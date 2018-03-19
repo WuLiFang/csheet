@@ -1,0 +1,46 @@
+<table>
+    <thead>
+        <tr>
+            <th>流程</th>
+            <th>制作者</th>
+            <th>组长状态</th>
+            <th>导演状态</th>
+            <th>客户状态</th>
+            <th>备注</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in data %}
+        <tr>
+            <td>{{ i[0] | e }}</td>
+            <td>{{ i[1] | e }}</td>
+            <td class="status" status="{{ i[2] | e }}">
+            </td>
+            <td class="status" status="{{ i[3] | e }}">
+            </td>
+            <td class="status" status="{{ i[4] | e }}">
+            </td>
+            <td class="notes" data-pipeline="{{ i[0] | e }}" onclick="getNote(this)">
+                {{ i[5] | e }}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<table>
+    <thead>
+        <tr>
+            <th>文件名</th>
+            <th>修改日期</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in metadata %}
+        <tr>
+            <td>{{ i[0] | e }}</td>
+            <td>{{ i[1] | e }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="note-container"></div>

@@ -1,0 +1,13 @@
+{
+  "name": "csheet",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "python -m unittest discover -v -t lib/csheet/tests",
+    "build": "docker build . -t csheet:latest",
+    "serve": "docker run -p 5001:80 --name csheet_server csheet"
+  },
+  "keywords": [],
+  "author": "NateScalet@Gmail.com"
+}
