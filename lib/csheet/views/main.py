@@ -3,55 +3,48 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from flask import abort, make_response, redirect, render_template, request
+from flask import abort, make_response, render_template, request, session
 
 from wlf import cgtwq
 from wlf.path import Path
 
 from . import pack
 from ..database import get_csheet_config
-from ..exceptions import u_abort
 from ..html import from_dir, get_images_from_dir
 from .app import APP
+from .util import require_login
 
 
-@APP.route('/', methods=('GET',))
+@require_login
 def render_main():
     """main page.  """
 
-    if APP.config.get('local_dir'):
-        return redirect('/local')
-
-    if not cgtwq.CGTeamWorkClient.is_logged_in():
-        u_abort(503, '服务器无法连接到CGTeamWork')
-
+    token = session['token']
     args = request.args
     if not args:
+        cgtwq.PROJECT.token = token
         return render_template('index.html', projects=cgtwq.PROJECT.names())
 
-    try:
-        project = args['project']
-        prefix = args.get('prefix')
-        pipeline = args.get('pipeline')
+    project = args['project']
+    prefix = args.get('prefix')
+    pipeline = args.get('pipeline')
+    config = get_csheet_config(
+        project, pipeline, prefix,
+        token=token)
 
-        config = get_csheet_config(project, pipeline, prefix)
+    if 'pack' in args:
+        return pack.packed_page(**config)
 
-        if 'pack' in args:
-            return pack.packed_page(**config)
+    config['is_client'] = True
 
-        config['is_client'] = True
+    # Respon with cookies set.
+    resp = make_response(render_template('csheet_app.html', **config))
+    cookie_life = 60 * 60 * 24 * 90
+    resp.set_cookie('project', project, max_age=cookie_life)
+    resp.set_cookie('pipeline', pipeline, max_age=cookie_life)
+    resp.set_cookie('prefix', prefix, max_age=cookie_life)
 
-        # Respon with cookies set.
-        resp = make_response(render_template('csheet_app.html', **config))
-        cookie_life = 60 * 60 * 24 * 90
-        resp.set_cookie('project', project, max_age=cookie_life)
-        resp.set_cookie('pipeline', pipeline, max_age=cookie_life)
-        resp.set_cookie('prefix', prefix, max_age=cookie_life)
-
-        return resp
-    except Exception as ex:
-        u_abort(500, ex)
-        raise
+    return resp
 
 
 @APP.route('/local')

@@ -22,10 +22,11 @@ def get_image(uuid):
         u_abort(404, 'No image match this uuid.')
 
 
-def get_images(database, pipeline, prefix):
+def get_images(database, pipeline, prefix, token=None):
     """Get all images in specifc range.  """
 
     database = cgtwq.Database(database)
+    database.token = token
     module = database['shot_task']
     select = module.filter(cgtwq.Filter('pipeline', pipeline))
     shots = [i for i in select['shot.shot'] if i and i.startswith(prefix)]
@@ -76,17 +77,18 @@ def get_images(database, pipeline, prefix):
     return ret
 
 
-def get_csheet_config(project, pipeline, prefix):
+def get_csheet_config(project, pipeline, prefix, **kwargs):
     """Provide infos a csheet needed.  """
 
     database = cgtwq.PROJECT.filter(
         cgtwq.Filter('full_name', project))['database'][0]
+
     config = {
         'project': project,
         'database': database,
         'pipeline': pipeline,
         'prefix': prefix,
-        'images': get_images(database, pipeline=pipeline, prefix=prefix),
+        'images': get_images(database, pipeline=pipeline, prefix=prefix, **kwargs),
         'title': '{}色板'.format('_'.join(
             i for i in
             (project, prefix.strip(get_project_code(project)).strip('_'), pipeline) if i)),

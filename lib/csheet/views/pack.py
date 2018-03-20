@@ -16,6 +16,7 @@ from flask import Response, abort, render_template, request, send_file
 from ..html import HTMLImage, updated_config
 from .app import APP
 
+
 STATUS = {}
 PROGRESS_EVENT_LISTENER = []
 
@@ -33,7 +34,10 @@ def pack_progress(value=None):
     return str(STATUS.get('PACK_PROGRESS', -1))
 
 
+@APP.route('/pack_progress')
 def pack_event():
+    """Return pack event.  """
+
     def _sse(data):
         return 'data: {}\n\n'.format(data)
 
@@ -51,7 +55,6 @@ def pack_event():
     return pack_progress()
 
 
-@APP.route('/pack_packprogress')
 def packed_page(**config):
     """Return zip packed local version.  """
 

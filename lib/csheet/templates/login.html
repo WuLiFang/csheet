@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <title>登录 色板工具</title>
+    <meta charset="UTF-8" />
+    <link href="static/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>登录</h1>{% with messages = get_flashed_messages() %} {% if messages %}
+        <div class="flashes"> {% for message in messages %}
+            <div>{{ message }}</div> {% endfor %}
+        </div>
+        <hr>{% endif %} {% endwith %}
+        <form method="post" class="form-horizontal">
+            <div class="form-group">
+                <label for="account" class="control-label" placeholder="CGTeamWork帐号">帐号</label>
+                <input type="text" name="account" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password" class="control-label">密码</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="登录" class="form-control">
+            </div>
+        </form>
+    </div>
+</body>

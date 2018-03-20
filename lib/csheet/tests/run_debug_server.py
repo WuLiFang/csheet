@@ -4,9 +4,9 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
-from wlf import mp_logging
-from csheet.views import APP
 from csheet import util
+from csheet.views import APP
+from wlf import mp_logging
 
 
 def main():
