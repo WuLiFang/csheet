@@ -5,7 +5,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import re
-from unittest import TestCase, main
+from unittest import TestCase, main, skip
 
 from csheet.views import APP
 from requests.utils import quote
@@ -19,6 +19,7 @@ class ViewTestCase(TestCase):
     def setUp(self):
         self.app = APP.test_client()
 
+    @skip
     def test_main(self):
         recv = self.app.get('/')
         if CGTeamWorkClient.is_logged_in():

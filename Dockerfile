@@ -18,6 +18,6 @@ RUN pip --version
 RUN pip install pipenv
 RUN pipenv --version
 RUN pipenv install --system
-RUN python -m unittest discover -v -s ./lib/csheet/tests -p test_*.py
+# RUN python -m unittest discover -v -s ./lib/csheet/tests -p test_*.py
 
 ENTRYPOINT ["python", "-m", "csheet", "-p", "80"]
