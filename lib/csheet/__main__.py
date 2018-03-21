@@ -26,7 +26,7 @@ def run_server(port=5000, local_dir=None):
     APP.config['local_dir'] = local_dir
 
     host_ip = gethostbyname(gethostname())
-    server = WSGIServer(('0.0.0.0', port), APP, log=None)
+    server = WSGIServer(('0.0.0.0', port), APP)
     address = 'https://{}:{}'.format(host_ip, port)
     print(address)
     LOGGER.info('服务器运行于: %s', address)
