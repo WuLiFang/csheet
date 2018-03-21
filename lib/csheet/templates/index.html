@@ -20,7 +20,7 @@
                 <label for="inputPipeline" class="col-sm-2 control-label">流程</label>
                 <div class="col-sm-10">
                     <select id="inputPipeline" name="pipeline" class="form-control">
-                        {% for i in ['动画', '灯光', '合成'] %} {% if i == request.cookies['pipeline'] %}
+                        {% for i in ['合成', '灯光', '动画'] %} {% if i == request.cookies['pipeline'] %}
                         <option selected>{{ i|e }}</option>
                         {% else %}
                         <option>{{ i|e }}</option>
