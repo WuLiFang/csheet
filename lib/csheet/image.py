@@ -1,5 +1,5 @@
 # -*- coding=UTF-8 -*-
-"""HTML csheet page.  """
+"""HTML image used in csheet page.  """
 from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
@@ -16,7 +16,7 @@ from wlf.path import get_encoded as e
 from wlf.path import get_unicode as u
 from wlf.path import Path, PurePath
 
-from .base import Image
+from .filename import filter_filename
 
 try:
     from gevent.lock import Semaphore
@@ -24,8 +24,54 @@ except ImportError:
     from threading import Semaphore
 
 
-LOGGER = logging.getLogger('wlf.chseet.html')
+LOGGER = logging.getLogger(__name__)
 RESOURCES_DIR = Path(os.path.abspath(os.path.join(__file__, '../../static')))
+
+
+class Image(object):
+    """Image item for contactsheet.  """
+
+    def __new__(cls, path):
+        if isinstance(path, Image):
+            return path
+        return super(Image, cls).__new__(cls)
+
+    def __getnewargs__(self):
+        return (self.path,)
+
+    def __init__(self, path):
+        # Ignore initiated.
+        if isinstance(path, Image):
+            return
+
+        # Initiate.
+        self.__path = PurePath(filter_filename(path))
+        self.name = self.path.shot
+
+    def __eq__(self, other):
+        if isinstance(other, Image):
+            return other.name == self.name and other.path == self.path
+        return False
+
+    @property
+    def path(self):
+        """Path for this image.  """
+
+        return self.__path
+
+    def __nonzero__(self):
+        return bool(self.path)
+
+    def __str__(self):
+        return '<Image: {0.name}>'.format(self)
+
+    def __unicode__(self):
+        return '<图像: {0.name}>'.format(self)
+
+    def download(self, dest):
+        """Download this image to dest.  """
+
+        copy(self.path, dest)
 
 
 def updated_config(config=None):
@@ -227,16 +273,11 @@ class HTMLImage(Image):
             }
             _kwargs = default_kwargs.get(role, {})
 
-            try:
-                source = Path(source or self.source[role])
-            except KeyError:
-                if is_strict:
-                    raise
-
-                source = Path(self.path)
-
+            source = source or self.get_source(role, is_strict)
+            source = Path(source)
             if not source.exists():
                 raise ValueError('Source file not exists.', source)
+            LOGGER.debug('Generation source: %s', source)
 
             def _same_mimetype(suffix_a, suffix_b):
                 map_ = mimetypes.types_map
@@ -255,13 +296,38 @@ class HTMLImage(Image):
             output = Path(output or self.get_default(role))
             method = self.generate_methods[role]
 
-            output.parent.mkdir(parents=True, exist_ok=True)
+            Path(output.parent).mkdir(parents=True, exist_ok=True)
             ret = method(source, output, **_kwargs)
             ret = Path(ret)
             self.generated[role] = ret
             return ret
         finally:
             lock.release()
+
+    def get_source(self, role, is_strict=False, platform=None):
+        """Get generation source for the image.
+
+        Args:
+            role (str): Generation role.
+            is_strict (bool, optional): Defaults to False.
+                `False` mean default to self.path if no such role source.
+            platform (src, optional): Defaults to None.
+                Convert path to match given platform.
+
+        Returns:
+            str: Source file path.
+        """
+
+        try:
+            source = self.source[role]
+            if not source:
+                raise KeyError
+        except KeyError:
+            if is_strict:
+                raise
+            source = self.path
+        source = filter_filename(source, platform=platform)
+        return source
 
     def download(self, dest):
         """Download this image to dest.  """

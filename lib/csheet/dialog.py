@@ -22,7 +22,7 @@ from wlf.path import Path, PurePath, get_encoded
 from wlf.uitools import DialogWithDir, main_show_dialog
 
 from .__about__ import __version__
-from .html import RESOURCES_DIR, HTMLImage, from_list, updated_config
+from .image import RESOURCES_DIR, HTMLImage, from_list, updated_config
 
 LOGGER = logging.getLogger('com.wlf.csheet.dialog')
 

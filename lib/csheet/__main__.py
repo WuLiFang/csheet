@@ -1,16 +1,17 @@
 #! /usr/bin/env python2
 # -*- coding=UTF-8 -*-
 """GUI for csheet creation.  """
-from __future__ import print_function, unicode_literals
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
 
 import logging
+import os
 import webbrowser
 
 from wlf import mp_logging
 from wlf.path import Path
 
 from .__about__ import __version__
-from . import util
 
 LOGGER = logging.getLogger('com.wlf.csheet')
 
@@ -18,11 +19,10 @@ LOGGER = logging.getLogger('com.wlf.csheet')
 def run_server(port=5000, local_dir=None):
     """Run csheet server at @port.  """
 
-    from gevent.wsgi import WSGIServer
+    from gevent.pywsgi import WSGIServer
     from .views import APP
     from socket import gethostname, gethostbyname
 
-    util.set_locale()
     APP.config['local_dir'] = local_dir
 
     host_ip = gethostbyname(gethostname())
@@ -48,11 +48,12 @@ def main():
                         help='生成的文件集中存放至此')
     args = parser.parse_args()
 
-    mp_logging.basic_config(level=logging.INFO)
-    if args.storage:
-        from .views import APP
-        APP.config['storage'] = args.storage
+    mp_logging.basic_config(level=os.getenv('LOGLEVEL', logging.INFO))
+
     if args.port:
+        from .views import APP
+        if args.storage:
+            APP.config['storage'] = args.storage
         return run_server(args.port, args.dir)
     elif args.dir:
         from . import create_html_from_dir

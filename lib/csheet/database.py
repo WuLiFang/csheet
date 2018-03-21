@@ -7,8 +7,9 @@ from __future__ import (absolute_import, division, print_function,
 import json
 
 from wlf import cgtwq
-from .html import updated_config, HTMLImage
+from .image import updated_config, HTMLImage
 from .exceptions import u_abort
+from .filename import filter_filename
 
 
 def get_image(uuid):
@@ -70,7 +71,8 @@ def get_images(database, pipeline, prefix, token=None):
         try:
             data = previews.get(shot)
             if data:
-                img.source['preview'] = json.loads(data)['path'][0]
+                img.source['preview'] = filter_filename(
+                    json.loads(data)['path'][0])
         except (TypeError, IndexError):
             pass
         ret.append(img)
@@ -80,6 +82,7 @@ def get_images(database, pipeline, prefix, token=None):
 def get_csheet_config(project, pipeline, prefix, **kwargs):
     """Provide infos a csheet needed.  """
 
+    cgtwq.PROJECT.token = kwargs.get('token')
     database = cgtwq.PROJECT.filter(
         cgtwq.Filter('full_name', project))['database'][0]
 

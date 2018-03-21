@@ -1,17 +1,18 @@
 # -*- coding=UTF-8 -*-
 """Contactsheet creation."""
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
 
-from __about__ import __version__
+import logging
+from .__about__ import __version__
 
-from logging import getLogger
-
-LOGGER = getLogger('com.wlf.csheet')
+LOGGER = logging.getLogger(__name__)
 
 
 def create_html_from_dir(image_folder, save_path=None, **config):
     """Create a html page for a @image_folder.  """
 
-    from .html import from_dir, RESOURCES_DIR
+    from .image import from_dir, RESOURCES_DIR
     from wlf.path import PurePath, Path
 
     images_folder_path = PurePath(image_folder)
