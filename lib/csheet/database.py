@@ -82,7 +82,7 @@ def get_images(database, pipeline, prefix, token=None):
 def get_csheet_config(project, pipeline, prefix, **kwargs):
     """Provide infos a csheet needed.  """
 
-    cgtwq.PROJECT.token = kwargs.get('token')
+    token = kwargs.get('token')
     database = cgtwq.PROJECT.filter(
         cgtwq.Filter('full_name', project))['database'][0]
 
@@ -94,15 +94,24 @@ def get_csheet_config(project, pipeline, prefix, **kwargs):
         'images': get_images(database, pipeline=pipeline, prefix=prefix, **kwargs),
         'title': '{}色板'.format('_'.join(
             i for i in
-            (project, prefix.strip(get_project_code(project)).strip('_'), pipeline) if i)),
+            (project, prefix.strip(get_project_code(project, token)).strip('_'), pipeline) if i)),
     }
     return updated_config(config)
 
 
-def get_project_code(project):
+def get_project_code(project, token):
     """Get proejct code for @project.  """
-
+    cgtwq.PROJECT.token = token
     try:
         return cgtwq.PROJECT.filter(cgtwq.Filter('full_name', project))['code'][0]
+    except IndexError:
+        u_abort(404, 'No such project.')
+
+
+def get_database(project, token):
+    """Get proejct database for @project.  """
+    cgtwq.PROJECT.token = token
+    try:
+        return cgtwq.PROJECT.filter(cgtwq.Filter('full_name', project))['database'][0]
     except IndexError:
         u_abort(404, 'No such project.')

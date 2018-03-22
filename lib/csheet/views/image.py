@@ -4,6 +4,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import logging
+import tempfile
 from os.path import basename, getmtime, join
 
 import pendulum
@@ -12,6 +13,7 @@ from gevent import sleep, spawn
 from gevent.queue import Empty, Queue
 from six import text_type
 
+import diskcache
 from wlf import cgtwq
 from wlf.path import Path
 
@@ -20,6 +22,22 @@ from ..exceptions import u_abort
 from .app import APP
 
 LOGGER = logging.getLogger(__name__)
+
+CACHE = diskcache.FanoutCache(join(tempfile.gettempdir(), 'csheet', __name__))
+
+
+@CACHE.memoize(name='images', expire=10)
+def _get_gen_image(uuid, role):
+    image = get_image(uuid)
+    kwargs = {}
+    folder = APP.config.get('storage')
+    if folder:
+        kwargs['output'] = join(folder, role, uuid)
+    ret = image.generate(role,
+                         is_strict=role not in ('thumb', 'full'),
+                         limit_size=APP.config['preview_limit_size'],
+                         **kwargs)
+    return ret
 
 
 @APP.route('/images/<uuid>.<role>')
@@ -37,26 +55,21 @@ def response_image(uuid, role):
         flask.Response: Response for client.
     """
 
-    image = get_image(uuid)
-    kwargs = {}
-    folder = APP.config.get('storage')
-    if folder:
-        kwargs['output'] = join(folder, role, uuid)
-
     result = Queue(1)
+    image = get_image(uuid)
 
     def _gen():
         try:
-            ret = image.generate(role,
-                                 is_strict=role not in ('thumb', 'full'),
-                                 limit_size=APP.config['preview_limit_size'],
-                                 **kwargs)
+            ret = _get_gen_image(uuid, role)
             result.put(ret)
         except ValueError as ex:
             LOGGER.debug('Can not generate: %s', ex)
         except KeyError as ex:
             LOGGER.debug('No source: %s', ex)
         except Exception as ex:  # pylint: disable=broad-except
+            LOGGER.error(
+                'Unexpected error durring generation: %s',
+                image, exc_info=True)
             result.put(ex)
     spawn(_gen)
     sleep()
@@ -64,10 +77,6 @@ def response_image(uuid, role):
     try:
         generated = result.get(block=False)
         if isinstance(generated, Exception):
-            LOGGER.error(
-                'Unexpected error durring generation: %s: %s',
-                image,
-                repr(generated))
             u_abort(500, generated)
 
         if not Path(generated).exists():

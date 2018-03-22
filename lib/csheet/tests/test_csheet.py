@@ -9,7 +9,7 @@ from unittest import TestCase, main, skip
 
 from six.moves import range
 
-from csheet.html import HTMLImage
+from csheet.image import HTMLImage
 from wlf.path import PurePath
 
 
@@ -20,7 +20,7 @@ class CSheetTestCase(TestCase):
                            + [mktemp() for _ in range(20)])
 
     def test_from_list(self):
-        from csheet.html import from_list
+        from csheet.image import from_list
         from_list(self.dummy_list)
 
     def test_preview_default(self):
@@ -35,7 +35,7 @@ class CSheetTestCase(TestCase):
                          PurePath(expected))
 
     def test_pickle_image(self):
-        from csheet.base import Image
+        from csheet.image import Image
 
         image_b = Image('temp')
         data = pickle.dumps(image_b, pickle.HIGHEST_PROTOCOL)

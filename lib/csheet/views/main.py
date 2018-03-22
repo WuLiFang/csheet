@@ -10,7 +10,7 @@ from wlf.path import Path
 
 from . import pack
 from ..database import get_csheet_config
-from ..html import from_dir, get_images_from_dir
+from ..image import from_dir, get_images_from_dir
 from .app import APP
 from .util import require_login
 

@@ -64,8 +64,6 @@ class CGTeamworkTestCase(TestCase):
             self.assertEqual(recv.status_code, 200)
 
     def test_get_image(self):
-        import wlf.mp_logging
-        wlf.mp_logging.basic_config(level='DEBUG')
         for role in ('thumb', 'preview', 'full'):
             for i in self.uuid_list:
                 url = b'/images/{}.{}'.format(i, role)
@@ -74,6 +72,11 @@ class CGTeamworkTestCase(TestCase):
                     recv.status_code,
                     (200, 503),
                     '{}: {}'.format(url, _recv_msg(recv)))
+
+    def test_api(self):
+        result = self.client.get('/api/list_images/梦塔/合成/MT_EP06_01')
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(result.content_type, 'application/json')
 
 
 def _recv_msg(recv):

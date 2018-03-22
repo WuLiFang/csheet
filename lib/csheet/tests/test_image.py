@@ -7,13 +7,13 @@ from unittest import TestCase, main
 
 import six
 
-from csheet import html
+from csheet.image import HTMLImage
 import util
 
 
 class HTMLImageTestCase(TestCase):
     def setUp(self):
-        self.image = html.HTMLImage(util.path('images', 'gray.png'))
+        self.image = HTMLImage(util.path('images', 'gray.png'))
 
     def test_generate(self):
         self.image.generate('thumb')

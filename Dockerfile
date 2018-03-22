@@ -35,4 +35,5 @@ RUN set -ex && python -m unittest discover -v -s ./lib/wlf/tests -p test_*.py
 FROM build AS release
 
 LABEL author="NateScarlet@Gmail.com"
-ENTRYPOINT ["python", "-m", "csheet", "-p", "80"]
+CMD  ["-p", "80", "-s", "/storage"]
+ENTRYPOINT ["python", "-m", "csheet"]

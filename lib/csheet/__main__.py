@@ -48,7 +48,10 @@ def main():
                         help='生成的文件集中存放至此')
     args = parser.parse_args()
 
-    mp_logging.basic_config(level=os.getenv('LOGLEVEL', logging.INFO))
+    try:
+        mp_logging.basic_config(level=os.getenv('LOGLEVEL', logging.INFO))
+    except ValueError:
+        mp_logging.basic_config(level=logging.INFO)
 
     if args.port:
         from .views import APP

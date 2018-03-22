@@ -13,7 +13,7 @@ from six import text_type
 
 from flask import Response, abort, render_template, request, send_file
 
-from ..html import HTMLImage, updated_config
+from ..image import HTMLImage, updated_config
 from .app import APP
 
 

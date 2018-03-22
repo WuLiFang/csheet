@@ -1,3 +1,5 @@
+git clean -fdx *.pyc
+
 docker-machine env | Invoke-Expression
 docker build . -t csheet
 if ($LASTEXITCODE) {
