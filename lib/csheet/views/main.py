@@ -10,10 +10,10 @@ from wlf.path import Path
 
 from . import pack
 from ..database import get_csheet_config
-from ..image import from_dir, get_images_from_dir
+from ..image import get_images_from_dir
 from .app import APP
 from .util import require_login
-
+from ..page import from_dir
 
 @require_login
 def render_main():

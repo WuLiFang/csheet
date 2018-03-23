@@ -74,27 +74,6 @@ class Image(object):
         copy(self.path, dest)
 
 
-def updated_config(config=None):
-    """Return a default csheet config or updated default from given @config. """
-
-    default = {'static': ('csheet.css',
-                          'es5-shim.min.js',
-                          'es5-sham.min.js',
-                          'json3.min.js',
-                          'es6-shim.min.js',
-                          'es6-sham.min.js',
-                          'html5shiv.min.js',
-                          'jquery-3.2.1.min.js',
-                          'jquery.appear.js',
-                          'csheet.js'),
-               'static_folder': 'static'}
-
-    if config:
-        default.update(config)
-
-    return default
-
-
 class HTMLImage(Image):
     """A image in html contactsheet page.  """
 
@@ -139,9 +118,9 @@ class HTMLImage(Image):
         self.source = {}
         self.generated = {}
 
-        if is_mimetype(self.path,'image') :
+        if is_mimetype(self.path, 'image'):
             self.source['full'] = self.source['thumb'] = self.path
-        elif is_mimetype(self.path,'video') :
+        elif is_mimetype(self.path, 'video'):
             self.source['preview'] = self.path
 
         HTMLImage._cache[self.uuid] = self
@@ -190,7 +169,7 @@ class HTMLImage(Image):
                 self.path.name)
 
         try:
-            return PurePath(filter_filename(self.path,'win32')).as_uri()
+            return PurePath(filter_filename(self.path, 'win32')).as_uri()
         except ValueError:
             return ''
 
@@ -362,16 +341,6 @@ class HTMLImage(Image):
                 copy(src_path, dst_path)
 
 
-def from_dir(images_folder, **config):
-    """Create a html page for a @images_folder.  """
-
-    path = Path(images_folder)
-    images = get_images_from_dir(images_folder)
-    config.setdefault('title', path.name)
-
-    return from_list(images, **config)
-
-
 def get_images_from_dir(images_folder):
     """Get HTMLImage for @images_folder.  """
 
@@ -382,19 +351,3 @@ def get_images_from_dir(images_folder):
                             if i.is_file()
                             and is_mimetype(i, ('video', 'image')))
     return [HTMLImage(i) for i in images]
-
-
-def from_list(images_list, **config):
-    """Create a html page for a @images_list.  """
-
-    config.update({
-        'images': [HTMLImage(i) for i in images_list],
-    })
-
-    env = Environment(
-        loader=PackageLoader(__name__),
-    )
-
-    template = env.get_template('csheet.html')
-
-    return template.render(**updated_config(config))

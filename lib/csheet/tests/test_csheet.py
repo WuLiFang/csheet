@@ -11,6 +11,7 @@ from six.moves import range
 
 from csheet.image import HTMLImage
 from wlf.path import PurePath
+from csheet.page import from_list
 
 
 class CSheetTestCase(TestCase):
@@ -20,7 +21,6 @@ class CSheetTestCase(TestCase):
                            + [mktemp() for _ in range(20)])
 
     def test_from_list(self):
-        from csheet.image import from_list
         from_list(self.dummy_list)
 
     def test_preview_default(self):

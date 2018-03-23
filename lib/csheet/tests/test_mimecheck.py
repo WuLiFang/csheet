@@ -27,6 +27,8 @@ class MimeCheckTestCase(TestCase):
         self.assert_(result)
         result = mimecheck.is_mimetype('test.txt', ('video', 'text'))
         self.assert_(result)
+        result = mimecheck.is_mimetype('test', 'text')
+        self.assertFalse(result)
 
 
 if __name__ == '__main__':

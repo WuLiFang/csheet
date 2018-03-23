@@ -38,4 +38,4 @@ def is_mimetype(filename, type_):
 
     filename = text_type(filename)
     mime, _ = mimetypes.guess_type(filename)
-    return mime.startswith(type_)
+    return mime and mime.startswith(type_)

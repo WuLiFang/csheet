@@ -1,4 +1,5 @@
-/.venv
-/.vscode
+.venv
+.vscode
+.pytest_cache
 *.pyc
 node_modules

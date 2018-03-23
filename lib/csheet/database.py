@@ -7,9 +7,10 @@ from __future__ import (absolute_import, division, print_function,
 import json
 
 from wlf import cgtwq
-from .image import updated_config, HTMLImage
+from .image import HTMLImage
 from .exceptions import u_abort
 from .filename import filter_filename
+from .page import updated_config
 
 
 def get_image(uuid):

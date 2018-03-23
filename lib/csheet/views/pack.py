@@ -13,9 +13,10 @@ from gevent import sleep, spawn
 from gevent.queue import Queue
 from six import text_type
 
-from ..image import HTMLImage, updated_config
+from ..image import HTMLImage
 from .app import APP
 from .image import _get_gen_image
+from ..page import updated_config
 
 STATUS = {}
 PROGRESS_EVENT_LISTENER = []
