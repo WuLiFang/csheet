@@ -2,10 +2,12 @@ language: python
 python:
   - "2.7"
 install:
-  - pip install pipenv
-  - pipenv --version
-  - pipenv install
-  - pip install coverage
+  - yes "" | sudo add-apt-repository ppa:mc3man/trusty-media
+  - sudo apt-get update
+  - sudo apt-get install ffmpeg && ffmpeg -version
+  - pip install pipenv && pipenv --version
+  - pipenv install --system --deploy
+  - pip install coverage && coverage --version
 cache:
   - pip
 before_script:
@@ -13,7 +15,8 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
-  - pipenv run coverage run -m unittest discover -v -s ./lib/csheet/tests -p test_*.py
+  - export PYTHONPATH=lib:lib/wlf/site-packages
+  - coverage run -m unittest discover -v -s ./lib/csheet/tests -p test_*.py
 after_script:
   - coverage xml
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
