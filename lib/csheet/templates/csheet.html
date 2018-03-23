@@ -1,5 +1,5 @@
 <!DOCTYPE html> {% set config = {'database': database, 'pipeline': pipeline, 'prefix': prefix, 'is_pack': is_pack, 'is_client' : is_client,
-'is_local': is_local, 'relative_to' : relative_to} %} {% set rev=4 %}
+'is_local': is_local, 'relative_to' : relative_to} %} {% set rev=5 %}
 <html lang="zh-CN">
 
 <head>
@@ -75,7 +75,7 @@
             <a href="#image{{ loop.index }}" class="zoom" draggable="false">
                 <video class='small hidden' data-poster="{{ image.get('thumb', **config) }}" data-src="{{ image.get('preview', **config) }}"
                     muted loop>
-                    <img alt="no image" data-src="{{ image.get('thumb', **config) }}" />
+                    <img class='small' alt="no image" data-src="{{ image.get('thumb', **config) }}" />
                 </video>
                 <div class="noscript">
                     <noscript>

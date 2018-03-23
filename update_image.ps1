@@ -14,5 +14,5 @@ if ((docker inspect -f="{{.Image}}" $CONTAINNER) -eq
 "# Update container"
 docker stop $CONTAINNER
 docker rm $CONTAINNER
-docker run -d -v /z:/z -p 60000:80 --restart always --name $CONTAINNER $IMAGE
+docker run -d -v /z:/z -v /srv/csheet:/srv/csheet -p 60000:80 --restart always --name $CONTAINNER $IMAGE
 docker ps

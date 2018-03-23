@@ -20,10 +20,9 @@ from wlf.path import Path
 from ..database import get_image
 from ..exceptions import u_abort
 from .app import APP
+from ..cache import CACHE
 
 LOGGER = logging.getLogger(__name__)
-
-CACHE = diskcache.FanoutCache(join(tempfile.gettempdir(), 'csheet', __name__))
 
 
 @CACHE.memoize(name='images', expire=10)

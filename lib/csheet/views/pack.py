@@ -3,22 +3,24 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import logging
 from os import SEEK_END
 from tempfile import TemporaryFile
 from zipfile import ZipFile
 
+from flask import Response, abort, render_template, request, send_file
 from gevent import sleep, spawn
 from gevent.queue import Queue
 from six import text_type
 
-from flask import Response, abort, render_template, request, send_file
-
 from ..image import HTMLImage, updated_config
 from .app import APP
-
+from .image import _get_gen_image
 
 STATUS = {}
 PROGRESS_EVENT_LISTENER = []
+
+LOGGER = logging.getLogger(__name__)
 
 
 def pack_progress(value=None):
@@ -56,17 +58,44 @@ def pack_event():
 
 
 def packed_page(**config):
-    """Return zip packed local version.  """
+    """Return zip packed offline version.  """
+
+    try:
+        LOGGER.info('Start pack.')
+        f = archive(**config)
+    except:
+        LOGGER.error('Error during pack page.', exc_info=True)
+        raise
+    finally:
+        pack_progress(-1)
+
+    f.seek(0, SEEK_END)
+    size = f.tell()
+    f.seek(0)
+    filename = '{}.zip'.format(config.get('title', 'temp'))
+
+    resp = send_file(f, as_attachment=True,
+                     attachment_filename=filename.encode('utf-8'),
+                     add_etags=False)
+    resp.headers.extend({
+        'Content-Length': size,
+        'Cache-Control': 'no-cache'
+    })
+    return resp
+
+
+def archive(**config):
+    """Return zip packed offline version.  """
 
     if float(pack_progress()) != -1:
         abort(429)
+
     config = updated_config(config)
     pack_progress(0)
 
     f = TemporaryFile(suffix='.zip',
                       prefix=config.get('title', 'packing_csheet_'),
                       dir=APP.config.get('PACK_FOLDER'))
-    filename = '{}.zip'.format(config.get('title', 'temp'))
     APP.logger.info('Start archive page.')
     config['is_pack'] = True
 
@@ -80,13 +109,17 @@ def packed_page(**config):
 
         def _write_image(image):
             assert isinstance(image, HTMLImage)
-            for role, dirname in image.folder_names.items():
+            for role in image.generate_methods:
                 try:
-                    generated = image.generate(role)
-                    zipfile.write(text_type(generated),
-                                  '{}/{}'.format(dirname, generated.name))
-                except (OSError, KeyError):
-                    pass
+                    generated = _get_gen_image(image.uuid, role)
+                except(KeyError, ValueError):
+                    continue
+                except:
+                    LOGGER.error(
+                        'Unexpect exception during generate: %s: %s', image, role, exc_info=True)
+                    raise
+                arcname = image.get(role, is_pack=True)
+                zipfile.write(text_type(generated), arcname)
 
         for index, i in enumerate(images, 1):
             job = spawn(_write_image, i)
@@ -103,14 +136,4 @@ def packed_page(**config):
         zipfile.writestr('{}.html'.format(
             config.get('title', 'index')), index_page.encode('utf-8'))
 
-    f.seek(0, SEEK_END)
-    size = f.tell()
-    f.seek(0)
-    resp = send_file(f, as_attachment=True, attachment_filename=filename.encode('utf-8'),
-                     add_etags=False)
-    resp.headers.extend({
-        'Content-Length': size,
-        'Cache-Control': 'no-cache'
-    })
-    pack_progress(-1)
-    return resp
+    return f

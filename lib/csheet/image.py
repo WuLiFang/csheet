@@ -207,15 +207,17 @@ class HTMLImage(Image):
         """
 
         if config.get('is_client'):
-            return ('/images/{}.{}'.format(self.uuid, role))
+            url = '/images/{}.{}'.format(self.uuid, role)
+            try:
+                url += '?timestamp={}'.format(self.get_timestamp(role))
+            except KeyError:
+                pass
+            return url
 
         if config.get('is_pack'):
-            try:
-                return '{}/{}'.format(
-                    self.folder_names[role],
-                    self.generated[role].name)
-            except KeyError:
-                return ''
+            return '{}/{}'.format(
+                self.folder_names[role],
+                self.path.with_suffix(self.file_suffix[role]).name)
 
         path = self.generated.get(role, self.source.get(role, self.path))
         assert isinstance(path, PurePath)
@@ -223,6 +225,11 @@ class HTMLImage(Image):
             return path.as_uri()
         except ValueError:
             return text_type(path)
+
+    def get_timestamp(self, role):
+        file_ = self.generated[role]
+        ret = os.path.getmtime(text_type(file_))
+        return ret
 
     def get_default(self, role):
         """Get default path.
@@ -285,18 +292,24 @@ class HTMLImage(Image):
                 return type_a and type_a == type_b
 
             # Skip some generation to speed up.
-            if (output is None
-                    # Ensure same memetype.
-                    and _same_mimetype(source.suffix.lower(), self.file_suffix[role].lower())
+            if (  # Ensure same memetype.
+                    _same_mimetype(source.suffix.lower(),
+                                   self.file_suffix[role].lower())
                     # Check size.
                     and source.stat().st_size < self.max_skipgen_size):
-                return source
+                ret = source
+                if output:
+                    ret = copy(source, PurePath(
+                        output).with_suffix(self.file_suffix[role]))
+                self.generated[role] = ret
+                return ret
+
+            output = Path(output or self.get_default(role))
+            Path(output.parent).mkdir(parents=True, exist_ok=True)
 
             _kwargs.update(kwargs)
-            output = Path(output or self.get_default(role))
             method = self.generate_methods[role]
 
-            Path(output.parent).mkdir(parents=True, exist_ok=True)
             ret = method(source, output, **_kwargs)
             ret = Path(ret)
             self.generated[role] = ret
