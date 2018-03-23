@@ -31,7 +31,6 @@ FROM build AS test
 
 RUN pip install mock
 RUN set -ex && python -m unittest discover -v -s ./lib/csheet/tests -p test_*.py
-RUN set -ex && python -m unittest discover -v -s ./lib/wlf/tests -p test_*.py
 
 FROM build AS release
 
