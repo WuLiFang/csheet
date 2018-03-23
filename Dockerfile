@@ -2,6 +2,7 @@ FROM centos AS base
 
 # Install pip
 RUN curl https://bootstrap.pypa.io/get-pip.py | python && pip --version
+ENV PIP_INDEX_URL https://pypi.tuna.tsinghua.edu.cn/simple
 
 # Install pipenv
 RUN pip install pipenv && pipenv --version
