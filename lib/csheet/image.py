@@ -190,7 +190,7 @@ class HTMLImage(Image):
                 self.path.name)
 
         try:
-            return self.path.as_uri()
+            return PurePath(filter_filename(self.path,'win32')).as_uri()
         except ValueError:
             return ''
 
