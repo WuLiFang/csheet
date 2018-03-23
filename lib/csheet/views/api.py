@@ -3,19 +3,16 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from os.path import getmtime
-
 from flask import jsonify, request, session
-from six import text_type
 
+from wlf import cgtwq
 from wlf.path import get_unicode as u
 
-from ..database import get_database, get_images, get_project_code
+from ..cache import CACHE
+from ..database import get_database, get_image, get_images, get_project_code
 from ..image import HTMLImage
 from .app import APP
 from .util import require_login
-
-from ..cache import CACHE
 
 
 @APP.route('/api/list_images/<project>/<pipeline>/<prefix>')
@@ -50,7 +47,7 @@ def image_url():
 
 @CACHE.memoize('view', expire=10)
 def _image_url(uuid):
-    image = HTMLImage.from_uuid(uuid)
+    image = get_image(uuid)
     return {i: image.get(i, is_client=True) for i in image.generate_methods}
 
 
@@ -58,3 +55,17 @@ def _image_url(uuid):
 @APP.route('/project_code/<project>')  # TODO: remove usage in js
 def project_code(project):
     return _apply_token(get_project_code, project)
+
+
+@APP.route('/api/image/note', methods=('GET', 'POST'))
+def note():
+    uuid = request.args['uuid']
+    pipeline = request.args['pipeline']
+
+    image = get_image(uuid)
+    select = image.cgteamwork_select
+    assert isinstance(select, cgtwq.database.Selection)
+    select.token = session['token']
+    select = select.filter(cgtwq.Field('pipeline') == pipeline)
+    notes = select.get_notes()
+    return jsonify(notes)

@@ -3,7 +3,6 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
-import mimetypes
 import os
 import uuid
 
@@ -16,13 +15,14 @@ from wlf.path import get_encoded as e
 from wlf.path import get_unicode as u
 from wlf.path import Path, PurePath
 
+from .cache import getmtime
 from .filename import filter_filename
+from .mimecheck import same_mimetype, is_mimetype
 
 try:
     from gevent.lock import Semaphore
 except ImportError:
     from threading import Semaphore
-
 
 LOGGER = logging.getLogger(__name__)
 RESOURCES_DIR = Path(os.path.abspath(os.path.join(__file__, '../../static')))
@@ -139,10 +139,9 @@ class HTMLImage(Image):
         self.source = {}
         self.generated = {}
 
-        type_ = text_type(mimetypes.guess_type(text_type(self.path))[0])
-        if type_.startswith('image/'):
+        if is_mimetype(self.path,'image') :
             self.source['full'] = self.source['thumb'] = self.path
-        elif type_.startswith('video/'):
+        elif is_mimetype(self.path,'video') :
             self.source['preview'] = self.path
 
         HTMLImage._cache[self.uuid] = self
@@ -227,8 +226,17 @@ class HTMLImage(Image):
             return text_type(path)
 
     def get_timestamp(self, role):
+        """Get mtime for role.
+
+        Args:
+            role (str): Generated role.
+
+        Returns:
+            fload: Timestamp of mtime.
+        """
+
         file_ = self.generated[role]
-        ret = os.path.getmtime(text_type(file_))
+        ret = getmtime(text_type(file_))
         return ret
 
     def get_default(self, role):
@@ -286,15 +294,10 @@ class HTMLImage(Image):
                 raise ValueError('Source file not exists.', source)
             LOGGER.debug('Generation source: %s', source)
 
-            def _same_mimetype(suffix_a, suffix_b):
-                map_ = mimetypes.types_map
-                type_a, type_b = map_.get(suffix_a), map_.get(suffix_b)
-                return type_a and type_a == type_b
-
             # Skip some generation to speed up.
             if (  # Ensure same memetype.
-                    _same_mimetype(source.suffix.lower(),
-                                   self.file_suffix[role].lower())
+                    same_mimetype(source.suffix.lower(),
+                                  self.file_suffix[role].lower())
                     # Check size.
                     and source.stat().st_size < self.max_skipgen_size):
                 ret = source
@@ -377,8 +380,7 @@ def get_images_from_dir(images_folder):
         raise ValueError('Not a dir : {}'.format(images_folder))
     images = version_filter(i for i in path.iterdir()
                             if i.is_file()
-                            and (text_type(mimetypes.guess_type(text_type(i))[0])
-                                 .startswith(('video/', 'image/'))))
+                            and is_mimetype(i, ('video', 'image')))
     return [HTMLImage(i) for i in images]
 
 

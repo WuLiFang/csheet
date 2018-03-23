@@ -4,8 +4,15 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import tempfile
-from os.path import join
-
+import os
 import diskcache
 
-CACHE = diskcache.FanoutCache(join(tempfile.gettempdir(), 'csheet', __name__))
+CACHE = diskcache.FanoutCache(os.path.join(
+    tempfile.gettempdir(), 'csheet', __name__))
+
+
+@CACHE.memoize('mtime', expire=10)
+def getmtime(filename):
+    """Cached `os.path.getmtime`.   """
+
+    return os.path.getmtime(filename)

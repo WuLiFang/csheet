@@ -4,23 +4,23 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import logging
-import tempfile
 from os.path import basename, getmtime, join
 
 import pendulum
-from flask import abort, make_response, render_template, request, send_file
+from flask import (abort, make_response, render_template, request, send_file,
+                   session)
 from gevent import sleep, spawn
 from gevent.queue import Empty, Queue
 from six import text_type
 
-import diskcache
 from wlf import cgtwq
 from wlf.path import Path
 
+from ..cache import CACHE
 from ..database import get_image
 from ..exceptions import u_abort
 from .app import APP
-from ..cache import CACHE
+from .util import require_login
 
 LOGGER = logging.getLogger(__name__)
 
@@ -142,10 +142,22 @@ def image_info(uuid):
 
 
 @APP.route('/images/<uuid>.notes/<pipeline>')
+@require_login
 def image_notes(uuid, pipeline):
+    """Response image with given pipeline.
+
+    Args:
+        uuid (str): Image uuid.
+        pipeline (str): Pipeline the notes related.
+
+    Returns:
+        flask.Response: Html notes.
+    """
+
     image = get_image(uuid)
     select = image.cgteamwork_select
     assert isinstance(select, cgtwq.database.Selection)
+    select.token = session['token']
     select = select.filter(cgtwq.Field('pipeline') == pipeline)
     notes = select.get_notes()
     return render_template('image_notes.html', notes=notes, server_ip=cgtwq.CGTeamWorkClient.server_ip())
