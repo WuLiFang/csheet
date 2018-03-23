@@ -3,3 +3,4 @@
 .pytest_cache
 *.pyc
 node_modules
+dist/

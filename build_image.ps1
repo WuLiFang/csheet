@@ -1,5 +1,7 @@
 git clean -fdx *.pyc
 
+npx webpack --mode production
+
 docker-machine env | Invoke-Expression
 docker build . -t csheet
 if ($LASTEXITCODE) {

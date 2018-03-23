@@ -5,15 +5,21 @@
   "private": true,
   "scripts": {
     "test": "python -m unittest discover -v -t lib/csheet/tests",
-    "build": "docker build . -t csheet:latest"
+    "build": "npx webpack --mode development"
   },
   "keywords": [],
   "author": "NateScalet@Gmail.com",
   "dependencies": {
-    "jquery": "^3.3.1"
+    "jquery": "^3.3.1",
+    "jquery-appear-poetic": "^0.3.9"
   },
   "devDependencies": {
-    "webpack": "^4.2.0",
-    "webpack-cli": "^2.0.13"
+    "css-loader": "^0.28.11",
+    "mini-css-extract-plugin": "^0.2.0",
+    "sass": "^1.0.0-rc.1",
+    "sass-loader": "^6.0.7",
+    "ts-loader": "^4.1.0",
+    "typescript": "^2.7.2",
+    "webpack": "^4.2.0"
   }
 }

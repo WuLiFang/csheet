@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "module": "es2015",
+        "moduleResolution": "node",
+        "target": "es3",
+        "strict": true,
+        "jsx": "preserve"
+    },
+    "exclude": [
+        "node_modules",
+        "**/node_modules/*",
+        "lib"
+    ]
+}

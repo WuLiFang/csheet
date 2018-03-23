@@ -190,7 +190,7 @@ video {
         visibility: hidden;
         transition: inherit;
         transform: translate(0, -100%);
-        .detail{
+        .detail {
             z-index: 3;
             display: block;
             position: fixed;
@@ -198,45 +198,45 @@ video {
             top: 0;
             margin: 5px;
             background: black;
-            table{
+            table {
                 border-spacing: 0.5em 0.2em;
-                td.status{
+                td.status {
                     color: white;
                     opacity: 0.5;
                     border-radius: 8px;
-                    &[status=Wait]{
+                    &[status=Wait] {
                         background: rgb(0, 85, 127);
-                        &::before{
+                        &::before {
                             content: "等待"
                         }
                     }
-                    &[status=Check]{
+                    &[status=Check] {
                         background: rgb(219, 219, 2);
-                        &::before{
+                        &::before {
                             content: "检查"
                         }
                     }
-                    &[status=Retake]{
+                    &[status=Retake] {
                         background: rgb(255, 0, 0);
-                        &::before{
+                        &::before {
                             content: "返修"
                         }
                     }
-                    &[status=Approve]{
+                    &[status=Approve] {
                         background: rgb(0, 206, 0);
-                        &::before{
+                        &::before {
                             content: "通过"
                         }
                     }
-                    &[status=Close]{
-                        &::before{
+                    &[status=Close] {
+                        &::before {
                             content: "<关闭>"
                         }
                     }
                 }
-                td.notes{
+                td.notes {
                     transition: 0.3s ease-out;
-                    &:hover{
+                    &:hover {
                         background: rgba(255, 255, 255, 0.2)
                     }
                 }
@@ -251,7 +251,7 @@ video {
             max-width: 90%;
             /* for animation */
             max-height: 70%;
-            &:hover{
+            &:hover {
                 z-index: 3
             }
         }

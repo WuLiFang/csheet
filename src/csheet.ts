@@ -1,23 +1,28 @@
 // TODO: button image loop
+import * as $ from 'jquery';
+import 'jquery-appear-poetic';
+import './csheet.scss';
+
 let count = 0;
 let isClient = false;
 let videoHeight = 200;
 let updateQueueName = 'autoRefresh';
-let isHovering;
+let isHovering: boolean;
 let workerCount = 0;
 let workerNumber = 20;
-let lastRefreshTime;
+let lastRefreshTime: number;
 $(document).ready(
-    function() {
-        let $videos = $('.lightbox video');
+    function () {
+        let test = $('video');
+        let $videos = <JQuery<HTMLVideoElement>>$('.lightbox video');
         let $smallVideos = $videos.filter('.small');
         let isAutoRefresh = false;
 
         $smallVideos.appear();
         $('html').dblclick(
-            function() {
+            function () {
                 $smallVideos.filter(':appeared').each(
-                    function() {
+                    function () {
                         if (!this.readyState) {
                             loadResource(this, '.small');
                         } else {
@@ -29,25 +34,25 @@ $(document).ready(
         );
         // Soure manage.
         $smallVideos.mouseenter(
-            function() {
+            function () {
                 if (!this.readyState) {
                     loadResource(this, '.small');
                 }
             }
         );
         $smallVideos.on('disappear',
-            function() {
+            function () {
                 unloadResource(this, '.small');
             }
         );
         $smallVideos.on('appear',
-            function() {
-                $(getLightbox(this)).find('video').each(
-                    function() {
+            function () {
+                (<JQuery<HTMLVideoElement>>$(getLightbox(this)).find('video')).each(
+                    function () {
                         let video = this;
                         if (!$(this).data('isScheduled')) {
                             putUpdateQueue(this, true,
-                                function() {
+                                function () {
                                     $(video).data('isScheduled', false);
                                 }
                             );
@@ -59,10 +64,10 @@ $(document).ready(
             }
         );
         $('.lightbox a.zoom').click(
-            function() {
+            function () {
                 loadResource(this, '.full');
                 $smallVideos.each(
-                    function() {
+                    function () {
                         this.pause();
                     }
                 );
@@ -70,42 +75,42 @@ $(document).ready(
         );
         if (isClient) {
             // Refresh button.
-            $('.viewer').append(
-                $('<button>', {
+            (<JQuery<HTMLDivElement>>$('.viewer')).append(
+                (<JQuery<HTMLButtonElement>>$('<button>', {
                     class: 'refresh',
-                    click: function() {
-                        loadResource(this, '.full', true);
+                    click: function (this: HTMLButtonElement) {
+                        loadResource(this, '.full');
                     },
-                })
+                }))
             );
             // Controls.
             $('#control').removeClass('hidden');
             let captions = $('.lightbox a.zoom .caption');
-            $('#caption-switch').change(
-                function() {
+            (<JQuery<HTMLInputElement>>$('#caption-switch')).change(
+                function () {
                     if (this.checked) {
-                        captions.css({transform: 'none'});
+                        captions.css({ transform: 'none' });
                     } else {
-                        captions.css({transform: ''});
+                        captions.css({ transform: '' });
                     }
                 }
             );
             // Auto refresh button.
-            let refreshInterval;
+            let refreshInterval: number;
             let buttons = $('.refresh-module')
                 .removeClass('hidden').find('button');
             let spans = buttons.find('span');
-            $('.images').mouseenter(function() {
+            $('.images').mouseenter(function () {
                 isHovering = true;
-            }).mouseleave(function() {
+            }).mouseleave(function () {
                 isHovering = false;
             });
-            let onInterval = function() {
+            let onInterval = function () {
                 let $appearedViedos = $smallVideos.filter(':appeared');
                 if ($(document).queue(updateQueueName).length == 0 &&
                     new Date().getTime() - lastRefreshTime > 5000) {
                     $appearedViedos.each(
-                        function() {
+                        function () {
                             if (this.paused) {
                                 putUpdateQueue(this);
                             }
@@ -118,7 +123,7 @@ $(document).ready(
                 });
             };
             buttons.click(
-                function() {
+                function () {
                     if (!isAutoRefresh) {
                         refreshInterval = setInterval(onInterval, 100);
                         isAutoRefresh = true;
@@ -134,10 +139,10 @@ $(document).ready(
         }
         // Disable next/prev button when not avalieble.
         $('.lightbox .viewer a').click(
-            function() {
+            function () {
                 let $this = $(this);
                 let $lightbox = $(getLightbox(this));
-                let href;
+                let href: string;
                 unloadResource(this, '.full');
                 switch ($this.attr('class')) {
                     case 'prev':
@@ -146,7 +151,7 @@ $(document).ready(
                             prev = prev.prev();
                         }
                         href = '#' + prev.attr('id');
-                        loadResource(prev, '.full');
+                        loadResource(prev[0], '.full');
                         break;
                     case 'next':
                         let next = $lightbox.next();
@@ -154,10 +159,10 @@ $(document).ready(
                             next = next.next();
                         }
                         href = '#' + next.attr('id');
-                        loadResource(next, '.full');
+                        loadResource(next[0], '.full');
                         break;
                     default:
-                        href = $this.attr('href');
+                        href = String($this.attr('href'));
                 }
                 $this.attr('href', href);
                 if (href == '#undefined') {
@@ -167,15 +172,15 @@ $(document).ready(
         );
         // Setup drag.
         $('.lightbox').each(
-            function() {
+            function () {
                 this.draggable = true;
             }
         ).on('dragstart',
-            function(ev) {
-                let event = ev.originalEvent;
+            function (ev) {
+                let event = <DragEvent>ev.originalEvent;
                 // let lightbox = getLightbox(this);
                 let lightbox = this;
-                let dragData = $(lightbox).data('drag');
+                let dragData = <string>$(lightbox).data('drag');
                 let plainData = dragData;
                 if (window.location.protocol == 'file:') {
                     plainData =
@@ -198,24 +203,24 @@ $(document).ready(
         );
         // Video play controls.
         $smallVideos.on('loadeddata',
-            function() {
+            function () {
                 this.play();
             }
         );
         $smallVideos.mouseenter(
-            function() {
+            function () {
                 if (this.readyState > 1) {
                     this.play();
                 }
             }
         );
         $smallVideos.mouseleave(
-            function() {
+            function () {
                 this.pause();
             }
         );
-        $('.lightbox video.full').on('loadedmetadata',
-            function() {
+        (<JQuery<HTMLVideoElement>>$('.lightbox video.full')).on('loadedmetadata',
+            function () {
                 this.controls = this.duration > 0.1;
             }
         );
@@ -223,7 +228,7 @@ $(document).ready(
         $('nav').append(
             $('<button>', {
                 text: '帮助',
-                click: function() {
+                click: function () {
                     $('.help').toggleClass('hidden');
                 },
             })
@@ -231,14 +236,14 @@ $(document).ready(
 
         // show pack progress
         $('button.pack').click(
-            function() {
-                let progressBar = $('progress.pack');
+            function () {
+                let progressBar = <JQuery<HTMLProgressElement>>$('progress.pack');
                 let isStarted = false;
                 progressBar.removeClass('hidden');
                 $(this).addClass('hidden');
                 if (typeof (EventSource) != 'undefined') {
                     let source = new EventSource('/pack_progress');
-                    source.onmessage = function(event) {
+                    source.onmessage = function (event) {
                         if (event.data > 0) {
                             isStarted = true;
                         }
@@ -250,25 +255,8 @@ $(document).ready(
                     };
                 } else {
                     let isStarted = false;
-                    /**
-                     * Update progress bar value without sse.
-                     * @argument {element} progressBar progressbar to update.
-                     */
-                    function updateProgressBar(progressBar) {
-                        $.get('/pack_progress', function(progress) {
-                            progressBar.val(progress);
-                            if (isStarted && progress < 0) {
-                                progressBar.addClass('hidden');
-                                return;
-                            } else if (progress > 0) {
-                                isStarted = true;
-                            }
-                            setTimeout(function() {
-                                updateProgressBar(progressBar);
-                            }, 100);
-                        });
-                    }
-                    updateProgressBar(progressBar);
+
+                    updateProgressBar(progressBar, isStarted);
                 };
             }
         );
@@ -276,7 +264,7 @@ $(document).ready(
         $('.noscript').remove();
         $('video').removeClass('hidden');
         $smallVideos.each(
-            function() {
+            function () {
                 if ($(this).is(':appeared')) {
                     putUpdateQueue(this);
                 }
@@ -289,10 +277,10 @@ $(document).ready(
 
 /**
  * get a light box from element parent.
- * @param {Element} element this element.
- * @return {Element} lightbox element.
+ * @param element this element.
+ * @return  lightbox element.
  */
-function getLightbox(element) {
+function getLightbox(element: HTMLElement) {
     let $element = $(element);
     if ($element.is('.lightbox')) {
         return element;
@@ -300,26 +288,44 @@ function getLightbox(element) {
     return $element.parents('.lightbox')[0];
 }
 
-
+/**
+ * Update progress bar value without sse.
+ * @argument progressBar progressbar to update.
+ * @argument isStarted Is progress started.
+ */
+function updateProgressBar(progressBar: JQuery<HTMLProgressElement>, isStarted: Boolean) {
+    $.get('/pack_progress', function (progress) {
+        progressBar.val(progress);
+        if (isStarted && progress < 0) {
+            progressBar.addClass('hidden');
+            return;
+        } else if (progress > 0) {
+            isStarted = true;
+        }
+        setTimeout(function () {
+            updateProgressBar(progressBar, isStarted);
+        }, 100);
+    });
+}
 /**
  * Reload related video.
- * @param {Element} element element in a lightbox.
- * @param {String} selector element selector.
+ * @param element element in a lightbox.
+ * @param selector element selector.
  */
-function loadResource(element, selector) {
+function loadResource(element: HTMLElement, selector: string) {
     selector = typeof (selector) === 'undefined' ? '*' : selector;
     let $lightbox = $(getLightbox(element));
     let $selected = $lightbox.find(selector);
-    $selected.filter('video').each(
-        function() {
+    (<JQuery<HTMLVideoElement>>$selected.filter('video')).each(
+        function () {
             updatePoster(this);
             let url = $(this).data('src');
             this.src = url;
             this.load();
         }
     );
-    $selected.find('img').each(
-        function() {
+    (<JQuery<HTMLImageElement>>$selected.find('img')).each(
+        function () {
             let img = this;
             let url = $(this).data('src');
             if (!img.src) {
@@ -327,7 +333,7 @@ function loadResource(element, selector) {
             }
             imageAvailable(
                 url,
-                function() {
+                function () {
                     img.src = url;
                 }
             );
@@ -340,14 +346,14 @@ function loadResource(element, selector) {
 
 /**
  * Load image information
- * @param {element} element in lightbox.
+ * @param element in lightbox.
  */
-function loadImageInfo(element) {
+function loadImageInfo(element: HTMLElement) {
     let $lightbox = $(getLightbox(element));
     $.get('images/' + $lightbox.data('uuid') + '.info',
-        function(data) {
+        function (data) {
             $lightbox.find('.detail').each(
-                function() {
+                function () {
                     this.innerHTML = data;
                 }
             );
@@ -357,21 +363,22 @@ function loadImageInfo(element) {
 
 /**
  * Unload related video to display poster.
- * @param {Element} element element in a lightbox.
- * @param {String} selector element selector.
+ * @param element element in a lightbox.
+ * @param selector element selector.
  */
-function unloadResource(element, selector) {
+function unloadResource(element: HTMLElement, selector: string) {
     selector = typeof (selector) === 'undefined' ? '*' : selector;
-    let $selected = $(getLightbox(element)).find('video').filter(selector);
+    let $selected = <JQuery<HTMLVideoElement>>
+        $(getLightbox(element)).find('video').filter(selector);
     $selected.each(
-        function() {
+        function () {
             this.controls = false;
             this.removeAttribute('src');
             this.load();
         }
     );
     $selected.find('img').each(
-        function() {
+        function () {
             this.removeAttribute('src');
         }
     );
@@ -379,12 +386,16 @@ function unloadResource(element, selector) {
 
 /**
  * Update video poster.
- * @param {Element} video video element.
+ * @param {HTMLVideoElement} video video element.
  * @param {Boolean} isReplace force poster to display.
  * @param {Function} onload Callback.
  * @param {Function} onerror Callback.
  */
-function updatePoster(video, isReplace, onload, onerror) {
+function updatePoster(
+    video: HTMLVideoElement,
+    isReplace = false,
+    onload = (img: HTMLImageElement) => { },
+    onerror = () => { }) {
     if (!isClient) {
         loadPoster(video, isReplace, onload, onerror);
         return;
@@ -396,15 +407,15 @@ function updatePoster(video, isReplace, onload, onerror) {
     $(lightbox).removeClass(failedClass).addClass(updatingClass);
     updateData(
         lightbox,
-        function() {
+        function () {
             loadPoster(video, isReplace,
-                function(img) {
+                function (img: HTMLImageElement) {
                     $(lightbox).removeClass(updatingClass);
                     if (onload) {
                         onload(img);
                     }
                 },
-                function() {
+                function () {
                     $(lightbox).addClass(failedClass);
                     if (onerror) {
                         onerror();
@@ -416,12 +427,16 @@ function updatePoster(video, isReplace, onload, onerror) {
 }
 /**
  * load video poster.
- * @param {Element} video video element.
- * @param {Boolean} isReplace force poster to display.
- * @param {Function} onload Callback.
- * @param {Function} onerror Callback.
+ * @param video video element.
+ * @param isReplace force poster to display.
+ * @param onload Callback.
+ * @param onerror Callback.
  */
-function loadPoster(video, isReplace, onload, onerror) {
+function loadPoster(
+    video: HTMLVideoElement,
+    isReplace: boolean,
+    onload = (img: HTMLImageElement) => { },
+    onerror = () => { }) {
     let url = $(video).data('poster');
     let lightbox = getLightbox(video);
     let isSmall = $(video).is('.small');
@@ -439,7 +454,7 @@ function loadPoster(video, isReplace, onload, onerror) {
         // Update run
         imageAvailable(
             url,
-            function(img) {
+            function (img) {
                 if (isSmall) {
                     $(lightbox).data('ratio', img.width / img.height);
                 }
@@ -453,8 +468,8 @@ function loadPoster(video, isReplace, onload, onerror) {
                     onload(img);
                 }
             },
-            function() {
-                if (video.attributes.poster == url) {
+            function () {
+                if (video.attributes.getNamedItem('poster') == url) {
                     video.removeAttribute('poster');
                 }
                 if (isSmall && !video.poster) {
@@ -471,9 +486,9 @@ function loadPoster(video, isReplace, onload, onerror) {
 
 /**
  * Shrink lightbox  element then set count.
- * @param {Element} element lightbox to hide.
+ * @param element lightbox to hide.
  */
-function shrinkLightbox(element) {
+function shrinkLightbox(element: HTMLElement) {
     let $lightbox = $(getLightbox(element));
     if ($lightbox.is('.shrink')) {
         return;
@@ -486,11 +501,11 @@ function shrinkLightbox(element) {
 
 /**
  * Expand element related lightbox.
- * @param {Element} element The root element.
+ * @param element The root element.
  */
-function expandLightbox(element) {
+function expandLightbox(element: HTMLElement) {
     let $lightbox = $(getLightbox(element));
-    $video = $lightbox.find('video.small');
+    let $video = $lightbox.find('video.small');
     $lightbox.height(videoHeight);
     $lightbox.width($lightbox.data('ratio') * videoHeight);
     if ($lightbox.is('.shrink')) {
@@ -507,20 +522,22 @@ function updateCount() {
     let header = document.getElementsByTagName('header')[0];
     let lightboxes = document.getElementsByClassName('lightbox');
     let total = lightboxes.length;
-    header.children[0].innerText = (
+    header.children[0].innerHTML = (
         (total - count).toString() + '/' + total.toString()
     );
 }
 
 /**
  * Load image in background.
- * @param {String} url image url.
- * @param {Function} onload callback.
- * @param {Function} onerror callback.
+ * @param url image url.
+ * @param onload callback.
+ * @param onerror callback.
  */
-function imageAvailable(url, onload, onerror) {
+function imageAvailable(url: string,
+    onload = (img: HTMLImageElement) => { },
+    onerror = () => { }) {
     let temp = new Image;
-    temp.onload = function() {
+    temp.onload = function () {
         onload(temp);
     };
     temp.onerror = onerror;
@@ -529,27 +546,28 @@ function imageAvailable(url, onload, onerror) {
 
 /**
  * Use queue to update video poster.
- * @param {element} video Video element to update.
+ * @param {HTMLVideoElement} video Video element to update.
  * @param {Boolean} isSkipLoaded Will skip update loaded poster if ture.
  * @param {Function} onskip Callback.
  */
-function putUpdateQueue(video, isSkipLoaded, onskip) {
+function putUpdateQueue(video: HTMLVideoElement, isSkipLoaded = false, onskip = () => { }) {
     $(document).queue(updateQueueName,
-        function() {
+        function () {
             if (!(isSkipLoaded && video.poster) &&
-                !location.hash.startsWith('#image') &&
+                !location.hash.match('^#image') &&
                 $(video).is(':appeared')) {
-                let onFinish = function() {
+                let onFinish = function () {
                     lastRefreshTime = new Date().getTime();
                     workerCount -= 1;
                     startUpdateWorker();
                 };
                 updatePoster(video, !isHovering, onFinish, onFinish);
-                $(getLightbox(video)).find('video.full').each(
-                    function() {
-                        updatePoster(this, false);
-                    }
-                );
+                (<JQuery<HTMLVideoElement>>
+                    ($(getLightbox(video)).find('video.full'))).each(
+                        function () {
+                            updatePoster(this, false);
+                        }
+                    );
             } else {
                 workerCount -= 1;
                 startUpdateWorker();
@@ -572,25 +590,29 @@ function startUpdateWorker() {
 
 /**
  * Get notes data then display.
- * @param {element} element Note element with pipline data.
+ * @param element Note element with pipline data.
  */
-function getNote(element) {
+function getNote(element: HTMLTableDataCellElement) {
     let pipeline = $(element).data('pipeline');
     let lightbox = getLightbox(element);
     let $lightbox = $(lightbox);
     let uuid = $lightbox.data('uuid');
 
     $.get('/images/' + uuid + '.notes/' + pipeline,
-        function(data) {
+        function (data) {
             $lightbox.find('.note-container').each(
-                function() {
+                function () {
                     let $data = $(data);
                     let content = $data.find('.note-html p').html();
                     let serverIP = $data.find('.note-html').data('serverIp');
                     $data.find('.note-html').replaceWith(content);
-                    $data.find('img').each(
-                        function() {
-                            this.src = $(this).attr('src').replace('/upload', 'http://' + serverIP + '/upload');
+                    (<JQuery<HTMLImageElement>>$data.find('img')).each(
+                        function () {
+                            let src = $(this).attr('src');
+                            if (!src) {
+                                return
+                            }
+                            this.src = src.replace('/upload', 'http://' + serverIP + '/upload');
                         }
                     );
                     this.innerHTML = $data.html();
@@ -599,33 +621,32 @@ function getNote(element) {
         }
     );
 }
+
 /**
  * Update url data.
- * @param {element} lightbox Lightbox to update data.
- * @param {Function} onload Callback.
+ * @param lightbox Lightbox to update data.
+ * @param onload Callback.
  */
-function updateData(lightbox, onload) {
+function updateData(lightbox: HTMLElement, onload = () => { }) {
     let uuid = $(lightbox).data('uuid');
     $.get(
         '/api/image/url',
-        {uuid: uuid},
-        function(data) {
+        { uuid: uuid },
+        function (data) {
             $(lightbox).find('video').each(
-                function() {
+                function () {
                     let isSmall = $(this).is('.small');
                     $(this).data('poster', isSmall ? data.thumb : data.full);
                     $(this).data('src', data.preview);
                 }
             );
             $(lightbox).find('img').each(
-                function() {
+                function () {
                     let isSmall = $(this).is('.small');
                     $(this).data('src', isSmall ? data.thumb : data.full);
                 }
             );
-            if (onload) {
-                onload();
-            }
+            onload();
         }
     );
 }
