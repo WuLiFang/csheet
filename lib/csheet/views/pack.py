@@ -60,6 +60,8 @@ def pack_event():
 def packed_page(**config):
     """Return zip packed offline version.  """
 
+    if float(pack_progress()) != -1:
+        abort(429)
     try:
         LOGGER.info('Start pack.')
         f = archive(**config)
@@ -86,9 +88,6 @@ def packed_page(**config):
 
 def archive(**config):
     """Return zip packed offline version.  """
-
-    if float(pack_progress()) != -1:
-        abort(429)
 
     config = updated_config(config)
     pack_progress(0)
