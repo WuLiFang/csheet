@@ -15,7 +15,7 @@ def updated_config(config=None):
 
     default = {'static': ('csheet.css',
                           'csheet.bundle.js'),
-               'static_folder': 'static'}
+               'static_folder': 'static/dist'}
 
     if config:
         default.update(config)

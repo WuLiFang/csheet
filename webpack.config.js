@@ -1,5 +1,6 @@
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const webpack = require('webpack');
 let csheeetJS = {
   entry: {
     csheet: path.join(__dirname, 'src', 'csheet.ts'),
@@ -26,7 +27,10 @@ let csheeetJS = {
     ],
   },
   resolve: {
-    extensions: ['.json', '.js', '.jsx', '.css'],
+    extensions: ['.json', '.js', '.jsx', '.css', '.ts', '.sass'],
+    alias: {
+      'jquery': require.resolve('jquery')
+    }
   },
   devtool: 'source-map',
   devServer: {

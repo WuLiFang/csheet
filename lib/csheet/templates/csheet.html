@@ -19,14 +19,11 @@
     // window.open("http://outdatedbrowser.com/zh-cn", "_self");
     </script>
     <![endif]-->
-    <script>
-        isClient = "{{ config['is_client'] }}" === "True";
-    </script>
 </head>
 
 <body>
     <header>
-        <div class="count">
+        <div id="count">
             {{ images.__len__() }}
         </div>
         <div id="_remove_me">
@@ -71,11 +68,12 @@
     </header>
     <ul class="images">
         {% for image in images %}
-        <li class="lightbox" id="image{{ loop.index }}" data-drag="{{ image.get_drag(**config) }}" data-uuid="{{ image.uuid }}">
+        <li class="lightbox shrink" id="image{{ loop.index }}" data-drag="{{ image.get_drag(**config) }}" data-thumb="{{ image.get('thumb', **config) }}"
+            data-full="{{ image.get('full', **config) }}" data-preview="{{ image.get('preview', **config) }}" data-uuid="{{ image.uuid }}"
+            style="width:355.56px">
             <a href="#image{{ loop.index }}" class="zoom" draggable="false">
-                <video class='small hidden' data-poster="{{ image.get('thumb', **config) }}" data-src="{{ image.get('preview', **config) }}"
-                    muted loop>
-                    <img class='small' alt="no image" data-src="{{ image.get('thumb', **config) }}" />
+                <video class='small hidden' muted loop>
+                    <img alt="no image" />
                 </video>
                 <div class="noscript">
                     <noscript>
@@ -91,9 +89,9 @@
             <div class="viewer">
                 <div class="detail"> </div>
                 <a class="close" href="#void"> </a>
-                <video class='full hidden' data-poster="{{ image.get('full', **config) }}" data-src="{{ image.get('preview', **config) }}">
+                <video class='full hidden'>
                     <a href="{{ image.get('full', **config) }}" target="_blank">
-                        <img alt="no image" data-src="{{ image.get('full', **config) }}" />
+                        <img alt="no image" />
                     </a>
                 </video>
                 <div class="noscript">

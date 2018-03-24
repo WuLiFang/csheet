@@ -1,6 +1,6 @@
 {
   "name": "csheet",
-  "version": "0.1.0",
+  "version": "2.1.0",
   "description": "",
   "private": true,
   "scripts": {
@@ -10,10 +10,10 @@
   "keywords": [],
   "author": "NateScalet@Gmail.com",
   "dependencies": {
-    "jquery": "^3.3.1",
-    "jquery-appear-poetic": "^0.3.9"
+    "jquery": "^3.3.1"
   },
   "devDependencies": {
+    "@types/jquery": "^3.3.1",
     "css-loader": "^0.28.11",
     "mini-css-extract-plugin": "^0.2.0",
     "sass": "^1.0.0-rc.1",

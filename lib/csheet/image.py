@@ -188,8 +188,8 @@ class HTMLImage(Image):
             url = '/images/{}.{}'.format(self.uuid, role)
             try:
                 url += '?timestamp={}'.format(self.get_timestamp(role))
-            except KeyError:
-                pass
+            except (KeyError, OSError):
+                return ''
             return url
 
         if config.get('is_pack'):
@@ -214,7 +214,7 @@ class HTMLImage(Image):
             fload: Timestamp of mtime.
         """
 
-        file_ = self.generated[role]
+        file_ = self.source[role]
         ret = getmtime(text_type(file_))
         return ret
 

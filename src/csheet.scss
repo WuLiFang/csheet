@@ -82,7 +82,7 @@ a.button {
 header {
     z-index: 1;
     transition: 0.5s ease-in-out;
-    .count {
+    #count {
         &:before {
             content: "总计: ";
         }
