@@ -1,7 +1,6 @@
 import * as $ from 'jquery';
 import './csheet.scss';
 import { LightboxManager } from './lightbox';
-import { imageAvailable } from './image';
 
 $(document).ready(
     function () {
