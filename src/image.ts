@@ -111,7 +111,9 @@ export class CSheetImage {
     }
     unloadPreview() {
         this.lightbox.smallVideo.removeAttribute('src')
+        this.lightbox.smallVideo.load()
         this.lightbox.fullVideo.removeAttribute('src')
+        this.lightbox.fullVideo.load()
     }
     loadInfo() {
         $.get(
