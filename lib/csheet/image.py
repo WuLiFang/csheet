@@ -121,7 +121,7 @@ class HTMLImage(Image):
         if is_mimetype(self.path, 'image'):
             self.source['full'] = self.source['thumb'] = self.path
         elif is_mimetype(self.path, 'video'):
-            self.source['preview'] = self.path
+            self.source['full'] = self.source['thumb'] = self.source['preview'] = self.path
 
         HTMLImage._cache[self.uuid] = self
 
@@ -189,6 +189,7 @@ class HTMLImage(Image):
             try:
                 url += '?timestamp={}'.format(self.get_timestamp(role))
             except (KeyError, OSError):
+                LOGGER.warning('Get url fail.', exc_info=True)
                 return ''
             return url
 
