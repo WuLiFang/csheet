@@ -29,7 +29,7 @@ export class Lightbox {
         let lightbox = this;
 
         // Play control.
-        this.smallVideo.addEventListener('loadeddata', function () { this.play() })
+        this.smallVideo.addEventListener('loadeddata', function () { if (!$(location.hash).is('.lightbox')) { this.play() } })
         this.smallVideo.addEventListener('mouseenter',
             function () {
                 if (this.readyState > 1) {
@@ -161,19 +161,19 @@ export class LightboxManager {
     onhashchange(ev: HashChangeEvent) {
         if (ev.oldURL) {
             let $old = $(new URL(ev.oldURL).hash)
-            if ($old.is('.lighbox')) {
+            if ($old.is('.lightbox')) {
                 let lightbox = this.dict[$old.data('uuid')]
                 lightbox.image.unloadPreview()
             }
         }
         if (ev.newURL) {
             let $new = $(new URL(ev.newURL).hash)
-            if ($new.is('.lighbox')) {
+            if ($new.is('.lightbox')) {
                 let lightbox = this.dict[$new.data('uuid')]
+                this.array.map((lightbox) => { lightbox.smallVideo.pause() })
                 lightbox.image.loadFull()
-                lightbox.image.loadPreview()
+                lightbox.image.loadFullPreview()
                 lightbox.image.loadInfo()
-                lightbox.smallVideo.pause();
             }
         }
     }
