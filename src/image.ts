@@ -7,11 +7,15 @@ enum classes {
     updatingThumb = 'updating-thumb',
     updatingFull = 'updating-full',
 }
+let currentAjax = 0;
+let ajaxLimit = 5;
 export class CSheetImage {
     public ratio = 1;
     private isUpdating = false;
+    private isScheduled = false;
     private isloadingThumb = false;
     private isloadingFull = false;
+    private retryAfter = 1000;
 
     constructor(
         readonly uuid: string,
@@ -21,31 +25,35 @@ export class CSheetImage {
         public readonly lightbox: Lightbox,
     ) {
     }
-    update() {
+    update(isScheduledTask = false) {
         if (this.isUpdating) {
             return
         }
-        this.lightbox.$.addClass(classes.updatingFull)
-        this.lightbox.$.addClass(classes.updatingThumb)
-        $.get(
-            '/api/image/timestamp',
-            { uuid: this.uuid },
-            (data: ImageData) => {
+        if (currentAjax >= ajaxLimit) {
+            if (this.isScheduled && !isScheduledTask) {
+                return
+            }
+            if (isScheduledTask) {
+                // Increase wait time for next retry.
+                this.retryAfter *= 1.2;
+            }
+            this.isScheduled = true;
+            setTimeout(() => { this.update(true) }, this.retryAfter)
+        }
+        currentAjax += 1;
+
+        $.get({
+            url: '/api/image/timestamp',
+            data: { uuid: this.uuid },
+            success: (data: ImageData) => {
                 if (!data.thumb) {
                     this.onthumberror()
-                } else if (data.thumb == this.thumb) {
-                    this.lightbox.$.removeClass(classes.updatingThumb)
-                    this.lightbox.$.removeClass(classes.failedThumb)
                 } else {
                     this.thumb = `/images/${this.uuid}.thumb?timestamp=${data.thumb}`;
                     this.loadThumb();
-
                 }
                 if (!data.full) {
                     this.lightbox.$.addClass(classes.failedFull)
-                } else if (data.full == this.full) {
-                    this.lightbox.$.removeClass(classes.updatingFull)
-                    this.lightbox.$.removeClass(classes.failedFull)
                 } else {
                     this.full = `/images/${this.uuid}.full?timestamp=${data.full}`;
                     this.loadFull();
@@ -53,22 +61,32 @@ export class CSheetImage {
                 if (data.preview) {
                     this.preview = `/images/${this.uuid}.preview?timestamp=${data.preview}`;
                 }
-                this.isUpdating = false
+                // Reset wait time.
+                this.retryAfter = 1000;
+            },
+            complete: () => {
+                currentAjax -= 1;
+                this.isUpdating = false;
+                this.isScheduled = false;
             }
+        }
         );
     }
     loadThumb() {
-        if (this.isloadingThumb || !this.thumb) {
+        if (this.isloadingThumb || !this.thumb
+            || this.lightbox.smallVideo.getAttribute('poster') == this.thumb) {
             return
         }
         this.isloadingThumb = true
         this.lightbox.$.removeClass(classes.failedThumb)
+        this.lightbox.$.addClass(classes.updatingThumb)
         imageAvailable(
             this.thumb,
             (img) => {
+                let src = <string>img.getAttribute('src')
                 this.ratio = img.width / img.height;
-                this.lightbox.smallImage.src = img.src
-                this.lightbox.smallVideo.poster = img.src
+                this.lightbox.smallImage.src = src;
+                this.lightbox.smallVideo.poster = src;
                 this.lightbox.$.removeClass(classes.updatingThumb)
                 this.lightbox.expand()
                 this.isloadingThumb = false
@@ -83,17 +101,20 @@ export class CSheetImage {
     }
 
     loadFull() {
-        if (this.isloadingFull || !this.full) {
+        if (this.isloadingFull || !this.full
+            || this.lightbox.fullVideo.getAttribute('poster') == this.full) {
             return
         }
         this.isloadingFull = true
 
         this.lightbox.$.removeClass(classes.failedFull)
+        this.lightbox.$.addClass(classes.updatingFull)
         imageAvailable(
             this.full,
             (img) => {
-                this.lightbox.fullImage.src = img.src
-                this.lightbox.fullVideo.poster = img.src
+                let src = <string>img.getAttribute('src')
+                this.lightbox.fullImage.src = src
+                this.lightbox.fullVideo.poster = src
                 this.lightbox.$.removeClass(classes.updatingFull)
                 this.isloadingFull = false
             },

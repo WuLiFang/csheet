@@ -11,7 +11,7 @@ CACHE = diskcache.FanoutCache(os.path.join(
     tempfile.gettempdir(), 'csheet', __name__))
 
 
-@CACHE.memoize('mtime', expire=10)
+@CACHE.memoize('mtime', expire=1)
 def getmtime(filename):
     """Cached `os.path.getmtime`.   """
 

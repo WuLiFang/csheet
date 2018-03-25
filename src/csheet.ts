@@ -53,7 +53,7 @@ $(document).ready(
         );
         // Setup.
         const Manager = new LightboxManager()
-        setInterval(() => { Manager.updateAppeared() }, 1000)
+        setInterval(() => { Manager.updateAppeared() }, 5000)
         $('.noscript').remove();
         $('#control').removeClass('hidden');
         $('video').removeClass('hidden');
