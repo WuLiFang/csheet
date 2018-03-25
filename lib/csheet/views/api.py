@@ -51,6 +51,20 @@ def _image_url(uuid):
     return {i: image.get(i, is_client=True) for i in image.generate_methods}
 
 
+@APP.route('/api/image/timestamp')
+def image_timestamp():
+    """get realtime source timestamp for all role.   """
+
+    uuid = request.args['uuid']
+    return jsonify(_image_timestamp(uuid))
+
+
+@CACHE.memoize('view', expire=10)
+def _image_timestamp(uuid):
+    image = get_image(uuid)
+    return {i: image.get_timestamp(i) for i in image.generate_methods if i in image.source}
+
+
 @APP.route('/api/project_code/<project>')
 @APP.route('/project_code/<project>')  # TODO: remove usage in js
 def project_code(project):

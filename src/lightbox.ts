@@ -95,8 +95,8 @@ export class Lightbox {
         this.image.unloadPreview()
     }
     onappear() {
-        this.image.loadThumb()
         this.image.loadFull()
+        this.image.update()
     }
 }
 
@@ -110,6 +110,7 @@ export class LightboxManager {
         $('.lightbox').toArray().map((element: HTMLElement) => {
             let lightbox = new Lightbox(element);
             this.array.push(lightbox);
+            lightbox.image.loadThumb();
             lightbox.modeChangedCallbacks.push(() => { this.updateCount() })
             this.dict[lightbox.image.uuid] = lightbox
         })

@@ -185,12 +185,15 @@ class HTMLImage(Image):
         """
 
         if config.get('is_client'):
-            url = '/images/{}.{}'.format(self.uuid, role)
+            url = ''
             try:
-                url += '?timestamp={}'.format(self.get_timestamp(role))
-            except (KeyError, OSError):
+                timestamp = self.get_timestamp(role)
+                url = '/images/{}.{}?timestamp={}'.format(
+                    self.uuid, role, timestamp)
+            except KeyError:
+                pass
+            except OSError:
                 LOGGER.warning('Get url fail.', exc_info=True)
-                return ''
             return url
 
         if config.get('is_pack'):

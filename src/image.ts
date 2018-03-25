@@ -28,7 +28,7 @@ export class CSheetImage {
         this.lightbox.$.addClass(classes.updatingFull)
         this.lightbox.$.addClass(classes.updatingThumb)
         $.get(
-            '/api/image/url',
+            '/api/image/timestamp',
             { uuid: this.uuid },
             (data: ImageData) => {
                 if (!data.thumb) {
@@ -37,7 +37,7 @@ export class CSheetImage {
                     this.lightbox.$.removeClass(classes.updatingThumb)
                     this.lightbox.$.removeClass(classes.failedThumb)
                 } else {
-                    this.thumb = data.thumb;
+                    this.thumb = `/images/${this.uuid}.thumb?timestamp=${data.thumb}`;
                     this.loadThumb();
 
                 }
@@ -47,10 +47,12 @@ export class CSheetImage {
                     this.lightbox.$.removeClass(classes.updatingFull)
                     this.lightbox.$.removeClass(classes.failedFull)
                 } else {
-                    this.full = data.full;
+                    this.full = `/images/${this.uuid}.full?timestamp=${data.full}`;
                     this.loadFull();
                 }
-                this.preview = data.preview;
+                if (data.preview) {
+                    this.preview = `/images/${this.uuid}.preview?timestamp=${data.preview}`;
+                }
                 this.isUpdating = false
             }
         );
@@ -103,14 +105,15 @@ export class CSheetImage {
         )
     }
     loadPreview() {
-        if (!this.preview) {
-            return
-        }
         this.loadSmallPreview()
         this.loadFullPreview()
     }
-    loadSmallPreview() { this.lightbox.smallVideo.src = this.preview }
-    loadFullPreview() { this.lightbox.fullVideo.src = this.preview }
+    loadSmallPreview() {
+        if (this.preview) { this.lightbox.smallVideo.src = this.preview }
+    }
+    loadFullPreview() {
+        if (this.preview) { this.lightbox.fullVideo.src = this.preview }
+    }
     unloadPreview() {
         this.lightbox.smallVideo.removeAttribute('src')
         this.lightbox.smallVideo.load()
@@ -164,9 +167,9 @@ export class CSheetImage {
 }
 
 interface ImageData {
-    thumb: string
-    full: string
-    preview: string
+    thumb?: string
+    full?: string
+    preview?: string
 }
 
 /**

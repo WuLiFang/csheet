@@ -86,10 +86,6 @@ def response_image(uuid, role):
             return make_response('Generated file has been moved', 503, {'Retry-After': 10})
 
         resp = send_file(text_type(generated), conditional=True)
-        resp.cache_control.max_age = 0
-        resp.cache_control.no_cache = True
-        if request.args:
-            resp.cache_control.no_store = True
         return resp
     except Empty:
         LOGGER.debug('Image not ready: %s', image)
