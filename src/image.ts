@@ -77,6 +77,10 @@ export class CSheetImage {
         );
     }
     loadThumb() {
+        if (!this.thumb && !this.preview) {
+            this.lightbox.shrink()
+            return
+        }
         if (this.isloadingThumb || !this.thumb
             || this.lightbox.smallVideo.getAttribute('poster') == this.thumb) {
             return
@@ -105,8 +109,11 @@ export class CSheetImage {
             }
         )
     }
-
     loadFull() {
+        if (!this.thumb && !this.preview) {
+            this.lightbox.shrink()
+            return
+        }
         if (this.isloadingFull || !this.full
             || this.lightbox.fullVideo.getAttribute('poster') == this.full) {
             return
