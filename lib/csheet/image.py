@@ -278,15 +278,13 @@ class HTMLImage(Image):
             LOGGER.debug('Generation source: %s', source)
 
             # Skip some generation to speed up.
-            if (  # Ensure same memetype.
-                    same_mimetype(source.suffix.lower(),
-                                  self.file_suffix[role].lower())
+            if (not output
+                    # Ensure same memetype.
+                    and same_mimetype(source.suffix.lower(),
+                                      self.file_suffix[role].lower())
                     # Check size.
                     and source.stat().st_size < self.max_skipgen_size):
                 ret = source
-                if output:
-                    ret = copy(source, PurePath(
-                        output).with_suffix(self.file_suffix[role]))
                 self.generated[role] = ret
                 return ret
 
