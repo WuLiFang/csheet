@@ -1,5 +1,5 @@
 <!DOCTYPE html> {% set config = {'database': database, 'pipeline': pipeline, 'prefix': prefix, 'is_pack': is_pack, 'is_client' : is_client,
-'is_local': is_local, 'relative_to' : relative_to} %} {% set rev=6 %}
+'is_local': is_local, 'relative_to' : relative_to} %}
 <html lang="zh-CN">
 
 <head>
@@ -8,11 +8,8 @@
         {{ config['title'] }}
     </title>
     {% for i in static %} {% if i.endswith('.css') %}
-    <link href="{{ static_folder }}/{{ i }}?rev={{ rev }}" rel="stylesheet" type="text/css" /> {% elif i in ('html5shiv.min.js', ) %}
-    <!--[if lt IE 9]>
-	<script src="{{ static_folder }}/{{ i }}?rev={{ rev }}"></script>
-    <![endif]-->{% elif i.endswith('.js') %}
-    <script src="{{ static_folder }}/{{ i }}?rev={{ rev }}"></script> {% endif %} {% endfor %}
+    <link href="{{ static_folder }}/{{ i }}?version={{ __version__ }}" rel="stylesheet" type="text/css" />{% elif i.endswith('.js') %}
+    <script src="{{ static_folder }}/{{ i }}?version={{ __version__ }}"></script> {% endif %} {% endfor %}
     <!--[if IE]>
     <script type="text/javascript">
     alert('请使用现代浏览器浏览本页面');

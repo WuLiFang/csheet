@@ -8,6 +8,7 @@ from jinja2 import Environment, PackageLoader
 from wlf.path import Path
 
 from .image import HTMLImage, get_images_from_dir
+from .__about__ import __version__
 
 
 def updated_config(config=None):
@@ -15,7 +16,8 @@ def updated_config(config=None):
 
     default = {'static': ('dist/csheet.css',
                           'dist/csheet.bundle.js'),
-               'static_folder': 'static'}
+               'static_folder': 'static',
+               '__version__': __version__}
 
     if config:
         default.update(config)
