@@ -93,8 +93,7 @@ def archive(**config):
     pack_progress(0)
 
     f = TemporaryFile(suffix='.zip',
-                      prefix=config.get('title', 'packing_csheet_'),
-                      dir=APP.config.get('storage'))
+                      prefix=config.get('title', 'packing_csheet_'))
     APP.logger.info('Start archive page.')
     config['is_pack'] = True
 
