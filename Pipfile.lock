@@ -9,10 +9,10 @@
             "os_name": "nt",
             "platform_machine": "AMD64",
             "platform_python_implementation": "CPython",
-            "platform_release": "10",
+            "platform_release": "7",
             "platform_system": "Windows",
-            "platform_version": "10.0.16299",
-            "python_full_version": "2.7.14",
+            "platform_version": "6.1.7601",
+            "python_full_version": "2.7.13",
             "python_version": "2.7",
             "sys_platform": "win32"
         },
@@ -37,7 +37,7 @@
         },
         "pendulum": {
             "hashes": [],
-            "version": "==1.4.4"
+            "version": "==1.4.2"
         },
         "python-dateutil": {
             "hashes": [],
@@ -63,7 +63,7 @@
     "develop": {
         "astroid": {
             "hashes": [],
-            "version": "==1.6.2"
+            "version": "==1.6.1"
         },
         "attrs": {
             "hashes": [],
@@ -75,7 +75,7 @@
         },
         "backports.functools-lru-cache": {
             "hashes": [],
-            "markers": "python_version < '3.4'",
+            "markers": "python_version == '2.7'",
             "version": "==1.5"
         },
         "colorama": {
@@ -114,17 +114,13 @@
             "hashes": [],
             "version": "==0.6.1"
         },
-        "more-itertools": {
-            "hashes": [],
-            "version": "==4.1.0"
-        },
         "pluggy": {
             "hashes": [],
             "version": "==0.6.0"
         },
         "py": {
             "hashes": [],
-            "version": "==1.5.3"
+            "version": "==1.5.2"
         },
         "pycodestyle": {
             "hashes": [],
@@ -132,11 +128,11 @@
         },
         "pylint": {
             "hashes": [],
-            "version": "==1.8.3"
+            "version": "==1.8.2"
         },
         "pytest": {
             "hashes": [],
-            "version": "==3.5.0"
+            "version": "==3.4.2"
         },
         "rope": {
             "hashes": [],
