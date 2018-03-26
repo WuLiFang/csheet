@@ -62,7 +62,13 @@ def image_timestamp():
 @CACHE.memoize('view', expire=10)
 def _image_timestamp(uuid):
     image = get_image(uuid)
-    return {i: image.get_timestamp(i) for i in image.generate_methods if i in image.source}
+    ret = {}
+    for i in image.source:
+        try:
+            ret[i] = image.get_timestamp(i)
+        except OSError:
+            continue
+    return ret
 
 
 @APP.route('/api/project_code/<project>')

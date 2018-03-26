@@ -11,7 +11,6 @@ export class Lightbox {
     readonly smallImage: HTMLImageElement;
     readonly fullImage: HTMLImageElement;
     public readonly viewer: Viewer;
-    public lastUpdateTime = 0;
     public appeared = false;
     public isExpanded = false;
     public modeChangedCallbacks: ((lightbox: Lightbox) => void)[] = [];
@@ -47,13 +46,13 @@ export class Lightbox {
             this);
     }
     shrink() {
-        if (this.$.is('.' + shrinkClass)) {
-            return;
-        }
-        this.$.addClass(shrinkClass);
+        let modeChanged = !this.$.is('.' + shrinkClass)
         this.$.width('10px');
-        this.isExpanded = false;
-        this.modeChangedCallbacks.forEach((cb) => { cb(this) })
+        if (modeChanged) {
+            this.$.addClass(shrinkClass);
+            this.isExpanded = false;
+            this.modeChangedCallbacks.forEach((cb) => { cb(this) })
+        }
     }
     expand() {
         this.$.height(this.videoHeight);
@@ -143,15 +142,11 @@ export class LightboxManager {
     }
     updateAppeared() {
         this.getAppeared().forEach((lightbox) => {
-            if (new Date().getTime() - lightbox.lastUpdateTime < 2000) {
-                return
-            }
 
             if (!lightbox.smallVideo.poster) {
                 lightbox.image.loadThumb()
             }
             lightbox.image.update()
-            lightbox.lastUpdateTime = new Date().getTime();
         })
     }
     updateCount() {

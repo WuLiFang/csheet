@@ -11,11 +11,13 @@ let currentAjax = 0;
 let ajaxLimit = 5;
 export class CSheetImage {
     public ratio = 1;
+    public minUpdateInterval = 2000;
     private isUpdating = false;
     private isScheduled = false;
     private isloadingThumb = false;
     private isloadingFull = false;
     private retryAfter = 1000;
+    private lastUpdateTime = 0;
 
     constructor(
         readonly uuid: string,
@@ -26,7 +28,8 @@ export class CSheetImage {
     ) {
     }
     update(isScheduledTask = false) {
-        if (this.isUpdating) {
+        if (this.isUpdating || this.isScheduled
+            || new Date().getTime() - this.lastUpdateTime < this.minUpdateInterval) {
             return
         }
         if (currentAjax >= ajaxLimit) {
@@ -68,6 +71,7 @@ export class CSheetImage {
                 currentAjax -= 1;
                 this.isUpdating = false;
                 this.isScheduled = false;
+                this.lastUpdateTime = new Date().getTime();
             }
         }
         );
@@ -91,9 +95,11 @@ export class CSheetImage {
                 this.lightbox.expand()
                 this.isloadingThumb = false
             },
-            () => {
-
-                this.lightbox.$.addClass(classes.failedThumb)
+            (img) => {
+                let src = <string>img.getAttribute('src')
+                if (src == this.lightbox.smallVideo.getAttribute('poster')) {
+                    this.lightbox.shrink()
+                }
                 this.onthumberror()
                 this.isloadingThumb = false
             }
@@ -157,9 +163,8 @@ export class CSheetImage {
     onthumberror() {
         this.lightbox.$.removeClass(classes.updatingThumb)
         this.lightbox.$.addClass(classes.failedThumb)
-        if (!(this.lightbox.smallVideo.poster
-            || this.lightbox.smallImage.src)
-        ) {
+        if (!(this.lightbox.smallVideo.getAttribute('poster')
+            || this.lightbox.smallVideo.getAttribute('src'))) {
             this.lightbox.shrink()
         }
     }
@@ -202,10 +207,10 @@ interface ImageData {
 export function imageAvailable(
     url: string,
     onload = (img: HTMLImageElement) => { },
-    onerror = () => { }
+    onerror = (img: HTMLImageElement) => { }
 ) {
     let temp = new Image;
     temp.onload = () => { onload(temp); };
-    temp.onerror = onerror;
+    temp.onerror = () => { onerror(temp); };
     temp.src = url;
 }

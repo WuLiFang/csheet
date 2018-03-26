@@ -84,6 +84,7 @@ def get_csheet_config(project, pipeline, prefix, **kwargs):
     """Provide infos a csheet needed.  """
 
     token = kwargs.get('token')
+    cgtwq.PROJECT.token = token
     database = cgtwq.PROJECT.filter(
         cgtwq.Filter('full_name', project))['database'][0]
 

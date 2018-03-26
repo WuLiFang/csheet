@@ -13,9 +13,9 @@ from .image import HTMLImage, get_images_from_dir
 def updated_config(config=None):
     """Return a default csheet config or updated default from given @config. """
 
-    default = {'static': ('csheet.css',
-                          'csheet.bundle.js'),
-               'static_folder': 'static/dist'}
+    default = {'static': ('dist/csheet.css',
+                          'dist/csheet.bundle.js'),
+               'static_folder': 'static'}
 
     if config:
         default.update(config)

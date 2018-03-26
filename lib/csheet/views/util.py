@@ -16,7 +16,7 @@ def require_login(func):
     @wraps(func)
     def _func(*args, **kwargs):
         try:
-            if'token' in session:
+            if session.get('token'):
                 return func(*args, **kwargs)
         except cgtwq.LoginError:
             pass

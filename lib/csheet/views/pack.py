@@ -95,7 +95,7 @@ def archive(**config):
 
     f = TemporaryFile(suffix='.zip',
                       prefix=config.get('title', 'packing_csheet_'),
-                      dir=APP.config.get('PACK_FOLDER'))
+                      dir=APP.config.get('storage'))
     APP.logger.info('Start archive page.')
     config['is_pack'] = True
 
@@ -129,7 +129,8 @@ def archive(**config):
 
         # Pack static files:
         for i in config.get('static', ()):
-            zipfile.write(APP.static_folder + '/' + i, 'static/{}'.format(i))
+            zipfile.write(APP.static_folder + '/' + i,
+                          '{}/{}'.format(config['static_folder'], i))
 
         # Pack index.
         index_page = render_template('csheet.html', **config)
