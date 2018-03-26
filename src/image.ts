@@ -28,10 +28,16 @@ export class CSheetImage {
     ) {
     }
     update(isScheduledTask = false) {
+        // Skip for packed page.
+        if (location.protocol == 'file:') {
+            return
+        }
+        // Skip for already updated recently.
         if (this.isUpdating || this.isScheduled
             || new Date().getTime() - this.lastUpdateTime < this.minUpdateInterval) {
             return
         }
+        // Schedule update later if busy.
         if (currentAjax >= ajaxLimit) {
             if (this.isScheduled && !isScheduledTask) {
                 return

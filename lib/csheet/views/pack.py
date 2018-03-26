@@ -15,7 +15,6 @@ from six import text_type
 
 from ..image import HTMLImage
 from .app import APP
-from .image import _get_gen_image
 from ..page import updated_config
 
 STATUS = {}
@@ -109,17 +108,16 @@ def archive(**config):
 
         def _write_image(image):
             assert isinstance(image, HTMLImage)
-            for role in image.generate_methods:
+            # Make sure image avaliable.
+            for role in ('thumb', 'full'):
                 try:
-                    generated = _get_gen_image(image.uuid, role)
-                except(KeyError, ValueError):
+                    image.generate(role)
+                except ValueError:
                     continue
-                except:
-                    LOGGER.error(
-                        'Unexpect exception during generate: %s: %s', image, role, exc_info=True)
-                    raise
+            # Pack genereted files.
+            for role, filename in image.generated.items():
                 arcname = image.get(role, is_pack=True)
-                zipfile.write(text_type(generated), arcname)
+                zipfile.write(text_type(filename), arcname)
 
         for index, i in enumerate(images, 1):
             job = spawn(_write_image, i)

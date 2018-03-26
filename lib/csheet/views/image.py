@@ -7,8 +7,7 @@ import logging
 from os.path import basename, getmtime, join
 
 import pendulum
-from flask import (abort, make_response, render_template, request, send_file,
-                   session)
+from flask import abort, make_response, render_template, send_file, session
 from gevent import sleep, spawn
 from gevent.queue import Empty, Queue
 from six import text_type

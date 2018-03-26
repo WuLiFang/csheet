@@ -6,7 +6,6 @@ import logging
 import os
 import uuid
 
-from jinja2 import Environment, PackageLoader
 from six import PY3, text_type
 
 from wlf import ffmpeg
@@ -184,14 +183,14 @@ class HTMLImage(Image):
             str: url  for role name.
         """
 
+        try:
+            timestamp = self.get_timestamp(role)
+        except (KeyError, OSError):
+            return ''
+
         if config.get('is_client'):
-            url = ''
-            try:
-                timestamp = self.get_timestamp(role)
-                url = '/images/{}.{}?timestamp={}'.format(
-                    self.uuid, role, timestamp)
-            except (KeyError, OSError):
-                pass
+            url = '/images/{}.{}?timestamp={}'.format(
+                self.uuid, role, timestamp)
             return url
 
         if config.get('is_pack'):
