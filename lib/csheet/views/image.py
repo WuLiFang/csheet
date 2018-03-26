@@ -156,4 +156,4 @@ def image_notes(uuid, pipeline):
     select.token = session['token']
     select = select.filter(cgtwq.Field('pipeline') == pipeline)
     notes = select.get_notes()
-    return render_template('image_notes.html', notes=notes, server_ip=cgtwq.CGTeamWorkClient.server_ip())
+    return render_template('image_notes.html', notes=notes, server_ip=cgtwq.setting.SERVER_IP)

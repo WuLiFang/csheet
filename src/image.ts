@@ -169,8 +169,14 @@ export class CSheetImage {
         }
     }
     loadNote(pipeline: string) {
+        let container = this.lightbox.$.find('.note-container')
+        if (container.length == 0) {
+            console.error('no container', this.lightbox)
+            return
+        }
         $.get(
             `/images/${this.uuid}.notes/${pipeline}`,
+            {},
             (data) => {
                 let $data = $(data);
                 let content = $data.find('.note-html p').html();
@@ -186,7 +192,7 @@ export class CSheetImage {
                         this.src = src.replace('/upload', `http://${serverIP}/upload`);
                     }
                 );
-                this.lightbox.$.find('.note-container').html($data.html());
+                container.html($data.html());
             }
         );
     }
