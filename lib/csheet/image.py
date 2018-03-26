@@ -190,10 +190,8 @@ class HTMLImage(Image):
                 timestamp = self.get_timestamp(role)
                 url = '/images/{}.{}?timestamp={}'.format(
                     self.uuid, role, timestamp)
-            except KeyError:
+            except (KeyError, OSError):
                 pass
-            except OSError:
-                LOGGER.warning('Get url fail.', exc_info=True)
             return url
 
         if config.get('is_pack'):
