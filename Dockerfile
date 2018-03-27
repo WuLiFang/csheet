@@ -1,12 +1,5 @@
 FROM centos AS base
 
-# Install pip
-RUN curl https://bootstrap.pypa.io/get-pip.py | python && pip --version
-ENV PIP_INDEX_URL https://pypi.tuna.tsinghua.edu.cn/simple
-
-# Install pipenv
-RUN pip install pipenv && pipenv --version
-
 # Install commandline tools
 RUN yum install -y epel-release
 RUN yum update -y
@@ -14,6 +7,13 @@ RUN rpm --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
 RUN rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
 RUN yum install -y ffmpeg && ffmpeg -version
 RUN yum install -y which
+
+# Install pip
+RUN curl https://bootstrap.pypa.io/get-pip.py | python && pip --version
+ENV PIP_INDEX_URL https://mirrors.aliyun.com/pypi/simple
+
+# Install pipenv
+RUN pip install pipenv && pipenv --version
 
 FROM base AS build
 

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6b8539484ec1c3e8c6fc7185d5c14cb94b8238cf03800ef4603465f7c3d731e9"
+            "sha256": "a405895224f8617f77bf4e96b783668ac5258530aa32311268ccce52c5e90ecb"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -21,7 +21,7 @@
         "sources": [
             {
                 "name": "pypi",
-                "url": "https://pypi.tuna.tsinghua.edu.cn/simple",
+                "url": "https://mirrors.aliyun.com/pypi/simple",
                 "verify_ssl": true
             }
         ]
@@ -107,7 +107,7 @@
         },
         "backports.functools-lru-cache": {
             "hashes": [],
-            "markers": "python_version < '3.4'",
+            "markers": "python_version == '2.7'",
             "version": "==1.5"
         },
         "colorama": {
