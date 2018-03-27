@@ -6,9 +6,12 @@ from __future__ import (absolute_import, division, print_function,
 import os
 from unittest import skipIf
 
-from wlf.cgtwq import CGTeamWorkClient
+import flask
 
-skip_if_not_logged_in = skipIf(not CGTeamWorkClient.is_logged_in(),  # pylint: disable=invalid-name
+from cgtwq import DesktopClient
+from csheet.views.app import APP
+
+skip_if_not_logged_in = skipIf(not DesktopClient.is_logged_in(),  # pylint: disable=invalid-name
                                'CGTeamWork is not logged in.')
 
 ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -22,3 +25,13 @@ def path(*other):
     """
 
     return os.path.abspath(os.path.join(ROOT, *other))
+
+
+APP.testing = True
+
+
+@APP.route('/_login', methods=('POST',))
+def _login():
+    """For test client login.  """
+    flask.session['token'] = DesktopClient.token()
+    return 'Logged in'

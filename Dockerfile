@@ -21,6 +21,7 @@ COPY . /csheet
 WORKDIR /csheet
 
 # Install dependencies
+ENV PIP_PROCESS_DEPENDENCY_LINKS=1
 RUN pipenv install --system --deploy
 
 # Set environment

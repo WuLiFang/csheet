@@ -5,12 +5,11 @@ from __future__ import (absolute_import, division, print_function,
 
 from flask import jsonify, request, session
 
-from wlf import cgtwq
+import cgtwq
 from wlf.path import get_unicode as u
 
 from ..cache import CACHE
 from ..database import get_database, get_image, get_images, get_project_code
-from ..image import HTMLImage
 from .app import APP
 from .util import require_login
 
@@ -81,11 +80,36 @@ def project_code(project):
 def note():
     uuid = request.args['uuid']
     pipeline = request.args['pipeline']
-
     image = get_image(uuid)
     select = image.cgteamwork_select
-    assert isinstance(select, cgtwq.database.Selection)
+    assert isinstance(select, cgtwq.Selection)
     select.token = session['token']
-    select = select.filter(cgtwq.Field('pipeline') == pipeline)
-    notes = select.get_notes()
-    return jsonify(notes)
+    entry = select.filter(cgtwq.Field('pipeline') == pipeline).to_entry()
+    assert isinstance(entry, cgtwq.Entry)
+    notes = entry.get_notes()
+    if request.method == 'GET':
+        return jsonify(notes)
+    elif request.method == 'POST':
+        entry.module
+
+
+@APP.route('/api/image/field', methods=('GET', 'PUT'))
+@require_login
+def database_field():
+    """Get/Set database field.   """
+
+    uuid = request.args['uuid']
+    pipeline = request.args['pipeline']
+    field = request.args['field']
+    image = get_image(uuid)
+    select = image.cgteamwork_select
+    assert isinstance(select, cgtwq.Selection)
+    entry = select.filter(cgtwq.Field('pipeline') == pipeline).to_entry()
+    assert isinstance(entry, cgtwq.Entry)
+    entry.token = session['token']
+    if request.method == 'GET':
+        return jsonify(entry[field])
+    elif request.method == 'PUT':
+        value = request.form['data']
+        entry[field] = value
+        return 'ok'

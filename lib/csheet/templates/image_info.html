@@ -14,11 +14,11 @@
         <tr>
             <td>{{ i[0] | e }}</td>
             <td>{{ i[1] | e }}</td>
-            <td class="status" status="{{ i[2] | e }}">
+            <td class="status" status="{{ i[2] | e }}" data-field="leader_status">
             </td>
-            <td class="status" status="{{ i[3] | e }}">
+            <td class="status" status="{{ i[3] | e }}" data-field="director_status">
             </td>
-            <td class="status" status="{{ i[4] | e }}">
+            <td class="status" status="{{ i[4] | e }}" data-field="client_status">
             </td>
             <td class="notes" data-pipeline="{{ i[0] | e }}">
                 {{ i[5] | e }}

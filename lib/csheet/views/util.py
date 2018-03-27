@@ -7,7 +7,7 @@ from functools import wraps
 
 from flask import redirect, session, request, url_for
 
-from wlf import cgtwq
+import cgtwq
 
 
 def require_login(func):

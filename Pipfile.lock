@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e2204a2e91ce2e99facdc35817c37f1a59f3d356fefb6ca86daa5b0a99ac244b"
+            "sha256": "6b8539484ec1c3e8c6fc7185d5c14cb94b8238cf03800ef4603465f7c3d731e9"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -27,6 +27,22 @@
         ]
     },
     "default": {
+        "cgtwq": {
+            "git": "https://github.com/WuLiFang/cgtwq",
+            "ref": "54137889ad5cb33cf777778ef16e38f50acb41e5"
+        },
+        "click": {
+            "hashes": [],
+            "version": "==6.7"
+        },
+        "diskcache": {
+            "hashes": [],
+            "version": "==3.0.1"
+        },
+        "flask": {
+            "hashes": [],
+            "version": "==0.12.2"
+        },
         "gevent": {
             "hashes": [],
             "version": "==1.2.2"
@@ -35,13 +51,25 @@
             "hashes": [],
             "version": "==0.4.13"
         },
+        "itsdangerous": {
+            "hashes": [],
+            "version": "==0.24"
+        },
+        "jinja2": {
+            "hashes": [],
+            "version": "==2.10"
+        },
+        "markupsafe": {
+            "hashes": [],
+            "version": "==1.0"
+        },
         "pendulum": {
             "hashes": [],
-            "version": "==1.4.2"
+            "version": "==1.4.4"
         },
         "python-dateutil": {
             "hashes": [],
-            "version": "==2.7.0"
+            "version": "==2.7.2"
         },
         "pytz": {
             "hashes": [],
@@ -58,12 +86,16 @@
         "tzlocal": {
             "hashes": [],
             "version": "==1.5.1"
+        },
+        "werkzeug": {
+            "hashes": [],
+            "version": "==0.14.1"
         }
     },
     "develop": {
         "astroid": {
             "hashes": [],
-            "version": "==1.6.1"
+            "version": "==1.6.2"
         },
         "attrs": {
             "hashes": [],
@@ -75,7 +107,7 @@
         },
         "backports.functools-lru-cache": {
             "hashes": [],
-            "markers": "python_version == '2.7'",
+            "markers": "python_version < '3.4'",
             "version": "==1.5"
         },
         "colorama": {
@@ -114,13 +146,17 @@
             "hashes": [],
             "version": "==0.6.1"
         },
+        "more-itertools": {
+            "hashes": [],
+            "version": "==4.1.0"
+        },
         "pluggy": {
             "hashes": [],
             "version": "==0.6.0"
         },
         "py": {
             "hashes": [],
-            "version": "==1.5.2"
+            "version": "==1.5.3"
         },
         "pycodestyle": {
             "hashes": [],
@@ -128,11 +164,11 @@
         },
         "pylint": {
             "hashes": [],
-            "version": "==1.8.2"
+            "version": "==1.8.3"
         },
         "pytest": {
             "hashes": [],
-            "version": "==3.4.2"
+            "version": "==3.5.0"
         },
         "rope": {
             "hashes": [],

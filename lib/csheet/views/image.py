@@ -12,7 +12,7 @@ from gevent import sleep, spawn
 from gevent.queue import Empty, Queue
 from six import text_type
 
-from wlf import cgtwq
+import cgtwq
 from wlf.path import Path
 
 from ..cache import CACHE
@@ -102,7 +102,7 @@ def image_info(uuid):
     except AttributeError:
         abort(404, 'No related task found.')
 
-    assert isinstance(select, cgtwq.database.Selection)
+    assert isinstance(select, cgtwq.Selection)
     data = select.get_fields(
         'pipeline', 'artist', 'leader_status', 'director_status', 'client_status', 'note_num')
     data.sort(key=lambda i: (
@@ -151,8 +151,9 @@ def image_notes(uuid, pipeline):
 
     image = get_image(uuid)
     select = image.cgteamwork_select
-    assert isinstance(select, cgtwq.database.Selection)
+    assert isinstance(select, cgtwq.Selection)
     select.token = session['token']
     select = select.filter(cgtwq.Field('pipeline') == pipeline)
     notes = select.get_notes()
-    return render_template('image_notes.html', notes=notes, server_ip=cgtwq.setting.SERVER_IP)
+    return render_template('image_notes.html', notes=notes,
+                           server_ip=cgtwq.server.setting.SERVER_IP)

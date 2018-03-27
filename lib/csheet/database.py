@@ -6,7 +6,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import json
 
-from wlf import cgtwq
+import cgtwq
 from .image import HTMLImage
 from .exceptions import u_abort
 from .filename import filter_filename

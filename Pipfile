@@ -17,3 +17,6 @@ pytest = "*"
 
 gevent = "*"
 pendulum = "*"
+cgtwq = {git = "https://github.com/WuLiFang/cgtwq", ref = "54137889ad5cb33cf777778ef16e38f50acb41e5"}
+flask = "*"
+diskcache = "*"

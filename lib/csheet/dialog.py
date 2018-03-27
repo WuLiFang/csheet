@@ -11,8 +11,8 @@ from multiprocessing.dummy import Pool, cpu_count
 from Qt import QtCore, QtWidgets
 from Qt.QtWidgets import QMessageBox
 
-from wlf import cgtwq
-from wlf.cgtwq import CGTeamWorkClient
+import cgtwq
+from cgtwq import DesktopClient
 from wlf.config import Config as BaseConfig
 from wlf.decorators import run_with_memory_require
 from wlf.ffmpeg import GenerateError
@@ -76,15 +76,14 @@ class Dialog(DialogWithDir):
         self.labelVersion.setText('v{}'.format(__version__))
 
         # Project combo box
-        project = cgtwq.Project()
-        names = project.names()
+        select = cgtwq.PROJECT.all()
         edit = self.comboBoxProject
         self.projects_databse = {
-            i: project.get_info(i, 'database')for i in names}
+            i['full_name']: i['database'] for i in select.to_entries()}
         self.projects_code = {
-            i: project.get_info(i, 'code')for i in names}
+            i['full_name']: i['code'] for i in select.to_entries()}
         proj_config = CONFIG['PROJECT']
-        edit.insertItems(0, names)
+        edit.insertItems(0, self.projects_databse.keys())
         edit.setCurrentIndex(edit.findText(proj_config))
 
         # Signals
@@ -303,7 +302,7 @@ class Dialog(DialogWithDir):
 
 
 def show():
-    if CGTeamWorkClient.is_logged_in():
+    if DesktopClient.is_logged_in():
         main_show_dialog(Dialog)
     else:
         dummy_app = QtWidgets.QApplication([])

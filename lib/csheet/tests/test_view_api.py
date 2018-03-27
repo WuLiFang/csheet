@@ -8,14 +8,11 @@ import re
 from unittest import TestCase, main, skip
 
 import flask
+from cgtwq import DesktopClient
 from requests.utils import quote
 
 from csheet.views import APP
 from util import skip_if_not_logged_in
-from cgtwq import DesktopClient
-
-
-APP.testing = True
 
 
 class ViewTestCase(TestCase):
@@ -36,7 +33,9 @@ class CGTeamworkTestCase(TestCase):
 
     def setUp(self):
         self.client = APP.test_client()
-        recv = self.client.post('_login')
+        # recv = self.client.post('/_login')
+        recv = self.client.post(
+            '/login', data={'account': 'lubo', 'password': ''})
         # To initiate images
         url = quote(
             b'/?pipeline=合成&project=梦塔&prefix=MT_EP06_01_', safe=b'/?=&')
@@ -45,32 +44,14 @@ class CGTeamworkTestCase(TestCase):
         self.uuid_list = re.findall('data-uuid="(.+)"', recv.data)
         self.assert_(self.uuid_list)
 
-    def test_image_info(self):
+    def test_database_field(self):
         for i in self.uuid_list:
-            url = '/images/{}.info'.format(i)
-            recv = self.client.get(url)
-            self.assertEqual(recv.status_code, 200)
-
-    def test_image_note(self):
-        for i in self.uuid_list:
-            url = b'/images/{}.notes/合成'.format(i)
-            recv = self.client.get(quote(url))
-            self.assertEqual(recv.status_code, 200)
-
-    def test_get_image(self):
-        for role in ('thumb', 'preview', 'full'):
-            for i in self.uuid_list:
-                url = b'/images/{}.{}'.format(i, role)
-                recv = self.client.get(quote(url))
-                self.assertIn(
-                    recv.status_code,
-                    (200, 503),
-                    '{}: {}'.format(url, _recv_msg(recv)))
-
-    def test_api(self):
-        result = self.client.get('/api/list_images/梦塔/合成/MT_EP06_01')
-        self.assertEqual(result.status_code, 200)
-        self.assertEqual(result.content_type, 'application/json')
+            url = (b'/api/image/field'
+                   b'?field=test&pipeline=合成&uuid={}').format(i)
+            result = self.client.get(url)
+            self.assertEqual(result.status_code, 200)
+            self.assertEqual(result.content_type, 'application/json')
+            self.client.put(url, data={'data': '3'})
 
 
 def _recv_msg(recv):

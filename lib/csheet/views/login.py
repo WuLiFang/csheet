@@ -6,7 +6,7 @@ from __future__ import (absolute_import, division, print_function,
 
 from flask import redirect, request, session, render_template, flash
 
-from wlf import cgtwq
+import cgtwq
 
 from .app import APP
 from . import util
