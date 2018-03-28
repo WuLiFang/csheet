@@ -149,10 +149,14 @@ export class CSheetImage {
         this.loadFullPreview()
     }
     loadSmallPreview() {
-        if (this.preview) { this.lightbox.smallVideo.src = this.preview }
+        if (this.preview != this.lightbox.smallVideo.getAttribute('src')) {
+            this.lightbox.smallVideo.src = this.preview
+        }
     }
     loadFullPreview() {
-        if (this.preview) { this.lightbox.fullVideo.src = this.preview }
+        if (this.preview != this.lightbox.fullVideo.getAttribute('src')) {
+            this.lightbox.fullVideo.src = this.preview
+        }
     }
     unloadPreview() {
         this.lightbox.smallVideo.removeAttribute('src')

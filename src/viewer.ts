@@ -25,7 +25,6 @@ export class Viewer {
     onanchorclicked(anchor: HTMLAnchorElement) {
         let href = anchor.href;
         let $anchor = $(anchor);
-        this.lightbox.image.unloadPreview()
         switch ($anchor.attr('class')) {
             case 'prev':
                 let prev = this.lightbox.$.prev();
