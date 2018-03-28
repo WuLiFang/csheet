@@ -4,10 +4,11 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import logging
-from os.path import basename, getmtime, join
+from os.path import basename, join
 
 import pendulum
-from flask import abort, make_response, render_template, send_file, session
+from flask import (abort, make_response, render_template, request, send_file,
+                   session)
 from gevent import sleep, spawn
 from gevent.queue import Empty, Queue
 from six import text_type
@@ -15,7 +16,7 @@ from six import text_type
 import cgtwq
 from wlf.path import Path
 
-from ..cache import CACHE
+from ..cache import CACHE, getmtime
 from ..database import get_image
 from ..exceptions import u_abort
 from .app import APP
@@ -89,9 +90,12 @@ def response_image(uuid, role):
     except Empty:
         timestamp = request.args.get('timestamp')
         generated = image.generated.get(role)
-        if (timestamp and generated
-                and abs(getmtime(text_type(generated)) - timestamp) < 1e-6):
-            return send_file(text_type(generated), conditional=True)
+        try:
+            if (timestamp and generated
+                    and abs(getmtime(text_type(generated)) - timestamp) < 1e-6):
+                return send_file(text_type(generated), conditional=True)
+        except OSError:
+            pass
 
         LOGGER.debug('Image not ready: %s', image)
         return make_response('Image not ready.', 503, {'Retry-After': 10})
@@ -140,9 +144,6 @@ def image_info(uuid):
                  if i[1] else '<获取失败>')
                 for i in metadata]
     return render_template('image_info.html', data=data, metadata=metadata)
-
-
-from flask import request
 
 
 @APP.route('/images/<uuid>.notes/<pipeline>')
