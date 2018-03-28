@@ -165,6 +165,10 @@ export class CSheetImage {
         this.lightbox.fullVideo.load()
     }
     loadInfo() {
+        // Skip for packed page.
+        if (location.protocol == 'file:') {
+            return
+        }
         $.get(
             `images/${this.uuid}.info`,
             (data: string) => {
@@ -186,6 +190,10 @@ export class CSheetImage {
         }
     }
     loadNote(pipeline: string) {
+        // Skip for packed page.
+        if (location.protocol == 'file:') {
+            return
+        }
         let container = this.lightbox.$.find('.note-container')
         if (container.length == 0) {
             console.error('no container', this.lightbox)
