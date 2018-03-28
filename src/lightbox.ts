@@ -23,7 +23,7 @@ export class Lightbox {
         this.fullImage = <HTMLImageElement>this.$.find('.full img')[0];
         this.$.mouseenter(() => { this.onmouseenter() });
         element.draggable = true;
-        this.$.on('dragstart', this.ondragstart);
+        this.$.on('dragstart', (ev) => { this.ondragstart(ev) });
         this.viewer = new Viewer(this)
         let lightbox = this;
 
@@ -68,9 +68,7 @@ export class Lightbox {
     }
     ondragstart(ev: JQuery.Event) {
         let event = <DragEvent>ev.originalEvent;
-        // let lightbox = getLightbox(this);
-        let lightbox = this;
-        let dragData = <string>$(lightbox).data('drag');
+        let dragData = <string>this.$.data('drag');
         let plainData = dragData;
         if (window.location.protocol == 'file:') {
             plainData =
