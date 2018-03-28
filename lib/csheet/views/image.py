@@ -87,6 +87,12 @@ def response_image(uuid, role):
         resp = send_file(text_type(generated), conditional=True)
         return resp
     except Empty:
+        timestamp = request.args.get('timestamp')
+        generated = image.generated.get(role)
+        if (timestamp and generated
+                and abs(getmtime(text_type(generated)) - timestamp) < 1e-6):
+            return send_file(text_type(generated), conditional=True)
+
         LOGGER.debug('Image not ready: %s', image)
         return make_response('Image not ready.', 503, {'Retry-After': 10})
 
@@ -134,6 +140,9 @@ def image_info(uuid):
                  if i[1] else '<获取失败>')
                 for i in metadata]
     return render_template('image_info.html', data=data, metadata=metadata)
+
+
+from flask import request
 
 
 @APP.route('/images/<uuid>.notes/<pipeline>')
