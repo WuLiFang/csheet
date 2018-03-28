@@ -7,6 +7,8 @@ RUN rpm --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
 RUN rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
 RUN yum install -y ffmpeg && ffmpeg -version
 RUN yum install -y which
+RUN yum install -y gcc
+RUN yum install -y python-devel
 
 # Install pip
 RUN curl https://bootstrap.pypa.io/get-pip.py | python && pip --version
@@ -21,12 +23,15 @@ COPY . /csheet
 WORKDIR /csheet
 
 # Install dependencies
-ENV PIP_PROCESS_DEPENDENCY_LINKS=1
 RUN pipenv install --system --deploy
 
 # Set environment
-ENV PYTHONPATH=lib:lib/wlf/site-packages
+ENV PYTHONPATH=lib
 ENV LANG=en_US.utf-8
+
+# Clean commandline tools.
+RUN yum remove -y which gcc python-devel
+RUN yum clean all
 
 FROM build AS test
 

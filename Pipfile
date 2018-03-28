@@ -1,22 +1,26 @@
 [[source]]
-
 url = "https://mirrors.aliyun.com/pypi/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [dev-packages]
-
 pylint = "*"
 "autopep8" = "*"
 rope = "*"
 pytest = "*"
 
-
 [packages]
-
-gevent = "*"
+gevent = ">=1.2.2"
 pendulum = "*"
-cgtwq = {git = "https://github.com/WuLiFang/cgtwq", ref = "54137889ad5cb33cf777778ef16e38f50acb41e5"}
-flask = "*"
+Flask = "*"
 diskcache = "*"
+"560d3b2" = {file = "https://github.com/WuLiFang/cgtwq/archive/1.0.0.tar.gz"}
+"3500461" = {file = "https://github.com/WuLiFang/wlf/archive/0.3.2.tar.gz"}
+"pathlib2" = ">=2.3.0"
+openpyxl = ">=2.5.1"
+psutil = ">=5.4.3"
+"beautifulsoup4" = ">=4.6.0"
+"Qt.py" = ">=1.1.0"
+pyblish = ">=1.4.3"
+requests = ">=2.18.4"
+websocket-client = ">=0.47.0"
