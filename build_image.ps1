@@ -1,4 +1,4 @@
-git clean -fdx *.pyc
+git clean -fdX *.pyc
 
 npx webpack --mode production
 
