@@ -4,3 +4,4 @@
 *.pyc
 node_modules
 dist/
+/SENTRY_DSN
