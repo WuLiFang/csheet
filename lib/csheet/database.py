@@ -60,9 +60,10 @@ def get_images(database, pipeline, prefix, token=None):
             path = json.loads(image_data)['image_path']
         except (TypeError, KeyError):
             _select = module.select(id_)
+            # XXX: need refactor cgtwq module.
+            cgtwq.selection.filebox._OS = 'win'
             path = '{}/{}.jpg'.format(
                 _select.get_filebox(id_=fileboxes[0].id).path, shot)
-
         img = HTMLImage(path)
         img.cgteamwork_select = module.select(
             *[i[0] for i in related_data if i[2] == shot]
@@ -73,7 +74,7 @@ def get_images(database, pipeline, prefix, token=None):
             data = previews.get(shot)
             if data:
                 img.source['preview'] = filter_filename(
-                    json.loads(data)['path'][0])
+                    json.loads(data)['file_path'][0])
         except (TypeError, IndexError):
             pass
         ret.append(img)

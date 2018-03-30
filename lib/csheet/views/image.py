@@ -88,14 +88,20 @@ def response_image(uuid, role):
         resp = send_file(text_type(generated), conditional=True)
         return resp
     except Empty:
-        timestamp = request.args.get('timestamp')
-        generated = image.generated.get(role)
+        timestamp = None
         try:
-            if (timestamp and generated
-                    and abs(getmtime(text_type(generated)) - timestamp) < 1e-6):
-                return send_file(text_type(generated), conditional=True)
-        except OSError:
+            timestamp = int(request.args.get('timestamp'))
+        except (TypeError, ValueError):
             pass
+
+        if timestamp:
+            generated = image.generated.get(role)
+            try:
+                if (timestamp and generated
+                        and abs(getmtime(text_type(generated)) - timestamp) < 1e-6):
+                    return send_file(text_type(generated), conditional=True)
+            except OSError:
+                pass
 
         LOGGER.debug('Image not ready: %s', image)
         return make_response('Image not ready.', 503, {'Retry-After': 10})
@@ -133,6 +139,7 @@ def image_info(uuid):
         try:
             _mtime = getmtime(text_type(v))
         except OSError:
+            LOGGER.error('Get mtime fail: %s', text_type(v), exc_info=True)
             _mtime = None
         _data = (basename(text_type(v)), _mtime)
         metadata[v] = _data

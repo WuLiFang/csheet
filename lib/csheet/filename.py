@@ -27,14 +27,19 @@ def filter_filename(path, platform=None):
         return path
 
     for i in filters.split(','):
-        src, _, dst = i.rpartition(':')
+        if platform == 'win32':
+            src, _, dst = i.partition(':')
+        else:
+            src, _, dst = i.rpartition(':')
         pattern = re.sub(r'[/\\]', r'[\\\\/]', src)
         pattern = '^{}'.format(pattern)
         path = re.sub(pattern, dst, path, 1, re.I)
 
     if platform == sys.platform:
         path = os.path.normpath(path)
-    elif platform != 'win32':
+    elif platform == 'win32':
+        path = path.replace('/', '\\')
+    else:
         path = path.replace('\\', '/')
     return path
 

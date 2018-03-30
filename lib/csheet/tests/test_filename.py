@@ -20,6 +20,16 @@ class UtilTestCase(TestCase):
         for input_, expected in test_case.items():
             result = filename.filter_filename(input_, 'linux')
             self.assertEqual(result, expected)
+        test_case = {
+            '/z/abc': 'Z:\\abc',
+            '/z/abc': 'Z:\\abc',
+            '/z/abc': 'Z:\\abc',
+            '/x/abc/2': 'X:\\abc\\2',
+            '/x/abc/2/3': 'X:\\abc\\2\\3',
+        }
+        for input_, expected in test_case.items():
+            result = filename.filter_filename(input_, 'win32')
+            self.assertEqual(result, expected)
 
 
 if __name__ == '__main__':
