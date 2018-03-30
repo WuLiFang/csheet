@@ -167,9 +167,10 @@ class HTMLImage(Image):
                 self.folder_names['full'],
                 self.path.name)
 
-        try:
-            return PurePath(filter_filename(self.path, 'win32')).as_uri()
-        except ValueError:
+        if self.path.is_absolute():
+            filename = filter_filename(self.path, 'win32').replace('\\', '/')
+            return 'file://{}'.format(filename)
+        else:
             return ''
 
     def get(self, role, **config):
