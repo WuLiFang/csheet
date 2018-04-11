@@ -1,8 +1,0 @@
-<div class="notes"> {% for i in notes %}
-    <hr>
-    <div class="note-html" data-server-ip="{{server_ip}}">{{ i.html | safe }}</div>
-    <div class="note-info">
-        <span class="note-user">{{ i.account_name }}</span>
-        <span class="note-time">{{ i.time }}</span>
-    </div> {% endfor %}
-</div>

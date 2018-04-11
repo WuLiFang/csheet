@@ -176,7 +176,7 @@ export class CSheetImage {
                 detail.html(data)
                 let self = this;
                 (<JQuery<HTMLTableDataCellElement>>detail.find('td.notes')).click(
-                    function () { self.loadNote($(this).data('pipeline')) }
+                    function () { self.loadNote($(this).data('taskId')) }
                 )
             }
         );
@@ -189,37 +189,34 @@ export class CSheetImage {
             this.lightbox.shrink()
         }
     }
-    loadNote(pipeline: string) {
+    loadNote(taskId: string) {
         // Skip for packed page.
         if (location.protocol == 'file:') {
             return
         }
-        let container = this.lightbox.$.find('.note-container')
+        let detail = this.lightbox.$.find('.detail')
+        let container = detail.find('.note-container')
         if (container.length == 0) {
             console.error('no container', this.lightbox)
             return
         }
-        $.get(
-            `/images/${this.uuid}.notes/${pipeline}`,
-            {},
-            (data) => {
-                let $data = $(data);
-                let content = $data.find('.note-html p').html();
-                let serverIP = $data.find('.note-html').data('serverIp');
-                $data.find('.note-html').replaceWith(content);
-                // Redirect img src to other server.
-                (<JQuery<HTMLImageElement>>$data.find('img')).each(
-                    function () {
-                        let src = $(this).attr('src');
-                        if (!src) {
-                            return
-                        }
-                        this.src = src.replace('/upload', `http://${serverIP}/upload`);
-                    }
-                );
-                container.html($data.html());
-            }
-        );
+        let template = <string | undefined>container.data('noteUrlTemplate')
+        if (!template) {
+            return
+        }
+        container.empty()
+        let src = template.replace('${taskId}', taskId)
+        let iframe = <JQuery<HTMLIFrameElement>>$('<iframe>', { src: src, seamless: true })
+
+        let otherHeight = detail.height()
+        let bottomHeight = this.lightbox.$.find('.viewer .bottom').outerHeight()
+        bottomHeight = bottomHeight ? bottomHeight : 20
+        if (otherHeight) {
+            let windowHeight = window.innerHeight
+            iframe.height(windowHeight - otherHeight - bottomHeight - 2)
+        }
+
+        container.append(iframe)
     }
 }
 

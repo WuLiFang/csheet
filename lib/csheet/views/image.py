@@ -7,8 +7,7 @@ import logging
 from os.path import basename, join
 
 import pendulum
-from flask import (abort, make_response, render_template, request, send_file,
-                   session)
+from flask import (abort, make_response, render_template, request, send_file)
 from gevent import sleep, spawn
 from gevent.queue import Empty, Queue
 from six import text_type
@@ -20,7 +19,6 @@ from ..cache import CACHE, getmtime
 from ..database import get_image
 from ..exceptions import u_abort
 from .app import APP
-from .util import require_login
 
 LOGGER = logging.getLogger(__name__)
 
@@ -120,7 +118,7 @@ def image_info(uuid):
 
     assert isinstance(select, cgtwq.Selection)
     data = select.get_fields(
-        'pipeline', 'artist', 'leader_status', 'director_status', 'client_status', 'note_num')
+        'pipeline', 'artist', 'leader_status', 'director_status', 'client_status', 'note_num', 'id')
     data.sort(key=lambda i: (
         i[0] == '合成',
         i[0] == '渲染',
@@ -150,27 +148,17 @@ def image_info(uuid):
                  pendulum.from_timestamp(i[1]).diff_for_humans(locale='zh')
                  if i[1] else '<获取失败>')
                 for i in metadata]
-    return render_template('image_info.html', data=data, metadata=metadata)
-
-
-@APP.route('/images/<uuid>.notes/<pipeline>')
-@require_login
-def image_notes(uuid, pipeline):
-    """Response image with given pipeline.
-
-    Args:
-        uuid (str): Image uuid.
-        pipeline (str): Pipeline the notes related.
-
-    Returns:
-        flask.Response: Html notes.
-    """
-
-    image = get_image(uuid)
-    select = image.cgteamwork_select
-    assert isinstance(select, cgtwq.Selection)
-    select.token = session['token']
-    select = select.filter(cgtwq.Field('pipeline') == pipeline)
-    notes = select.notify.get()
-    return render_template('image_notes.html', notes=notes,
-                           server_ip=cgtwq.server.setting.SERVER_IP)
+    note_url_template = ((
+        'http://{server_ip}/index.php?'
+        'controller=v_note'
+        '&method=show_page'
+        '&db={database}'
+        '&module={module}'
+        '&task_id=${{taskId}}').format(
+            server_ip=cgtwq.server.setting.SERVER_IP,
+            database=select.module.database.name,
+            module=select.module.name))
+    return render_template('image_info.html',
+                           data=data,
+                           metadata=metadata,
+                           note_url_template=note_url_template)

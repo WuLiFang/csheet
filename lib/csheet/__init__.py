@@ -11,8 +11,8 @@ LOGGER = logging.getLogger(__name__)
 
 def create_html_from_dir(image_folder, save_path=None, **config):
     """Create a html page for a @image_folder.  """
-
-    from .image import from_dir, RESOURCES_DIR
+    from .image import RESOURCES_DIR
+    from .page import from_dir
     from wlf.path import PurePath, Path
 
     images_folder_path = PurePath(image_folder)

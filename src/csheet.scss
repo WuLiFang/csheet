@@ -198,6 +198,8 @@ video {
             top: 0;
             margin: 5px;
             background: black;
+            max-height: 100%;
+            overflow-y: auto;
             table {
                 border-spacing: 0.5em 0.2em;
                 td.status {
@@ -239,6 +241,14 @@ video {
                     &:hover {
                         background: rgba(255, 255, 255, 0.2)
                     }
+                }
+            }
+            .note-container{
+                iframe{
+                    width: 100%;
+                    min-width: 350px;
+                    height: 320px;
+                    border: 0
                 }
             }
         }
