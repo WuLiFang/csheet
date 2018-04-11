@@ -6,10 +6,13 @@ from __future__ import (absolute_import, division, print_function,
 
 import json
 
+from gevent import sleep
+
 import cgtwq
-from .image import HTMLImage
+
 from .exceptions import u_abort
 from .filename import filter_filename
+from .image import HTMLImage
 from .page import updated_config
 
 
@@ -30,7 +33,8 @@ def get_images(database, pipeline, prefix, token=None):
     database = cgtwq.Database(database)
     database.token = token
     module = database['shot_task']
-    select = module.filter(cgtwq.Filter('pipeline', pipeline))
+    select = module.filter(cgtwq.Filter('pipeline', pipeline) &
+                           cgtwq.Filter('shot.shot', prefix, 'has'))
     shots = [i for i in select['shot.shot'] if i and i.startswith(prefix)]
 
     # Filebox for non-existed image.
@@ -41,20 +45,17 @@ def get_images(database, pipeline, prefix, token=None):
         cgtwq.Filter('title', ['单帧图', '检查单帧图']))
 
     # Related task for image info and preview.
-    related_select = module.filter(cgtwq.Filter('shot.shot', shots))
+    related_select = module.filter(cgtwq.Field('shot.shot') | shots)
     related_data = related_select.get_fields(
         'id', 'pipeline', 'shot.shot', 'image', 'submit_file_path')
-    related_data.sort(key=lambda x: x[2])
+    sleep(1e-5)
 
     previews = {i[2]: i[4]
                 for i in related_data
                 if i[1] == {'灯光':  '渲染'}.get(pipeline, pipeline)}
 
-    ret = []
-    for i in related_data:
-        id_, _pipeline, shot, image_data, _ = i
-        if _pipeline != pipeline:
-            continue
+    def _getimage(data):
+        id_, _, shot, image_data, _ = data
 
         try:
             path = json.loads(image_data)['image_path']
@@ -62,6 +63,7 @@ def get_images(database, pipeline, prefix, token=None):
             _select = module.select(id_)
             path = '{}/{}.jpg'.format(
                 _select.filebox.get(id_=fileboxes[0].id).path, shot)
+            sleep(1e-5)
         img = HTMLImage(path)
         img.cgteamwork_select = module.select(
             *[i[0] for i in related_data if i[2] == shot]
@@ -75,8 +77,9 @@ def get_images(database, pipeline, prefix, token=None):
                     json.loads(data)['file_path'][0])
         except (TypeError, IndexError):
             pass
-        ret.append(img)
-    return ret
+        return img
+
+    return [_getimage(i) for i in [i for i in related_data if i[1] == pipeline]]
 
 
 def get_csheet_config(project, pipeline, prefix, **kwargs):
