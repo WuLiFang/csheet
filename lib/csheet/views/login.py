@@ -3,13 +3,12 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-
-from flask import redirect, request, session, render_template, flash
+from flask import flash, redirect, render_template, request, session
+from six import text_type
 
 import cgtwq
 
 from .app import APP
-from . import util
 
 
 @APP.route('/login', methods=['GET', 'POST'])
@@ -20,8 +19,8 @@ def login():
         try:
             account_info = cgtwq.login(request.form['account'],
                                        request.form['password'])
-        except ValueError as ex:
-            flash(util.format_error(ex))
+        except cgtwq.CGTeamWorkException as ex:
+            flash(text_type(ex))
             return redirect(request.full_path)
         for k, v in account_info._asdict().items():
             session[k] = v
