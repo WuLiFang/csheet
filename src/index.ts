@@ -4,7 +4,7 @@ import './bootstrap.min.css';
 $(document).ready(
     function () {
         $('#inputProject').change(function () {
-            $.get('/project_code/' + $(this).children(':selected').text(),
+            $.get('/api/project_code/' + $(this).children(':selected').text(),
                 function (result) {
                     $('#inputPrefix').val(result + '_EP01_');
                     let inputPrefix = <HTMLInputElement>$('#inputPrefix')[0];

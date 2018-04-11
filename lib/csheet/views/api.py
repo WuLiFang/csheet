@@ -71,8 +71,9 @@ def _image_timestamp(uuid):
 
 
 @APP.route('/api/project_code/<project>')
-@APP.route('/project_code/<project>')  # TODO: remove usage in js
 def project_code(project):
+    """Get project code from project name.  """
+
     return _apply_token(get_project_code, project)
 
 
