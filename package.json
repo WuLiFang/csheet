@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "test": "python -m unittest discover -v -t lib/csheet/tests",
-    "build": "npx webpack --mode development"
+    "build": "npx webpack --mode development",
+    "start:dev": "webpack-dev-server"
   },
   "keywords": [],
   "author": "NateScalet@Gmail.com",
@@ -21,6 +22,7 @@
     "ts-loader": "^4.1.0",
     "typescript": "^2.7.2",
     "webpack": "^4.2.0",
-    "webpack-cli": "^2.0.13"
+    "webpack-cli": "^2.0.13",
+    "webpack-dev-server": "^3.1.3"
   }
 }

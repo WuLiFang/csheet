@@ -2,6 +2,7 @@ const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpack = require('webpack');
 let csheeetJS = {
+  mode: "development",
   entry: {
     csheet: path.join(__dirname, 'src', 'csheet.ts'),
     // csheet_css: path.join(__dirname, 'src', 'csheet.sass'),
@@ -14,16 +15,21 @@ let csheeetJS = {
   },
   module: {
     rules: [{
-        test: /\.tsx?$/,
-        loader: 'ts-loader',
-        include: [
-          path.resolve(__dirname, 'src'),
-        ],
-      },
-      {
-        test: /\.scss$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
-      },
+      test: /\.tsx?$/,
+      loader: 'ts-loader',
+      include: [
+        path.resolve(__dirname, 'src'),
+      ],
+    },
+    {
+      test: /\.scss$/,
+      use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
+    },
+    {
+      test: /\.css$/,
+      use: [MiniCssExtractPlugin.loader, 'css-loader']
+
+    }
     ],
   },
   resolve: {
@@ -33,14 +39,19 @@ let csheeetJS = {
     }
   },
   devtool: 'source-map',
-  devServer: {
-    publicPath: path.join('/dist/'),
-  },
   plugins: [
     new MiniCssExtractPlugin({
       filename: "[name].css",
       chunkFilename: "[id].css"
     })
-  ]
+  ],
+  devServer: {
+    contentBase: path.join(__dirname, 'tests/pages'),
+    proxy: {
+      '/api': 'http://localhost:5001',
+      '/images': 'http://localhost:5001',
+    },
+    publicPath: '/static/dist',
+  },
 };
 module.exports = [csheeetJS]

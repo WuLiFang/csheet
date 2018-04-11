@@ -1,4 +1,6 @@
 import * as $ from 'jquery';
+import './bootstrap.min.css';
+
 $(document).ready(
     function () {
         $('#inputProject').change(function () {
