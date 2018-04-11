@@ -48,6 +48,7 @@ def get_images(database, pipeline, prefix, token=None):
     related_select = module.filter(cgtwq.Field('shot.shot') | shots)
     related_data = related_select.get_fields(
         'id', 'pipeline', 'shot.shot', 'image', 'submit_file_path')
+    related_data = sorted(related_data, key=lambda i: i[2])
     sleep(1e-5)
 
     previews = {i[2]: i[4]

@@ -22,4 +22,6 @@ def main():
 
 
 if __name__ == '__main__':
+    import generate_test_page
+    generate_test_page.main()
     main()
