@@ -16,7 +16,7 @@ before_script:
   - ./cc-test-reporter before-build
 script:
   - export PYTHONPATH=lib:lib/wlf/site-packages
-  - coverage run -m unittest discover -v -s ./lib/csheet/tests -p test_*.py
+  - coverage run -m unittest discover -v -s ./tests -p test_*.py
 after_script:
   - coverage xml
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
