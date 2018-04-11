@@ -21,10 +21,10 @@ from wlf.notify import CancelledError, progress
 from wlf.path import Path, PurePath, get_encoded
 from wlf.uitools import DialogWithDir, main_show_dialog
 
+from . import database
 from .__about__ import __version__
 from .image import RESOURCES_DIR, HTMLImage
 from .page import from_list, updated_config
-
 
 LOGGER = logging.getLogger('com.wlf.csheet.dialog')
 
@@ -174,35 +174,14 @@ class Dialog(DialogWithDir):
     def get_images(self):
         """Get images from database.  """
 
-        related_pipeline = {'灯光':  '渲染'}
         try:
             for _ in progress((self.database,), '访问数据库', parent=self):
-                shots = cgtwq.Shots(
+                return database.get_images(
                     self.database,
                     pipeline=self.pipeline,
-                    prefix=self.prefix)
-
-            # For pipelines thas has a another video related pipeline.
-            if self.pipeline in related_pipeline:
-                _pipeline = related_pipeline[self.pipeline]
-                LOGGER.debug('Using related pipeline: %s', _pipeline)
-                video_shots = cgtwq.Shots(
-                    self.database,
-                    pipeline=_pipeline,
-                    prefix=self.prefix)
-            else:
-                video_shots = None
-
-            images = []
-            for shot in progress(shots.shots, '分析信息', parent=self):
-                image = HTMLImage(shots.get_shot_image(shot))
-                if image:
-                    image.name = shot
-                    _shots = video_shots if self.pipeline in related_pipeline else shots
-                    image.preview_source = _shots.get_shot_submit_path(shot)
-                    images.append(image)
-            images.sort(key=lambda x: x.name)
-            return images
+                    prefix=self.prefix,
+                    token=DesktopClient.token()
+                )
         except cgtwq.IDError as ex:
             QMessageBox.critical(self, '找不到对应条目', str(ex))
             raise
