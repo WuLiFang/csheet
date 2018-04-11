@@ -14,8 +14,6 @@ gevent = ">=1.2.2"
 pendulum = "*"
 Flask = "*"
 diskcache = "*"
-"560d3b2" = {file = "https://github.com/WuLiFang/cgtwq/archive/1.0.0.tar.gz"}
-"3500461" = {file = "https://github.com/WuLiFang/wlf/archive/0.3.2.tar.gz"}
 "pathlib2" = ">=2.3.0"
 openpyxl = ">=2.5.1"
 psutil = ">=5.4.3"
@@ -25,3 +23,5 @@ pyblish = ">=1.4.3"
 requests = ">=2.18.4"
 websocket-client = ">=0.47.0"
 raven = {extras = ["flask"]}
+"544be00" = {file = "https://github.com/WuLiFang/wlf/archive/0.3.3.tar.gz"}
+"1ba1c41" = {file = "https://github.com/WuLiFang/cgtwq/archive/1.2.0.tar.gz"}

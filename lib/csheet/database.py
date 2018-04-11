@@ -37,7 +37,7 @@ def get_images(database, pipeline, prefix, token=None):
     fileboxes = database.get_fileboxes(
         cgtwq.Filter(
             '#pipeline_id',
-            database.get_piplines(cgtwq.Filter('name', pipeline))[0].id) &
+            database.get_pipelines(cgtwq.Filter('name', pipeline))[0].id) &
         cgtwq.Filter('title', ['单帧图', '检查单帧图']))
 
     # Related task for image info and preview.
@@ -60,10 +60,8 @@ def get_images(database, pipeline, prefix, token=None):
             path = json.loads(image_data)['image_path']
         except (TypeError, KeyError):
             _select = module.select(id_)
-            # XXX: need refactor cgtwq module.
-            cgtwq.selection.filebox._OS = 'win'
             path = '{}/{}.jpg'.format(
-                _select.get_filebox(id_=fileboxes[0].id).path, shot)
+                _select.filebox.get(id_=fileboxes[0].id).path, shot)
         img = HTMLImage(path)
         img.cgteamwork_select = module.select(
             *[i[0] for i in related_data if i[2] == shot]

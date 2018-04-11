@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "dd11010193b306792800c9a1a710ec1677786fa0421651d6ced1f2a28592572f"
+            "sha256": "2d3d76fd444f51697976e5bb87f21451c8d7b52aa86af698c4c3bffb371d0bb5"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -14,11 +14,11 @@
         ]
     },
     "default": {
-        "3500461": {
-            "file": "https://github.com/WuLiFang/wlf/archive/0.3.2.tar.gz"
+        "1ba1c41": {
+            "file": "https://github.com/WuLiFang/cgtwq/archive/1.2.0.tar.gz"
         },
-        "560d3b2": {
-            "file": "https://github.com/WuLiFang/cgtwq/archive/1.0.0.tar.gz"
+        "544be00": {
+            "file": "https://github.com/WuLiFang/wlf/archive/0.3.3.tar.gz"
         },
         "beautifulsoup4": {
             "hashes": [
@@ -169,10 +169,10 @@
         },
         "openpyxl": {
             "hashes": [
-                "sha256:c875fbefae29c4ac9ceaa88470b682834495173cbe9cd37e7286285b7fbc2602"
+                "sha256:63165adcc806a5c281febb344f3594541f778f05b99a3a5e802941a3c0a85f71"
             ],
             "index": "pypi",
-            "version": "==2.5.1"
+            "version": "==2.5.2"
         },
         "pathlib2": {
             "hashes": [
@@ -350,10 +350,10 @@
     "develop": {
         "astroid": {
             "hashes": [
-                "sha256:a92c1197dd496ef2470e73e1c296fc02a719907ee07259744e26a13bda9d4862",
-                "sha256:b76e5109ff0f386dd229673ca1323d21b1e9bb9c38eaed2cf830882dd7628be2"
+                "sha256:35cfae47aac19c7b407b7095410e895e836f2285ccf1220336afba744cc4c5f2",
+                "sha256:38186e481b65877fd8b1f9acc33e922109e983eb7b6e487bd4c71002134ad331"
             ],
-            "version": "==1.6.2"
+            "version": "==1.6.3"
         },
         "attrs": {
             "hashes": [
@@ -364,10 +364,10 @@
         },
         "autopep8": {
             "hashes": [
-                "sha256:c7be71ab0cb2f50c9c22c82f0c9acaafc6f57492c3fbfee9790c415005c2b9a5"
+                "sha256:2284d4ae2052fedb9f466c09728e30d2e231cfded5ffd7b1a20c34123fdc4ba4"
             ],
             "index": "pypi",
-            "version": "==1.3.4"
+            "version": "==1.3.5"
         },
         "backports.functools-lru-cache": {
             "hashes": [
@@ -496,11 +496,11 @@
         },
         "pylint": {
             "hashes": [
-                "sha256:34ab1a62fbdd48059d082f5a52b7e719a39b757a53ecbf0b2b7169b9c6a2cc28",
-                "sha256:c77311859e0c2d7932095f30d2b1bfdc4b6fe111f534450ba727a52eae330ef2"
+                "sha256:0b7e6b5d9f1d4e0b554b5d948f14ed7969e8cdf9a0120853e6e5af60813b18ab",
+                "sha256:34738a82ab33cbd3bb6cd4cef823dbcabdd2b6b48a4e3a3054a2bbbf0c712be9"
             ],
             "index": "pypi",
-            "version": "==1.8.3"
+            "version": "==1.8.4"
         },
         "pytest": {
             "hashes": [
