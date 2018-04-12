@@ -14,5 +14,27 @@ $(document).ready(
                         result.length + 5);
                 });
         });
+        let button = <JQuery<HTMLButtonElement>>$('#open');
+        $('form').submit(
+            function () {
+                button.each(
+                    function () {
+                        this.disabled = true
+                    }
+                )
+                let count = 0;
+                function updateText() {
+                    let dotAmount = (count + 2) % 3 + 1
+                    let message = '正在生成'
+                    for (let i = 0; i < dotAmount; i++) {
+                        message += '.'
+                    }
+                    button.html(message)
+                    count += 1
+                }
+                updateText()
+                setInterval(updateText, 500)
+            }
+        )
     }
 );
