@@ -9,11 +9,12 @@ import cgtwq
 from wlf.path import Path
 
 from . import pack
+from ..__about__ import __version__
 from ..database import get_csheet_config
 from ..image import get_images_from_dir
+from ..page import from_dir
 from .app import APP
 from .util import require_login
-from ..page import from_dir
 
 
 @require_login
@@ -24,7 +25,7 @@ def render_main():
     args = request.args
     if not args:
         cgtwq.PROJECT.token = token
-        return render_template('index.html', projects=cgtwq.PROJECT.names())
+        return render_template('index.html', projects=cgtwq.PROJECT.names(), __version__=__version__)
 
     project = args['project']
     prefix = args.get('prefix')

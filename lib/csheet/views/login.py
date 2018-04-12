@@ -9,6 +9,7 @@ from six import text_type
 import cgtwq
 
 from .app import APP
+from ..__about__ import __version__
 
 
 @APP.route('/login', methods=['GET', 'POST'])
@@ -26,7 +27,7 @@ def login():
             session[k] = v
         print(request.args.get('from', '/'))
         return redirect(request.args.get('from', '/'))
-    return render_template('login.html')
+    return render_template('login.html', __version__=__version__)
 
 
 @APP.route('/logout', methods=['GET', 'POST'])
