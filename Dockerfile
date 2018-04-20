@@ -24,6 +24,7 @@ WORKDIR /csheet
 
 # Install dependencies
 RUN pipenv install --system --deploy
+RUN pip install gunicorn
 
 # Set environment
 ENV PYTHONPATH=lib
@@ -41,5 +42,5 @@ RUN set -ex && python -m unittest discover -v -s ./tests -p test_*.py
 FROM build AS release
 
 LABEL author="NateScarlet@Gmail.com"
-CMD  ["-p", "80", "-s", "/srv/csheet"]
-ENTRYPOINT ["python", "-m", "csheet"]
+ENV CSHEET_STORAGE /srv/csheet
+ENTRYPOINT ["gunicorn", "-w", "4", "-k", "gevent", "-b", "0.0.0.0:80", "csheet:APP"]
