@@ -33,8 +33,7 @@ export class CSheetImage {
             return
         }
         // Skip for already updated recently.
-        if (this.isUpdating || this.isScheduled
-            || new Date().getTime() - this.lastUpdateTime < this.minUpdateInterval) {
+        if (this.isUpdating || new Date().getTime() - this.lastUpdateTime < this.minUpdateInterval) {
             return
         }
         // Schedule update later if busy.
@@ -48,6 +47,7 @@ export class CSheetImage {
             }
             this.isScheduled = true;
             setTimeout(() => { this.update(true) }, this.retryAfter)
+            return
         }
         currentAjax += 1;
 
