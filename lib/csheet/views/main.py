@@ -3,6 +3,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+from contextlib import closing
+
 from flask import abort, make_response, render_template, request, session
 
 import cgtwq
@@ -12,6 +14,7 @@ from . import pack
 from ..__about__ import __version__
 from ..database import get_csheet_config
 from ..image import get_images_from_dir
+from ..model import Session
 from ..page import from_dir
 from .app import APP
 from .util import require_login
@@ -25,7 +28,10 @@ def render_main():
     args = request.args
     if not args:
         cgtwq.PROJECT.token = token
-        return render_template('index.html', projects=cgtwq.PROJECT.names(), __version__=__version__)
+        return render_template(
+            'index.html',
+            projects=cgtwq.PROJECT.names(),
+            __version__=__version__)
 
     project = args['project']
     prefix = args.get('prefix')
@@ -38,9 +44,13 @@ def render_main():
         return pack.packed_page(**config)
 
     config['is_client'] = True
+    sess = Session()
+    videos = config['images']
+    sess.add_all(videos)
 
     # Respon with cookies set.
-    resp = make_response(render_template('csheet_app.html', **config))
+    with closing(sess):
+        resp = make_response(render_template('csheet_app.html', **config))
     cookie_life = 60 * 60 * 24 * 90
     resp.set_cookie('project', project, max_age=cookie_life)
     resp.set_cookie('pipeline', pipeline, max_age=cookie_life)

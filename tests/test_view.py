@@ -7,7 +7,6 @@ from __future__ import (absolute_import, division, print_function,
 import re
 from unittest import TestCase, main, skip
 
-import flask
 from requests.utils import quote
 
 from csheet.views import APP
@@ -47,24 +46,18 @@ class CGTeamworkTestCase(TestCase):
 
     def test_image_info(self):
         for i in self.uuid_list:
-            url = '/images/{}.info'.format(i)
+            url = '/videos/{}.info'.format(i)
             recv = self.client.get(url)
-            self.assertEqual(recv.status_code, 200)
-
-    def test_image_note(self):
-        for i in self.uuid_list:
-            url = b'/images/{}.notes/合成'.format(i)
-            recv = self.client.get(quote(url))
             self.assertEqual(recv.status_code, 200)
 
     def test_get_image(self):
         for role in ('thumb', 'preview', 'full'):
             for i in self.uuid_list:
-                url = b'/images/{}.{}'.format(i, role)
+                url = b'/videos/{}.{}'.format(i, role)
                 recv = self.client.get(quote(url))
                 self.assertIn(
                     recv.status_code,
-                    (200, 503),
+                    (200, 400),
                     '{}: {}'.format(url, _recv_msg(recv)))
 
     def test_api(self):

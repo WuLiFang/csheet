@@ -43,4 +43,5 @@ FROM build AS release
 
 LABEL author="NateScarlet@Gmail.com"
 ENV CSHEET_STORAGE /srv/csheet
-ENTRYPOINT ["gunicorn", "-w", "4", "-k", "gevent", "-b", "0.0.0.0:80", "csheet:APP"]
+ENV CSHEET_DATABASE sqlite:////srv/csheet/csheet.db
+CMD ["gunicorn", "-w", "4", "-k", "gevent", "-b", "0.0.0.0:80", "csheet:APP"]

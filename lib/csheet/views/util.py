@@ -9,6 +9,8 @@ from flask import redirect, session, request, url_for
 
 import cgtwq
 
+# TODO: remove this module.
+
 
 def require_login(func):
     """Decorator, require login before return view.   """

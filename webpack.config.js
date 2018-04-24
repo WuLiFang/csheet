@@ -49,7 +49,7 @@ let csheeetJS = {
     contentBase: path.join(__dirname, 'tests/pages'),
     proxy: {
       '/api': 'http://localhost:5001',
-      '/images': 'http://localhost:5001',
+      '/videos': 'http://localhost:5001',
     },
     publicPath: '/static/dist',
   },

@@ -52,23 +52,23 @@ export class CSheetImage {
         currentAjax += 1;
 
         $.get({
-            url: '/api/image/timestamp',
+            url: '/api/video/mtime',
             data: { uuid: this.uuid },
             success: (data: ImageData) => {
                 if (!data.thumb) {
                     this.onthumberror()
                 } else {
-                    this.thumb = `/images/${this.uuid}.thumb?timestamp=${data.thumb}`;
+                    this.thumb = `/videos/${this.uuid}.thumb?timestamp=${data.thumb}`;
                     this.loadThumb();
                 }
                 if (!data.full) {
                     this.lightbox.$.addClass(classes.failedFull)
                 } else {
-                    this.full = `/images/${this.uuid}.full?timestamp=${data.full}`;
+                    this.full = `/videos/${this.uuid}.full?timestamp=${data.full}`;
                     this.loadFull();
                 }
                 if (data.preview) {
-                    this.preview = `/images/${this.uuid}.preview?timestamp=${data.preview}`;
+                    this.preview = `/videos/${this.uuid}.preview?timestamp=${data.preview}`;
                 }
                 // Reset wait time.
                 this.retryAfter = 1000;
@@ -170,7 +170,7 @@ export class CSheetImage {
             return
         }
         $.get(
-            `images/${this.uuid}.info`,
+            `videos/${this.uuid}.info`,
             (data: string) => {
                 let detail = this.lightbox.$.find('.detail')
                 detail.html(data)

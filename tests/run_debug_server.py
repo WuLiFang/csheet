@@ -4,21 +4,24 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
-from gevent.pywsgi import WSGIServer
 
-from csheet.views import APP
+from csheet import generation, APP, watch
 from wlf import mp_logging
+from util import setup
 
 
 def main():
     mp_logging.basic_config(level=logging.DEBUG)
-    APP.config['storage'] = 'D:\\docker_serve\\csheet'
-    # APP.run('localhost', 5001, True)
+    setup()
+
     port = 5001
     APP.debug = True
-    server = WSGIServer(('localhost', port), APP)
+    generation.start()
+    watch.start()
+
+    APP.run('localhost', port, True)
+
     APP.logger.debug('Server ready')
-    server.serve_forever()
 
 
 if __name__ == '__main__':

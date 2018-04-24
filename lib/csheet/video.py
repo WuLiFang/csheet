@@ -3,11 +3,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from six import text_type
-
 from wlf.path import PurePath
 
-from .cache import getmtime
 from .filename import filter_filename
 from .model import Video
 
@@ -28,6 +25,7 @@ class HTMLVideo(Video):
 
     def source(self, role):
         """Get generation source for role.  """
+
         if role in ('preview',):
             return self.src
         elif role in ('thumb', 'full'):
@@ -66,24 +64,17 @@ class HTMLVideo(Video):
                 self.folder_names[role],
                 path.with_suffix(self.file_suffix[role]).name)
 
-        try:
-            timestamp = self.get_timestamp(role)
-        except (KeyError, OSError):
+        timestamp_attr = {
+            'thumb': 'thumb_mtime',
+            'full': 'poster_mtime',
+            'poster': 'poster_mtime',
+            'src': 'src_mtime',
+            'preview': 'preview_mtime'
+        }[role]
+
+        timestamp = getattr(self, timestamp_attr)
+        if not timestamp:
             return ''
 
-        url = '/images/{}.{}?timestamp={}'.format(self.uuid, role, timestamp)
+        url = '/videos/{}.{}?timestamp={}'.format(self.uuid, role, timestamp)
         return url
-
-    def get_timestamp(self, role):
-        """Get mtime for role.
-
-        Args:
-            role (str): Generated role.
-
-        Returns:
-            fload: Timestamp of mtime.
-        """
-
-        file_ = self.source(role)
-        ret = getmtime(text_type(file_))
-        return ret

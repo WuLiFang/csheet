@@ -12,6 +12,7 @@ from wlf import mp_logging
 from wlf.path import Path
 
 from .__about__ import __version__
+from . import generation, watch
 
 LOGGER = logging.getLogger('com.wlf.csheet')
 
@@ -30,6 +31,8 @@ def run_server(port=5000, local_dir=None):
     address = 'https://{}:{}'.format(host_ip, port)
     print(address)
     LOGGER.info('服务器运行于: %s', address)
+    watch.start()
+    generation.start()
     server.serve_forever()
 
     return (host_ip, port)

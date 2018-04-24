@@ -18,7 +18,7 @@ APP.secret_key = ('}w\xb7\xa3]\xfaI\x94Z\x14\xa9\xa5}\x16\xb3'
 APP.config['version'] = __version__
 APP.config['preview_limit_size'] = 10 * 2 ** 20  # 10MB
 APP.config['storage'] = os.getenv('CSHEET_STORAGE')
-SENTRY = Sentry(APP, logging=True,
+SENTRY = Sentry(APP, logging=bool(os.getenv('SENTRY_DSN')),
                 level=logging.WARNING)
 
 

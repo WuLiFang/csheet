@@ -2,3 +2,7 @@
 .vscode/
 Documentation/
 node_modules/
+tests/storage
+!tests/storage/.gitignore
+tests/images/*/*
+tests/pages/

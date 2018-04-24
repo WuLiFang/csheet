@@ -4,6 +4,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import logging
+from contextlib import closing
 from os import SEEK_END
 from tempfile import TemporaryFile
 from zipfile import ZipFile
@@ -13,9 +14,10 @@ from gevent import sleep, spawn
 from gevent.queue import Queue
 from six import text_type
 
-from ..image import HTMLImage
-from .app import APP
+from ..model import Session
 from ..page import updated_config
+from ..video import HTMLVideo
+from .app import APP
 
 STATUS = {}
 PROGRESS_EVENT_LISTENER = []
@@ -44,7 +46,7 @@ def pack_event():
         return 'data: {}\n\n'.format(data)
 
     if request.headers.get('accept') == 'text/event-stream':
-        def events():
+        def _events():
             queue = Queue()
             PROGRESS_EVENT_LISTENER.append(queue)
             try:
@@ -53,7 +55,7 @@ def pack_event():
             except GeneratorExit:
                 PROGRESS_EVENT_LISTENER.remove(queue)
 
-        return Response(events(), content_type='text/event-stream')
+        return Response(_events(), content_type='text/event-stream')
     return pack_progress()
 
 
@@ -97,41 +99,44 @@ def archive(**config):
     APP.logger.info('Start archive page.')
     config['is_pack'] = True
 
-    with ZipFile(f, 'w', allowZip64=True) as zipfile:
+    sess = Session()
+    videos = config['images']
+    sess.add_all(videos)
 
-        # Pack images.
-        images = config.get('images')
-        if not images:
-            abort(404)
-        total = len(images)
+    with closing(sess):
+        with ZipFile(f, 'w', allowZip64=True) as zipfile:
 
-        def _write_image(image):
-            assert isinstance(image, HTMLImage)
-            # Make sure image avaliable.
-            for role in ('thumb', 'full'):
-                try:
-                    image.generate(role)
-                except ValueError:
-                    continue
-            # Pack genereted files.
-            for role, filename in image.generated.items():
-                arcname = image.get(role, is_pack=True)
-                zipfile.write(text_type(filename), arcname)
+            # Pack images.
+            images = config.get('images')
+            if not images:
+                abort(404)
+            total = len(images)
 
-        for index, i in enumerate(images, 1):
-            job = spawn(_write_image, i)
-            while not job.ready():
-                sleep(0.1)
-            pack_progress(index * 100.0 / total)
+            def _write_image(video):
+                assert isinstance(video, HTMLVideo)
+                data = {'full': video.poster,
+                        'preview': video.preview,
+                        'thumb': video.thumb}
+                for role, filename in data.items():
+                    if not filename:
+                        continue
+                    arcname = video.get(role, is_pack=True)
+                    zipfile.write(text_type(filename), arcname)
 
-        # Pack static files:
-        for i in config.get('static', ()):
-            zipfile.write(APP.static_folder + '/' + i,
-                          '{}/{}'.format(config['static_folder'], i))
+            for index, i in enumerate(images, 1):
+                job = spawn(_write_image, i)
+                while not job.ready():
+                    sleep(0.1)
+                pack_progress(index * 100.0 / total)
 
-        # Pack index.
-        index_page = render_template('csheet.html', **config)
-        zipfile.writestr('{}.html'.format(
-            config.get('title', 'index')), index_page.encode('utf-8'))
+            # Pack static files:
+            for i in config.get('static', ()):
+                zipfile.write(APP.static_folder + '/' + i,
+                              '{}/{}'.format(config['static_folder'], i))
 
-    return f
+            # Pack index.
+            index_page = render_template('csheet.html', **config)
+            zipfile.writestr('{}.html'.format(
+                config.get('title', 'index')), index_page.encode('utf-8'))
+
+        return f

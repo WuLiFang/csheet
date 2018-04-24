@@ -3,6 +3,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import time
+
 from flask import jsonify, request, session
 
 import cgtwq
@@ -10,6 +12,7 @@ from wlf.path import get_unicode as u
 
 from ..cache import CACHE
 from ..database import get_database, get_image, get_images, get_project_code
+from ..model import Session, Video
 from .app import APP
 from .util import require_login
 
@@ -58,6 +61,26 @@ def image_timestamp():
     return jsonify(_image_timestamp(uuid))
 
 
+@APP.route('/api/video/mtime')
+def video_mtime():
+    """get realtime source timestamp for all role.   """
+
+    uuid = request.args['uuid']
+    try:
+        video = Video(uuid=uuid)
+    except ValueError:
+        return 'No such video', 404
+
+    if not video.is_need_update and time.time() - video.last_update_time > 10:
+        sess = Session()
+        video.is_need_update = True
+        sess.add(video)
+        sess.commit()
+    return jsonify({'thumb': video.thumb_mtime,
+                    'preview': video.preview_mtime,
+                    'full': video.poster_mtime})
+
+
 @CACHE.memoize('view', expire=10)
 def _image_timestamp(uuid):
     image = get_image(uuid)
@@ -77,21 +100,21 @@ def project_code(project):
     return _apply_token(get_project_code, project)
 
 
-@APP.route('/api/image/note', methods=('GET', 'POST'))
-def note():
-    uuid = request.args['uuid']
-    pipeline = request.args['pipeline']
-    image = get_image(uuid)
-    select = image.cgteamwork_select
-    assert isinstance(select, cgtwq.Selection)
-    select.token = session['token']
-    entry = select.filter(cgtwq.Field('pipeline') == pipeline).to_entry()
-    assert isinstance(entry, cgtwq.Entry)
-    notes = entry.get_notes()
-    if request.method == 'GET':
-        return jsonify(notes)
-    elif request.method == 'POST':
-        entry.module
+# @APP.route('/api/image/note', methods=('GET', 'POST'))
+# def note():
+#     uuid = request.args['uuid']
+#     pipeline = request.args['pipeline']
+#     image = get_image(uuid)
+#     select = image.cgteamwork_select
+#     assert isinstance(select, cgtwq.Selection)
+#     select.token = session['token']
+#     entry = select.filter(cgtwq.Field('pipeline') == pipeline).to_entry()
+#     assert isinstance(entry, cgtwq.Entry)
+#     notes = entry.get_notes()
+#     if request.method == 'GET':
+#         return jsonify(notes)
+#     elif request.method == 'POST':
+#         entry.module
 
 
 @APP.route('/api/image/field', methods=('GET', 'PUT'))

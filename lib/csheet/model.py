@@ -3,16 +3,63 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import os
+import json
+from contextlib import closing
 
-from sqlalchemy import Column, String, create_engine, orm, Boolean
+from sqlalchemy import Boolean, Column, Float, String, create_engine, orm
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.types import VARCHAR, TypeDecorator, Unicode
 
+from wlf.path import get_unicode as u
+from wlf.path import PurePath
+
+from . import setting
 from .localdatabase import uuid_from_path
 
-ENGINE = create_engine(os.getenv('CSHEET_DABASE', 'sqlite:///:memory:'))
-Base = declarative_base(bind=ENGINE)  # pylint: disable=invalid-name
-Session = orm.sessionmaker(bind=ENGINE)  # pylint: disable=invalid-name
+Base = declarative_base()  # pylint: disable=invalid-name
+Session = orm.sessionmaker()  # pylint: disable=invalid-name
+
+
+class Path(TypeDecorator):
+    """Path type."""
+    # pylint: disable=abstract-method
+
+    impl = Unicode
+
+    def process_bind_param(self, value, dialect):
+        if value is not None:
+            value = u(value).replace('\\', '/')
+            value = PurePath(value).as_posix()
+        return value
+
+    def process_result_value(self, value, dialect):
+        if value is not None:
+            value = PurePath(value)
+        return value
+
+
+class JSONEncodedDict(TypeDecorator):
+    """Represents an immutable structure as a json-encoded string.
+
+    Usage::
+
+        JSONEncodedDict(255)
+
+    """
+    # pylint: disable=abstract-method
+
+    impl = VARCHAR
+
+    def process_bind_param(self, value, dialect):
+        if value is not None:
+            value = json.dumps(value)
+
+        return value
+
+    def process_result_value(self, value, dialect):
+        if value is not None:
+            value = json.loads(value)
+        return value
 
 
 class Video(Base):
@@ -20,39 +67,59 @@ class Video(Base):
 
     __tablename__ = 'video'
     uuid = Column(String, primary_key=True)
-    src = Column(String)
-    poster = Column(String)
-    is_generated = Column(Boolean)
-    thumb = Column(String)
-    preview = Column(String)
+    label = Column(String)
+    src = Column(Path)
+    poster = Column(Path)
+    thumb = Column(Path)
+    preview = Column(Path)
+    is_need_update = Column(Boolean)
+    src_mtime = Column(Float)
+    poster_mtime = Column(Float)
+    thumb_mtime = Column(Float)
+    preview_mtime = Column(Float)
+    last_update_time = Column(Float)
+    task_info = Column(JSONEncodedDict)
+    _is_initiated = False
 
-    def __init__(self, src=None, poster=None):
-        if not (src or poster):
-            raise ValueError('Need at least one of `src` and `poster`')
-        uuid = uuid_from_path(src or poster)
-        super(Video, self).__init__(uuid=uuid,
-                                    src=src,
-                                    poster=poster,
-                                    is_generated=False)
-        session = Session()
-        session.add(self)
-        session.commit()
+    def __new__(cls, src=None, poster=None, uuid=None):
+        # pylint: disable=unused-argument
+        ret = None
+        if uuid:
+            session = Session()
+            with closing(session):
+                ret = session.query(cls).filter(cls.uuid == uuid).one_or_none()
 
-    @classmethod
-    def from_uuid(cls, uuid_):
-        """Get video from uuid.
-
-        Args:
-            uuid_ (str): uuid of video.
-
-        Returns:
-            Video: video with that uuid.
-        """
-
-        session = Session()
-        ret = session.query(cls).filter(cls.uuid == uuid_).one()
-        assert isinstance(ret, cls)
+                if ret:
+                    assert isinstance(ret, cls)
+                    ret._is_initiated = True  # pylint: disable=protected-access
+        ret = ret or super(Video, cls).__new__(cls)
         return ret
 
+    def __init__(self, src=None, poster=None, uuid=None):
+        if self._is_initiated:
+            return
+        elif not (src or poster):
+            raise ValueError('Need at least one of `src` and `poster`')
+        uuid = uuid or uuid_from_path(poster or src)
+        label = PurePath(poster or src).stem
+        super(Video, self).__init__(uuid=uuid,
+                                    label=label,
+                                    src=src,
+                                    poster=poster,
+                                    is_need_update=True)
+        self._is_initiated = True
 
-Base.metadata.create_all()
+    def __repr__(self):
+        return 'Video<uuid={0.uuid}, src={0.src}, poster={0.poster}>'.format(self)
+
+
+def bind(url=None):
+    """Bind model to database.  """
+
+    url = url or setting.DATABASE
+    engine = create_engine(url)
+    Session.configure(bind=engine)
+    Base.metadata.create_all(engine)
+
+
+bind()
