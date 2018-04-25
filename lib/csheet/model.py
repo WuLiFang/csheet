@@ -4,9 +4,11 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import json
+import logging
 from contextlib import closing
 
 from sqlalchemy import Boolean, Column, Float, String, create_engine, orm
+from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.types import VARCHAR, TypeDecorator, Unicode
 
@@ -18,6 +20,7 @@ from .localdatabase import uuid_from_path
 
 Base = declarative_base()  # pylint: disable=invalid-name
 Session = orm.sessionmaker()  # pylint: disable=invalid-name
+LOGGER = logging.getLogger(__name__)
 
 
 class Path(TypeDecorator):
@@ -78,6 +81,8 @@ class Video(Base):
     thumb_mtime = Column(Float)
     preview_mtime = Column(Float)
     last_update_time = Column(Float)
+    database = Column(String)
+    pipeline = Column(String)
     task_info = Column(JSONEncodedDict)
     _is_initiated = False
 
@@ -117,9 +122,20 @@ def bind(url=None):
     """Bind model to database.  """
 
     url = url or setting.DATABASE
+    LOGGER.debug('Bind to engine: %s', url)
     engine = create_engine(url)
     Session.configure(bind=engine)
     Base.metadata.create_all(engine)
+    _upgrade_database(engine)
+
+
+def _upgrade_database(engine):
+    for column, type_ in (('database', 'VARCHAR'), ('pipeline', 'VARCHAR')):
+        try:
+            engine.execute(
+                'ALTER TABLE video ADD COLUMN {} {}'.format(column, type_))
+        except OperationalError:
+            continue
 
 
 bind()

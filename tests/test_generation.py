@@ -2,9 +2,10 @@
 """Test module `model`.  """
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+import pytest
 
-from csheet import generation, model, setting
 import util
+from csheet import generation, model, setting
 
 
 def setup():
@@ -20,6 +21,7 @@ def test_gen_thumb():
     generation.generate_one_thumb()
 
 
+@pytest.mark.skip('May take too long time')
 def test_gen_preview():
     setup()
     generation.generate_one_preview()

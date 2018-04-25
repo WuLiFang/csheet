@@ -4,6 +4,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import time
+from contextlib import closing
 
 from flask import jsonify, request, session
 
@@ -71,14 +72,15 @@ def video_mtime():
     except ValueError:
         return 'No such video', 404
 
-    if not video.is_need_update and time.time() - video.last_update_time > 10:
-        sess = Session()
-        video.is_need_update = True
+    sess = Session()
+    with closing(sess):
         sess.add(video)
-        sess.commit()
-    return jsonify({'thumb': video.thumb_mtime,
-                    'preview': video.preview_mtime,
-                    'full': video.poster_mtime})
+        if not video.is_need_update and time.time() - video.last_update_time > 10:
+            video.is_need_update = True
+            sess.commit()
+        return jsonify({'thumb': video.thumb_mtime,
+                        'preview': video.preview_mtime,
+                        'full': video.poster_mtime})
 
 
 @CACHE.memoize('view', expire=10)

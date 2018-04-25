@@ -25,7 +25,8 @@ def generate_one_thumb():
 
     with closing(session):
         video = session.query(Video).filter(
-            Video.poster_mtime.isnot(None)
+            Video.poster.isnot(None)
+            & Video.poster_mtime.isnot(None)
             & (Video.thumb_mtime.is_(None)
                | Video.thumb.is_(None)
                | (Video.thumb_mtime != Video.poster_mtime))
@@ -36,11 +37,14 @@ def generate_one_thumb():
 
         LOGGER.debug('Generate thumb for: %s', video)
         try:
-            video.thumb = generate_thumb(video).as_posix()
+            video.thumb = generate_thumb(video)
             video.thumb_mtime = video.poster_mtime
         except OSError:
             video.thumb_mtime = None
             video.poster_mtime = None
+        except ffmpeg.GenerateError:
+            video.poster = None
+            video.poster_mtime = video.thumb_mtime
 
         session.commit()
     return True
@@ -53,7 +57,8 @@ def generate_one_preview():
 
     with closing(session):
         video = session.query(Video).filter(
-            Video.src_mtime.isnot(None)
+            Video.src.isnot(None)
+            & Video.src_mtime.isnot(None)
             & (Video.preview_mtime.is_(None)
                | Video.preview.is_(None)
                | (Video.preview_mtime != Video.src_mtime))
@@ -64,11 +69,14 @@ def generate_one_preview():
 
         LOGGER.debug('Generate preview for: %s', video)
         try:
-            video.preview = generate_preview(video).as_posix()
+            video.preview = generate_preview(video)
             video.preview_mtime = video.src_mtime
         except OSError:
             video.preview_mtime = None
             video.src_mtime = None
+        except ffmpeg.GenerateError:
+            video.src = None
+            video.preview_mtime = video.src_mtime
 
         session.commit()
     return True
@@ -126,7 +134,8 @@ def generate_forever():
         except (KeyboardInterrupt, SystemExit):
             return
         except:  # pylint: disable=bare-except
-            LOGGER.error('Error during generation.', exc_info=True)
+            LOGGER.error(
+                'Error during generation.', exc_info=True)
 
 
 def start():

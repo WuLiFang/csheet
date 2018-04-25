@@ -63,7 +63,8 @@ def update_forever():
         except (KeyboardInterrupt, SystemExit):
             return
         except:  # pylint: disable=bare-except
-            LOGGER.error('Error during generation.', exc_info=True)
+            LOGGER.error(
+                'Error during generation.', exc_info=True)
 
 
 def start():

@@ -4,6 +4,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
+import generate_test_page
 
 from csheet import generation, APP, watch
 from wlf import mp_logging
@@ -14,6 +15,8 @@ def main():
     mp_logging.basic_config(level=logging.DEBUG)
     setup()
 
+    generate_test_page.main()
+
     port = 5001
     APP.debug = True
     generation.start()
@@ -21,10 +24,6 @@ def main():
 
     APP.run('localhost', port, True)
 
-    APP.logger.debug('Server ready')
-
 
 if __name__ == '__main__':
-    import generate_test_page
-    generate_test_page.main()
     main()

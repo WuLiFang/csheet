@@ -5,20 +5,24 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import json
+import logging
 from contextlib import closing
+from multiprocessing.dummy import Pool
 
 from gevent import sleep
 
 import cgtwq
 
+from sqlalchemy.exc import OperationalError
 from .exceptions import u_abort
 from .filename import filter_filename
 from .image import HTMLImage
-from .model import Session
+from .model import Session, Video
 from .page import updated_config
 from .video import HTMLVideo
 
 RENDER_PIPELINE = {'灯光':  '渲染', '合成':  '输出'}
+LOGGER = logging.getLogger(__name__)
 
 
 def get_image(uuid):
@@ -111,8 +115,8 @@ def get_videos(database, pipeline, prefix, token=None):
     related_data = related_select.get_fields(
         'id', 'pipeline', 'shot.shot', 'image', 'submit_file_path')
     related_data = sorted(related_data, key=lambda i: i[2])
-    sleep(1e-5)
     session = Session()
+    sleep(1e-5)
 
     def _get_poster(shot):
         data = [i for i in related_data
@@ -148,25 +152,40 @@ def get_videos(database, pipeline, prefix, token=None):
         return None
 
     def _get_video(shot):
-        src = _get_src(shot)
-        poster = _get_poster(shot)
-        data = [i for i in related_data
-                if i[1] == pipeline and i[2] == shot][0]
-        ret = HTMLVideo(src, poster, uuid=data[0])
-        ret.label = shot
-        if src:
-            ret.src = src
-        if poster:
-            ret.poster = poster
-        ret.task_info = {
-            'db': database.name,
-            'module': module.name,
-            'task_id': [i[0] for i in related_data if i[2] == shot]
-        }
-        return ret
+        try:
+            src = _get_src(shot)
+            poster = _get_poster(shot)
+            data = [i for i in related_data
+                    if i[1] == pipeline and i[2] == shot][0]
+            ret = HTMLVideo(src, poster, uuid=data[0])
+            ret.label = shot
+            if src:
+                ret.src = src
+            if poster:
+                ret.poster = poster
+            ret.database = database.name
+            ret.pipeline = pipeline
+            ret.task_info = {
+                'db': database.name,
+                'module': module.name,
+                'task_id': [i[0] for i in related_data if i[2] == shot]
+            }
+            return ret
+        except:
+            logging.error('Error during get video.', exc_info=True)
+            raise
 
     with closing(session):
-        ret = [_get_video(i) for i in shots]
+        ret = session.query(HTMLVideo).filter(
+            HTMLVideo.database == database.name,
+            HTMLVideo.pipeline == pipeline,
+            HTMLVideo.label.in_(shots)
+        ).all()
+        cached_shots = [i.label for i in ret]
+        LOGGER.debug('Use cached shots: %s', ret)
+        pool = Pool()
+        ret += pool.map(_get_video,
+                        (i for i in shots if i not in cached_shots))
         session.add_all(ret)
         session.commit()
         return ret

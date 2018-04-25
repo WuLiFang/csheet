@@ -36,12 +36,14 @@ RUN yum clean all
 
 FROM build AS test
 
-RUN pip install mock
-RUN set -ex && python -m unittest discover -v -s ./tests -p test_*.py
+RUN pip install pytest
+RUN set -ex && python -m pytest ./tests
 
 FROM build AS release
 
 LABEL author="NateScarlet@Gmail.com"
-ENV CSHEET_STORAGE /srv/csheet
-ENV CSHEET_DATABASE sqlite:////srv/csheet/csheet.db
-CMD ["gunicorn", "-w", "4", "-k", "gevent", "-b", "0.0.0.0:80", "csheet:APP"]
+ENV CSHEET_STORAGE=/srv/csheet
+ENV CSHEET_DATABASE=sqlite:////srv/csheet/csheet.db
+ENV NUM_WOKERS=8
+CMD ["run"]
+ENTRYPOINT [ "./entrypoint.sh" ]
