@@ -16,7 +16,7 @@ export class CSheetImage {
     private isScheduled = false;
     private isloadingThumb = false;
     private isloadingFull = false;
-    private retryAfter = 1000;
+    private share = 1;
     private lastUpdateTime = 0;
 
     constructor(
@@ -37,16 +37,16 @@ export class CSheetImage {
             return
         }
         // Schedule update later if busy.
-        if (currentAjax >= ajaxLimit) {
+        if (currentAjax >= ajaxLimit * this.share) {
             if (this.isScheduled && !isScheduledTask) {
                 return
             }
             if (isScheduledTask) {
                 // Increase wait time for next retry.
-                this.retryAfter *= 1.2;
+                this.share *= 1.2;
             }
             this.isScheduled = true;
-            setTimeout(() => { this.update(true) }, this.retryAfter)
+            setTimeout(() => { this.update(true) }, 1000)
             return
         }
         currentAjax += 1;
@@ -74,8 +74,8 @@ export class CSheetImage {
                 if (data.preview) {
                     this.preview = `/videos/${this.uuid}.preview?timestamp=${data.preview}`;
                 }
-                // Reset wait time.
-                this.retryAfter = 1000;
+                // Reset share.
+                this.share = 0.2;
             },
             complete: () => {
                 currentAjax -= 1;
