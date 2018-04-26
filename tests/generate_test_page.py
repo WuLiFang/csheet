@@ -17,7 +17,7 @@ def main():
     for page, filename in [
             ('/login', 'login.html'),
             ('/', 'index.html'),
-            (quote(b'/?pipeline=合成&project=梦塔&prefix=MT_EP06_01_',
+            (quote(b'/?pipeline=合成&project=梦塔&prefix=MT_EP07_01_',
                    safe=b'/?=&'), 'csheet.html')
     ]:
         resp = client.get(page)
