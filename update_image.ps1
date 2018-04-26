@@ -29,6 +29,7 @@ docker run -d `
     --restart always `
     $MAPPING `
     $SENTRY_OPTIONS `
+    --cpu-shares 2048 `
     -e NUM_WOKERS=$NUM_WORKERS `
     --name $CONTAINER $IMAGE
 
