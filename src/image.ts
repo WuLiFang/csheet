@@ -27,7 +27,7 @@ export class CSheetImage {
         public readonly lightbox: Lightbox,
     ) {
     }
-    update(isScheduledTask = false) {
+    update(isScheduledTask = false, isLoad = true) {
         // Skip for packed page.
         if (location.protocol == 'file:') {
             return
@@ -59,13 +59,17 @@ export class CSheetImage {
                     this.onthumberror()
                 } else {
                     this.thumb = `/videos/${this.uuid}.thumb?timestamp=${data.thumb}`;
-                    this.loadThumb();
+                    if (isLoad) {
+                        this.loadThumb();
+                    }
                 }
                 if (!data.full) {
                     this.lightbox.$.addClass(classes.failedFull)
                 } else {
                     this.full = `/videos/${this.uuid}.full?timestamp=${data.full}`;
-                    this.loadFull();
+                    if (isLoad) {
+                        this.loadFull();
+                    }
                 }
                 if (data.preview) {
                     this.preview = `/videos/${this.uuid}.preview?timestamp=${data.preview}`;
@@ -115,21 +119,27 @@ export class CSheetImage {
             }
         )
     }
-    loadFull() {
-        if (!this.thumb && !this.preview) {
-            this.lightbox.shrink()
-            return
-        }
-        if (this.isloadingFull || !this.full
-            || this.lightbox.fullVideo.getAttribute('poster') == this.full) {
-            return
+    loadFull(isForce = false) {
+        if (!isForce) {
+            if (!this.thumb && !this.preview) {
+                this.lightbox.shrink()
+                return
+            }
+            if (this.isloadingFull || !this.full
+                || this.lightbox.fullVideo.getAttribute('poster') == this.full) {
+                return
+            }
         }
         this.isloadingFull = true
 
         this.lightbox.$.removeClass(classes.failedFull)
         this.lightbox.$.addClass(classes.updatingFull)
+        let url = this.full
+        if (isForce) {
+            url = `${url}?forceLoadAt=${new Date().getTime()}`
+        }
         imageAvailable(
-            this.full,
+            url,
             (img) => {
                 let src = <string>img.getAttribute('src')
                 this.lightbox.fullImage.src = src

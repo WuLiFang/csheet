@@ -48,7 +48,8 @@ export class Viewer {
     }
     onrefreshclicked() {
         this.lightbox.image.unloadPreview()
-        this.lightbox.image.update()
+        this.lightbox.image.update(false, true)
+        this.lightbox.image.loadFull(true)
         this.lightbox.image.loadInfo()
         this.lightbox.image.loadPreview()
     }
