@@ -40,7 +40,7 @@ def render_main():
         return pack.packed_page(config)
 
     # Respon with cookies set.
-    config.sync()
+    config.sync_with_thread()
     resp = make_response(render_template('csheet_app.html', config=config))
     cookie_life = 60 * 60 * 24 * 90
     resp.set_cookie('project', project, max_age=cookie_life)

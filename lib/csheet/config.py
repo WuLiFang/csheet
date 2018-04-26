@@ -18,6 +18,8 @@ from .video import HTMLVideo
 
 LOGGER = logging.getLogger(__name__)
 
+from wlf.decorators import run_async
+
 
 class BaseConfig(object):
     """Base config class for render csheet page. """
@@ -74,6 +76,12 @@ class CGTeamWorkConfig(BaseConfig):
             set(i for i in select['shot.shot'] if i and i.startswith(self.prefix)))
         select = module.filter(cgtwq.Field('shot.shot') | shots)
         return select
+
+    @run_async
+    def sync_with_thread(self):
+        """Run sync in another thread.  """
+
+        return self.sync()
 
     def sync(self):
         """Sync local database with cgteamwork database.  """
