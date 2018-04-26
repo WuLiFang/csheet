@@ -5,7 +5,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import logging
 from .__about__ import __version__
-from .views import APP
+from .views import APP, SOCKETIO
 
 LOGGER = logging.getLogger(__name__)
 

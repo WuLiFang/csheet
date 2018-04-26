@@ -15,21 +15,21 @@ let csheeetJS = {
   },
   module: {
     rules: [{
-      test: /\.tsx?$/,
-      loader: 'ts-loader',
-      include: [
-        path.resolve(__dirname, 'src'),
-      ],
-    },
-    {
-      test: /\.scss$/,
-      use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
-    },
-    {
-      test: /\.css$/,
-      use: [MiniCssExtractPlugin.loader, 'css-loader']
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+        include: [
+          path.resolve(__dirname, 'src'),
+        ],
+      },
+      {
+        test: /\.scss$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
+      },
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader']
 
-    }
+      }
     ],
   },
   resolve: {
@@ -50,8 +50,9 @@ let csheeetJS = {
     proxy: {
       '/api': 'http://localhost:5001',
       '/videos': 'http://localhost:5001',
+      '/socket.io': 'http://localhost:5001',
     },
     publicPath: '/static/dist',
-  },
+  }
 };
 module.exports = [csheeetJS]

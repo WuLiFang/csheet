@@ -4,6 +4,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import cgtwq
 from requests.utils import quote
 
 import util
@@ -11,6 +12,9 @@ from csheet.views import APP
 
 
 def main():
+    if not cgtwq.DesktopClient.is_logged_in():
+        print('CGTeamWork not logged in, skip generate page.')
+        return
 
     client = APP.test_client()
     client.post('/_login')

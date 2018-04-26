@@ -7,6 +7,7 @@ import logging
 import os
 
 from flask import Flask
+from flask_socketio import SocketIO
 from raven.contrib.flask import Sentry
 
 from ..__about__ import __name__ as name
@@ -20,6 +21,8 @@ APP.config['preview_limit_size'] = 10 * 2 ** 20  # 10MB
 APP.config['storage'] = os.getenv('CSHEET_STORAGE')
 SENTRY = Sentry(APP, logging=bool(os.getenv('SENTRY_DSN')),
                 level=logging.WARNING)
+
+SOCKETIO = SocketIO(APP)
 
 
 @APP.route('/test_sentry')

@@ -7,8 +7,8 @@ import logging
 import os
 import time
 from contextlib import closing
-from multiprocessing.dummy import Process
 
+from gevent import sleep, spawn
 from sqlalchemy import or_
 
 from wlf import ffmpeg
@@ -133,7 +133,7 @@ def generate_forever():
     while True:
         try:
             if not (generate_one_thumb() or generate_one_preview()):
-                time.sleep(1)
+                sleep(1)
         except (KeyboardInterrupt, SystemExit):
             return
         except:  # pylint: disable=bare-except
@@ -144,6 +144,4 @@ def generate_forever():
 def start():
     """Start generation thread.  """
 
-    process = Process(name='Generation', target=generate_forever)
-    process.daemon = True
-    process.start()
+    spawn(generate_forever)

@@ -6,7 +6,7 @@ import logging
 
 import generate_test_page
 
-from csheet import generation, APP, watch
+from csheet import generation, APP, watch, SOCKETIO
 from wlf import mp_logging
 from util import setup
 
@@ -22,7 +22,7 @@ def main():
     generation.start()
     watch.start()
 
-    APP.run('localhost', port, True)
+    SOCKETIO.run(APP, 'localhost', port, debug=True)
 
 
 if __name__ == '__main__':

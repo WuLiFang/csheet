@@ -3,5 +3,5 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from . import image, login, main, pack, route, api, video
-from .app import APP
+from . import image, login, main, pack, route, api, video, socketio
+from .app import APP, SOCKETIO

@@ -7,7 +7,8 @@ import logging
 import os
 import time
 from contextlib import closing
-from multiprocessing.dummy import Process
+
+from gevent import sleep, spawn
 
 from wlf.path import get_encoded as e
 
@@ -36,6 +37,7 @@ def update_one():
             Video.last_update_time < time.time() - 10
         ).order_by(Video.last_update_time).first()
         if video is None:
+            LOGGER.debug('Nothing to update')
             return False
         assert isinstance(video, Video), type(video)
         video.is_need_update = False
@@ -63,7 +65,7 @@ def update_forever():
     while True:
         try:
             if not update_one():
-                time.sleep(1)
+                sleep(1)
         except (KeyboardInterrupt, SystemExit):
             return
         except:  # pylint: disable=bare-except
@@ -74,6 +76,4 @@ def update_forever():
 def start():
     """Start generation thread.  """
 
-    process = Process(name='Updating', target=update_forever)
-    process.daemon = True
-    process.start()
+    spawn(update_forever)

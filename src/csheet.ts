@@ -1,6 +1,7 @@
 import * as $ from 'jquery';
 import './csheet.scss';
 import { LightboxManager } from './lightbox';
+import './socketio';
 
 $(document).ready(
     function () {
