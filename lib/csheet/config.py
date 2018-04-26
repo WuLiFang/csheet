@@ -70,6 +70,9 @@ class CGTeamWorkConfig(BaseConfig):
 
         select = module.filter(cgtwq.Filter('pipeline', self.pipeline) &
                                cgtwq.Filter('shot.shot', self.prefix, 'has'))
+        shots = sorted(
+            set(i for i in select['shot.shot'] if i and i.startswith(self.prefix)))
+        select = module.filter(cgtwq.Field('shot.shot') | shots)
         return select
 
     def sync(self):
