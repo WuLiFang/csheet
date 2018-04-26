@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <title>
-        {{ config['title'] }}
+        {{ config.title }}
     </title>
     {% for i in config.static %} {% if i.endswith('.css') %}
     <link href="{{ config.static_folder }}/{{ i }}?version={{ config.version }}" rel="stylesheet" type="text/css" />{% elif i.endswith('.js') %}
@@ -101,7 +101,7 @@
                 </div>
                 <div class="bottom">
                     <div class='caption' title="{{ image.name | e }}">
-                        <span>{{ image.name | e }} </span>
+                        <span>{{ image.label | e }} </span>
                     </div>
                 </div>
                 <a class="prev" href="#image{{ loop.index - 1 }}"> </a>
