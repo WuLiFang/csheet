@@ -22,6 +22,7 @@ def setup():
 
     storage = path('storage')
     database = 'sqlite:///{}\\csheet.db'.format(storage)
+    setting.STORAGE = storage
     setting.DATABASE = database
     model.bind(database)
 

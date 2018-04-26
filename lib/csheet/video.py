@@ -61,10 +61,10 @@ class HTMLVideo(Video):
         """
 
         if is_pack:
-            path = PurePath(self.src or self.poster)
-            return '{}/{}'.format(
+            return '{}/{}{}'.format(
                 self.folder_names[role],
-                path.with_suffix(self.file_suffix[role]).name)
+                self.label or self.uuid,
+                self.file_suffix[role])
 
         timestamp_attr = {
             'thumb': 'thumb_mtime',

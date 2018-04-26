@@ -75,10 +75,12 @@ class Video(Base):
     src_mtime = Column(Float)
     preview = Column(Path)
     preview_mtime = Column(Float)
+    preview_atime = Column(Float)
     poster = Column(Path)
     poster_mtime = Column(Float)
     thumb = Column(Path)
     thumb_mtime = Column(Float)
+    thumb_atime = Column(Float)
     is_need_update = Column(Boolean)
     last_update_time = Column(Float)
     database = Column(String)
@@ -119,7 +121,7 @@ class Video(Base):
         self._is_initiated = True
 
     def __repr__(self):
-        return 'Video<uuid={0.uuid}, src={0.src}, poster={0.poster}>'.format(self)
+        return 'Video<label={0.label}, uuid={0.uuid}, src={0.src}, poster={0.poster}>'.format(self)
 
 
 def bind(url=None):
@@ -134,7 +136,11 @@ def bind(url=None):
 
 
 def _upgrade_database(engine):
-    for column, type_ in (('database', 'VARCHAR'), ('pipeline', 'VARCHAR')):
+    for column, type_ in (('database', 'VARCHAR'),
+                          ('pipeline', 'VARCHAR'),
+                          ('thumb_atime', 'FLOAT'),
+                          ('preview_atime', 'FLOAT')
+                          ):
         try:
             engine.execute(
                 'ALTER TABLE video ADD COLUMN {} {}'.format(column, type_))

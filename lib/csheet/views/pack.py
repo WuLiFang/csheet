@@ -18,6 +18,7 @@ from ..page import updated_config
 from ..video import HTMLVideo
 from .app import APP
 from ..config import BaseConfig
+from wlf.path import PurePath, get_encoded as e
 
 STATUS = {}
 PROGRESS_EVENT_LISTENER = []
@@ -91,7 +92,6 @@ def packed_page(config):
 def archive(config):
     """Return zip packed offline version.  """
     assert isinstance(config, BaseConfig), type(config)
-    pack_progress(0)
 
     f = TemporaryFile(suffix='.zip',
                       prefix=config.title)
@@ -104,9 +104,8 @@ def archive(config):
         videos = config.videos()
         if not videos:
             abort(404)
-        total = len(videos)
 
-        def _write(video):
+        for video in videos:
             assert isinstance(video, HTMLVideo)
             data = {'full': video.poster,
                     'preview': video.preview,
@@ -114,14 +113,14 @@ def archive(config):
             for role, filename in data.items():
                 if not filename:
                     continue
-                arcname = video.get(role, is_pack=True)
-                zipfile.write(text_type(filename), arcname)
+                assert isinstance(filename, PurePath), type(filename)
 
-        for index, i in enumerate(videos, 1):
-            job = spawn(_write, i)
-            while not job.ready():
-                sleep(0.1)
-            pack_progress(index * 100.0 / total)
+                arcname = video.get(role, is_pack=True)
+                try:
+                    zipfile.write(e(filename), arcname.encode('utf-8'))
+                    LOGGER.debug('Write zipfile: %s -> %s', filename, arcname)
+                except OSError:
+                    LOGGER.error('Error during pack', exc_info=True)
 
         # Pack static files:
         for i in config.static:
@@ -132,5 +131,5 @@ def archive(config):
         index_page = render_template('csheet.html', config=config)
         zipfile.writestr('{}.html'.format(config.title),
                          index_page.encode('utf-8'))
-
+    f.seek(0)
     return f
