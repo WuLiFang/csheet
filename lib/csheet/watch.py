@@ -31,24 +31,26 @@ def update_one():
 
     with closing(session):
         video = session.query(Video).filter(
-            Video.is_need_update.is_(True)).first()
+            Video.is_need_update.is_(True),
+            Video.src.isnot(None) | Video.poster.isnot(None)).first()
         if video is None:
             return False
         assert isinstance(video, Video), type(video)
+        video.is_need_update = False
+        video.last_update_time = time.time()
+        session.commit()
 
         LOGGER.debug('Update video info: %s', video)
         if video.src:
             try:
                 video.src_mtime = getmtime(video.src)
             except OSError:
-                pass
+                video.src = None
         if video.poster:
             try:
                 video.poster_mtime = getmtime(video.poster)
             except OSError:
-                pass
-        video.is_need_update = False
-        video.last_update_time = time.time()
+                video.poster = None
         session.commit()
         return True
 

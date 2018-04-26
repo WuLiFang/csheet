@@ -20,6 +20,7 @@ class CSheetTestCase(TestCase):
                             'e:/中文路径', 'e:/测试/中文路径']
                            + [mktemp() for _ in range(20)])
 
+    @skip('TODO')
     def test_from_list(self):
         from_list(self.dummy_list)
 

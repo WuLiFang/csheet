@@ -1,5 +1,4 @@
-<!DOCTYPE html> {% set config = {'database': database, 'pipeline': pipeline, 'prefix': prefix, 'is_pack': is_pack, 'is_client' : is_client,
-'is_local': is_local, 'relative_to' : relative_to} %}
+<!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
@@ -7,9 +6,9 @@
     <title>
         {{ config['title'] }}
     </title>
-    {% for i in static %} {% if i.endswith('.css') %}
-    <link href="{{ static_folder }}/{{ i }}?version={{ __version__ }}" rel="stylesheet" type="text/css" />{% elif i.endswith('.js') %}
-    <script src="{{ static_folder }}/{{ i }}?version={{ __version__ }}"></script> {% endif %} {% endfor %}
+    {% for i in config.static %} {% if i.endswith('.css') %}
+    <link href="{{ config.static_folder }}/{{ i }}?version={{ config.version }}" rel="stylesheet" type="text/css" />{% elif i.endswith('.js') %}
+    <script src="{{ config.static_folder }}/{{ i }}?version={{ config.version }}"></script> {% endif %} {% endfor %}
     <!--[if IE]>
     <script type="text/javascript">
     alert('请使用现代浏览器浏览本页面');
@@ -64,9 +63,9 @@
         </div>
     </header>
     <ul class="images">
-        {% for image in images %}
-        <li class="lightbox shrink" id="image{{ loop.index }}" data-drag="{{ image.get_drag(**config) }}" data-thumb="{{ image.get('thumb', **config) }}"
-            data-full="{{ image.get('full', **config) }}" data-preview="{{ image.get('preview', **config) }}" data-uuid="{{ image.uuid }}"
+        {% for image in config.videos() %}
+        <li class="lightbox shrink" id="image{{ loop.index }}" data-drag="{{ image.get_drag(config.is_pack) }}" data-thumb="{{ image.get('thumb', config.is_pack) }}"
+            data-full="{{ image.get('full', config.is_pack) }}" data-preview="{{ image.get('preview', config.is_pack) }}" data-uuid="{{ image.uuid }}"
             style="width:355.56px">
             <a href="#image{{ loop.index }}" class="zoom" draggable="false">
                 <video class='small hidden' muted loop>
@@ -74,8 +73,8 @@
                 </video>
                 <div class="noscript">
                     <noscript>
-                        <video poster="{{ image.get('thumb', **config) }}" src="{{ image.get('preview', **config) }}" muted loop>
-                            <img alt="no image" src="{{ image.get('thumb', **config) }}" />
+                        <video poster="{{ image.get('thumb', config.is_pack) }}" src="{{ image.get('preview', config.is_pack) }}" muted loop>
+                            <img alt="no image" src="{{ image.get('thumb', config.is_pack) }}" />
                         </video>
                     </noscript>
                 </div>
@@ -87,15 +86,15 @@
                 <div class="detail"> </div>
                 <a class="close" href="#void"> </a>
                 <video class='full hidden'>
-                    <a href="{{ image.get('full', **config) }}" target="_blank">
+                    <a href="{{ image.get('full', config.is_pack) }}" target="_blank">
                         <img alt="no image" />
                     </a>
                 </video>
                 <div class="noscript">
                     <noscript>
-                        <video class='full' poster="{{ image.get('full', **config) }}" src="{{ image.get('preview', **config) }}">
-                            <a href="{{ image.get('full', **config) }}" target="_blank">
-                                <img alt="no image" src="{{ image.get('full', **config) }}" />
+                        <video class='full' poster="{{ image.get('full', config.is_pack) }}" src="{{ image.get('preview', config.is_pack) }}">
+                            <a href="{{ image.get('full', config.is_pack) }}" target="_blank">
+                                <img alt="no image" src="{{ image.get('full', config.is_pack) }}" />
                             </a>
                         </video>
                     </noscript>

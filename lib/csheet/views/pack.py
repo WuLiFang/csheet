@@ -4,7 +4,6 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import logging
-from contextlib import closing
 from os import SEEK_END
 from tempfile import TemporaryFile
 from zipfile import ZipFile
@@ -18,6 +17,7 @@ from ..model import Session
 from ..page import updated_config
 from ..video import HTMLVideo
 from .app import APP
+from ..config import BaseConfig
 
 STATUS = {}
 PROGRESS_EVENT_LISTENER = []
@@ -59,14 +59,14 @@ def pack_event():
     return pack_progress()
 
 
-def packed_page(**config):
+def packed_page(config):
     """Return zip packed offline version.  """
-
+    assert isinstance(config, BaseConfig), type(config)
     if float(pack_progress()) != -1:
         abort(429)
     try:
         LOGGER.info('Start pack.')
-        f = archive(**config)
+        f = archive(config)
     except:
         LOGGER.error('Error during pack page.', exc_info=True)
         raise
@@ -76,7 +76,7 @@ def packed_page(**config):
     f.seek(0, SEEK_END)
     size = f.tell()
     f.seek(0)
-    filename = '{}.zip'.format(config.get('title', 'temp'))
+    filename = '{}.zip'.format(config.title)
 
     resp = send_file(f, as_attachment=True,
                      attachment_filename=filename.encode('utf-8'),
@@ -88,55 +88,49 @@ def packed_page(**config):
     return resp
 
 
-def archive(**config):
+def archive(config):
     """Return zip packed offline version.  """
-
-    config = updated_config(config)
+    assert isinstance(config, BaseConfig), type(config)
     pack_progress(0)
 
     f = TemporaryFile(suffix='.zip',
-                      prefix=config.get('title', 'packing_csheet_'))
+                      prefix=config.title)
     APP.logger.info('Start archive page.')
-    config['is_pack'] = True
+    config.is_pack = True
 
-    sess = Session()
-    videos = config['images']
-    sess.add_all(videos)
+    with ZipFile(f, 'w', allowZip64=True) as zipfile:
 
-    with closing(sess):
-        with ZipFile(f, 'w', allowZip64=True) as zipfile:
+        # Pack images.
+        videos = config.videos()
+        if not videos:
+            abort(404)
+        total = len(videos)
 
-            # Pack images.
-            images = config.get('images')
-            if not images:
-                abort(404)
-            total = len(images)
+        def _write(video):
+            assert isinstance(video, HTMLVideo)
+            data = {'full': video.poster,
+                    'preview': video.preview,
+                    'thumb': video.thumb}
+            for role, filename in data.items():
+                if not filename:
+                    continue
+                arcname = video.get(role, is_pack=True)
+                zipfile.write(text_type(filename), arcname)
 
-            def _write_image(video):
-                assert isinstance(video, HTMLVideo)
-                data = {'full': video.poster,
-                        'preview': video.preview,
-                        'thumb': video.thumb}
-                for role, filename in data.items():
-                    if not filename:
-                        continue
-                    arcname = video.get(role, is_pack=True)
-                    zipfile.write(text_type(filename), arcname)
+        for index, i in enumerate(videos, 1):
+            job = spawn(_write, i)
+            while not job.ready():
+                sleep(0.1)
+            pack_progress(index * 100.0 / total)
 
-            for index, i in enumerate(images, 1):
-                job = spawn(_write_image, i)
-                while not job.ready():
-                    sleep(0.1)
-                pack_progress(index * 100.0 / total)
+        # Pack static files:
+        for i in config.static:
+            zipfile.write(APP.static_folder + '/' + i,
+                          '{}/{}'.format(config.static_folder, i))
 
-            # Pack static files:
-            for i in config.get('static', ()):
-                zipfile.write(APP.static_folder + '/' + i,
-                              '{}/{}'.format(config['static_folder'], i))
+        # Pack index.
+        index_page = render_template('csheet.html', config=config)
+        zipfile.writestr('{}.html'.format(config.title),
+                         index_page.encode('utf-8'))
 
-            # Pack index.
-            index_page = render_template('csheet.html', **config)
-            zipfile.writestr('{}.html'.format(
-                config.get('title', 'index')), index_page.encode('utf-8'))
-
-        return f
+    return f

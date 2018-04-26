@@ -72,14 +72,14 @@ class Video(Base):
     uuid = Column(String, primary_key=True)
     label = Column(String)
     src = Column(Path)
-    poster = Column(Path)
-    thumb = Column(Path)
-    preview = Column(Path)
-    is_need_update = Column(Boolean)
     src_mtime = Column(Float)
-    poster_mtime = Column(Float)
-    thumb_mtime = Column(Float)
+    preview = Column(Path)
     preview_mtime = Column(Float)
+    poster = Column(Path)
+    poster_mtime = Column(Float)
+    thumb = Column(Path)
+    thumb_mtime = Column(Float)
+    is_need_update = Column(Boolean)
     last_update_time = Column(Float)
     database = Column(String)
     pipeline = Column(String)
@@ -87,7 +87,6 @@ class Video(Base):
     _is_initiated = False
 
     def __new__(cls, src=None, poster=None, uuid=None):
-        # pylint: disable=unused-argument
         ret = None
         if uuid:
             session = Session()
@@ -96,6 +95,10 @@ class Video(Base):
 
                 if ret:
                     assert isinstance(ret, cls)
+                    if src:
+                        ret.src = src
+                    if poster:
+                        ret.poster = poster
                     ret._is_initiated = True  # pylint: disable=protected-access
         ret = ret or super(Video, cls).__new__(cls)
         return ret
@@ -103,10 +106,11 @@ class Video(Base):
     def __init__(self, src=None, poster=None, uuid=None):
         if self._is_initiated:
             return
-        elif not (src or poster):
-            raise ValueError('Need at least one of `src` and `poster`')
+
         uuid = uuid or uuid_from_path(poster or src)
-        label = PurePath(poster or src).stem
+        label = None
+        if (poster or src):
+            label = PurePath(poster or src).stem
         super(Video, self).__init__(uuid=uuid,
                                     label=label,
                                     src=src,

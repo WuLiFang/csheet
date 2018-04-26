@@ -32,33 +32,35 @@ class HTMLVideo(Video):
             return self.poster or self.src
         return None
 
-    def get_drag(self, **config):
+    def get_drag(self, is_pack=False):
         """get path used on drag.  """
 
-        path = PurePath(self.src or self.poster)
-        if config.get('is_pack'):
-            return '{}/{}'.format(
-                self.folder_names['preview'] if self.src else self.folder_names['full'],
-                path.name)
+        path = self.src or self.poster
+        if path:
+            path = PurePath(path)
+            if is_pack:
+                return '{}/{}'.format(
+                    self.folder_names['preview'] if self.src else self.folder_names['full'],
+                    path.name)
 
-        if path.is_absolute():
-            filename = filter_filename(path, 'win32').replace('\\', '/')
-            return 'file://{}'.format(filename)
+            if path.is_absolute():
+                filename = filter_filename(path, 'win32').replace('\\', '/')
+                return 'file://{}'.format(filename)
 
         return ''
 
-    def get(self, role, **config):
+    def get(self, role, is_pack=False):
         """Get url for given role.
 
         Args:
             role (str): role name, key of self.folder_names.
-            **config (dict): jinja config env
+            is_pack (bool): return pack version path.
 
         Returns:
             str: url  for role name.
         """
 
-        if config.get('is_pack'):
+        if is_pack:
             path = PurePath(self.src or self.poster)
             return '{}/{}'.format(
                 self.folder_names[role],

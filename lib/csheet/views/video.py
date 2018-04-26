@@ -73,11 +73,11 @@ def video_info(uuid):
     except ValueError:
         return 'No such video', 404
 
-    database = video.task_info['db']
-    module = video.task_info['module']
+    database = video.database
+    module = cgtwq.Database(database)['shot_task']
     ids = video.task_info['task_id']
 
-    select = cgtwq.Database(database)[module].select(*ids)
+    select = module.select(*ids)
     assert isinstance(select, cgtwq.Selection)
     select.token = session['token']
 
