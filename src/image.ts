@@ -42,8 +42,8 @@ export class CSheetImage {
                 return
             }
             if (isScheduledTask) {
-                // Increase wait time for next retry.
-                this.share *= 1.2;
+                // Increase share level for next retry.
+                this.share *= 1.05;
             }
             this.isScheduled = true;
             setTimeout(() => { this.update(true) }, 1000)
