@@ -34,7 +34,7 @@ def generate_one_thumb():
             or_(Video.thumb.is_(None),
                 Video.thumb_mtime.is_(None),
                 (Video.thumb_mtime != Video.poster_mtime))
-        ).first()
+        ).order_by(Video.thumb_atime).first()
         if video is None:
             LOGGER.debug('No thumb need generate.')
             return False
@@ -67,7 +67,7 @@ def generate_one_preview():
             or_(Video.preview_mtime.is_(None),
                 Video.preview.is_(None),
                 (Video.preview_mtime != Video.src_mtime))
-        ).first()
+        ).order_by(Video.preview_atime).first()
         if video is None:
             LOGGER.debug('No preview need generate.')
             return False
