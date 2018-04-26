@@ -4,7 +4,7 @@ import * as $ from 'jquery';
 
 $(document).ready(
     () => {
-        const socket = io(`/`)
+        const socket = io(`/`, { path: '/api/socket.io' })
         socket.on('new asset',
             (message: string) => {
                 console.log(message)

@@ -22,7 +22,7 @@ APP.config['storage'] = os.getenv('CSHEET_STORAGE')
 SENTRY = Sentry(APP, logging=bool(os.getenv('SENTRY_DSN')),
                 level=logging.WARNING)
 
-SOCKETIO = SocketIO(APP)
+SOCKETIO = SocketIO(APP, path='/api/socket.io')
 
 
 @APP.route('/test_sentry')
