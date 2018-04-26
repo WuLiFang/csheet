@@ -32,7 +32,8 @@ def update_one():
     with closing(session):
         video = session.query(Video).filter(
             Video.is_need_update.is_(True),
-            Video.src.isnot(None) | Video.poster.isnot(None)
+            Video.src.isnot(None) | Video.poster.isnot(None),
+            Video.last_update_time < time.time() - 10
         ).order_by(Video.last_update_time).first()
         if video is None:
             return False
