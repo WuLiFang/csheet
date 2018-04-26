@@ -7,6 +7,7 @@ $MAPPING = ('-v', '/z:/z', '-v', '/srv/csheet:/srv/csheet')
 $SENTRY_OPTIONS = ('--link', 'sentry-server:sentry', '-e', "SENTRY_DSN=$SENTRY_DSN")
 $NUM_CORES = Get-WmiObject -Class Win32_ComputerSystem | Select-Object -ExpandProperty "NumberOfLogicalProcessors"
 $NUM_WORKERS = (($NUM_CORES * 2) + 1)
+$GENERATION_CPUS = (($NUM_CORES / 2) + 1)
 
 "# Setup"
 docker-machine env | Invoke-Expression
@@ -36,17 +37,17 @@ docker run -d `
     --restart always `
     $MAPPING `
     $SENTRY_OPTIONS `
-    --cpus 1 `
     --cpu-shares 768 `
     --name $WATCH_CONTAINER $IMAGE `
     run watch
     
 "# Start generation"
+
 docker run -d `
     --restart always `
     $MAPPING `
     $SENTRY_OPTIONS `
-    --cpus 1 `
+    --cpus $GENERATION_CPUS `
     --cpu-shares 512 `
     --name $GENERATION_CONTAINER $IMAGE `
     run generation
