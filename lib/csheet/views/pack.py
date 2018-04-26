@@ -9,16 +9,15 @@ from tempfile import TemporaryFile
 from zipfile import ZipFile
 
 from flask import Response, abort, render_template, request, send_file
-from gevent import sleep, spawn
 from gevent.queue import Queue
-from six import text_type
 
-from ..model import Session
-from ..page import updated_config
+from wlf.path import get_encoded as e
+from wlf.path import PurePath
+
+from ..config import BaseConfig
+from ..filename import filter_filename
 from ..video import HTMLVideo
 from .app import APP
-from ..config import BaseConfig
-from wlf.path import PurePath, get_encoded as e
 
 STATUS = {}
 PROGRESS_EVENT_LISTENER = []
@@ -115,6 +114,7 @@ def archive(config):
                     continue
                 assert isinstance(filename, PurePath), type(filename)
 
+                filename = filter_filename(filename)
                 arcname = video.get(role, is_pack=True)
                 try:
                     zipfile.write(e(filename), arcname.encode('utf-8'))
