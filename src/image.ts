@@ -27,7 +27,7 @@ export class CSheetImage {
         public readonly lightbox: Lightbox,
     ) {
     }
-    update(isScheduledTask = false, isLoad = true) {
+    update(isScheduledTask = false) {
         // Skip for packed page.
         if (location.protocol == 'file:') {
             return
@@ -59,17 +59,13 @@ export class CSheetImage {
                     this.onthumberror()
                 } else {
                     this.thumb = `/videos/${this.uuid}.thumb?timestamp=${data.thumb}`;
-                    if (isLoad) {
-                        this.loadThumb();
-                    }
+                    this.loadThumb();
                 }
                 if (!data.full) {
                     this.lightbox.$.addClass(classes.failedFull)
                 } else {
                     this.full = `/videos/${this.uuid}.full?timestamp=${data.full}`;
-                    if (isLoad) {
-                        this.loadFull();
-                    }
+                    this.loadFull();
                 }
                 if (data.preview) {
                     this.preview = `/videos/${this.uuid}.preview?timestamp=${data.preview}`;
@@ -86,7 +82,7 @@ export class CSheetImage {
         }
         );
     }
-    loadThumb() {
+    loadThumb(isForce = false) {
         if (!this.thumb && !this.preview) {
             this.lightbox.shrink()
             return
@@ -98,8 +94,9 @@ export class CSheetImage {
         this.isloadingThumb = true
         this.lightbox.$.removeClass(classes.failedThumb)
         this.lightbox.$.addClass(classes.updatingThumb)
+
         imageAvailable(
-            this.thumb,
+            isForce ? forcedURL(this.thumb) : this.thumb,
             (img) => {
                 let src = <string>img.getAttribute('src')
                 this.ratio = img.width / img.height;
@@ -134,12 +131,8 @@ export class CSheetImage {
 
         this.lightbox.$.removeClass(classes.failedFull)
         this.lightbox.$.addClass(classes.updatingFull)
-        let url = this.full
-        if (isForce) {
-            url = `${url}?forceLoadAt=${new Date().getTime()}`
-        }
         imageAvailable(
-            url,
+            isForce ? forcedURL(this.full) : this.full,
             (img) => {
                 let src = <string>img.getAttribute('src')
                 this.lightbox.fullImage.src = src
@@ -229,7 +222,9 @@ export class CSheetImage {
         container.append(iframe)
     }
 }
-
+function forcedURL(url: string): string {
+    return `${url}?forceLoadAt=${new Date().getTime()}`
+}
 interface ImageData {
     thumb?: string
     full?: string
