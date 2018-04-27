@@ -8,12 +8,12 @@ import generate_test_page
 
 from csheet import generation, APP, watch, SOCKETIO
 from wlf import mp_logging
-from util import setup
+import util
 
 
 def main():
     mp_logging.basic_config(level=logging.DEBUG)
-    setup()
+    util.setup()
 
     generate_test_page.main()
 
@@ -22,7 +22,9 @@ def main():
     generation.start()
     watch.start()
 
-    SOCKETIO.run(APP, 'localhost', port, debug=True)
+    SOCKETIO.run(APP,
+                 'localhost', port,
+                 debug=True)
 
 
 if __name__ == '__main__':

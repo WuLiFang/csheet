@@ -3,9 +3,10 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import logging
+
 from csheet import generation
 from wlf import mp_logging
-import logging
 
 
 def main():

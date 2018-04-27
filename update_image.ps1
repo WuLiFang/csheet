@@ -3,7 +3,7 @@ $CONTAINER = "csheet_server"
 $GENERATION_CONTAINER = "$CONTAINER-generation"
 $WATCH_CONTAINER = "$CONTAINER-watch"
 $SENTRY_DSN = Get-Content .\SENTRY_DSN
-$MAPPING = ('-v', '/z:/z', '-v', '/srv/csheet:/srv/csheet')
+$MAPPING = ('-v', '/z:/z', '-v', '/srv/csheet:/srv/csheet', '-v', '/var/db/csheet.db:/var/db/csheet.db')
 $SENTRY_OPTIONS = ('--link', 'sentry-server:sentry', '-e', "SENTRY_DSN=$SENTRY_DSN")
 $NUM_CORES = Get-WmiObject -Class Win32_ComputerSystem | Select-Object -ExpandProperty "NumberOfLogicalProcessors"
 $NUM_WORKERS = (($NUM_CORES * 2) + 1)
