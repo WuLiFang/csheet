@@ -81,8 +81,12 @@ def video_info(uuid):
     assert isinstance(select, cgtwq.Selection)
     select.token = session['token']
 
-    data = select.get_fields(
-        'pipeline', 'artist', 'leader_status', 'director_status', 'client_status', 'note_num', 'id')
+    try:
+        data = select.get_fields(
+            'pipeline', 'artist', 'leader_status', 'director_status', 'client_status', 'note_num', 'id')
+    except cgtwq.LoginError:
+        return '登录过期, 请刷新页面重新登录'
+
     data.sort(key=lambda i: (
         i[0] == '输出',
         i[0] == '合成',
