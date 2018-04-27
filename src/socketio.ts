@@ -46,9 +46,3 @@ export default class SocketIO {
         this.requestUpdate(uuidList)
     }, 2000)
 }
-interface UpdatedAssets {
-
-}
-interface UpdatedAsset {
-
-}

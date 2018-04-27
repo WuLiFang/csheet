@@ -20,20 +20,18 @@ LOGGER = logging.getLogger('com.wlf.csheet')
 def run_server(port=5000, local_dir=None):
     """Run csheet server at @port.  """
 
-    from gevent.pywsgi import WSGIServer
-    from .views import APP
+    from .views import APP, SOCKETIO
     from socket import gethostname, gethostbyname
 
     APP.config['local_dir'] = local_dir
 
     host_ip = gethostbyname(gethostname())
-    server = WSGIServer(('0.0.0.0', port), APP)
     address = 'https://{}:{}'.format(host_ip, port)
     print(address)
     LOGGER.info('服务器运行于: %s', address)
     watch.start()
     generation.start()
-    server.serve_forever()
+    SOCKETIO.run(APP, '0.0.0.0', port)
 
     return (host_ip, port)
 

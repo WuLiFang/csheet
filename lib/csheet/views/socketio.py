@@ -5,19 +5,25 @@ from __future__ import (absolute_import, division, print_function,
 
 import logging
 import time
+from contextlib import closing
 
 from gevent import sleep, spawn
+from sqlalchemy import and_, or_
 
 from .. import setting
-from .app import APP, SOCKETIO
 from ..model import Session, Video
-from contextlib import closing
+from .app import APP, SOCKETIO
+
 LOGGER = logging.getLogger()
 
-from sqlalchemy import or_, and_
 
+def get_updated_asset(since):
+    """Get all newly updated asset from local database.
 
-def get_new_asset(since):
+    Args:
+        since (float): Timestamp
+    """
+
     sess = Session()
     with closing(sess):
         query = sess.query(Video).filter(
@@ -41,6 +47,15 @@ def get_new_asset(since):
 
 
 def format_videos(videos):
+    """Format videos for front end.
+
+    Args:
+        videos (list[Video]): Videos to format.
+
+    Returns:
+        list[tuple]: Formated video infos.
+    """
+
     ret = []
     for i in videos:
         assert isinstance(i, Video)
@@ -49,20 +64,28 @@ def format_videos(videos):
     return ret
 
 
-def broadcast_new_asset(since):
-    data = get_new_asset(since)
+def broadcast_updated_asset(since):
+    """Broad cast all newly updated asset.
+
+    Args:
+        since (float): Timestamp
+    """
+
+    data = get_updated_asset(since)
     assert isinstance(data, list), type(data)
     if data:
         SOCKETIO.emit('asset update', data, broadcast=True)
-        LOGGER.debug('Broadcast new asset, count: %s', len(data))
+        LOGGER.debug('Broadcast updated asset, count: %s', len(data))
     else:
-        LOGGER.debug('No new assets.')
+        LOGGER.debug('No updated assets.')
 
 
 def broadcast_forever():
+    """Start broadcast.  """
+
     last_broadcast_time = time.time() - 10
     while True:
-        broadcast_new_asset(since=last_broadcast_time)
+        broadcast_updated_asset(since=last_broadcast_time)
         last_broadcast_time = time.time()
         sleep(setting.BROADCAST_INTERVAL, False)
 
@@ -90,5 +113,7 @@ def on_request_update(message):
 
 @APP.before_first_request
 def start_broadcast():
+    """Start broadcast.  """
+
     spawn(broadcast_forever)
     LOGGER.debug('Start broadcast')
