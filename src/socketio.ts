@@ -14,10 +14,12 @@ export default class SocketIO {
         setInterval(this.updateAppeared, 2000)
     }
     on_connect() {
-        new Notify('已建立连接').show()
+        let msg = '已建立连接'
+        new Notify(msg, { timeout: 2, tag: msg }).show()
     }
     on_disconnect() {
-        new Notify('连接断开').show()
+        let msg = '连接断开'
+        new Notify(msg, { timeout: 2, tag: msg }).show()
     }
     on_asset_update(message: (string | number | null)[][]) {
         let manager = this.manager;

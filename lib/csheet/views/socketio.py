@@ -101,9 +101,13 @@ def on_request_update(message):
     sess = Session()
     with closing(sess):
         query = sess.query(Video).filter(
-            Video.uuid.in_(message)
+            Video.uuid.in_(message),
+            Video.last_update_time < time.time() - 10
         )
         videos = query.all()
+        if not videos:
+            return
+
         for i in videos:
             assert isinstance(i, Video)
             i.is_need_update = True

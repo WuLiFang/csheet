@@ -70,7 +70,7 @@ def update_forever():
             return
         except:  # pylint: disable=bare-except
             LOGGER.error(
-                'Error during generation.', exc_info=True)
+                'Error during update.', exc_info=True)
 
 
 def start():

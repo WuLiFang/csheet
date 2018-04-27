@@ -93,7 +93,6 @@ export class Lightbox {
     }
     onappear() {
         this.image.loadFull()
-        this.image.update()
     }
 }
 
@@ -144,7 +143,6 @@ export class LightboxManager {
             if (!lightbox.smallVideo.poster) {
                 lightbox.image.loadThumb()
             }
-            lightbox.image.update()
         })
     }
     updateCount() {

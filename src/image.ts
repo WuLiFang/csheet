@@ -45,61 +45,6 @@ export class CSheetImage {
             this.preview = `/videos/${this.uuid}.preview?timestamp=${options.preview}`;
         }
     }
-    update(isScheduledTask = false) {
-        // Skip for packed page.
-        if (location.protocol == 'file:') {
-            return
-        }
-        // Skip for already updated recently.
-        if (this.isUpdating || new Date().getTime() - this.lastUpdateTime < this.minUpdateInterval) {
-            return
-        }
-        // Schedule update later if busy.
-        if (currentAjax >= ajaxLimit * this.share) {
-            if (this.isScheduled && !isScheduledTask) {
-                return
-            }
-            if (isScheduledTask) {
-                // Increase share level for next retry.
-                this.share *= 1.05;
-            }
-            this.isScheduled = true;
-            setTimeout(() => { this.update(true) }, 1000)
-            return
-        }
-        currentAjax += 1;
-
-        $.get({
-            url: '/api/video/mtime',
-            data: { uuid: this.uuid },
-            success: (data: ImageData) => {
-                if (!data.thumb) {
-                    this.onthumberror()
-                } else {
-                    this.thumb = `/videos/${this.uuid}.thumb?timestamp=${data.thumb}`;
-                    this.loadThumb();
-                }
-                if (!data.full) {
-                    this.lightbox.$.addClass(classes.failedFull)
-                } else {
-                    this.full = `/videos/${this.uuid}.full?timestamp=${data.full}`;
-                    this.loadFull();
-                }
-                if (data.preview) {
-                    this.preview = `/videos/${this.uuid}.preview?timestamp=${data.preview}`;
-                }
-                // Reset share.
-                this.share = 0.2;
-            },
-            complete: () => {
-                currentAjax -= 1;
-                this.isUpdating = false;
-                this.isScheduled = false;
-                this.lastUpdateTime = new Date().getTime();
-            }
-        }
-        );
-    }
     loadThumb(isForce = false) {
         if (!this.thumb && !this.preview) {
             this.lightbox.shrink()

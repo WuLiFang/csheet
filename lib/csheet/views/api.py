@@ -65,6 +65,8 @@ def image_timestamp():
 def video_mtime():
     """get realtime source timestamp for all role.   """
 
+    return 'Deprecated', 410
+
     uuid = request.args['uuid']
     try:
         video = Video(uuid=uuid)

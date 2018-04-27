@@ -24,7 +24,7 @@ WORKDIR /csheet
 
 # Install dependencies
 RUN pipenv install --system --deploy
-RUN pip install gunicorn
+RUN pip install gunicorn gevent-websocket
 
 # Set environment
 ENV PYTHONPATH=lib
@@ -43,7 +43,7 @@ FROM build AS release
 
 LABEL author="NateScarlet@Gmail.com"
 ENV CSHEET_STORAGE=/srv/csheet
-ENV CSHEET_DATABASE=sqlite:////srv/csheet/csheet.db
+ENV CSHEET_DATABASE=sqlite:////var/db/csheet.db
 ENV NUM_WORKERS=8
 CMD ["run"]
 ENTRYPOINT [ "./entrypoint.sh" ]
