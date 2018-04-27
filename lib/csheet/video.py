@@ -43,9 +43,8 @@ class HTMLVideo(Video):
                     self.folder_names['preview'] if self.src else self.folder_names['full'],
                     path.name)
 
-            if path.is_absolute():
-                filename = filter_filename(path, 'win32').replace('\\', '/')
-                return 'file://{}'.format(filename)
+            filename = filter_filename(path, 'win32').replace('\\', '/')
+            return 'file://{}'.format(filename)
 
         return ''
 
