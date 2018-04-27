@@ -10,3 +10,4 @@ dist/
 *.pem
 *.key
 *.crt
+/req.conf
