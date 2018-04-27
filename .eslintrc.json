@@ -1,0 +1,13 @@
+{
+    "extends": "google",
+    "parserOptions": {
+        "ecmaVersion": 6
+    },
+    "env": {
+        "browser": true,
+        "jquery": true
+    },
+    "rules": {
+        "linebreak-style": "off"
+    }
+}

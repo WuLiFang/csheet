@@ -2,6 +2,7 @@ import * as $ from 'jquery';
 import './csheet.scss';
 import { LightboxManager } from './lightbox';
 import './socketio';
+import SocketIO from './socketio';
 
 $(document).ready(
     function () {
@@ -54,7 +55,8 @@ $(document).ready(
         );
         // Setup.
         const Manager = new LightboxManager()
-        setInterval(() => { Manager.updateAppeared() }, 5000)
+        const IO = new SocketIO(Manager)
+        // setInterval(() => { Manager.updateAppeared() }, 5000)
         $('.noscript').remove();
         $('#control').removeClass('hidden');
         $('video').removeClass('hidden');

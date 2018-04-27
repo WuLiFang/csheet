@@ -182,4 +182,21 @@ export class LightboxManager {
             }
         );
     }
+    updateAsset(uuid: string,
+        thumb_mtime: number | null,
+        poster_mtime: number | null,
+        previw_mtime: number | null): boolean {
+        let lighbox = this.dict[uuid]
+        if (!lighbox) {
+            console.debug(`uuid not belong to this page: ${uuid}`)
+            return false
+        }
+        lighbox.image.updateMtime({
+            thumb: thumb_mtime,
+            poster: poster_mtime,
+            preview: previw_mtime
+        }
+        )
+        return true
+    }
 }

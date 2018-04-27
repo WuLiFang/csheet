@@ -40,6 +40,7 @@ def generate_one_thumb():
             return False
         assert isinstance(video, Video), type(video)
         video.thumb_atime = time.time()
+        video.thumb_mtime = None
         session.commit()
 
         LOGGER.debug('Generate thumb for: %s', video)
@@ -73,6 +74,7 @@ def generate_one_preview():
             return False
         assert isinstance(video, Video), type(video)
         video.preview_atime = time.time()
+        video.preview_mtime = None
         session.commit()
 
         LOGGER.debug('Generate preview for: %s', video)

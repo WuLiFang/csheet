@@ -9,6 +9,11 @@ enum classes {
 }
 let currentAjax = 0;
 let ajaxLimit = 5;
+interface updateMtimeOptions {
+    thumb?: number | null,
+    poster?: number | null,
+    preview?: number | null
+}
 export class CSheetImage {
     public ratio = 1;
     public minUpdateInterval = 2000;
@@ -26,6 +31,19 @@ export class CSheetImage {
         public preview: string,
         public readonly lightbox: Lightbox,
     ) {
+    }
+    updateMtime(options: updateMtimeOptions) {
+        if (options.thumb) {
+            this.thumb = `/videos/${this.uuid}.thumb?timestamp=${options.thumb}`;
+            this.loadThumb()
+        }
+        if (options.poster) {
+            this.full = `/videos/${this.uuid}.full?timestamp=${options.poster}`;
+            this.loadThumb()
+        }
+        if (options.preview) {
+            this.preview = `/videos/${this.uuid}.preview?timestamp=${options.preview}`;
+        }
     }
     update(isScheduledTask = false) {
         // Skip for packed page.
