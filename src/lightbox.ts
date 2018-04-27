@@ -186,7 +186,6 @@ export class LightboxManager {
         previw_mtime: number | null): boolean {
         let lighbox = this.dict[uuid]
         if (!lighbox) {
-            console.debug(`uuid not belong to this page: ${uuid}`)
             return false
         }
         lighbox.image.updateMtime({
