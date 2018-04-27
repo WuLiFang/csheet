@@ -89,6 +89,8 @@ class Video(Base):
     _is_initiated = False
 
     def __new__(cls, src=None, poster=None, uuid=None):
+        # pylint: disable=unused-argument
+
         ret = None
         if uuid:
             session = Session()
@@ -97,16 +99,16 @@ class Video(Base):
 
                 if ret:
                     assert isinstance(ret, cls)
-                    if src:
-                        ret.src = src
-                    if poster:
-                        ret.poster = poster
                     ret._is_initiated = True  # pylint: disable=protected-access
         ret = ret or super(Video, cls).__new__(cls)
         return ret
 
     def __init__(self, src=None, poster=None, uuid=None):
         if self._is_initiated:
+            if src:
+                self.src = src
+            if poster:
+                self.poster = poster
             return
 
         uuid = uuid or uuid_from_path(poster or src)
