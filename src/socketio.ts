@@ -31,7 +31,7 @@ export default class SocketIO {
                 let preview_mtime = <number | null>value[3]
                 let label = <string | null>value[4]
                 if (manager.updateAsset(uuid, thumb_mtime, poster_mtime, preview_mtime)) {
-                    new Notify('文件更新', { body: label ? label : '<未命名>' }).show()
+                    new Notify('文件更新', { body: label ? label : '<未命名>', timeout: 2, tag: uuid }).show()
                 }
             }
         )
