@@ -1,0 +1,44 @@
+version: '3.5'
+services:
+  web:
+    image: 'csheet'
+    ports:
+     - "60000:80"
+    volumes: 
+     - /z:/z
+     - /srv/csheet:/srv/csheet
+     - database:/var/db
+    restart: always
+    external_links:
+      - sentry-server:sentry
+    environment: 
+      NUM_WORKERS: ${NUM_WORKERS:-'4'}
+      SENTRY_DSN: ${SENTRY_DSN}
+  watch:
+    image: 'csheet'
+    command: 'run watch'
+    volumes: 
+     - /z:/z
+     - /srv/csheet:/srv/csheet
+     - database:/var/db
+    restart: always
+    external_links:
+      - sentry-server:sentry
+    environment: 
+      SENTRY_DSN: ${SENTRY_DSN}
+  generation:
+    image: 'csheet'
+    command: 'run generation'
+    volumes: 
+     - /z:/z
+     - /srv/csheet:/srv/csheet
+     - database:/var/db
+
+    restart: always
+    external_links:
+      - sentry-server:sentry
+    environment: 
+      SENTRY_DSN: ${SENTRY_DSN}
+
+volumes:
+    database:
