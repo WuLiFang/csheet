@@ -5,8 +5,6 @@ services:
      - "60000:80"
     volumes: 
      - /z:/z
-     - ${CSHEET_STORAGE:-'/srv/csheet'}:/srv/csheet
-     - database:/var/db
     restart: always
     external_links:
       - sentry-server:sentry
@@ -16,8 +14,6 @@ services:
   watch:
     volumes: 
      - /z:/z
-     - ${CSHEET_STORAGE:-'/srv/csheet'}:/srv/csheet
-     - database:/var/db
     restart: always
     external_links:
       - sentry-server:sentry
@@ -26,8 +22,6 @@ services:
   generation:
     volumes: 
      - /z:/z
-     - ${CSHEET_STORAGE:-'/srv/csheet'}:/srv/csheet
-     - database:/var/db
     restart: always
     external_links:
       - sentry-server:sentry

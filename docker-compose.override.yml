@@ -5,7 +5,6 @@ services:
     ports:
      - "60000:80"
     environment: 
-      NUM_WORKERS: ${NUM_WORKERS:-'4'}
       SENTRY_DSN: ${SENTRY_DSN}
   watch:
     external_links:
@@ -17,3 +16,15 @@ services:
       - sentry-server:sentry
     environment: 
       SENTRY_DSN: ${SENTRY_DSN}
+  nginx:
+    image: 'nginx'
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ${CSHEET_STORAGE:-'/srv/csheet'}/nginx/html:/usr/share/nginx/html
+      - type: bind
+        source: ${CSHEET_STORAGE:-'/srv/csheet'}/nginx/conf
+        target: /etc/nginx
+        read_only: true
+    

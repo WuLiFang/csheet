@@ -2,8 +2,6 @@ version: '3.5'
 services:
   web:
     image: 'csheet'
-    ports:
-     - "80:80"
     volumes: 
      - ${CSHEET_STORAGE:-'/srv/csheet'}:/srv/csheet
      - database:/var/db
