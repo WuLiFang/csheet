@@ -1,0 +1,19 @@
+version: '3.5'
+services:
+  web:
+    build: '.'
+    ports:
+     - "60000:80"
+    environment: 
+      NUM_WORKERS: ${NUM_WORKERS:-'4'}
+      SENTRY_DSN: ${SENTRY_DSN}
+  watch:
+    external_links:
+      - sentry-server:sentry
+    environment: 
+      SENTRY_DSN: ${SENTRY_DSN}
+  generation:
+    external_links:
+      - sentry-server:sentry
+    environment: 
+      SENTRY_DSN: ${SENTRY_DSN}
