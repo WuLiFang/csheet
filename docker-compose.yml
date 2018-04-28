@@ -2,6 +2,7 @@ version: '3.5'
 services:
   web:
     image: 'csheet'
+    build: '.'
     ports:
      - "60000:80"
     volumes: 
