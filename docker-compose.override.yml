@@ -4,6 +4,10 @@ services:
     build: '.'
     ports:
      - "60000:80"
+    volumes:
+      - 'D:/:/d'
+    external_links:
+      - sentry-server:sentry
     environment: 
       SENTRY_DSN: ${SENTRY_DSN}
   watch:
