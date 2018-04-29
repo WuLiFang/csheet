@@ -9,6 +9,7 @@ import logging
 import os
 from abc import abstractmethod
 from contextlib import closing
+from mimetypes import guess_type
 
 import cgtwq
 
@@ -17,9 +18,10 @@ from wlf.path import PurePath
 
 from . import model
 from .__about__ import __version__
+from .filename import filter_filename
 from .mimecheck import is_mimetype
 from .video import HTMLVideo
-from mimetypes import guess_type
+
 LOGGER = logging.getLogger(__name__)
 
 
@@ -187,7 +189,7 @@ class LocalConfig(BaseConfig):
         # Scan root.
         videos = {}
         images = {}
-        for dirpath, _, filenames in os.walk(self.root):
+        for dirpath, _, filenames in os.walk(filter_filename(self.root)):
             for filename in filenames:
                 fullpath = os.path.join(dirpath, filename)
                 label = PurePath(filename).stem

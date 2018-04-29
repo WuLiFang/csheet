@@ -5,7 +5,6 @@ if [ "$1" = "run" ]; then
         gunicorn -w 1 \
             -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker \
             -b 0.0.0.0:80 csheet:APP
-        fi
     elif [ "$2" = "generation" ]; then
         python ./run_generation_worker.py
     elif [ "$2" = "watch" ]; then

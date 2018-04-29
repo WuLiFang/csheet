@@ -55,8 +55,6 @@ def render_local_dir():
     """Render page for local dir.  """
 
     root = request.args['root']
-    if not Path(root).exists():
-        abort(404)
     config = LocalConfig(root)
     config.update()
 
