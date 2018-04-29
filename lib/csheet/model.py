@@ -95,22 +95,28 @@ class Video(Base):
         if src or poster:
             uuid = uuid or uuid_from_path(poster or src)
         if uuid:
-            session = Session()
-            with closing(session):
-                ret = session.query(cls).filter(cls.uuid == uuid).one_or_none()
+            sess = Session()
+            with closing(sess):
+                query = sess.query(cls).filter(cls.uuid == uuid)
+                ret = query.one_or_none()
 
                 if ret:
                     assert isinstance(ret, cls)
+                    if src or poster:
+                        if src:
+                            ret.src = src
+                        if poster:
+                            ret.poster = poster
+                        sess.add(ret)
+                        sess.commit()
+                        sess.refresh(ret)
                     ret._is_initiated = True  # pylint: disable=protected-access
-        ret = ret or super(Video, cls).__new__(cls)
-        return ret
+                    return ret
+
+        return super(Video, cls).__new__(cls)
 
     def __init__(self, src=None, poster=None, uuid=None):
         if self._is_initiated:
-            if src:
-                self.src = src
-            if poster:
-                self.poster = poster
             return
 
         uuid = uuid or uuid_from_path(poster or src)

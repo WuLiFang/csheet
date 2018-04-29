@@ -75,6 +75,8 @@ def video_info(uuid):
 
     database = video.database
     module = cgtwq.Database(database)['shot_task']
+    if video.task_info is None:
+        return ''
     ids = video.task_info['task_id']
 
     select = module.select(*ids)
@@ -83,7 +85,8 @@ def video_info(uuid):
 
     try:
         data = select.get_fields(
-            'pipeline', 'artist', 'leader_status', 'director_status', 'client_status', 'note_num', 'id')
+            'pipeline', 'artist', 'leader_status',
+            'director_status', 'client_status', 'note_num', 'id')
     except cgtwq.LoginError:
         return '登录过期, 请刷新页面重新登录'
 

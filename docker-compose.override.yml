@@ -9,16 +9,23 @@ services:
     external_links:
       - sentry-server:sentry
     environment: 
+      CSHEET_DEBUG: 1
       SENTRY_DSN: ${SENTRY_DSN}
   watch:
     external_links:
       - sentry-server:sentry
+    volumes:
+      - 'D:/:/d'
     environment: 
+      CSHEET_DEBUG: 1
       SENTRY_DSN: ${SENTRY_DSN}
   generation:
     external_links:
       - sentry-server:sentry
+    volumes:
+      - 'D:/:/d'
     environment: 
+      CSHEET_DEBUG: 1
       SENTRY_DSN: ${SENTRY_DSN}
   nginx:
     command: [nginx-debug, '-g', 'daemon off;']
