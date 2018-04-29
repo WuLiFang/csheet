@@ -11,7 +11,7 @@ from wlf.path import Path
 
 from . import pack
 from ..__about__ import __version__
-from ..config import CGTeamWorkConfig
+from ..config import CGTeamWorkConfig, LocalConfig
 from ..image import get_images_from_dir
 from ..page import from_dir
 from .app import APP
@@ -54,11 +54,13 @@ def render_main():
 def render_local_dir():
     """Render page for local dir.  """
 
-    local_dir = APP.config['local_dir']
-    if not Path(local_dir).exists():
+    root = request.args['root']
+    if not Path(root).exists():
         abort(404)
+    config = LocalConfig(root)
+    config.update()
 
-    if request.args.get('pack'):
-        return pack.packed_page(images=get_images_from_dir(local_dir))
+    if 'pack' in request.args:
+        return pack.packed_page(config)
 
-    return from_dir(local_dir, is_client=True, relative_to=local_dir)
+    return render_template('csheet_app.html', config=config)

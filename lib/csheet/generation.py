@@ -134,8 +134,7 @@ def generate_forever():
 
     while True:
         try:
-            if not (generate_one_thumb() or generate_one_preview()):
-                sleep(1)
+            sleep(0 if (generate_one_thumb() or generate_one_preview()) else 1)
         except (KeyboardInterrupt, SystemExit):
             return
         except:  # pylint: disable=bare-except

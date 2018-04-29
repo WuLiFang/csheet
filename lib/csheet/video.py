@@ -15,12 +15,14 @@ class HTMLVideo(Video):
     folder_names = {
         'thumb': 'thumbs',
         'preview': 'previews',
-        'full': 'images'
+        'full': 'images',
+        'poster': 'images'
     }
     file_suffix = {
         'thumb': '.jpg',
         'preview': '.mp4',
-        'full': '.jpg'
+        'full': '.jpg',
+        'poster': '.jpg'
     }
 
     def source(self, role):
@@ -28,7 +30,7 @@ class HTMLVideo(Video):
 
         if role in ('preview',):
             return self.src
-        elif role in ('thumb', 'full'):
+        elif role in ('thumb', 'full', 'poster'):
             return self.poster or self.src
         return None
 

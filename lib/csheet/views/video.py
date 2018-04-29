@@ -35,7 +35,7 @@ def response_video(uuid, role):
         flask.Response: Response for client.
     """
 
-    accept_role = ('thumb', 'preview', 'full')
+    accept_role = ('thumb', 'preview', 'full', 'poster')
     if role not in accept_role:
         return 'Role must in {}'.format(accept_role), 400
     try:

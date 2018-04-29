@@ -92,6 +92,8 @@ class Video(Base):
         # pylint: disable=unused-argument
 
         ret = None
+        if src or poster:
+            uuid = uuid_from_path(poster or src)
         if uuid:
             session = Session()
             with closing(session):

@@ -63,9 +63,10 @@
         </div>
     </header>
     <ul class="images">
-        {% for image in config.videos() %}
-        <li class="lightbox shrink" id="image{{ loop.index }}" data-drag="{{ image.get_drag(config.is_pack) }}" data-thumb="{{ image.get('thumb', config.is_pack) }}"
-            data-full="{{ image.get('full', config.is_pack) }}" data-preview="{{ image.get('preview', config.is_pack) }}" data-uuid="{{ image.uuid }}"
+        {% for video in config.videos() %} {% set thumb = video.get('thumb',config.is_pack) %} {% set poster = video.get('poster',
+        config.is_pack) %} {% set src = video.get('preview', config.is_pack) %}
+        <li class="lightbox shrink" id="image{{ loop.index }}" data-drag="{{ video.get_drag(config.is_pack) }}" {% if thumb %}data-thumb="{{ thumb }}"
+            {% endif %}{% if poster %}data-full="{{ poster }}" {% endif %}{% if src %}data-preview="{{ src }}" {% endif %}data-uuid="{{ video.uuid }}"
             style="width:355.56px">
             <a href="#image{{ loop.index }}" class="zoom" draggable="false">
                 <video class='small hidden' muted loop>
@@ -73,35 +74,35 @@
                 </video>
                 <div class="noscript">
                     <noscript>
-                        <video poster="{{ image.get('thumb', config.is_pack) }}" src="{{ image.get('preview', config.is_pack) }}" muted loop>
-                            <img alt="no image" src="{{ image.get('thumb', config.is_pack) }}" />
+                        <video poster="{{ thumb }}" src="{{ src }}" muted loop>
+                            <img alt="no image" src="{{ thumb }}" />
                         </video>
                     </noscript>
                 </div>
-                <div class='caption' title="{{ image.name | e }}">
-                    {{ image.label | e }}
+                <div class='caption' title="{{ video.label | e }}">
+                    {{ video.label | e }}
                 </div>
             </a>
             <div class="viewer">
                 <div class="detail"> </div>
                 <a class="close" href="#void"> </a>
                 <video class='full hidden'>
-                    <a href="{{ image.get('full', config.is_pack) }}" target="_blank">
+                    <a href="{{ poster }}" target="_blank">
                         <img alt="no image" />
                     </a>
                 </video>
                 <div class="noscript">
                     <noscript>
-                        <video class='full' poster="{{ image.get('full', config.is_pack) }}" src="{{ image.get('preview', config.is_pack) }}">
-                            <a href="{{ image.get('full', config.is_pack) }}" target="_blank">
-                                <img alt="no image" src="{{ image.get('full', config.is_pack) }}" />
+                        <video class='full' poster="{{ poster }}" src="{{ src }}">
+                            <a href="{{ poster }}" target="_blank">
+                                <img alt="no image" src="{{ poster }}" />
                             </a>
                         </video>
                     </noscript>
                 </div>
                 <div class="bottom">
-                    <div class='caption' title="{{ image.name | e }}">
-                        <span>{{ image.label | e }} </span>
+                    <div class='caption' title="{{ video.label | e }}">
+                        <span>{{ video.label | e }} </span>
                     </div>
                 </div>
                 <a class="prev" href="#image{{ loop.index - 1 }}"> </a>

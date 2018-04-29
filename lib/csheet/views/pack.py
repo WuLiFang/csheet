@@ -129,7 +129,7 @@ def archive(config):
 
         # Pack index.
         index_page = render_template('csheet.html', config=config)
-        zipfile.writestr('{}.html'.format(config.title),
+        zipfile.writestr('{}.html'.format(config.title.replace('\\', '_')),
                          index_page.encode('utf-8'))
     f.seek(0)
     return f

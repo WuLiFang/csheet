@@ -9,6 +9,7 @@ import time
 from contextlib import closing
 
 from gevent import sleep, spawn
+from sqlalchemy import or_
 
 from wlf.path import get_encoded as e
 
@@ -34,7 +35,8 @@ def update_one():
         video = session.query(Video).filter(
             Video.is_need_update.is_(True),
             Video.src.isnot(None) | Video.poster.isnot(None),
-            Video.last_update_time < time.time() - 1
+            or_(Video.last_update_time.is_(None),
+                Video.last_update_time < time.time() - 1)
         ).order_by(Video.last_update_time).first()
         if video is None:
             LOGGER.debug('Nothing to update')
@@ -64,8 +66,7 @@ def update_forever():
 
     while True:
         try:
-            if not update_one():
-                sleep(1)
+            sleep(0 if update_one() else 1)
         except (KeyboardInterrupt, SystemExit):
             return
         except:  # pylint: disable=bare-except
