@@ -21,6 +21,11 @@ def test_gen_thumb():
     generation.generate_one_thumb()
 
 
+def test_gen_poster():
+    setup()
+    generation.generate_one_poster()
+
+
 @pytest.mark.skip('May take too long time')
 def test_gen_preview():
     setup()

@@ -9,7 +9,7 @@ import time
 from contextlib import closing
 
 from gevent import sleep, spawn
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 
 from wlf import ffmpeg
 
@@ -20,72 +20,89 @@ from .model import Session, Video
 LOGGER = logging.getLogger(__name__)
 
 
-def generate_one_thumb():
-    """Generate one not generated video"""
+def abstract_generation(source, target, method, min_interval, condition=()):
+    """Abstact generation from source to target.
+
+    Args:
+        source (str): Source column name(`poster` or `src`)
+        target (str): Target column name(`thumb`, `poster` or `preview`)
+        method (Video => path | None): Generation function.
+        min_interval (int): Min generation interval
+
+    Returns:
+        bool: `True` if generated, `False` if nothing to generate.
+    """
+
+    source_column = getattr(Video, source)
+    source_mtime_column = getattr(Video, '{}_mtime'.format(source))
+    target_column = getattr(Video, target)
+    target_mtime_column = getattr(Video, '{}_mtime'.format(target))
+    target_atime_column = getattr(Video, '{}_atime'.format(target))
 
     session = Session()
 
     with closing(session):
         video = session.query(Video).filter(
-            Video.poster.isnot(None),
-            Video.poster_mtime.isnot(None),
-            or_(Video.thumb_atime.is_(None),
-                Video.thumb_atime < time.time() - 10),
-            or_(Video.thumb.is_(None),
-                Video.thumb_mtime.is_(None),
-                (Video.thumb_mtime != Video.poster_mtime))
-        ).order_by(Video.thumb_atime).first()
+            source_column.isnot(None),
+            source_mtime_column.isnot(None),
+            or_(target_atime_column.is_(None),
+                target_atime_column < time.time() - min_interval),
+            or_(target_column.is_(None),
+                target_mtime_column.is_(None),
+                (target_mtime_column != source_mtime_column)),
+            *condition
+        ).order_by(target_mtime_column).first()
         if video is None:
-            LOGGER.debug('No thumb need generate.')
+            LOGGER.debug('No %s need generate.', target)
             return False
         assert isinstance(video, Video), type(video)
-        video.thumb_atime = time.time()
-        video.thumb_mtime = None
+        setattr(video, '{}_atime'.format(target), time.time())
+        setattr(video, '{}_mtime'.format(target), None)
         session.commit()
 
-        LOGGER.debug('Generate thumb for: %s', video)
+        LOGGER.debug('Generate %s for: %s', target, video)
         try:
-            video.thumb = generate_thumb(video)
-            video.thumb_mtime = video.poster_mtime
+            generated = method(video)
+            setattr(video, target, generated)
+            setattr(video, '{}_mtime'.format(target),
+                    getattr(video, '{}_mtime'.format(source)))
         except (OSError, ffmpeg.GenerateError):
             video.is_need_update = True
+            LOGGER.warning('Generation failed', exc_info=True)
 
         session.commit()
     return True
+
+
+def generate_one_thumb():
+    """Generate one outdated thumb"""
+
+    return abstract_generation(
+        source='poster',
+        target='thumb',
+        method=generate_thumb,
+        min_interval=10)
+
+
+def generate_one_poster():
+    """Generate one not generated poster"""
+
+    return abstract_generation(
+        source='src',
+        target='poster',
+        method=generate_poster,
+        min_interval=0,
+        condition=(Video.poster.is_(None),))
 
 
 def generate_one_preview():
-    """Generate one not generated video"""
+    """Generate one outdated preview"""
 
-    session = Session()
-
-    with closing(session):
-        video = session.query(Video).filter(
-            Video.src.isnot(None),
-            Video.src_mtime.isnot(None),
-            or_(Video.preview_atime.is_(None),
-                Video.preview_atime < time.time() - 100),
-            or_(Video.preview_mtime.is_(None),
-                Video.preview.is_(None),
-                (Video.preview_mtime != Video.src_mtime))
-        ).order_by(Video.preview_atime).first()
-        if video is None:
-            LOGGER.debug('No preview need generate.')
-            return False
-        assert isinstance(video, Video), type(video)
-        video.preview_atime = time.time()
-        video.preview_mtime = None
-        session.commit()
-
-        LOGGER.debug('Generate preview for: %s', video)
-        try:
-            video.preview = generate_preview(video)
-            video.preview_mtime = video.src_mtime
-        except (OSError, ffmpeg.GenerateError):
-            video.is_need_update = True
-
-        session.commit()
-    return True
+    return abstract_generation(
+        source='src',
+        target='preview',
+        method=generate_preview,
+        min_interval=100)
 
 
 def output_path(*other):
@@ -114,6 +131,21 @@ def generate_thumb(video):
         height=200)
 
 
+def generate_poster(video):
+    """Generate thumb for video.  """
+
+    assert isinstance(video, Video)
+    if not video.src:
+        return None
+
+    LOGGER.debug('generate_poster, %s', video)
+    src = filter_filename(video.src)
+    output = output_path('poster', video.uuid)
+    assert output
+    return ffmpeg.generate_jpg(
+        src, output)
+
+
 def generate_preview(video):
     """Generate preview for video.  """
 
@@ -134,7 +166,9 @@ def generate_forever():
 
     while True:
         try:
-            sleep(0 if (generate_one_thumb() or generate_one_preview()) else 1)
+            sleep(0 if (generate_one_thumb()
+                        or generate_one_poster()
+                        or generate_one_preview()) else 1)
         except (KeyboardInterrupt, SystemExit):
             return
         except:  # pylint: disable=bare-except

@@ -78,6 +78,7 @@ class Video(Base):
     preview_atime = Column(Float)
     poster = Column(Path)
     poster_mtime = Column(Float)
+    poster_atime = Column(Float)
     thumb = Column(Path)
     thumb_mtime = Column(Float)
     thumb_atime = Column(Float)
@@ -149,8 +150,8 @@ def _upgrade_database(engine):
     for column, type_ in (('database', 'VARCHAR'),
                           ('pipeline', 'VARCHAR'),
                           ('thumb_atime', 'FLOAT'),
-                          ('preview_atime', 'FLOAT')
-                          ):
+                          ('preview_atime', 'FLOAT'),
+                          ('poster_atime', 'FLOAT')):
         try:
             engine.execute(
                 'ALTER TABLE video ADD COLUMN {} {}'.format(column, type_))
