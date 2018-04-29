@@ -29,8 +29,6 @@ services:
       SENTRY_DSN: ${SENTRY_DSN}
   nginx:
     command: [nginx-debug, '-g', 'daemon off;']
-    volumes:
-      - 'D:/:/d'
     ports:
       - 80:80
       - 443:443
