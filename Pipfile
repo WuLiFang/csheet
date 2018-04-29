@@ -28,7 +28,7 @@ pyblish = ">=1.4.3"
 requests = ">=2.18.4"
 websocket-client = ">=0.47.0"
 raven = {extras = ["flask"]}
-"544be00" = {file = "https://github.com/WuLiFang/wlf/archive/0.3.3.tar.gz"}
 "1ba1c41" = {file = "https://github.com/WuLiFang/cgtwq/archive/1.2.0.tar.gz"}
 sqlalchemy = "*"
 flask-socketio = "*"
+"38eb6bc" = {file = "https://github.com/WuLiFang/wlf/archive/0.3.8.tar.gz"}

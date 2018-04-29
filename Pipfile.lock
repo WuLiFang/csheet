@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "39ccc73305d60f6fe65d78b13850c41019a7316aa78d69923dfa41fcf20a579d"
+            "sha256": "be34aee792becc14e555abbb2a0eb5564fc4e0bb63adc490c121e42495c624ff"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -30,8 +30,8 @@
         "1ba1c41": {
             "file": "https://github.com/WuLiFang/cgtwq/archive/1.2.0.tar.gz"
         },
-        "544be00": {
-            "file": "https://github.com/WuLiFang/wlf/archive/0.3.3.tar.gz"
+        "38eb6bc": {
+            "file": "https://github.com/WuLiFang/wlf/archive/0.3.8.tar.gz"
         },
         "beautifulsoup4": {
             "hashes": [],
@@ -68,7 +68,7 @@
         },
         "flask": {
             "hashes": [],
-            "version": "==0.12.2"
+            "version": "==1.0"
         },
         "flask-socketio": {
             "hashes": [],
@@ -148,7 +148,7 @@
         },
         "python-engineio": {
             "hashes": [],
-            "version": "==2.0.4"
+            "version": "==2.1.0"
         },
         "python-socketio": {
             "hashes": [],
@@ -219,7 +219,7 @@
         },
         "backports.functools-lru-cache": {
             "hashes": [],
-            "markers": "python_version == '2.7'",
+            "markers": "python_version < '3.4'",
             "version": "==1.5"
         },
         "colorama": {
