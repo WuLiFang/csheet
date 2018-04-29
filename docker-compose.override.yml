@@ -6,6 +6,7 @@ services:
      - "60000:80"
     volumes:
       - 'D:/:/d'
+      - 'E:/:/e'
     external_links:
       - sentry-server:sentry
     environment: 
@@ -16,6 +17,7 @@ services:
       - sentry-server:sentry
     volumes:
       - 'D:/:/d'
+      - 'E:/:/e'
     environment: 
       CSHEET_DEBUG: 1
       SENTRY_DSN: ${SENTRY_DSN}
@@ -24,6 +26,7 @@ services:
       - sentry-server:sentry
     volumes:
       - 'D:/:/d'
+      - 'E:/:/e'
     environment: 
       CSHEET_DEBUG: 1
       SENTRY_DSN: ${SENTRY_DSN}

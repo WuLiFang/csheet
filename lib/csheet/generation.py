@@ -56,7 +56,9 @@ def abstract_generation(source, target, method, min_interval, condition=()):
             LOGGER.debug('No %s need generate.', target)
             return False
         assert isinstance(video, Video), type(video)
-        setattr(video, '{}_atime'.format(target), time.time())
+        def _touch():
+            setattr(video, '{}_atime'.format(target), time.time())
+        _touch()
         setattr(video, '{}_mtime'.format(target), None)
         session.commit()
 
@@ -69,6 +71,7 @@ def abstract_generation(source, target, method, min_interval, condition=()):
             setattr(video, target, generated)
             setattr(video, '{}_mtime'.format(target),
                     getattr(video, '{}_mtime'.format(source)))
+            _touch()
         except (OSError, ffmpeg.GenerateError):
             video.is_need_update = True
             LOGGER.warning('Generation failed', exc_info=True)
