@@ -32,3 +32,4 @@ raven = {extras = ["flask"]}
 sqlalchemy = "*"
 flask-socketio = "*"
 "38eb6bc" = {file = "https://github.com/WuLiFang/wlf/archive/0.3.8.tar.gz"}
+"58b68b2" = {file = "https://github.com/WuLiFang/wlf/archive/0.3.9.tar.gz"}

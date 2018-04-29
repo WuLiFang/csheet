@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "be34aee792becc14e555abbb2a0eb5564fc4e0bb63adc490c121e42495c624ff"
+            "sha256": "213a834deab24d9020e5a8d193bba2bfd78fdd7412e4462bfb65eb09a3b31b6c"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -32,6 +32,9 @@
         },
         "38eb6bc": {
             "file": "https://github.com/WuLiFang/wlf/archive/0.3.8.tar.gz"
+        },
+        "58b68b2": {
+            "file": "https://github.com/WuLiFang/wlf/archive/0.3.9.tar.gz"
         },
         "beautifulsoup4": {
             "hashes": [],

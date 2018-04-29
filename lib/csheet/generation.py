@@ -63,6 +63,9 @@ def abstract_generation(source, target, method, min_interval, condition=()):
         LOGGER.debug('Generate %s for: %s', target, video)
         try:
             generated = method(video)
+            mediainfo = ffmpeg.probe(generated)
+            if mediainfo.error:
+                raise ffmpeg.GenerateError(mediainfo.error)
             setattr(video, target, generated)
             setattr(video, '{}_mtime'.format(target),
                     getattr(video, '{}_mtime'.format(source)))
@@ -91,7 +94,7 @@ def generate_one_poster():
         source='src',
         target='poster',
         method=generate_poster,
-        min_interval=0,
+        min_interval=10,
         condition=(Video.poster.is_(None),))
 
 
