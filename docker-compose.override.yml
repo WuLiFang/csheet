@@ -17,14 +17,8 @@ services:
     environment: 
       SENTRY_DSN: ${SENTRY_DSN}
   nginx:
-    image: 'nginx'
+    command: [nginx-debug, '-g', 'daemon off;']
     ports:
       - 80:80
       - 443:443
-    volumes:
-      - ${CSHEET_STORAGE:-'/srv/csheet'}/nginx/html:/usr/share/nginx/html
-      - type: bind
-        source: ${CSHEET_STORAGE:-'/srv/csheet'}/nginx/conf
-        target: /etc/nginx
-        read_only: true
     

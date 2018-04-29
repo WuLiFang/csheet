@@ -3,7 +3,7 @@ services:
   web:
     image: 'csheet'
     volumes: 
-     - ${CSHEET_STORAGE:-'/srv/csheet'}:/srv/csheet
+     - ${CSHEET_STORAGE:-'/srv/csheet'}/srv:/srv/csheet
      - database:/var/db
     environment: 
       NUM_WORKERS: ${NUM_WORKERS:-'4'}
@@ -11,14 +11,26 @@ services:
     image: 'csheet'
     command: 'run watch'
     volumes: 
-     - ${CSHEET_STORAGE:-'/srv/csheet'}:/srv/csheet
+     - ${CSHEET_STORAGE:-'/srv/csheet'}/srv:/srv/csheet
      - database:/var/db
   generation:
     image: 'csheet'
     command: 'run generation'
     volumes: 
-     - ${CSHEET_STORAGE:-'/srv/csheet'}:/srv/csheet
+     - ${CSHEET_STORAGE:-'/srv/csheet'}/srv:/srv/csheet
      - database:/var/db
-
+  nginx:
+    image: 'nginx'
+    volumes:
+      - ${CSHEET_STORAGE:-'/srv/csheet'}/srv:/srv/csheet
+      - type: bind
+        source: ${CSHEET_STORAGE:-'/srv/csheet'}/etc
+        target: /etc/csheet
+        read_only: true
+      - type: bind
+        source: ${CSHEET_STORAGE:-'/srv/csheet'}/etc/nginx.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
+        
 volumes:
     database:

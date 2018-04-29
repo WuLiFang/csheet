@@ -1,8 +1,6 @@
 version: '3.5'
 services:
   web:
-    ports:
-     - "60000:80"
     volumes: 
      - /z:/z
     restart: always
@@ -27,3 +25,7 @@ services:
       - sentry-server:sentry
     environment: 
       SENTRY_DSN: ${SENTRY_DSN}
+  nginx:
+    ports:
+     - "60000:80"
+     - "60001:443"
