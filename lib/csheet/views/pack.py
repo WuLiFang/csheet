@@ -5,18 +5,10 @@ from __future__ import (absolute_import, division, print_function,
 
 import logging
 from os import SEEK_END
-from tempfile import TemporaryFile
-from zipfile import ZipFile
 
-from flask import Response, abort, render_template, request, send_file
+from flask import Response, abort, request, send_file
 from gevent.queue import Queue
 
-from wlf.path import get_encoded as e
-from wlf.path import PurePath
-
-from ..config import BaseConfig
-from ..filename import filter_filename
-from ..video import HTMLVideo
 from .app import APP
 
 STATUS = {}
@@ -61,12 +53,12 @@ def pack_event():
 
 def packed_page(config):
     """Return zip packed offline version.  """
-    assert isinstance(config, BaseConfig), type(config)
+
     if float(pack_progress()) != -1:
         abort(429)
     try:
         LOGGER.info('Start pack.')
-        f = archive(config)
+        f = config.archive()
     except:
         LOGGER.error('Error during pack page.', exc_info=True)
         raise
@@ -86,50 +78,3 @@ def packed_page(config):
         'Cache-Control': 'no-cache'
     })
     return resp
-
-
-def archive(config):
-    """Return zip packed offline version.  """
-    assert isinstance(config, BaseConfig), type(config)
-
-    f = TemporaryFile(suffix='.zip',
-                      prefix=config.title)
-    APP.logger.info('Start archive page.')
-    config.is_pack = True
-
-    with ZipFile(f, 'w', allowZip64=True) as zipfile:
-
-        # Pack images.
-        videos = config.videos()
-        if not videos:
-            abort(404)
-
-        for video in videos:
-            assert isinstance(video, HTMLVideo)
-            data = {'full': video.poster,
-                    'preview': video.preview,
-                    'thumb': video.thumb}
-            for role, filename in data.items():
-                if not filename:
-                    continue
-                assert isinstance(filename, PurePath), type(filename)
-
-                filename = filter_filename(filename)
-                arcname = video.get(role, is_pack=True)
-                try:
-                    zipfile.write(e(filename), arcname.encode('utf-8'))
-                    LOGGER.debug('Write zipfile: %s -> %s', filename, arcname)
-                except OSError:
-                    LOGGER.error('Error during pack', exc_info=True)
-
-        # Pack static files:
-        for i in config.static:
-            zipfile.write(APP.static_folder + '/' + i,
-                          '{}/{}'.format(config.static_folder, i))
-
-        # Pack index.
-        index_page = render_template('csheet.html', config=config)
-        zipfile.writestr('{}.html'.format(config.title.replace('\\', '_')),
-                         index_page.encode('utf-8'))
-    f.seek(0)
-    return f

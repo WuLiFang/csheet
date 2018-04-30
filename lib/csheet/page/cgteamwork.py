@@ -6,49 +6,23 @@ from __future__ import (absolute_import, division, print_function,
 
 import json
 import logging
-import os
-from abc import abstractmethod
 from contextlib import closing
-from mimetypes import guess_type
 
 import cgtwq
 
 from wlf.decorators import run_async
-from wlf.path import PurePath
 
-from . import model
-from .__about__ import __version__
-from .filename import filter_filename
-from .mimecheck import is_mimetype
-from .video import HTMLVideo
+from .. import model
+from ..mimecheck import is_mimetype
+from ..video import HTMLVideo
+from .core import BasePage
 
 LOGGER = logging.getLogger(__name__)
 
 
-class BaseConfig(object):
-    """Base config class for render csheet page. """
+class CGTeamWorkPage(BasePage):
+    """Csheet page from cgteamwork. """
 
-    static = ('dist/csheet.css',
-              'dist/csheet.bundle.js')
-    static_folder = 'static'
-    version = __version__
-    is_client = True
-    is_pack = False
-
-    @abstractmethod
-    def videos(self):
-        """Videos for the csheet page.  """
-        pass
-
-    @property
-    def title(self):
-        """Csheet title.  """
-
-        raise NotImplementedError
-
-
-class CGTeamWorkConfig(BaseConfig):
-    """For render csheet page from cgteamwork. """
     render_pipeline = {'灯光':  '渲染', '合成':  '输出'}
 
     def __init__(self, project, pipeline, prefix, token):
@@ -175,64 +149,3 @@ class CGTeamWorkConfig(BaseConfig):
         return '{}色板'.format(
             '_'.join(
                 [self.project, self.prefix.strip(self.code).strip('_'), self.pipeline]))
-
-
-class LocalConfig(BaseConfig):
-    """Config for csheet from local folder.  """
-
-    def __init__(self, root):
-        self.root = root
-        self.uuid_list = []
-
-    def update(self):
-        """Scan root for videos.  """
-        # Scan root.
-        videos = {}
-        images = {}
-        for dirpath, _, filenames in os.walk(filter_filename(self.root)):
-            for filename in filenames:
-                fullpath = os.path.join(dirpath, filename)
-                label = PurePath(filename).stem
-                type_, _ = guess_type(filename)
-                if type_ is None:
-                    LOGGER.warning('File type unknown: %s', fullpath)
-                elif type_.startswith('image/'):
-                    if label not in images:
-                        images[label] = fullpath
-                    else:
-                        LOGGER.warning('Duplicated image label: %s', fullpath)
-                elif type_.startswith('video/'):
-                    if label not in videos:
-                        videos[label] = fullpath
-                    else:
-                        LOGGER.warning('Duplicated video label: %s', fullpath)
-
-        # Create videos.
-        labels = sorted(set(videos.keys() + images.keys()))
-        LOGGER.debug('Labels: %s', labels)
-        ret = []
-        for label in labels:
-            video = HTMLVideo(src=videos.get(label),
-                              poster=images.get(label))
-            video.label = label
-            ret.append(video)
-
-        # Save to database.
-        sess = model.Session()
-        with closing(sess):
-            sess.add_all(ret)
-            sess.commit()
-            self.uuid_list = [i.uuid for i in ret]
-
-    def videos(self):
-
-        sess = model.Session()
-        with closing(sess):
-            query = sess.query(HTMLVideo)
-            query = query.filter(HTMLVideo.uuid.in_(
-                self.uuid_list)).order_by(HTMLVideo.label)
-            return query.all()
-
-    @property
-    def title(self):
-        return '{}色板'.format(self.root)

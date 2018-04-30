@@ -1,7 +1,8 @@
 # -*- coding=UTF-8 -*-
-"""App views.  """
+"""Render csheet page.  """
+
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from . import login, main, pack, api, video, socketio
-from .app import APP, SOCKETIO
+from .cgteamwork import CGTeamWorkPage
+from .local import LocalPage

@@ -59,7 +59,7 @@ class CGTeamworkTestCase(TestCase):
                     recv.status_code,
                     (200, 400),
                     '{}: {}'.format(url, _recv_msg(recv)))
-
+    @skip('TODO')
     def test_api(self):
         result = self.client.get('/api/list_images/梦塔/合成/MT_EP06_01')
         self.assertEqual(result.status_code, 200)

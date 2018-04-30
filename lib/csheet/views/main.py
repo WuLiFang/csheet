@@ -3,17 +3,13 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from flask import abort, make_response, render_template, request, session
-from gevent import spawn
+from flask import make_response, render_template, request, session
 
 import cgtwq
-from wlf.path import Path
 
 from . import pack
 from ..__about__ import __version__
-from ..config import CGTeamWorkConfig, LocalConfig
-from ..image import get_images_from_dir
-from ..page import from_dir
+from ..page import LocalPage, CGTeamWorkPage
 from .app import APP
 from .util import require_login
 
@@ -35,13 +31,14 @@ def render_main():
     prefix = args['prefix']
     pipeline = args['pipeline']
     token = session['token']
-    config = CGTeamWorkConfig(project, pipeline, prefix, token)
+    page = CGTeamWorkPage(project, pipeline, prefix, token)
     if 'pack' in args:
-        return pack.packed_page(config)
+        return pack.packed_page(page)
 
     # Respon with cookies set.
-    config.sync_with_thread()
-    resp = make_response(render_template('csheet_app.html', config=config))
+    page.sync_with_thread()
+    rendered = page.render('csheet_app.html', request=request)
+    resp = make_response(rendered)
     cookie_life = 60 * 60 * 24 * 90
     resp.set_cookie('project', project, max_age=cookie_life)
     resp.set_cookie('pipeline', pipeline, max_age=cookie_life)
@@ -55,10 +52,10 @@ def render_local_dir():
     """Render page for local dir.  """
 
     root = request.args['root']
-    config = LocalConfig(root)
-    config.update()
+    page = LocalPage(root)
+    page.update()
 
     if 'pack' in request.args:
-        return pack.packed_page(config)
+        return pack.packed_page(page)
 
-    return render_template('csheet_app.html', config=config)
+    return page.render('csheet_app.html', request=request)
