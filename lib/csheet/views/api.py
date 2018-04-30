@@ -6,7 +6,7 @@ from __future__ import (absolute_import, division, print_function,
 from flask import session
 
 
-from ..database import get_database, get_project_code
+from ..database import get_project_info
 from .app import APP
 from .util import require_login
 
@@ -20,11 +20,11 @@ def _apply_token(func, *args, **kwargs):
 @require_login
 def database(project):
     """get database for project.   """
-    return _apply_token(get_database, project)
+    return _apply_token(get_project_info, project).database
 
 
 @APP.route('/api/project_code/<project>')
 def project_code(project):
     """Get project code from project name.  """
 
-    return _apply_token(get_project_code, project)
+    return _apply_token(get_project_info, project).code
