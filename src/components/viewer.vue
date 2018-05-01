@@ -142,6 +142,7 @@ video {
 }
 .prev,
 .next {
+  color: burlywood;
   z-index: 4;
   position: fixed;
   text-decoration: none;

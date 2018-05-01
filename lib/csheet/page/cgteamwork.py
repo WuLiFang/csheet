@@ -10,8 +10,6 @@ from contextlib import closing
 
 import cgtwq
 
-from wlf.decorators import run_async
-
 from .. import model
 from ..mimecheck import is_mimetype
 from ..video import HTMLVideo
@@ -55,13 +53,7 @@ class CGTeamWorkPage(BasePage):
         select = module.filter(cgtwq.Field('shot.shot') | shots)
         return select
 
-    @run_async
-    def sync_with_thread(self):
-        """Run sync in another thread.  """
-
-        return self.sync()
-
-    def sync(self):
+    def update(self):
         """Sync local database with cgteamwork database.  """
 
         LOGGER.info('Sync with cgteamwork: %s', self)

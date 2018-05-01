@@ -12,6 +12,7 @@ from zipfile import ZipFile
 
 from jinja2 import Environment, PackageLoader
 
+from wlf.decorators import run_async
 from wlf.path import get_encoded as e
 from wlf.path import PurePath
 
@@ -37,6 +38,17 @@ class BasePage(object):
         """Videos for the csheet page.  """
         pass
 
+    @abstractmethod
+    def update(self):
+        """Update database with this config.  """
+        pass
+
+    @run_async
+    def update_with_thread(self):
+        """Run sync in another thread.  """
+
+        return self.update()
+
     @property
     def title(self):
         """Csheet title.  """
@@ -52,7 +64,7 @@ class BasePage(object):
 
         template = env.get_template(template)
 
-        return template.render(config=self, dump=self.dump, **context)
+        return template.render(config=self, dump=dump_videos, **context)
 
     def archive(self):
         """Archive page and assets to a temporary file.  """
@@ -103,13 +115,13 @@ class BasePage(object):
         f.seek(0)
         return f
 
-    @classmethod
-    def dump(self, videos):
-        """Dump videos to string data.  """
 
-        ret = []
-        for i in videos:
-            assert isinstance(i, HTMLVideo)
-            row = i.to_tuple()
-            ret.append(row)
-        return json.dumps(ret)
+def dump_videos(videos):
+    """Dump videos to string data.  """
+
+    ret = []
+    for i in videos:
+        assert isinstance(i, HTMLVideo)
+        row = i.to_tuple()
+        ret.append(row)
+    return json.dumps(ret)

@@ -14,8 +14,8 @@ from .app import APP
 from .util import require_login
 
 
-@require_login
 @APP.route('/')
+@require_login
 def render_main():
     """main page.  """
 
@@ -37,7 +37,7 @@ def render_main():
         return pack.packed_page(page)
 
     # Respon with cookies set.
-    page.sync_with_thread()
+    page.update_with_thread()
     rendered = page.render('csheet_app.html', request=request)
     resp = make_response(rendered)
     cookie_life = 60 * 60 * 24 * 90
@@ -54,7 +54,7 @@ def render_local_dir():
 
     root = request.args['root']
     page = LocalPage(root)
-    page.update()
+    page.update_with_thread()
 
     if 'pack' in request.args:
         return pack.packed_page(page)

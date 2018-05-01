@@ -67,12 +67,14 @@ class LocalPage(BasePage):
             self.uuid_list = [i.uuid for i in ret]
 
     def videos(self):
-
+        root = filter_filename(self.root)
         sess = model.Session()
         with closing(sess):
             query = sess.query(HTMLVideo)
-            query = query.filter(HTMLVideo.uuid.in_(
-                self.uuid_list)).order_by(HTMLVideo.label)
+            query = query.filter(
+                HTMLVideo.src.startswith(root) |
+                HTMLVideo.poster.startswith(root) 
+            ).order_by(HTMLVideo.label)
             return query.all()
 
     @property
