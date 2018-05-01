@@ -15,6 +15,7 @@ from .util import require_login
 
 
 @require_login
+@APP.route('/')
 def render_main():
     """main page.  """
 
