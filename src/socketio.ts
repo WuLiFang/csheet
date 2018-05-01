@@ -2,13 +2,15 @@ import * as io from 'socket.io-client';
 import Notify from 'notifyjs';
 import { LightboxManager } from './lightbox';
 import * as _ from 'lodash';
+import { VideoStorage, CSheetVideo, Role } from './video';
+import { CSheetVideoDataRow } from './types';
 
 export default class SocketIO {
     public socket: SocketIOClient.Socket
-    constructor(public manager: LightboxManager) {
+    constructor(public videoBus: VideoStorage) {
         this.socket = io(`/`, { path: '/api/socket.io' })
         Notify.requestPermission()
-        this.socket.on('asset update', (message: (string | number | null)[][]) => this.on_asset_update(message))
+        this.socket.on('asset update', (message: Array<CSheetVideoDataRow>) => this.on_asset_update(message))
         this.socket.on('connect', this.on_connect)
         this.socket.on('disconnect', this.on_disconnect)
         setInterval(this.updateAppeared, 2000)
@@ -21,18 +23,19 @@ export default class SocketIO {
         let msg = '连接断开'
         new Notify(msg, { timeout: 2, tag: msg }).show()
     }
-    on_asset_update(message: (string | number | null)[][]) {
-        let manager = this.manager;
+    on_asset_update(message: Array<CSheetVideoDataRow>) {
         _.each(message,
             value => {
-                let uuid = <string>value[0]
-                let thumb_mtime = <number | null>value[1]
-                let poster_mtime = <number | null>value[2]
-                let preview_mtime = <number | null>value[3]
-                let label = <string | null>value[4]
-                if (manager.updateAsset(uuid, thumb_mtime, poster_mtime, preview_mtime)) {
-                    new Notify('文件更新', { body: label ? label : '<未命名>', timeout: 2, tag: uuid }).show()
-                }
+                let video = CSheetVideo.fromDataRow(value)
+                this.videoBus[video.uuid] = video
+                let thumb = video.getPath(Role.thumb)
+                new Notify('文件更新',
+                    {
+                        body: video.label,
+                        icon: thumb ? thumb : undefined,
+                        timeout: 2,
+                        tag: video.uuid
+                    }).show()
             }
         )
 
@@ -43,8 +46,8 @@ export default class SocketIO {
         )
     }
     updateAppeared = _.throttle(() => {
-        let appread = this.manager.getAppeared()
-        let uuidList = appread.map(value => value.image.uuid)
-        this.requestUpdate(uuidList)
+        let appeared = _.filter(this.videoBus, value => value.isAppeared())
+        let uuids = _.map(appeared, value => value.uuid)
+        this.requestUpdate(uuids)
     }, 2000)
 }

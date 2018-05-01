@@ -1,11 +1,7 @@
 {% extends "csheet.html" %} {% block nav %}
-<div>
-    <progress class='pack hidden' value="{{ pack_progress }}" max="100.0"></progress>
-</div>
 <a href="/" class="button">
     <button>返回</button>
 </a>
 <a href="{{ request.full_path }}&amp;pack=1" class="button" download="{{ title }}.zip">
     <button class='pack'>打包</button>
-</a>{% endblock %} {% block viewer %}
-<button class='refresh'></button>{% endblock %}
+</a>{% endblock %}

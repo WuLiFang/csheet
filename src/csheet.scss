@@ -96,7 +96,7 @@ header {
     }
 }
 
-ul.images {
+ul.noscript {
     width: 85%;
     color: grey;
     margin: auto;
@@ -127,6 +127,125 @@ ul.images {
             }
         }
     }
+    .lightbox {
+        display: inline-block;
+        margin: 0;
+        transition: 0.5s ease-in-out;
+        position: relative;
+        height: 200px;
+        border: 1px solid black;
+        box-sizing: border-box;
+        overflow: hidden;
+        .viewer {
+            z-index: 1;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            /* for animation */
+            visibility: hidden;
+            transition: inherit;
+            transform: translate(0, -100%);
+            .full {
+                z-index: 2;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -52%);
+                max-width: 90%;
+                height: 90%;
+                &:hover {
+                    z-index: 3
+                }
+                img {
+                    max-width: 100%;
+                    max-height: 100%;
+                }
+            }
+            .bottom {
+                z-index: 3;
+                position: absolute;
+                box-sizing: border-box;
+                bottom: 0;
+                width: 100%;
+                padding: 0.5%;
+                .caption {
+                    max-width: 80%;
+                    color: #EEE;
+                    text-shadow: 1px 1px 0 black;
+                    span {
+                        background: rgba(0, 0, 0, 0.5);
+                        padding: 0.5em
+                    }
+                }
+            }
+            a {
+                &.prev,
+                &.next {
+                    z-index: 4;
+                    position: fixed;
+                    text-decoration: none;
+                    font-size: 3em;
+                    background: rgba(255, 255, 255, 0.1);
+                    padding: 5% 2%;
+                    opacity: 0;
+                    top: 50%;
+                    transform: translate(0%, -50%);
+                    transition: 0.4s ease-in-out;
+                    &:hover {
+                        background: rgba(255, 255, 255, 0.2);
+                    }
+                }
+                &.prev {
+                    left: -10%;
+                    &:before {
+                        content: "<";
+                    }
+                }
+                &.next {
+                    right: -10%;
+                    &:after {
+                        content: ">";
+                    }
+                }
+                &.close {
+                    z-index: 1;
+                    position: fixed;
+                    width: 100%;
+                    height: 100%;
+                    top: 0px;
+                    left: 0px;
+                    cursor: zoom-out;
+                }
+            }
+        }
+        &.shrink {
+            background: rgba(255, 255, 255, 0.2);
+            a.zoom .caption {
+                visibility: hidden;
+            }
+        }
+        &:target {
+            & .viewer {
+                visibility: visible;
+                transform: none;
+                a {
+                    &.prev,
+                    &.next {
+                        opacity: 1;
+                    }
+                    &.prev {
+                        left: 1%;
+                    }
+                    &.next {
+                        right: 1%;
+                    }
+                }
+            }
+        }
+    }
 }
 
 video {
@@ -134,22 +253,60 @@ video {
     max-height: 100%;
 }
 
-.lightbox {
-    display: inline-block;
-    margin: 0;
-    transition: 0.5s ease-in-out;
-    position: relative;
-    height: 200px;
-    border: 1px solid black;
-    box-sizing: border-box;
-    overflow: hidden; // &>a {
-    //     display: block;
-    // }
-    &:not(:hover) {
-        a.zoom .caption {
-            transform: translateY(100%)
+table {
+    border-spacing: 0.5em 0.2em;
+    td.status {
+        color: white;
+        opacity: 0.5;
+        border-radius: 8px;
+        &[status=Wait] {
+            background: rgb(0, 85, 127);
+            &::before {
+                content: "等待"
+            }
+        }
+        &[status=Check] {
+            background: rgb(219, 219, 2);
+            &::before {
+                content: "检查"
+            }
+        }
+        &[status=Retake] {
+            background: rgb(255, 0, 0);
+            &::before {
+                content: "返修"
+            }
+        }
+        &[status=Approve] {
+            background: rgb(0, 206, 0);
+            &::before {
+                content: "通过"
+            }
+        }
+        &[status=Close] {
+            &::before {
+                content: "<关闭>"
+            }
         }
     }
+    td.notes {
+        transition: 0.3s ease-out;
+        &:hover {
+            background: rgba(255, 255, 255, 0.2)
+        }
+    }
+}
+
+.note-container {
+    iframe {
+        width: 100%;
+        min-width: 350px;
+        height: 320px;
+        border: 0
+    }
+}
+
+.lightbox {
     .caption {
         word-break: keep-all;
         text-overflow: ellipsis;
@@ -157,7 +314,7 @@ video {
         margin: auto;
         transition: 0.3s ease-out;
     }
-    a.zoom .caption {
+    .small.caption {
         color: #EEE;
         position: absolute;
         bottom: 0;
@@ -167,176 +324,9 @@ video {
         transform: none;
         background: rgba(0, 0, 0, 0.5)
     }
-    .small {
-        z-index: 1;
-        text-align: center;
-        margin: 0;
-        width: 100%;
-        transition: 0.5s ease-in-out;
-        cursor: zoom-in;
-        img {
-            border: 1px solid grey;
-        }
-    }
-    .viewer {
-        z-index: 1;
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-        background-color: rgba(0, 0, 0, 0.8);
-        /* for animation */
-        visibility: hidden;
-        transition: inherit;
-        transform: translate(0, -100%);
-        .detail {
-            z-index: 3;
-            display: block;
-            position: fixed;
-            left: 0;
-            top: 0;
-            margin: 5px;
-            background: black;
-            max-height: 100%;
-            overflow-y: auto;
-            table {
-                border-spacing: 0.5em 0.2em;
-                td.status {
-                    color: white;
-                    opacity: 0.5;
-                    border-radius: 8px;
-                    &[status=Wait] {
-                        background: rgb(0, 85, 127);
-                        &::before {
-                            content: "等待"
-                        }
-                    }
-                    &[status=Check] {
-                        background: rgb(219, 219, 2);
-                        &::before {
-                            content: "检查"
-                        }
-                    }
-                    &[status=Retake] {
-                        background: rgb(255, 0, 0);
-                        &::before {
-                            content: "返修"
-                        }
-                    }
-                    &[status=Approve] {
-                        background: rgb(0, 206, 0);
-                        &::before {
-                            content: "通过"
-                        }
-                    }
-                    &[status=Close] {
-                        &::before {
-                            content: "<关闭>"
-                        }
-                    }
-                }
-                td.notes {
-                    transition: 0.3s ease-out;
-                    &:hover {
-                        background: rgba(255, 255, 255, 0.2)
-                    }
-                }
-            }
-            .note-container{
-                iframe{
-                    width: 100%;
-                    min-width: 350px;
-                    height: 320px;
-                    border: 0
-                }
-            }
-        }
-        .full {
-            z-index: 2;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -52%);
-            max-width: 90%;
-            /* for animation */
-            max-height: 70%;
-            &:hover {
-                z-index: 3
-            }
-        }
-        .bottom {
-            z-index: 3;
-            position: absolute;
-            box-sizing: border-box;
-            bottom: 0;
-            width: 100%;
-            padding: 0.5%;
-            .caption {
-                max-width: 80%;
-                color: #EEE;
-                text-shadow: 1px 1px 0 black;
-                span {
-                    background: rgba(0, 0, 0, 0.5);
-                    padding: 0.5em
-                }
-            }
-        }
-        a {
-            &.prev,
-            &.next {
-                z-index: 4;
-                position: fixed;
-                text-decoration: none;
-                font-size: 3em;
-                background: rgba(255, 255, 255, 0.1);
-                padding: 5% 2%;
-                opacity: 0;
-                top: 50%;
-                transform: translate(0%, -50%);
-                transition: 0.4s ease-in-out;
-                &:hover {
-                    background: rgba(255, 255, 255, 0.2);
-                }
-            }
-            &.prev {
-                left: -10%;
-                &:before {
-                    content: "<";
-                }
-            }
-            &.next {
-                right: -10%;
-                &:after {
-                    content: ">";
-                }
-            }
-            &.close {
-                z-index: 1;
-                position: fixed;
-                width: 100%;
-                height: 100%;
-                top: 0px;
-                left: 0px;
-                cursor: zoom-out;
-            }
-        }
-        button {
-            z-index: 3;
-            position: absolute;
-            &.refresh {
-                top: 10px;
-                right: 10px;
-                &:after {
-                    content: '刷新'
-                }
-            }
-        }
-    }
-    &.shrink {
-        background: rgba(255, 255, 255, 0.2);
-        a.zoom .caption {
-            visibility: hidden;
+    &:not(:hover) {
+        .small.caption {
+            transform: translateY(100%)
         }
     }
     &.updating-thumb {
@@ -356,27 +346,6 @@ video {
     &.failed-full {
         video.full {
             border: 1px solid darkred;
-        }
-    }
-    &:target {
-        & .viewer {
-            visibility: visible;
-            transform: none;
-            .full {
-                max-height: 90%;
-            }
-            a {
-                &.prev,
-                &.next {
-                    opacity: 1;
-                }
-                &.prev {
-                    left: 1%;
-                }
-                &.next {
-                    right: 1%;
-                }
-            }
         }
     }
 }

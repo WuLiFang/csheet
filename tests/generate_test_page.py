@@ -12,18 +12,18 @@ from csheet.views import APP
 
 
 def main():
-    if not cgtwq.DesktopClient.is_logged_in():
-        print('CGTeamWork not logged in, skip generate page.')
-        return
-
+    tasks = [
+        ('/login', 'login.html'),
+        ('/', 'index.html'),
+        ('/local?root=D%3A%5CUsers%5C34357%5CPictures%5CCollection', 'local.html')
+    ]
     client = APP.test_client()
-    client.post('/_login')
-    for page, filename in [
-            ('/login', 'login.html'),
-            ('/', 'index.html'),
-            (quote(b'/?pipeline=合成&project=梦塔&prefix=MT_EP06_07_',
-                   safe=b'/?=&'), 'csheet.html')
-    ]:
+    if cgtwq.DesktopClient.is_logged_in():
+        tasks.append((quote(b'/?pipeline=合成&project=梦塔&prefix=MT_EP06_07_',
+                            safe=b'/?=&'), 'csheet.html'))
+
+        client.post('/_login')
+    for page, filename in tasks:
         resp = client.get(page)
         with open(util.path('pages', filename), 'w') as f:
             f.write(resp.data)

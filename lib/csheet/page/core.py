@@ -4,6 +4,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import json
 import logging
 from abc import abstractmethod
 from tempfile import TemporaryFile
@@ -51,7 +52,7 @@ class BasePage(object):
 
         template = env.get_template(template)
 
-        return template.render(config=self, **context)
+        return template.render(config=self, dump=self.dump, **context)
 
     def archive(self):
         """Archive page and assets to a temporary file.  """
@@ -101,3 +102,14 @@ class BasePage(object):
                              index_page.encode('utf-8'))
         f.seek(0)
         return f
+
+    @classmethod
+    def dump(self, videos):
+        """Dump videos to string data.  """
+
+        ret = []
+        for i in videos:
+            assert isinstance(i, HTMLVideo)
+            row = i.to_tuple()
+            ret.append(row)
+        return json.dumps(ret)

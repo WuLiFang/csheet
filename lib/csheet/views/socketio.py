@@ -59,7 +59,7 @@ def format_videos(videos):
     ret = []
     for i in videos:
         assert isinstance(i, Video)
-        row = (i.uuid, i.thumb_mtime, i.poster_mtime, i.preview_mtime, i.label)
+        row = i.to_tuple()
         ret.append(row)
     return ret
 
@@ -97,12 +97,13 @@ def on_connect():
 
 @SOCKETIO.on('request update')
 def on_request_update(message):
+    LOGGER.info(message)
     assert isinstance(message, list), type(message)
     sess = Session()
     with closing(sess):
         query = sess.query(Video).filter(
             Video.uuid.in_(message),
-            Video.last_update_time < time.time() - 10
+            Video.last_update_time < time.time() - setting.BROADCAST_INTERVAL
         )
         videos = query.all()
         if not videos:

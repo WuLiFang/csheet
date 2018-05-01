@@ -134,6 +134,15 @@ class Video(Base):
     def __repr__(self):
         return 'Video<label={0.label}, uuid={0.uuid}, src={0.src}, poster={0.poster}>'.format(self)
 
+    def to_tuple(self):
+        """Convert video to tuple for frontend transfer.  """
+
+        return (self.uuid,
+                self.label,
+                self.thumb_mtime,
+                self.poster_mtime,
+                self.preview_mtime)
+
 
 def bind(url=None):
     """Bind model to database.  """

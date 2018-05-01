@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html>{% set videos = config.videos() %}
 <html lang="zh-CN">
 
 <head>
@@ -6,9 +6,6 @@
     <title>
         {{ config.title }}
     </title>
-    {% for i in config.static %} {% if i.endswith('.css') %}
-    <link href="{{ config.static_folder }}/{{ i }}?version={{ config.version }}" rel="stylesheet" type="text/css" />{% elif i.endswith('.js') %}
-    <script src="{{ config.static_folder }}/{{ i }}?version={{ config.version }}"></script> {% endif %} {% endfor %}
     <!--[if IE]>
     <script type="text/javascript">
     alert('请使用现代浏览器浏览本页面');
@@ -17,100 +14,50 @@
     <![endif]-->
 </head>
 
-<body>
-    <header>
-        <div id="count">
-            {{ images.__len__() }}
-        </div>
-        <div id="_remove_me">
-            页面脚本无法运行, 功能受限
-        </div>
-        <script>
-            let element = document.getElementById('_remove_me');
-            element.parentElement.removeChild(element)
-        </script>
-        <nav>
-            <div class="refresh-module hidden">
-                <button>
-                    <div>
-                        <span></span>
-                    </div>
-                </button>
+<div id='app' data-page='{{ dump(videos) }}'>
+    <noscript>
+        <header>
+            <div id="count">
+                {{ images.__len__() }}
             </div>
-            <div class="hidden" id="control">
-                <label for="caption-switch">
-                    标题
-                </label>
-                <input type="checkbox" , id='caption-switch'></input>
-            </div>
-            {% block nav %} {% endblock %}
-        </nav>
-        <div class="help hidden">
-            <table>
-                <tr>
-                    <th>快捷键</th>
-                    <th>用途</th>
-                </tr>
-                <tr>
-                    <td>双击两侧空白处</td>
-                    <td>播放所有可见视频</td>
-                </tr>
-                <tr>
-                    <td>拖动图片</td>
-                    <td>可拖入其他软件(例如 Nuke)</td>
-                </tr>
-            </table>
-        </div>
-    </header>
-    <ul class="images">
-        {% for video in config.videos() %} {% set thumb = video.get('thumb',config.is_pack) %} {% set poster = video.get('poster',
-        config.is_pack) %} {% set src = video.get('preview', config.is_pack) %}
-        <li class="lightbox shrink" id="image{{ loop.index }}" data-drag="{{ video.get_drag(config.is_pack) }}" {% if thumb %}data-thumb="{{ thumb }}"
-            {% endif %}{% if poster %}data-full="{{ poster }}" {% endif %}{% if src %}data-preview="{{ src }}" {% endif %}data-uuid="{{ video.uuid }}"
-            style="width:355.56px">
-            <a href="#image{{ loop.index }}" class="zoom" draggable="false">
-                <video class='small hidden' muted loop>
-                    <img alt="no image" />
-                </video>
-                <div class="noscript">
-                    <noscript>
-                        <video poster="{{ thumb }}" src="{{ src }}" muted loop>
-                            <img alt="no image" src="{{ thumb }}" />
-                        </video>
-                    </noscript>
-                </div>
-                <div class='caption' title="{{ video.label | e }}">
-                    {{ video.label | e }}
-                </div>
-            </a>
-            <div class="viewer">
-                <div class="detail"> </div>
-                <a class="close" href="#void"> </a>
-                <video class='full hidden'>
-                    <a href="{{ poster }}" target="_blank">
-                        <img alt="no image" />
+            <nav>
+                {% block nav %} {% endblock %}
+            </nav>
+        </header>
+
+        <body>
+            {% for i in config.static %} {% if i.endswith('.css') %}
+            <link href="{{ config.static_folder }}/{{ i }}?version={{ config.version }}" rel="stylesheet" type="text/css" /> {% endif %} {% endfor %}
+            <ul class="noscript">
+                {% for video in videos %} {% set thumb = video.get('thumb',config.is_pack) %} {% set poster = video.get('poster', config.is_pack)
+                %} {% set preview = video.get('preview', config.is_pack) %}
+                <li class="lightbox" id="image{{ loop.index }}">
+                    <a href="#image{{ loop.index }}" class="zoom" draggable="false">
+                        <img alt="no image" src="{{ thumb }}" />
+                        <div class='small caption' title="{{ video.label | e }}">
+                            {{ video.label | e }}
+                        </div>
                     </a>
-                </video>
-                <div class="noscript">
-                    <noscript>
-                        <video class='full' poster="{{ poster }}" src="{{ src }}">
-                            <a href="{{ poster }}" target="_blank">
-                                <img alt="no image" src="{{ poster }}" />
-                            </a>
-                        </video>
-                    </noscript>
-                </div>
-                <div class="bottom">
-                    <div class='caption' title="{{ video.label | e }}">
-                        <span>{{ video.label | e }} </span>
+                    <div class="viewer">
+                        <a class="close" href="#void"> </a>
+                        <div class='full'>
+                            <img alt="no image" src="{{ poster }}" />
+                        </div>
+                        <div class="bottom">
+                            <div class='caption' title="{{ video.label | e }}">
+                                <span>{{ video.label | e }} </span>
+                            </div>
+                        </div>
+                        <a class="prev" href="#image{{ loop.index - 1 }}"> </a>
+                        <a class="next" href="#image{{ loop.index + 1 }}"> </a>
                     </div>
-                </div>
-                <a class="prev" href="#image{{ loop.index - 1 }}"> </a>
-                <a class="next" href="#image{{ loop.index + 1 }}"> </a> {% block viewer %} {% endblock %}
-            </div>
-        </li>
-        {% endfor %}
-    </ul>
-</body>
+                </li>
+                {% endfor %}
+            </ul>
+        </body>
+    </noscript>
+</div>
+
+<script src="{{ config.static_folder }}/dist/csheet.bundle.js?version={{ config.version }}"></script>
 
 </html>
