@@ -97,7 +97,6 @@ def on_connect():
 
 @SOCKETIO.on('request update')
 def on_request_update(message):
-    LOGGER.info(message)
     assert isinstance(message, list), type(message)
     sess = Session()
     with closing(sess):
