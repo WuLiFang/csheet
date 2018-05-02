@@ -22,11 +22,12 @@ LOGGER = logging.getLogger(__name__)
 def getmtime(path):
     """Get mtime for database path.  """
 
-    path = filter_filename(path)
-    try:
-        return os.path.getmtime(e(path))
-    except OSError:
-        LOGGER.warning('File removed: %s', path)
+    if path:
+        path = filter_filename(path)
+        try:
+            return os.path.getmtime(e(path))
+        except OSError:
+            LOGGER.warning('File removed: %s', path)
     return None
 
 
