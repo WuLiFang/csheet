@@ -102,7 +102,7 @@ export default Vue.extend({
   cursor: zoom-out;
 }
 .detail {
-  color: white;
+  color: grey;
   z-index: 3;
   display: block;
   position: fixed;
@@ -112,6 +112,7 @@ export default Vue.extend({
   background: black;
   max-height: 100%;
   overflow-y: auto;
+  text-align: center;
 }
 video {
   position: absolute;
@@ -167,6 +168,62 @@ video {
   right: 1%;
   &:after {
     content: ">";
+  }
+}
+</style>
+<style lang="scss">
+.detail {
+  table {
+    border-spacing: 0.5em 0.2em;
+    td.status {
+      color: white;
+      opacity: 0.5;
+      border-radius: 8px;
+      &[status="Wait"] {
+        background: rgb(0, 85, 127);
+        &::before {
+          content: "等待";
+        }
+      }
+      &[status="Check"] {
+        background: rgb(219, 219, 2);
+        &::before {
+          content: "检查";
+        }
+      }
+      &[status="Retake"] {
+        background: rgb(255, 0, 0);
+        &::before {
+          content: "返修";
+        }
+      }
+      &[status="Approve"] {
+        background: rgb(0, 206, 0);
+        &::before {
+          content: "通过";
+        }
+      }
+      &[status="Close"] {
+        &::before {
+          content: "<关闭>";
+        }
+      }
+    }
+    td.notes {
+      transition: 0.3s ease-out;
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+    }
+  }
+
+  .note-container {
+    iframe {
+      width: 100%;
+      min-width: 350px;
+      height: 320px;
+      border: 0;
+    }
   }
 }
 </style>
