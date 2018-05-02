@@ -72,6 +72,12 @@ export class CSheetVideo {
             () => { this.posterFailed = true }
         )
     }
+    scrollToThis() {
+        let element = this.lightboxElement
+        if (element) {
+            window.scroll(undefined, element.offsetTop)
+        }
+    }
     static fromDataRow(data: CSheetVideoDataRow) {
         return new CSheetVideo(data[0], data[1], data[2], data[3], data[4])
     }

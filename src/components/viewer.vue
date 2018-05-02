@@ -104,6 +104,7 @@ export default Vue.extend({
     video(value: CSheetVideo | null) {
       if (value) {
         value.loadInfo();
+        value.scrollToThis();
       }
     }
   }
