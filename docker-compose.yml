@@ -6,7 +6,7 @@ services:
      - ${CSHEET_STORAGE:-/srv/csheet}/srv:/srv/csheet
      - database:/var/db
     environment: 
-      NUM_WORKERS: ${NUM_WORKERS:-'4'}
+      NUM_WORKERS: ${NUM_WORKERS:-4}
   socketio:
     image: 'csheet'
     command: 'run socketio'

@@ -7,7 +7,6 @@ services:
     external_links:
       - sentry-server:sentry
     environment: 
-      NUM_WORKERS: ${NUM_WORKERS:-'4'}
       SENTRY_DSN: ${SENTRY_DSN}
   watch:
     volumes: 
