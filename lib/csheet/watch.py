@@ -45,23 +45,35 @@ def update_one():
         video.is_need_update = False
         video.last_update_time = time.time()
         session.commit()
+        session.refresh(video)
 
-        LOGGER.debug('Update video info: %s', video)
-        src, poster = video.src, video.poster
-        if src:
-            try:
-                video.src_mtime = getmtime(src)
-            except OSError:
-                LOGGER.warning('File removed: %s', src)
-                video.src = None
-        if poster:
-            try:
-                video.poster_mtime = getmtime(poster)
-            except OSError:
-                LOGGER.warning('File removed: %s', poster)
-                video.poster = None
-        session.commit()
-        return True
+    update_video(video)
+    return True
+
+
+def update_video(video):
+    """"Update video mtime info.  """
+
+    assert isinstance(video, Video)
+    LOGGER.debug('Update video info: %s', video)
+    src, poster = video.src, video.poster
+    if src:
+        try:
+            video.src_mtime = getmtime(src)
+        except OSError:
+            LOGGER.warning('File removed: %s', src)
+            video.src = None
+    if poster:
+        try:
+            video.poster_mtime = getmtime(poster)
+        except OSError:
+            LOGGER.warning('File removed: %s', poster)
+            video.poster = None
+
+    sess = Session()
+    with closing(sess):
+        sess.add(video)
+        sess.commit()
 
 
 def update_forever():
