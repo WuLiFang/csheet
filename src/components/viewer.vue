@@ -3,6 +3,7 @@
     div.overlay(@click='setVideo(null)')
     div.detail(v-html='video ? video.infoHTML : "<empty>"')
     video.small(:poster='poster' :src='preview' muted loop v-if='posterReady')
+    span.placeholder.failed(v-else-if='posterFailed') 读取失败
     span.placeholder(v-else-if='poster') 读取中
     span.placeholder(v-else) 不可用
     div.prev(:class='{disabled: !prev}' @click='prev ? setVideo(prev) : null')
@@ -36,6 +37,9 @@ export default Vue.extend({
     },
     posterReady(): boolean {
       return Boolean(this.poster && this.video && this.video.posterReady);
+    },
+    posterFailed(): boolean {
+      return Boolean(this.poster && this.video && this.video.posterFailed);
     },
     preview(): string | null {
       if (!this.video) {
@@ -109,6 +113,9 @@ export default Vue.extend({
   height: 100%;
   background: rgba(1, 1, 1, 0.5);
   cursor: zoom-out;
+}
+.failed {
+  color: lightcoral;
 }
 .detail {
   color: grey;

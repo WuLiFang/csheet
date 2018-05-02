@@ -8,6 +8,7 @@ export class CSheetVideo {
     public infoHTML = '';
     public lightboxElement = <HTMLElement | null>null;
     public posterReady = false;
+    public posterFailed = false;
     constructor(
         public uuid: string,
         public label: string,
@@ -60,12 +61,14 @@ export class CSheetVideo {
     loadPoster() {
         let uri = this.getPath(Role.poster)
         this.posterReady = false
+        this.posterFailed = false
         if (!uri) {
             return
         }
         imageAvailable(
             uri,
-            () => { this.posterReady = true }
+            () => { this.posterReady = true },
+            () => { this.posterFailed = true }
         )
     }
     static fromDataRow(data: CSheetVideoDataRow) {
