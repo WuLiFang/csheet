@@ -36,7 +36,8 @@ export default Vue.extend({
       return _.keys(this.videos).length;
     },
     packURL(): string {
-      return `${window.location.href}&pack=1`;
+      return `${window.location.origin}${window.location.pathname}${window
+        .location.search || "?"}&pack=1`;
     },
     packFilename(): string {
       return `${document.title}.zip`;
