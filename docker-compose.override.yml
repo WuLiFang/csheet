@@ -21,7 +21,7 @@ services:
       - 'E:/:/e'
       - '/z:/z'
     environment: 
-      CSHEET_DEBUG: 1
+      # CSHEET_DEBUG: 1
       SENTRY_DSN: ${SENTRY_DSN}
   generation:
     external_links:
@@ -31,7 +31,7 @@ services:
       - 'E:/:/e'
       - '/z:/z'
     environment: 
-      CSHEET_DEBUG: 1
+      # CSHEET_DEBUG: 1
       SENTRY_DSN: ${SENTRY_DSN}
   nginx:
     command: [nginx-debug, '-g', 'daemon off;']

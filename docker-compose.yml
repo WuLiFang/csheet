@@ -26,6 +26,9 @@ services:
      - database:/var/db
   nginx:
     image: 'nginx'
+    depends_on:
+      - web
+      - socketio
     volumes:
       - ${CSHEET_STORAGE:-/srv/csheet}/srv:/srv/csheet
       - type: bind
