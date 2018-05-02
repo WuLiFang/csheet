@@ -1,4 +1,4 @@
-import { CSheetImage } from "./image";
+import { CSheetImage, imageAvailable } from "./image";
 import { CSheetVideoDataRow } from "./types";
 import axios from 'axios';
 export interface VideoStorage {
@@ -7,6 +7,7 @@ export interface VideoStorage {
 export class CSheetVideo {
     public infoHTML = '';
     public lightboxElement = <HTMLElement | null>null;
+    public posterReady = false;
     constructor(
         public uuid: string,
         public label: string,
@@ -55,6 +56,17 @@ export class CSheetVideo {
         let ypos = this.lightboxElement.offsetTop;
         return (top <= ypos && ypos <= bottom)
 
+    }
+    loadPoster() {
+        let uri = this.getPath(Role.poster)
+        this.posterReady = false
+        if (!uri) {
+            return
+        }
+        imageAvailable(
+            uri,
+            () => { this.posterReady = true }
+        )
     }
     static fromDataRow(data: CSheetVideoDataRow) {
         return new CSheetVideo(data[0], data[1], data[2], data[3], data[4])

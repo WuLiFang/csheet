@@ -2,7 +2,9 @@
   div.viewer(v-show='video')
     div.overlay(@click='setVideo(null)')
     div.detail(v-html='video ? video.infoHTML : "<empty>"')
-    video.small(:poster='poster' :src='preview' muted loop ref='video')
+    video.small(:poster='poster' :src='preview' muted loop v-if='posterReady')
+    span.placeholder(v-else-if='poster') 读取中
+    span.placeholder(v-else) 不可用
     div.prev(:class='{disabled: !prev}' @click='prev ? setVideo(prev) : null')
     div.next(:class='{disabled: !next}' @click='next ? setVideo(next) : null')
     div.bottom
@@ -31,6 +33,9 @@ export default Vue.extend({
       }
       let mtime = this.video.poster_mtime;
       return this.video.getPath(Role.poster);
+    },
+    posterReady(): boolean {
+      return Boolean(this.poster && this.video && this.video.posterReady);
     },
     preview(): string | null {
       if (!this.video) {
@@ -83,12 +88,16 @@ export default Vue.extend({
     video(value: CSheetVideo | null) {
       if (value) {
         value.loadInfo();
+        value.loadPoster();
       }
     }
   }
 });
 </script>
 <style lang="scss" scoped>
+* {
+  color: white;
+}
 .viewer {
   position: fixed;
   width: 100%;
@@ -114,7 +123,8 @@ export default Vue.extend({
   overflow-y: auto;
   text-align: center;
 }
-video {
+video,
+.placeholder {
   position: absolute;
   left: 50%;
   top: 50%;
