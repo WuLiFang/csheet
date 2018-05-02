@@ -2,6 +2,8 @@
   div.viewer(v-show='video')
     div.overlay(@click='setVideo(null)')
     div.detail(v-html='video ? video.infoHTML : "<empty>"')
+    div.topright
+      button(@click='refresh') 刷新
     video.small(:poster='poster' :src='preview' muted loop v-if='posterReady')
     span.placeholder.failed(v-else-if='posterFailed') 读取失败
     span.placeholder(v-else-if='poster') 读取中
@@ -86,13 +88,18 @@ export default Vue.extend({
   methods: {
     setVideo(video: CSheetVideo | null) {
       this.$emit("update:video", video);
+    },
+    refresh() {
+      if (!this.video) {
+        return;
+      }
+      this.video.loadPoster();
     }
   },
   watch: {
     video(value: CSheetVideo | null) {
       if (value) {
         value.loadInfo();
-        value.loadPoster();
       }
     }
   }
@@ -101,6 +108,9 @@ export default Vue.extend({
 <style lang="scss" scoped>
 * {
   color: white;
+}
+button {
+  color: black;
 }
 .viewer {
   position: fixed;
@@ -129,6 +139,12 @@ export default Vue.extend({
   max-height: 100%;
   overflow-y: auto;
   text-align: center;
+}
+.topright {
+  position: fixed;
+  right: 0;
+  top: 0;
+  margin: 0.5%;
 }
 video,
 .placeholder {
