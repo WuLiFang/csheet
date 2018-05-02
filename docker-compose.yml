@@ -7,6 +7,11 @@ services:
      - database:/var/db
     environment: 
       NUM_WORKERS: ${NUM_WORKERS:-'4'}
+  socketio:
+    image: 'csheet'
+    command: 'run socketio'
+    volumes: 
+     - database:/var/db
   watch:
     image: 'csheet'
     command: 'run watch'

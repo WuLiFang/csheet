@@ -2,6 +2,10 @@
 
 if [ "$1" = "run" ]; then
     if [ "$2" = "" ]; then
+        gunicorn -w $NUM_WORKERS \
+            -k gevent \
+            -b 0.0.0.0:80 csheet:APP
+    elif [ "$2" = "socketio" ]; then
         gunicorn -w 1 \
             -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker \
             -b 0.0.0.0:80 csheet:APP
