@@ -107,12 +107,12 @@ class CGTeamWorkPage(BasePage):
             except StopIteration:
                 data_render = None
 
-            video = HTMLVideo(uuid=data_current[0])
+            video = HTMLVideo(
+                src=_get_src(data_render) or _get_src(data_current),
+                poster=_get_poster(data_current) or _get_poster(data_render),
+                uuid=data_current[0])
 
             video.label = shot
-            video.src = _get_src(data_render) or _get_src(data_current)
-            video.poster = _get_poster(
-                data_current) or _get_poster(data_render)
             video.database = self.database
             video.pipeline = self.pipeline
             video.task_info = {'task_id': [i[0] for i in data if i[2] == shot]}

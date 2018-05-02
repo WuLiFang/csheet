@@ -2,7 +2,7 @@
   div.viewer(v-show='video')
     div.overlay(@click='setVideo(null)')
     div.detail(v-html='video ? video.infoHTML : "<empty>"')
-    video.small(:poster='poster' :src='preview' muted loop)
+    video.small(:poster='poster' :src='preview' muted loop ref='video')
     div.prev(:class='{disabled: !prev}' @click='prev ? setVideo(prev) : null')
     div.next(:class='{disabled: !next}' @click='next ? setVideo(next) : null')
     div.bottom

@@ -1,6 +1,6 @@
 <template lang="pug">
   div.lightbox(:class='{shrink: !video.thumb_mtime}' @click='onclick' ref='lightbox')
-    video(:poster='thumb' :src='preview' muted loop  )
+    video(:poster='thumb' muted loop)
     div
       span.caption(:style='captionStyle') {{ video.label }}
 </template>

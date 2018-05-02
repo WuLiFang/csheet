@@ -47,15 +47,18 @@ def update_one():
         session.commit()
 
         LOGGER.debug('Update video info: %s', video)
-        if video.src:
+        src, poster = video.src, video.poster
+        if src:
             try:
-                video.src_mtime = getmtime(video.src)
+                video.src_mtime = getmtime(src)
             except OSError:
+                LOGGER.warning('File removed: %s', src)
                 video.src = None
-        if video.poster:
+        if poster:
             try:
-                video.poster_mtime = getmtime(video.poster)
+                video.poster_mtime = getmtime(poster)
             except OSError:
+                LOGGER.warning('File removed: %s', poster)
                 video.poster = None
         session.commit()
         return True
