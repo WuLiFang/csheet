@@ -74,7 +74,7 @@ def update_forever():
 
     while True:
         try:
-            sleep(0 if update_one() else 1, ref=False)
+            sleep(0 if update_one() else 1)
         except (KeyboardInterrupt, SystemExit):
             return
         except:  # pylint: disable=bare-except
