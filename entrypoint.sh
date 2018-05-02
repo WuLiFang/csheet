@@ -2,7 +2,7 @@
 
 if [ "$1" = "run" ]; then
     if [ "$2" = "" ]; then
-        gunicorn -w $NUM_WORKER \
+        gunicorn -w $NUM_WORKERS \
             -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker \
             -b 0.0.0.0:80 csheet:APP
     elif [ "$2" = "generation" ]; then
