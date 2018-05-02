@@ -44,11 +44,9 @@ def response_video(uuid, role):
         return 'No such video', 404
 
     role = {'full': 'poster'}.get(role, role)
-    LOGGER.debug(video)
     ret = getattr(video, role)
     try:
         if ret:
-            LOGGER.debug(ret)
             return send_file(filter_filename(ret), conditional=True)
     except IOError as ex:
         if ex.errno == errno.ENOENT:
