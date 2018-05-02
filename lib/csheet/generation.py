@@ -9,7 +9,7 @@ import time
 from contextlib import closing
 
 from gevent import sleep, spawn
-from sqlalchemy import or_, and_
+from sqlalchemy import or_
 
 from wlf import ffmpeg
 
@@ -51,31 +51,36 @@ def abstract_generation(source, target, method, min_interval, condition=()):
                 target_mtime_column.is_(None),
                 (target_mtime_column != source_mtime_column)),
             *condition
-        ).order_by(target_mtime_column).first()
+        ).order_by(target_atime_column).first()
         if video is None:
             LOGGER.debug('No %s need generate.', target)
             return False
         assert isinstance(video, Video), type(video)
+
         def _touch():
             setattr(video, '{}_atime'.format(target), time.time())
         _touch()
         setattr(video, '{}_mtime'.format(target), None)
         session.commit()
 
-        LOGGER.debug('Generate %s for: %s', target, video)
-        try:
-            generated = method(video)
-            mediainfo = ffmpeg.probe(generated)
-            if mediainfo.error:
-                raise ffmpeg.GenerateError(mediainfo.error)
-            setattr(video, target, generated)
-            setattr(video, '{}_mtime'.format(target),
-                    getattr(video, '{}_mtime'.format(source)))
-            _touch()
-        except (OSError, ffmpeg.GenerateError):
-            video.is_need_update = True
-            LOGGER.warning('Generation failed', exc_info=True)
+    LOGGER.debug('Generate %s for: %s', target, video)
+    try:
+        generated = method(video)
+        mediainfo = ffmpeg.probe(generated)
+        if mediainfo.error:
+            raise ffmpeg.GenerateError(mediainfo.error)
+        setattr(video, target, generated)
+        setattr(video, '{}_mtime'.format(target),
+                getattr(video, '{}_mtime'.format(source)))
+        _touch()
+    except (OSError, ffmpeg.GenerateError):
+        video.is_need_update = True
+        LOGGER.warning('Generation failed', exc_info=True)
 
+    session = Session()
+
+    with closing(session):
+        session.add(video)
         session.commit()
     return True
 
