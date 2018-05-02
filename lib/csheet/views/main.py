@@ -37,7 +37,7 @@ def render_main():
         return pack.packed_page(page)
 
     # Respon with cookies set.
-    page.update_with_thread()
+    page.update_later()
     rendered = page.render('csheet_app.html', request=request)
     resp = make_response(rendered)
     cookie_life = 60 * 60 * 24 * 90
@@ -54,7 +54,7 @@ def render_local_dir():
 
     root = request.args['root']
     page = LocalPage(root)
-    page.update_with_thread()
+    page.update_later()
 
     if 'pack' in request.args:
         return pack.packed_page(page)

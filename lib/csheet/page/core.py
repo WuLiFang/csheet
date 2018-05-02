@@ -11,8 +11,7 @@ from tempfile import TemporaryFile
 from zipfile import ZipFile
 
 from jinja2 import Environment, PackageLoader
-
-from wlf.decorators import run_async
+from gevent import spawn
 from wlf.path import get_encoded as e
 from wlf.path import PurePath
 
@@ -43,11 +42,13 @@ class BasePage(object):
         """Update database with this config.  """
         pass
 
-    @run_async
-    def update_with_thread(self):
+    def update_later(self):
         """Run sync in another thread.  """
 
-        return self.update()
+        if self.videos():
+            spawn(self.update)
+        else:
+            self.update()
 
     @property
     def title(self):

@@ -105,6 +105,13 @@ export default Vue.extend({
       if (value) {
         value.loadInfo();
         value.scrollToThis();
+        value.loadPoster();
+        if (this.next) {
+          this.next.loadPoster();
+        }
+        if (this.prev) {
+          this.prev.loadPoster();
+        }
       }
     }
   }

@@ -19,7 +19,7 @@ def main():
     ]
     client = APP.test_client()
     if cgtwq.DesktopClient.is_logged_in():
-        tasks.append((quote(b'/?pipeline=合成&project=梦塔&prefix=MT_EP06_07_',
+        tasks.append((quote(b'/?pipeline=合成&project=梦塔&prefix=MT_EP06_',
                             safe=b'/?=&'), 'csheet.html'))
         client.post('/_login')
     else:

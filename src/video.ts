@@ -16,7 +16,6 @@ export class CSheetVideo {
         public poster_mtime: number | null,
         public preview_mtime: number | null,
     ) {
-        this.loadPoster()
     }
 
     public getPath(role: Role, isForce = false): string | null {

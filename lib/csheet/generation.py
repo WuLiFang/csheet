@@ -62,6 +62,7 @@ def abstract_generation(source, target, method, min_interval, condition=()):
         _touch()
         setattr(video, '{}_mtime'.format(target), None)
         session.commit()
+        session.refresh(video)
 
     LOGGER.debug('Generate %s for: %s', target, video)
     try:
@@ -78,7 +79,6 @@ def abstract_generation(source, target, method, min_interval, condition=()):
         LOGGER.warning('Generation failed', exc_info=True)
 
     session = Session()
-
     with closing(session):
         session.add(video)
         session.commit()
