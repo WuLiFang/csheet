@@ -4,12 +4,15 @@ import { LightboxManager } from './lightbox';
 import * as _ from 'lodash';
 import { VideoStorage, CSheetVideo, Role } from './video';
 import { CSheetVideoDataRow } from './types';
+import { isFileProtocol } from './packtools';
 
 export default class SocketIO {
     public socket: SocketIOClient.Socket
     constructor(public videoBus: VideoStorage) {
         this.socket = io(`/`, { path: '/api/socket.io' })
-        Notify.requestPermission()
+        if (!isFileProtocol) {
+            Notify.requestPermission()
+        }
         this.socket.on('asset update', (message: Array<CSheetVideoDataRow>) => this.on_asset_update(message))
         this.socket.on('connect', this.on_connect)
         this.socket.on('disconnect', this.on_disconnect)

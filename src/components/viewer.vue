@@ -3,7 +3,7 @@
     div.overlay(@click='setVideo(null)')
     div.detail(v-html='video ? video.infoHTML : "<empty>"')
     div.topright
-      button(@click='refresh') 刷新
+      button(@click='refresh' v-if='!isFileProtocol') 刷新
     video.small(:poster='poster' :src='preview' muted loop v-if='posterReady' @loadedmetadata='onloadedmetadata')
     span.placeholder.failed(v-else-if='posterFailed') 读取失败
     span.placeholder(v-else-if='poster') 读取中
@@ -19,6 +19,7 @@ import Vue from "vue";
 import { CSheetVideo, Role } from "../video";
 import { VideoBus } from "../csheet";
 import * as _ from "lodash";
+import { isFileProtocol } from "../packtools";
 
 export default Vue.extend({
   props: {
@@ -26,7 +27,8 @@ export default Vue.extend({
   },
   data() {
     return {
-      note: "<div>test</div>"
+      note: "<div>test</div>",
+      isFileProtocol: isFileProtocol
     };
   },
   computed: {

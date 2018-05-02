@@ -1,6 +1,7 @@
 import { CSheetImage, imageAvailable } from "./image";
 import { CSheetVideoDataRow } from "./types";
 import axios from 'axios';
+import { isFileProtocol } from "./packtools";
 export interface VideoStorage {
     [id: string]: CSheetVideo
 }
@@ -17,28 +18,59 @@ export class CSheetVideo {
         public preview_mtime: number | null,
     ) {
     }
-
+    public getPackedPath(role: Role): string | null {
+        if (!this.getMtime(role)) {
+            return null
+        }
+        let folder: string
+        let suffix: string
+        switch (role) {
+            case Role.thumb: {
+                folder = 'thumbs'
+                suffix = '.jpg'
+                break
+            }
+            case Role.poster: {
+                folder = 'images'
+                suffix = '.jpg'
+                break
+            }
+            case Role.preview: {
+                folder = 'previews'
+                suffix = '.mp4'
+                break
+            }
+            default: {
+                return null
+            }
+        }
+        return `${folder}/${this.label}${suffix}`
+    }
+    public getMtime(role: Role): number | null {
+        switch (role) {
+            case Role.thumb: {
+                return this.thumb_mtime
+            }
+            case Role.poster: {
+                return this.poster_mtime
+            }
+            case Role.preview: {
+                return this.preview_mtime
+            }
+            default:
+                console.error('Unkown role: ' + role)
+                return null
+        }
+    }
     public getPath(role: Role, isForce = false): string | null {
+        if (isFileProtocol) {
+            return this.getPackedPath(role)
+        }
         let mtime: number | null = null;
         if (isForce) {
             mtime = new Date().getTime()
         } else {
-            switch (role) {
-                case Role.thumb: {
-                    mtime = this.thumb_mtime
-                    break
-                }
-                case Role.poster: {
-                    mtime = this.poster_mtime
-                    break
-                }
-                case Role.preview: {
-                    mtime = this.preview_mtime
-                    break
-                }
-                default:
-                    console.error('Unkown role: ' + role)
-            }
+            mtime = this.getMtime(role)
         }
         return this.getPathWithMtime(role, mtime)
     }

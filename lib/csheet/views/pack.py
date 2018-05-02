@@ -71,7 +71,7 @@ def packed_page(config):
     filename = '{}.zip'.format(config.title)
 
     resp = send_file(f, as_attachment=True,
-                     attachment_filename=filename.encode('utf-8'),
+                     attachment_filename=filename,
                      add_etags=False)
     resp.headers.extend({
         'Content-Length': size,

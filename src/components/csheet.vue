@@ -4,6 +4,9 @@
       div {{avaliableCount}}/{{totalCount}}
       label 标题
       input(type='checkbox' v-model='isShowTitle')
+      a(v-if='isShowPack' :href="packURL" :download="packFilename" @click='isShowPack = false')
+        div
+          button 打包
     lightbox(v-for='video in videos' :video='video' :key='video.label' @click="onclick" :isShowTitle='isShowTitle')
     viewer(:video.sync='current')
 </template>
@@ -21,7 +24,8 @@ export default Vue.extend({
   data() {
     return {
       current: <CSheetVideo | null>null,
-      isShowTitle: false
+      isShowTitle: false,
+      isShowPack: true
     };
   },
   computed: {
@@ -30,6 +34,12 @@ export default Vue.extend({
     },
     totalCount(): number {
       return _.keys(this.videos).length;
+    },
+    packURL(): string {
+      return `${window.location.href}&pack=1`;
+    },
+    packFilename(): string {
+      return `${document.title}.zip`;
     }
   },
   methods: {
