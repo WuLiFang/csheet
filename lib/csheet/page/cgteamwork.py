@@ -97,33 +97,31 @@ class CGTeamWorkPage(BasePage):
                 return ret
             return None
 
-        videos = []
-        for shot in shots:
-            data_current = (
-                i for i in data if i[2] == shot and i[1] == self.pipeline).next()
-            try:
-                data_render = (
-                    i for i in data if i[2] == shot and i[1] == self.render_pipeline).next()
-            except StopIteration:
-                data_render = None
-
-            video = HTMLVideo(
-                src=_get_src(data_render) or _get_src(data_current),
-                poster=_get_poster(data_current) or _get_poster(data_render),
-                uuid=data_current[0])
-
-            video.label = shot
-            video.database = self.database
-            video.pipeline = self.pipeline
-            video.task_info = {'task_id': [i[0] for i in data if i[2] == shot]}
-
-            videos.append(video)
-
         sess = model.Session()
         with closing(sess):
-            sess.add_all(videos)
+            for shot in shots:
+                data_current = (
+                    i for i in data if i[2] == shot and i[1] == self.pipeline).next()
+                try:
+                    data_render = (
+                        i for i in data if i[2] == shot and i[1] == self.render_pipeline).next()
+                except StopIteration:
+                    data_render = None
+
+                uuid = data_current[0]
+                poster = _get_poster(data_current) or _get_poster(data_render)
+                src = _get_src(data_render) or _get_src(data_current)
+                video = sess.query(HTMLVideo).get(uuid) or HTMLVideo(uuid=uuid)
+                video.src = src
+                video.poster = poster
+                video.label = shot
+                video.database = self.database
+                video.pipeline = self.pipeline
+                video.task_info = {'task_id': [i[0]
+                                               for i in data if i[2] == shot]}
+                sess.add(video)
+
             sess.commit()
-            return videos
 
     def videos(self):
 

@@ -5,7 +5,6 @@ from __future__ import (absolute_import, division, print_function,
 
 import json
 import logging
-from contextlib import closing
 
 from sqlalchemy import Boolean, Column, Float, String, create_engine, orm
 from sqlalchemy.exc import OperationalError
@@ -16,7 +15,6 @@ from wlf.path import get_unicode as u
 from wlf.path import PurePath
 
 from . import setting
-from .localdatabase import uuid_from_path
 
 Base = declarative_base()  # pylint: disable=invalid-name
 Session = orm.sessionmaker()  # pylint: disable=invalid-name
@@ -87,40 +85,9 @@ class Video(Base):
     database = Column(String)
     pipeline = Column(String)
     task_info = Column(JSONEncodedDict)
-    _is_initiated = False
-
-    def __new__(cls, src=None, poster=None, uuid=None):
-        # pylint: disable=unused-argument
-
-        ret = None
-        if src or poster:
-            uuid = uuid or uuid_from_path(poster or src)
-        if uuid:
-            sess = Session()
-            with closing(sess):
-                query = sess.query(cls).filter(cls.uuid == uuid)
-                ret = query.one_or_none()
-
-                if ret:
-                    assert isinstance(ret, cls)
-                    if src or poster:
-                        if src:
-                            ret.src = src
-                        if poster:
-                            ret.poster = poster
-                        sess.add(ret)
-                        sess.commit()
-                        sess.refresh(ret)
-                    ret._is_initiated = True  # pylint: disable=protected-access
-                    return ret
-
-        return super(Video, cls).__new__(cls)
 
     def __init__(self, src=None, poster=None, uuid=None):
-        if self._is_initiated:
-            return
 
-        uuid = uuid or uuid_from_path(poster or src)
         label = None
         if (poster or src):
             label = PurePath(poster or src).stem
@@ -129,7 +96,6 @@ class Video(Base):
                                     src=src,
                                     poster=poster,
                                     is_need_update=True)
-        self._is_initiated = True
 
     def __repr__(self):
         return 'Video<label={0.label}, uuid={0.uuid}, src={0.src}, poster={0.poster}>'.format(self)

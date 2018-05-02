@@ -10,7 +10,7 @@ from contextlib import closing
 from mimetypes import guess_type
 
 from wlf.path import PurePath
-
+from ..localdatabase import uuid_from_path
 from .. import model
 from ..filename import filter_filename
 from ..video import HTMLVideo
@@ -24,7 +24,6 @@ class LocalPage(BasePage):
 
     def __init__(self, root):
         self.root = root
-        self.uuid_list = []
 
     def update(self):
         """Scan root for videos.  """
@@ -51,20 +50,18 @@ class LocalPage(BasePage):
 
         # Create videos.
         labels = sorted(set(videos.keys() + images.keys()))
-        LOGGER.debug('Labels: %s', labels)
-        ret = []
-        for label in labels:
-            video = HTMLVideo(src=videos.get(label),
-                              poster=images.get(label))
-            video.label = label
-            ret.append(video)
-
-        # Save to database.
         sess = model.Session()
         with closing(sess):
-            sess.add_all(ret)
+            for label in labels:
+                src, poster = videos.get(label), images.get(label)
+                uuid = uuid_from_path(poster or src)
+                video = sess.query(HTMLVideo).get(uuid) or HTMLVideo(uuid=uuid)
+                video.src = src
+                video.poster = poster
+                video.label = label
+                sess.add(video)
+
             sess.commit()
-            self.uuid_list = [i.uuid for i in ret]
 
     def videos(self):
         root = filter_filename(self.root)
@@ -73,7 +70,7 @@ class LocalPage(BasePage):
             query = sess.query(HTMLVideo)
             query = query.filter(
                 HTMLVideo.src.startswith(root) |
-                HTMLVideo.poster.startswith(root) 
+                HTMLVideo.poster.startswith(root)
             ).order_by(HTMLVideo.label)
             return query.all()
 

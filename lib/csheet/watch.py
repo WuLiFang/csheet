@@ -52,6 +52,7 @@ def update_one():
             assert isinstance(i, Video), type(i)
             i.is_need_update = False
             i.last_update_time = current_time
+        session.add_all(videos)
         session.commit()
 
         pathdata = {i: (i.poster, i.src) for i in videos}

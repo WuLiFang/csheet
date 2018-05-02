@@ -38,10 +38,12 @@ def response_video(uuid, role):
     accept_role = ('thumb', 'preview', 'full', 'poster')
     if role not in accept_role:
         return 'Role must in {}'.format(accept_role), 400
-    try:
-        video = HTMLVideo(uuid=uuid)
-    except ValueError:
-        return 'No such video', 404
+
+    sess = Session()
+    with closing(sess):
+        video = sess.query(HTMLVideo).get(uuid)
+        if not video:
+            return 'No such video', 404
 
     role = {'full': 'poster'}.get(role, role)
     ret = getattr(video, role)
@@ -66,10 +68,11 @@ def response_video(uuid, role):
 def video_info(uuid):
     """Get image related information.   """
 
-    try:
-        video = HTMLVideo(uuid=uuid)
-    except ValueError:
-        return 'No such video', 404
+    sess = Session()
+    with closing(sess):
+        video = sess.query(HTMLVideo).get(uuid)
+        if not video:
+            return 'No such video', 404
 
     database = video.database
     module = cgtwq.Database(database)['shot_task']
