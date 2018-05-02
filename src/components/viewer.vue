@@ -3,8 +3,8 @@
     div.overlay(@click='setVideo(null)')
     div.detail(v-html='video ? video.infoHTML : "<empty>"')
     video.small(:poster='poster' :src='preview' muted loop)
-    div.prev(v-show='prev' @click='setVideo(prev)')
-    div.next(v-show='next' @click='setVideo(next)')
+    div.prev(:class='{disabled: !prev}' @click='prev ? setVideo(prev) : null')
+    div.next(:class='{disabled: !next}' @click='next ? setVideo(next) : null')
     div.bottom
       span.caption {{ video ? video.label : ''}}
 </template>
@@ -120,7 +120,7 @@ video {
   top: 50%;
   transform: translate(-50%, -52%);
   max-width: 90%;
-  height: 90%;
+  max-height: 90%;
   &:hover {
     z-index: 3;
   }
@@ -157,6 +157,10 @@ video {
     background: rgba(255, 255, 255, 0.2);
   }
   cursor: pointer;
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 .prev {
   left: 1%;
