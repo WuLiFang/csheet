@@ -1,6 +1,7 @@
 <template lang="pug">
-  div(class='videos')
-    div(class='control')
+  div.videos
+    div.control
+      div {{avaliableCount}}/{{totalCount}}
       label 标题
       input(type='checkbox' v-model='isShowTitle')
     lightbox(v-for='video in videos' :video='video' :key='video.label' @click="onclick" :isShowTitle='isShowTitle')
@@ -10,6 +11,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { VideoStorage, CSheetVideo } from "../video";
+import * as _ from "lodash";
 import Lightbox from "./lightbox.vue";
 import Viewer from "./viewer.vue";
 export default Vue.extend({
@@ -21,6 +23,14 @@ export default Vue.extend({
       current: <CSheetVideo | null>null,
       isShowTitle: false
     };
+  },
+  computed: {
+    avaliableCount(): number {
+      return _.filter(this.videos, value => value.poster_mtime !== null).length;
+    },
+    totalCount(): number {
+      return _.keys(this.videos).length;
+    }
   },
   methods: {
     onclick(video: CSheetVideo) {
