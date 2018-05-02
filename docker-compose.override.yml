@@ -11,7 +11,7 @@ services:
     external_links:
       - sentry-server:sentry
     environment: 
-      CSHEET_DEBUG: 1
+      # CSHEET_DEBUG: 1
       SENTRY_DSN: ${SENTRY_DSN}
   watch:
     external_links:
