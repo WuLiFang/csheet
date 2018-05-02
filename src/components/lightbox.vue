@@ -1,5 +1,5 @@
 <template lang="pug">
-  div.lightbox(:class='{shrink: !video.thumb_mtime}' @click='onclick' ref='lightbox')
+  div.lightbox(:class='{shrink: !video.thumb_mtime}' @click='onclick' @dragstart='ondragstart' ref='lightbox' draggable='true')
     video(:poster='thumb' muted loop)
     div
       span.caption(:style='captionStyle') {{ video.label }}
@@ -9,6 +9,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { CSheetVideo, Role } from "../video";
+import { isFileProtocol } from "../packtools";
 export default Vue.extend({
   props: {
     video: { type: CSheetVideo },
@@ -35,6 +36,25 @@ export default Vue.extend({
   methods: {
     onclick() {
       this.$emit("click", this.video);
+    },
+    ondragstart(event: DragEvent) {
+      let plainData = this.video.poster || this.video.src;
+      if (!plainData) {
+        return;
+      }
+      if (isFileProtocol) {
+        plainData =
+          window.location.origin +
+          decodeURI(
+            window.location.pathname.slice(
+              0,
+              window.location.pathname.lastIndexOf("/")
+            )
+          ) +
+          "/" +
+          plainData;
+      }
+      event.dataTransfer.setData("text/plain", plainData);
     }
   },
   mounted() {

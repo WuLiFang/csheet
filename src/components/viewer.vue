@@ -4,7 +4,7 @@
     div.detail(v-html='video ? video.infoHTML : "<empty>"')
     div.topright
       button(@click='refresh' v-if='!isFileProtocol') 刷新
-    video.small(:poster='poster' :src='preview' muted loop v-if='posterReady' @loadedmetadata='onloadedmetadata')
+    video.small(:poster='poster' :src='preview' muted loop v-if='posterReady' @loadedmetadata='onloadedmetadata' @dragstart='ondragstart' draggable='true')
     span.placeholder.failed(v-else-if='posterFailed') 读取失败
     span.placeholder(v-else-if='poster') 读取中
     span.placeholder(v-else) 不可用
@@ -100,6 +100,28 @@ export default Vue.extend({
     onloadedmetadata(event: Event) {
       let element = <HTMLVideoElement>event.target;
       element.controls = element.duration > 0.1;
+    },
+    ondragstart(event: DragEvent) {
+      if (!this.video) {
+        return;
+      }
+      let plainData = this.video.src || this.video.poster;
+      if (!plainData) {
+        return;
+      }
+      if (isFileProtocol) {
+        plainData =
+          window.location.origin +
+          decodeURI(
+            window.location.pathname.slice(
+              0,
+              window.location.pathname.lastIndexOf("/")
+            )
+          ) +
+          "/" +
+          plainData;
+      }
+      event.dataTransfer.setData("text/plain", plainData);
     }
   },
   watch: {

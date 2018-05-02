@@ -107,7 +107,9 @@ class Video(Base):
                 self.label,
                 self.thumb_mtime,
                 self.poster_mtime,
-                self.preview_mtime)
+                self.preview_mtime,
+                self.src,
+                self.poster)
 
 
 def bind(url=None):

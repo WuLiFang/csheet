@@ -10,8 +10,9 @@ from abc import abstractmethod
 from tempfile import TemporaryFile
 from zipfile import ZipFile
 
-from jinja2 import Environment, PackageLoader
 from gevent import spawn
+from jinja2 import Environment, PackageLoader
+
 from wlf.path import get_encoded as e
 from wlf.path import PurePath
 
@@ -125,4 +126,10 @@ def dump_videos(videos):
         assert isinstance(i, HTMLVideo)
         row = i.to_tuple()
         ret.append(row)
-    return json.dumps(ret)
+
+    def _serialize(obj):
+        if isinstance(obj, PurePath):
+            return obj.as_posix()
+        raise TypeError(repr(obj) + " is not JSON serializable")
+
+    return json.dumps(ret, default=_serialize)

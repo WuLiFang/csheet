@@ -16,6 +16,8 @@ export class CSheetVideo {
         public thumb_mtime: number | null,
         public poster_mtime: number | null,
         public preview_mtime: number | null,
+        public src: string | null,
+        public poster: string | null,
     ) {
     }
     public getPackedPath(role: Role): string | null {
@@ -110,7 +112,7 @@ export class CSheetVideo {
         }
     }
     static fromDataRow(data: CSheetVideoDataRow) {
-        return new CSheetVideo(data[0], data[1], data[2], data[3], data[4])
+        return new CSheetVideo(data[0], data[1], data[2], data[3], data[4], data[5], data[6])
     }
     async loadInfo() {
         // Skip for packed page.
