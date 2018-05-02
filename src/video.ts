@@ -74,6 +74,6 @@ export class CSheetVideo {
 export enum Role {
     thumb = 'thumb',
     poster = 'poster',
-    preview = 'privew',
+    preview = 'preview',
 
 }

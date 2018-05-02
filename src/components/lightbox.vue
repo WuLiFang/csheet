@@ -1,5 +1,5 @@
 <template lang="pug">
-  div.lightbox(@click='onclick' ref='lightbox')
+  div.lightbox(:class='{shrink: !video.thumb_mtime}' @click='onclick' ref='lightbox')
     video(:poster='thumb' :src='preview' muted loop  )
     div
       span.caption(:style='captionStyle') {{ video.label }}
@@ -62,6 +62,13 @@ export default Vue.extend({
   }
   cursor: zoom-in;
   transition: 0.5s ease-in-out;
+  &.shrink {
+    background: rgba(255, 255, 255, 0.2);
+    width: 10px;
+    .caption {
+      display: none;
+    }
+  }
 }
 .caption {
   position: absolute;
