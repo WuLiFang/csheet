@@ -4,7 +4,7 @@
     div.detail(v-html='video ? video.infoHTML : "<empty>"')
     div.topright
       button(@click='refresh') 刷新
-    video.small(:poster='poster' :src='preview' muted loop v-if='posterReady')
+    video.small(:poster='poster' :src='preview' muted loop v-if='posterReady' @loadedmetadata='onloadedmetadata')
     span.placeholder.failed(v-else-if='posterFailed') 读取失败
     span.placeholder(v-else-if='poster') 读取中
     span.placeholder(v-else) 不可用
@@ -94,6 +94,10 @@ export default Vue.extend({
         return;
       }
       this.video.loadPoster();
+    },
+    onloadedmetadata(event: Event) {
+      let element = <HTMLVideoElement>event.target;
+      element.controls = element.duration > 0.1;
     }
   },
   watch: {
