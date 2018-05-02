@@ -14,7 +14,7 @@ from wlf.path import get_encoded as e
 def test_cgteamwork():
     cfg = page.CGTeamWorkPage(
         '梦塔', '合成', 'MT_EP07_05', cgtwq.DesktopClient.token())
-    cfg.sync()
+    cfg.update_later()
     videos = cfg.videos()
     assert isinstance(videos, list)
     assert videos
@@ -23,7 +23,7 @@ def test_cgteamwork():
 
 def test_local():
     cfg = page.LocalPage('D:/Users/34357/Pictures/Collection')
-    cfg.update()
+    cfg.update_later()
     videos = cfg.videos()
     assert isinstance(videos, list)
     for i in videos:
@@ -36,9 +36,7 @@ def test_pack():
     util.setup()
     cfg = page.CGTeamWorkPage(
         '梦塔', '合成', 'MT_EP06_03', cgtwq.DesktopClient.token())
-    cfg.sync()
+    cfg.update_later()
     file_ = cfg.archive()
     with open(e(util.path('storage', 'packed.zip')), 'wb') as f:
         f.write(file_.read())
-
-    raise RuntimeError
