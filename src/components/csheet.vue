@@ -29,16 +29,12 @@ export default Vue.extend({
       current: <CSheetVideo | null>null,
       isShowTitle: false,
       isShowPack: isFileProtocol ? false : true,
-      filterText: ""
+      filterText: "",
+      avaliableCount: -1,
+      totalCount: -1
     };
   },
   computed: {
-    avaliableCount(): number {
-      return _.filter(this.videos, value => value.poster_mtime !== null).length;
-    },
-    totalCount(): number {
-      return _.keys(this.videos).length;
-    },
     packURL(): string {
       return `${window.location.origin}${window.location.pathname}${window
         .location.search || "?"}&pack=1`;
@@ -56,11 +52,22 @@ export default Vue.extend({
         return true;
       }
       return new RegExp(this.filterText, "i").test(video.label);
+    },
+    count() {
+      let videos = _.filter(this.videos, value => value.isVisible);
+      this.avaliableCount = _.filter(
+        videos,
+        value => value.poster_mtime !== null
+      ).length;
+      this.totalCount = videos.length;
     }
   },
   components: {
     Lightbox,
     Viewer
+  },
+  updated() {
+    this.count();
   }
 });
 </script>
