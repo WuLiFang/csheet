@@ -44,6 +44,6 @@ FROM build AS release
 LABEL author="NateScarlet@Gmail.com"
 ENV CSHEET_STORAGE=/srv/csheet
 ENV CSHEET_DATABASE=sqlite:////var/db/csheet.db
-ENV NUM_WORKERS=8
+ENV WORKER_CONNECTIONS=1000
 CMD ["run"]
 ENTRYPOINT [ "./entrypoint.sh" ]
