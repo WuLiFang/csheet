@@ -9,10 +9,6 @@ services:
     environment: 
       WORKER_CONNECTIONS: 10240
       SENTRY_DSN: ${SENTRY_DSN}
-  socketio:
-    environment: 
-      # CSHEET_DEBUG: 1
-      SENTRY_DSN: ${SENTRY_DSN}
   watch:
     volumes: 
      - /z:/z

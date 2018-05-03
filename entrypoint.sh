@@ -3,12 +3,8 @@
 if [ "$1" = "run" ]; then
     if [ "$2" = "" ]; then
         gunicorn -w 1 \
-            --worker-connections $WORKER_CONNECTIONS \
-            -k gevent \
-            -b 0.0.0.0:80 csheet:APP
-    elif [ "$2" = "socketio" ]; then
-        gunicorn -w 1 \
             -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker \
+            --worker-connections $WORKER_CONNECTIONS \
             -b 0.0.0.0:80 csheet:APP
     elif [ "$2" = "generation" ]; then
         python ./run_generation_worker.py
