@@ -1,38 +1,29 @@
-FROM centos AS base
+FROM jrottenberg/ffmpeg:centos AS ffmpeg
+FROM centos:7 AS base
 
-# Install commandline tools
-RUN yum install -y epel-release
-RUN yum update -y
-RUN rpm --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
-RUN rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
-RUN yum install -y ffmpeg && ffmpeg -version
-RUN yum install -y which
-RUN yum install -y gcc
-RUN yum install -y python-devel
+RUN yum -y install libgomp which gcc python-devel && \
+    yum clean all;
 
-# Install pip
-RUN curl https://bootstrap.pypa.io/get-pip.py | python && pip --version
+COPY --from=ffmpeg /usr/local /usr/local/
+
 ENV PIP_INDEX_URL https://mirrors.aliyun.com/pypi/simple
-
-# Install pipenv
-RUN pip install pipenv && pipenv --version
+RUN curl https://bootstrap.pypa.io/get-pip.py | python && pip install --upgrade pip
+RUN pip install pipenv gunicorn gevent-websocket
 
 FROM base AS build
+
+ENV PYTHONPATH=lib
+ENV LANG=en_US.utf-8
+
+LABEL author="NateScarlet@Gmail.com"
+ENV CSHEET_STORAGE=/srv/csheet
+ENV CSHEET_DATABASE=sqlite:////var/db/csheet.db
+ENV WORKER_CONNECTIONS=1000
 
 COPY . /csheet
 WORKDIR /csheet
 
-# Install dependencies
 RUN pipenv install --system --deploy
-RUN pip install gunicorn gevent-websocket
-
-# Set environment
-ENV PYTHONPATH=lib
-ENV LANG=en_US.utf-8
-
-# Clean commandline tools.
-RUN yum remove -y which gcc python-devel
-RUN yum clean all
 
 FROM build AS test
 
@@ -41,9 +32,5 @@ RUN set -ex && python -m pytest ./tests
 
 FROM build AS release
 
-LABEL author="NateScarlet@Gmail.com"
-ENV CSHEET_STORAGE=/srv/csheet
-ENV CSHEET_DATABASE=sqlite:////var/db/csheet.db
-ENV WORKER_CONNECTIONS=1000
 CMD ["run"]
 ENTRYPOINT [ "./entrypoint.sh" ]
