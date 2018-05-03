@@ -86,7 +86,8 @@ export class CSheetVideo {
         let top = window.scrollY;
         let bottom = top + window.innerHeight;
         let ypos = this.lightboxElement.offsetTop;
-        let ret = (top <= ypos && ypos <= bottom)
+        let boxHeight = this.lightboxElement.clientHeight;
+        let ret = (top <= ypos + boxHeight && ypos <= bottom)
         this.isRecentlyAppreared = ret;
         return ret
 
