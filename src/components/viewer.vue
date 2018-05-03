@@ -138,6 +138,21 @@ export default Vue.extend({
         }
       }
     }
+  },
+  created() {
+    console.log("aa");
+    window.addEventListener("keyup", (event: KeyboardEvent) => {
+      switch (event.key) {
+        case "ArrowLeft": {
+          this.prev ? this.setVideo(this.prev) : null;
+          break;
+        }
+        case "ArrowRight": {
+          this.next ? this.setVideo(this.next) : null;
+          break;
+        }
+      }
+    });
   }
 });
 </script>
