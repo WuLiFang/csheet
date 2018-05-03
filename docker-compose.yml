@@ -12,18 +12,26 @@ services:
     command: 'run socketio'
     volumes: 
      - database:/var/db
+    depends_on:
+      - web
   watch:
     image: 'csheet'
     command: 'run watch'
     volumes: 
      - ${CSHEET_STORAGE:-/srv/csheet}/srv:/srv/csheet
      - database:/var/db
+    depends_on:
+      - web
+      - socketio
   generation:
     image: 'csheet'
     command: 'run generation'
     volumes: 
      - ${CSHEET_STORAGE:-/srv/csheet}/srv:/srv/csheet
      - database:/var/db
+    depends_on:
+      - web
+      - socketio
   nginx:
     image: 'nginx'
     depends_on:
