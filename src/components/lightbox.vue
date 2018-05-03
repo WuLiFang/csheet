@@ -1,6 +1,22 @@
 <template lang="pug">
-  div.lightbox(:class='{shrink: !video.thumb_mtime}' @click='onclick' @dragstart='ondragstart' ref='lightbox' draggable='true' v-show='isVisible')
-    video(:poster='thumb' muted loop)
+  div.lightbox(
+    ref='lightbox'
+    :class='{shrink: !video.thumb_mtime}'
+    @click='onclick'
+    @dragstart='ondragstart'
+    @mouseenter="onmouseenter" 
+    @mouseleave="onmouseleave" 
+    v-show='isVisible'
+    draggable
+  )
+    video(
+      ref='video'
+      :poster='thumb' 
+      :src='preview' 
+      @loadeddata="onloadeddata"
+      muted 
+      loop 
+    )
     div
       span.caption(:style='captionStyle') {{ video.label }}
 </template>
@@ -16,14 +32,23 @@ export default Vue.extend({
     isShowTitle: { default: false },
     isVisible: { default: false }
   },
+  data() {
+    return {
+      isLoadVideo: false,
+      isAutoplay: false
+    };
+  },
   computed: {
     thumb(): string | null {
       let mtime = this.video.thumb_mtime;
       return this.video.getPath(Role.thumb);
     },
     preview(): string | null {
-      let mtime = this.video.preview_mtime;
-      return this.video.getPath(Role.preview);
+      if (this.isLoadVideo && this.video.isRecentlyAppreared) {
+        let mtime = this.video.preview_mtime;
+        return this.video.getPath(Role.preview);
+      }
+      return null;
     },
     captionStyle(): Object {
       if (this.isShowTitle) {
@@ -35,6 +60,9 @@ export default Vue.extend({
     },
     element(): HTMLElement {
       return <HTMLElement>this.$refs.lightbox;
+    },
+    videoElement(): HTMLVideoElement {
+      return <HTMLVideoElement>this.$refs.video;
     }
   },
   methods: {
@@ -60,6 +88,25 @@ export default Vue.extend({
       }
       event.dataTransfer.setData("text/plain", plainData);
     },
+    play() {
+      if (this.videoElement.readyState > 1) {
+        this.videoElement.play();
+      }
+    },
+    onmouseenter() {
+      this.isLoadVideo = true;
+      this.isAutoplay = true;
+      this.play();
+    },
+    onmouseleave() {
+      this.isAutoplay = false;
+      this.videoElement.pause();
+    },
+    onloadeddata() {
+      if (this.isAutoplay) {
+        this.play();
+      }
+    },
     setUpVideo() {
       this.video.lightboxElement = this.element;
       this.video.isVisible = this.isVisible;
@@ -68,9 +115,15 @@ export default Vue.extend({
   watch: {
     isVisible(value) {
       this.video.isVisible = value;
+      if (!value) {
+        this.video.isRecentlyAppreared = false;
+      }
     },
     video(value) {
       this.setUpVideo();
+    },
+    preview(value) {
+      this.videoElement.load();
     }
   },
   mounted() {
