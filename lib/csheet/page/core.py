@@ -127,9 +127,4 @@ def dump_videos(videos):
         row = i.to_tuple()
         ret.append(row)
 
-    def _serialize(obj):
-        if isinstance(obj, PurePath):
-            return obj.as_posix()
-        raise TypeError(repr(obj) + " is not JSON serializable")
-
-    return json.dumps(ret, default=_serialize)
+    return json.dumps(ret)

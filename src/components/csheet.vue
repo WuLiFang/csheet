@@ -9,7 +9,7 @@
       a.pack(v-if='isShowPack' :href="packURL" :download="packFilename" @click='isShowPack = false')
         div
           button 打包
-    lightbox(v-for='video in videos' :video='video' v-show='filter(video)' :key='video.label' @click="onclick" :isShowTitle='isShowTitle')
+    lightbox(v-for='video in videos' :video='video' :isVisible='filter(video)' :key='video.label' @click="onclick" :isShowTitle='isShowTitle')
     viewer(:video.sync='current')
 </template>
 

@@ -103,13 +103,16 @@ class Video(Base):
     def to_tuple(self):
         """Convert video to tuple for frontend transfer.  """
 
-        return (self.uuid,
-                self.label,
-                self.thumb_mtime,
-                self.poster_mtime,
-                self.preview_mtime,
-                self.src,
-                self.poster)
+        ret = (self.uuid,
+               self.label,
+               self.thumb_mtime,
+               self.poster_mtime,
+               self.preview_mtime,
+               self.src,
+               self.poster)
+        ret = tuple(i.as_posix() if isinstance(
+            i, PurePath) else i for i in ret)
+        return ret
 
 
 def bind(url=None):

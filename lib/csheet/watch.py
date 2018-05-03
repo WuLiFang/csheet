@@ -37,22 +37,21 @@ def update_one():
     session = Session()
 
     with closing(session):
+        current_time = time.time()
         videos = session.query(Video).filter(
             Video.is_need_update.is_(True),
             Video.src.isnot(None) | Video.poster.isnot(None),
             or_(Video.last_update_time.is_(None),
-                Video.last_update_time < time.time() - 1)
+                Video.last_update_time < current_time - 1)
         ).order_by(Video.last_update_time).limit(50).all()
         if not videos:
             LOGGER.debug('Nothing to update')
             return False
 
-        current_time = time.time()
         for i in videos:
             assert isinstance(i, Video), type(i)
             i.is_need_update = False
             i.last_update_time = current_time
-        session.add_all(videos)
         session.commit()
 
         pathdata = {i: (i.poster, i.src) for i in videos}
@@ -60,11 +59,20 @@ def update_one():
     LOGGER.info('Start update videos, count: %s', len(videos))
     mtimedata = {i: [getmtime(j) for j in pathdata[i]] for i in pathdata}
 
-    for i in mtimedata:
-        i.poster_mtime, i.src_mtime = mtimedata[i]
-
     sess = Session()
     with closing(sess):
+        for i in mtimedata:
+            LOGGER.debug(i.label)
+            poster_mtime, src_mtime = mtimedata[i]
+            if i.poster_mtime != poster_mtime:
+                LOGGER.info('Poster changed: %s: %s -> %s',
+                            i, i.poster_mtime, poster_mtime)
+                i.poster_mtime = poster_mtime
+            if i.src_mtime != src_mtime:
+                LOGGER.info('Src changed: %s: %s -> %s',
+                            i, i.src_mtime, src_mtime)
+                i.src_mtime = src_mtime
+
         sess.add_all(videos)
         sess.commit()
 

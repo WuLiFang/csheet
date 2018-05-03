@@ -102,7 +102,8 @@ def on_request_update(message):
     with closing(sess):
         query = sess.query(Video).filter(
             Video.uuid.in_(message),
-            Video.last_update_time < time.time() - setting.BROADCAST_INTERVAL
+            Video.last_update_time < time.time() - setting.BROADCAST_INTERVAL,
+            Video.is_need_update != True,
         )
         videos = query.all()
         if not videos:

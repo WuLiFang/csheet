@@ -92,7 +92,7 @@ def generate_one_thumb():
         source='poster',
         target='thumb',
         method=generate_thumb,
-        min_interval=10)
+        min_interval=1)
 
 
 def generate_one_poster():

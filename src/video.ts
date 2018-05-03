@@ -8,6 +8,7 @@ export interface VideoStorage {
 export class CSheetVideo {
     public infoHTML = '';
     public lightboxElement = <HTMLElement | null>null;
+    public isVisible = false;
     public posterReady = false;
     public posterFailed = false;
     constructor(
@@ -78,7 +79,7 @@ export class CSheetVideo {
         return `/videos/${this.uuid}.${role}?timestamp=${mtime}`
     }
     isAppeared(): boolean {
-        if (!this.lightboxElement) {
+        if (!this.lightboxElement || !this.isVisible) {
             return false
         }
         let top = window.scrollY;

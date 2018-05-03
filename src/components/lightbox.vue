@@ -1,5 +1,5 @@
 <template lang="pug">
-  div.lightbox(:class='{shrink: !video.thumb_mtime}' @click='onclick' @dragstart='ondragstart' ref='lightbox' draggable='true')
+  div.lightbox(:class='{shrink: !video.thumb_mtime}' @click='onclick' @dragstart='ondragstart' ref='lightbox' draggable='true' v-show='isVisible')
     video(:poster='thumb' muted loop)
     div
       span.caption(:style='captionStyle') {{ video.label }}
@@ -13,7 +13,8 @@ import { isFileProtocol } from "../packtools";
 export default Vue.extend({
   props: {
     video: { type: CSheetVideo },
-    isShowTitle: { default: false }
+    isShowTitle: { default: false },
+    isVisible: { default: false }
   },
   computed: {
     thumb(): string | null {
@@ -57,9 +58,15 @@ export default Vue.extend({
       event.dataTransfer.setData("text/plain", plainData);
     }
   },
+  watch: {
+    isVisible(value) {
+      this.video.isVisible = value;
+    }
+  },
   mounted() {
     let element = <HTMLElement>this.$refs.lightbox;
     this.video.lightboxElement = element;
+    this.video.isVisible = this.isVisible;
   }
 });
 </script>
