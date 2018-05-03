@@ -64,16 +64,11 @@ export class CSheetVideo {
                 return null
         }
     }
-    public getPath(role: Role, isForce = false): string | null {
+    public getPath(role: Role): string | null {
         if (isFileProtocol) {
             return this.getPackedPath(role)
         }
-        let mtime: number | null = null;
-        if (isForce) {
-            mtime = new Date().getTime()
-        } else {
-            mtime = this.getMtime(role)
-        }
+        let mtime = this.getMtime(role)
         return this.getPathWithMtime(role, mtime)
     }
     getPathWithMtime(role: Role, mtime: number | null): string | null {

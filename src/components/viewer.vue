@@ -99,6 +99,10 @@ export default Vue.extend({
       if (!this.video) {
         return;
       }
+      let now = new Date().getTime();
+      this.video.thumb_mtime = now;
+      this.video.poster_mtime = now;
+      this.video.preview_mtime = now;
       this.video.loadPoster();
     },
     onloadedmetadata(event: Event) {
