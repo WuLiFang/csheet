@@ -85,6 +85,10 @@ export default Vue.extend({
         this.index - 1
       );
       return ret ? ret : null;
+    },
+    url(): string {
+      let hash = this.video ? `#${this.video.label}` : "";
+      return `${window.location.href.split("#")[0]}${hash}`;
     }
   },
   methods: {
@@ -167,7 +171,7 @@ export default Vue.extend({
         if (this.prev) {
           this.prev.loadPoster();
         }
-        window.location.hash = value.label;
+        window.location.replace(this.url);
       }
     }
   },
