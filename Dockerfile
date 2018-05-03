@@ -1,11 +1,7 @@
-FROM jrottenberg/ffmpeg:centos AS ffmpeg
-FROM centos:7 AS base
+FROM jrottenberg/ffmpeg:centos AS base
 
-RUN yum -y install libgomp which gcc python-devel && \
+RUN yum -y install which gcc python-devel && \
     yum clean all;
-
-ENV LD_LIBRARY_PATH=/usr/local/lib64
-COPY --from=ffmpeg /usr/local /usr/local/
 
 ENV PIP_INDEX_URL https://mirrors.aliyun.com/pypi/simple
 RUN curl https://bootstrap.pypa.io/get-pip.py | python && pip install --upgrade pip
