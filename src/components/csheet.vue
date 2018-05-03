@@ -4,8 +4,9 @@
       div {{avaliableCount}}/{{totalCount}}
       label 标题
       input(type='checkbox' v-model='isShowTitle')
-      div
-        input.filter(placeholder='正则过滤' v-model='filterText')
+      div 
+        span {{filterStatusText}}
+        input.filter(placeholder='正则过滤' v-model='filterText' @keyup.esc='filterText = ""' @focus='filterStatusText = "按esc清空"' @blur="filterStatusText = ''")
       a.pack(v-if='isShowPack' :href="packURL" :download="packFilename" @click='isShowPack = false')
         div
           button 打包
@@ -31,7 +32,8 @@ export default Vue.extend({
       isShowPack: isFileProtocol ? false : true,
       filterText: "",
       avaliableCount: -1,
-      totalCount: -1
+      totalCount: -1,
+      filterStatusText: ""
     };
   },
   computed: {
