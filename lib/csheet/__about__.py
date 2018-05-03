@@ -1,5 +1,5 @@
 # -*- coding=UTF-8 -*-
 """Csheet (Contactsheet and Colorsheet) package.   """
 
-__version__ = '2.8.2'
+__version__ = '2.8.3'
 __author__ = 'NateScarlet@Gmail.com'
