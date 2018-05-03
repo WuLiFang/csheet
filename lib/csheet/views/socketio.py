@@ -37,9 +37,7 @@ def get_updated_asset(since):
                 and_(
                     Video.poster.isnot(None),
                     Video.poster_mtime.isnot(None),
-                    Video.poster_mtime >= since
-                )
-            )
+                    Video.poster_mtime >= since))
         ).order_by(Video.label)
         result = query.all()
         result = format_videos(result)

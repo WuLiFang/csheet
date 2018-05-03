@@ -32,6 +32,9 @@ export default Vue.extend({
         };
       }
       return {};
+    },
+    element(): HTMLElement {
+      return <HTMLElement>this.$refs.lightbox;
     }
   },
   methods: {
@@ -56,17 +59,22 @@ export default Vue.extend({
           plainData;
       }
       event.dataTransfer.setData("text/plain", plainData);
+    },
+    setUpVideo() {
+      this.video.lightboxElement = this.element;
+      this.video.isVisible = this.isVisible;
     }
   },
   watch: {
     isVisible(value) {
       this.video.isVisible = value;
+    },
+    video(value) {
+      this.setUpVideo();
     }
   },
   mounted() {
-    let element = <HTMLElement>this.$refs.lightbox;
-    this.video.lightboxElement = element;
-    this.video.isVisible = this.isVisible;
+    this.setUpVideo();
   }
 });
 </script>
