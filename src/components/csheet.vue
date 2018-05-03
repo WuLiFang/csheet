@@ -70,6 +70,9 @@ export default Vue.extend({
   },
   updated() {
     this.count();
+  },
+  mounted() {
+    this.count();
   }
 });
 </script>
