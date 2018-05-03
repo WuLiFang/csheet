@@ -103,6 +103,7 @@ export default Vue.extend({
       this.video.thumb_mtime = now;
       this.video.poster_mtime = now;
       this.video.preview_mtime = now;
+      this.video.posterReady = false;
       this.video.loadPoster();
     },
     onloadedmetadata(event: Event) {

@@ -92,8 +92,10 @@ export class CSheetVideo {
 
     }
     loadPoster() {
+        if (this.posterReady) {
+            return
+        }
         let uri = this.getPath(Role.poster)
-        this.posterReady = false
         this.posterFailed = false
         if (!uri) {
             return
