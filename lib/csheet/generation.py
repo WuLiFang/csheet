@@ -64,7 +64,7 @@ def abstract_generation(source, target, method, min_interval, condition=()):
         session.commit()
         session.refresh(video)
 
-    LOGGER.debug('Generate %s for: %s', target, video)
+    LOGGER.info('Generate %s for: %s', target, video)
     try:
         generated = method(video)
         mediainfo = ffmpeg.probe(generated)
