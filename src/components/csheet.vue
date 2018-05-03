@@ -4,10 +4,12 @@
       div {{avaliableCount}}/{{totalCount}}
       label 标题
       input(type='checkbox' v-model='isShowTitle')
-      a(v-if='isShowPack' :href="packURL" :download="packFilename" @click='isShowPack = false')
+      div
+        input.filter(placeholder='正则过滤' v-model='filterText')
+      a.pack(v-if='isShowPack' :href="packURL" :download="packFilename" @click='isShowPack = false')
         div
           button 打包
-    lightbox(v-for='video in videos' :video='video' :key='video.label' @click="onclick" :isShowTitle='isShowTitle')
+    lightbox(v-for='video in videos' :video='video' v-show='filter(video)' :key='video.label' @click="onclick" :isShowTitle='isShowTitle')
     viewer(:video.sync='current')
 </template>
 
@@ -17,6 +19,7 @@ import { VideoStorage, CSheetVideo } from "../video";
 import * as _ from "lodash";
 import Lightbox from "./lightbox.vue";
 import Viewer from "./viewer.vue";
+import { isFileProtocol } from "../packtools";
 export default Vue.extend({
   props: {
     videos: { type: <() => VideoStorage>Object }
@@ -25,7 +28,8 @@ export default Vue.extend({
     return {
       current: <CSheetVideo | null>null,
       isShowTitle: false,
-      isShowPack: true
+      isShowPack: isFileProtocol ? false : true,
+      filterText: ""
     };
   },
   computed: {
@@ -46,6 +50,12 @@ export default Vue.extend({
   methods: {
     onclick(video: CSheetVideo) {
       this.current = video;
+    },
+    filter(video: CSheetVideo): boolean {
+      if (!this.filterText) {
+        return true;
+      }
+      return new RegExp(this.filterText, "i").test(video.label);
     }
   },
   components: {
@@ -74,6 +84,14 @@ export default Vue.extend({
   right: 0;
   top: 0;
   margin: 0.5%;
+  text-align: right;
+  .filter {
+    width: 5em;
+    text-align: right;
+  }
+  .pack {
+    margin: 1em;
+  }
 }
 </style>
 <style lang="scss">
