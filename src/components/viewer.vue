@@ -168,8 +168,6 @@ export default Vue.extend({
           this.prev.loadPoster();
         }
         window.location.hash = value.label;
-      } else {
-        window.location.hash = "";
       }
     }
   },
