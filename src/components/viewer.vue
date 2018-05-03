@@ -122,6 +122,37 @@ export default Vue.extend({
           plainData;
       }
       event.dataTransfer.setData("text/plain", plainData);
+    },
+    parseHash() {
+      let hash = window.location.hash.slice(1);
+      if (!hash) {
+        return;
+      }
+      let index: number | null = _.findIndex(
+        this.videoList,
+        value => value.label == hash
+      );
+      if (index < 0) {
+        let match = /^image(\d+)/.exec(hash);
+        index = match && Number(match[1]);
+      }
+      if (index) {
+        this.setVideo(this.videoList[index]);
+      }
+    },
+    setUpShortcut() {
+      window.addEventListener("keyup", (event: KeyboardEvent) => {
+        switch (event.key) {
+          case "ArrowLeft": {
+            this.prev ? this.setVideo(this.prev) : null;
+            break;
+          }
+          case "ArrowRight": {
+            this.next ? this.setVideo(this.next) : null;
+            break;
+          }
+        }
+      });
     }
   },
   watch: {
@@ -136,23 +167,15 @@ export default Vue.extend({
         if (this.prev) {
           this.prev.loadPoster();
         }
+        window.location.hash = value.label;
+      } else {
+        window.location.hash = "";
       }
     }
   },
   created() {
-    console.log("aa");
-    window.addEventListener("keyup", (event: KeyboardEvent) => {
-      switch (event.key) {
-        case "ArrowLeft": {
-          this.prev ? this.setVideo(this.prev) : null;
-          break;
-        }
-        case "ArrowRight": {
-          this.next ? this.setVideo(this.next) : null;
-          break;
-        }
-      }
-    });
+    this.setUpShortcut();
+    this.parseHash();
   }
 });
 </script>
