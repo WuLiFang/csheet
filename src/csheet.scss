@@ -23,58 +23,6 @@ header {
     opacity: 0.3;
 }
 
-div.noscript,
-div.noscript div {
-    display: inherit;
-    height: 100%;
-    margin: 0;
-    width: 100%;
-}
-
-.hidden {
-    display: none !important;
-}
-
-.help table {
-    td,
-    th {
-        max-width: 200px;
-        word-break: break-all;
-        text-align: center;
-    }
-}
-
-div.refresh-module {
-    display: inline-block;
-    button {
-        position: relative;
-        width: 100%;
-        &:before {
-            content: "自动刷新"
-        }
-        &[status="on"]:after {
-            content: ": 开"
-        }
-        &[status="off"]:after {
-            content: ": 关"
-        }
-        div {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: white;
-            box-sizing: border-box;
-            span {
-                height: 100%;
-                background: #444;
-                display: block;
-            }
-        }
-    }
-}
-
 a.button {
     text-decoration: none;
 }
@@ -221,12 +169,6 @@ ul.noscript {
                 }
             }
         }
-        &.shrink {
-            background: rgba(255, 255, 255, 0.2);
-            a.zoom .caption {
-                visibility: hidden;
-            }
-        }
         &:target {
             & .viewer {
                 visibility: visible;
@@ -253,59 +195,6 @@ video {
     max-height: 100%;
 }
 
-table {
-    border-spacing: 0.5em 0.2em;
-    td.status {
-        color: white;
-        opacity: 0.5;
-        border-radius: 8px;
-        &[status=Wait] {
-            background: rgb(0, 85, 127);
-            &::before {
-                content: "等待"
-            }
-        }
-        &[status=Check] {
-            background: rgb(219, 219, 2);
-            &::before {
-                content: "检查"
-            }
-        }
-        &[status=Retake] {
-            background: rgb(255, 0, 0);
-            &::before {
-                content: "返修"
-            }
-        }
-        &[status=Approve] {
-            background: rgb(0, 206, 0);
-            &::before {
-                content: "通过"
-            }
-        }
-        &[status=Close] {
-            &::before {
-                content: "<关闭>"
-            }
-        }
-    }
-    td.notes {
-        transition: 0.3s ease-out;
-        &:hover {
-            background: rgba(255, 255, 255, 0.2)
-        }
-    }
-}
-
-.note-container {
-    iframe {
-        width: 100%;
-        min-width: 350px;
-        height: 320px;
-        border: 0
-    }
-}
-
 .lightbox {
     .caption {
         word-break: keep-all;
@@ -329,29 +218,4 @@ table {
             transform: translateY(100%)
         }
     }
-    &.updating-thumb {
-        border: 1px solid gray;
-    }
-    &.updating-full {
-        video.full {
-            border: 1px solid white;
-        }
-    }
-    &.failed-thumb {
-        border: 1px solid darkred;
-        .small {
-            opacity: 0.5;
-        }
-    }
-    &.failed-full {
-        video.full {
-            border: 1px solid darkred;
-        }
-    }
-}
-
-/* Indicate invaid anchor */
-
-a[href=\#undefined] {
-    opacity: 0.2 !important;
 }

@@ -1,7 +1,6 @@
+import * as _ from 'lodash';
 import * as io from 'socket.io-client';
 import Notify from 'notifyjs';
-import { LightboxManager } from './lightbox';
-import * as _ from 'lodash';
 import { VideoStorage, CSheetVideo, Role } from './video';
 import { CSheetVideoDataRow } from './types';
 import { isFileProtocol } from './packtools';

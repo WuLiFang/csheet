@@ -1,6 +1,6 @@
-import { CSheetImage, imageAvailable } from "./image";
-import { CSheetVideoDataRow } from "./types";
 import axios from 'axios';
+import { imageAvailable } from "./image";
+import { CSheetVideoDataRow } from "./types";
 import { isFileProtocol } from "./packtools";
 export interface VideoStorage {
     [id: string]: CSheetVideo

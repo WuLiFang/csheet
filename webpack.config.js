@@ -15,38 +15,37 @@ module.exports = {
   },
   module: {
     rules: [{
-      test: /\.tsx?$/,
-      loader: 'ts-loader',
-      include: [
-        path.resolve(__dirname, 'src'),
-      ],
-      exclude: /node_modules/,
-      options: {
-        appendTsSuffixTo: [/\.vue$/],
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+        include: [
+          path.resolve(__dirname, 'src'),
+        ],
+        exclude: /node_modules/,
+        options: {
+          appendTsSuffixTo: [/\.vue$/],
+        },
       },
-    },
-    {
-      test: /\.vue$/,
-      use: 'vue-loader',
-    },
-    {
-      test: /\.scss$/,
-      use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
-    },
-    {
-      test: /\.css$/,
-      use: [MiniCssExtractPlugin.loader, 'css-loader'],
-    },
-    {
-      test: /\.pug$/,
-      loader: 'pug-plain-loader',
-    },
+      {
+        test: /\.vue$/,
+        use: 'vue-loader',
+      },
+      {
+        test: /\.scss$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+      },
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+      {
+        test: /\.pug$/,
+        loader: 'pug-plain-loader',
+      },
     ],
   },
   resolve: {
     extensions: ['.json', '.js', '.jsx', '.css', '.ts', '.sass', '.vue'],
     alias: {
-      'jquery': require.resolve('jquery'),
       'vue$': 'vue/dist/vue.esm.js',
     },
   },

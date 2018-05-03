@@ -1,6 +1,5 @@
 import * as $ from 'jquery';
 import './csheet.scss';
-import { LightboxManager } from './lightbox';
 import './socketio';
 import SocketIO from './socketio';
 import Vue from 'vue';
