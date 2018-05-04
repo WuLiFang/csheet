@@ -1,16 +1,25 @@
 <template lang="pug">
-  div.viewer(v-show='video')
-    div.overlay(@click='setVideo(null)')
-    div.detail(v-html='video ? video.infoHTML : "<empty>"')
-    div.topright
+  .viewer(v-show='video' )
+    .overlay(@click='setVideo(null)')
+    .detail(v-html='video ? video.infoHTML : "<empty>"')
+    .topright
       button(@click='refresh' v-if='!isFileProtocol') 刷新
-    video(:poster='poster' :src='preview' loop v-if='posterReady' @loadedmetadata='onloadedmetadata' @dragstart='ondragstart' draggable='true')
-    span.placeholder.failed(v-else-if='posterFailed') 读取失败
-    span.placeholder(v-else-if='poster') 读取中
-    span.placeholder(v-else) 不可用
-    div.prev(:class='{disabled: !prev}' @click='prev ? setVideo(prev) : null')
-    div.next(:class='{disabled: !next}' @click='next ? setVideo(next) : null')
-    div.bottom
+    video.center(
+      v-if='posterReady'
+      :poster='poster'
+      :src='preview'
+      @loadedmetadata='onloadedmetadata' 
+      @dragstart='ondragstart' 
+      draggable
+      loop
+    )
+    .center.failed(v-else-if='posterFailed') 读取失败
+    .center(v-else-if='poster')
+      Spinner(size='large' message='读取中' text-fg-color='white')
+    .center.failed(v-else) 不可用
+    .prev(:class='{disabled: !prev}' @click='prev ? setVideo(prev) : null')
+    .next(:class='{disabled: !next}' @click='next ? setVideo(next) : null')
+    .bottom
       span.caption {{ video ? video.label : ''}}
 </template>
 
@@ -18,6 +27,7 @@
 import Vue from "vue";
 
 import * as _ from "lodash";
+import Spinner from "vue-simple-spinner";
 
 import { CSheetVideo, Role } from "../video";
 import { VideoBus } from "../csheet";
@@ -185,6 +195,9 @@ export default Vue.extend({
   created() {
     this.setUpShortcut();
     this.parseHash();
+  },
+  components: {
+    Spinner
   }
 });
 </script>
@@ -229,8 +242,8 @@ button {
   top: 0;
   margin: 0.5%;
 }
-video,
-.placeholder {
+
+.center {
   position: absolute;
   left: 50%;
   top: 50%;
