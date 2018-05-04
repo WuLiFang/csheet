@@ -1,22 +1,21 @@
-import * as $ from 'jquery';
+import Vue from 'vue';
 import './csheet.scss';
 import './socketio';
 import SocketIO from './socketio';
-import Vue from 'vue';
-import CSheetComponent from './components/csheet.vue'
-import { VideoStorage, CSheetVideo } from './video';
+import TheCSheet from './components/TheCSheet.vue';
 import { CSheetVideoDataRow } from './types';
+import { CSheetVideo, VideoStorage } from './video';
 
 export let VideoBus = parseData()
 const vue = new Vue({
-    template: '<c-sheet-component :videos="videos"/>',
+    template: '<TheCSheet :videos="videos"/>',
     data() {
         return {
             videos: VideoBus
         }
     },
     components: {
-        CSheetComponent
+        TheCSheet
     }
 })
 

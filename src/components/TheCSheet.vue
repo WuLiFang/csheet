@@ -16,17 +16,20 @@
       div.pack(v-if='isShowPack')
         a(:href="packURL" :download="packFilename" @click='isShowPack = false')
           button 打包
-    lightbox(v-for='video in videos' :video='video' :isVisible='filter(video)' :key='video.label' @click="onclick" :isShowTitle='isShowTitle')
-    viewer(:video.sync='current')
+    Lightbox(v-for='video in videos' :video='video' :isVisible='filter(video)' :key='video.label' @click="onclick" :isShowTitle='isShowTitle')
+    TheCSheetViewer(:video.sync='current')
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { VideoStorage, CSheetVideo } from "../video";
+
 import * as _ from "lodash";
-import Lightbox from "./lightbox.vue";
-import Viewer from "./viewer.vue";
+
+import Lightbox from "./Lightbox.vue";
+import TheCSheetViewer from "./TheCSheetViewer.vue";
+import { VideoStorage, CSheetVideo } from "../video";
 import { isFileProtocol } from "../packtools";
+
 export default Vue.extend({
   props: {
     videos: { type: <() => VideoStorage>Object }
@@ -71,7 +74,7 @@ export default Vue.extend({
   },
   components: {
     Lightbox,
-    Viewer
+    TheCSheetViewer
   },
   updated() {
     this.count();

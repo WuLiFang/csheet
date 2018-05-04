@@ -16,9 +16,11 @@
 
 <script lang="ts">
 import Vue from "vue";
+
+import * as _ from "lodash";
+
 import { CSheetVideo, Role } from "../video";
 import { VideoBus } from "../csheet";
-import * as _ from "lodash";
 import { isFileProtocol } from "../packtools";
 
 export default Vue.extend({
