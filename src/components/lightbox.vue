@@ -1,6 +1,5 @@
 <template lang="pug">
   div.lightbox(
-    ref='lightbox'
     :class='{shrink: !video.thumb_mtime}'
     @click='onclick'
     @dragstart='ondragstart'
@@ -58,9 +57,6 @@ export default Vue.extend({
       }
       return {};
     },
-    element(): HTMLElement {
-      return <HTMLElement>this.$refs.lightbox;
-    },
     videoElement(): HTMLVideoElement {
       return <HTMLVideoElement>this.$refs.video;
     }
@@ -108,7 +104,7 @@ export default Vue.extend({
       }
     },
     setUpVideo() {
-      this.video.lightboxElement = this.element;
+      this.video.lightboxElement = this.$el;
       this.video.isVisible = this.isVisible;
     }
   },
