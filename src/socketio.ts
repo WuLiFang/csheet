@@ -29,6 +29,10 @@ export default class SocketIO {
         _.each(message,
             value => {
                 let video = CSheetVideo.fromDataRow(value)
+                if (!this.videoBus[video.uuid]) {
+                    return
+                }
+
                 this.videoBus[video.uuid] = video
                 let thumb = video.getPath(Role.thumb)
                 new Notify('文件更新',
