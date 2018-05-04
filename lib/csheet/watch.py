@@ -31,51 +31,90 @@ def getmtime(path):
     return None
 
 
-def update_one():
+class Chunk(list):
+    """Chunk for update.  """
+
+    @classmethod
+    def get(cls, size=50, min_update_interval=1):
+        """Get update chunk from local database.
+            size (int, optional): Defaults to 50. Chunk size.
+            min_update_interval (int, optional): Defaults to 1.
+                Ignore newly updated items by seconds.
+
+        Returns:
+            Chunk: Chunk for update.
+        """
+
+        session = Session()
+
+        with closing(session):
+            current_time = time.time()
+            videos = session.query(Video).filter(
+                Video.is_need_update.is_(True),
+                Video.src.isnot(None) | Video.poster.isnot(None),
+                or_(Video.last_update_time.is_(None),
+                    Video.last_update_time < current_time - min_update_interval)
+            ).order_by(Video.last_update_time).limit(size).all()
+
+            for i in videos:
+                assert isinstance(i, Video), type(i)
+                i.is_need_update = False
+                i.last_update_time = current_time
+            session.commit()
+
+            return cls(videos)
+
+    def update_mtime(self, src_column, mtime_column):
+        """Update mtime column from source column
+
+        Args:
+            src_column (str): Source column name.
+            mtime_column (str): Mtime column name.
+        """
+
+        mtimedata = self.get_mtimedata(src_column)
+        sess = Session()
+        with closing(sess):
+            for k, v in mtimedata.items():
+                assert isinstance(k, Video), type(k)
+                prev_value = getattr(k, mtime_column)
+                if v is None:
+                    setattr(k, src_column, None)
+                elif v != prev_value:
+                    LOGGER.info('File changed: %s: %s -> %s',
+                                src_column, prev_value, v)
+                    setattr(k, mtime_column, v)
+
+            sess.add_all(self)
+            sess.commit()
+
+    def get_mtimedata(self, src_column):
+        """Get mtime data for a column.
+
+        Args:
+            src_column (str): Column name.
+
+        Returns:
+            dict[Video: float|None]: Mtime data dictionary.
+        """
+
+        sess = Session()
+        with closing(sess):
+            sess.add_all(self)
+            pathdata = {i: getattr(i, src_column) for i in self}
+        return {k: getmtime(v) for k, v in pathdata.items()}
+
+
+def update_one_chunk():
     """Generate one not generated video"""
 
-    session = Session()
-
-    with closing(session):
-        current_time = time.time()
-        videos = session.query(Video).filter(
-            Video.is_need_update.is_(True),
-            Video.src.isnot(None) | Video.poster.isnot(None),
-            or_(Video.last_update_time.is_(None),
-                Video.last_update_time < current_time - 1)
-        ).order_by(Video.last_update_time).limit(50).all()
-        if not videos:
-            LOGGER.debug('Nothing to update')
-            return False
-
-        for i in videos:
-            assert isinstance(i, Video), type(i)
-            i.is_need_update = False
-            i.last_update_time = current_time
-        session.commit()
-
-        pathdata = {i: (i.poster, i.src) for i in videos}
-
-    LOGGER.info('Start update videos, count: %s', len(videos))
-    mtimedata = {i: [getmtime(j) for j in pathdata[i]] for i in pathdata}
-
-    sess = Session()
-    with closing(sess):
-        for i in mtimedata:
-            LOGGER.debug(i.label)
-            poster_mtime, src_mtime = mtimedata[i]
-            if i.poster_mtime != poster_mtime:
-                LOGGER.info('Poster changed: %s: %s -> %s',
-                            i, i.poster_mtime, poster_mtime)
-                i.poster_mtime = poster_mtime
-            if i.src_mtime != src_mtime:
-                LOGGER.info('Src changed: %s: %s -> %s',
-                            i, i.src_mtime, src_mtime)
-                i.src_mtime = src_mtime
-
-        sess.add_all(videos)
-        sess.commit()
-
+    chunk = Chunk.get()
+    if not chunk:
+        LOGGER.debug('No video need update.')
+        return False
+    LOGGER.info('Start update videos, count: %s', len(chunk))
+    chunk.update_mtime('src', 'src_mtime')
+    chunk.update_mtime('poster', 'poster_mtime')
     return True
 
 
@@ -84,7 +123,7 @@ def update_forever():
 
     while True:
         try:
-            sleep(0 if update_one() else 1)
+            sleep(0 if update_one_chunk() else 1)
         except (KeyboardInterrupt, SystemExit):
             return
         except:  # pylint: disable=bare-except
