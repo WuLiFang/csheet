@@ -106,7 +106,7 @@ class Chunk(list):
 
 
 def update_one_chunk():
-    """Generate one not generated video"""
+    """Get a update chunk then update it.  """
 
     chunk = Chunk.get()
     if not chunk:
@@ -119,7 +119,7 @@ def update_one_chunk():
 
 
 def update_forever():
-    """Run as generate worker.  """
+    """Run as watch worker.  """
 
     while True:
         try:
@@ -132,6 +132,6 @@ def update_forever():
 
 
 def start():
-    """Start generation thread.  """
+    """Start watch.  """
 
     spawn(update_forever)
