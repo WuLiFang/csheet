@@ -5,10 +5,16 @@
       label 标题
       input(type='checkbox' v-model='isShowTitle')
       div 
-        span {{filterStatusText}}
-        input.filter(placeholder='正则过滤' v-model='filterText' @keyup.esc='filterText = ""' @focus='filterStatusText = "按esc清空"' @blur="filterStatusText = ''")
-      a.pack(v-if='isShowPack' :href="packURL" :download="packFilename" @click='isShowPack = false')
-        div
+        input.filter(
+          placeholder='正则过滤' 
+          v-model='filterText' 
+        )
+        button(
+          v-show='filterText'
+          @click='filterText = ""'
+        ) 重置
+      div.pack(v-if='isShowPack')
+        a(:href="packURL" :download="packFilename" @click='isShowPack = false')
           button 打包
     lightbox(v-for='video in videos' :video='video' :isVisible='filter(video)' :key='video.label' @click="onclick" :isShowTitle='isShowTitle')
     viewer(:video.sync='current')
@@ -32,8 +38,7 @@ export default Vue.extend({
       isShowPack: isFileProtocol ? false : true,
       filterText: "",
       avaliableCount: -1,
-      totalCount: -1,
-      filterStatusText: ""
+      totalCount: -1
     };
   },
   computed: {
@@ -102,7 +107,8 @@ export default Vue.extend({
     text-align: right;
   }
   .pack {
-    margin: 1em;
+    margin-top: 1em;
+    margin-bottom: 1em;
   }
 }
 </style>
