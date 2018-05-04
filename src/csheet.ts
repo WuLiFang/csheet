@@ -1,10 +1,13 @@
 import Vue from 'vue';
-import './csheet.scss';
-import './socketio';
+
 import SocketIO from './socketio';
+
+import './csheet.scss?external';
+import './socketio';
 import TheCSheet from './components/TheCSheet.vue';
 import { CSheetVideoDataRow } from './types';
 import { CSheetVideo, VideoStorage } from './video';
+
 
 export let VideoBus = parseData()
 const vue = new Vue({

@@ -31,16 +31,42 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+        oneOf: [{
+            resourceQuery: /external/,
+            use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+          },
+          {
+            use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
+          }
+        ]
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        oneOf: [{
+            resourceQuery: /external/,
+            use: [MiniCssExtractPlugin.loader, 'css-loader'],
+          },
+          {
+            use: ['css-loader', 'postcss-loader'],
+          }
+        ]
       },
       {
         test: /\.pug$/,
         loader: 'pug-plain-loader',
       },
+      {
+        test: new RegExp('\\.(png|jpg|jpeg|gif|eot|ttf' +
+          '|woff|woff2|svg|svgz)(\\?.+)?$'),
+        use: [{
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+            publicPath: '/static/dist',
+          },
+        }],
+      },
+
     ],
   },
   resolve: {

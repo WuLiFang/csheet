@@ -1,5 +1,5 @@
 import * as $ from 'jquery';
-import './bootstrap.min.css';
+import './bootstrap.min.css?external';
 
 $(document).ready(
     function () {
