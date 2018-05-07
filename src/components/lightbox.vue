@@ -120,6 +120,9 @@ export default Vue.extend({
     },
     preview(value) {
       this.videoElement.load();
+      if(!value){
+        this.isLoadVideo = false;
+      }
     }
   },
   mounted() {
