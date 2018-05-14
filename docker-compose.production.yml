@@ -26,6 +26,7 @@ services:
     environment: 
       SENTRY_DSN: ${SENTRY_DSN}
   nginx:
+    restart: always
     ports:
      - "60000:80"
      - "60001:443"
