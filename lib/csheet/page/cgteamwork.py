@@ -6,6 +6,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import json
 import logging
+from collections import namedtuple
 
 import cgtwq
 
@@ -14,6 +15,14 @@ from ..video import HTMLVideo
 from .core import BasePage
 
 LOGGER = logging.getLogger(__name__)
+
+
+class TaskDataRow(namedtuple('VideoDataRow',
+                             ('id', 'pipeline', 'shot',
+                              'image', 'submit_file_path'))):
+    """Cgteamwork task data needed.  """
+    fields = ('id', 'pipeline', 'shot.shot',
+              'image', 'submit_file_path')
 
 
 class CGTeamWorkPage(BasePage):
@@ -71,17 +80,15 @@ class CGTeamWorkPage(BasePage):
         return None
 
     def _get_video(self, data, shot, session):
-        data_current = (
-            i for i in data
-            if i[2] == shot and i[1] == self.pipeline).next()
+        data_current = _filter_data(
+            data, shot=shot, pipline=self.pipeline).next()
         try:
-            data_render = (
-                i for i in data
-                if i[2] == shot and i[1] == self.render_pipeline).next()
+            data_render = _filter_data(
+                data, shot=shot, pipline=self.render_pipeline).next()
         except StopIteration:
             data_render = None
 
-        uuid = data_current[0]
+        uuid = data_current.id
         poster = (self._get_poster(data_current) or
                   self._get_poster(data_render))
         src = (self._get_src(data_render) or
@@ -93,8 +100,8 @@ class CGTeamWorkPage(BasePage):
         video.label = shot
         video.database = self.database
         video.pipeline = self.pipeline
-        video.task_info = {'task_id': [i[0] for i in data
-                                       if i[2] == shot]}
+        video.task_info = {'task_id': [i.id for i in data
+                                       if i.shot == shot]}
         session.add(video)
 
     def update(self, session):
@@ -103,9 +110,9 @@ class CGTeamWorkPage(BasePage):
         LOGGER.info('Sync with cgteamwork: %s', self)
 
         select = self.select()
-        data = select.get_fields('id', 'pipeline', 'shot.shot',
-                                 'image', 'submit_file_path')
-        shots = sorted(set(i[2] for i in data))
+        data = select.get_fields(*TaskDataRow.fields)
+        data = [TaskDataRow(*i) for i in data]
+        shots = sorted(set(i.shot for i in data))
 
         for shot in shots:
             self._get_video(data, shot, session)
@@ -116,7 +123,8 @@ class CGTeamWorkPage(BasePage):
         query = query.filter(
             HTMLVideo.database == self.database,
             HTMLVideo.pipeline == self.pipeline,
-            HTMLVideo.label.startswith(self.prefix))
+            HTMLVideo.label.startswith(self.prefix)
+            ).order_by(HTMLVideo.label)
         return query.all()
 
     @property
@@ -148,3 +156,8 @@ def _get_poster_from_submit(submit_file_data):
     if ret and is_mimetype(ret, 'image'):
         return ret
     return None
+
+
+def _filter_data(data, **kwargs):
+    return (i for i in data
+            if i[i._fields.index(j)] == kwargs[j] for j in kwargs)
