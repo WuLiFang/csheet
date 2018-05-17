@@ -6,7 +6,6 @@ from __future__ import (absolute_import, division, print_function,
 import errno
 import logging
 from collections import namedtuple
-from contextlib import closing
 
 import pendulum
 from flask import render_template, send_file, session
@@ -14,11 +13,13 @@ from flask import render_template, send_file, session
 import cgtwq
 
 from ..filename import filter_filename
-from ..model import Session
 from ..video import HTMLVideo
 from .app import APP
+from .core import database_session
 
 LOGGER = logging.getLogger(__name__)
+
+VIDEO_ROLES = ('thumb', 'preview', 'poster')
 
 
 @APP.route('/videos/<uuid>.<role>')
@@ -36,39 +37,38 @@ def response_video(uuid, role):
         flask.Response: Response for client.
     """
 
-    accept_role = ('thumb', 'preview', 'full', 'poster')
-    if role not in accept_role:
-        return 'Role must in {}'.format(accept_role), 400
+    if role not in VIDEO_ROLES:
+        return 'Role must in {}'.format(VIDEO_ROLES), 400
 
-    sess = Session()
-    with closing(sess):
+    with database_session() as sess:
         video = sess.query(HTMLVideo).get(uuid)
         if not video:
             return 'No such video', 404
+        return _try_send_file(video, role, sess)
 
-    role = {'full': 'poster'}.get(role, role)
-    ret = getattr(video, role)
+
+def _try_send_file(video, role, sess):
+    path = getattr(video, role)
     try:
-        if ret:
-            return send_file(filter_filename(ret), conditional=True)
+        return send_file(filter_filename(path), conditional=True)
     except IOError as ex:
         if ex.errno == errno.ENOENT:
-            if role in ('thumb', 'preview'):
-                setattr(video, role, None)
-                sess = Session()
-                with closing(sess):
-                    sess.add(video)
-                    sess.commit()
+            _handle_not_eixsits(video, role, sess)
         else:
             raise
-
     return 'No such file', 400
 
 
+def _handle_not_eixsits(video, role, sess):
+    if role in ('thumb', 'preview'):
+        setattr(video, role, None)
+        sess.commit()
+
+
 class VideoInfo(namedtuple(
-    'VideoInfo',
-    ('pipeline', 'artist', 'leader_status',
-     'director_status', 'client_status', 'note_num', 'id'))):
+        'VideoInfo',
+        ('pipeline', 'artist', 'leader_status',
+         'director_status', 'client_status', 'note_num', 'id'))):
     """Video information.  """
 
     def sort_key(self):
@@ -92,8 +92,7 @@ class VideoInfo(namedtuple(
 def video_info(uuid):
     """Get image related information.   """
 
-    sess = Session()
-    with closing(sess):
+    with database_session() as sess:
         video = sess.query(HTMLVideo).get(uuid)
         if not video:
             return 'No such video', 404
