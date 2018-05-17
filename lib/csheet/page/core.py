@@ -135,10 +135,4 @@ class BasePage(object):
 def dump_videos(videos):
     """Dump videos to string data.  """
 
-    ret = []
-    for i in videos:
-        assert isinstance(i, HTMLVideo)
-        row = i.to_tuple()
-        ret.append(row)
-
-    return json.dumps(ret)
+    return json.dumps(model.format_videos(videos))

@@ -11,9 +11,8 @@ from gevent import sleep, spawn
 from sqlalchemy import and_, or_
 
 from .. import setting
-from ..model import Session, Video
+from ..model import Session, Video, format_videos
 from .app import APP, SOCKETIO
-
 LOGGER = logging.getLogger()
 
 
@@ -42,24 +41,6 @@ def get_updated_asset(since):
         result = query.all()
         result = format_videos(result)
         return result
-
-
-def format_videos(videos):
-    """Format videos for front end.
-
-    Args:
-        videos (list[Video]): Videos to format.
-
-    Returns:
-        list[tuple]: Formated video infos.
-    """
-
-    ret = []
-    for i in videos:
-        assert isinstance(i, Video)
-        row = i.to_tuple()
-        ret.append(row)
-    return ret
 
 
 def broadcast_updated_asset(since):

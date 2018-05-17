@@ -140,6 +140,24 @@ class Video(Base):
         return ret
 
 
+def format_videos(videos):
+    """Format videos for front end.
+
+    Args:
+        videos (list[Video]): Videos to format.
+
+    Returns:
+        list[tuple]: Formated video infos.
+    """
+
+    ret = []
+    for i in videos:
+        assert isinstance(i, Video)
+        row = i.to_tuple()
+        ret.append(row)
+    return ret
+
+
 def bind(url=None):
     """Bind model to database.  """
 
