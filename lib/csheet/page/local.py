@@ -33,7 +33,7 @@ class LocalPage(BasePage):
         for dirpath, _, filenames in os.walk(filter_filename(self.root)):
             for filename in filenames:
                 fullpath = os.path.join(dirpath, filename)
-                self._sort_file(fullpath, images, videos)
+                _sort_file(fullpath, images, videos)
 
         # Create videos.
         labels = sorted(set(videos.keys() + images.keys()))
@@ -52,23 +52,6 @@ class LocalPage(BasePage):
         video.label = label
         session.add(video)
 
-    @staticmethod
-    def _sort_file(path, images, videos):
-        label = PurePath(path).stem
-        type_, _ = guess_type(path)
-        if type_ is None:
-            LOGGER.warning('File type unknown: %s', path)
-        elif type_.startswith('image/'):
-            if label in images:
-                LOGGER.warning('Duplicated image label: %s', path)
-            else:
-                images[label] = path
-        elif type_.startswith('video/'):
-            if label in videos:
-                LOGGER.warning('Duplicated video label: %s', path)
-            else:
-                videos[label] = path
-
     def videos(self, session):
         root = filter_filename(self.root)
         query = session.query(HTMLVideo)
@@ -81,3 +64,21 @@ class LocalPage(BasePage):
     @property
     def title(self):
         return '{}色板'.format(self.root)
+
+
+def _sort_file(path, images, videos):
+    label = PurePath(path).stem
+    type_, _ = guess_type(path)
+    if type_ is None:
+        LOGGER.warning('File type unknown: %s', path)
+    elif type_.startswith('image/'):
+        _set_label_dict(images, label, path)
+    elif type_.startswith('video/'):
+        _set_label_dict(videos, label, path)
+
+
+def _set_label_dict(dict_, label, value):
+    if label in dict_:
+        LOGGER.warning('Duplicated label: %s', value)
+    else:
+        dict_[label] = value
