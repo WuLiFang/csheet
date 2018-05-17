@@ -2,7 +2,6 @@
 """Test module `model`.  """
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import pytest
 
 import util
 from csheet import generation, model, setting
@@ -16,20 +15,8 @@ def setup():
     setting.STORAGE = storage
 
 
-def test_gen_thumb():
+def test_execute_generate_task():
     setup()
     with model.session_scope() as sess:
-        generation.generate_one_thumb(sess)
-
-
-def test_gen_poster():
-    setup()
-    with model.session_scope() as sess:
-        generation.generate_one_poster(sess)
-
-
-@pytest.mark.skip('May take too long time')
-def test_gen_preview():
-    setup()
-    with model.session_scope() as sess:
-        generation.generate_one_preview(sess)
+        for i in generation.GENERATION_TASKS:
+            generation.execute_generate_task(sess, **i)
