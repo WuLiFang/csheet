@@ -38,17 +38,16 @@ class HTMLVideo(Video):
         """get path used on drag.  """
 
         path = self.src or self.poster
-        if path:
-            path = PurePath(path)
-            if is_pack:
-                return '{}/{}'.format(
-                    self.folder_names['preview'] if self.src else self.folder_names['full'],
-                    path.name)
+        if not path:
+            return ''
+        elif is_pack:
+            folder_name = (self.folder_names['preview']
+                           if self.src
+                           else self.folder_names['full'])
+            return '{}/{}'.format(folder_name, path.name)
 
-            filename = filter_filename(path, 'win32').replace('\\', '/')
-            return 'file://{}'.format(filename)
-
-        return ''
+        filename = filter_filename(path, 'win32').replace('\\', '/')
+        return 'file://{}'.format(filename)
 
     def get(self, role, is_pack=False):
         """Get url for given role.
