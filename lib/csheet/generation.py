@@ -109,8 +109,8 @@ class GenaratableVideo(Video):
             limit_size=setting.PREVIEW_SIZE_LIMIT)
 
 
-def abstract_generation(session, **kwargs):
-    """Abstact generation from source to target.
+def execute_generate_task(session, **kwargs):
+    """Generate from source to target.
 
     Args:
         source (str): Source column name(`poster` or `src`)
@@ -166,38 +166,27 @@ def _get_video(source, target, session, **kwargs):
     return video
 
 
-def generate_one_thumb(session):
-    """Generate one outdated thumb"""
-
-    return abstract_generation(
-        session=session,
-        source='poster',
-        target='thumb',
-        method=GenaratableVideo.generate_thumb,
-        min_interval=1)
-
-
-def generate_one_poster(session):
-    """Generate one not generated poster"""
-
-    return abstract_generation(
-        session=session,
-        source='src',
-        target='poster',
-        method=GenaratableVideo.generate_poster,
-        min_interval=10,
-        condition=(Video.poster.is_(None),))
-
-
-def generate_one_preview(session):
-    """Generate one outdated preview"""
-
-    return abstract_generation(
-        session=session,
-        source='src',
-        target='preview',
-        method=GenaratableVideo.generate_preview,
-        min_interval=100)
+GENERATION_TASKS = [
+    {
+        'source': 'poster',
+        'target': 'thumb',
+        'method': GenaratableVideo.generate_thumb,
+        'min_interval': 1
+    },
+    {
+        'source': 'src',
+        'target': 'poster',
+        'method': GenaratableVideo.generate_poster,
+        'min_interval': 10,
+        'condition': (Video.poster.is_(None),)
+    },
+    {
+        'source': 'src',
+        'target': 'preview',
+        'method': GenaratableVideo.generate_preview,
+        'min_interval': 100
+    },
+]
 
 
 def output_path(*other):
@@ -221,9 +210,8 @@ def generate_forever():
 
 def _do_generate():
     with session_scope() as sess:
-        return (generate_one_thumb(sess)
-                or generate_one_poster(sess)
-                or generate_one_preview(sess))
+        return any(execute_generate_task(sess, **i)
+                   for i in GENERATION_TASKS)
 
 
 def start():
