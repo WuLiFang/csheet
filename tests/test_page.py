@@ -1,5 +1,5 @@
 # -*- coding=UTF-8 -*-
-"""Test module `config`.  """
+"""Test module `page`.  """
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
