@@ -6,11 +6,9 @@ from __future__ import (absolute_import, division, print_function,
 
 import json
 import logging
-from contextlib import closing
 
 import cgtwq
 
-from .. import model
 from ..mimecheck import is_mimetype
 from ..video import HTMLVideo
 from .core import BasePage
@@ -53,31 +51,13 @@ class CGTeamWorkPage(BasePage):
         select = module.filter(cgtwq.Field('shot.shot') | shots)
         return select
 
-    @staticmethod
-    def _get_submit_file(submit_file_data):
-        try:
-            return json.loads(submit_file_data)['file_path'][0]
-        except (TypeError, KeyError, IndexError):
-            pass
-        return None
-
     @classmethod
     def _get_poster(cls, data):
         if data is None:
             return None
         _, _, _, image_data, submit_file_data = data
-        if image_data:
-            dict_ = json.loads(image_data)
-            assert isinstance(dict_, dict), repr(dict_)
-            ret = dict_.get('path', dict_.get('image_path'))
-            if ret:
-                return ret
-        if submit_file_data:
-            ret = cls._get_submit_file(submit_file_data)
-            if ret and is_mimetype(ret, 'image'):
-                return ret
-
-        return None
+        return (_get_poster_from_image(image_data)
+                or _get_poster_from_submit(submit_file_data))
 
     @classmethod
     def _get_src(cls, data):
@@ -85,17 +65,19 @@ class CGTeamWorkPage(BasePage):
             return None
         _, _, _, _, submit_file_data = data
 
-        ret = cls._get_submit_file(submit_file_data)
+        ret = _get_submit_file(submit_file_data)
         if ret and is_mimetype(ret, 'video'):
             return ret
         return None
 
     def _get_video(self, data, shot, session):
         data_current = (
-            i for i in data if i[2] == shot and i[1] == self.pipeline).next()
+            i for i in data
+            if i[2] == shot and i[1] == self.pipeline).next()
         try:
             data_render = (
-                i for i in data if i[2] == shot and i[1] == self.render_pipeline).next()
+                i for i in data
+                if i[2] == shot and i[1] == self.render_pipeline).next()
         except StopIteration:
             data_render = None
 
@@ -140,3 +122,27 @@ class CGTeamWorkPage(BasePage):
         return '{}色板'.format(
             '_'.join(
                 [self.project, self.prefix.strip(self.code).strip('_'), self.pipeline]))
+
+
+def _get_submit_file(submit_file_data):
+    try:
+        return json.loads(submit_file_data)['file_path'][0]
+    except (TypeError, KeyError, IndexError):
+        pass
+    return None
+
+
+def _get_poster_from_image(image_data):
+    if not image_data:
+        return None
+    dict_ = json.loads(image_data)
+    assert isinstance(dict_, dict), repr(dict_)
+    ret = dict_.get('path', dict_.get('image_path'))
+    return ret
+
+
+def _get_poster_from_submit(submit_file_data):
+    ret = _get_submit_file(submit_file_data)
+    if ret and is_mimetype(ret, 'image'):
+        return ret
+    return None
