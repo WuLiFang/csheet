@@ -82,17 +82,19 @@ class CGTeamWorkPage(BasePage):
             data_render = None
 
         uuid = data_current[0]
-        poster = self._get_poster(
-            data_current) or self._get_poster(data_render)
-        src = self._get_src(data_render) or self._get_src(data_current)
-        video = session.query(HTMLVideo).get(uuid) or HTMLVideo(uuid=uuid)
+        poster = (self._get_poster(data_current) or
+                  self._get_poster(data_render))
+        src = (self._get_src(data_render) or
+               self._get_src(data_current))
+        video = (session.query(HTMLVideo).get(uuid) or
+                 HTMLVideo(uuid=uuid))
         video.src = src
         video.poster = poster
         video.label = shot
         video.database = self.database
         video.pipeline = self.pipeline
-        video.task_info = {'task_id': [i[0]
-                                       for i in data if i[2] == shot]}
+        video.task_info = {'task_id': [i[0] for i in data
+                                       if i[2] == shot]}
         session.add(video)
 
     def update(self, session):
