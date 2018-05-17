@@ -74,51 +74,62 @@ class BasePage(object):
     def archive(self, session):
         """Archive page and assets to a temporary file.  """
 
-        f = TemporaryFile(suffix='.zip',
-                          prefix=self.title)
         LOGGER.info('Start archive page.')
 
+        videos = self.videos(session)
+        if not videos:
+            raise ValueError('Empty page.')
+
+        f = TemporaryFile(suffix='.zip',
+                          prefix=self.title)
         with ZipFile(f, 'w', allowZip64=True) as zipfile:
+            self._pack_static(zipfile)
+            self._pack_videos(videos, zipfile)
+            self._pack_page(videos, zipfile)
 
-            # Pack images.
-            videos = self.videos(session)
-            if not videos:
-                raise ValueError('Empty page.')
-
-            for video in videos:
-                assert isinstance(video, HTMLVideo)
-                data = {'full': video.poster,
-                        'preview': video.preview,
-                        'thumb': video.thumb}
-                for role, filename in data.items():
-                    if not filename:
-                        continue
-                    assert isinstance(filename, PurePath), type(filename)
-
-                    filename = filter_filename(filename)
-                    arcname = video.get(role, is_pack=True)
-                    try:
-                        zipfile.write(e(filename), arcname.encode('utf-8'))
-                        LOGGER.debug('Write zipfile: %s -> %s',
-                                     filename, arcname)
-                    except OSError:
-                        LOGGER.error('Error during pack', exc_info=True)
-
-            # Pack static files:
-            for i in self.static:
-                zipfile.write(filetools.path(self.static_folder, i),
-                              '{}/{}'.format(self.static_folder, i))
-
-            # Pack index.
-            try:
-                self.is_pack = True
-                index_page = self.render(videos)
-            finally:
-                self.is_pack = False
-            zipfile.writestr('{}.html'.format(self.title.replace('\\', '_')),
-                             index_page.encode('utf-8'))
         f.seek(0)
         return f
+
+    @classmethod
+    def _pack_videos(cls, videos, zipfile):
+        for video in videos:
+            try:
+                cls._pack_one_video(video, zipfile)
+            except OSError:
+                LOGGER.error('Error during pack', exc_info=True)
+
+    @staticmethod
+    def _pack_one_video(video, zipfile):
+        assert isinstance(video, HTMLVideo)
+        data = {'full': video.poster,
+                'preview': video.preview,
+                'thumb': video.thumb}
+        for role, filename in data.items():
+            if not filename:
+                continue
+
+            assert isinstance(filename, PurePath), type(filename)
+
+            filename = filter_filename(filename)
+            arcname = video.get(role, is_pack=True)
+            zipfile.write(e(filename), arcname.encode('utf-8'))
+
+            LOGGER.debug('Write zipfile: %s -> %s',
+                         filename, arcname)
+
+    def _pack_static(self, zipfile):
+        for i in self.static:
+            zipfile.write(filetools.path(self.static_folder, i),
+                          '{}/{}'.format(self.static_folder, i))
+
+    def _pack_page(self, videos, zipfile):
+        try:
+            self.is_pack = True
+            index_page = self.render(videos)
+        finally:
+            self.is_pack = False
+        zipfile.writestr('{}.html'.format(self.title.replace('\\', '_')),
+                         index_page.encode('utf-8'))
 
 
 def dump_videos(videos):
