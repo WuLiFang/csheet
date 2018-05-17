@@ -15,7 +15,8 @@ from wlf import ffmpeg
 from . import setting
 from .filename import filter_filename
 from .model import Video, session_scope
-from .workertools import try_execute
+from .workertools import work_forever
+from .exceptions import WorkerIdle
 
 LOGGER = logging.getLogger(__name__)
 
@@ -203,15 +204,15 @@ def output_path(*other):
 def generate_forever():
     """Run as generate worker.  """
 
-    while True:
-        success = try_execute(_do_generate, LOGGER, 'generate')
-        sleep(0 if success else 1)
+    work_forever(_do_generate, LOGGER, label='update')
 
 
 def _do_generate():
     with session_scope() as sess:
-        return any(execute_generate_task(sess, **i)
-                   for i in GENERATION_TASKS)
+        result = any(execute_generate_task(sess, **i)
+                     for i in GENERATION_TASKS)
+        if not result:
+            raise WorkerIdle
 
 
 def start():

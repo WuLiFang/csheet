@@ -11,3 +11,11 @@ def u_abort(status, msg):
 
     abort(make_response(escape(text_type(msg)), status, {
         'Content-Type': 'text/html; charset=utf-8'}))
+
+
+class WorkerException(Exception):
+    """Base exceptions for worker.  """
+
+
+class WorkerIdle(WorkerException):
+    """Indicate no job for worker.  """

@@ -8,14 +8,15 @@ import os
 import time
 from contextlib import closing
 
-from gevent import sleep, spawn
+from gevent import spawn
 from sqlalchemy import or_
 
 from wlf.path import get_encoded as e
 
 from .filename import filter_filename
 from .model import Session, Video
-from .workertools import try_execute
+from .workertools import work_forever
+from .exceptions import WorkerIdle
 
 LOGGER = logging.getLogger(__name__)
 
@@ -112,19 +113,16 @@ def update_one_chunk():
     chunk = Chunk.get()
     if not chunk:
         LOGGER.debug('No video need update.')
-        return False
+        raise WorkerIdle
     LOGGER.info('Start update videos, count: %s', len(chunk))
     chunk.update_mtime('src', 'src_mtime')
     chunk.update_mtime('poster', 'poster_mtime')
-    return True
 
 
 def update_forever():
     """Run as watch worker.  """
 
-    while True:
-        success = try_execute(update_one_chunk, LOGGER, 'update')
-        sleep(0 if success else 1)
+    work_forever(update_one_chunk, LOGGER, label='update')
 
 
 def start():
