@@ -10,7 +10,7 @@ from gevent import sleep, spawn
 from sqlalchemy import and_, or_
 
 from .. import setting
-from ..model import Video, format_videos
+from ..model import Video, format_videos, session_scope
 from .app import APP, SOCKETIO
 from .core import database_session
 
@@ -63,7 +63,7 @@ def broadcast_forever():
 
     last_broadcast_time = time.time() - 10
     while True:
-        with database_session() as sess:
+        with session_scope() as sess:
             broadcast_updated_asset(since=last_broadcast_time, session=sess)
         last_broadcast_time = time.time()
         sleep(setting.BROADCAST_INTERVAL, False)
