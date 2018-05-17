@@ -6,6 +6,7 @@ from __future__ import (absolute_import, division, print_function,
 import json
 import logging
 from contextlib import contextmanager
+from functools import wraps
 
 from sqlalchemy import Boolean, Column, Float, String, create_engine, orm
 from sqlalchemy.exc import OperationalError
@@ -38,22 +39,32 @@ def session_scope(session=None):
         sess.close()
 
 
+def _skip_process_if_is_none(process):
+
+    @wraps(process)
+    def _process(self, value, dialect):
+        if value is None:
+            return value
+        return process(self, value, dialect)
+
+    return _process
+
+
 class Path(TypeDecorator):
     """Path type."""
     # pylint: disable=abstract-method
 
     impl = Unicode
 
+    @_skip_process_if_is_none
     def process_bind_param(self, value, dialect):
-        if value is not None:
-            value = u(value).replace('\\', '/')
-            value = PurePath(value).as_posix()
-        return value
+        ret = u(value).replace('\\', '/')
+        ret = PurePath(value).as_posix()
+        return ret
 
+    @_skip_process_if_is_none
     def process_result_value(self, value, dialect):
-        if value is not None:
-            value = PurePath(value)
-        return value
+        return PurePath(value)
 
 
 class JSONEncodedDict(TypeDecorator):
@@ -68,16 +79,13 @@ class JSONEncodedDict(TypeDecorator):
 
     impl = VARCHAR
 
+    @_skip_process_if_is_none
     def process_bind_param(self, value, dialect):
-        if value is not None:
-            value = json.dumps(value)
+        return json.dumps(value)
 
-        return value
-
+    @_skip_process_if_is_none
     def process_result_value(self, value, dialect):
-        if value is not None:
-            value = json.loads(value)
-        return value
+        return json.loads(value)
 
 
 class Video(Base):
