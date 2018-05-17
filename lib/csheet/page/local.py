@@ -9,7 +9,7 @@ import os
 
 from mimetypes import guess_type
 
-from wlf.path import PurePath
+from wlf.path import PurePath, get_unicode as u
 
 from ..filename import filter_filename
 from ..localdatabase import uuid_from_path
@@ -23,7 +23,7 @@ class LocalPage(BasePage):
     """Csheet page from a local folder.  """
 
     def __init__(self, root):
-        self.root = root
+        self.root = u(root)
 
     def update(self, session):
         """Scan root for videos.  """
