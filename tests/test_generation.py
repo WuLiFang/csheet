@@ -18,15 +18,18 @@ def setup():
 
 def test_gen_thumb():
     setup()
-    generation.generate_one_thumb()
+    with model.session_scope() as sess:
+        generation.generate_one_thumb(sess)
 
 
 def test_gen_poster():
     setup()
-    generation.generate_one_poster()
+    with model.session_scope() as sess:
+        generation.generate_one_poster(sess)
 
 
 @pytest.mark.skip('May take too long time')
 def test_gen_preview():
     setup()
-    generation.generate_one_preview()
+    with model.session_scope() as sess:
+        generation.generate_one_preview(sess)
