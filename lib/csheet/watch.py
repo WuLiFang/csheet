@@ -118,17 +118,21 @@ def update_one_chunk():
     return True
 
 
+def _try_update():
+    try:
+        sleep(0 if update_one_chunk() else 1)
+    except (KeyboardInterrupt, SystemExit):
+        raise
+    except:  # pylint: disable=bare-except
+        LOGGER.error(
+            'Error during update.', exc_info=True)
+
+
 def update_forever():
     """Run as watch worker.  """
 
     while True:
-        try:
-            sleep(0 if update_one_chunk() else 1)
-        except (KeyboardInterrupt, SystemExit):
-            return
-        except:  # pylint: disable=bare-except
-            LOGGER.error(
-                'Error during update.', exc_info=True)
+        _try_update()
 
 
 def start():
