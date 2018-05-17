@@ -53,7 +53,67 @@ class CGTeamWorkPage(BasePage):
         select = module.filter(cgtwq.Field('shot.shot') | shots)
         return select
 
-    def update(self):
+    @staticmethod
+    def _get_submit_file(submit_file_data):
+        try:
+            return json.loads(submit_file_data)['file_path'][0]
+        except (TypeError, KeyError, IndexError):
+            pass
+        return None
+
+    @classmethod
+    def _get_poster(cls, data):
+        if data is None:
+            return None
+        _, _, _, image_data, submit_file_data = data
+        if image_data:
+            dict_ = json.loads(image_data)
+            assert isinstance(dict_, dict), repr(dict_)
+            ret = dict_.get('path', dict_.get('image_path'))
+            if ret:
+                return ret
+        if submit_file_data:
+            ret = cls._get_submit_file(submit_file_data)
+            if ret and is_mimetype(ret, 'image'):
+                return ret
+
+        return None
+
+    @classmethod
+    def _get_src(cls, data):
+        if data is None:
+            return None
+        _, _, _, _, submit_file_data = data
+
+        ret = cls._get_submit_file(submit_file_data)
+        if ret and is_mimetype(ret, 'video'):
+            return ret
+        return None
+
+    def _get_video(self, data, shot, session):
+        data_current = (
+            i for i in data if i[2] == shot and i[1] == self.pipeline).next()
+        try:
+            data_render = (
+                i for i in data if i[2] == shot and i[1] == self.render_pipeline).next()
+        except StopIteration:
+            data_render = None
+
+        uuid = data_current[0]
+        poster = self._get_poster(
+            data_current) or self._get_poster(data_render)
+        src = self._get_src(data_render) or self._get_src(data_current)
+        video = session.query(HTMLVideo).get(uuid) or HTMLVideo(uuid=uuid)
+        video.src = src
+        video.poster = poster
+        video.label = shot
+        video.database = self.database
+        video.pipeline = self.pipeline
+        video.task_info = {'task_id': [i[0]
+                                       for i in data if i[2] == shot]}
+        session.add(video)
+
+    def update(self, session):
         """Sync local database with cgteamwork database.  """
 
         LOGGER.info('Sync with cgteamwork: %s', self)
@@ -63,76 +123,17 @@ class CGTeamWorkPage(BasePage):
                                  'image', 'submit_file_path')
         shots = sorted(set(i[2] for i in data))
 
-        def _get_submit_file(submit_file_data):
-            try:
-                return json.loads(submit_file_data)['file_path'][0]
-            except (TypeError, KeyError, IndexError):
-                pass
-            return None
+        for shot in shots:
+            self._get_video(data, shot, session)
+        session.commit()
 
-        def _get_poster(data):
-            if data is None:
-                return None
-            _, _, _, image_data, submit_file_data = data
-            if image_data:
-                dict_ = json.loads(image_data)
-                assert isinstance(dict_, dict), repr(dict_)
-                ret = dict_.get('path', dict_.get('image_path'))
-                if ret:
-                    return ret
-            if submit_file_data:
-                ret = _get_submit_file(submit_file_data)
-                if ret and is_mimetype(ret, 'image'):
-                    return ret
-
-            return None
-
-        def _get_src(data):
-            if data is None:
-                return None
-            _, _, _, _, submit_file_data = data
-
-            ret = _get_submit_file(submit_file_data)
-            if ret and is_mimetype(ret, 'video'):
-                return ret
-            return None
-
-        sess = model.Session()
-        with closing(sess):
-            for shot in shots:
-                data_current = (
-                    i for i in data if i[2] == shot and i[1] == self.pipeline).next()
-                try:
-                    data_render = (
-                        i for i in data if i[2] == shot and i[1] == self.render_pipeline).next()
-                except StopIteration:
-                    data_render = None
-
-                uuid = data_current[0]
-                poster = _get_poster(data_current) or _get_poster(data_render)
-                src = _get_src(data_render) or _get_src(data_current)
-                video = sess.query(HTMLVideo).get(uuid) or HTMLVideo(uuid=uuid)
-                video.src = src
-                video.poster = poster
-                video.label = shot
-                video.database = self.database
-                video.pipeline = self.pipeline
-                video.task_info = {'task_id': [i[0]
-                                               for i in data if i[2] == shot]}
-                sess.add(video)
-
-            sess.commit()
-
-    def videos(self):
-
-        sess = model.Session()
-        with closing(sess):
-            query = sess.query(HTMLVideo)
-            query = query.filter(
-                HTMLVideo.database == self.database,
-                HTMLVideo.pipeline == self.pipeline,
-                HTMLVideo.label.startswith(self.prefix))
-            return query.all()
+    def videos(self, session):
+        query = session.query(HTMLVideo)
+        query = query.filter(
+            HTMLVideo.database == self.database,
+            HTMLVideo.pipeline == self.pipeline,
+            HTMLVideo.label.startswith(self.prefix))
+        return query.all()
 
     @property
     def title(self):

@@ -15,6 +15,7 @@ from jinja2 import Environment, PackageLoader
 
 from wlf.path import get_encoded as e
 from wlf.path import PurePath
+from .. import model
 
 from .. import __about__, filetools
 from ..__about__ import __version__
@@ -34,22 +35,22 @@ class BasePage(object):
     is_pack = False
 
     @abstractmethod
-    def videos(self):
+    def videos(self, session):
         """Videos for the csheet page.  """
         pass
 
     @abstractmethod
-    def update(self):
+    def update(self, session):
         """Update database with this config.  """
         pass
 
-    def update_later(self):
+    def update_later(self, session):
         """Run sync in another thread.  """
 
-        if self.videos():
-            spawn(self.update)
+        if self.videos(session):
+            spawn(lambda: self.update(model.Session))
         else:
-            self.update()
+            self.update(session)
 
     @property
     def title(self):
@@ -57,7 +58,7 @@ class BasePage(object):
 
         raise NotImplementedError
 
-    def render(self, template='csheet.html', **context):
+    def render(self, videos, template='csheet.html', **context):
         """Render the page.  """
 
         env = Environment(
@@ -66,9 +67,11 @@ class BasePage(object):
 
         template = env.get_template(template)
 
-        return template.render(config=self, dump=dump_videos, **context)
+        return template.render(config=self,
+                               videos=videos,
+                               dump=dump_videos, **context)
 
-    def archive(self):
+    def archive(self, session):
         """Archive page and assets to a temporary file.  """
 
         f = TemporaryFile(suffix='.zip',
@@ -78,7 +81,7 @@ class BasePage(object):
         with ZipFile(f, 'w', allowZip64=True) as zipfile:
 
             # Pack images.
-            videos = self.videos()
+            videos = self.videos(session)
             if not videos:
                 raise ValueError('Empty page.')
 
@@ -109,7 +112,7 @@ class BasePage(object):
             # Pack index.
             try:
                 self.is_pack = True
-                index_page = self.render()
+                index_page = self.render(videos)
             finally:
                 self.is_pack = False
             zipfile.writestr('{}.html'.format(self.title.replace('\\', '_')),

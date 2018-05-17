@@ -5,6 +5,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import json
 import logging
+from contextlib import contextmanager
 
 from sqlalchemy import Boolean, Column, Float, String, create_engine, orm
 from sqlalchemy.exc import OperationalError
@@ -19,6 +20,22 @@ from . import setting
 Base = declarative_base()  # pylint: disable=invalid-name
 Session = orm.sessionmaker()  # pylint: disable=invalid-name
 LOGGER = logging.getLogger(__name__)
+
+
+@contextmanager
+def session_scope(session=None):
+    """Session scope context.  """
+
+    sess = session or Session()
+
+    try:
+        yield sess
+        sess.commit()
+    except:
+        sess.rollback()
+        raise
+    finally:
+        sess.close()
 
 
 class Path(TypeDecorator):

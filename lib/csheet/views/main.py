@@ -3,13 +3,15 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from flask import make_response, render_template, request, session
+import os
+
+from flask import make_response, render_template, request, send_file, session
 
 import cgtwq
 
-from . import pack
+from . import core
 from ..__about__ import __version__
-from ..page import LocalPage, CGTeamWorkPage
+from ..page import CGTeamWorkPage, LocalPage
 from .app import APP
 from .util import require_login
 
@@ -33,12 +35,17 @@ def render_main():
     pipeline = args['pipeline']
     token = session['token']
     page = CGTeamWorkPage(project, pipeline, prefix, token)
-    if 'pack' in args:
-        return pack.packed_page(page)
+
+    with core.database_session() as sess:
+        if 'pack' in args:
+            return packed_page(page, sess)
+        page.update_later(sess)
+        rendered = page.render(
+            page.videos(sess),
+            template='csheet_app.html',
+            request=request)
 
     # Respon with cookies set.
-    page.update_later()
-    rendered = page.render('csheet_app.html', request=request)
     resp = make_response(rendered)
     cookie_life = 60 * 60 * 24 * 90
     resp.set_cookie('project', project, max_age=cookie_life)
@@ -54,9 +61,29 @@ def render_local_dir():
 
     root = request.args['root']
     page = LocalPage(root)
-    page.update_later()
+    with core.database_session() as sess:
+        page.update_later(sess)
 
-    if 'pack' in request.args:
-        return pack.packed_page(page)
+        if 'pack' in request.args:
+            return packed_page(page, sess)
 
-    return page.render('csheet_app.html', request=request)
+        return page.render(page.videos(sess), 'csheet_app.html', request=request)
+
+
+def packed_page(page, database_session):
+    """Return zip packed offline version.  """
+
+    f = page.archive(database_session)
+    f.seek(0, os.SEEK_END)
+    size = f.tell()
+    f.seek(0)
+    filename = '{}.zip'.format(page.title)
+
+    resp = send_file(f, as_attachment=True,
+                     attachment_filename=filename,
+                     add_etags=False)
+    resp.headers.extend({
+        'Content-Length': size,
+        'Cache-Control': 'no-cache'
+    })
+    return resp
