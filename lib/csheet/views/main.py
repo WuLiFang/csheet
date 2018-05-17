@@ -24,7 +24,7 @@ def render_main():
     token = session['token']
     if not request.args:
         return render_index(token)
-    return render_csheet_page
+    return render_csheet_page()
 
 
 def render_csheet_page():
@@ -33,7 +33,7 @@ def render_csheet_page():
     project = request.args['project']
     prefix = request.args['prefix']
     pipeline = request.args['pipeline']
-    token = request.args['token']
+    token = session['token']
     page = CGTeamWorkPage(project, pipeline, prefix, token)
 
     with core.database_session() as sess:
