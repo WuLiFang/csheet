@@ -22,22 +22,22 @@ def render_main():
     """main page.  """
 
     token = session['token']
-    args = request.args
-    if not args:
-        cgtwq.PROJECT.token = token
-        return render_template(
-            'index.html',
-            projects=cgtwq.PROJECT.names(),
-            __version__=__version__)
+    if not request.args:
+        return render_index(token)
+    return render_csheet_page
 
-    project = args['project']
-    prefix = args['prefix']
-    pipeline = args['pipeline']
-    token = session['token']
+
+def render_csheet_page():
+    """Csheet page.  """
+
+    project = request.args['project']
+    prefix = request.args['prefix']
+    pipeline = request.args['pipeline']
+    token = request.args['token']
     page = CGTeamWorkPage(project, pipeline, prefix, token)
 
     with core.database_session() as sess:
-        if 'pack' in args:
+        if 'pack' in request.args:
             return packed_page(page, sess)
         page.update_later(sess)
         rendered = page.render(
@@ -53,6 +53,15 @@ def render_main():
     resp.set_cookie('prefix', prefix, max_age=cookie_life)
 
     return resp
+
+
+def render_index(token):
+    """Index page."""
+    cgtwq.PROJECT.token = token
+    return render_template(
+        'index.html',
+        projects=cgtwq.PROJECT.names(),
+        __version__=__version__)
 
 
 @APP.route('/local')
