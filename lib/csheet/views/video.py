@@ -5,6 +5,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import errno
 import logging
+from collections import namedtuple
 from contextlib import closing
 
 import pendulum
@@ -64,6 +65,29 @@ def response_video(uuid, role):
     return 'No such file', 400
 
 
+class VideoInfo(namedtuple(
+    'VideoInfo',
+    ('pipeline', 'artist', 'leader_status',
+     'director_status', 'client_status', 'note_num', 'id'))):
+    """Video information.  """
+
+    def sort_key(self):
+        """Key for list sort . """
+
+        pipeline = self.pipeline
+        return (
+            pipeline == '输出',
+            pipeline == '合成',
+            pipeline == '渲染',
+            pipeline == '灯光',
+            pipeline == '特效',
+            pipeline == '解算',
+            pipeline == '动画',
+            pipeline == 'Layout',
+            pipeline
+        )
+
+
 @APP.route('/videos/<uuid>.info')
 def video_info(uuid):
     """Get image related information.   """
@@ -85,34 +109,17 @@ def video_info(uuid):
     select.token = session['token']
 
     try:
-        data = select.get_fields(
-            'pipeline', 'artist', 'leader_status',
-            'director_status', 'client_status', 'note_num', 'id')
+        data = select.get_fields(*VideoInfo._fields)
     except cgtwq.LoginError:
         return '登录过期, 请刷新页面重新登录'
 
-    data.sort(key=lambda i: (
-        i[0] == '输出',
-        i[0] == '合成',
-        i[0] == '渲染',
-        i[0] == '灯光',
-        i[0] == '特效',
-        i[0] == '解算',
-        i[0] == '动画',
-        i[0] == 'Layout',
-        i[0]
-    ))
-
-    def _format(i):
-        if i[0] is None:
-            return ('<{}文件不存在>'.format(i[2]), '')
-        return i[0].name, (pendulum.from_timestamp(i[1]).diff_for_humans(locale='zh')
-                           if i[1] else '<获取失败>')
+    data = [VideoInfo(*i) for i in data]
+    data.sort(key=lambda i: i.sort_key())
 
     metadata = [(video.src, video.src_mtime, '视频'),
                 (video.poster, video.poster_mtime, '单帧')]
 
-    metadata = [_format(i) for i in metadata]
+    metadata = [_format_metadata(i) for i in metadata]
 
     note_url_template = ((
         'http://{server_ip}/index.php?'
@@ -128,3 +135,10 @@ def video_info(uuid):
                            data=data,
                            metadata=metadata,
                            note_url_template=note_url_template)
+
+
+def _format_metadata(i):
+    if i[0] is None:
+        return ('<{}文件不存在>'.format(i[2]), '')
+    return i[0].name, (pendulum.from_timestamp(i[1]).diff_for_humans(locale='zh')
+                       if i[1] else '<获取失败>')
