@@ -58,23 +58,26 @@ def main():
     if args.port:
         if args.storage:
             APP.config['storage'] = args.storage
-        return run_server(args.port, args.dir)
+        run_server(args.port, args.dir)
     elif args.dir:
-        # TODO: Implement static page.
-        page_ = page.LocalPage(args.dir)
-        page_.static_folder = filetools.path('static')
-        with model.session_scope() as sess:
-            page_.update(sess)
-            html = page_.render(page_.videos(sess))
+        render_staic_page(args.dir)
 
-        target = os.path.join(os.path.abspath(
-            os.path.dirname(args.dir)), '{}.html'.format(page_.title))
-        with open(e(target), 'w') as f:
-            f.write(html.encode('utf-8'))
-        LOGGER.info('生成色板: %s', target)
-        print(target)
-        webbrowser.open(e(target))
-        return
+
+def render_staic_page(dir_):
+    # TODO: Implement static page.
+    page_ = page.LocalPage(dir_)
+    page_.static_folder = filetools.path('static')
+    with model.session_scope() as sess:
+        page_.update(sess)
+        html = page_.render(page_.videos(sess))
+
+    target = os.path.join(os.path.abspath(
+        os.path.dirname(dir_)), '{}.html'.format(page_.title))
+    with open(e(target), 'w') as f:
+        f.write(html.encode('utf-8'))
+    LOGGER.info('生成色板: %s', target)
+    print(target)
+    webbrowser.open(e(target))
 
 
 if __name__ == '__main__':
