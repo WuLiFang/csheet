@@ -1,0 +1,5 @@
+[run]
+include = ./lib/csheet/*
+omit = 
+    */static/*
+    */templates/*
