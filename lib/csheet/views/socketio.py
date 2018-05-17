@@ -5,52 +5,51 @@ from __future__ import (absolute_import, division, print_function,
 
 import logging
 import time
-from contextlib import closing
 
 from gevent import sleep, spawn
 from sqlalchemy import and_, or_
 
 from .. import setting
-from ..model import Session, Video, format_videos
+from ..model import Video, format_videos
 from .app import APP, SOCKETIO
+from .core import database_session
+
 LOGGER = logging.getLogger()
 
 
-def get_updated_asset(since):
+def get_updated_asset(since, sess):
     """Get all newly updated asset from local database.
 
     Args:
         since (float): Timestamp
     """
 
-    sess = Session()
-    with closing(sess):
-        query = sess.query(Video).filter(
-            or_(
-                and_(Video.thumb.isnot(None),
-                     Video.thumb_mtime.isnot(None),
-                     Video.thumb_atime >= since),
-                and_(Video.preview.isnot(None),
-                     Video.preview_mtime.isnot(None),
-                     Video.preview_atime >= since),
-                and_(
-                    Video.poster.isnot(None),
-                    Video.poster_mtime.isnot(None),
-                    Video.poster_mtime >= since))
-        ).order_by(Video.label)
-        result = query.all()
-        result = format_videos(result)
-        return result
+    query = sess.query(Video).filter(
+        or_(
+            and_(Video.thumb.isnot(None),
+                 Video.thumb_mtime.isnot(None),
+                 Video.thumb_atime >= since),
+            and_(Video.preview.isnot(None),
+                 Video.preview_mtime.isnot(None),
+                 Video.preview_atime >= since),
+            and_(
+                Video.poster.isnot(None),
+                Video.poster_mtime.isnot(None),
+                Video.poster_mtime >= since))
+    ).order_by(Video.label)
+    result = query.all()
+    result = format_videos(result)
+    return result
 
 
-def broadcast_updated_asset(since):
+def broadcast_updated_asset(since, session):
     """Broad cast all newly updated asset.
 
     Args:
         since (float): Timestamp
     """
 
-    data = get_updated_asset(since)
+    data = get_updated_asset(since, session)
     assert isinstance(data, list), type(data)
     if data:
         SOCKETIO.emit('asset update', data, broadcast=True)
@@ -64,7 +63,8 @@ def broadcast_forever():
 
     last_broadcast_time = time.time() - 10
     while True:
-        broadcast_updated_asset(since=last_broadcast_time)
+        with database_session() as sess:
+            broadcast_updated_asset(since=last_broadcast_time, session=sess)
         last_broadcast_time = time.time()
         sleep(setting.BROADCAST_INTERVAL, False)
 
@@ -77,8 +77,7 @@ def on_connect():
 @SOCKETIO.on('request update')
 def on_request_update(message):
     assert isinstance(message, list), type(message)
-    sess = Session()
-    with closing(sess):
+    with database_session() as sess:
         query = sess.query(Video).filter(
             Video.uuid.in_(message),
             Video.last_update_time < time.time() - setting.BROADCAST_INTERVAL,
