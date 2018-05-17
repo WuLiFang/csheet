@@ -81,10 +81,10 @@ class CGTeamWorkPage(BasePage):
 
     def _get_video(self, data, shot, session):
         data_current = _filter_data(
-            data, shot=shot, pipline=self.pipeline).next()
+            data, shot=shot, pipeline=self.pipeline).next()
         try:
             data_render = _filter_data(
-                data, shot=shot, pipline=self.render_pipeline).next()
+                data, shot=shot, pipeline=self.render_pipeline).next()
         except StopIteration:
             data_render = None
 
@@ -124,7 +124,7 @@ class CGTeamWorkPage(BasePage):
             HTMLVideo.database == self.database,
             HTMLVideo.pipeline == self.pipeline,
             HTMLVideo.label.startswith(self.prefix)
-            ).order_by(HTMLVideo.label)
+        ).order_by(HTMLVideo.label)
         return query.all()
 
     @property
@@ -159,5 +159,6 @@ def _get_poster_from_submit(submit_file_data):
 
 
 def _filter_data(data, **kwargs):
+
     return (i for i in data
-            if i[i._fields.index(j)] == kwargs[j] for j in kwargs)
+            if all(i[i._fields.index(j)] == kwargs[j] for j in kwargs))
