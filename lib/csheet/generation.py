@@ -214,13 +214,17 @@ def generate_forever():
     """Run as generate worker.  """
 
     while True:
-        try:
-            sleep(0 if _do_generate() else 1)
-        except (KeyboardInterrupt, SystemExit):
-            return
-        except:  # pylint: disable=bare-except
-            LOGGER.error(
-                'Error during generation.', exc_info=True)
+        _try_generate()
+
+
+def _try_generate():
+    try:
+        sleep(0 if _do_generate() else 1)
+    except (KeyboardInterrupt, SystemExit):
+        raise
+    except:  # pylint: disable=bare-except
+        LOGGER.error(
+            'Error during generation.', exc_info=True)
 
 
 def _do_generate():
