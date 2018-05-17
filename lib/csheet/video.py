@@ -34,20 +34,23 @@ class HTMLVideo(Video):
             return self.poster or self.src
         return None
 
-    def get_drag(self, is_pack=False):
+    def get_drag(self, is_pack=False, platform='win32'):
         """get path used on drag.  """
 
         path = self.src or self.poster
         if not path:
             return ''
         elif is_pack:
-            folder_name = (self.folder_names['preview']
-                           if self.src
-                           else self.folder_names['full'])
-            return '{}/{}'.format(folder_name, path.name)
+            return self._get_pack_drag(path)
 
-        filename = filter_filename(path, 'win32').replace('\\', '/')
+        filename = filter_filename(path, platform).replace('\\', '/')
         return 'file://{}'.format(filename)
+
+    def _get_pack_drag(self, path):
+        folder_name = (self.folder_names['preview']
+                       if self.src
+                       else self.folder_names['full'])
+        return '{}/{}'.format(folder_name, path.name)
 
     def get(self, role, is_pack=False):
         """Get url for given role.
