@@ -8,7 +8,7 @@ import logging
 from collections import namedtuple
 
 import pendulum
-from flask import render_template, send_file, session
+from flask import render_template, send_file, session, abort
 
 import cgtwq
 
@@ -41,10 +41,15 @@ def response_video(uuid, role):
         return 'Role must in {}'.format(VIDEO_ROLES), 400
 
     with database_session() as sess:
-        video = sess.query(HTMLVideo).get(uuid)
-        if not video:
-            return 'No such video', 404
+        video = _get_video(uuid, sess)
         return _try_send_file(video, role, sess)
+
+
+def _get_video(uuid, sess):
+    ret = sess.query(HTMLVideo).get(uuid)
+    if not ret:
+        abort(404, 'No such video')
+    return ret
 
 
 def _try_send_file(video, role, sess):
@@ -93,20 +98,26 @@ def video_info(uuid):
     """Get image related information.   """
 
     with database_session() as sess:
-        video = sess.query(HTMLVideo).get(uuid)
-        if not video:
-            return 'No such video', 404
+        video = _get_video(uuid, sess)
+        if video.task_info is None:
+            return ''
+        metadata = _get_metadata(video)
+        ids = video.task_info['task_id']
+        database = video.database
 
-    database = video.database
-    module = cgtwq.Database(database)['shot_task']
-    if video.task_info is None:
-        return ''
-    ids = video.task_info['task_id']
-
-    select = module.select(*ids)
-    assert isinstance(select, cgtwq.Selection)
+    select = _get_select(database, ids)
     select.token = session['token']
 
+    data = _get_data(select)
+    note_url_template = _get_note_url_template(select)
+
+    return render_template('image_info.html',
+                           data=data,
+                           metadata=metadata,
+                           note_url_template=note_url_template)
+
+
+def _get_data(select):
     try:
         data = select.get_fields(*VideoInfo._fields)
     except cgtwq.LoginError:
@@ -114,12 +125,24 @@ def video_info(uuid):
 
     data = [VideoInfo(*i) for i in data]
     data.sort(key=lambda i: i.sort_key())
+    return data
 
+
+def _get_select(database, ids):
+    module = cgtwq.Database(database)['shot_task']
+    select = module.select(*ids)
+    assert isinstance(select, cgtwq.Selection)
+    return select
+
+
+def _get_metadata(video):
     metadata = [(video.src, video.src_mtime, '视频'),
                 (video.poster, video.poster_mtime, '单帧')]
-
     metadata = [_format_metadata(i) for i in metadata]
+    return metadata
 
+
+def _get_note_url_template(select):
     note_url_template = ((
         'http://{server_ip}/index.php?'
         'controller=v_note'
@@ -130,10 +153,7 @@ def video_info(uuid):
             server_ip=cgtwq.server.setting.SERVER_IP,
             database=select.module.database.name,
             module=select.module.name))
-    return render_template('image_info.html',
-                           data=data,
-                           metadata=metadata,
-                           note_url_template=note_url_template)
+    return note_url_template
 
 
 def _format_metadata(i):
