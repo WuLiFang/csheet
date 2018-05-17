@@ -15,6 +15,7 @@ from wlf import ffmpeg
 from . import setting
 from .filename import filter_filename
 from .model import Video, session_scope
+from .workertools import try_execute
 
 LOGGER = logging.getLogger(__name__)
 
@@ -214,17 +215,8 @@ def generate_forever():
     """Run as generate worker.  """
 
     while True:
-        _try_generate()
-
-
-def _try_generate():
-    try:
-        sleep(0 if _do_generate() else 1)
-    except (KeyboardInterrupt, SystemExit):
-        raise
-    except:  # pylint: disable=bare-except
-        LOGGER.error(
-            'Error during generation.', exc_info=True)
+        success = try_execute(_do_generate, LOGGER, 'generate')
+        sleep(0 if success else 1)
 
 
 def _do_generate():

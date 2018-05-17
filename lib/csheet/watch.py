@@ -15,6 +15,7 @@ from wlf.path import get_encoded as e
 
 from .filename import filter_filename
 from .model import Session, Video
+from .workertools import try_execute
 
 LOGGER = logging.getLogger(__name__)
 
@@ -118,21 +119,12 @@ def update_one_chunk():
     return True
 
 
-def _try_update():
-    try:
-        sleep(0 if update_one_chunk() else 1)
-    except (KeyboardInterrupt, SystemExit):
-        raise
-    except:  # pylint: disable=bare-except
-        LOGGER.error(
-            'Error during update.', exc_info=True)
-
-
 def update_forever():
     """Run as watch worker.  """
 
     while True:
-        _try_update()
+        success = try_execute(update_one_chunk, LOGGER, 'update')
+        sleep(0 if success else 1)
 
 
 def start():
