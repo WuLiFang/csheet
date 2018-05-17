@@ -26,28 +26,24 @@ export class CSheetVideo {
         if (!this.getMtime(role)) {
             return null
         }
-        let folder: string
-        let suffix: string
+        let ret: string | null = null;
         switch (role) {
             case Role.thumb: {
-                folder = 'thumbs'
-                suffix = '.jpg'
+                ret = this._getPackedPath('thumbs', '.jpg')
                 break
             }
             case Role.poster: {
-                folder = 'images'
-                suffix = '.jpg'
+                ret = this._getPackedPath('images', '.jpg')
                 break
             }
             case Role.preview: {
-                folder = 'previews'
-                suffix = '.mp4'
+                ret = this._getPackedPath('previews', '.mp4')
                 break
             }
-            default: {
-                return null
-            }
         }
+        return ret
+    }
+    private _getPackedPath(folder: string, suffix: string) {
         return `${folder}/${this.label}${suffix}`
     }
     public getMtime(role: Role): number | null {
