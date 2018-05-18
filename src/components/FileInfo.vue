@@ -3,6 +3,7 @@
       .time
         | 单帧:
         RelativeTime(:timestamp='videoData.poster_mtime')
+      br
       .time
         | 视频:
         RelativeTime(:timestamp='videoData.src_mtime')
@@ -46,6 +47,11 @@ export default Vue.extend({
 </script>
 <style lang="scss" scoped>
 .file-info {
+  display: inline-block;
+  margin: 5px;
+  .time {
+    display: inline-block;
+  }
   color: white;
   opacity: 0.5;
   text-align: left;

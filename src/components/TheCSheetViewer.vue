@@ -246,7 +246,6 @@ button {
   margin: 5px;
   max-height: 100%;
   overflow-y: auto;
-  text-align: center;
 }
 .topright {
   position: fixed;
