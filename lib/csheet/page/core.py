@@ -48,7 +48,7 @@ class BasePage(object):
         """Run sync in another thread.  """
 
         if self.videos(session):
-            spawn(lambda: self.update(model.Session))
+            spawn(lambda: self.update(model.Session()))
         else:
             self.update(session)
 
