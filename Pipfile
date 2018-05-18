@@ -1,21 +1,16 @@
 [[source]]
-
 url = "https://mirrors.aliyun.com/pypi/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [dev-packages]
-
 pylint = "*"
 "autopep8" = "*"
 rope = "*"
 pytest = "*"
 
-
 [packages]
-
-gevent = ">=1.2.2"
+gevent = "*"
 pendulum = "*"
 flask = "*"
 diskcache = "*"
@@ -33,3 +28,4 @@ sqlalchemy = "*"
 flask-socketio = "*"
 "38eb6bc" = {file = "https://github.com/WuLiFang/wlf/archive/0.3.8.tar.gz"}
 "58b68b2" = {file = "https://github.com/WuLiFang/wlf/archive/0.3.9.tar.gz"}
+flask-restful = "*"

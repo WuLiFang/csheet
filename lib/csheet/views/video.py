@@ -5,17 +5,15 @@ from __future__ import (absolute_import, division, print_function,
 
 import errno
 import logging
-from collections import namedtuple
 
 import pendulum
-from flask import render_template, send_file, session, abort
+from flask import render_template, send_file
 
 import cgtwq
 
 from ..filename import filter_filename
-from ..video import HTMLVideo
 from .app import APP
-from .core import database_session
+from .core import database_session, get_video, get_select, get_task_data
 
 LOGGER = logging.getLogger(__name__)
 
@@ -41,15 +39,8 @@ def response_video(uuid, role):
         return 'Role must in {}'.format(VIDEO_ROLES), 400
 
     with database_session() as sess:
-        video = _get_video(uuid, sess)
+        video = get_video(uuid, sess)
         return _try_send_file(video, role, sess)
-
-
-def _get_video(uuid, sess):
-    ret = sess.query(HTMLVideo).get(uuid)
-    if not ret:
-        abort(404, 'No such video')
-    return ret
 
 
 def _try_send_file(video, role, sess):
@@ -70,43 +61,19 @@ def _handle_not_eixsits(video, role, sess):
         sess.commit()
 
 
-class VideoInfo(namedtuple(
-        'VideoInfo',
-        ('pipeline', 'artist', 'leader_status',
-         'director_status', 'client_status', 'note_num', 'id'))):
-    """Video information.  """
-
-    def sort_key(self):
-        """Key for list sort . """
-
-        pipeline = self.pipeline
-        return (
-            pipeline == '输出',
-            pipeline == '合成',
-            pipeline == '渲染',
-            pipeline == '灯光',
-            pipeline == '特效',
-            pipeline == '解算',
-            pipeline == '动画',
-            pipeline == 'Layout',
-            pipeline
-        )
-
-
 @APP.route('/videos/<uuid>.info')
 def video_info(uuid):
     """Get image related information.   """
 
     with database_session() as sess:
-        video = _get_video(uuid, sess)
+        video = get_video(uuid, sess)
         if video.task_info is None:
             return ''
         metadata = _get_metadata(video)
         ids = video.task_info['task_id']
         database = video.database
 
-    select = _get_select(database, ids)
-    select.token = session['token']
+    select = get_select(database, ids)
 
     data = _get_data(select)
     note_url_template = _get_note_url_template(select)
@@ -119,20 +86,11 @@ def video_info(uuid):
 
 def _get_data(select):
     try:
-        data = select.get_fields(*VideoInfo._fields)
+        data = get_task_data(select)
     except cgtwq.LoginError:
         return '登录过期, 请刷新页面重新登录'
 
-    data = [VideoInfo(*i) for i in data]
-    data.sort(key=lambda i: i.sort_key())
     return data
-
-
-def _get_select(database, ids):
-    module = cgtwq.Database(database)['shot_task']
-    select = module.select(*ids)
-    assert isinstance(select, cgtwq.Selection)
-    return select
 
 
 def _get_metadata(video):

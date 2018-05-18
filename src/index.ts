@@ -3,9 +3,9 @@ import './bootstrap.min.css?external';
 
 $(document).ready(
     function () {
-        $('#inputProject').change(function () {
+        $('#inputProject').change(function (this:any) {
             $.get('/api/project_code/' + $(this).children(':selected').text(),
-                function (result) {
+                function (result:any) {
                     $('#inputPrefix').val(result + '_EP01_');
                     let inputPrefix = <HTMLInputElement>$('#inputPrefix')[0];
                     inputPrefix.focus();

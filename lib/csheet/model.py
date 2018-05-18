@@ -88,7 +88,24 @@ class JSONEncodedDict(TypeDecorator):
         return json.loads(value)
 
 
-class Video(Base):
+class SerializableMixin(object):
+    """Mixin for serialization.   """
+
+    # pylint: disable=too-few-public-methods
+
+    @classmethod
+    def _encode(cls, obj):
+        if isinstance(obj, PurePath):
+            return obj.as_posix()
+        return obj
+
+    def serialize(self):
+        """Serialize sqlalchemy object to dictionary.  """
+
+        return {i.name: self._encode(getattr(self, i.name)) for i in self.__table__.columns}
+
+
+class Video(Base, SerializableMixin):
     """Video data in local database.  """
 
     __tablename__ = 'video'

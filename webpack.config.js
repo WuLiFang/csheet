@@ -15,57 +15,57 @@ module.exports = {
   },
   module: {
     rules: [{
-        test: /\.tsx?$/,
-        loader: 'ts-loader',
-        include: [
-          path.resolve(__dirname, 'src'),
-        ],
-        exclude: /node_modules/,
+      test: /\.tsx?$/,
+      loader: 'ts-loader',
+      include: [
+        path.resolve(__dirname, 'src'),
+      ],
+      exclude: /node_modules/,
+      options: {
+        appendTsSuffixTo: [/\.vue$/],
+      },
+    },
+    {
+      test: /\.vue$/,
+      use: 'vue-loader',
+    },
+    {
+      test: /\.scss$/,
+      oneOf: [{
+        resourceQuery: /external/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+      },
+      {
+        use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
+      },
+      ],
+    },
+    {
+      test: /\.css$/,
+      oneOf: [{
+        resourceQuery: /external/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+      {
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
+      },
+      ],
+    },
+    {
+      test: /\.pug$/,
+      loader: 'pug-plain-loader',
+    },
+    {
+      test: new RegExp('\\.(png|jpg|jpeg|gif|eot|ttf' +
+        '|woff|woff2|svg|svgz)(\\?.+)?$'),
+      use: [{
+        loader: 'url-loader',
         options: {
-          appendTsSuffixTo: [/\.vue$/],
+          limit: 10000,
+          publicPath: '/static/dist',
         },
-      },
-      {
-        test: /\.vue$/,
-        use: 'vue-loader',
-      },
-      {
-        test: /\.scss$/,
-        oneOf: [{
-            resourceQuery: /external/,
-            use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
-          },
-          {
-            use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
-          }
-        ]
-      },
-      {
-        test: /\.css$/,
-        oneOf: [{
-            resourceQuery: /external/,
-            use: [MiniCssExtractPlugin.loader, 'css-loader'],
-          },
-          {
-            use: ['css-loader', 'postcss-loader'],
-          }
-        ]
-      },
-      {
-        test: /\.pug$/,
-        loader: 'pug-plain-loader',
-      },
-      {
-        test: new RegExp('\\.(png|jpg|jpeg|gif|eot|ttf' +
-          '|woff|woff2|svg|svgz)(\\?.+)?$'),
-        use: [{
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            publicPath: '/static/dist',
-          },
-        }],
-      },
+      }],
+    },
 
     ],
   },

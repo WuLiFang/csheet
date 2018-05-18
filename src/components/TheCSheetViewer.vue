@@ -1,10 +1,13 @@
 <template lang="pug">
-  .viewer(v-show='video' )
+  .viewer(v-show='video')
     .overlay(@click='setVideo(null)')
-    .detail(v-html='video ? video.infoHTML : "<empty>"')
+    .detail(v-if='video')
+      TaskInfo(:id="video.uuid")
+      FileInfo(:id="video.uuid")
     .topright
       button(@click='refresh' v-if='!isFileProtocol') 刷新
     video.center(
+      ref='video'
       v-if='posterReady'
       :poster='poster'
       :src='preview'
@@ -29,6 +32,9 @@ import Vue from "vue";
 import * as _ from "lodash";
 import Spinner from "vue-simple-spinner";
 
+import TaskInfo from "./TaskInfo.vue";
+import FileInfo from "./FileInfo.vue";
+
 import { CSheetVideo, Role } from "../video";
 import { VideoBus } from "../csheet";
 import { isFileProtocol } from "../packtools";
@@ -42,6 +48,11 @@ export default Vue.extend({
       note: "<div>test</div>",
       isFileProtocol: isFileProtocol
     };
+  },
+  components: {
+    Spinner,
+    TaskInfo,
+    FileInfo
   },
   computed: {
     poster(): string | null {
@@ -161,7 +172,7 @@ export default Vue.extend({
         this.setVideo(this.videoList[index]);
       }
     },
-    setUpShortcut() {
+    setupShortcut() {
       window.addEventListener("keyup", (event: KeyboardEvent) => {
         switch (event.key) {
           case "ArrowLeft": {
@@ -179,7 +190,6 @@ export default Vue.extend({
   watch: {
     video(value: CSheetVideo | null) {
       if (value) {
-        value.loadInfo();
         value.scrollToThis();
         value.loadPoster();
         if (this.next) {
@@ -188,16 +198,19 @@ export default Vue.extend({
         if (this.prev) {
           this.prev.loadPoster();
         }
+
         window.location.replace(this.url);
+      }
+    },
+    preview(value) {
+      if (!value && this.videoElement) {
+        this.videoElement.controls = false;
       }
     }
   },
   created() {
-    this.setUpShortcut();
+    this.setupShortcut();
     this.parseHash();
-  },
-  components: {
-    Spinner
   }
 });
 </script>
@@ -231,7 +244,6 @@ button {
   left: 0;
   top: 0;
   margin: 5px;
-  background: black;
   max-height: 100%;
   overflow-y: auto;
   text-align: center;
@@ -301,62 +313,6 @@ button {
   right: 1%;
   &:after {
     content: ">";
-  }
-}
-</style>
-<style lang="scss">
-.detail {
-  table {
-    border-spacing: 0.5em 0.2em;
-    td.status {
-      color: white;
-      opacity: 0.5;
-      border-radius: 8px;
-      &[status="Wait"] {
-        background: rgb(0, 85, 127);
-        &::before {
-          content: "等待";
-        }
-      }
-      &[status="Check"] {
-        background: rgb(219, 219, 2);
-        &::before {
-          content: "检查";
-        }
-      }
-      &[status="Retake"] {
-        background: rgb(255, 0, 0);
-        &::before {
-          content: "返修";
-        }
-      }
-      &[status="Approve"] {
-        background: rgb(0, 206, 0);
-        &::before {
-          content: "通过";
-        }
-      }
-      &[status="Close"] {
-        &::before {
-          content: "<关闭>";
-        }
-      }
-    }
-    td.notes {
-      transition: 0.3s ease-out;
-      &:hover {
-        background: rgba(255, 255, 255, 0.2);
-      }
-    }
-  }
-
-  .note-container {
-    iframe {
-      width: 100%;
-      min-width: 350px;
-      height: 320px;
-      border: 0;
-    }
   }
 }
 </style>

@@ -1,13 +1,20 @@
 import Vue from 'vue';
 
 import SocketIO from './socketio';
-
-import './csheet.scss?external';
+// @ts-ignore
+import { Icon } from 'element-ui';
 import './socketio';
+import './csheet.scss?external';
+import 'element-ui/lib/theme-chalk/index.css';
+
 import TheCSheet from './components/TheCSheet.vue';
 import { CSheetVideoDataRow } from './types';
 import { CSheetVideo, VideoStorage } from './video';
+import * as moment from 'moment';
+import 'moment/locale/zh-cn';
 
+Vue.use(Icon)
+moment.locale(navigator.language)
 
 export let VideoBus = parseData()
 const vue = new Vue({

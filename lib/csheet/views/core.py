@@ -3,9 +3,14 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from flask import g
+from flask import abort, g, session
+
+import cgtwq
 
 from ..model import Session, session_scope
+from ..video import HTMLVideo
+from ..model import Video
+from .datamodel import TaskInfo
 
 
 def database_session():
@@ -16,3 +21,34 @@ def database_session():
     sess = g.database_session
 
     return session_scope(sess)
+
+
+def get_video(uuid, sess, cls=HTMLVideo):
+    """Get video from uuid.  """
+
+    assert issubclass(cls, Video)
+    ret = sess.query(cls).get(uuid)
+    if not ret:
+        abort(404, 'No such video')
+    assert isinstance(ret, cls)
+    return ret
+
+
+def get_select(database, ids):
+    """Get task select from database from id list.  """
+
+    module = cgtwq.Database(database)['shot_task']
+    select = module.select(*ids)
+    assert isinstance(select, cgtwq.Selection)
+    select.token = session['token']
+    return select
+
+
+def get_task_data(select):
+    """Get task data from cgteamwork.  """
+
+    data = select.get_fields(*TaskInfo._fields)
+    data = [TaskInfo(*i) for i in data]
+    data.sort(key=lambda i: i.sort_key())
+
+    return data

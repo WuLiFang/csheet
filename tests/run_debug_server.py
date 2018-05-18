@@ -10,20 +10,22 @@ from csheet import generation, APP, watch, SOCKETIO
 from wlf import mp_logging
 import util
 
+PORT = 5001
+
 
 def main():
+
     mp_logging.basic_config(level=logging.DEBUG)
     util.setup()
 
     generate_test_page.main()
 
-    port = 5001
-    APP.debug = True
+    generation.GENERATION_TASKS.pop()
     generation.start()
     watch.start()
 
     SOCKETIO.run(APP,
-                 'localhost', port,
+                 'localhost', PORT,
                  debug=True)
 
 
