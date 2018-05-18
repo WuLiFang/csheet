@@ -1,9 +1,9 @@
 <template lang="pug">
     .file-info(v-if='videoData')
-      span
+      .time
         | 单帧:
         RelativeTime(:timestamp='videoData.poster_mtime')
-      span 
+      .time
         | 视频:
         RelativeTime(:timestamp='videoData.src_mtime')
 </template>
@@ -48,6 +48,7 @@ export default Vue.extend({
 .file-info {
   color: white;
   opacity: 0.5;
+  text-align: left;
   transition: 0.2s ease-in-out;
   &:hover {
     background: black;
