@@ -179,7 +179,7 @@ GENERATION_TASKS = [
         'target': 'poster',
         'method': GenaratableVideo.generate_poster,
         'min_interval': 10,
-        'condition': (Video.poster.is_(None),)
+        'conditions': (Video.poster.is_(None),)
     },
     {
         'source': 'src',
