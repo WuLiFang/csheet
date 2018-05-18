@@ -3,7 +3,10 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import sys
+
 from gevent import sleep
+
 from .exceptions import WorkerIdle
 
 
@@ -16,19 +19,25 @@ def work_forever(func, logger, **kwargs):
         label (str, optional): Defaults to 'work', for logger message.
     """
 
-    label = kwargs.pop('label', 'work')
-    fail_delay = kwargs.pop('fail_delay', 0.5)
-    idle_delay = kwargs.pop('idle_delay', 10)
-
     while True:
         delay = 0
         try:
             func()
-        except WorkerIdle:
-            delay = idle_delay
-        except (KeyboardInterrupt, SystemExit):
-            raise
         except:  # pylint: disable=bare-except
-            logger.error('Error during %s.', label, exc_info=True)
-            delay = fail_delay
+            delay = _handle_worker_exceptions(logger, **kwargs)
         sleep(delay)
+
+
+def _handle_worker_exceptions(logger, **kwargs):
+    label = kwargs.pop('label', 'work')
+    fail_delay = kwargs.pop('fail_delay', 0.5)
+    idle_delay = kwargs.pop('idle_delay', 10)
+
+    exctype, value = sys.exc_info()[:2]
+    if exctype is WorkerIdle:
+        return idle_delay
+    elif exctype in (KeyboardInterrupt, SystemExit):
+        raise value
+
+    logger.error('Error during %s.', label, exc_info=True)
+    return fail_delay
