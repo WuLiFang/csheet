@@ -17,6 +17,14 @@ from .core import database_session
 LOGGER = logging.getLogger()
 
 
+def _role_updated_criterion(role, since):
+    return and_(
+        getattr(Video, role).isnot(None),
+        getattr(Video, '{}_mtime'.format(role)).isnot(None),
+        getattr(Video, '{}_atime'.format(role)) >= since,
+    )
+
+
 def get_updated_asset(since, sess):
     """Get all newly updated asset from local database.
 
@@ -25,17 +33,9 @@ def get_updated_asset(since, sess):
     """
 
     query = sess.query(Video).filter(
-        or_(
-            and_(Video.thumb.isnot(None),
-                 Video.thumb_mtime.isnot(None),
-                 Video.thumb_atime >= since),
-            and_(Video.preview.isnot(None),
-                 Video.preview_mtime.isnot(None),
-                 Video.preview_atime >= since),
-            and_(
-                Video.poster.isnot(None),
-                Video.poster_mtime.isnot(None),
-                Video.poster_mtime >= since))
+        or_(_role_updated_criterion('thumb', since),
+            _role_updated_criterion('preview', since),
+            _role_updated_criterion('poster', since))
     ).order_by(Video.label)
     result = query.all()
     result = format_videos(result)
