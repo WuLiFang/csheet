@@ -46,6 +46,12 @@ export default Vue.extend({
 </script>
 <style lang="scss" scoped>
 .file-info {
-  color: gray;
+  color: white;
+  opacity: 0.5;
+  transition: 0.2s ease-in-out;
+  &:hover {
+    background: black;
+    opacity: 1;
+  }
 }
 </style>
