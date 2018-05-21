@@ -23,7 +23,19 @@ def database_session():
     return session_scope(sess)
 
 
-def get_video(uuid, sess, cls=HTMLVideo):
+class CGTeamWorkVideo(Video):
+    """Video for cgteamwork task.  """
+
+    def get_entry(self):
+        """Get entry from this video.  """
+        return get_select(self.database, self.uuid).to_entry()
+
+    def get_select(self):
+        """Get related selection from this video.  """
+        return get_select(self.database, self.task_info['task_id'])
+
+
+def get_video(uuid, sess, cls=CGTeamWorkVideo):
     """Get video from uuid.  """
 
     assert issubclass(cls, Video)

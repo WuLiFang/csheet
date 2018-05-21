@@ -4,12 +4,11 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 from flask import session
-from flask_restful import Api, Resource
+from flask_restful import Api, Resource, reqparse
 
+from . import core
 from ..database import get_project_info
 from .app import APP
-from . import core
-from .datamodel import TaskInfo
 from .util import require_login
 
 API = Api(APP, '/api')
@@ -43,12 +42,44 @@ class Task(Resource):
 
         with core.database_session() as sess:
             video = core.get_video(id_, sess)
-            select = core.get_select(
-                video.database, video.task_info['task_id'])
+            select = video.get_select()
         return core.get_task_data(select)
 
 
 API.add_resource(Task, '/task/<id_>')
+
+
+class TaskField(Resource):
+    """Api for task info"""
+
+    @staticmethod
+    def get(id_, name):
+        """Get field info.  """
+
+        ret = {}
+        with core.database_session() as sess:
+            video = core.get_video(id_, sess)
+            entry = video.get_entry()
+        ret['value'] = entry[name]
+        ret['has_permission'] = entry.has_permission_on_status(name)
+        return ret
+
+    @staticmethod
+    def put(id_, name):
+        """Change field value.  """
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('value', required=True)
+        args = parser.parse_args()
+
+        with core.database_session() as sess:
+            video = core.get_video(id_, sess)
+            entry = video.get_entry()
+        entry[name] = args.value
+        return entry[name]
+
+
+API.add_resource(TaskField, '/task/<id_>/<name>')
 
 
 class Video(Resource):
