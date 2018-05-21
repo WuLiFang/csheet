@@ -1,11 +1,11 @@
 <template lang="pug">
     .task-info-pipeline-badge-poper
         span 制作者: {{model.artist}}
-        TaskInfoStatus(v-if='model.leader_status' :status='model.leader_status' )
+        TaskInfoStatusEdit(:taskId='model.id' field='leader_status' :videoId='videoId')
             template(slot-scope='status') 组长状态: {{status.text}}
-        TaskInfoStatus(v-if='model.director_status' :status='model.director_status' )
+        TaskInfoStatusEdit(:taskId='model.id' field='director_status' :videoId='videoId')
             template(slot-scope='status') 导演状态: {{status.text}}
-        TaskInfoStatus(v-if='model.client_status' :status='model.client_status' )
+        TaskInfoStatusEdit(:taskId='model.id' field='client_status' :videoId='videoId')
             template(slot-scope='status') 客户状态: {{status.text}}
         span 备注: {{model.note_num}}
 </template>
@@ -15,14 +15,15 @@
 import Vue from "vue";
 import { TaskDataModel } from "../interface";
 
-import TaskInfoStatus from "./TaskInfoStatus.vue";
+import TaskInfoStatusEdit from "./TaskInfoStatusEdit.vue";
 
 export default Vue.extend({
   props: {
-    model: { type: <() => TaskDataModel>Object }
+    model: { type: <() => TaskDataModel>Object },
+    videoId: { type: String }
   },
   components: {
-    TaskInfoStatus
+    TaskInfoStatusEdit
   }
 });
 </script>

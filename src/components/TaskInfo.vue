@@ -1,6 +1,6 @@
 <template lang="pug">
     .task-info
-      TaskInfoPiplineBadge(v-for="i in model" :model="i" :key="i.order") {{model}}
+      TaskInfoPiplineBadge(v-for="i in model" :model="i" :key="i.order" :videoId='id') {{model}}
 </template>
 
 <script lang="ts">
@@ -42,6 +42,8 @@ export default Vue.extend({
 .task-info {
   opacity: 0.5;
   transition: 0.2s ease-in-out;
+  display: flex;
+  flex-wrap: wrap;
   &:hover {
     opacity: 1;
   }

@@ -54,3 +54,8 @@ export interface VideoResponse {
     thumb_mtime: number,
     uuid: string
 }
+
+export interface FieldResponse {
+    has_permission: boolean,
+    value: TaskStatusText | null,
+}
