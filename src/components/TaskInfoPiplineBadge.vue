@@ -2,7 +2,7 @@
     Popover.task-info-pipeline-badge(trigger="hover" placement='bottom-end' effect='dark') 
       TaskInfoPiplineBadgePoper(:model='model' :videoId='videoId')
       span.status(slot='reference')
-        TaskInfoStatusEdit( v-if='permissionedFields' :videoId='videoId' :taskId='model.id' :field='permissionedFields[0]') {{model.pipeline}}
+        TaskInfoStatusEdit( v-if='field' :videoId='videoId' :taskId='model.id' :field='field') {{model.pipeline}}
         TaskInfoStatus( v-else :status='generalStatus') {{model.pipeline}}
 </template>
 
@@ -35,6 +35,9 @@ export default Vue.extend({
     };
   },
   computed: {
+    field(): string | undefined {
+      return this.permissionedFields[0];
+    },
     generalStatus(): TaskStatus {
       let data = [
         this.model.leader_status,
@@ -45,7 +48,7 @@ export default Vue.extend({
       return Math.min(...data);
     },
     permissionedFields(): Array<string> {
-      let map = this.fieldHub[this.videoId];
+      let map = this.fieldHub[this.model.id];
       if (!map) {
         return [];
       }
