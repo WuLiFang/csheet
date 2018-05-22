@@ -6,10 +6,8 @@ from __future__ import (absolute_import, division, print_function,
 from flask import session, make_response, abort
 from flask_restful import Api, Resource, reqparse
 
-import cgtwq
 
 from . import core
-from ..database import get_project_info
 from .app import APP
 from .util import require_login
 
@@ -25,14 +23,14 @@ def _apply_token(func, *args, **kwargs):
 @require_login
 def database_name(project):
     """get database for project.   """
-    return _apply_token(get_project_info, project).database
+    return _apply_token(core.get_project_info, project).database
 
 
 @APP.route('/api/project_code/<project>')
 def project_code(project):
     """Get project code from project name.  """
 
-    return _apply_token(get_project_info, project).code
+    return _apply_token(core.get_project_info, project).code
 
 
 class Task(Resource):
@@ -55,19 +53,15 @@ class TaskField(Resource):
     """Api for task info"""
 
     @staticmethod
-    def get(video_id, task_id, name):
+    def get(uuid, name, **_):
         """Get field info.  """
 
         with core.database_session() as sess:
-            video = core.get_video(video_id, sess)
-            entry = _get_entry(video, task_id)
-        ret = {}
-        ret['value'] = entry[name]
-        ret['has_permission'] = entry.flow.has_field_permission(name)
-        return ret
+            entry = core.get_entry(uuid, sess)
+        return core.get_field_data(entry, name)
 
     @staticmethod
-    def put(video_id, task_id, name):
+    def put(uuid, name, **_):
         """Change field value.  """
 
         parser = reqparse.RequestParser()
@@ -75,8 +69,7 @@ class TaskField(Resource):
         args = parser.parse_args()
 
         with core.database_session() as sess:
-            video = core.get_video(video_id, sess)
-            entry = _get_entry(video, task_id)
+            entry = core.get_entry(uuid, sess)
 
         if not entry.flow.has_field_permission(name):
             abort(make_response('无权限修改', 403))
@@ -84,21 +77,14 @@ class TaskField(Resource):
         return entry[name]
 
 
-def _get_entry(video, id_):
-    module = cgtwq.Database(video.database).module('shot_task')
-    select = module.select(id_).to_entry()
-    select.token = session['token']
-    return select
-
-
-API.add_resource(TaskField, '/video/<video_id>/task/<task_id>/<name>')
+API.add_resource(TaskField, '/task/<uuid>/<name>')
 
 
 class TaskNote(Resource):
     """Api for task note.  """
 
     @staticmethod
-    def post(video_id, task_id):
+    def post(uuid, **_):
         """Add new note.  """
 
         parser = reqparse.RequestParser()
@@ -106,13 +92,12 @@ class TaskNote(Resource):
         args = parser.parse_args()
 
         with core.database_session() as sess:
-            video = core.get_video(video_id, sess)
-            entry = _get_entry(video, task_id)
+            entry = core.get_entry(uuid, sess)
 
         entry.notify.add(text=args.text, account=session['account_id'])
 
 
-API.add_resource(TaskNote, '/video/<video_id>/task_note/<task_id>')
+API.add_resource(TaskNote, '/task_note/<uuid>')
 
 
 class Video(Resource):
@@ -127,3 +112,8 @@ class Video(Resource):
 
 
 API.add_resource(Video, '/video/<id_>')
+
+API.add_resource(TaskField, '/video/<_>/task/<uuid>/<name>',
+                 endpoint=b'deprecated_api_taskfield')
+API.add_resource(TaskNote, '/video/<_>/task_note/<uuid>',
+                 endpoint=b'deprecated_api_tasknote')

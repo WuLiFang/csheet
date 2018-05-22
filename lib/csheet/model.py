@@ -5,10 +5,11 @@ from __future__ import (absolute_import, division, print_function,
 
 import json
 import logging
+import cgtwq
 from contextlib import contextmanager
 from functools import wraps
 
-from sqlalchemy import Boolean, Column, Float, String, create_engine, orm
+from sqlalchemy import Boolean, Column, Float, String, create_engine, orm, Table, ForeignKey
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.types import VARCHAR, TypeDecorator, Unicode
@@ -21,6 +22,9 @@ from . import setting
 Base = declarative_base()  # pylint: disable=invalid-name
 Session = orm.sessionmaker()  # pylint: disable=invalid-name
 LOGGER = logging.getLogger(__name__)
+VIDEO_TASK = Table('Video-CGTeamWorkTask', Base.metadata,
+                   Column('video_id', String, ForeignKey('Video.uuid')),
+                   Column('task_id', String, ForeignKey('CGTeamWorkTask.uuid')))
 
 
 @contextmanager
@@ -108,7 +112,7 @@ class SerializableMixin(object):
 class Video(Base, SerializableMixin):
     """Video data in local database.  """
 
-    __tablename__ = 'video'
+    __tablename__ = 'Video'
     uuid = Column(String, primary_key=True)
     label = Column(String)
     src = Column(Path)
@@ -125,8 +129,11 @@ class Video(Base, SerializableMixin):
     is_need_update = Column(Boolean)
     last_update_time = Column(Float)
     database = Column(String)
+    module = Column(String)
     pipeline = Column(String)
-    task_info = Column(JSONEncodedDict)
+    related_tasks = orm.relationship('CGTeamWorkTask', secondary=VIDEO_TASK)
+    task_id = Column(String, ForeignKey('CGTeamWorkTask.uuid'))
+    task = orm.relationship('CGTeamWorkTask')
 
     def __init__(self, src=None, poster=None, uuid=None):
 
@@ -138,9 +145,6 @@ class Video(Base, SerializableMixin):
                                     src=src,
                                     poster=poster,
                                     is_need_update=True)
-
-    def __repr__(self):
-        return 'Video<label={0.label}, uuid={0.uuid}, src={0.src}, poster={0.poster}>'.format(self)
 
     def to_tuple(self):
         """Convert video to tuple for frontend transfer.  """
@@ -155,6 +159,25 @@ class Video(Base, SerializableMixin):
         ret = tuple(i.as_posix() if isinstance(
             i, PurePath) else i for i in ret)
         return ret
+
+
+class CGTeamWorkTask(Base, SerializableMixin):
+    """CGTeamWork task.  """
+
+    __tablename__ = 'CGTeamWorkTask'
+    uuid = Column(String, primary_key=True)
+    database = Column(String)
+    module = Column(String)
+    videos = orm.relationship('Video', secondary=VIDEO_TASK)
+
+    def to_entry(self):
+        """Convert to entry.
+
+        Returns:
+            cgtwq.Entry
+        """
+
+        return cgtwq.Database(self.database).module(self.module).select(self.uuid).to_entry()
 
 
 def format_videos(videos):
@@ -191,10 +214,12 @@ def _upgrade_database(engine):
                           ('pipeline', 'VARCHAR'),
                           ('thumb_atime', 'FLOAT'),
                           ('preview_atime', 'FLOAT'),
-                          ('poster_atime', 'FLOAT')):
+                          ('poster_atime', 'FLOAT'),
+                          ('module', 'VARCHAR'),
+                          ('task_id', 'VARCHAR')):
         try:
             engine.execute(
-                'ALTER TABLE video ADD COLUMN {} {}'.format(column, type_))
+                'ALTER TABLE Video ADD COLUMN {} {}'.format(column, type_))
         except OperationalError:
             continue
 

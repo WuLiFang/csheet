@@ -7,7 +7,7 @@ import logging
 import os
 import time
 
-from gevent import sleep, spawn
+from gevent import spawn
 from sqlalchemy import or_
 
 from wlf import ffmpeg

@@ -12,6 +12,7 @@ import cgtwq
 
 from ..mimecheck import is_mimetype
 from ..video import HTMLVideo
+from ..model import CGTeamWorkTask
 from .core import BasePage
 
 LOGGER = logging.getLogger(__name__)
@@ -29,6 +30,7 @@ class CGTeamWorkPage(BasePage):
     """Csheet page from cgteamwork. """
 
     render_pipeline = {'灯光':  '渲染', '合成':  '输出'}
+    module = 'shot_task'
 
     def __init__(self, project, pipeline, prefix, token):
         cgtwq.PROJECT.token = token
@@ -51,7 +53,7 @@ class CGTeamWorkPage(BasePage):
 
         database = cgtwq.Database(self.database)
         database.token = self.token
-        module = database['shot_task']
+        module = database[self.module]
 
         select = module.filter(cgtwq.Filter('pipeline', self.pipeline) &
                                cgtwq.Filter('shot.shot', self.prefix, 'has'))
@@ -99,9 +101,18 @@ class CGTeamWorkPage(BasePage):
         video.poster = poster
         video.label = shot
         video.database = self.database
+        video.module = self.module
         video.pipeline = self.pipeline
-        video.task_info = {'task_id': [i.id for i in data
-                                       if i.shot == shot]}
+
+        tasks = [session.query(CGTeamWorkTask).get(i.id) or CGTeamWorkTask(uuid=i.id)
+                 for i in data if i.shot == shot]
+        for i in tasks:
+            i.database = self.database
+            i.module = self.module
+            session.add(i)
+
+        video.related_tasks = tasks
+        video.task_id = uuid
         session.add(video)
 
     def update(self, session):

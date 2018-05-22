@@ -27,6 +27,7 @@ function parseReponse(response: TaskInfoResponse, order: number): TaskDataModel 
         client_status: TaskStatus[response[4]],
         note_num: response[5],
         id: response[6],
+        permissions: response[7],
         order,
     };
 }
@@ -48,8 +49,8 @@ export async function requestVideoData(id: string) {
     });
 }
 
-export async function requestFieldData(videoId: string, taskId: string, field: string) {
-    return axios.get(`/api/video/${videoId}/task/${taskId}/${field}`).then(response => {
+export async function requestFieldData(taskId: string, field: string) {
+    return axios.get(`/api/task/${taskId}/${field}`).then(response => {
         let data: FieldResponse = response.data;
         let map = fieldHub[taskId]
         if (!map) {
@@ -61,11 +62,11 @@ export async function requestFieldData(videoId: string, taskId: string, field: s
     });
 }
 
-export async function approve(videoId: string, taskId: string, field: string) {
-    return axios.put(`/api/video/${videoId}/task/${taskId}/${field}`, { value: 'Approve' }).then(
+export async function approve(taskId: string, field: string) {
+    return axios.put(`/api/task/${taskId}/${field}`, { value: 'Approve' }).then(
         response => {
             Message({ message: '镜头设为通过', type: 'success' })
-            requestFieldData(videoId, taskId, field)
+            requestFieldData(taskId, field)
             return response
         }
     ).catch(
@@ -78,13 +79,13 @@ function errorMessage(error: any) {
     Message({ message: error.response.data, type: 'error' })
 }
 
-export async function retake(videoId: string, taskId: string, field: string, reason?: string) {
-    return axios.put(`/api/video/${videoId}/task/${taskId}/${field}`, { value: 'Retake' }).then(
+export async function retake(taskId: string, field: string, reason?: string) {
+    return axios.put(`/api/task/${taskId}/${field}`, { value: 'Retake' }).then(
         response => {
             Message({ message: '镜头设为返修', type: 'success' })
-            requestFieldData(videoId, taskId, field)
+            requestFieldData(taskId, field)
             if (reason) {
-                addNote(videoId, taskId, `返修原因: ${reason}`)
+                addNote(taskId, `返修原因: ${reason}`)
             }
             return response
         }
@@ -94,8 +95,8 @@ export async function retake(videoId: string, taskId: string, field: string, rea
 
 }
 
-export async function addNote(videoId: string, taskId: string, text: string) {
-    return axios.post(`api/video/${videoId}/task_note/${taskId}`, { text }).then(
+export async function addNote(taskId: string, text: string) {
+    return axios.post(`api/task_note/${taskId}`, { text }).then(
         response => {
             Message({ message: '已添加备注', type: 'success' })
             return response

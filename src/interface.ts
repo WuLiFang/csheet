@@ -7,6 +7,11 @@ export interface TaskDataModel {
     note_num: number;
     id: string;
     order: number;
+    permissions: StringMap<boolean>
+}
+
+export interface StringMap<T> {
+    [id: string]: T
 }
 
 export type TaskInfoResponse = [
@@ -16,7 +21,8 @@ export type TaskInfoResponse = [
     TaskStatusText,
     TaskStatusText,
     number,
-    string
+    string,
+    StringMap<boolean>
 ];
 
 export enum TaskStatus {

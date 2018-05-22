@@ -50,16 +50,16 @@ export default Vue.extend({
   },
   methods: {
     loadData() {
-      requestFieldData(this.videoId, this.taskId, this.field);
+      requestFieldData(this.taskId, this.field);
     },
     approve() {
-      approve(this.videoId, this.taskId, this.field);
+      approve(this.taskId, this.field);
     },
 
     retake() {
       MessageBox.prompt("原因", "设为返修")
         .then((result: any) => {
-          retake(this.videoId, this.taskId, this.field, result.value);
+          retake(this.taskId, this.field, result.value);
         })
         .catch(reason => {
           Message({ message: "取消操作" });
