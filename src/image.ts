@@ -7,9 +7,9 @@
 export function imageAvailable(
     url: string,
     onload = (img: HTMLImageElement) => { },
-    onerror = (img: HTMLImageElement) => { }
+    onerror = (img: HTMLImageElement) => { },
 ) {
-    let temp = new Image;
+    const temp = new Image;
     temp.onload = () => { onload(temp); };
     temp.onerror = () => { onerror(temp); };
     temp.src = url;

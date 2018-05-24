@@ -3,31 +3,31 @@
 
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>
         {{ config.title }}
     </title>
-    <!--[if IE]>
+    <!-- [if IE]>
     <script type="text/javascript">
     alert('本页面不支持IE, 请使用其他现代浏览器');
     // window.open("http://outdatedbrowser.com/zh-cn", "_self");
     </script>
-    <![endif]-->
+    <![endif] -->
 </head>
 
-<div id='app' data-page='{{ dump(videos) }}'>
-    <noscript>
-        <header>
-            <div id="count">
-                {{ videos.__len__() }}
-            </div>
-            <nav>
-                {% block nav %} {% endblock %}
-            </nav>
-        </header>
-
-        <body>
+<body>
+    <div id='app' data-page='{{ dump(videos) }}'>
+        <noscript>
+            <header>
+                <div id="count">
+                    {{ videos.__len__() }}
+                </div>
+                <nav>
+                    {% block nav %} {% endblock %}
+                </nav>
+            </header>
             {% for i in config.static %} {% if i.endswith('.css') %}
-            <link href="{{ config.static_folder }}/{{ i }}?version={{ config.version }}" rel="stylesheet" type="text/css" /> {% endif %} {% endfor %}
+            <link href="{{ config.assets['csheet_noscript']['css'] }}" rel="stylesheet" type="text/css" /> {% endif %} {% endfor %}
             <ul class="noscript">
                 {% for video in videos %} {% set thumb = video.get('thumb',config.is_pack) %} {% set poster = video.get('poster', config.is_pack)
                 %} {% set preview = video.get('preview', config.is_pack) %}
@@ -54,10 +54,8 @@
                 </li>
                 {% endfor %}
             </ul>
-        </body>
-    </noscript>
-</div>
-
-<script src="{{ config.static_folder }}/dist/csheet.bundle.js?version={{ config.version }}"></script>
+        </noscript>
+    </div>
+</body>
 
 </html>

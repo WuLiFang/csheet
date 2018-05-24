@@ -3,19 +3,19 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import * as moment from "moment";
+import Vue from 'vue';
+import * as moment from 'moment';
 
 export default Vue.extend({
   props: { timestamp: { type: Number } },
   computed: {
     fromNow(): string {
       if (!this.timestamp) {
-        return "未知";
+        return '未知';
       }
       return moment(this.timestamp * 1000).fromNow();
-    }
-  }
+    },
+  },
 });
 </script>
 <style lang="scss" scoped>

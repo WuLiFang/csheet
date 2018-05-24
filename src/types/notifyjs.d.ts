@@ -12,46 +12,46 @@ declare module 'notifyjs' {
          * Check is permission is needed for the user to receive notifications.
          * @return true : needs permission, false : does not need
          */
-        static needsPermission: boolean;
+        public static needsPermission: boolean;
 
         /**
          * Asks the user for permission to display notifications
          * @param onPermissionGrantedCallback A callback for permission is granted.
          * @param onPermissionDeniedCallback  A callback for permission is denied.
          */
-        static requestPermission(onPermissionGrantedCallback?: () => any, onPermissionDeniedCallback?: () => any): void;
+        public static requestPermission(onPermissionGrantedCallback?: () => any, onPermissionDeniedCallback?: () => any): void;
 
         /**
          * return true if the browser supports HTML5 Notification
          * @param true : the browser supports HTML5 Notification, false ; the browser does not supports HTML5 Notification.
          */
-        static isSupported(): boolean;
+        public static isSupported(): boolean;
 
         /**
          * shows the user's current permission level (granted, denied or default), returns null if notifications are not supported.
          * @return 'granted' : permission has been given, 'denied' : permission has been denied, 'default' : permission has not yet been set, null : notifications are not supported
          */
-        static permissionLevel: string;
+        public static permissionLevel: string;
 
         /**
          * Show the notification.
          */
-        show(): void;
+        public show(): void;
 
         /**
          * Remove all event listener.
          */
-        destroy(): void;
+        public destroy(): void;
 
         /**
          * Close the notification.
          */
-        close(): void;
-        onShowNotification(e: Event): void;
-        onCloseNotification(): void;
-        onClickNotification(): void;
-        onErrorNotification(): void;
-        handleEvent(e: Event): void;
+        public close(): void;
+        public onShowNotification(e: Event): void;
+        public onCloseNotification(): void;
+        public onClickNotification(): void;
+        public onErrorNotification(): void;
+        public handleEvent(e: Event): void;
     }
 
     /**

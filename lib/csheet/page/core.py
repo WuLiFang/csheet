@@ -11,13 +11,12 @@ from tempfile import TemporaryFile
 from zipfile import ZipFile
 
 from gevent import spawn
-from jinja2 import Environment, PackageLoader
+from jinja2 import Environment, FileSystemLoader
 
 from wlf.path import get_encoded as e
 from wlf.path import PurePath
-from .. import model
 
-from .. import __about__, filetools
+from .. import __about__, filetools, model
 from ..__about__ import __version__
 from ..filename import filter_filename
 from ..video import HTMLVideo
@@ -25,14 +24,18 @@ from ..video import HTMLVideo
 LOGGER = logging.getLogger(__name__)
 
 
+def _read_assets():
+    with open(filetools.dist_path('webpack-assets.json')) as f:
+        return json.load(f)
+
+
 class BasePage(object):
     """Base class for render csheet page. """
 
-    static = ('dist/csheet.css',
-              'dist/csheet.bundle.js')
-    static_folder = 'static'
+    templates_folder = filetools.dist_path('templates')
     version = __about__.__version__
     is_pack = False
+    assets = _read_assets()
 
     @abstractmethod
     def videos(self, session):
@@ -62,7 +65,7 @@ class BasePage(object):
         """Render the page.  """
 
         env = Environment(
-            loader=PackageLoader(__about__.__name__),
+            loader=FileSystemLoader(self.templates_folder),
         )
 
         template = env.get_template(template)
@@ -83,9 +86,8 @@ class BasePage(object):
         f = TemporaryFile(suffix='.zip',
                           prefix=self.title)
         with ZipFile(f, 'w', allowZip64=True) as zipfile:
-            self._pack_static(zipfile)
-            self._pack_videos(videos, zipfile)
             self._pack_page(videos, zipfile)
+            self._pack_videos(videos, zipfile)
 
         f.seek(0)
         return f
@@ -117,10 +119,13 @@ class BasePage(object):
             LOGGER.debug('Write zipfile: %s -> %s',
                          filename, arcname)
 
-    def _pack_static(self, zipfile):
-        for i in self.static:
-            zipfile.write(filetools.path(self.static_folder, i),
-                          '{}/{}'.format(self.static_folder, i))
+    def _pack_entry(self, zipfile, index_page, entry):
+        entry_data = self.assets[entry]
+        for i in entry_data.values():
+            relative_path = i.lstrip('/')
+            index_page = index_page.replace(i, relative_path)
+            zipfile.write(filetools.dist_path(relative_path), i)
+        return index_page
 
     def _pack_page(self, videos, zipfile):
         try:
@@ -128,6 +133,8 @@ class BasePage(object):
             index_page = self.render(videos)
         finally:
             self.is_pack = False
+        index_page = self._pack_entry(zipfile, index_page, 'vendors~csheet')
+        index_page = self._pack_entry(zipfile, index_page, 'csheet')
         zipfile.writestr('{}.html'.format(self.title.replace('\\', '_')),
                          index_page.encode('utf-8'))
 

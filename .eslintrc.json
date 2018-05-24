@@ -4,8 +4,7 @@
         "ecmaVersion": 6
     },
     "env": {
-        "browser": true,
-        "jquery": true
+        "browser": true
     },
     "rules": {
         "linebreak-style": "off"

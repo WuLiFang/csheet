@@ -1,12 +1,12 @@
 <template lang="pug">
-  span.task-info-edit(v-if='response')
+  span.task-info-edit(v-if='model')
     TaskInfoStatus(:status='status')
       template(slot-scope='childStatus')
         slot(:text='childStatus.text') 
           | {{childStatus.text}}
-    span.edit(v-show='response.has_permission')
-      Button.el-icon-check(v-show='statusText != "Approve"' plain size='mini' type='success' @click='approve')
-      Button.el-icon-close(v-show='statusText != "Retake"' plain size='mini' type='danger' @click='retake')
+    span.edit(v-show='hasPermission')
+      Button.el-icon-check(v-show='status != TaskStatus.Approve' plain size='mini' type='success' @click='approve')
+      Button.el-icon-close(v-show='status != TaskStatus.Retake' plain size='mini' type='danger' @click='retake')
 </template>
 
 <script lang="ts">
@@ -15,14 +15,20 @@ import Vue from "vue";
 import { Button, ButtonGroup, MessageBox, Message } from "element-ui";
 
 import TaskInfoStatus from "./TaskInfoStatus.vue";
-import { fieldHub, requestFieldData, FieldMap, approve, retake } from "../hub";
-import { FieldResponse, TaskStatus, TaskStatusText } from "../interface";
+import { approve, retake } from "../hub";
+import {
+  FieldResponse,
+  TaskStatus,
+  TaskStatusText,
+  CGTeamWorkTaskData,
+  StringMap
+} from "../interface";
+import { cgTeamWorkComputedMinxin } from "../store/cgteamwork-task";
 
 export default Vue.extend({
   props: {
     taskId: { type: String },
-    videoId: { type: String },
-    field: { type: String }
+    field: { type: String as () => "leader_status" | "directory_status" }
   },
   components: {
     TaskInfoStatus,
@@ -31,31 +37,32 @@ export default Vue.extend({
   },
   data() {
     return {
-      fieldHub
+      TaskStatus
     };
   },
   computed: {
-    response(): FieldResponse | undefined {
-      return this.fieldMap[this.field];
+    ...cgTeamWorkComputedMinxin,
+    model(): CGTeamWorkTaskData {
+      return this.cgTeamworkTaskStore.storage[this.taskId];
     },
-    fieldMap(): FieldMap {
-      return this.fieldHub[this.taskId] || {};
-    },
-    statusText(): TaskStatusText | null {
-      return this.response ? this.response.value : null;
+    fieldsValue(): StringMap<TaskStatus | null> {
+      return {
+        leader_status: this.model.leader_status,
+        director_status: this.model.director_status,
+        client_status: this.model.client_status
+      };
     },
     status(): TaskStatus | null {
-      return this.statusText ? TaskStatus[this.statusText] : null;
+      return this.fieldsValue[this.field];
+    },
+    hasPermission(): boolean {
+      return this.model.permissions[this.field];
     }
   },
   methods: {
-    loadData() {
-      requestFieldData(this.taskId, this.field);
-    },
     approve() {
       approve(this.taskId, this.field);
     },
-
     retake() {
       MessageBox.prompt("原因", "设为返修")
         .then((result: any) => {
@@ -65,9 +72,6 @@ export default Vue.extend({
           Message({ message: "取消操作" });
         });
     }
-  },
-  created() {
-    this.loadData();
   }
 });
 </script>

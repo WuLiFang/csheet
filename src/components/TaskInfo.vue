@@ -1,39 +1,77 @@
 <template lang="pug">
     .task-info
-      TaskInfoPiplineBadge(v-for="i in model" :model="i" :key="i.order" :videoId='id') {{model}}
+      TaskInfoPiplineBadge(v-for="i in tasks" :taskId="i" :key="i")
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import _ from "lodash";
 
 import TaskInfoPiplineBadge from "./TaskInfoPiplineBadge.vue";
-import { taskDataHub, requestTaskData } from "../hub";
-import { TaskDataModel } from "../interface";
+import { cgTeamWorkComputedMinxin } from "../store/cgteamwork-task";
+import { CGTeamWorkTaskData, VideoResponse } from "../interface";
+import { videoComputedMinxin } from "../store/video";
+import {
+  CGTeamWorkTaskReadActionPayload,
+  CGTEAMWORK_TASK
+} from "@/mutation-types";
 
 export default Vue.extend({
   props: {
     id: { type: String }
   },
-  data() {
-    return {
-      hub: taskDataHub
-    };
-  },
   components: {
     TaskInfoPiplineBadge
   },
   computed: {
-    model(): Array<TaskDataModel> {
-      return this.hub[this.id] || [];
+    ...cgTeamWorkComputedMinxin,
+    ...videoComputedMinxin,
+    video(): VideoResponse | undefined {
+      return this.videoStore.storage[this.id];
+    },
+    tasks(): string[] {
+      if (!this.video) {
+        return [];
+      }
+      return _.orderBy(this.video.related_tasks, this.badge_key);
+    }
+  },
+  methods: {
+    badge_key(id: string) {
+      let task = this.cgTeamworkTaskStore.storage[id];
+      if (!task) {
+        return null;
+      }
+      const pipeline = task.pipeline;
+      return [
+        pipeline === "输出",
+        pipeline === "合成",
+        pipeline === "渲染",
+        pipeline === "灯光",
+        pipeline === "特效",
+        pipeline === "解算",
+        pipeline === "动画",
+        pipeline === "Layout",
+        pipeline
+      ];
+    },
+    readTaskData() {
+      if (!this.video) {
+        return;
+      }
+      this.video.related_tasks.forEach(i => {
+        const payload: CGTeamWorkTaskReadActionPayload = { id: i };
+        this.$store.dispatch(CGTEAMWORK_TASK.READ, payload);
+      });
     }
   },
   watch: {
-    id(value) {
-      requestTaskData(value);
+    id() {
+      this.readTaskData();
     }
   },
   mounted() {
-    requestTaskData(this.id);
+    this.readTaskData();
   }
 });
 </script>

@@ -3,13 +3,15 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from flask import flash, redirect, render_template, request, session
+from functools import wraps
+
+from flask import flash, redirect, render_template, request, session, url_for
 from six import text_type
 
 import cgtwq
 
-from .app import APP
 from ..__about__ import __version__
+from .app import APP
 
 
 @APP.route('/login', methods=['GET', 'POST'])
@@ -37,3 +39,20 @@ def logout():
     session.clear()
     if request.method == 'GET':
         return redirect('/')
+    return 'Logged out'
+
+
+def require_login(func):
+    """Decorator, require login before return view.   """
+
+    @wraps(func)
+    def _func(*args, **kwargs):
+        try:
+            if session.get('token'):
+                return func(*args, **kwargs)
+        except cgtwq.LoginError:
+            pass
+
+        return redirect(url_for('login', **{'from': request.full_path}))
+
+    return _func

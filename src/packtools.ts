@@ -1,1 +1,1 @@
-export const isFileProtocol = window.location.protocol === 'file:'
+export const isFileProtocol = window.location.protocol === 'file:';

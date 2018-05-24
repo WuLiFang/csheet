@@ -5,15 +5,17 @@ from __future__ import (absolute_import, division, print_function,
 
 import json
 import logging
-import cgtwq
+from collections import namedtuple
 from contextlib import contextmanager
 from functools import wraps
 
-from sqlalchemy import Boolean, Column, Float, String, create_engine, orm, Table, ForeignKey
+from sqlalchemy import (Boolean, Column, Float, ForeignKey, String, Table,
+                        create_engine, orm)
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.types import VARCHAR, TypeDecorator, Unicode
 
+import cgtwq
 from wlf.path import get_unicode as u
 from wlf.path import PurePath
 
@@ -146,19 +148,33 @@ class Video(Base, SerializableMixin):
                                     poster=poster,
                                     is_need_update=True)
 
-    def to_tuple(self):
-        """Convert video to tuple for frontend transfer.  """
-
-        ret = (self.uuid,
-               self.label,
-               self.thumb_mtime,
-               self.poster_mtime,
-               self.preview_mtime,
-               self.src,
-               self.poster)
-        ret = tuple(i.as_posix() if isinstance(
-            i, PurePath) else i for i in ret)
+    def serialize(self):
+        ret = super(Video, self).serialize()
+        ret['related_tasks'] = [i.uuid for i in self.related_tasks]
         return ret
+
+
+class TaskInfo(namedtuple(
+        'TaskInfo',
+        ('pipeline', 'artist', 'leader_status',
+         'director_status', 'client_status', 'note_num', 'id'))):
+    """Task information.  """
+
+    def sort_key(self):
+        """Key for list sort . """
+
+        pipeline = self.pipeline
+        return (
+            pipeline == '输出',
+            pipeline == '合成',
+            pipeline == '渲染',
+            pipeline == '灯光',
+            pipeline == '特效',
+            pipeline == '解算',
+            pipeline == '动画',
+            pipeline == 'Layout',
+            pipeline
+        )
 
 
 class CGTeamWorkTask(Base, SerializableMixin):
@@ -179,6 +195,19 @@ class CGTeamWorkTask(Base, SerializableMixin):
 
         return cgtwq.Database(self.database).module(self.module).select(self.uuid).to_entry()
 
+    def get_entry_data(self, token):
+        """CGTeamWork Entry data for frontend.  """
+
+        entry = self.to_entry()
+        entry.token = token
+        data = entry.get_fields(*TaskInfo._fields)
+        data = TaskInfo(*data)
+        permissions = {i: entry.flow.has_field_permission(i)
+                       for i in TaskInfo._fields
+                       if i.endswith('status')}
+        data += tuple([permissions])
+        return data
+
 
 def format_videos(videos):
     """Format videos for front end.
@@ -193,7 +222,7 @@ def format_videos(videos):
     ret = []
     for i in videos:
         assert isinstance(i, Video)
-        row = i.to_tuple()
+        row = i.serialize()
         ret.append(row)
     return ret
 

@@ -16,8 +16,8 @@
       div.pack(v-if='isShowPack')
         a(:href="packURL" :download="packFilename" @click='isShowPack = false')
           button 打包
-    Lightbox(v-for='video in videos' :video='video' :isVisible='filter(video)' :key='video.label' @click="onclick" :isShowTitle='isShowTitle')
-    TheCSheetViewer(:video.sync='current')
+    Lightbox(v-for='video in videos' :id='video.uuid' :isVisible='filter(video)' :key='video.label' @click="onclick" :isShowTitle='isShowTitle')
+    TheCSheetViewer(:videoId.sync='current')
 </template>
 
 <script lang="ts">
@@ -27,16 +27,14 @@ import * as _ from "lodash";
 
 import Lightbox from "./Lightbox.vue";
 import TheCSheetViewer from "./TheCSheetViewer.vue";
-import { VideoStorage, CSheetVideo } from "../video";
 import { isFileProtocol } from "../packtools";
+import { videoComputedMinxin } from "../store/video";
+import { VideoResponse } from "../interface";
 
 export default Vue.extend({
-  props: {
-    videos: { type: <() => VideoStorage>Object }
-  },
   data() {
     return {
-      current: <CSheetVideo | null>null,
+      current: null as string | null,
       isShowTitle: false,
       isShowPack: isFileProtocol ? false : true,
       filterText: "",
@@ -45,6 +43,10 @@ export default Vue.extend({
     };
   },
   computed: {
+    ...videoComputedMinxin,
+    videos(): VideoResponse[] {
+      return _.values(this.videoStore.storage);
+    },
     packURL(): string {
       return `${window.location.origin}${window.location.pathname}${window
         .location.search || "?"}&pack=1`;
@@ -54,22 +56,24 @@ export default Vue.extend({
     }
   },
   methods: {
-    onclick(video: CSheetVideo) {
-      this.current = video;
+    onclick(video: VideoResponse) {
+      this.current = video.uuid;
     },
-    filter(video: CSheetVideo): boolean {
+    filter(video: VideoResponse): boolean {
       if (!this.filterText) {
         return true;
       }
       return new RegExp(this.filterText, "i").test(video.label);
     },
     count() {
-      let videos = _.filter(this.videos, value => value.isVisible);
-      this.avaliableCount = _.filter(
-        videos,
-        value => value.poster_mtime !== null
-      ).length;
-      this.totalCount = videos.length;
+      this.avaliableCount = this.videos.filter(i => {
+        const element = this.videoElementHub.get(i.uuid);
+        if (!element || element.hidden) {
+          return false;
+        }
+        return Boolean(i.poster_mtime);
+      }).length;
+      this.totalCount = this.videos.length;
     }
   },
   components: {

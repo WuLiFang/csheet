@@ -13,7 +13,7 @@ from . import core
 from ..__about__ import __version__
 from ..page import CGTeamWorkPage, LocalPage
 from .app import APP
-from .util import require_login
+from .login import require_login
 
 
 @APP.route('/')

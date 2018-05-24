@@ -9,7 +9,7 @@ from flask_restful import Api, Resource, reqparse
 
 from . import core
 from .app import APP
-from .util import require_login
+from .login import require_login
 
 API = Api(APP, '/api')
 
@@ -37,13 +37,13 @@ class Task(Resource):
     """Api for video related task.  """
 
     @staticmethod
+    @require_login
     def get(id_):
         """Get task info.  """
 
         with core.database_session() as sess:
-            video = core.get_video(id_, sess)
-            select = video.get_select()
-        return core.get_task_data(select)
+            task = core.get_task(id_, sess)
+            return task.get_entry_data(session['token'])
 
 
 API.add_resource(Task, '/task/<id_>')
@@ -53,14 +53,16 @@ class TaskField(Resource):
     """Api for task info"""
 
     @staticmethod
+    @require_login
     def get(uuid, name, **_):
         """Get field info.  """
 
         with core.database_session() as sess:
-            entry = core.get_entry(uuid, sess)
+            entry = core.get_task(uuid, sess).to_entry()
         return core.get_field_data(entry, name)
 
     @staticmethod
+    @require_login
     def put(uuid, name, **_):
         """Change field value.  """
 
@@ -69,7 +71,7 @@ class TaskField(Resource):
         args = parser.parse_args()
 
         with core.database_session() as sess:
-            entry = core.get_entry(uuid, sess)
+            entry = core.get_task(uuid, sess).to_entry()
 
         if not entry.flow.has_field_permission(name):
             abort(make_response('无权限修改', 403))
@@ -92,7 +94,7 @@ class TaskNote(Resource):
         args = parser.parse_args()
 
         with core.database_session() as sess:
-            entry = core.get_entry(uuid, sess)
+            entry = core.get_task(uuid, sess).to_entry()
 
         entry.notify.add(text=args.text, account=session['account_id'])
 

@@ -1,6 +1,6 @@
 <template lang="pug">
-  .viewer(v-show='video')
-    .overlay(@click='setVideo(null)')
+  .the-csheet-viewer(v-show='video')
+    .overlay(@click='setVideoId(null)')
     .detail(v-if='video')
       TaskInfo(:id="video.uuid")
       FileInfo(:id="video.uuid")
@@ -20,8 +20,8 @@
     .center(v-else-if='poster')
       Spinner(size='large' message='读取中' text-fg-color='white')
     .center.failed(v-else) 不可用
-    .prev(:class='{disabled: !prev}' @click='prev ? setVideo(prev) : null')
-    .next(:class='{disabled: !next}' @click='next ? setVideo(next) : null')
+    .prev(:class='{disabled: !prev}' @click='prev ? setVideoId(prev.uuid) : null')
+    .next(:class='{disabled: !next}' @click='next ? setVideoId(next.uuid) : null')
     .bottom
       span.caption {{ video ? video.label : ''}}
 </template>
@@ -35,18 +35,25 @@ import Spinner from "vue-simple-spinner";
 import TaskInfo from "./TaskInfo.vue";
 import FileInfo from "./FileInfo.vue";
 
-import { CSheetVideo, Role } from "../video";
-import { VideoBus } from "../csheet";
 import { isFileProtocol } from "../packtools";
+import { videoComputedMinxin } from "../store/video";
+import { LoadStatus } from "../store/types";
+import { VideoResponse, VideoRole } from "../interface";
+import {
+  VideoLoadPosterActionPayload,
+  LOAD_VIDEO_POSTER,
+  VideoReadActionPayload,
+  VIDEO
+} from "../mutation-types";
 
 export default Vue.extend({
   props: {
-    video: { type: CSheetVideo, default: null }
+    videoId: { type: String, default: null }
   },
   data() {
     return {
       note: "<div>test</div>",
-      isFileProtocol: isFileProtocol
+      isFileProtocol
     };
   },
   components: {
@@ -55,54 +62,52 @@ export default Vue.extend({
     FileInfo
   },
   computed: {
+    ...videoComputedMinxin,
     poster(): string | null {
-      if (!this.video) {
-        return null;
-      }
-      let mtime = this.video.poster_mtime;
-      return this.video.getPath(Role.poster);
+      return this.getVideoURI(this.videoId, VideoRole.poster);
     },
     posterReady(): boolean {
-      return Boolean(this.poster && this.video && this.video.posterReady);
+      return this.videoStore.posterStatusMap[this.videoId] === LoadStatus.ready;
     },
     posterFailed(): boolean {
-      return Boolean(this.poster && this.video && this.video.posterFailed);
+      return (
+        this.videoStore.posterStatusMap[this.videoId] === LoadStatus.failed
+      );
     },
     preview(): string | null {
-      if (!this.video) {
-        return null;
-      }
-      let mtime = this.video.preview_mtime;
-      return this.video.getPath(Role.preview);
+      return this.getVideoURI(this.videoId, VideoRole.preview);
     },
-    videoList(): Array<CSheetVideo> {
-      return _.toArray(VideoBus);
+    videoList(): VideoResponse[] {
+      return _.sortBy(this.videoStore.storage, v => v.label);
+    },
+    video(): VideoResponse {
+      return this.videoStore.storage[this.videoId];
     },
     videoElement(): HTMLVideoElement | undefined {
-      return <HTMLVideoElement | undefined>this.$refs.video;
+      return this.$refs.video as HTMLVideoElement | undefined;
     },
     index(): number | null {
-      if (!this.video) {
+      if (!this.videoId) {
         return null;
       }
       return this.videoList.indexOf(this.video);
     },
-    next(): CSheetVideo | null {
+    next(): VideoResponse | null {
       if (this.index === null) {
         return null;
       }
-      let ret = _.find(
+      const ret = _.find(
         this.videoList,
         value => Boolean(value.poster_mtime),
         this.index + 1
       );
       return ret ? ret : null;
     },
-    prev(): CSheetVideo | null {
+    prev(): VideoResponse | null {
       if (!this.index) {
         return null;
       }
-      let ret = _.findLast(
+      const ret = _.findLast(
         this.videoList,
         value => Boolean(value.poster_mtime),
         this.index - 1
@@ -110,27 +115,29 @@ export default Vue.extend({
       return ret ? ret : null;
     },
     url(): string {
-      let hash = this.video ? `#${this.video.label}` : "";
+      const hash = this.video ? `#${this.video.label}` : "";
       return `${window.location.href.split("#")[0]}${hash}`;
     }
   },
   methods: {
-    setVideo(video: CSheetVideo | null) {
-      this.$emit("update:video", video);
+    setVideoId(id: string | null) {
+      this.$emit("update:videoId", id);
     },
     refresh() {
-      if (!this.video) {
-        return;
-      }
-      let now = new Date().getTime();
-      this.video.thumb_mtime = now;
-      this.video.poster_mtime = now;
-      this.video.preview_mtime = now;
-      this.video.posterReady = false;
-      this.video.loadPoster();
+      const payload: VideoReadActionPayload = { id: this.videoId };
+      this.$store.dispatch(VIDEO.READ, payload);
+      // if (!this.video) {
+      //   return;
+      // }
+      // let now = new Date().getTime();
+      // this.video.thumb_mtime = now;
+      // this.video.poster_mtime = now;
+      // this.video.preview_mtime = now;
+      // this.video.posterReady = false;
+      // this.video.loadPoster();
     },
     onloadedmetadata(event: Event) {
-      let element = <HTMLVideoElement>event.target;
+      const element = event.target as HTMLVideoElement;
       element.controls = element.duration > 0.1;
     },
     ondragstart(event: DragEvent) {
@@ -156,7 +163,7 @@ export default Vue.extend({
       event.dataTransfer.setData("text/plain", plainData);
     },
     parseHash() {
-      let hash = window.location.hash.slice(1);
+      const hash = window.location.hash.slice(1);
       if (!hash) {
         return;
       }
@@ -165,40 +172,43 @@ export default Vue.extend({
         value => value.label == hash
       );
       if (index < 0) {
-        let match = /^image(\d+)/.exec(hash);
+        const match = /^image(\d+)/.exec(hash);
         index = match && Number(match[1]);
       }
       if (index) {
-        this.setVideo(this.videoList[index]);
+        this.setVideoId(this.videoList[index].uuid);
       }
     },
     setupShortcut() {
       window.addEventListener("keyup", (event: KeyboardEvent) => {
         switch (event.key) {
           case "ArrowLeft": {
-            this.prev ? this.setVideo(this.prev) : null;
+            this.prev ? this.setVideoId(this.prev.uuid) : null;
             break;
           }
           case "ArrowRight": {
-            this.next ? this.setVideo(this.next) : null;
+            this.next ? this.setVideoId(this.next.uuid) : null;
             break;
           }
         }
       });
+    },
+    loadPoster(id: string) {
+      const payload: VideoLoadPosterActionPayload = { id };
+      this.$store.dispatch(LOAD_VIDEO_POSTER, payload);
     }
   },
   watch: {
-    video(value: CSheetVideo | null) {
+    videoId(value: string | null) {
       if (value) {
-        value.scrollToThis();
-        value.loadPoster();
+        this.scrollTo(value);
+        this.loadPoster(value);
         if (this.next) {
-          this.next.loadPoster();
+          this.loadPoster(this.next.uuid);
         }
         if (this.prev) {
-          this.prev.loadPoster();
+          this.loadPoster(this.prev.uuid);
         }
-
         window.location.replace(this.url);
       }
     },
@@ -215,103 +225,103 @@ export default Vue.extend({
 });
 </script>
 <style lang="scss" scoped>
-* {
+.the-csheet-viewer {
   color: white;
-}
-button {
-  color: black;
-}
-.viewer {
   position: fixed;
   width: 100%;
   height: 100%;
-}
-.overlay {
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  background: rgba(1, 1, 1, 0.5);
-  cursor: zoom-out;
-}
-.failed {
-  color: lightcoral;
-}
-.detail {
-  color: grey;
-  z-index: 3;
-  display: block;
-  position: fixed;
   left: 0;
   top: 0;
-  margin: 5px;
-  max-height: 100%;
-  overflow-y: auto;
-}
-.topright {
-  position: fixed;
-  right: 0;
-  top: 0;
-  margin: 0.5%;
-}
-
-.center {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -52%);
-  max-width: 90%;
-  max-height: 90%;
-  &:hover {
+  button {
+    color: black;
+  }
+  .overlay {
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background: rgba(1, 1, 1, 0.5);
+    cursor: zoom-out;
+  }
+  .failed {
+    color: lightcoral;
+  }
+  .detail {
+    color: grey;
     z-index: 3;
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    margin: 5px;
+    max-height: 100%;
+    overflow-y: auto;
   }
-}
-.bottom {
-  z-index: 3;
-  position: absolute;
-  box-sizing: border-box;
-  text-align: center;
-  bottom: 0;
-  width: 100%;
-  margin: 0.5%;
-  .caption {
-    max-width: 80%;
-    color: #eee;
-    text-shadow: 1px 1px 0 black;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 0.5em;
+  .topright {
+    position: fixed;
+    right: 0;
+    top: 0;
+    margin: 0.5%;
   }
-}
-.prev,
-.next {
-  color: burlywood;
-  z-index: 4;
-  position: fixed;
-  text-decoration: none;
-  font-size: 3em;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 5% 2%;
-  top: 50%;
-  transition: 0.4s ease-in-out;
-  transform: translate(0%, -50%);
-  &:hover {
-    background: rgba(255, 255, 255, 0.2);
+
+  .center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -52%);
+    max-width: 90%;
+    max-height: 90%;
+    &:hover {
+      z-index: 3;
+    }
   }
-  cursor: pointer;
-  &.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  .bottom {
+    z-index: 3;
+    position: absolute;
+    box-sizing: border-box;
+    text-align: center;
+    bottom: 0;
+    width: 100%;
+    margin: 0.5%;
+    .caption {
+      max-width: 80%;
+      color: #eee;
+      text-shadow: 1px 1px 0 black;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 0.5em;
+    }
   }
-}
-.prev {
-  left: 1%;
-  &:before {
-    content: "<";
+  .prev,
+  .next {
+    color: burlywood;
+    z-index: 4;
+    position: fixed;
+    text-decoration: none;
+    font-size: 3em;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 5% 2%;
+    top: 50%;
+    transition: 0.4s ease-in-out;
+    transform: translate(0%, -50%);
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    cursor: pointer;
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
   }
-}
-.next {
-  right: 1%;
-  &:after {
-    content: ">";
+  .prev {
+    left: 1%;
+    &:before {
+      content: "<";
+    }
+  }
+  .next {
+    right: 1%;
+    &:after {
+      content: ">";
+    }
   }
 }
 </style>

@@ -1,10 +1,11 @@
 <template lang="pug">
-  div.lightbox(
-    :class='{shrink: !video.thumb_mtime}'
+  .lightbox(
+    :class='{shrink: (!video.thumb_mtime || forceShrink)}'
     @click='onclick'
     @dragstart='ondragstart'
     @mouseenter="onmouseenter" 
     @mouseleave="onmouseleave" 
+    :hidden='!isVisible'
     v-show='isVisible'
     draggable
   )
@@ -23,29 +24,45 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { CSheetVideo, Role } from "../video";
+
 import { isFileProtocol } from "../packtools";
+import { videoComputedMinxin } from "../store/video";
+import { VideoResponse, VideoRole } from "../interface";
+import {
+  VideoSetVisibilityMutationPayload,
+  SET_VIDEO_VISIBILITY,
+  VideoUpdateAppearingMutationPayload,
+  VideoUpdatePositionMutationPayload,
+  UPDATE_VIDEO_POSITION
+} from "../mutation-types";
+import { PositionData } from "@/store/types";
 export default Vue.extend({
   props: {
-    video: { type: CSheetVideo },
+    id: { type: String },
     isShowTitle: { default: false },
     isVisible: { default: false }
   },
   data() {
     return {
       isLoadVideo: false,
-      isAutoplay: false
+      isAutoplay: false,
+      forceShrink: false
     };
   },
   computed: {
+    ...videoComputedMinxin,
+    top(): number {
+      return this.$el.offsetTop;
+    },
+    video(): VideoResponse {
+      return this.videoStore.storage[this.id];
+    },
     thumb(): string | null {
-      let mtime = this.video.thumb_mtime;
-      return this.video.getPath(Role.thumb);
+      return this.getVideoURI(this.id, VideoRole.thumb);
     },
     preview(): string | null {
-      if (this.isLoadVideo && this.video.isRecentlyAppreared) {
-        let mtime = this.video.preview_mtime;
-        return this.video.getPath(Role.preview);
+      if (this.isLoadVideo) {
+        return this.getVideoURI(this.id, VideoRole.preview);
       }
       return null;
     },
@@ -58,7 +75,7 @@ export default Vue.extend({
       return {};
     },
     videoElement(): HTMLVideoElement {
-      return <HTMLVideoElement>this.$refs.video;
+      return this.$refs.video as HTMLVideoElement;
     }
   },
   methods: {
@@ -102,31 +119,20 @@ export default Vue.extend({
       if (this.isAutoplay) {
         this.play();
       }
-    },
-    setUpVideo() {
-      this.video.lightboxElement = this.$el;
-      this.video.isVisible = this.isVisible;
     }
   },
   watch: {
-    isVisible(value) {
-      this.video.isVisible = value;
-      if (!value) {
-        this.video.isRecentlyAppreared = false;
-      }
-    },
-    video(value) {
-      this.setUpVideo();
-    },
     preview(value) {
       this.videoElement.load();
-      if(!value){
+      if (!value) {
         this.isLoadVideo = false;
       }
     }
   },
   mounted() {
-    this.setUpVideo();
+    this.$nextTick(() => {
+      this.videoElementHub.set(this.id, this.$el);
+    });
   }
 });
 </script>
