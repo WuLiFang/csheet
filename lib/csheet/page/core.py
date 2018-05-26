@@ -135,6 +135,7 @@ class BasePage(object):
             self.is_pack = False
         index_page = self._pack_entry(zipfile, index_page, 'vendors~csheet')
         index_page = self._pack_entry(zipfile, index_page, 'csheet')
+        index_page = self._pack_entry(zipfile, index_page, 'csheet_noscript')
         zipfile.writestr('{}.html'.format(self.title.replace('\\', '_')),
                          index_page.encode('utf-8'))
 
