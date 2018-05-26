@@ -7,8 +7,6 @@ import 'element-ui/lib/theme-chalk/index.css';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 
-import './csheet.scss?external';
-
 import TheCSheet from './components/TheCSheet.vue';
 
 import SocketIO from './socketio';

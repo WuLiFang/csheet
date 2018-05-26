@@ -24,6 +24,8 @@ def main():
          'local.html', _inject_text('/csheet.js'))
     ]
 
+    original_root_path = APP.root_path
+    original_tempaltes_folder = csheet.page.core.BasePage.templates_folder
     APP.root_path = util.path('../public')
     csheet.page.core.BasePage.templates_folder = util.path(
         '../public/templates')
@@ -40,6 +42,9 @@ def main():
         with open(util.path('pages', filename), 'w') as f:
             f.write(resp.data)
             f.write(inject_text)
+
+    csheet.page.core.BasePage.templates_folder = original_tempaltes_folder
+    APP.root_path = original_root_path
 
 
 if __name__ == '__main__':

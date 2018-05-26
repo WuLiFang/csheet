@@ -17,8 +17,13 @@
 
 <body>
     <div id='app' data-page='{{ dump(videos) }}'>
-        <noscript>
+        <noscript class="noscript">
+            <link href="{{ config.assets['csheet_noscript']['css'] }}" rel="stylesheet" type="text/css" />
             <header>
+                <p>
+                    <div style="font-weight:bold">兼容模式</div>
+                    <div style="font-size:0.5em">请启用javascript以使用完整功能</div>
+                </p>
                 <div id="count">
                     {{ videos.__len__() }}
                 </div>
@@ -26,9 +31,7 @@
                     {% block nav %} {% endblock %}
                 </nav>
             </header>
-            {% for i in config.static %} {% if i.endswith('.css') %}
-            <link href="{{ config.assets['csheet_noscript']['css'] }}" rel="stylesheet" type="text/css" /> {% endif %} {% endfor %}
-            <ul class="noscript">
+            <ul>
                 {% for video in videos %} {% set thumb = video.get('thumb',config.is_pack) %} {% set poster = video.get('poster', config.is_pack)
                 %} {% set preview = video.get('preview', config.is_pack) %}
                 <li class="lightbox" id="image{{ loop.index }}">
@@ -40,9 +43,7 @@
                     </a>
                     <div class="viewer">
                         <a class="close" href="#void"> </a>
-                        <div class='full'>
-                            <img alt="no image" src="{{ poster }}" />
-                        </div>
+                        <img class='full' alt="no image" src="{{ poster }}" />
                         <div class="bottom">
                             <div class='caption' title="{{ video.label | e }}">
                                 <span>{{ video.label | e }} </span>
