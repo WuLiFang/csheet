@@ -1,7 +1,11 @@
 language: python
 python:
   - "2.7"
+node_js:
+  - "node"
 install:
+  - npm install -g cnpm
+  - cnpm i
   - yes "" | sudo add-apt-repository ppa:mc3man/trusty-media
   - sudo apt-get update
   - sudo apt-get install ffmpeg && ffmpeg -version
@@ -15,6 +19,7 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
+  - npm run build
   - export PYTHONPATH=lib
   - coverage run -m pytest ./tests && coverage report
 after_script:
