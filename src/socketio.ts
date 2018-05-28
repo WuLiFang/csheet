@@ -5,7 +5,7 @@ import { Store } from 'vuex';
 
 import { isFileProtocol } from './packtools';
 import { CombinedRootState, RootState } from './store/types';
-import { VideoResponse } from './interface';
+import { VideoResponse, VideoRole } from './interface';
 import { VideoReadMutationPayload, VIDEO } from './mutation-types';
 
 const isSupportNotify =
@@ -52,7 +52,7 @@ export default class SocketIO {
       }
       const payload: VideoReadMutationPayload = { id: value.uuid, data: value };
       this.store.commit(VIDEO.READ, payload);
-      const thumb = this.store.getters.videoURIMap.thumb[value.uuid];
+      const thumb = this.store.getters.getVideoURI(value.uuid, VideoRole.thumb);
       if (isSupportNotify) {
         new Notify('文件更新', {
           body: value.label,
