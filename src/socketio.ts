@@ -47,6 +47,9 @@ export default class SocketIO {
   }
   public on_asset_update(message: VideoResponse[]) {
     _.each(message, value => {
+      if (!this.store.state.videoStore.storage[value.uuid]) {
+        return;
+      }
       const payload: VideoReadMutationPayload = { id: value.uuid, data: value };
       this.store.commit(VIDEO.READ, payload);
       const thumb = this.store.getters.videoURIMap.thumb[value.uuid];
