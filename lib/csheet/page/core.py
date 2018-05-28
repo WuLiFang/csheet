@@ -10,7 +10,7 @@ from abc import abstractmethod
 from tempfile import TemporaryFile
 from zipfile import ZipFile
 
-from gevent import spawn
+from gevent import spawn, sleep
 from jinja2 import Environment, FileSystemLoader
 
 from wlf.path import get_encoded as e
@@ -99,6 +99,7 @@ class BasePage(object):
                 cls._pack_one_video(video, zipfile)
             except OSError:
                 LOGGER.error('Error during pack', exc_info=True)
+            sleep()
 
     @staticmethod
     def _pack_one_video(video, zipfile):
