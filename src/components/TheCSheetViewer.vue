@@ -217,6 +217,11 @@ export default Vue.extend({
         window.location.replace(this.url);
       }
     },
+    preview(value) {
+      if (value === null) {
+        this.reset();
+      }
+    },
   },
   created() {
     this.setupShortcut();

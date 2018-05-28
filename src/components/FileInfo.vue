@@ -1,12 +1,15 @@
 <template lang="pug">
     .file-info(v-if='videoData')
-      .time
-        | 单帧:
+      .time(v-show='videoData.poster_mtime')
+        | 图像:
         RelativeTime(:timestamp='videoData.poster_mtime')
       br
-      .time
+      .time(v-show='videoData.src_mtime')
         | 视频:
         RelativeTime(:timestamp='videoData.src_mtime')
+        span.warn(v-show='videoData.preview_mtime != videoData.src_mtime')
+          | 当前预览非最新:
+          RelativeTime(:timestamp='videoData.preview_mtime')
 </template>
 
 
@@ -39,6 +42,9 @@ export default Vue.extend({
   margin: 5px;
   .time {
     display: inline-block;
+    .warn {
+      background: crimson;
+    }
   }
   color: white;
   opacity: 0.5;
