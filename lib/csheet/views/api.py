@@ -49,6 +49,13 @@ class Task(Resource):
 API.add_resource(Task, '/task/<id_>')
 
 
+def _get_entry(uuid):
+    with core.database_session() as sess:
+        entry = core.get_task(uuid, sess).to_entry()
+    entry.token = session['token']
+    return entry
+
+
 class TaskField(Resource):
     """Api for task info"""
 
@@ -57,8 +64,8 @@ class TaskField(Resource):
     def get(uuid, name, **_):
         """Get field info.  """
 
-        with core.database_session() as sess:
-            entry = core.get_task(uuid, sess).to_entry()
+        entry = _get_entry(uuid)
+
         return core.get_field_data(entry, name)
 
     @staticmethod
@@ -70,8 +77,7 @@ class TaskField(Resource):
         parser.add_argument('value', required=True)
         args = parser.parse_args()
 
-        with core.database_session() as sess:
-            entry = core.get_task(uuid, sess).to_entry()
+        entry = _get_entry(uuid)
 
         if not entry.flow.has_field_permission(name):
             abort(make_response('无权限修改', 403))
@@ -86,6 +92,7 @@ class TaskNote(Resource):
     """Api for task note.  """
 
     @staticmethod
+    @require_login
     def post(uuid, **_):
         """Add new note.  """
 
@@ -93,8 +100,7 @@ class TaskNote(Resource):
         parser.add_argument('text', required=True)
         args = parser.parse_args()
 
-        with core.database_session() as sess:
-            entry = core.get_task(uuid, sess).to_entry()
+        entry = _get_entry(uuid)
 
         entry.notify.add(text=args.text, account=session['account_id'])
 
