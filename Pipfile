@@ -1,29 +1,34 @@
 [[source]]
+
 url = "https://mirrors.aliyun.com/pypi/simple"
 verify_ssl = true
 name = "pypi"
 
+
 [dev-packages]
+
 pylint = "*"
 "autopep8" = "*"
 rope = "*"
 pytest = "*"
 
+
 [packages]
+
 gevent = "*"
-Flask = "*"
+flask = "*"
 diskcache = "*"
 "pathlib2" = ">=2.3.0"
 openpyxl = ">=2.5.1"
 psutil = ">=5.4.3"
 "beautifulsoup4" = ">=4.6.0"
-"Qt.py" = ">=1.1.0"
+"qt.py" = ">=1.1.0"
 pyblish = ">=1.4.3"
 requests = ">=2.18.4"
 websocket-client = ">=0.47.0"
 raven = {extras = ["flask"]}
-SQLAlchemy = "*"
-Flask-SocketIO = "*"
-Flask-RESTful = "*"
-wlf = {file = "https://github.com/WuLiFang/wlf/archive/0.3.11.tar.gz"}
+sqlalchemy = "*"
+flask-socketio = "*"
+flask-restful = "*"
 cgtwq = {file = "https://github.com/WuLiFang/cgtwq/archive/1.3.1.tar.gz"}
+wlf = {file = "https://github.com/WuLiFang/wlf/archive/0.3.12.tar.gz"}
