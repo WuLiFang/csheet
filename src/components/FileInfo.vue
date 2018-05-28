@@ -7,9 +7,12 @@
       .time(v-show='videoData.src_mtime')
         | 视频:
         RelativeTime(:timestamp='videoData.src_mtime')
-        span.warn(v-show='videoData.preview_mtime != videoData.src_mtime')
-          | 当前预览非最新:
-          RelativeTime(:timestamp='videoData.preview_mtime')
+        span.message(v-show='videoData.preview_mtime != videoData.src_mtime')
+          span.outdated(v-if='videoData.preview_mtime')
+            | 预览非最新:
+            RelativeTime(:timestamp='videoData.preview_mtime')
+          span.notready(v-else)
+            | 预览未就绪: 等待转码
 </template>
 
 
@@ -42,8 +45,11 @@ export default Vue.extend({
   margin: 5px;
   .time {
     display: inline-block;
-    .warn {
+    .outdated {
       background: crimson;
+    }
+    .notready {
+      background: darkorange;
     }
   }
   color: white;
