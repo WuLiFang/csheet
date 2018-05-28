@@ -12,7 +12,10 @@ import {
     CGTEAMWORK_TASK,
     CGTeamWorkTaskReadActionPayload,
     CGTeamWorkTaskReadMutationPayload,
-    CGTeamWorkTaskUpdateActionPayload,
+    CGTeamWorkTaskUpdateFieldActionPayload,
+    UPDATE_CGTEAMWORK_TASK_FIELD,
+    CREATE_CGTEAMWORK_TASK_NOTE,
+    CGTeamWorkTaskCreateNoteActionPayload,
 } from '../mutation-types';
 import { isFileProtocol } from '@/packtools';
 
@@ -60,16 +63,23 @@ const actions: ActionTree<CGTeamworkTaskState, RootState> = {
                 return response;
             });
     },
-    async [CGTEAMWORK_TASK.UPDATE](context, payload: CGTeamWorkTaskUpdateActionPayload) {
+    async [UPDATE_CGTEAMWORK_TASK_FIELD](context, payload: CGTeamWorkTaskUpdateFieldActionPayload) {
         if (isFileProtocol) {
             return;
         }
-        return axios.put(`/api/taks/${payload.id}`, payload.data).then(
+        return axios.put(`/api/task/${payload.id}/${payload.field}`, payload.data).then(
             (response) => {
                 handleCGTeamWorkTaskResponse(context, response);
+                if (payload.reason) {
+                    const notePayload: CGTeamWorkTaskCreateNoteActionPayload = { id: payload.id, text: payload.reason };
+                    context.dispatch(CREATE_CGTEAMWORK_TASK_NOTE, notePayload);
+                }
                 return response;
             },
         );
+    },
+    async [CREATE_CGTEAMWORK_TASK_NOTE](context, payload: CGTeamWorkTaskCreateNoteActionPayload) {
+        return axios.post(`api/task_note/${payload.id}`, { text: payload.text });
     },
 };
 

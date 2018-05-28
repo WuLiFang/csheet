@@ -77,10 +77,20 @@ export interface CGTeamWorkTaskUpdateMutationPayload {
     value: string;
 }
 
-export interface CGTeamWorkTaskUpdateActionPayload {
+export const UPDATE_CGTEAMWORK_TASK_FIELD = 'update_cgteamwork_task_field';
+
+export interface CGTeamWorkTaskUpdateFieldActionPayload {
     id: string;
+    field: string;
+    reason?: string;
     data: {
-        action: 'approve' | 'retake'
-        field: 'leader_status' | 'director_status' | 'client_status',
+        value: string;
     };
+}
+
+export const CREATE_CGTEAMWORK_TASK_NOTE = 'create_cgteamwork_task_note';
+
+export interface CGTeamWorkTaskCreateNoteActionPayload {
+    id: string;
+    text: string;
 }

@@ -77,12 +77,15 @@ class TaskField(Resource):
         parser.add_argument('value', required=True)
         args = parser.parse_args()
 
-        entry = _get_entry(uuid)
+        with core.database_session() as sess:
+            task = core.get_task(uuid, sess)
+            entry = task.to_entry()
+            entry.token = session['token']
 
-        if not entry.flow.has_field_permission(name):
-            abort(make_response('无权限修改', 403))
-        entry[name] = args.value
-        return entry[name]
+            if not entry.flow.has_field_permission(name):
+                abort(make_response('无权限修改', 403))
+            entry[name] = args.value
+            return task.get_entry_data(session['token'])
 
 
 API.add_resource(TaskField, '/task/<uuid>/<name>')

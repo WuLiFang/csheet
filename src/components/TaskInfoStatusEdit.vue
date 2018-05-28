@@ -15,7 +15,6 @@ import Vue from "vue";
 import { Button, ButtonGroup, MessageBox, Message } from "element-ui";
 
 import TaskInfoStatus from "./TaskInfoStatus.vue";
-import { approve, retake } from "../hub";
 import {
   FieldResponse,
   TaskStatus,
@@ -24,6 +23,14 @@ import {
   StringMap
 } from "../interface";
 import { cgTeamWorkComputedMinxin } from "../store/cgteamwork-task";
+import {
+  UPDATE_CGTEAMWORK_TASK_FIELD,
+  CGTeamWorkTaskUpdateFieldActionPayload
+} from "@/mutation-types";
+
+function errorMessage(error: any) {
+  Message({ message: error.response.data, type: "error" });
+}
 
 export default Vue.extend({
   props: {
@@ -61,12 +68,33 @@ export default Vue.extend({
   },
   methods: {
     approve() {
-      approve(this.taskId, this.field);
+      const payload: CGTeamWorkTaskUpdateFieldActionPayload = {
+        id: this.taskId,
+        field: this.field,
+        data: { value: "Approve" }
+      };
+      this.$store
+        .dispatch(UPDATE_CGTEAMWORK_TASK_FIELD, payload)
+        .then(() => {
+          Message({ message: "镜头设为通过", type: "success" });
+        })
+        .catch(errorMessage);
     },
     retake() {
       MessageBox.prompt("原因", "设为返修")
         .then((result: any) => {
-          retake(this.taskId, this.field, result.value);
+          const payload: CGTeamWorkTaskUpdateFieldActionPayload = {
+            id: this.taskId,
+            field: this.field,
+            reason: `返修原因: ${result.value}`,
+            data: { value: "Retake" }
+          };
+          this.$store
+            .dispatch(UPDATE_CGTEAMWORK_TASK_FIELD, payload)
+            .then(() => {
+              Message({ message: "镜头设为返修", type: "success" });
+            })
+            .catch(errorMessage);
         })
         .catch(reason => {
           Message({ message: "取消操作" });
