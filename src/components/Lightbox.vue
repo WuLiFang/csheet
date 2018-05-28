@@ -23,30 +23,30 @@
 
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 
-import { isFileProtocol } from "../packtools";
-import { videoComputedMinxin } from "../store/video";
-import { VideoResponse, VideoRole } from "../interface";
+import { isFileProtocol } from '../packtools';
+import { videoComputedMinxin } from '../store/video';
+import { VideoResponse, VideoRole } from '../interface';
 import {
   VideoSetVisibilityMutationPayload,
   SET_VIDEO_VISIBILITY,
   VideoUpdateAppearingMutationPayload,
   VideoUpdatePositionMutationPayload,
-  UPDATE_VIDEO_POSITION
-} from "../mutation-types";
-import { PositionData } from "@/store/types";
+  UPDATE_VIDEO_POSITION,
+} from '../mutation-types';
+import { PositionData } from '@/store/types';
 export default Vue.extend({
   props: {
     id: { type: String },
     isShowTitle: { default: false },
-    isVisible: { default: false }
+    isVisible: { default: false },
   },
   data() {
     return {
       isLoadVideo: false,
       isAutoplay: false,
-      forceShrink: false
+      forceShrink: false,
     };
   },
   computed: {
@@ -66,21 +66,21 @@ export default Vue.extend({
       }
       return null;
     },
-    captionStyle(): Object {
+    captionStyle(): object {
       if (this.isShowTitle) {
         return {
-          transform: "none"
+          transform: 'none',
         };
       }
       return {};
     },
     videoElement(): HTMLVideoElement {
       return this.$refs.video as HTMLVideoElement;
-    }
+    },
   },
   methods: {
     onclick() {
-      this.$emit("click", this.video);
+      this.$emit('click', this.video);
     },
     ondragstart(event: DragEvent) {
       let plainData = this.video.poster || this.video.src;
@@ -93,13 +93,13 @@ export default Vue.extend({
           decodeURI(
             window.location.pathname.slice(
               0,
-              window.location.pathname.lastIndexOf("/")
-            )
+              window.location.pathname.lastIndexOf('/'),
+            ),
           ) +
-          "/" +
+          '/' +
           plainData;
       }
-      event.dataTransfer.setData("text/plain", plainData);
+      event.dataTransfer.setData('text/plain', plainData);
     },
     play() {
       if (this.videoElement.readyState > 1) {
@@ -119,7 +119,7 @@ export default Vue.extend({
       if (this.isAutoplay) {
         this.play();
       }
-    }
+    },
   },
   watch: {
     preview(value) {
@@ -127,13 +127,13 @@ export default Vue.extend({
       if (!value) {
         this.isLoadVideo = false;
       }
-    }
+    },
   },
   mounted() {
     this.$nextTick(() => {
       this.videoElementHub.set(this.id, this.$el);
     });
-  }
+  },
 });
 </script>
 

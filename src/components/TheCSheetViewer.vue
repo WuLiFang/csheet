@@ -27,39 +27,39 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 
-import * as _ from "lodash";
-import Spinner from "vue-simple-spinner";
+import * as _ from 'lodash';
+import Spinner from 'vue-simple-spinner';
 
-import TaskInfo from "./TaskInfo.vue";
-import FileInfo from "./FileInfo.vue";
+import TaskInfo from './TaskInfo.vue';
+import FileInfo from './FileInfo.vue';
 
-import { isFileProtocol } from "../packtools";
-import { videoComputedMinxin } from "../store/video";
-import { LoadStatus } from "../store/types";
-import { VideoResponse, VideoRole } from "../interface";
+import { isFileProtocol } from '../packtools';
+import { videoComputedMinxin } from '../store/video';
+import { LoadStatus } from '../store/types';
+import { VideoResponse, VideoRole } from '../interface';
 import {
   VideoLoadPosterActionPayload,
   LOAD_VIDEO_POSTER,
   VideoReadActionPayload,
-  VIDEO
-} from "../mutation-types";
+  VIDEO,
+} from '../mutation-types';
 
 export default Vue.extend({
   props: {
-    videoId: { type: String, default: null }
+    videoId: { type: String, default: null },
   },
   data() {
     return {
       isForce: false,
-      isFileProtocol
+      isFileProtocol,
     };
   },
   components: {
     Spinner,
     TaskInfo,
-    FileInfo
+    FileInfo,
   },
   computed: {
     ...videoComputedMinxin,
@@ -99,7 +99,7 @@ export default Vue.extend({
       const ret = _.find(
         this.videoList,
         value => Boolean(value.poster_mtime),
-        this.index + 1
+        this.index + 1,
       );
       return ret ? ret : null;
     },
@@ -110,23 +110,23 @@ export default Vue.extend({
       const ret = _.findLast(
         this.videoList,
         value => Boolean(value.poster_mtime),
-        this.index - 1
+        this.index - 1,
       );
       return ret ? ret : null;
     },
     url(): string {
-      const hash = this.video ? `#${this.video.label}` : "";
-      return `${window.location.href.split("#")[0]}${hash}`;
-    }
+      const hash = this.video ? `#${this.video.label}` : '';
+      return `${window.location.href.split('#')[0]}${hash}`;
+    },
   },
   methods: {
     setVideoId(id: string | null) {
-      this.$emit("update:videoId", id);
+      this.$emit('update:videoId', id);
     },
     refresh() {
       const payload: VideoReadActionPayload = { id: this.videoId };
-      this.reset()
-      this.isForce = true
+      this.reset();
+      this.isForce = true;
       this.$store.dispatch(VIDEO.READ, payload);
     },
     onloadedmetadata(event: Event) {
@@ -147,13 +147,13 @@ export default Vue.extend({
           decodeURI(
             window.location.pathname.slice(
               0,
-              window.location.pathname.lastIndexOf("/")
-            )
+              window.location.pathname.lastIndexOf('/'),
+            ),
           ) +
-          "/" +
+          '/' +
           plainData;
       }
-      event.dataTransfer.setData("text/plain", plainData);
+      event.dataTransfer.setData('text/plain', plainData);
     },
     parseHash() {
       const hash = window.location.hash.slice(1);
@@ -162,7 +162,7 @@ export default Vue.extend({
       }
       let index: number | null = _.findIndex(
         this.videoList,
-        value => value.label == hash
+        value => value.label === hash,
       );
       if (index < 0) {
         const match = /^image(\d+)/.exec(hash);
@@ -173,14 +173,18 @@ export default Vue.extend({
       }
     },
     setupShortcut() {
-      window.addEventListener("keyup", (event: KeyboardEvent) => {
+      window.addEventListener('keyup', (event: KeyboardEvent) => {
         switch (event.key) {
-          case "ArrowLeft": {
-            this.prev ? this.setVideoId(this.prev.uuid) : null;
+          case 'ArrowLeft': {
+            if (this.prev) {
+              this.setVideoId(this.prev.uuid);
+            }
             break;
           }
-          case "ArrowRight": {
-            this.next ? this.setVideoId(this.next.uuid) : null;
+          case 'ArrowRight': {
+            if (this.next) {
+              this.setVideoId(this.next.uuid);
+            }
             break;
           }
         }
@@ -190,13 +194,13 @@ export default Vue.extend({
       const payload: VideoLoadPosterActionPayload = { id };
       this.$store.dispatch(LOAD_VIDEO_POSTER, payload);
     },
-    reset(){
-      this.isForce = false
-      if(this.videoElement){
+    reset() {
+      this.isForce = false;
+      if (this.videoElement) {
         this.videoElement.controls = false;
         this.videoElement.load();
       }
-    }
+    },
   },
   watch: {
     videoId(value: string | null) {
@@ -211,13 +215,13 @@ export default Vue.extend({
         }
         window.location.replace(this.url);
       }
-      this.reset()
+      this.reset();
     },
   },
   created() {
     this.setupShortcut();
     this.parseHash();
-  }
+  },
 });
 </script>
 <style lang="scss" scoped>
@@ -310,13 +314,13 @@ export default Vue.extend({
   .prev {
     left: 1%;
     &:before {
-      content: "<";
+      content: '<';
     }
   }
   .next {
     right: 1%;
     &:after {
-      content: ">";
+      content: '>';
     }
   }
 }

@@ -15,17 +15,16 @@ import { VideoResponse } from '@/interface';
 import { VIDEO, VideoReadMutationPayload } from '@/mutation-types';
 import { isFileProtocol } from '@/packtools';
 
-
 Vue.use(Vuex);
 Vue.use(Icon);
 moment.locale(navigator.language);
 
 const store = new Vuex.Store(_store);
 const vue = new Vue({
-    store,
-    render: (h) => h(TheCSheet),
+  store,
+  render: h => h(TheCSheet),
 }).$mount('#app');
 
 if (!isFileProtocol) {
-    const IO = new SocketIO(store);
+  const IO = new SocketIO(store);
 }

@@ -10,41 +10,41 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 
-import { Button, ButtonGroup, MessageBox, Message } from "element-ui";
+import { Button, ButtonGroup, MessageBox, Message } from 'element-ui';
 
-import TaskInfoStatus from "./TaskInfoStatus.vue";
+import TaskInfoStatus from './TaskInfoStatus.vue';
 import {
   FieldResponse,
   TaskStatus,
   TaskStatusText,
   CGTeamWorkTaskData,
-  StringMap
-} from "../interface";
-import { cgTeamWorkComputedMinxin } from "../store/cgteamwork-task";
+  StringMap,
+} from '../interface';
+import { cgTeamWorkComputedMinxin } from '../store/cgteamwork-task';
 import {
   UPDATE_CGTEAMWORK_TASK_FIELD,
-  CGTeamWorkTaskUpdateFieldActionPayload
-} from "@/mutation-types";
+  CGTeamWorkTaskUpdateFieldActionPayload,
+} from '@/mutation-types';
 
 function errorMessage(error: any) {
-  Message({ message: error.response.data, type: "error" });
+  Message({ message: error.response.data, type: 'error' });
 }
 
 export default Vue.extend({
   props: {
     taskId: { type: String },
-    field: { type: String as () => "leader_status" | "directory_status" }
+    field: { type: String as () => 'leader_status' | 'directory_status' },
   },
   components: {
     TaskInfoStatus,
     Button,
-    ButtonGroup
+    ButtonGroup,
   },
   data() {
     return {
-      TaskStatus
+      TaskStatus,
     };
   },
   computed: {
@@ -56,7 +56,7 @@ export default Vue.extend({
       return {
         leader_status: this.model.leader_status,
         director_status: this.model.director_status,
-        client_status: this.model.client_status
+        client_status: this.model.client_status,
       };
     },
     status(): TaskStatus | null {
@@ -64,43 +64,43 @@ export default Vue.extend({
     },
     hasPermission(): boolean {
       return this.model.permissions[this.field];
-    }
+    },
   },
   methods: {
     approve() {
       const payload: CGTeamWorkTaskUpdateFieldActionPayload = {
         id: this.taskId,
         field: this.field,
-        data: { value: "Approve" }
+        data: { value: 'Approve' },
       };
       this.$store
         .dispatch(UPDATE_CGTEAMWORK_TASK_FIELD, payload)
         .then(() => {
-          Message({ message: "镜头设为通过", type: "success" });
+          Message({ message: '镜头设为通过', type: 'success' });
         })
         .catch(errorMessage);
     },
     retake() {
-      MessageBox.prompt("原因", "设为返修")
+      MessageBox.prompt('原因', '设为返修')
         .then((result: any) => {
           const payload: CGTeamWorkTaskUpdateFieldActionPayload = {
             id: this.taskId,
             field: this.field,
             reason: `返修原因: ${result.value}`,
-            data: { value: "Retake" }
+            data: { value: 'Retake' },
           };
           this.$store
             .dispatch(UPDATE_CGTEAMWORK_TASK_FIELD, payload)
             .then(() => {
-              Message({ message: "镜头设为返修", type: "success" });
+              Message({ message: '镜头设为返修', type: 'success' });
             })
             .catch(errorMessage);
         })
         .catch(reason => {
-          Message({ message: "取消操作" });
+          Message({ message: '取消操作' });
         });
-    }
-  }
+    },
+  },
 });
 </script>
 

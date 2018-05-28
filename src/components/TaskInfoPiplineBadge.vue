@@ -7,31 +7,31 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 
-import { Popover } from "element-ui";
+import { Popover } from 'element-ui';
 
-import TaskInfoStatusEdit from "./TaskInfoStatusEdit.vue";
-import TaskInfoStatus from "./TaskInfoStatus.vue";
-import TaskInfoPiplineBadgePoper from "./TaskInfoPiplineBadgePoper.vue";
+import TaskInfoStatusEdit from './TaskInfoStatusEdit.vue';
+import TaskInfoStatus from './TaskInfoStatus.vue';
+import TaskInfoPiplineBadgePoper from './TaskInfoPiplineBadgePoper.vue';
 
-import { TaskStatus, CGTeamWorkTaskData } from "../interface";
-import { StringIterator } from "lodash";
-import { cgTeamWorkComputedMinxin } from "../store/cgteamwork-task";
+import { TaskStatus, CGTeamWorkTaskData } from '../interface';
+import { StringIterator } from 'lodash';
+import { cgTeamWorkComputedMinxin } from '../store/cgteamwork-task';
 import {
   CGTeamWorkTaskReadActionPayload,
-  CGTEAMWORK_TASK
-} from "@/mutation-types";
+  CGTEAMWORK_TASK,
+} from '@/mutation-types';
 
 export default Vue.extend({
   props: {
-    taskId: { type: String }
+    taskId: { type: String },
   },
   components: {
     Popover,
     TaskInfoStatusEdit,
     TaskInfoStatus,
-    TaskInfoPiplineBadgePoper
+    TaskInfoPiplineBadgePoper,
   },
   computed: {
     ...cgTeamWorkComputedMinxin,
@@ -45,17 +45,17 @@ export default Vue.extend({
       let data = [
         this.model.leader_status,
         this.model.director_status,
-        this.model.client_status
+        this.model.client_status,
       ];
-      data = data.filter(i => typeof i !== "undefined");
+      data = data.filter(i => typeof i !== 'undefined');
       return Math.min(...data);
     },
     permissionedFields(): string[] {
       const map = this.model.permissions;
       const fields = Object.keys(map);
       return fields.filter(i => map[i]);
-    }
-  }
+    },
+  },
 });
 </script>
 

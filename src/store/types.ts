@@ -4,8 +4,7 @@ export interface IDMap<T> {
     [id: string]: T;
 }
 
-export interface RootState {
-}
+export type RootState = object;
 
 export enum LoadStatus {
     notReady,

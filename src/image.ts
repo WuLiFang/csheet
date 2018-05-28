@@ -4,13 +4,20 @@
  * @param onload callback.
  * @param onerror callback.
  */
+
+type imageLoadCallback = (img: HTMLImageElement) => void;
+
 export function imageAvailable(
     url: string,
-    onload = (img: HTMLImageElement) => { },
-    onerror = (img: HTMLImageElement) => { },
+    onload?: imageLoadCallback,
+    onerror?: imageLoadCallback,
 ) {
-    const temp = new Image;
-    temp.onload = () => { onload(temp); };
-    temp.onerror = () => { onerror(temp); };
+    const temp = new Image();
+    if (onload) {
+        temp.onload = () => { onload(temp); };
+    }
+    if (onerror) {
+        temp.onerror = () => { onerror(temp); };
+    }
     temp.src = url;
 }

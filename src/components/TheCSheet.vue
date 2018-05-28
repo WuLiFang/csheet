@@ -21,15 +21,15 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 
-import * as _ from "lodash";
+import * as _ from 'lodash';
 
-import Lightbox from "./Lightbox.vue";
-import TheCSheetViewer from "./TheCSheetViewer.vue";
-import { isFileProtocol } from "../packtools";
-import { videoComputedMinxin } from "../store/video";
-import { VideoResponse } from "../interface";
+import Lightbox from './Lightbox.vue';
+import TheCSheetViewer from './TheCSheetViewer.vue';
+import { isFileProtocol } from '../packtools';
+import { videoComputedMinxin } from '../store/video';
+import { VideoResponse } from '../interface';
 
 export default Vue.extend({
   data() {
@@ -37,9 +37,9 @@ export default Vue.extend({
       current: null as string | null,
       isShowTitle: false,
       isShowPack: isFileProtocol ? false : true,
-      filterText: "",
+      filterText: '',
       avaliableCount: -1,
-      totalCount: -1
+      totalCount: -1,
     };
   },
   computed: {
@@ -49,11 +49,11 @@ export default Vue.extend({
     },
     packURL(): string {
       return `${window.location.origin}${window.location.pathname}${window
-        .location.search || "?"}&pack=1`;
+        .location.search || '?'}&pack=1`;
     },
     packFilename(): string {
       return `${document.title}.zip`;
-    }
+    },
   },
   methods: {
     onclick(video: VideoResponse) {
@@ -63,7 +63,7 @@ export default Vue.extend({
       if (!this.filterText) {
         return true;
       }
-      return new RegExp(this.filterText, "i").test(video.label);
+      return new RegExp(this.filterText, 'i').test(video.label);
     },
     count() {
       this.avaliableCount = this.videos.filter(i => {
@@ -74,18 +74,18 @@ export default Vue.extend({
         return Boolean(i.poster_mtime);
       }).length;
       this.totalCount = this.videos.length;
-    }
+    },
   },
   components: {
     Lightbox,
-    TheCSheetViewer
+    TheCSheetViewer,
   },
   updated() {
     this.count();
   },
   mounted() {
     this.count();
-  }
+  },
 });
 </script>
 

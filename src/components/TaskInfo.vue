@@ -4,24 +4,24 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import _ from "lodash";
+import Vue from 'vue';
+import _ from 'lodash';
 
-import TaskInfoPiplineBadge from "./TaskInfoPiplineBadge.vue";
-import { cgTeamWorkComputedMinxin } from "../store/cgteamwork-task";
-import { CGTeamWorkTaskData, VideoResponse } from "../interface";
-import { videoComputedMinxin } from "../store/video";
+import TaskInfoPiplineBadge from './TaskInfoPiplineBadge.vue';
+import { cgTeamWorkComputedMinxin } from '../store/cgteamwork-task';
+import { CGTeamWorkTaskData, VideoResponse } from '../interface';
+import { videoComputedMinxin } from '../store/video';
 import {
   CGTeamWorkTaskReadActionPayload,
-  CGTEAMWORK_TASK
-} from "@/mutation-types";
+  CGTEAMWORK_TASK,
+} from '@/mutation-types';
 
 export default Vue.extend({
   props: {
-    id: { type: String }
+    id: { type: String },
   },
   components: {
-    TaskInfoPiplineBadge
+    TaskInfoPiplineBadge,
   },
   computed: {
     ...cgTeamWorkComputedMinxin,
@@ -34,25 +34,25 @@ export default Vue.extend({
         return [];
       }
       return _.orderBy(this.video.related_tasks, this.badge_key);
-    }
+    },
   },
   methods: {
     badge_key(id: string) {
-      let task = this.cgTeamworkTaskStore.storage[id];
+      const task = this.cgTeamworkTaskStore.storage[id];
       if (!task) {
         return null;
       }
       const pipeline = task.pipeline;
       return [
-        pipeline === "输出",
-        pipeline === "合成",
-        pipeline === "渲染",
-        pipeline === "灯光",
-        pipeline === "特效",
-        pipeline === "解算",
-        pipeline === "动画",
-        pipeline === "Layout",
-        pipeline
+        pipeline === '输出',
+        pipeline === '合成',
+        pipeline === '渲染',
+        pipeline === '灯光',
+        pipeline === '特效',
+        pipeline === '解算',
+        pipeline === '动画',
+        pipeline === 'Layout',
+        pipeline,
       ];
     },
     readTaskData() {
@@ -63,16 +63,16 @@ export default Vue.extend({
         const payload: CGTeamWorkTaskReadActionPayload = { id: i };
         this.$store.dispatch(CGTEAMWORK_TASK.READ, payload);
       });
-    }
+    },
   },
   watch: {
     id() {
       this.readTaskData();
-    }
+    },
   },
   mounted() {
     this.readTaskData();
-  }
+  },
 });
 </script>
 

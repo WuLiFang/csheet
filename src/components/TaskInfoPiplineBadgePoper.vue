@@ -12,24 +12,24 @@
 
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 
-import TaskInfoStatusEdit from "./TaskInfoStatusEdit.vue";
-import { cgTeamWorkComputedMinxin } from "../store/cgteamwork-task";
-import { CGTeamWorkTaskData } from "../interface";
+import TaskInfoStatusEdit from './TaskInfoStatusEdit.vue';
+import { cgTeamWorkComputedMinxin } from '../store/cgteamwork-task';
+import { CGTeamWorkTaskData } from '../interface';
 
 export default Vue.extend({
   props: {
-    taskId: { type: String }
+    taskId: { type: String },
   },
   components: {
-    TaskInfoStatusEdit
+    TaskInfoStatusEdit,
   },
   computed: {
     ...cgTeamWorkComputedMinxin,
     model(): CGTeamWorkTaskData {
       return this.cgTeamworkTaskStore.storage[this.taskId];
-    }
-  }
+    },
+  },
 });
 </script>

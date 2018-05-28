@@ -1,10 +1,10 @@
 import * as $ from 'jquery';
 
 $(document).ready(
-    function() {
+    () => {
         $('#inputProject').change(function(this: any) {
             $.get('/api/project_code/' + $(this).children(':selected').text(),
-                function(result: any) {
+                (result: any) => {
                     $('#inputPrefix').val(result + '_EP01_');
                     const inputPrefix = $('#inputPrefix')[0] as HTMLInputElement;
                     inputPrefix.focus();
@@ -15,7 +15,7 @@ $(document).ready(
         });
         const button = $('#open') as JQuery<HTMLButtonElement>;
         $('form').submit(
-            function() {
+            () => {
                 button.each(
                     function() {
                         this.disabled = true;
