@@ -204,6 +204,7 @@ export default Vue.extend({
   },
   watch: {
     videoId(value: string | null) {
+      this.reset();
       if (value) {
         this.scrollTo(value);
         this.loadPoster(value);
@@ -215,7 +216,6 @@ export default Vue.extend({
         }
         window.location.replace(this.url);
       }
-      this.reset();
     },
   },
   created() {
