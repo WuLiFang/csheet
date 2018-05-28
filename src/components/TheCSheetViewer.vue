@@ -52,7 +52,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      note: "<div>test</div>",
+      isForce: false,
       isFileProtocol
     };
   },
@@ -64,7 +64,7 @@ export default Vue.extend({
   computed: {
     ...videoComputedMinxin,
     poster(): string | null {
-      return this.getVideoURI(this.videoId, VideoRole.poster);
+      return this.getVideoURI(this.videoId, VideoRole.poster, this.isForce);
     },
     posterReady(): boolean {
       return this.videoStore.posterStatusMap[this.videoId] === LoadStatus.ready;
@@ -75,7 +75,7 @@ export default Vue.extend({
       );
     },
     preview(): string | null {
-      return this.getVideoURI(this.videoId, VideoRole.preview);
+      return this.getVideoURI(this.videoId, VideoRole.preview, this.isForce);
     },
     videoList(): VideoResponse[] {
       return _.sortBy(this.videoStore.storage, v => v.label);
@@ -125,16 +125,9 @@ export default Vue.extend({
     },
     refresh() {
       const payload: VideoReadActionPayload = { id: this.videoId };
+      this.reset()
+      this.isForce = true
       this.$store.dispatch(VIDEO.READ, payload);
-      // if (!this.video) {
-      //   return;
-      // }
-      // let now = new Date().getTime();
-      // this.video.thumb_mtime = now;
-      // this.video.poster_mtime = now;
-      // this.video.preview_mtime = now;
-      // this.video.posterReady = false;
-      // this.video.loadPoster();
     },
     onloadedmetadata(event: Event) {
       const element = event.target as HTMLVideoElement;
@@ -196,6 +189,13 @@ export default Vue.extend({
     loadPoster(id: string) {
       const payload: VideoLoadPosterActionPayload = { id };
       this.$store.dispatch(LOAD_VIDEO_POSTER, payload);
+    },
+    reset(){
+      this.isForce = false
+      if(this.videoElement){
+        this.videoElement.controls = false;
+        this.videoElement.load();
+      }
     }
   },
   watch: {
@@ -211,12 +211,8 @@ export default Vue.extend({
         }
         window.location.replace(this.url);
       }
+      this.reset()
     },
-    preview(value) {
-      if (!value && this.videoElement) {
-        this.videoElement.controls = false;
-      }
-    }
   },
   created() {
     this.setupShortcut();

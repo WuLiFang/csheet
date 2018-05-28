@@ -66,29 +66,33 @@ function getMtime(videoData: VideoResponse, role: VideoRole): number | null {
             return null;
     }
 }
-function getPath(videoData: VideoResponse, role: VideoRole): string | null {
+function getPath(videoData: VideoResponse, role: VideoRole, isForce = false): string | null {
     if (isFileProtocol) {
         return getPackedPath(videoData, role);
     }
-    return getPathWithMtime(videoData, role);
+    return getPathWithMtime(videoData, role, isForce);
 }
 
-function getPathWithMtime(videoData: VideoResponse, role: VideoRole): string | null {
+function getPathWithMtime(videoData: VideoResponse, role: VideoRole, isForce = false): string | null {
     const mtime = getMtime(videoData, role);
     if (!mtime) {
         return null;
     }
-    return `/videos/${videoData.uuid}.${role}?timestamp=${mtime}`;
+    let ret = `/videos/${videoData.uuid}.${role}?timestamp=${mtime}`;
+    if (isForce) {
+        ret += `?forceUpdateAt=${new Date().getTime()}`;
+    }
+    return ret;
 }
 const elementHub = new Map<string, HTMLElement>();
 export const getters: GetterTree<VideoState, RootState> = {
     getVideoURI(contextState) {
-        return (id: string, role: VideoRole) => {
+        return (id: string, role: VideoRole, isForce = false) => {
             const data = contextState.storage[id];
             if (!data) {
                 return null;
             }
-            return getPath(data, role);
+            return getPath(data, role, isForce);
         };
     },
     scrollTo() {
@@ -120,7 +124,7 @@ export const getters: GetterTree<VideoState, RootState> = {
 interface VideoComputedMixin extends DefaultComputed {
     videoStore: () => VideoState;
     scrollTo: () => (id: string) => void;
-    getVideoURI: () => (id: string, role: VideoRole) => string | null;
+    getVideoURI: () => (id: string, role: VideoRole, isForce?: boolean) => string | null;
     videoElementHub: () => typeof elementHub;
     appearedVideos: () => () => string[];
 }
