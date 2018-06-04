@@ -17,7 +17,7 @@ import TaskInfoPiplineBadgePoper from './TaskInfoPiplineBadgePoper.vue';
 
 import { TaskStatus, CGTeamWorkTaskData } from '../interface';
 import { StringIterator } from 'lodash';
-import { cgTeamWorkComputedMinxin } from '../store/cgteamwork-task';
+import { CGTeamWorkTaskComputedMixin } from '../store/cgteamwork-task';
 import {
   CGTeamWorkTaskReadActionPayload,
   CGTEAMWORK_TASK,
@@ -34,7 +34,7 @@ export default Vue.extend({
     TaskInfoPiplineBadgePoper,
   },
   computed: {
-    ...cgTeamWorkComputedMinxin,
+    ...CGTeamWorkTaskComputedMixin,
     model(): CGTeamWorkTaskData {
       return this.cgTeamworkTaskStore.storage[this.taskId];
     },
@@ -42,13 +42,7 @@ export default Vue.extend({
       return this.permissionedFields[0];
     },
     generalStatus(): TaskStatus {
-      let data = [
-        this.model.leader_status,
-        this.model.director_status,
-        this.model.client_status,
-      ];
-      data = data.filter(i => typeof i !== 'undefined');
-      return Math.min(...data);
+      return this.getGeneralStatus(this.model.id);
     },
     permissionedFields(): string[] {
       const map = this.model.permissions;

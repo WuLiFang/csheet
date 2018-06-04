@@ -8,7 +8,7 @@ import Vue from 'vue';
 import _ from 'lodash';
 
 import TaskInfoPiplineBadge from './TaskInfoPiplineBadge.vue';
-import { cgTeamWorkComputedMinxin } from '../store/cgteamwork-task';
+import { CGTeamWorkTaskComputedMixin } from '../store/cgteamwork-task';
 import { CGTeamWorkTaskData, VideoResponse } from '../interface';
 import { videoComputedMinxin } from '../store/video';
 import {
@@ -24,7 +24,7 @@ export default Vue.extend({
     TaskInfoPiplineBadge,
   },
   computed: {
-    ...cgTeamWorkComputedMinxin,
+    ...CGTeamWorkTaskComputedMixin,
     ...videoComputedMinxin,
     video(): VideoResponse | undefined {
       return this.videoStore.storage[this.id];

@@ -13,7 +13,7 @@ export default Vue.extend({
   },
   computed: {
     statusText(): TaskStatusText | null {
-      return TaskStatus[this.status] as TaskStatusText || null;
+      return (TaskStatus[this.status] as TaskStatusText) || null;
     },
     text(): string {
       return this.l10n(this.statusText);
@@ -37,6 +37,8 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+@import '@/status-color.scss';
+
 $radius: 8px;
 
 .task-info-status {
@@ -45,25 +47,6 @@ $radius: 8px;
   border-radius: $radius;
   padding: $radius/2 1em;
   margin: 3px;
-  &[status="Wait"] {
-    background: rgb(0, 85, 127);
-  }
-  &[status="Check"] {
-    background: rgb(219, 219, 2);
-  }
-  &[status="Retake"] {
-    background: rgb(255, 0, 0);
-  }
-  &[status="Approve"] {
-    background: rgb(0, 206, 0);
-  }
-  &[status="Close"] {
-    background: rgb(0, 0, 0);
-  }
-  &:not([status]) {
-    background: rgba($color: white, $alpha: 0.2);
-    color: black;
-    border: 1px solid black;
-  }
+  @include background-by-status;
 }
 </style>

@@ -25,6 +25,7 @@ import {
   CGTeamWorkTaskResponse,
   CGTeamWorkTaskData,
   parseCGTeamWorkTaskResponse,
+  TaskStatus,
 } from '../interface';
 import {
   CGTEAMWORK_TASK,
@@ -37,15 +38,25 @@ import {
 } from '../mutation-types';
 import { isFileProtocol } from '@/packtools';
 
-export const getters: GetterTree<CGTeamworkTaskState, RootState> = {};
+export const getters: GetterTree<CGTeamworkTaskState, RootState> = {
+  getGeneralStatus(contextState) {
+    return (id: string): TaskStatus => {
+      const task = contextState.storage[id];
+      let data = [task.leader_status, task.director_status, task.client_status];
+      data = data.filter(i => typeof i !== 'undefined');
+      return Math.min(...data);
+    };
+  },
+};
 
 interface CGTeamWorkTaskComputedMixin extends DefaultComputed {
   cgTeamworkTaskStore: () => CGTeamworkTaskState;
+  getGeneralStatus: () => (id: string) => TaskStatus;
 }
 
-export const cgTeamWorkComputedMinxin = {
+export const CGTeamWorkTaskComputedMixin = {
   ...mapState(['cgTeamworkTaskStore']),
-  ...mapGetters([]),
+  ...mapGetters(['getGeneralStatus']),
 } as CGTeamWorkTaskComputedMixin;
 
 const state: CGTeamworkTaskState = { storage: {} };

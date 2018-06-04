@@ -22,7 +22,7 @@ import {
   CGTeamWorkTaskData,
   StringMap,
 } from '../interface';
-import { cgTeamWorkComputedMinxin } from '../store/cgteamwork-task';
+import { CGTeamWorkTaskComputedMixin } from '../store/cgteamwork-task';
 import {
   UPDATE_CGTEAMWORK_TASK_FIELD,
   CGTeamWorkTaskUpdateFieldActionPayload,
@@ -48,7 +48,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    ...cgTeamWorkComputedMinxin,
+    ...CGTeamWorkTaskComputedMixin,
     model(): CGTeamWorkTaskData {
       return this.cgTeamworkTaskStore.storage[this.taskId];
     },

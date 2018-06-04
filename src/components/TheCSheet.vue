@@ -2,8 +2,12 @@
   div.videos
     div.control
       div {{avaliableCount}}/{{totalCount}}
-      label 标题
-      input(type='checkbox' v-model='isShowTitle')
+      div
+        label 标题
+        input(type='checkbox' v-model='isShowTitle')
+      div(v-if='hasTaskStorage')
+        label 任务信息
+        input(type='checkbox' v-model='isShowStatus')
       div 
         input.filter(
           placeholder='正则过滤' 
@@ -16,7 +20,15 @@
       div.pack(v-if='isShowPack')
         a(:href="packURL" :download="packFilename" @click='isShowPack = false')
           button 打包
-    Lightbox(v-for='video in videos' :id='video.uuid' :isVisible='filter(video)' :key='video.label' @click="onclick" :isShowTitle='isShowTitle')
+    Lightbox(
+      v-for='video in videos'
+      :id='video.uuid' 
+      :key='video.label' 
+      :isVisible='filter(video)'
+      :isShowTitle='isShowTitle' 
+      :isShowStatus='isShowStatus'
+      @click="onclick" 
+    )
     TheCSheetViewer(:videoId.sync='current')
 </template>
 
@@ -30,12 +42,14 @@ import TheCSheetViewer from './TheCSheetViewer.vue';
 import { isFileProtocol } from '../packtools';
 import { videoComputedMinxin } from '../store/video';
 import { VideoResponse } from '../interface';
+import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 
 export default Vue.extend({
   data() {
     return {
       current: null as string | null,
       isShowTitle: false,
+      isShowStatus: false,
       isShowPack: isFileProtocol ? false : true,
       filterText: '',
       avaliableCount: -1,
@@ -44,6 +58,10 @@ export default Vue.extend({
   },
   computed: {
     ...videoComputedMinxin,
+    ...CGTeamWorkTaskComputedMixin,
+    hasTaskStorage(): boolean {
+      return !_.isEmpty(this.cgTeamworkTaskStore.storage);
+    },
     videos(): VideoResponse[] {
       return _.values(this.videoStore.storage);
     },
