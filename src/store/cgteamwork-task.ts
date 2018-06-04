@@ -41,8 +41,11 @@ import { isFileProtocol } from '@/packtools';
 
 export const getters: GetterTree<CGTeamworkTaskState, RootState> = {
   getGeneralStatus(contextState) {
-    return (id: string, stage = TaskStage.client): TaskStatus => {
+    return (id: string, stage = TaskStage.client): TaskStatus | null => {
       const task = contextState.storage[id];
+      if (!task) {
+        return null;
+      }
       let data: TaskStatus[] = [];
       type stageMapItem = [TaskStage, TaskStatus];
       const stageMap: stageMapItem[] = [
@@ -63,7 +66,7 @@ export const getters: GetterTree<CGTeamworkTaskState, RootState> = {
 
 interface CGTeamWorkTaskComputedMixin extends DefaultComputed {
   cgTeamworkTaskStore: () => CGTeamworkTaskState;
-  getGeneralStatus: () => (id: string, stage?: TaskStage) => TaskStatus;
+  getGeneralStatus: () => (id: string, stage?: TaskStage) => TaskStatus | null;
 }
 
 export const CGTeamWorkTaskComputedMixin = {

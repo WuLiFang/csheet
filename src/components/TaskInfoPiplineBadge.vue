@@ -41,7 +41,7 @@ export default Vue.extend({
     field(): string | undefined {
       return this.permissionedFields[0];
     },
-    generalStatus(): TaskStatus {
+    generalStatus(): TaskStatus | null {
       return this.getGeneralStatus(this.model.id);
     },
     permissionedFields(): string[] {

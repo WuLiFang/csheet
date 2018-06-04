@@ -122,7 +122,7 @@ export default Vue.extend({
       // By status
 
       const status = this.getGeneralStatus(video.uuid, this.statusStage);
-      if (!this.statusSelect[status]) {
+      if (status !== null && !this.statusSelect[status]) {
         return false;
       }
       // By label
