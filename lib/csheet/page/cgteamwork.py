@@ -11,6 +11,7 @@ import cgtwq
 
 from ..mimecheck import is_mimetype
 from ..video import HTMLVideo
+
 from ..model import CGTeamWorkTask, TaskDataRow
 from .core import BasePage
 
@@ -124,7 +125,7 @@ class CGTeamWorkPage(BasePage):
         assert isinstance(task, CGTeamWorkTask)
         task.database = self.database
         task.module = self.module
-        task.pipeline = self.pipeline
+        task.pipeline = data.pipeline
         task.artist = data.artist
         task.shot = data.shot
         task.leader_status = data.leader_status
