@@ -140,6 +140,12 @@ class BasePage(object):
         zipfile.writestr('{}.html'.format(self.title.replace('\\', '_')),
                          index_page.encode('utf-8'))
 
+    @abstractmethod
+    def task_data(self):
+        """Video related task data.  """
+
+        return ''
+
 
 def dump_videos(videos):
     """Dump videos to string data.  """

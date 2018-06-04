@@ -8,6 +8,12 @@
       div(v-if='hasTaskStorage')
         label 任务信息
         input(type='checkbox' v-model='isShowStatus')
+      div(v-if='hasTaskStorage')
+        label 模式
+        select(v-model='statusMode')
+          option 组长
+          option 导演
+          option 客户
       div 
         input.filter(
           placeholder='正则过滤' 
@@ -27,6 +33,7 @@
       :isVisible='filter(video)'
       :isShowTitle='isShowTitle' 
       :isShowStatus='isShowStatus'
+      :statusStage='statusStage'
       @click="onclick" 
     )
     TheCSheetViewer(:videoId.sync='current')
@@ -41,7 +48,7 @@ import Lightbox from './Lightbox.vue';
 import TheCSheetViewer from './TheCSheetViewer.vue';
 import { isFileProtocol } from '../packtools';
 import { videoComputedMinxin } from '../store/video';
-import { VideoResponse } from '../interface';
+import { VideoResponse, TaskStage } from '../interface';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 
 export default Vue.extend({
@@ -51,6 +58,7 @@ export default Vue.extend({
       isShowTitle: false,
       isShowStatus: false,
       isShowPack: isFileProtocol ? false : true,
+      statusMode: '导演',
       filterText: '',
       avaliableCount: -1,
       totalCount: -1,
@@ -59,6 +67,23 @@ export default Vue.extend({
   computed: {
     ...videoComputedMinxin,
     ...CGTeamWorkTaskComputedMixin,
+    statusStage(): TaskStage {
+      let ret: TaskStage;
+      switch (this.statusMode) {
+        case '客户':
+          ret = TaskStage.client;
+          break;
+        case '导演':
+          ret = TaskStage.director;
+          break;
+        case '组长':
+          ret = TaskStage.leader;
+          break;
+        default:
+          ret = TaskStage.client;
+      }
+      return ret;
+    },
     hasTaskStorage(): boolean {
       return !_.isEmpty(this.cgTeamworkTaskStore.storage);
     },

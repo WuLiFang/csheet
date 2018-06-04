@@ -5,11 +5,18 @@
 <script lang="ts">
 import Vue from 'vue';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
-import { CGTeamWorkTaskData, TaskStatusText, TaskStatus } from '@/interface';
+import {
+  CGTeamWorkTaskData,
+  TaskStatusText,
+  TaskStatus,
+  TaskStage,
+} from '@/interface';
 import { taskStatusTextL10n } from '@/statustools';
+
 export default Vue.extend({
   props: {
     id: { type: String },
+    statusStage: { type: <() => TaskStage>Object, default: TaskStage.director },
   },
   computed: {
     ...CGTeamWorkTaskComputedMixin,
@@ -23,7 +30,7 @@ export default Vue.extend({
       return (TaskStatus[this.status] as TaskStatusText) || null;
     },
     status(): TaskStatus {
-      return this.getGeneralStatus(this.id);
+      return this.getGeneralStatus(this.id, this.statusStage);
     },
   },
 });

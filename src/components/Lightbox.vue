@@ -19,7 +19,11 @@
     )
     div.up-display(:style='upDisplayStyle')
       .artist(v-if='task') {{task.artist}}
-      LightboxTaskStatus.status(v-if='taskId' :id='taskId')
+      LightboxTaskStatus.status(
+        v-if='taskId' 
+        :id='taskId' 
+        :statusStage='statusStage'
+      )
     div
       span.caption(:style='captionStyle') {{ video.label }}
 </template>
@@ -29,7 +33,13 @@
 import Vue from 'vue';
 
 import { videoComputedMinxin } from '../store/video';
-import { VideoResponse, VideoRole, CGTeamWorkTaskData } from '../interface';
+import {
+  VideoResponse,
+  VideoRole,
+  CGTeamWorkTaskData,
+  TaskStage,
+  TaskStatus,
+} from '../interface';
 import {
   VideoSetVisibilityMutationPayload,
   SET_VIDEO_VISIBILITY,
@@ -48,6 +58,7 @@ export default Vue.extend({
     isShowTitle: { default: false },
     isShowStatus: { default: false },
     isVisible: { default: false },
+    statusStage: { type: <() => TaskStage>Object, default: TaskStage.director },
   },
   data() {
     return {
@@ -216,7 +227,8 @@ export default Vue.extend({
   &.shrink {
     background: rgba(255, 255, 255, 0.2);
     width: 10px;
-    .caption {
+    .caption,
+    .up-display {
       display: none;
     }
   }

@@ -12,7 +12,7 @@ import cgtwq
 
 from ..mimecheck import is_mimetype
 from ..video import HTMLVideo
-from ..model import CGTeamWorkTask
+from ..model import CGTeamWorkTask, TaskInfo
 from .core import BasePage
 
 LOGGER = logging.getLogger(__name__)
@@ -143,6 +143,11 @@ class CGTeamWorkPage(BasePage):
         return '{}色板'.format(
             '_'.join(
                 [self.project, self.prefix.strip(self.code).strip('_'), self.pipeline]))
+
+    def task_data(self):
+        select = self.select()
+        data = select.get_fields(*TaskInfo._fields)
+        return json.dumps([TaskInfo(*i) for i in data])
 
 
 def _get_submit_file(submit_file_data):

@@ -26,6 +26,7 @@ import {
   CGTeamWorkTaskData,
   parseCGTeamWorkTaskResponse,
   TaskStatus,
+  TaskStage,
 } from '../interface';
 import {
   CGTEAMWORK_TASK,
@@ -40,9 +41,20 @@ import { isFileProtocol } from '@/packtools';
 
 export const getters: GetterTree<CGTeamworkTaskState, RootState> = {
   getGeneralStatus(contextState) {
-    return (id: string): TaskStatus => {
+    return (id: string, stage = TaskStage.client): TaskStatus => {
       const task = contextState.storage[id];
-      let data = [task.leader_status, task.director_status, task.client_status];
+      let data: TaskStatus[] = [];
+      type stageMapItem = [TaskStage, TaskStatus];
+      const stageMap: stageMapItem[] = [
+        [TaskStage.leader, task.leader_status],
+        [TaskStage.director, task.director_status],
+        [TaskStage.client, task.client_status],
+      ];
+      stageMap.forEach(i => {
+        if (stage >= i[0]) {
+          data.push(i[1]);
+        }
+      });
       data = data.filter(i => typeof i !== 'undefined');
       return Math.min(...data);
     };
@@ -51,7 +63,7 @@ export const getters: GetterTree<CGTeamworkTaskState, RootState> = {
 
 interface CGTeamWorkTaskComputedMixin extends DefaultComputed {
   cgTeamworkTaskStore: () => CGTeamworkTaskState;
-  getGeneralStatus: () => (id: string) => TaskStatus;
+  getGeneralStatus: () => (id: string, stage?: TaskStage) => TaskStatus;
 }
 
 export const CGTeamWorkTaskComputedMixin = {
@@ -59,7 +71,26 @@ export const CGTeamWorkTaskComputedMixin = {
   ...mapGetters(['getGeneralStatus']),
 } as CGTeamWorkTaskComputedMixin;
 
-const state: CGTeamworkTaskState = { storage: {} };
+function parseDataFromPage(): CGTeamworkTaskState['storage'] {
+  const app = document.getElementById('app');
+  if (!app) {
+    return {};
+  }
+  const data = app.dataset.task;
+  if (!data) {
+    return {};
+  }
+  const time = new Date().getTime();
+  const parsed = JSON.parse(data) as CGTeamWorkTaskResponse[];
+  const ret: CGTeamworkTaskState['storage'] = {};
+  parsed.forEach(value => {
+    const task = parseCGTeamWorkTaskResponse(value);
+    ret[task.id] = task;
+  });
+  return ret;
+}
+
+const state: CGTeamworkTaskState = { storage: parseDataFromPage() };
 
 const mutations: MutationTree<CGTeamworkTaskState> = {
   [CGTEAMWORK_TASK.READ](
