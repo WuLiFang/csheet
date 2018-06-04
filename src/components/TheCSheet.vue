@@ -8,18 +8,18 @@
       div(v-if='hasTaskStorage')
         label 任务信息
         input(type='checkbox' v-model='isShowStatus')
-      div(v-if='hasTaskStorage')
+      div(v-show='isShowStatus')
         label 模式
         select(v-model='statusMode')
           option 组长
           option 导演
           option 客户
+        StatusSelect(:select.sync='statusSelect')
       div 
         input.filter(
           placeholder='正则过滤' 
           v-model='filterText' 
         )
-        StatusSelect(v-if='hasTaskStorage' :select.sync='statusSelect')
         button(
           v-show='filterText'
           @click='filterText = ""'
