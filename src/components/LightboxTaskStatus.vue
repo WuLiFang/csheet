@@ -16,7 +16,7 @@ import { taskStatusTextL10n } from '@/statustools';
 export default Vue.extend({
   props: {
     id: { type: String },
-    statusStage: { type: <() => TaskStage>Object, default: TaskStage.director },
+    statusStage: { type: <() => TaskStage>Number, default: TaskStage.director },
   },
   computed: {
     ...CGTeamWorkTaskComputedMixin,

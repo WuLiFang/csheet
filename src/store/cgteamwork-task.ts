@@ -84,6 +84,9 @@ function parseDataFromPage(): CGTeamworkTaskState['storage'] {
   const parsed = JSON.parse(data) as CGTeamWorkTaskResponse[];
   const ret: CGTeamworkTaskState['storage'] = {};
   parsed.forEach(value => {
+    if (typeof value[7] === 'undefined') {
+      value[7] = {};
+    }
     const task = parseCGTeamWorkTaskResponse(value);
     ret[task.id] = task;
   });

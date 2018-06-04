@@ -58,7 +58,7 @@ export default Vue.extend({
     isShowTitle: { default: false },
     isShowStatus: { default: false },
     isVisible: { default: false },
-    statusStage: { type: <() => TaskStage>Object, default: TaskStage.director },
+    statusStage: { type: <() => TaskStage>Number, default: TaskStage.director },
   },
   data() {
     return {

@@ -19,6 +19,7 @@
           placeholder='正则过滤' 
           v-model='filterText' 
         )
+        StatusSelect(v-if='hasTaskStorage' :select.sync='statusSelect')
         button(
           v-show='filterText'
           @click='filterText = ""'
@@ -45,10 +46,13 @@ import Vue from 'vue';
 import * as _ from 'lodash';
 
 import Lightbox from './Lightbox.vue';
+import StatusSelect from './StatusSelect.vue';
+import { StatusSelectResult } from './StatusSelect.vue';
 import TheCSheetViewer from './TheCSheetViewer.vue';
+
 import { isFileProtocol } from '../packtools';
 import { videoComputedMinxin } from '../store/video';
-import { VideoResponse, TaskStage } from '../interface';
+import { VideoResponse, TaskStage, TaskStatus } from '../interface';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 
 export default Vue.extend({
@@ -62,6 +66,14 @@ export default Vue.extend({
       filterText: '',
       avaliableCount: -1,
       totalCount: -1,
+      statusSelect: <StatusSelectResult>{
+        [TaskStatus.Close]: false,
+        [TaskStatus.Retake]: true,
+        [TaskStatus.Wait]: true,
+        [TaskStatus.Check]: true,
+        [TaskStatus.Approve]: true,
+        other: true,
+      },
     };
   },
   computed: {
@@ -103,6 +115,13 @@ export default Vue.extend({
       this.current = video.uuid;
     },
     filter(video: VideoResponse): boolean {
+      // By status
+
+      const status = this.getGeneralStatus(video.uuid, this.statusStage);
+      if (!this.statusSelect[status]) {
+        return false;
+      }
+      // By label
       if (!this.filterText) {
         return true;
       }
@@ -122,6 +141,7 @@ export default Vue.extend({
   components: {
     Lightbox,
     TheCSheetViewer,
+    StatusSelect,
   },
   updated() {
     this.count();
