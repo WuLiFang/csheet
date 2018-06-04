@@ -110,7 +110,7 @@ class CGTeamWorkPage(BasePage):
         LOGGER.info('Sync with cgteamwork: %s', self)
 
         select = self.select()
-        data = select.get_fields(*TaskDataRow._fields)
+        data = select.get_fields(*TaskDataRow.fields)
         data = [TaskDataRow(*i) for i in data]
         shots = sorted(set(i.shot for i in data))
 
@@ -157,7 +157,6 @@ class CGTeamWorkPage(BasePage):
         query = session.query(CGTeamWorkTask)
         query = query.filter(
             CGTeamWorkTask.database == self.database,
-            CGTeamWorkTask.pipeline == self.pipeline,
             CGTeamWorkTask.shot.startswith(self.prefix)
         ).order_by(CGTeamWorkTask.shot)
         data = query.all()

@@ -17,9 +17,12 @@ def test_cgteamwork():
     with model.session_scope() as sess:
         cfg.update_later(sess)
         videos = cfg.videos(sess)
+        tasks = cfg.tasks(sess)
     assert isinstance(videos, list)
+    assert isinstance(tasks, list)
     assert videos
     assert len(videos) == 102
+    assert len(tasks) == 102
 
 
 def test_local():
