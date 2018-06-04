@@ -120,11 +120,14 @@ export default Vue.extend({
     },
     filter(video: VideoResponse): boolean {
       // By status
+      let status = this.getGeneralStatus(video.uuid, this.statusStage);
 
-      const status = this.getGeneralStatus(video.uuid, this.statusStage);
-      if (status !== null && !this.statusSelect[status]) {
+      if (status === null && !this.statusSelect.other) {
+        return false;
+      } else if (status !== null && !this.statusSelect[status]) {
         return false;
       }
+
       // By label
       if (!this.filterText) {
         return true;
