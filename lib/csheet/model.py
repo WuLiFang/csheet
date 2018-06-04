@@ -177,6 +177,21 @@ class TaskInfo(namedtuple(
         )
 
 
+class TaskDataRow(namedtuple('VideoDataRow',
+                             ('id', 'pipeline', 'shot',
+                              'image', 'submit_file_path',
+                              'artist', 'leader_status',
+                              'director_status', 'client_status',
+                              'note_num'))):
+    """Cgteamwork task data needed.  """
+
+    fields = ('id', 'pipeline', 'shot.shot',
+              'image', 'submit_file_path',
+              'artist', 'leader_status',
+              'director_status', 'client_status',
+              'note_num')
+
+
 class CGTeamWorkTask(Base, SerializableMixin):
     """CGTeamWork task.  """
 
@@ -202,6 +217,28 @@ class CGTeamWorkTask(Base, SerializableMixin):
 
         return cgtwq.Database(self.database).module(self.module).select(self.uuid).to_entry()
 
+    def update(self, token, session):
+        """Update task data with cgteamwork database.
+
+        Args:
+            session (sqlalchemy.Session): Database session.
+        """
+
+        LOGGER.debug('Update task: %s', self.uuid)
+        entry = self.to_entry()
+        entry.token = token
+
+        data = TaskDataRow(*entry.get_fields(*TaskDataRow.fields))
+        self.pipeline = data.pipeline
+        self.shot = data.shot
+        self.artist = data.artist
+        self.leader_status = data.leader_status
+        self.director_status = data.director_status
+        self.client_status = data.client_status
+        self.note_num = data.note_num
+        session.add(self)
+        session.commit()
+
     def to_task_info(self):
         """Convert to task info for frontend.  """
 
@@ -218,10 +255,10 @@ class CGTeamWorkTask(Base, SerializableMixin):
     def get_entry_data(self, token):
         """CGTeamWork Entry data for frontend.  """
 
+        data = self.to_task_info()
+
         entry = self.to_entry()
         entry.token = token
-        data = entry.get_fields(*TaskInfo._fields)
-        data = TaskInfo(*data)
         permissions = {i: entry.flow.has_field_permission(i)
                        for i in TaskInfo._fields
                        if i.endswith('status')}

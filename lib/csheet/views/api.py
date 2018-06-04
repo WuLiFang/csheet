@@ -41,9 +41,12 @@ class Task(Resource):
     def get(id_):
         """Get task info.  """
 
+        token = session['token']
+
         with core.database_session() as sess:
             task = core.get_task(id_, sess)
-            return task.get_entry_data(session['token'])
+            task.update(token, sess)
+            return task.get_entry_data(token)
 
 
 API.add_resource(Task, '/task/<id_>')

@@ -6,31 +6,15 @@ from __future__ import (absolute_import, division, print_function,
 
 import json
 import logging
-from collections import namedtuple
 
 import cgtwq
 
 from ..mimecheck import is_mimetype
 from ..video import HTMLVideo
-from ..model import CGTeamWorkTask, TaskInfo
+from ..model import CGTeamWorkTask, TaskDataRow
 from .core import BasePage
 
 LOGGER = logging.getLogger(__name__)
-
-
-class TaskDataRow(namedtuple('VideoDataRow',
-                             ('id', 'pipeline', 'shot',
-                              'image', 'submit_file_path',
-                              'artist', 'leader_status',
-                              'director_status', 'client_status',
-                              'note_num'))):
-    """Cgteamwork task data needed.  """
-
-    fields = ('id', 'pipeline', 'shot.shot',
-              'image', 'submit_file_path',
-              'artist', 'leader_status',
-              'director_status', 'client_status',
-              'note_num')
 
 
 class CGTeamWorkPage(BasePage):
@@ -125,7 +109,7 @@ class CGTeamWorkPage(BasePage):
         LOGGER.info('Sync with cgteamwork: %s', self)
 
         select = self.select()
-        data = select.get_fields(*TaskDataRow.fields)
+        data = select.get_fields(*TaskDataRow._fields)
         data = [TaskDataRow(*i) for i in data]
         shots = sorted(set(i.shot for i in data))
 
