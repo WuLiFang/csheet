@@ -1,24 +1,25 @@
 <template lang="pug">
-  div.videos
+  div.the-csheet
     div.control
       div {{avaliableCount}}/{{totalCount}}
       div
-        label 标题
-        input(type='checkbox' v-model='isShowTitle')
-      div(v-if='hasTaskStorage')
-        label 任务信息
-        input(type='checkbox' v-model='isShowStatus')
-      div(v-show='isShowStatus')
-        label 模式
-        select(v-model='statusMode')
-          option 组长
-          option 导演
-          option 客户
+        ElCheckbox(v-model='isShowTitle') 标题
+      div
+        ElCheckbox(v-if='hasTaskStorage' v-model='isShowStatus') 任务信息
+      div.mode(v-show='isShowStatus')
+        ElSelect(v-model='statusStage' size='mini')
+          .prefix(slot='prefix')
+            span 阶段
+          ElOption(label='组长' :value='TaskStage.leader')
+          ElOption(label='导演' :value='TaskStage.director')
+          ElOption(label='客户' :value='TaskStage.client')
         StatusSelect(:select.sync='statusSelect')
       div 
-        input.filter(
+        ElInput.filter(
+          size='mini'
           placeholder='正则过滤' 
-          v-model='filterText' 
+          prefix-icon='el-icon-search'
+          v-model='filterText'
         )
         button(
           v-show='filterText'
@@ -26,7 +27,7 @@
         ) 重置
       div.pack(v-if='isShowPack')
         a(:href="packURL" :download="packFilename" @click='isShowPack = false')
-          button 打包
+          ElButton(icon="el-icon-message" size='mini') 打包
     Lightbox(
       v-for='video in videos'
       :id='video.uuid' 
@@ -49,6 +50,15 @@ import Lightbox from './Lightbox.vue';
 import StatusSelect from './StatusSelect.vue';
 import { StatusSelectResult } from './StatusSelect.vue';
 import TheCSheetViewer from './TheCSheetViewer.vue';
+import {
+  Input as ElInput,
+  Checkbox as ElCheckbox,
+  Button as ElButton,
+  Select as ElSelect,
+  Option as ElOption,
+  RadioGroup as ElRadioGroup,
+  RadioButton as ElRadioRadioButton,
+} from 'element-ui';
 
 import { isFileProtocol } from '../packtools';
 import { videoComputedMinxin } from '../store/video';
@@ -56,13 +66,23 @@ import { VideoResponse, TaskStage, TaskStatus } from '../interface';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 
 export default Vue.extend({
+  components: {
+    Lightbox,
+    TheCSheetViewer,
+    StatusSelect,
+    ElInput,
+    ElCheckbox,
+    ElButton,
+    ElSelect,
+    ElOption,
+  },
   data() {
     return {
       current: null as string | null,
       isShowTitle: false,
       isShowStatus: false,
       isShowPack: isFileProtocol ? false : true,
-      statusMode: '导演',
+      statusStage: TaskStage.director,
       filterText: '',
       avaliableCount: -1,
       totalCount: -1,
@@ -74,28 +94,12 @@ export default Vue.extend({
         [TaskStatus.Approve]: true,
         other: true,
       },
+      TaskStage,
     };
   },
   computed: {
     ...videoComputedMinxin,
     ...CGTeamWorkTaskComputedMixin,
-    statusStage(): TaskStage {
-      let ret: TaskStage;
-      switch (this.statusMode) {
-        case '客户':
-          ret = TaskStage.client;
-          break;
-        case '导演':
-          ret = TaskStage.director;
-          break;
-        case '组长':
-          ret = TaskStage.leader;
-          break;
-        default:
-          ret = TaskStage.client;
-      }
-      return ret;
-    },
     hasTaskStorage(): boolean {
       return !_.isEmpty(this.cgTeamworkTaskStore.storage);
     },
@@ -138,11 +142,7 @@ export default Vue.extend({
       this.totalCount = this.videos.length;
     },
   },
-  components: {
-    Lightbox,
-    TheCSheetViewer,
-    StatusSelect,
-  },
+
   updated() {
     this.count();
   },
@@ -153,32 +153,43 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.videos {
+.the-csheet {
   display: flex;
   position: relative;
   flex-wrap: wrap;
   justify-content: center;
   width: 85vw;
   margin: auto;
+  .control {
+    position: fixed;
+    color: gray;
+    right: 0;
+    top: 0;
+    margin: 0.5%;
+    text-align: right;
+    .mode {
+      .el-select {
+        width: 6em;
+        .prefix {
+          height: 100%;
+          display: inline-flex;
+          align-items: center;
+        }
+      }
+    }
+    .filter {
+      width: 10em;
+      text-align: right;
+      margin: 1em 0;
+    }
+    .pack {
+      margin-top: 1em;
+      margin-bottom: 1em;
+    }
+  }
   &:hover {
     border-left: 1px dotted rgba(255, 255, 255, 0.3);
     border-right: 1px dotted rgba(255, 255, 255, 0.3);
-  }
-}
-.control {
-  position: fixed;
-  color: white;
-  right: 0;
-  top: 0;
-  margin: 0.5%;
-  text-align: right;
-  .filter {
-    width: 5em;
-    text-align: right;
-  }
-  .pack {
-    margin-top: 1em;
-    margin-bottom: 1em;
   }
 }
 </style>

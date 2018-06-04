@@ -5,7 +5,12 @@
       TaskInfo(:id="video.uuid")
       FileInfo(:id="video.uuid")
     .topright
-      button(@click='refresh' v-if='!isFileProtocol') 刷新
+      ElButton(
+        @click='refresh' 
+        v-if='!isFileProtocol' 
+        size='small' 
+        icon='el-icon-refresh'
+      ) 刷新
     video.center(
       ref='video'
       v-if='posterReady'
@@ -31,6 +36,7 @@ import Vue from 'vue';
 
 import * as _ from 'lodash';
 import Spinner from 'vue-simple-spinner';
+import { Button as ElButton } from 'element-ui';
 
 import TaskInfo from './TaskInfo.vue';
 import FileInfo from './FileInfo.vue';
@@ -60,6 +66,7 @@ export default Vue.extend({
     Spinner,
     TaskInfo,
     FileInfo,
+    ElButton,
   },
   computed: {
     ...videoComputedMinxin,
