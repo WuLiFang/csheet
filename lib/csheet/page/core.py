@@ -11,11 +11,10 @@ from tempfile import TemporaryFile
 from zipfile import ZipFile
 
 from gevent import spawn, sleep
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, Undefined
 
 from wlf.path import get_encoded as e
 from wlf.path import PurePath
-
 from .. import __about__, filetools, model
 from ..__about__ import __version__
 from ..filename import filter_filename
@@ -72,6 +71,7 @@ class BasePage(object):
 
         return template.render(config=self,
                                videos=videos,
+                               dumps=dumps,
                                dump=dump_videos, **context)
 
     def archive(self, session):
@@ -140,11 +140,13 @@ class BasePage(object):
         zipfile.writestr('{}.html'.format(self.title.replace('\\', '_')),
                          index_page.encode('utf-8'))
 
-    @abstractmethod
-    def task_data(self):
-        """Video related task data.  """
 
+def dumps(obj):
+    """`json.dumps` for jinja template data.  """
+
+    if isinstance(obj, Undefined):
         return ''
+    return json.dumps(obj)
 
 
 def dump_videos(videos):

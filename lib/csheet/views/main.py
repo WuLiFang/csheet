@@ -42,6 +42,7 @@ def render_csheet_page():
         page.update_later(sess)
         rendered = page.render(
             page.videos(sess),
+            tasks=page.tasks(sess),
             template='csheet_app.html',
             request=request)
 

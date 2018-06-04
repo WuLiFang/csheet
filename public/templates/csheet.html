@@ -16,7 +16,7 @@
 </head>
 
 <body>
-    <div id='app' data-page='{{ dump(videos) }}' data-task='{{ config.task_data() }}'>
+    <div id='app' data-page='{{ dump(videos) }}' data-task='{{ dumps(tasks) }}'>
         <noscript class="noscript">
             <link href="{{ config.assets['csheet_noscript']['css'] }}" rel="stylesheet" type="text/css" />
             <header>

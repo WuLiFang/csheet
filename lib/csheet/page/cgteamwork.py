@@ -20,10 +20,17 @@ LOGGER = logging.getLogger(__name__)
 
 class TaskDataRow(namedtuple('VideoDataRow',
                              ('id', 'pipeline', 'shot',
-                              'image', 'submit_file_path'))):
+                              'image', 'submit_file_path',
+                              'artist', 'leader_status',
+                              'director_status', 'client_status',
+                              'note_num'))):
     """Cgteamwork task data needed.  """
+
     fields = ('id', 'pipeline', 'shot.shot',
-              'image', 'submit_file_path')
+              'image', 'submit_file_path',
+              'artist', 'leader_status',
+              'director_status', 'client_status',
+              'note_num')
 
 
 class CGTeamWorkPage(BasePage):
@@ -66,7 +73,8 @@ class CGTeamWorkPage(BasePage):
     def _get_poster(cls, data):
         if data is None:
             return None
-        _, _, _, image_data, submit_file_data = data
+        image_data = data[3]
+        submit_file_data = data[4]
         return (_get_poster_from_image(image_data)
                 or _get_poster_from_submit(submit_file_data))
 
@@ -74,7 +82,7 @@ class CGTeamWorkPage(BasePage):
     def _get_src(cls, data):
         if data is None:
             return None
-        _, _, _, _, submit_file_data = data
+        submit_file_data = data[4]
 
         ret = _get_submit_file(submit_file_data)
         if ret and is_mimetype(ret, 'video'):
@@ -104,12 +112,8 @@ class CGTeamWorkPage(BasePage):
         video.module = self.module
         video.pipeline = self.pipeline
 
-        tasks = [session.query(CGTeamWorkTask).get(i.id) or CGTeamWorkTask(uuid=i.id)
+        tasks = [self._update_task(i, session)
                  for i in data if i.shot == shot]
-        for i in tasks:
-            i.database = self.database
-            i.module = self.module
-            session.add(i)
 
         video.related_tasks = tasks
         video.task_id = uuid
@@ -129,6 +133,24 @@ class CGTeamWorkPage(BasePage):
             self._get_video(data, shot, session)
         session.commit()
 
+    def _update_task(self, data, session):
+        assert isinstance(data, TaskDataRow), type(data)
+        task = session.query(CGTeamWorkTask).get(
+            data.id) or CGTeamWorkTask(uuid=data.id)
+        assert isinstance(task, CGTeamWorkTask)
+        task.database = self.database
+        task.module = self.module
+        task.pipeline = self.pipeline
+        task.artist = data.artist
+        task.shot = data.shot
+        task.leader_status = data.leader_status
+        task.director_status = data.director_status
+        task.client_status = data.client_status
+        task.note_num = data.note_num
+        session.add(task)
+
+        return task
+
     def videos(self, session):
         query = session.query(HTMLVideo)
         query = query.filter(
@@ -144,10 +166,17 @@ class CGTeamWorkPage(BasePage):
             '_'.join(
                 [self.project, self.prefix.strip(self.code).strip('_'), self.pipeline]))
 
-    def task_data(self):
-        select = self.select()
-        data = select.get_fields(*TaskInfo._fields)
-        return json.dumps([TaskInfo(*i) for i in data])
+    def tasks(self, session):
+        """Video related task data.  """
+
+        query = session.query(CGTeamWorkTask)
+        query = query.filter(
+            CGTeamWorkTask.database == self.database,
+            CGTeamWorkTask.pipeline == self.pipeline,
+            CGTeamWorkTask.shot.startswith(self.prefix)
+        ).order_by(CGTeamWorkTask.shot)
+        data = query.all()
+        return [i.to_task_info() for i in data]
 
 
 def _get_submit_file(submit_file_data):

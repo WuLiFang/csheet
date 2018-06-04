@@ -9,7 +9,7 @@ from collections import namedtuple
 from contextlib import contextmanager
 from functools import wraps
 
-from sqlalchemy import (Boolean, Column, Float, ForeignKey, String, Table,
+from sqlalchemy import (Boolean, Column, Float, ForeignKey, String, Table, Integer,
                         create_engine, orm)
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.declarative import declarative_base
@@ -185,6 +185,13 @@ class CGTeamWorkTask(Base, SerializableMixin):
     database = Column(String)
     module = Column(String)
     videos = orm.relationship('Video', secondary=VIDEO_TASK)
+    pipeline = Column(String)
+    shot = Column(String)
+    artist = Column(String)
+    leader_status = Column(String)
+    director_status = Column(String)
+    client_status = Column(String)
+    note_num = Column(Integer)
 
     def to_entry(self):
         """Convert to entry.
@@ -194,6 +201,19 @@ class CGTeamWorkTask(Base, SerializableMixin):
         """
 
         return cgtwq.Database(self.database).module(self.module).select(self.uuid).to_entry()
+
+    def to_task_info(self):
+        """Convert to task info for frontend.  """
+
+        return TaskInfo(
+            pipeline=self.pipeline,
+            artist=self.artist,
+            leader_status=self.leader_status,
+            director_status=self.director_status,
+            client_status=self.client_status,
+            note_num=self.note_num,
+            id=self.uuid
+        )
 
     def get_entry_data(self, token):
         """CGTeamWork Entry data for frontend.  """
@@ -249,6 +269,18 @@ def _upgrade_database(engine):
         try:
             engine.execute(
                 'ALTER TABLE Video ADD COLUMN {} {}'.format(column, type_))
+        except OperationalError:
+            continue
+    for column, type_ in (('artist', 'VARCHAR'),
+                          ('shot', 'VARCHAR'),
+                          ('pipeline', 'VARCHAR'),
+                          ('leader_status', 'VARCHAR'),
+                          ('director_status', 'VARCHAR'),
+                          ('client_status', 'VARCHAR'),
+                          ('note_num', 'INTEGER'),):
+        try:
+            engine.execute(
+                'ALTER TABLE CGTeamWorkTask ADD COLUMN {} {}'.format(column, type_))
         except OperationalError:
             continue
 
