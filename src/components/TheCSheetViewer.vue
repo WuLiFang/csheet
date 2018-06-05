@@ -15,6 +15,7 @@
       ref='video'
       v-if='posterReady'
       :poster='poster'
+      :src='preview'
       @loadedmetadata='onloadedmetadata' 
       @dragstart='ondragstart' 
       draggable
