@@ -27,8 +27,9 @@ def login():
             return redirect(request.full_path)
         for k, v in account_info._asdict().items():
             session[k] = v
-        print(request.args.get('from', '/'))
-        return redirect(request.args.get('from', '/'))
+
+        resp = redirect(request.args.get('from', '/'))
+        return resp
     return render_template('login.html', __version__=__version__)
 
 

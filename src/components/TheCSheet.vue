@@ -14,17 +14,29 @@
           ElOption(label='导演' :value='TaskStage.director')
           ElOption(label='客户' :value='TaskStage.client')
         StatusSelect(:select.sync='statusSelect')
-      div 
-        ElInput.filter(
-          size='mini'
-          placeholder='正则过滤' 
-          prefix-icon='el-icon-search'
-          v-model='filterText'
-        )
-        button(
-          v-show='filterText'
-          @click='filterText = ""'
-        ) 重置
+      div.filter
+        div 
+          ElInput(
+            size='mini'
+            placeholder='标题正则过滤' 
+            prefix-icon='el-icon-search'
+            v-model='filterText'
+          )
+        div
+          ElAutocomplete(
+            v-model='filterArtist'
+            :fetch-suggestions='artistSearch'
+            size='mini'
+            prefix-icon='el-icon-info'
+            placeholder='人员过滤' 
+          )
+        ElCheckbox(v-model='isFilterUser' v-show='myTaskCount') 当前用户({{myTaskCount}})
+        div
+          ElButton(
+            size='mini'
+            v-show='filterText || filterArtist'
+            @click='filterText = ""; filterArtist = ""'
+          ) 重置过滤
       div.pack(v-if='isShowPack')
         a(:href="packURL" :download="packFilename" @click='isShowPack = false')
           ElButton(icon="el-icon-message" size='mini') 打包
@@ -58,11 +70,17 @@ import {
   Option as ElOption,
   RadioGroup as ElRadioGroup,
   RadioButton as ElRadioRadioButton,
+  Autocomplete as ElAutocomplete,
 } from 'element-ui';
 
 import { isFileProtocol } from '../packtools';
 import { videoComputedMinxin } from '../store/video';
-import { VideoResponse, TaskStage, TaskStatus } from '../interface';
+import {
+  VideoResponse,
+  TaskStage,
+  TaskStatus,
+  CGTeamWorkTaskData,
+} from '../interface';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 
 export default Vue.extend({
@@ -75,6 +93,7 @@ export default Vue.extend({
     ElButton,
     ElSelect,
     ElOption,
+    ElAutocomplete,
   },
   data() {
     return {
@@ -84,6 +103,7 @@ export default Vue.extend({
       isShowPack: isFileProtocol ? false : true,
       statusStage: TaskStage.director,
       filterText: '',
+      filterArtist: '',
       avaliableCount: -1,
       totalCount: -1,
       statusSelect: <StatusSelectResult>{
@@ -113,13 +133,34 @@ export default Vue.extend({
     packFilename(): string {
       return `${document.title}.zip`;
     },
+    myTaskCount(): number {
+      return this.getAritstTaskCount(this.$store.state.username);
+    },
+    isFilterUser: {
+      get(): boolean {
+        return this.filterArtist === this.$store.state.username
+      },
+      set(value: boolean){
+        if (value) {
+          this.filterArtist = this.$store.state.username;
+        } else {
+          this.filterArtist = '';
+        }
+      }
+    }
   },
   methods: {
     onclick(video: VideoResponse) {
       this.current = video.uuid;
     },
     filter(video: VideoResponse): boolean {
-      // By status
+      return (
+        this.filterByArtist(video) &&
+        this.filterByStatus(video) &&
+        this.filterByLabel(video)
+      );
+    },
+    filterByStatus(video: VideoResponse): boolean {
       let status = this.getGeneralStatus(video.uuid, this.statusStage);
 
       if (status === null && !this.statusSelect.other) {
@@ -127,12 +168,25 @@ export default Vue.extend({
       } else if (status !== null && !this.statusSelect[status]) {
         return false;
       }
-
-      // By label
+      return true;
+    },
+    filterByLabel(video: VideoResponse): boolean {
       if (!this.filterText) {
         return true;
       }
       return new RegExp(this.filterText, 'i').test(video.label);
+    },
+    filterByArtist(video: VideoResponse): boolean {
+      if (!this.filterArtist) {
+        return true;
+      }
+      return video.related_tasks.some(i => {
+        const task = this.cgTeamworkTaskStore.storage[i];
+        if (!task) {
+          return false;
+        }
+        return task.artist_array.indexOf(this.filterArtist) >= 0;
+      });
     },
     count() {
       this.avaliableCount = this.videos.filter(i => {
@@ -143,6 +197,18 @@ export default Vue.extend({
         return Boolean(i.poster_mtime);
       }).length;
       this.totalCount = this.videos.length;
+    },
+    artistSearch(queryString: string, cb: (result: any[]) => void) {
+      const result = queryString
+        ? this.artists.filter(i => i.startsWith(queryString))
+        : this.artists;
+      cb(
+        result.map(i => {
+          return {
+            value: i,
+          };
+        }),
+      );
     },
   },
 
@@ -181,8 +247,6 @@ export default Vue.extend({
       }
     }
     .filter {
-      width: 10em;
-      text-align: right;
       margin: 1em 0;
     }
     .pack {
@@ -200,5 +264,14 @@ export default Vue.extend({
 body {
   margin: 0;
   background: black;
+}
+.the-csheet {
+  .control {
+    .filter {
+      .el-input {
+        width: 10em;
+      }
+    }
+  }
 }
 </style>

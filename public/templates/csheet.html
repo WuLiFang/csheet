@@ -16,7 +16,7 @@
 </head>
 
 <body>
-    <div id='app' data-page='{{ dump(videos) }}' data-task='{{ dumps(tasks) }}'>
+    <div id='app' data-page='{{ dump(videos) }}' data-task='{{ dumps(tasks) }}' data-username='{{ session and session.get("name") | default("", True) }}'>
         <noscript class="noscript">
             <link href="{{ config.assets['csheet_noscript']['css'] }}" rel="stylesheet" type="text/css" />
             <header>

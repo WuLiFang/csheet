@@ -45,4 +45,5 @@ def _login():
     """For test client login.  """
 
     flask.session['token'] = DesktopClient.token()
+    flask.session['name'] = 'Test user'
     return 'Logged in'

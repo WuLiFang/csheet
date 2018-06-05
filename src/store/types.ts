@@ -4,7 +4,9 @@ export interface IDMap<T> {
   [id: string]: T;
 }
 
-export type RootState = object;
+export interface RootState {
+  username: string;
+}
 
 export enum LoadStatus {
   notReady,
@@ -19,9 +21,6 @@ export interface PositionData {
 export interface VideoState {
   storage: IDMap<VideoResponse>;
   posterStatusMap: IDMap<LoadStatus>;
-  // visibilityMap: IDMap<boolean>;
-  // appearingMap: IDMap<boolean>;
-  // positionMap: IDMap<PositionData>;
 }
 
 export interface CGTeamworkTaskState {

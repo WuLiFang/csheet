@@ -1,6 +1,7 @@
 export interface CGTeamWorkTaskData {
   pipeline: string;
   artist: string;
+  artist_array: string[];
   leader_status: TaskStatus;
   director_status: TaskStatus;
   client_status: TaskStatus;
@@ -30,6 +31,7 @@ export function parseCGTeamWorkTaskResponse(
   return {
     pipeline: response[0],
     artist: response[1],
+    artist_array: response[1] ? response[1].split(',') : [],
     leader_status: TaskStatus[response[2]],
     director_status: TaskStatus[response[3]],
     client_status: TaskStatus[response[4]],

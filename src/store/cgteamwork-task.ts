@@ -62,16 +62,26 @@ export const getters: GetterTree<CGTeamworkTaskState, RootState> = {
       return Math.min(...data);
     };
   },
+  artists(contextState): string[] {
+    return _.uniq(_.flatMap(contextState.storage, i => i.artist_array)).sort();
+  },
+  getAritstTaskCount(contextState) {
+    return (artist: string) =>
+      _.filter(contextState.storage, i => i.artist_array.indexOf(artist) >= 0)
+        .length;
+  },
 };
 
 interface CGTeamWorkTaskComputedMixin extends DefaultComputed {
   cgTeamworkTaskStore: () => CGTeamworkTaskState;
   getGeneralStatus: () => (id: string, stage?: TaskStage) => TaskStatus | null;
+  artists: () => string[];
+  getAritstTaskCount: () => (artist: string) => number;
 }
 
 export const CGTeamWorkTaskComputedMixin = {
   ...mapState(['cgTeamworkTaskStore']),
-  ...mapGetters(['getGeneralStatus']),
+  ...mapGetters(['getGeneralStatus', 'artists', 'getAritstTaskCount']),
 } as CGTeamWorkTaskComputedMixin;
 
 function parseDataFromPage(): CGTeamworkTaskState['storage'] {

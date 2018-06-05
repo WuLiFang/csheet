@@ -44,7 +44,8 @@ def render_csheet_page():
             page.videos(sess),
             tasks=page.tasks(sess),
             template='csheet_app.html',
-            request=request)
+            request=request,
+            session=session)
 
     # Respon with cookies set.
     resp = make_response(rendered)
