@@ -13,10 +13,14 @@
       ) 刷新
       ElCheckbox(v-model='isAutoPlay' label='自动播放' size='mini')
       ElCheckbox(v-model='isAutoNext' label='自动下一个' size='mini')
+    .center.failed(v-if='video && !(video.preview_mtime || video.poster_mtime)') 读取失败
+    .center(v-else-if='! (poster || preview)')
+      Spinner(size='large' message='读取中' text-fg-color='white')
     video.center(
       ref='video'
       :poster='poster'
       :src='preview'
+      v-else
       @durationchange='ondurationchange' 
       @dragstart='ondragstart' 
       :autoplay='isAutoPlay'
@@ -24,9 +28,6 @@
       draggable
       :loop='!isAutoNext'
     )
-    //- .center.failed(v-else-if='posterFailed') 读取失败
-    //- .center(v-else-if='poster')
-    //-   Spinner(size='large' message='读取中' text-fg-color='white')
     .prev(:class='{disabled: !prev}' @click='prev ? video = prev : null')
     .next(:class='{disabled: !next}' @click='next ? video = next : null')
     .bottom
