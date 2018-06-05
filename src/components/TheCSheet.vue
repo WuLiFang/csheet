@@ -22,7 +22,7 @@
             prefix-icon='el-icon-search'
             v-model='filterText'
           )
-        div
+        div(v-if='artists.length > 0')
           ElAutocomplete(
             v-model='filterArtist'
             :fetch-suggestions='artistSearch'
