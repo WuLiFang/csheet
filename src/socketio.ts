@@ -6,7 +6,18 @@ import { Store } from 'vuex';
 import { isFileProtocol } from './packtools';
 import { CombinedRootState, RootState } from './store/types';
 import { VideoResponse, VideoRole } from './interface';
-import { VideoReadMutationPayload, VIDEO } from './mutation-types';
+import {
+  VideoReadMutationPayload,
+  VIDEO,
+  VideoPreloadActionPayload,
+  PRELOAD_VIDEO,
+  CLEAR_VIDEO_BLOB,
+  VideoClearBlobMutationPayload,
+  VideoUpdateBlobWhiteListMapMutationPayload,
+  UPDATE_VIDEO_BLOB_WHITELIST,
+  UPDATE_VIDEO_APPEARED,
+} from './mutation-types';
+import { WSAVERNOTSUPPORTED } from 'constants';
 
 const isSupportNotify =
   typeof Notification === 'function' &&
@@ -19,9 +30,11 @@ export default class SocketIO {
   public socket: SocketIOClient.Socket;
   public store: Store<CombinedRootState>;
   public updateAppeared = _.throttle(() => {
-    const appeared: string[] = this.store.getters.appearedVideos();
+    this.store.dispatch(UPDATE_VIDEO_APPEARED);
+    const appeared: string[] =
+      this.store.state.videoStore.blobWhiteListMap.get('appeared') || [];
     this.requestUpdate(appeared);
-  }, 2000);
+  }, 5000);
   constructor(store: Store<RootState>) {
     this.store = store as Store<CombinedRootState>;
     this.socket = io(`/`, { path: '/api/socket.io' });

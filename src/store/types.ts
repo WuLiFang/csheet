@@ -20,7 +20,8 @@ export interface PositionData {
 }
 export interface VideoState {
   storage: IDMap<VideoResponse>;
-  posterStatusMap: IDMap<LoadStatus>;
+  blobURLMap: IDMap<string>;
+  blobWhiteListMap: Map<string, string[]>;
 }
 
 export interface CGTeamworkTaskState {

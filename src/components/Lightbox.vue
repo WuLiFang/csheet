@@ -46,6 +46,8 @@ import {
   VideoUpdateAppearingMutationPayload,
   VideoUpdatePositionMutationPayload,
   UPDATE_VIDEO_POSITION,
+  VideoPreloadActionPayload,
+  PRELOAD_VIDEO,
 } from '../mutation-types';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import { isFileProtocol } from '@/packtools';
@@ -84,7 +86,7 @@ export default Vue.extend({
     },
     preview(): string | null {
       if (this.isLoadVideo) {
-        return this.getVideoURI(this.id, VideoRole.preview);
+        return this.getBlobURL(this.id, VideoRole.preview);
       }
       return null;
     },
@@ -145,6 +147,11 @@ export default Vue.extend({
     onmouseenter() {
       this.isLoadVideo = true;
       this.isAutoplay = true;
+      let payload: VideoPreloadActionPayload = {
+        id: this.id,
+        role: VideoRole.preview,
+      };
+      this.$store.dispatch(PRELOAD_VIDEO, payload);
       this.play();
     },
     onmouseleave() {

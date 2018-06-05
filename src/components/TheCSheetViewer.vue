@@ -1,6 +1,6 @@
 <template lang="pug">
   .the-csheet-viewer(v-show='video')
-    .overlay(@click='setVideoId(null)')
+    .overlay(@click='video = null')
     .detail(v-if='video')
       TaskInfo(:id="video.uuid")
       FileInfo(:id="video.uuid")
@@ -11,32 +11,35 @@
         size='small' 
         icon='el-icon-refresh'
       ) 刷新
+      ElCheckbox(v-model='isAutoPlay' label='自动播放' size='mini')
+      ElCheckbox(v-model='isAutoNext' label='自动下一个' size='mini')
     video.center(
       ref='video'
-      v-if='posterReady'
       :poster='poster'
       :src='preview'
       @durationchange='ondurationchange' 
       @dragstart='ondragstart' 
+      :autoplay='isAutoPlay'
+      @ended='onended'
       draggable
-      loop
+      :loop='!isAutoNext'
     )
-    .center.failed(v-else-if='posterFailed') 读取失败
-    .center(v-else-if='poster')
-      Spinner(size='large' message='读取中' text-fg-color='white')
-    .center.failed(v-else) 不可用
-    .prev(:class='{disabled: !prev}' @click='prev ? setVideoId(prev.uuid) : null')
-    .next(:class='{disabled: !next}' @click='next ? setVideoId(next.uuid) : null')
+    //- .center.failed(v-else-if='posterFailed') 读取失败
+    //- .center(v-else-if='poster')
+    //-   Spinner(size='large' message='读取中' text-fg-color='white')
+    .prev(:class='{disabled: !prev}' @click='prev ? video = prev : null')
+    .next(:class='{disabled: !next}' @click='next ? video = next : null')
     .bottom
       span.caption {{ video ? video.label : ''}}
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import axios from 'axios';
 
 import * as _ from 'lodash';
 import Spinner from 'vue-simple-spinner';
-import { Button as ElButton } from 'element-ui';
+import { Button as ElButton, Checkbox as ElCheckbox } from 'element-ui';
 
 import TaskInfo from './TaskInfo.vue';
 import FileInfo from './FileInfo.vue';
@@ -46,80 +49,64 @@ import { videoComputedMinxin } from '../store/video';
 import { LoadStatus } from '../store/types';
 import { VideoResponse, VideoRole } from '../interface';
 import {
-  VideoLoadPosterActionPayload,
-  LOAD_VIDEO_POSTER,
   VideoReadActionPayload,
   VIDEO,
+  PRELOAD_VIDEO,
+  VideoPreloadActionPayload,
+  VideoUpdateBlobWhiteListMapMutationPayload,
+  UPDATE_VIDEO_BLOB_WHITELIST,
 } from '../mutation-types';
 
 export default Vue.extend({
-  props: {
-    videoId: { type: String, default: null },
-  },
-  data() {
-    return {
-      isForce: false,
-      isFileProtocol,
-    };
-  },
   components: {
     Spinner,
     TaskInfo,
     FileInfo,
     ElButton,
+    ElCheckbox,
+  },
+  props: {
+    videoId: { type: String, default: null },
+  },
+  data() {
+    return {
+      videoArray: <VideoResponse[]>[],
+      prev: <VideoResponse | null>null,
+      next: <VideoResponse | null>null,
+      index: <number | null>null,
+      nextPreviewBlob: <string | null>null,
+      isForce: false,
+      isAutoPlay: false,
+      isAutoNext: false,
+      isFileProtocol,
+    };
   },
   computed: {
     ...videoComputedMinxin,
+    id: {
+      get(): string | null {
+        return this.videoId;
+      },
+      set(value: string | null) {
+        this.$emit('update:videoId', value);
+      },
+    },
     poster(): string | null {
-      return this.getVideoURI(this.videoId, VideoRole.poster, this.isForce);
-    },
-    posterReady(): boolean {
-      return this.videoStore.posterStatusMap[this.videoId] === LoadStatus.ready;
-    },
-    posterFailed(): boolean {
-      return (
-        this.videoStore.posterStatusMap[this.videoId] === LoadStatus.failed
-      );
+      return this.getBlobURL(this.videoId, VideoRole.poster, this.isForce);
     },
     preview(): string | null {
-      return this.getVideoURI(this.videoId, VideoRole.preview, this.isForce);
+      return this.getBlobURL(this.videoId, VideoRole.preview, this.isForce);
     },
-    videoList(): VideoResponse[] {
-      return _.sortBy(this.videoStore.storage, v => v.label);
-    },
-    video(): VideoResponse {
-      return this.videoStore.storage[this.videoId];
+    video: {
+      get(): VideoResponse | null {
+        return this.videoStore.storage[this.videoId];
+      },
+      set(value: VideoResponse | null) {
+        this.id = value ? value.uuid : null;
+      },
     },
     videoElement(): HTMLVideoElement | undefined {
       return this.$refs.video as HTMLVideoElement | undefined;
-    },
-    index(): number | null {
-      if (!this.videoId) {
-        return null;
-      }
-      return this.videoList.indexOf(this.video);
-    },
-    next(): VideoResponse | null {
-      if (this.index === null) {
-        return null;
-      }
-      const ret = _.find(
-        this.videoList,
-        value => Boolean(value.poster_mtime),
-        this.index + 1,
-      );
-      return ret ? ret : null;
-    },
-    prev(): VideoResponse | null {
-      if (!this.index) {
-        return null;
-      }
-      const ret = _.findLast(
-        this.videoList,
-        value => Boolean(value.poster_mtime),
-        this.index - 1,
-      );
-      return ret ? ret : null;
     },
     url(): string {
       const hash = this.video ? `#${this.video.label}` : '';
@@ -127,8 +114,14 @@ export default Vue.extend({
     },
   },
   methods: {
-    setVideoId(id: string | null) {
-      this.$emit('update:videoId', id);
+    getVisibleVideo(): VideoResponse[] {
+      return _.sortBy(
+        _.filter(this.videoStore.storage, i => {
+          const element = this.videoElementHub.get(i.uuid);
+          return element ? !element.hidden : false;
+        }),
+        v => v.label,
+      );
     },
     refresh() {
       const payload: VideoReadActionPayload = { id: this.videoId };
@@ -162,16 +155,18 @@ export default Vue.extend({
       if (!hash) {
         return;
       }
-      let index: number | null = _.findIndex(
-        this.videoList,
-        value => value.label === hash,
-      );
-      if (index < 0) {
-        const match = /^image(\d+)/.exec(hash);
-        index = match && Number(match[1]);
+
+      // By label
+      const video = _.find(this.videoStore.storage, i => i.label == hash);
+      if (video) {
+        this.video = video;
+        return;
       }
-      if (index) {
-        this.setVideoId(this.videoList[index].uuid);
+
+      // By index.
+      const match = /^image(\d+)/.exec(hash);
+      if (match) {
+        this.video = this.videoArray[Number(match[1])];
       }
     },
     setupShortcut() {
@@ -179,57 +174,106 @@ export default Vue.extend({
         switch (event.key) {
           case 'ArrowLeft': {
             if (this.prev) {
-              this.setVideoId(this.prev.uuid);
+              this.video = this.prev;
             }
             break;
           }
           case 'ArrowRight': {
             if (this.next) {
-              this.setVideoId(this.next.uuid);
+              this.video = this.next;
             }
             break;
           }
         }
       });
     },
-    loadPoster(id: string) {
-      const payload: VideoLoadPosterActionPayload = { id };
-      this.$store.dispatch(LOAD_VIDEO_POSTER, payload);
-    },
     ondurationchange(event: Event) {
+      if (this.isAutoNext) {
+        return;
+      }
       const element = event.target as HTMLVideoElement;
       element.controls = element.duration > 0.1;
+    },
+    onended() {
+      if (this.isAutoNext && this.index) {
+        this.video =
+          _.find(
+            this.videoArray,
+            value => Boolean(value.preview_mtime),
+            this.index + 1,
+          ) ||
+          _.find(this.videoArray, value => Boolean(value.preview_mtime)) ||
+          this.video;
+      }
+    },
+    updateData() {
+      this.videoArray = this.getVisibleVideo();
+      if (!this.video) {
+        this.next = null;
+        this.prev = null;
+        this.index = null;
+        return;
+      }
+      this.index = this.videoArray.indexOf(this.video);
+      this.next =
+        _.find(
+          this.videoArray,
+          value => Boolean(value.poster_mtime),
+          this.index + 1,
+        ) || null;
+      this.prev =
+        _.findLast(
+          this.videoArray,
+          value => Boolean(value.poster_mtime),
+          this.index - 1,
+        ) || null;
+      const blobWhitelist = [this.video.uuid];
+      if (this.prev) {
+        blobWhitelist.push(this.prev.uuid);
+      }
+      if (this.next) {
+        blobWhitelist.push(this.next.uuid);
+      }
+      const payload: VideoUpdateBlobWhiteListMapMutationPayload = {
+        key: 'viewer',
+        value: blobWhitelist,
+      };
+      this.$store.commit(UPDATE_VIDEO_BLOB_WHITELIST, payload);
+      this.preloadVideo(this.video);
+      this.preloadVideo(this.prev);
+      this.preloadVideo(this.next);
+    },
+    preloadVideo(video: VideoResponse | null) {
+      if (!video) {
+        return;
+      }
+      let payload: VideoPreloadActionPayload = {
+        id: video.uuid,
+        role: VideoRole.poster,
+      };
+      this.$store.dispatch(PRELOAD_VIDEO, payload);
+      payload.role = VideoRole.preview;
+      this.$store.dispatch(PRELOAD_VIDEO, payload);
     },
   },
   watch: {
     videoId(value: string | null) {
+      this.updateData();
       if (value) {
         this.scrollTo(value);
-        this.loadPoster(value);
-        if (this.next) {
-          this.loadPoster(this.next.uuid);
-        }
-        if (this.prev) {
-          this.loadPoster(this.prev.uuid);
-        }
         window.location.replace(this.url);
       }
     },
     preview(value: string | null) {
       if (this.videoElement) {
         this.videoElement.controls = false;
-        if (value) {
-          this.videoElement.src = value;
-        } else {
-          this.videoElement.removeAttribute('src');
-        }
-        this.videoElement.load();
       }
     },
   },
-  created() {
+  mounted() {
     this.setupShortcut();
     this.parseHash();
+    this.updateData();
   },
 });
 </script>
@@ -270,6 +314,8 @@ export default Vue.extend({
     right: 0;
     top: 0;
     margin: 0.5%;
+    display: flex;
+    flex-direction: column;
   }
 
   .center {

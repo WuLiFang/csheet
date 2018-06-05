@@ -1,6 +1,6 @@
 <template lang="pug">
   div.the-csheet
-    div.control
+    div.control(v-show='!current')
       div {{avaliableCount}}/{{totalCount}}
       div
         ElCheckbox(v-model='isShowTitle') 标题
@@ -138,16 +138,16 @@ export default Vue.extend({
     },
     isFilterUser: {
       get(): boolean {
-        return this.filterArtist === this.$store.state.username
+        return this.filterArtist === this.$store.state.username;
       },
-      set(value: boolean){
+      set(value: boolean) {
         if (value) {
           this.filterArtist = this.$store.state.username;
         } else {
           this.filterArtist = '';
         }
-      }
-    }
+      },
+    },
   },
   methods: {
     onclick(video: VideoResponse) {

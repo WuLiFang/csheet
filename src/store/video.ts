@@ -17,20 +17,36 @@ import {
   VIDEO,
   VideoReadMutationPayload,
   VideoReadActionPayload,
-  SET_VIDEO_POSTER_STATUS,
-  VideoSetPosterStatusMutationPayload,
-  LOAD_VIDEO_POSTER,
-  VideoLoadPosterActionPayload,
   SET_VIDEO_VISIBILITY,
   VideoSetVisibilityMutationPayload,
   UPDATE_VIDEO_APPEARING,
   VideoUpdateAppearingMutationPayload,
   UPDATE_VIDEO_POSITION,
   VideoUpdatePositionMutationPayload,
+  UPDATE_BLOB_HUB,
+  UpdateBlobHubMutationPayload,
+  PRELOAD_VIDEO,
+  VideoPreloadActionPayload,
+  PreloadURLActionPayload,
+  PRELOAD_URL,
+  CLEAR_VIDEO_BLOB,
+  VideoClearBlobMutationPayload,
+  UPDATE_VIDEO_BLOB_WHITELIST,
+  VideoUpdateBlobWhiteListMapMutationPayload,
+  UPDATE_VIDEO_APPEARED,
 } from '../mutation-types';
 import { VideoResponse, VideoRole } from '../interface';
 import { isFileProtocol } from '../packtools';
 import { imageAvailable } from '../image';
+
+const blobHub = new Map<string, Blob>();
+
+async function loadBlob(url: string) {
+  return axios.get(url, { responseType: 'blob' }).then(response => {
+    blobHub.set(url, response.data);
+    return response;
+  });
+}
 
 function getPackedPath(
   videoData: VideoResponse,
@@ -124,19 +140,17 @@ export const getters: GetterTree<VideoState, RootState> = {
       }
     };
   },
+  getBlobURL(contextState, contextGetter) {
+    return (id: string, role: VideoRole, isForce = false) => {
+      const url = contextGetter.getVideoURI(id, role, isForce);
+      if (!url) {
+        return null;
+      }
+      return contextState.blobURLMap[url] || null;
+    };
+  },
   videoElementHub() {
     return elementHub;
-  },
-  appearedVideos() {
-    return () => {
-      const ret: string[] = [];
-      elementHub.forEach((value, key) => {
-        if (isElementAppread(value)) {
-          ret.push(key);
-        }
-      });
-      return ret;
-    };
   },
 };
 
@@ -148,8 +162,12 @@ interface VideoComputedMixin extends DefaultComputed {
     role: VideoRole,
     isForce?: boolean,
   ) => string | null;
+  getBlobURL: () => (
+    id: string,
+    role: VideoRole,
+    isForce?: boolean,
+  ) => string | null;
   videoElementHub: () => typeof elementHub;
-  appearedVideos: () => () => string[];
 }
 
 export const videoComputedMinxin = {
@@ -157,6 +175,7 @@ export const videoComputedMinxin = {
   ...mapGetters([
     'scrollTo',
     'getVideoURI',
+    'getBlobURL',
     'videoElementHub',
     'appearedVideos',
   ]),
@@ -182,27 +201,55 @@ function parseDataFromPage(): VideoState['storage'] {
 
 const state: VideoState = {
   storage: parseDataFromPage(),
-  posterStatusMap: {},
+  blobURLMap: {},
+  blobWhiteListMap: new Map<string, string[]>(),
 };
 
 const mutations: MutationTree<VideoState> = {
   [VIDEO.READ](contextState, payload: VideoReadMutationPayload) {
     Vue.set(contextState.storage, payload.id, payload.data);
   },
-  [SET_VIDEO_POSTER_STATUS](
+  [UPDATE_BLOB_HUB](contextState, payload: UpdateBlobHubMutationPayload) {
+    Vue.set(
+      contextState.blobURLMap,
+      payload.url,
+      URL.createObjectURL(payload.blob),
+    );
+  },
+  [CLEAR_VIDEO_BLOB](contextState) {
+    const whiteList: string[] = [];
+    for (const value of contextState.blobWhiteListMap.values()) {
+      whiteList.push(...value);
+    }
+    const exp = new RegExp('/videos/([^.]+)..*');
+    Object.keys(contextState.blobURLMap)
+      .filter(i => {
+        const match = i.match(exp);
+        if (!match) {
+          return true;
+        }
+        return !whiteList.includes(match[1]);
+      })
+      .forEach(i => {
+        const url = contextState.blobURLMap[i];
+        URL.revokeObjectURL(url);
+        Vue.delete(contextState.blobURLMap, i);
+      });
+  },
+  [UPDATE_VIDEO_BLOB_WHITELIST](
     contextState,
-    payload: VideoSetPosterStatusMutationPayload,
+    payload: VideoUpdateBlobWhiteListMapMutationPayload,
   ) {
-    Vue.set(contextState.posterStatusMap, payload.id, payload.status);
+    contextState.blobWhiteListMap.set(payload.key, payload.value);
   },
 };
 
-function isElementAppread(element: HTMLElement): boolean {
+function isElementAppread(element: HTMLElement, expand = 10): boolean {
   if (!element || element.hidden) {
     return false;
   }
-  const top = window.scrollY;
-  const bottom = top + window.innerHeight;
+  const top = window.scrollY - expand;
+  const bottom = top + window.innerHeight + expand * 2;
   const ypos = element.offsetTop;
   const boxHeight = element.clientHeight;
   const ret = top <= ypos + boxHeight && ypos <= bottom;
@@ -224,33 +271,39 @@ const actions: ActionTree<VideoState, RootState> = {
       return response;
     });
   },
-  [LOAD_VIDEO_POSTER](context, payload: VideoLoadPosterActionPayload) {
-    if (context.state.posterStatusMap[payload.id] === LoadStatus.ready) {
+  [PRELOAD_VIDEO](context, payload: VideoPreloadActionPayload) {
+    const url = context.getters.getVideoURI(payload.id, payload.role);
+
+    if (!url || context.state.blobURLMap[url]) {
       return;
     }
-    const uri: string | null = context.getters.getVideoURI(
-      payload.id,
-      VideoRole.poster,
-    );
-    const mutationPayload: VideoSetPosterStatusMutationPayload = {
-      id: payload.id,
-      status: LoadStatus.notReady,
+    const actionPayload: PreloadURLActionPayload = { url };
+    context.dispatch(PRELOAD_URL, actionPayload);
+  },
+  async [PRELOAD_URL](context, payload: PreloadURLActionPayload) {
+    return axios.get(payload.url, { responseType: 'blob' }).then(response => {
+      const mutationPayload: UpdateBlobHubMutationPayload = {
+        url: payload.url,
+        blob: response.data as Blob,
+      };
+      context.commit(UPDATE_BLOB_HUB, mutationPayload);
+      return response;
+    });
+  },
+  [UPDATE_VIDEO_APPEARED](context) {
+    const ret: string[] = [];
+    elementHub.forEach((value, key) => {
+      if (isElementAppread(value)) {
+        ret.push(key);
+      }
+    });
+    const mutationPayload: VideoUpdateBlobWhiteListMapMutationPayload = {
+      key: 'appeared',
+      value: ret,
     };
-    context.commit(SET_VIDEO_POSTER_STATUS, mutationPayload);
-    if (!uri) {
-      return;
-    }
-    imageAvailable(
-      uri,
-      () => {
-        mutationPayload.status = LoadStatus.ready;
-        context.commit(SET_VIDEO_POSTER_STATUS, mutationPayload);
-      },
-      () => {
-        mutationPayload.status = LoadStatus.failed;
-        context.commit(SET_VIDEO_POSTER_STATUS, mutationPayload);
-      },
-    );
+    context.commit(UPDATE_VIDEO_BLOB_WHITELIST, mutationPayload);
+    context.commit(CLEAR_VIDEO_BLOB);
+    return ret;
   },
 };
 
