@@ -16,7 +16,7 @@
       v-if='posterReady'
       :poster='poster'
       :src='preview'
-      @loadedmetadata='onloadedmetadata' 
+      @durationchange='ondurationchange' 
       @dragstart='ondragstart' 
       draggable
       loop
@@ -135,10 +135,6 @@ export default Vue.extend({
       this.isForce = true;
       this.$store.dispatch(VIDEO.READ, payload);
     },
-    onloadedmetadata(event: Event) {
-      const element = event.target as HTMLVideoElement;
-      element.controls = element.duration > 0.1;
-    },
     ondragstart(event: DragEvent) {
       if (!this.video) {
         return;
@@ -199,6 +195,10 @@ export default Vue.extend({
     loadPoster(id: string) {
       const payload: VideoLoadPosterActionPayload = { id };
       this.$store.dispatch(LOAD_VIDEO_POSTER, payload);
+    },
+    ondurationchange(event: Event) {
+      const element = event.target as HTMLVideoElement;
+      element.controls = element.duration > 0.1;
     },
   },
   watch: {
