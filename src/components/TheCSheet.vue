@@ -200,7 +200,7 @@ export default Vue.extend({
     },
     artistSearch(queryString: string, cb: (result: any[]) => void) {
       const result = queryString
-        ? this.artists.filter(i => i.startsWith(queryString))
+        ? this.artists.filter(i => i.includes(queryString))
         : this.artists;
       cb(
         result.map(i => {
