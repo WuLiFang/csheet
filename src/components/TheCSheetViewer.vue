@@ -15,7 +15,6 @@
       ref='video'
       v-if='posterReady'
       :poster='poster'
-      :src='preview'
       @loadedmetadata='onloadedmetadata' 
       @dragstart='ondragstart' 
       draggable
@@ -132,7 +131,6 @@ export default Vue.extend({
     },
     refresh() {
       const payload: VideoReadActionPayload = { id: this.videoId };
-      this.reset();
       this.isForce = true;
       this.$store.dispatch(VIDEO.READ, payload);
     },
@@ -201,17 +199,9 @@ export default Vue.extend({
       const payload: VideoLoadPosterActionPayload = { id };
       this.$store.dispatch(LOAD_VIDEO_POSTER, payload);
     },
-    reset() {
-      this.isForce = false;
-      if (this.videoElement) {
-        this.videoElement.controls = false;
-        this.videoElement.load();
-      }
-    },
   },
   watch: {
     videoId(value: string | null) {
-      this.reset();
       if (value) {
         this.scrollTo(value);
         this.loadPoster(value);
@@ -224,9 +214,15 @@ export default Vue.extend({
         window.location.replace(this.url);
       }
     },
-    preview(value) {
-      if (value === null) {
-        this.reset();
+    preview(value: string | null) {
+      if (this.videoElement) {
+        this.videoElement.controls = false;
+        if (value) {
+          this.videoElement.src = value;
+        } else {
+          this.videoElement.removeAttribute('src');
+        }
+        this.videoElement.load();
       }
     },
   },
