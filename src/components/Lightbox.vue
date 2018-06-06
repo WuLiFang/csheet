@@ -11,8 +11,9 @@
   )
     video(
       ref='video'
-      :poster='thumb' 
-      :src='preview' 
+      :poster='poster' 
+      :src='src' 
+      :width='200 / ratio'
       @loadeddata="onloadeddata"
       muted 
       loop 
@@ -53,6 +54,7 @@ import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import { isFileProtocol } from '@/packtools';
 
 import LightboxTaskStatus from './LightboxTaskStatus.vue';
+import { preloadVideo, preloadImage } from '@/preload';
 
 export default Vue.extend({
   props: {
@@ -67,6 +69,9 @@ export default Vue.extend({
       isLoadVideo: false,
       isAutoplay: false,
       forceShrink: false,
+      src: <string | null>null,
+      poster: <string | null>null,
+      ratio: 0.5625,
     };
   },
   components: {
@@ -81,10 +86,10 @@ export default Vue.extend({
     video(): VideoResponse {
       return this.videoStore.storage[this.id];
     },
-    thumb(): string | null {
+    posterURL(): string | null {
       return this.getVideoURI(this.id, VideoRole.thumb);
     },
-    preview(): string | null {
+    srcURL(): string | null {
       if (this.isLoadVideo) {
         return this.getBlobURL(this.id, VideoRole.preview);
       }
@@ -152,6 +157,8 @@ export default Vue.extend({
         role: VideoRole.preview,
       };
       this.$store.dispatch(PRELOAD_VIDEO, payload);
+      payload.role = VideoRole.poster;
+      this.$store.dispatch(PRELOAD_VIDEO, payload);
       this.play();
     },
     onmouseleave() {
@@ -163,16 +170,32 @@ export default Vue.extend({
         this.play();
       }
     },
+    updateRatio() {
+      if (!this.posterURL) {
+        return;
+      }
+      preloadImage(this.posterURL).then(image => {
+        this.ratio = image.naturalHeight / image.naturalWidth;
+      });
+    },
   },
   watch: {
-    preview(value) {
-      this.videoElement.load();
-      if (!value) {
+    posterURL(value) {
+      this.updateRatio();
+    },
+    srcURL(value) {
+      if (value) {
+        preloadVideo(value).then(video => {
+          this.ratio = video.videoHeight / video.videoWidth;
+          this.src = video.src;
+        });
         this.isLoadVideo = false;
       }
     },
   },
   mounted() {
+    this.poster = this.posterURL;
+    this.updateRatio();
     this.$nextTick(() => {
       this.videoElementHub.set(this.id, this.$el);
     });

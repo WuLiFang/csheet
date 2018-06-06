@@ -11,25 +11,40 @@
         size='small' 
         icon='el-icon-refresh'
       ) 刷新
-      ElCheckbox(v-model='isAutoPlay' label='自动播放' size='mini')
-      ElCheckbox(v-model='isAutoNext' label='自动下一个' size='mini')
+      .video-control(v-show='src')
+        ElCheckbox(v-model='isShowVideo' label='视频' size='mini')
+        ElCheckbox(v-model='isAutoPlay' label='自动播放' size='mini')
+        ElButton(v-show='isAutoPlay' @click='isAutoNext ? pause(): play()' size='mini')
+          span(v-if='isAutoNext')
+            FaIcon(name='sort-alpha-asc')
+            | 顺序
+          span(v-else)
+            FaIcon(name='magic')
+            | 自动
+
     .center.failed(v-if='video && !(video.preview_mtime || video.poster_mtime)') 读取失败
-    .center(v-else-if='! (poster || preview)')
+    .center(v-else-if='! (poster || src)')
       Spinner(size='large' message='读取中' text-fg-color='white')
-    video.center(
-      ref='video'
-      :poster='poster'
-      :src='preview'
-      v-else
-      @durationchange='ondurationchange' 
-      @dragstart='ondragstart' 
-      :autoplay='isAutoPlay'
-      @ended='onended'
+    img.center(
       draggable
-      :loop='!isAutoNext'
+      v-show='poster && (!src || !isShowVideo)'
+      :src='poster'
+      @dragstart='ondragstart' 
     )
-    .prev(:class='{disabled: !prev}' @click='prev ? video = prev : null')
-    .next(:class='{disabled: !next}' @click='next ? video = next : null')
+    video.center(
+      draggable
+      ref='video'
+      v-show='isShowVideo && src'
+      :poster='poster'
+      :src='src'
+      :autoplay='isAutoPlay'
+      :loop='!isAutoNext'
+      :controls='!isAutoNext && duration > 0.1'
+      @dragstart='ondragstart' 
+      @ended='onended'
+    )
+    .prev(@click='jumpPrevImage')
+    .next(@click='jumpNextImage')
     .bottom
       span.caption {{ video ? video.label : ''}}
 </template>
@@ -38,9 +53,14 @@
 import Vue from 'vue';
 import axios from 'axios';
 
-import * as _ from 'lodash';
+import _ from 'lodash';
 import Spinner from 'vue-simple-spinner';
 import { Button as ElButton, Checkbox as ElCheckbox } from 'element-ui';
+
+// @ts-ignore
+import FaIcon from 'vue-awesome/components/Icon';
+import 'vue-awesome/icons/magic';
+import 'vue-awesome/icons/sort-alpha-asc';
 
 import TaskInfo from './TaskInfo.vue';
 import FileInfo from './FileInfo.vue';
@@ -57,6 +77,8 @@ import {
   VideoUpdateBlobWhiteListMapMutationPayload,
   UPDATE_VIDEO_BLOB_WHITELIST,
 } from '../mutation-types';
+import { preloadVideo, preloadImage } from '@/preload';
+import { isNull } from 'util';
 
 export default Vue.extend({
   components: {
@@ -65,21 +87,21 @@ export default Vue.extend({
     FileInfo,
     ElButton,
     ElCheckbox,
+    FaIcon,
   },
   props: {
     videoId: { type: String, default: null },
   },
   data() {
     return {
-      videoArray: <VideoResponse[]>[],
-      prev: <VideoResponse | null>null,
-      next: <VideoResponse | null>null,
-      index: <number | null>null,
-      nextPreviewBlob: <string | null>null,
       isForce: false,
       isAutoPlay: false,
       isAutoNext: false,
+      isShowVideo: true,
       isFileProtocol,
+      src: <string | null>null,
+      poster: <string | null>null,
+      duration: 0,
     };
   },
   computed: {
@@ -92,11 +114,15 @@ export default Vue.extend({
         this.$emit('update:videoId', value);
       },
     },
-    poster(): string | null {
-      return this.getBlobURL(this.videoId, VideoRole.poster, this.isForce);
+    posterURL(): string | null {
+      return this.isForce
+        ? this.getVideoURI(this.videoId, VideoRole.poster, true)
+        : this.getBlobURL(this.videoId, VideoRole.poster);
     },
-    preview(): string | null {
-      return this.getBlobURL(this.videoId, VideoRole.preview, this.isForce);
+    srcURL(): string | null {
+      return this.isForce
+        ? this.getVideoURI(this.videoId, VideoRole.preview, true)
+        : this.getBlobURL(this.videoId, VideoRole.preview);
     },
     video: {
       get(): VideoResponse | null {
@@ -112,6 +138,12 @@ export default Vue.extend({
     url(): string {
       const hash = this.video ? `#${this.video.label}` : '';
       return `${window.location.href.split('#')[0]}${hash}`;
+    },
+    videoPlayList(): VideoResponse[] {
+      return _.filter(this.videoStore.storage, i => !isNull(i.preview_mtime));
+    },
+    imagePlayList(): VideoResponse[] {
+      return _.filter(this.videoStore.storage, i => !isNull(i.poster_mtime));
     },
   },
   methods: {
@@ -167,87 +199,97 @@ export default Vue.extend({
       // By index.
       const match = /^image(\d+)/.exec(hash);
       if (match) {
-        this.video = this.videoArray[Number(match[1])];
+        this.video = this.imagePlayList[Number(match[1])];
       }
     },
     setupShortcut() {
       window.addEventListener('keyup', (event: KeyboardEvent) => {
         switch (event.key) {
           case 'ArrowLeft': {
-            if (this.prev) {
-              this.video = this.prev;
-            }
+            this.jumpPrevImage();
             break;
           }
           case 'ArrowRight': {
-            if (this.next) {
-              this.video = this.next;
-            }
+            this.jumpNextImage();
             break;
           }
         }
       });
     },
-    ondurationchange(event: Event) {
-      if (this.isAutoNext) {
-        return;
-      }
-      const element = event.target as HTMLVideoElement;
-      element.controls = element.duration > 0.1;
-    },
     onended() {
-      if (this.isAutoNext && this.index) {
-        this.video =
-          _.find(
-            this.videoArray,
-            value => Boolean(value.preview_mtime),
-            this.index + 1,
-          ) ||
-          _.find(this.videoArray, value => Boolean(value.preview_mtime)) ||
-          this.video;
-      }
-    },
-    updateData() {
-      this.videoArray = this.getVisibleVideo();
       if (!this.video) {
-        this.next = null;
-        this.prev = null;
-        this.index = null;
         return;
       }
-      this.index = this.videoArray.indexOf(this.video);
-      this.next =
-        _.find(
-          this.videoArray,
-          value => Boolean(value.poster_mtime),
-          this.index + 1,
-        ) || null;
-      this.prev =
-        _.findLast(
-          this.videoArray,
-          value => Boolean(value.poster_mtime),
-          this.index - 1,
-        ) || null;
-      const blobWhitelist = [this.video.uuid];
-      if (this.prev) {
-        blobWhitelist.push(this.prev.uuid);
+      if (this.isAutoNext) {
+        const state = this.findIndex(this.videoPlayList);
+        const target = state.array[state.index + 1] || state.array[0];
+        const url = this.getVideoURI(target.uuid, VideoRole.preview);
+        if (!url) {
+          return;
+        }
+        preloadVideo(url).then(() => {
+          this.video = target;
+        });
       }
-      if (this.next) {
-        blobWhitelist.push(this.next.uuid);
-      }
-      const payload: VideoUpdateBlobWhiteListMapMutationPayload = {
-        key: 'viewer',
-        value: blobWhitelist,
-      };
-      this.$store.commit(UPDATE_VIDEO_BLOB_WHITELIST, payload);
-      this.preloadVideo(this.video);
-      this.preloadVideo(this.prev);
-      this.preloadVideo(this.next);
     },
-    preloadVideo(video: VideoResponse | null) {
-      if (!video) {
+    findIndex(videoArray: VideoResponse[], defaultIndex = 0) {
+      const array = _.sortBy(
+        _.intersection(videoArray, this.getVisibleVideo()),
+        i => i.label,
+      );
+      const index: number = this.video
+        ? videoArray.indexOf(this.video)
+        : defaultIndex;
+      return {
+        index,
+        array,
+      };
+    },
+    jumpNextImage() {
+      const state = this.findIndex(this.imagePlayList);
+      const target = state.array[state.index + 1] || state.array[0];
+      this.video = target;
+    },
+    jumpPrevImage() {
+      const state = this.findIndex(this.imagePlayList);
+      const target =
+        state.array[state.index - 1] || state.array[state.array.length - 1];
+      this.video = target;
+    },
+    prev(array: VideoResponse[]): VideoResponse | null {
+      const state = this.findIndex(this.imagePlayList);
+      return state.array[state.index - 1] || null;
+    },
+    next(array: VideoResponse[]): VideoResponse | null {
+      const state = this.findIndex(this.imagePlayList);
+      return state.array[state.index + 1] || null;
+    },
+    loadPoster() {
+      if (!this.posterURL) {
         return;
       }
+      const id = this.videoId;
+      return preloadImage(this.posterURL).then(image => {
+        if (this.videoId != id) {
+          return;
+        }
+        this.poster = image.src;
+      });
+    },
+    loadSrc() {
+      if (!this.srcURL) {
+        return;
+      }
+      const id = this.videoId;
+      preloadVideo(this.srcURL).then(video => {
+        if (this.videoId != id) {
+          return;
+        }
+        this.src = video.src;
+        this.duration = video.duration;
+      });
+    },
+    preload(video: VideoResponse) {
       let payload: VideoPreloadActionPayload = {
         id: video.uuid,
         role: VideoRole.poster,
@@ -256,25 +298,67 @@ export default Vue.extend({
       payload.role = VideoRole.preview;
       this.$store.dispatch(PRELOAD_VIDEO, payload);
     },
+    play() {
+      this.isAutoNext = true;
+      this.isAutoPlay = true;
+      if (this.videoElement) {
+        this.videoElement.play();
+      }
+    },
+    pause() {
+      this.isAutoNext = false;
+      if (this.videoElement) {
+        this.videoElement.pause();
+      }
+    },
   },
   watch: {
     videoId(value: string | null) {
-      this.updateData();
+      this.duration = 0;
+      this.src = null;
+      this.poster = null;
       if (value) {
         this.scrollTo(value);
         window.location.replace(this.url);
+        const blobWhitelist = _.uniq(
+          _.compact([
+            this.video,
+            this.prev(this.imagePlayList),
+            this.next(this.imagePlayList),
+            this.next(this.videoPlayList),
+          ]),
+        );
+        blobWhitelist.map(this.preload);
+
+        const payload: VideoUpdateBlobWhiteListMapMutationPayload = {
+          key: 'viewer',
+          value: blobWhitelist.map(i => i.uuid),
+        };
+        this.$store.commit(UPDATE_VIDEO_BLOB_WHITELIST, payload);
+      } else {
+        this.isAutoNext = false;
       }
     },
-    preview(value: string | null) {
-      if (this.videoElement) {
-        this.videoElement.controls = false;
+    srcURL(value) {
+      if (value) {
+        this.loadSrc();
+      } else if (this.videoElement) {
+        this.videoElement.removeAttribute('src');
+      }
+    },
+    posterURL(value) {
+      if (value) {
+        this.loadPoster();
+      } else if (this.videoElement) {
+        this.videoElement.removeAttribute('poster');
       }
     },
   },
   mounted() {
     this.setupShortcut();
     this.parseHash();
-    this.updateData();
+    this.loadSrc();
+    this.loadPoster();
   },
 });
 </script>
@@ -317,6 +401,14 @@ export default Vue.extend({
     margin: 0.5%;
     display: flex;
     flex-direction: column;
+    text-align: right;
+    .video-control {
+      display: flex;
+      flex-direction: column;
+    }
+    .fa-icon {
+      height: 1em;
+    }
   }
 
   .center {

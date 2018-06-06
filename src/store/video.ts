@@ -37,7 +37,6 @@ import {
 } from '../mutation-types';
 import { VideoResponse, VideoRole } from '../interface';
 import { isFileProtocol } from '../packtools';
-import { imageAvailable } from '../image';
 
 const blobHub = new Map<string, Blob>();
 
