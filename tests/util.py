@@ -9,7 +9,7 @@ from unittest import skipIf
 import flask
 
 from cgtwq import DesktopClient
-from csheet import APP, model, setting
+from csheet import APP, database, setting
 
 skip_if_not_logged_in = skipIf(not DesktopClient.is_logged_in(),  # pylint: disable=invalid-name
                                'CGTeamWork is not logged in.')
@@ -21,10 +21,10 @@ def setup():
     """Setup test env.  """
 
     storage = path('storage')
-    database = 'sqlite:///{}\\csheet.db'.format(storage)
+    engine_uri = 'sqlite:///{}\\csheet.db'.format(storage)
     setting.STORAGE = storage
-    setting.DATABASE = database
-    model.bind(database)
+    setting.ENGI = engine_uri
+    database.core.bind(engine_uri)
 
 
 def path(*other):

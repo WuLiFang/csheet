@@ -14,7 +14,7 @@ from wlf import ffmpeg
 
 from . import setting
 from .filename import filter_filename
-from .model import Video, session_scope
+from .database import Video, session_scope
 from .workertools import work_forever
 from .exceptions import WorkerIdle
 

@@ -12,7 +12,8 @@ import cgtwq
 from ..mimecheck import is_mimetype
 from ..video import HTMLVideo
 
-from ..model import CGTeamWorkTask, TaskDataRow
+from ..database import CGTeamWorkTask
+from ..database.cgteamworktask import TaskDataRow
 from .core import BasePage
 
 LOGGER = logging.getLogger(__name__)

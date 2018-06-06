@@ -14,7 +14,7 @@ ENV LANG=en_US.utf-8
 
 LABEL author="NateScarlet@Gmail.com"
 ENV CSHEET_STORAGE=/srv/csheet
-ENV CSHEET_DATABASE=sqlite:////var/db/csheet.db
+ENV CSHEET_ENGINE_URI=sqlite:////var/db/csheet.db
 ENV WORKER_CONNECTIONS=1000
 
 COPY . /csheet

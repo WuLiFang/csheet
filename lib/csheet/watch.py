@@ -14,7 +14,7 @@ from sqlalchemy import or_
 from wlf.path import get_encoded as e
 
 from .filename import filter_filename
-from .model import Session, Video
+from .database import Session, Video
 from .workertools import work_forever
 from .exceptions import WorkerIdle
 

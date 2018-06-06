@@ -10,12 +10,13 @@ from abc import abstractmethod
 from tempfile import TemporaryFile
 from zipfile import ZipFile
 
-from gevent import spawn, sleep
+from gevent import sleep, spawn
 from jinja2 import Environment, FileSystemLoader, Undefined
 
 from wlf.path import get_encoded as e
 from wlf.path import PurePath
-from .. import __about__, filetools, model
+
+from .. import __about__, database, filetools
 from ..__about__ import __version__
 from ..filename import filter_filename
 from ..video import HTMLVideo
@@ -50,7 +51,7 @@ class BasePage(object):
         """Run sync in another thread.  """
 
         if self.videos(session):
-            spawn(lambda: self.update(model.Session()))
+            spawn(lambda: self.update(database.Session()))
         else:
             self.update(session)
 
@@ -152,4 +153,4 @@ def dumps(obj):
 def dump_videos(videos):
     """Dump videos to string data.  """
 
-    return json.dumps(model.format_videos(videos))
+    return json.dumps(database.Video.format_videos(videos))

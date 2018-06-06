@@ -3,10 +3,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from wlf.path import PurePath
-
+from .database import Video
 from .filename import filter_filename
-from .model import Video
 
 
 class HTMLVideo(Video):

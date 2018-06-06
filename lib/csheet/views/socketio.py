@@ -10,7 +10,7 @@ from gevent import sleep, spawn
 from sqlalchemy import and_, or_
 
 from .. import setting
-from ..model import Video, format_videos, session_scope
+from ..database import Video, session_scope
 from .app import APP, SOCKETIO
 from .core import database_session
 
@@ -38,7 +38,7 @@ def get_updated_asset(since, sess):
             _role_updated_criterion('poster', since))
     ).order_by(Video.label)
     result = query.all()
-    result = format_videos(result)
+    result = Video.format_videos(result)
     return result
 
 

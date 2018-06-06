@@ -12,7 +12,7 @@ from mimetypes import guess_type
 from wlf.path import PurePath, get_unicode as u
 
 from ..filename import filter_filename
-from ..localdatabase import uuid_from_path
+from ..filetools import uuid_from_path
 from ..video import HTMLVideo
 from .core import BasePage
 

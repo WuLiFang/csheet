@@ -7,7 +7,7 @@ from flask import abort, g, session
 
 import cgtwq
 
-from ..model import CGTeamWorkTask, Session, Video, session_scope
+from ..database import CGTeamWorkTask, Session, Video, session_scope
 from .datamodel import ProjectInfo
 
 
