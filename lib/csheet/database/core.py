@@ -28,7 +28,7 @@ VIDEO_TASK = Table('Video-CGTeamWorkTask', Base.metadata,
 
 VIDEO_TAG = Table('Video-Tag', Base.metadata,
                   Column('video_id', String, ForeignKey('Video.uuid')),
-                  Column('tag_id', String, ForeignKey('Tag.text')))
+                  Column('tag_id', String, ForeignKey('Tag.id')))
 
 
 @contextmanager

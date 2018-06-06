@@ -3,13 +3,14 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from flask import session, make_response, abort
+import six
+from flask import abort, make_response, session
 from flask_restful import Api, Resource, reqparse
-
 
 from . import core
 from .app import APP
 from .login import require_login
+from .. import database
 
 API = Api(APP, '/api')
 
@@ -127,7 +128,88 @@ class Video(Resource):
 
 API.add_resource(Video, '/video/<id_>')
 
-API.add_resource(TaskField, '/video/<_>/task/<uuid>/<name>',
-                 endpoint=b'deprecated_api_taskfield')
-API.add_resource(TaskNote, '/video/<_>/task_note/<uuid>',
-                 endpoint=b'deprecated_api_tasknote')
+
+class Tag(Resource):
+    """Api for tag.  """
+
+    @staticmethod
+    def get(id_):
+        """Get tag info from database.  """
+
+        with core.database_session() as sess:
+            tag = core.get_tag(id_, sess)
+            return tag.serialize()
+
+    @staticmethod
+    def post(id_):
+        """Link video to tag.  """
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('videos', type=six.text_type,
+                            required=True, action='append')
+        args = parser.parse_args()
+
+        with core.database_session() as sess:
+            tag = core.get_tag(id_, sess)
+            videos = [core.get_video(i, sess) for i in args.videos]
+            tag.videos += videos
+            return tag.serialize()
+
+    @staticmethod
+    def put(id_):
+        """Modify tag.  """
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('text', required=True)
+        args = parser.parse_args()
+
+        with core.database_session() as sess:
+            tag = core.get_tag(id_, sess)
+            tag.text = args.text
+            return tag.serialize()
+
+    @staticmethod
+    def delete(id_):
+        """Delete tag.  """
+
+        with core.database_session() as sess:
+            tag = core.get_tag(id_, sess)
+            text = tag.text
+            sess.delete(tag)
+
+            return make_response('已删除标签: {}'.format(text))
+
+
+API.add_resource(Tag, '/tag/<id_>')
+
+
+class TagManage(Resource):
+    """Api for tag manage.  """
+
+    @staticmethod
+    def get():
+        """Get all tag info from database.  """
+
+        with core.database_session() as sess:
+            return [i.serialize() for i in sess.query(database.Tag).all()]
+
+    @staticmethod
+    def post():
+        """Create new tag, return existed tag with same text if any.  """
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('text', type=six.text_type,
+                            required=True)
+        args = parser.parse_args()
+
+        with core.database_session() as sess:
+            tag = sess.query(database.Tag).filter_by(
+                text=args.text).one_or_none()
+            if not tag:
+                tag = database.Tag(text=args.text)
+                sess.add(tag)
+                sess.commit()
+            return tag.serialize()
+
+
+API.add_resource(TagManage, '/tag')

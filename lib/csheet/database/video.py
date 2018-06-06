@@ -52,6 +52,7 @@ class Video(core.Base, core.SerializableMixin):
     def serialize(self):
         ret = super(Video, self).serialize()
         ret['related_tasks'] = [i.uuid for i in self.related_tasks]
+        ret['tags'] = [i.id for i in self.tags]
         return ret
 
     @staticmethod

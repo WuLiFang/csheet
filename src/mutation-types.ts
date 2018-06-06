@@ -1,4 +1,9 @@
-import { VideoResponse, CGTeamWorkTaskData, VideoRole } from './interface';
+import {
+  VideoResponse,
+  CGTeamWorkTaskData,
+  VideoRole,
+  TagResponse,
+} from './interface';
 import { LoadStatus, PositionData } from './store/types';
 
 export enum VIDEO {
@@ -110,3 +115,29 @@ export interface CGTeamWorkTaskCreateNoteActionPayload {
   id: string;
   text: string;
 }
+
+export enum TAG {
+  CREATE = 'create_tag',
+  READ = 'read_tag',
+  UPDATE = 'update_tag',
+  DELETE = 'delete_tag',
+}
+
+export interface TagId {
+  id: string | number;
+}
+export interface TagCreateActionPayload {
+  data: { text: string };
+}
+
+export type TagReadActionPayload = TagId;
+
+export interface TagUpdateActionPayload extends TagId {
+  data: { text: string };
+}
+export interface TagUpdateMutationPayload extends TagId {
+  data: TagResponse;
+}
+
+export type TagDeleteActionPayload = TagId;
+export type TagDeleteMutationPayload = TagId;

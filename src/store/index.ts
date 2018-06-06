@@ -7,6 +7,7 @@ import * as mutations from '../mutation-types';
 
 import videoStore from './video';
 import cgTeamworkTaskStore from './cgteamwork-task';
+import tagStore from './tag';
 import { RootState } from './types';
 import { getDataFromAppElement } from '@/datatools';
 
@@ -18,6 +19,7 @@ const store: StoreOptions<RootState> = {
   modules: {
     videoStore,
     cgTeamworkTaskStore,
+    tagStore,
   },
 };
 

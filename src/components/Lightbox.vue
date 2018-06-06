@@ -9,6 +9,8 @@
     v-show='isVisible'
     draggable
   )
+    .select-overlay(v-show='isSelectable && selected')
+      FaIcon(name='check-circle-o' scale='3')
     video(
       ref='video'
       :poster='poster' 
@@ -32,6 +34,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
+
+// @ts-ignore
+import FaIcon from 'vue-awesome/components/Icon';
+import 'vue-awesome/icons/check-circle-o';
 
 import { videoComputedMinxin } from '../store/video';
 import {
@@ -57,8 +63,14 @@ import LightboxTaskStatus from './LightboxTaskStatus.vue';
 import { preloadVideo, preloadImage } from '@/preload';
 
 export default Vue.extend({
+  components: {
+    LightboxTaskStatus,
+    FaIcon,
+  },
   props: {
+    value: { type: Boolean },
     id: { type: String },
+    isSelectable: { default: false },
     isShowTitle: { default: false },
     isShowStatus: { default: false },
     isVisible: { default: false },
@@ -74,12 +86,17 @@ export default Vue.extend({
       ratio: 0.5625,
     };
   },
-  components: {
-    LightboxTaskStatus,
-  },
   computed: {
     ...videoComputedMinxin,
     ...CGTeamWorkTaskComputedMixin,
+    selected: {
+      get(): boolean {
+        return this.value;
+      },
+      set(value: boolean) {
+        this.$emit('input', value);
+      },
+    },
     top(): number {
       return this.$el.offsetTop;
     },
@@ -123,7 +140,11 @@ export default Vue.extend({
   },
   methods: {
     onclick() {
-      this.$emit('click', this.video);
+      if (this.isSelectable) {
+        this.selected = !this.selected;
+      } else {
+        this.$emit('click', this.video);
+      }
     },
     ondragstart(event: DragEvent) {
       let plainData = this.video.poster || this.video.src;
@@ -215,6 +236,12 @@ export default Vue.extend({
   video {
     max-width: 100%;
     max-height: 100%;
+  }
+  .select-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba($color: green, $alpha: 0.2);
   }
   .up-display {
     position: absolute;

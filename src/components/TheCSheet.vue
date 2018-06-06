@@ -1,5 +1,13 @@
 <template lang="pug">
   div.the-csheet
+    .select-toolbar(v-show='isEditingTags')
+      span.label 编辑标签
+      TagSelect(v-model='selectedTags' size='mini')
+      ElButtonGroup
+        ElButton(@click='selectAll', size='mini' icon='el-icon-edit') 全选
+        ElButton(@click='reverseSelection', size='mini' icon='el-icon-edit') 反选
+        ElButton(@click='accept', size='mini' icon='el-icon-check' type="primary" :disabled='selectedTags.length === 0') 确定
+        ElButton(@click='reject', size='mini' icon='el-icon-close' type="info") 取消
     div.control(v-show='!current')
       div {{avaliableCount}}/{{totalCount}}
       div
@@ -15,14 +23,14 @@
           ElOption(label='客户' :value='TaskStage.client')
         StatusSelect(:select.sync='statusSelect')
       div.filter
-        div 
+        .label
           ElInput(
             size='mini'
             placeholder='标题正则过滤' 
             prefix-icon='el-icon-search'
             v-model='filterText'
           )
-        div(v-if='artists.length > 0')
+        .artist(v-if='artists.length > 0')
           ElAutocomplete(
             v-model='filterArtist'
             :fetch-suggestions='artistSearch'
@@ -30,21 +38,26 @@
             prefix-icon='el-icon-info'
             placeholder='人员过滤' 
           )
-        ElCheckbox(v-model='isFilterUser' v-show='myTaskCount') 当前用户({{myTaskCount}})
-        div
+          ElCheckbox(v-model='isFilterUser' v-show='myTaskCount') 当前用户({{myTaskCount}})
+        .tag
+          TagSelect(v-model='filterTags' size='mini' placeholder='标签过滤')
+        .buttons
+          ElButton(@click='editTag', size='mini' icon='el-icon-edit' v-show='!isEditingTags' ) 编辑标签
           ElButton(
             size='mini'
             v-show='filterText || filterArtist'
-            @click='filterText = ""; filterArtist = ""'
+            @click='filterText = ""; filterArtist = ""; filterTags = []'
           ) 重置过滤
       div.pack(v-if='isShowPack')
         a(:href="packURL" :download="packFilename" @click='isShowPack = false')
           ElButton(icon="el-icon-message" size='mini') 打包
     Lightbox(
       v-for='video in videos'
+      v-model='videoSelectState[video.uuid]'
       :id='video.uuid' 
       :key='video.label' 
-      :isVisible='filter(video)'
+      :isSelectable='isEditingTags'
+      :isVisible='visibleVideos.includes(video)'
       :isShowTitle='isShowTitle' 
       :isShowStatus='isShowStatus'
       :statusStage='statusStage'
@@ -62,10 +75,12 @@ import Lightbox from './Lightbox.vue';
 import StatusSelect from './StatusSelect.vue';
 import { StatusSelectResult } from './StatusSelect.vue';
 import TheCSheetViewer from './TheCSheetViewer.vue';
+import TagSelect from './TagSelect.vue';
 import {
   Input as ElInput,
   Checkbox as ElCheckbox,
   Button as ElButton,
+  ButtonGroup as ElButtonGroup,
   Select as ElSelect,
   Option as ElOption,
   RadioGroup as ElRadioGroup,
@@ -82,15 +97,23 @@ import {
   CGTeamWorkTaskData,
 } from '../interface';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
+import { tagComputedMinxin } from '@/store/tag';
+import { isUndefined } from 'util';
+
+interface VideoSelectState {
+  [id: string]: boolean | undefined;
+}
 
 export default Vue.extend({
   components: {
     Lightbox,
     TheCSheetViewer,
     StatusSelect,
+    TagSelect,
     ElInput,
     ElCheckbox,
     ElButton,
+    ElButtonGroup,
     ElSelect,
     ElOption,
     ElAutocomplete,
@@ -104,6 +127,10 @@ export default Vue.extend({
       statusStage: TaskStage.director,
       filterText: '',
       filterArtist: '',
+      filterTags: [],
+      selectedTags: [],
+      videoSelectState: <VideoSelectState>{},
+      isEditingTags: false,
       avaliableCount: -1,
       totalCount: -1,
       statusSelect: <StatusSelectResult>{
@@ -120,6 +147,7 @@ export default Vue.extend({
   computed: {
     ...videoComputedMinxin,
     ...CGTeamWorkTaskComputedMixin,
+    ...tagComputedMinxin,
     hasTaskStorage(): boolean {
       return !_.isEmpty(this.cgTeamworkTaskStore.storage);
     },
@@ -148,6 +176,9 @@ export default Vue.extend({
         }
       },
     },
+    visibleVideos(): VideoResponse[] {
+      return this.videos.filter(this.filter);
+    },
   },
   methods: {
     onclick(video: VideoResponse) {
@@ -156,6 +187,7 @@ export default Vue.extend({
     filter(video: VideoResponse): boolean {
       return (
         this.filterByArtist(video) &&
+        this.filterByTag(video) &&
         this.filterByStatus(video) &&
         this.filterByLabel(video)
       );
@@ -188,6 +220,14 @@ export default Vue.extend({
         return task.artist_array.indexOf(this.filterArtist) >= 0;
       });
     },
+    filterByTag(video: VideoResponse): boolean {
+      if (!this.filterTags) {
+        return true;
+      }
+      return this.filterTags.every(i => {
+        return video.tags.includes(i);
+      });
+    },
     count() {
       this.avaliableCount = this.videos.filter(i => {
         const element = this.videoElementHub.get(i.uuid);
@@ -210,6 +250,35 @@ export default Vue.extend({
         }),
       );
     },
+    editTag() {
+      this.isEditingTags = true;
+      if (this.filterTags) {
+        this.selectedTags = this.filterTags;
+      }
+    },
+    reverseSelection() {
+      this.visibleVideos.map(i => {
+        const old = this.videoSelectState[i.uuid];
+        Vue.set(this.videoSelectState, i.uuid, isUndefined(old) ? true : !old);
+      });
+    },
+    clearSelection() {
+      Object.keys(this.videoSelectState).map(i => {
+        Vue.set(this.videoSelectState, i, false);
+      });
+    },
+    selectAll() {
+      this.visibleVideos.map(i => {
+        Vue.set(this.videoSelectState, i.uuid, true);
+      });
+    },
+    accept() {
+      this.isEditingTags = false;
+    },
+    reject() {
+      this.clearSelection();
+      this.isEditingTags = false;
+    },
   },
 
   updated() {
@@ -229,7 +298,28 @@ export default Vue.extend({
   justify-content: center;
   width: 85vw;
   margin: auto;
+  .select-toolbar {
+    display: flex;
+
+    position: fixed;
+    background: rgba($color: orange, $alpha: 0.5);
+    width: 100%;
+    height: 2em;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    .label {
+      padding: 1em;
+      color: white;
+    }
+  }
+
   .control {
+    div {
+      display: flex;
+      flex-direction: column;
+    }
     position: fixed;
     color: gray;
     right: 0;

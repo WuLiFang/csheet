@@ -1,4 +1,4 @@
-import { VideoResponse, CGTeamWorkTaskData } from '../interface';
+import { VideoResponse, CGTeamWorkTaskData, TagResponse } from '../interface';
 
 export interface IDMap<T> {
   [id: string]: T;
@@ -28,7 +28,12 @@ export interface CGTeamworkTaskState {
   storage: IDMap<CGTeamWorkTaskData>;
 }
 
+export interface TagState {
+  storage: IDMap<TagResponse>;
+}
+
 export interface CombinedRootState extends RootState {
   videoStore: VideoState;
   cgTeamworkTaskStore: CGTeamworkTaskState;
+  tagStore: TagState;
 }

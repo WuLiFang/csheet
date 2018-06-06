@@ -7,7 +7,7 @@ from flask import abort, g, session
 
 import cgtwq
 
-from ..database import CGTeamWorkTask, Session, Video, session_scope
+from ..database import CGTeamWorkTask, Session, Tag, Video, session_scope
 from .datamodel import ProjectInfo
 
 
@@ -66,6 +66,12 @@ def get_task(task_id, session_):
     """Get entry from taks_id.  """
 
     return _get_model(task_id, session_, CGTeamWorkTask)
+
+
+def get_tag(text, session_):
+    """Get tag from text.  """
+
+    return _get_model(text, session_, Tag)
 
 
 def get_field_data(entry, name):

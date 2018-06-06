@@ -78,6 +78,7 @@ export interface VideoResponse {
   thumb_mtime: number;
   uuid: string;
   related_tasks: string[];
+  tags: string[];
 }
 
 export enum VideoRole {
@@ -89,4 +90,10 @@ export enum VideoRole {
 export interface FieldResponse {
   has_permission: boolean;
   value: TaskStatusText | null;
+}
+
+export interface TagResponse {
+  id: number;
+  text: string;
+  videos: string[];
 }
