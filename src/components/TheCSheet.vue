@@ -1,6 +1,6 @@
 <template lang="pug">
   div.the-csheet
-    .select-toolbar(v-show='isEditingTags')
+    .select-toolbar(v-if='!isFileProtocol' v-show='isEditingTags')
       span.label 为所选添加标签
       TagSelect(v-model='selectedTagTextArray' size='mini' allow-create=true)
       ElButtonGroup
@@ -41,7 +41,7 @@
         .tag
           TagSelect(v-model='filterTagTextArray' size='mini' placeholder='标签过滤')
         .buttons
-          ElButton(@click='editTag', size='mini' icon='el-icon-edit' v-show='!isEditingTags' ) 添加标签
+          ElButton(v-if='!isFileProtocol' @click='editTag', size='mini' icon='el-icon-edit' v-show='!isEditingTags' ) 添加标签
           ElButton(
             size='mini'
             v-show='filterText || filterArtist'

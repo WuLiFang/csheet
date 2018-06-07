@@ -11,9 +11,9 @@
   )
     ElPopover(trigger="hover")
       ElTag(v-for='i in tags' @close='deleteVideoTag(i)' closable size='small') {{ i.text }}
-      ElButton(@click='isTagEditDialogVisible = true' size='mini') 编辑标签
+      ElButton(v-if='!isFileProtocol' @click='isTagEditDialogVisible = true' size='mini') 编辑标签
       .reference(slot='reference')
-        .select-overlay(v-show='isSelectable && selected')
+        .select-overlay(v-if='!isFileProtocol' v-show='isSelectable && selected')
           FaIcon(name='check-circle-o' scale='3')
         video(
           ref='video'
@@ -119,6 +119,7 @@ export default Vue.extend({
       src: null as string | null,
       poster: null as string | null,
       ratio: 0.5625,
+      isFileProtocol,
     };
   },
   computed: {
