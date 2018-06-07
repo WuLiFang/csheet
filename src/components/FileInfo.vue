@@ -1,11 +1,19 @@
 <template lang="pug">
     .file-info(v-if='videoData')
       .time(v-show='videoData.poster_mtime')
-        | 图像:
+        | 图像
+        |
+        FaIcon.icon(name='file-image-o')
+        |
+        | :
         RelativeTime(:timestamp='videoData.poster_mtime')
       br
       .time(v-show='videoData.src_mtime')
-        | 视频:
+        | 视频
+        |
+        FaIcon.icon(name='file-video-o')
+        |
+        | :
         RelativeTime(:timestamp='videoData.src_mtime')
         span.message(v-show='videoData.preview_mtime != videoData.src_mtime')
           span.outdated(v-if='videoData.preview_mtime')
@@ -20,6 +28,10 @@
 import Vue from 'vue';
 
 import * as moment from 'moment';
+// @ts-ignore
+import FaIcon from 'vue-awesome/components/Icon';
+import 'vue-awesome/icons/file-video-o';
+import 'vue-awesome/icons/file-image-o';
 
 import RelativeTime from './RelativeTime.vue';
 
@@ -30,6 +42,7 @@ export default Vue.extend({
   props: { id: { type: String } },
   components: {
     RelativeTime,
+    FaIcon,
   },
   computed: {
     ...videoComputedMinxin,
@@ -43,6 +56,9 @@ export default Vue.extend({
 .file-info {
   display: inline-block;
   margin: 5px;
+  .icon {
+    vertical-align: -0.15em;
+  }
   .time {
     display: inline-block;
     .outdated {
