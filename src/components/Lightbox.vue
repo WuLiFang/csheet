@@ -1,34 +1,37 @@
 <template lang="pug">
   .lightbox(
+    v-show='isVisible'
+    draggable
     :class='{shrink: (!video.thumb_mtime || forceShrink)}'
+    :hidden='!isVisible'
     @click='onclick'
     @dragstart='ondragstart'
     @mouseenter="onmouseenter" 
     @mouseleave="onmouseleave" 
-    :hidden='!isVisible'
-    v-show='isVisible'
-    draggable
   )
-    .select-overlay(v-show='isSelectable && selected')
-      FaIcon(name='check-circle-o' scale='3')
-    video(
-      ref='video'
-      :poster='poster' 
-      :src='src' 
-      :width='200 / ratio'
-      @loadeddata="onloadeddata"
-      muted 
-      loop 
-    )
-    div.up-display(:style='upDisplayStyle')
-      .artist(v-if='task') {{task.artist}}
-      LightboxTaskStatus.status(
-        v-if='taskId' 
-        :id='taskId' 
-        :statusStage='statusStage'
-      )
-    div
-      span.caption(:style='captionStyle') {{ video.label }}
+    ElPopover(trigger="hover", :disabled='tags.length === 0')
+      ElTag(v-for='i in tags' @close='deleteVideoTag(i)' closable) {{ i.text }}
+      .reference(slot='reference')
+        .select-overlay(v-show='isSelectable && selected')
+          FaIcon(name='check-circle-o' scale='3')
+        video(
+          ref='video'
+          :poster='poster' 
+          :src='src' 
+          :width='200 / ratio'
+          @loadeddata="onloadeddata"
+          muted 
+          loop 
+        )
+        div.up-display(:style='upDisplayStyle')
+          .artist(v-if='task') {{task.artist}}
+          LightboxTaskStatus.status(
+            v-if='taskId' 
+            :id='taskId' 
+            :statusStage='statusStage'
+          )
+        div
+          span.caption(:style='captionStyle') {{ video.label }}
 </template>
 
 
@@ -39,6 +42,7 @@ import Vue from 'vue';
 import FaIcon from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/check-circle-o';
 
+import { Popover as ElPopover, Tag as ElTag } from 'element-ui';
 import { videoComputedMinxin } from '../store/video';
 import {
   VideoResponse,
@@ -46,6 +50,7 @@ import {
   CGTeamWorkTaskData,
   TaskStage,
   TaskStatus,
+  TagResponse,
 } from '../interface';
 import {
   VideoSetVisibilityMutationPayload,
@@ -55,17 +60,22 @@ import {
   UPDATE_VIDEO_POSITION,
   VideoPreloadActionPayload,
   PRELOAD_VIDEO,
+  VideoDeleteTagActionPayload,
+  VIDEO_DELETE_TAG,
 } from '../mutation-types';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import { isFileProtocol } from '@/packtools';
 
 import LightboxTaskStatus from './LightboxTaskStatus.vue';
 import { preloadVideo, preloadImage } from '@/preload';
+import { tagComputedMinxin } from '@/store/tag';
 
 export default Vue.extend({
   components: {
     LightboxTaskStatus,
     FaIcon,
+    ElPopover,
+    ElTag,
   },
   props: {
     value: { type: Boolean },
@@ -92,6 +102,7 @@ export default Vue.extend({
   computed: {
     ...videoComputedMinxin,
     ...CGTeamWorkTaskComputedMixin,
+    ...tagComputedMinxin,
     selected: {
       get(): boolean {
         return this.value;
@@ -139,6 +150,9 @@ export default Vue.extend({
     },
     task(): CGTeamWorkTaskData | undefined {
       return this.cgTeamworkTaskStore.storage[this.video.uuid];
+    },
+    tags(): TagResponse[] {
+      return this.video.tags.map(i => this.tagStore.storage[i]);
     },
   },
   methods: {
@@ -202,6 +216,15 @@ export default Vue.extend({
         this.ratio = image.naturalHeight / image.naturalWidth;
       });
     },
+    deleteVideoTag(tag: TagResponse) {
+      const payload: VideoDeleteTagActionPayload = {
+        id: this.video.uuid,
+        data: {
+          tags: [tag.id],
+        },
+      };
+      this.$store.dispatch(VIDEO_DELETE_TAG, payload);
+    },
   },
   watch: {
     posterURL(value) {
@@ -239,6 +262,9 @@ export default Vue.extend({
   video {
     max-width: 100%;
     max-height: 100%;
+  }
+  .el-tag {
+    margin: 1em;
   }
   .select-overlay {
     position: absolute;

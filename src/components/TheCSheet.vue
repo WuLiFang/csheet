@@ -42,7 +42,7 @@
         .tag
           TagSelect(v-model='filterTagTextArray' size='mini' placeholder='标签过滤')
         .buttons
-          ElButton(@click='editTag', size='mini' icon='el-icon-edit' v-show='!isEditingTags' ) 编辑标签
+          ElButton(@click='editTag', size='mini' icon='el-icon-edit' v-show='!isEditingTags' ) 添加标签
           ElButton(
             size='mini'
             v-show='filterText || filterArtist'

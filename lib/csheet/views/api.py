@@ -154,7 +154,6 @@ class Tag(Resource):
                       for i in args.videos]
             tag.mtime = time.time()
             tag.videos += videos
-            print(tag.videos)
             return tag.serialize()
 
     @staticmethod
@@ -216,3 +215,68 @@ class TagManage(Resource):
 
 
 API.add_resource(TagManage, '/tag')
+
+
+class VideoTag(Resource):
+    """Api for video tag.  """
+
+    @staticmethod
+    def get(video_id):
+        """Get video tag infos.  """
+
+        with core.database_session() as sess:
+            video = core.get_video(video_id, sess, database.Video)
+            return tuple(i.serialize() for i in video.tags)
+
+    @staticmethod
+    def post(video_id):
+        """Add tag to video.  """
+
+        with core.database_session() as sess:
+            tags = _parse_tags(sess)
+            video = core.get_video(video_id, sess, database.Video)
+            video.tags += tags
+            sess.commit()
+            return video.serialize()
+
+    @staticmethod
+    def put(video_id):
+        """Edit video tags.  """
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('tags', type=six.text_type,
+                            required=True, action='append')
+        parser.add_argument('action', type=six.text_type,
+                            required=True, choices=('update', 'delete'))
+        args = parser.parse_args()
+
+        with core.database_session() as sess:
+            tags = [core.get_tag(i, sess) for i in args.tags]
+            video = core.get_video(video_id, sess, database.Video)
+            if args.action == 'update':
+                video.tags = tags
+            elif args.action == 'delete':
+                video.tags = [i for i in video.tags if i not in tags]
+            sess.commit()
+            return video.serialize()
+
+    @staticmethod
+    def delete(video_id):
+        """Remove all tag from video.  """
+
+        with core.database_session() as sess:
+            video = core.get_video(video_id, sess, database.Video)
+            video.tags = None
+            sess.commit()
+            return video.serialize()
+
+
+def _parse_tags(sess):
+    parser = reqparse.RequestParser()
+    parser.add_argument('tags', type=six.text_type,
+                        required=True, action='append')
+    args = parser.parse_args()
+    return [core.get_tag(i, sess) for i in args.tags]
+
+
+API.add_resource(VideoTag, '/video_tag/<video_id>')

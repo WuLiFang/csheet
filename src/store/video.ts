@@ -6,16 +6,18 @@ import {
   GetterTree,
   mapGetters,
   mapState,
+  ActionContext,
 } from 'vuex';
 import { DefaultComputed } from 'vue/types/options';
 
 import * as _ from 'lodash';
 import axios from 'axios';
+import { AxiosResponse } from 'axios';
 
 import { RootState, VideoState, IDMap, LoadStatus } from './types';
 import {
   VIDEO,
-  VideoReadMutationPayload,
+  VideoUpdateMutationPayload,
   VideoReadActionPayload,
   SET_VIDEO_VISIBILITY,
   VideoSetVisibilityMutationPayload,
@@ -36,9 +38,13 @@ import {
   UPDATE_VIDEO_APPEARED,
   VIDEOS_ADD_TAG,
   VideosAddTagMutationsPayload,
+  VIDEO_UPDATE_TAG,
+  VideoDeleteTagActionPayload,
+  VIDEO_DELETE_TAG,
+  VideoUpdateTagActionPayload,
 } from '../mutation-types';
 import { VideoResponse, VideoRole } from '../interface';
-import { isFileProtocol } from '../packtools';
+import { isFileProtocol, SkipIfIsFileProtocol } from '../packtools';
 
 const blobHub = new Map<string, Blob>();
 
@@ -207,7 +213,7 @@ const state: VideoState = {
 };
 
 const mutations: MutationTree<VideoState> = {
-  [VIDEO.READ](contextState, payload: VideoReadMutationPayload) {
+  [VIDEO.UPDATE](contextState, payload: VideoUpdateMutationPayload) {
     Vue.set(contextState.storage, payload.id, payload.data);
   },
   [UPDATE_BLOB_HUB](contextState, payload: UpdateBlobHubMutationPayload) {
@@ -268,20 +274,27 @@ function isElementAppread(element: HTMLElement, expand = 10): boolean {
   return ret;
 }
 
+function HandleVideoReponse(
+  response: AxiosResponse,
+  context: ActionContext<VideoState, RootState>,
+) {
+  const data: VideoResponse = response.data;
+  const mutationPayload: VideoUpdateMutationPayload = {
+    id: data.uuid,
+    data,
+  };
+  context.commit(VIDEO.UPDATE, mutationPayload);
+  return response;
+}
+
 const actions: ActionTree<VideoState, RootState> = {
   async [VIDEO.READ](context, payload: VideoReadActionPayload) {
     if (isFileProtocol) {
       return;
     }
-    return axios.get(`/api/video/${payload.id}`).then(response => {
-      const data: VideoResponse = response.data;
-      const mutationPayload: VideoReadMutationPayload = {
-        id: payload.id,
-        data,
-      };
-      context.commit(VIDEO.READ, mutationPayload);
-      return response;
-    });
+    return axios
+      .get(`/api/video/${payload.id}`)
+      .then(response => HandleVideoReponse(response, context));
   },
   [PRELOAD_VIDEO](context, payload: VideoPreloadActionPayload) {
     const url = context.getters.getVideoURI(payload.id, payload.role);
@@ -316,6 +329,26 @@ const actions: ActionTree<VideoState, RootState> = {
     context.commit(UPDATE_VIDEO_BLOB_WHITELIST, mutationPayload);
     context.commit(CLEAR_VIDEO_BLOB);
     return ret;
+  },
+  async [VIDEO_UPDATE_TAG](context, payload: VideoUpdateTagActionPayload) {
+    return SkipIfIsFileProtocol(() => {
+      return axios
+        .put(`/api/video_tag/${payload.id}`, {
+          action: 'update',
+          ...payload.data,
+        })
+        .then(response => HandleVideoReponse(response, context));
+    })();
+  },
+  async [VIDEO_DELETE_TAG](context, payload: VideoDeleteTagActionPayload) {
+    return SkipIfIsFileProtocol(() => {
+      return axios
+        .put(`/api/video_tag/${payload.id}`, {
+          action: 'delete',
+          ...payload.data,
+        })
+        .then(response => HandleVideoReponse(response, context));
+    })();
   },
 };
 

@@ -9,24 +9,19 @@ import { LoadStatus, PositionData } from './store/types';
 export enum VIDEO {
   // CREATE = 'create_video',
   READ = 'read_video',
-  // UPDATE = 'update_video',
+  UPDATE = 'update_video',
   // DELETE = 'delete_video'
 }
 
-export interface VideoReadMutationPayload {
+interface VideoIdPayload {
   id: string;
+}
+export interface VideoUpdateMutationPayload extends VideoIdPayload {
   data: VideoResponse;
 }
 
-export interface VideoReadActionPayload {
-  id: string;
-}
+export type VideoReadActionPayload = VideoIdPayload;
 
-// export const SET_VIDEO_ELEMENT = 'set_video_element';
-// export interface VideoSetEelementMutationPayload {
-//     id: string;
-//     element: HTMLElement;
-// }
 export const UPDATE_VIDEO_POSITION = 'update_video_position';
 export interface VideoUpdatePositionMutationPayload {
   id: string;
@@ -123,30 +118,45 @@ export enum TAG {
   DELETE = 'delete_tag',
 }
 
-export interface TagId {
-  id: string | number;
+type TagId = string | number;
+interface TagIdPayload {
+  id: TagId;
 }
 export interface TagCreateActionPayload {
   data: { text: string };
 }
 
-export type TagReadActionPayload = TagId;
+export type TagReadActionPayload = TagIdPayload;
 
-export interface TagUpdateActionPayload extends TagId {
+export interface TagUpdateActionPayload extends TagIdPayload {
   data: { text: string };
 }
-export interface TagUpdateMutationPayload extends TagId {
+export interface TagUpdateMutationPayload extends TagIdPayload {
   data: TagResponse;
 }
 
-export type TagDeleteActionPayload = TagId;
-export type TagDeleteMutationPayload = TagId;
+export type TagDeleteActionPayload = TagIdPayload;
+export type TagDeleteMutationPayload = TagIdPayload;
 
 export const VIDEOS_ADD_TAG = 'videos_add_tag';
 
-export interface VideosAddTagActionPayload extends TagId {
+export interface VideosAddTagActionPayload extends TagIdPayload {
   data: { videos: string[] };
 }
-export interface VideosAddTagMutationsPayload extends TagId {
+export interface VideosAddTagMutationsPayload extends TagIdPayload {
   videos: string[];
+}
+
+export const VIDEO_UPDATE_TAG = 'video_upadte_tag';
+export interface VideoUpdateTagActionPayload extends VideoIdPayload {
+  data: {
+    tags: TagId[];
+  };
+}
+
+export const VIDEO_DELETE_TAG = 'video_delete_tag';
+export interface VideoDeleteTagActionPayload extends VideoIdPayload {
+  data: {
+    tags: TagId[];
+  };
 }

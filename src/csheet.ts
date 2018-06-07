@@ -12,7 +12,7 @@ import TheCSheet from './components/TheCSheet.vue';
 import SocketIO from './socketio';
 import _store from './store';
 import { VideoResponse } from '@/interface';
-import { VIDEO, VideoReadMutationPayload } from '@/mutation-types';
+import { VIDEO, VideoUpdateMutationPayload } from '@/mutation-types';
 import { isFileProtocol } from '@/packtools';
 
 Vue.use(Vuex);

@@ -68,10 +68,10 @@ def get_task(task_id, session_):
     return _get_model(task_id, session_, CGTeamWorkTask)
 
 
-def get_tag(text, session_):
-    """Get tag from text.  """
+def get_tag(tag_id, session_):
+    """Get tag from tag_id.  """
 
-    return _get_model(text, session_, Tag)
+    return _get_model(tag_id, session_, Tag)
 
 
 def get_field_data(entry, name):

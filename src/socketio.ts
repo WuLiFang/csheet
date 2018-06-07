@@ -7,7 +7,7 @@ import { isFileProtocol } from './packtools';
 import { CombinedRootState, RootState } from './store/types';
 import { VideoResponse, VideoRole } from './interface';
 import {
-  VideoReadMutationPayload,
+  VideoUpdateMutationPayload,
   VIDEO,
   VideoPreloadActionPayload,
   PRELOAD_VIDEO,
@@ -63,8 +63,11 @@ export default class SocketIO {
       if (!this.store.state.videoStore.storage[value.uuid]) {
         return;
       }
-      const payload: VideoReadMutationPayload = { id: value.uuid, data: value };
-      this.store.commit(VIDEO.READ, payload);
+      const payload: VideoUpdateMutationPayload = {
+        id: value.uuid,
+        data: value,
+      };
+      this.store.commit(VIDEO.UPDATE, payload);
       const thumb = this.store.getters.getVideoURI(value.uuid, VideoRole.thumb);
       if (isSupportNotify) {
         new Notify('文件更新', {
