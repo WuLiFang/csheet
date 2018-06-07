@@ -8,21 +8,20 @@
         ElButton(@click='reverseSelection', size='mini' icon='el-icon-edit') 反选
         ElButton(@click='accept', size='mini' icon='el-icon-check' type="primary" :disabled='selectedTags.length === 0 || selectedVideos.length === 0') 确定
         ElButton(@click='reject', size='mini' icon='el-icon-close' type="info") 取消
-    div.control(v-show='!current')
-      div {{avaliableCount}}/{{totalCount}}
-      div
+    .control(v-show='!current')
+      .count {{avaliableCount}}/{{totalCount}}
+      .title
         ElCheckbox(v-model='isShowTitle') 标题
-      div
+      .status
         ElCheckbox(v-if='hasTaskStorage' v-model='isShowStatus') 任务信息
-      div.mode(v-show='isShowStatus')
-        ElSelect(v-model='statusStage' size='mini')
+        ElSelect.mode(v-model='statusStage' v-show='isShowStatus' size='mini')
           .prefix(slot='prefix')
             span 阶段
           ElOption(label='组长' :value='TaskStage.leader')
           ElOption(label='导演' :value='TaskStage.director')
           ElOption(label='客户' :value='TaskStage.client')
-        StatusSelect(:select.sync='statusSelect')
-      div.filter
+        StatusSelect(v-show='isShowStatus' :select.sync='statusSelect')
+      .filter
         .label
           ElInput(
             size='mini'
@@ -365,13 +364,12 @@ export default Vue.extend({
     margin: 0.5%;
     text-align: right;
     .mode {
-      .el-select {
-        width: 6em;
-        .prefix {
-          height: 100%;
-          display: inline-flex;
-          align-items: center;
-        }
+      width: 6em;
+      align-self: flex-end;
+      .prefix {
+        height: 100%;
+        display: inline-flex;
+        justify-content: center;
       }
     }
     .filter {
