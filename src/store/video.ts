@@ -53,6 +53,7 @@ import {
   TagUpdateMutationPayload,
   READ_VIDEO_TAGS_IF_FOUND_UNDEFINED,
   VideoTagsReadIfFoundUndefinedActionPayload,
+  VideoTagsCreateActionPayload,
 } from '../mutation-types';
 import { VideoResponse, VideoRole, TagResponse } from '../interface';
 import { isFileProtocol, SkipIfIsFileProtocol } from '../packtools';
@@ -362,6 +363,13 @@ const actions: ActionTree<VideoState, RootState> = {
     context.commit(UPDATE_VIDEO_BLOB_WHITELIST, mutationPayload);
     context.commit(CLEAR_VIDEO_BLOB);
     return ret;
+  },
+  async [VIDEO_TAGS.CREATE](context, payload: VideoTagsCreateActionPayload) {
+    return SkipIfIsFileProtocol(() => {
+      return axios
+        .post(`/api/video_tag/${payload.id}`, payload.data)
+        .then(response => HandleVideoReponse(response, context));
+    })();
   },
   async [VIDEO_TAGS.UPDATE](context, payload: VideoTagsUpdateActionPayload) {
     return SkipIfIsFileProtocol(() => {

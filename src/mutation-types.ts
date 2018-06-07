@@ -148,13 +148,18 @@ export interface VideosAddTagMutationsPayload extends TagIdPayload {
 }
 
 export enum VIDEO_TAGS {
-  // CREATE = 'create_video_tags',
+  CREATE = 'create_video_tags',
   READ = 'read_video_tags',
   UPDATE = 'update_video_tags',
   DELETE = 'delete_video_tags',
 }
 export type VideoTagsReadActionPayload = VideoIdPayload;
 
+export interface VideoTagsCreateActionPayload extends VideoIdPayload {
+  data: {
+    tags: TagId[];
+  };
+}
 export interface VideoTagsUpdateActionPayload extends VideoIdPayload {
   data: {
     tags: TagId[];

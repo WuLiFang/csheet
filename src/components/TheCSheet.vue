@@ -2,7 +2,7 @@
   div.the-csheet
     .select-toolbar(v-show='isEditingTags')
       span.label 为所选添加标签
-      TagSelect(v-model='selectedTagTextArray' size='mini' placeholder='选择或创建标签' allow-create=true)
+      TagSelect(v-model='selectedTagTextArray' size='mini' allow-create=true)
       ElButtonGroup
         ElButton(@click='selectAll', size='mini' icon='el-icon-edit') 全选
         ElButton(@click='reverseSelection', size='mini' icon='el-icon-edit') 反选

@@ -253,14 +253,14 @@ class VideoTag(Resource):
         """Edit video tags.  """
 
         parser = reqparse.RequestParser()
-        parser.add_argument('tags', type=six.text_type,
-                            required=True, action='append')
+        parser.add_argument('tags', type=six.text_type, action='append')
         parser.add_argument('action', type=six.text_type,
                             required=True, choices=('update', 'delete'))
         args = parser.parse_args()
 
         with core.database_session() as sess:
-            tags = [core.get_tag(i, sess) for i in args.tags]
+            tags = [core.get_tag(i, sess)
+                    for i in args.tags] if args.tags else []
             video = core.get_video(video_id, sess, database.Video)
             if args.action == 'update':
                 video.tags = tags

@@ -46,7 +46,7 @@ export default Vue.extend({
     value: { type: Array as () => string[] },
     size: { default: 'mini' },
     allowCreate: { default: false },
-    placeholder: { default: '选择标签' },
+    placeholder: { default: '选择或创建标签' },
   },
   data() {
     return {};

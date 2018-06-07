@@ -9,8 +9,9 @@
     @mouseenter="onmouseenter" 
     @mouseleave="onmouseleave" 
   )
-    ElPopover(trigger="hover", :disabled='tags.length === 0')
-      ElTag(v-for='i in tags' @close='deleteVideoTag(i)' closable) {{ i.text }}
+    ElPopover(trigger="hover")
+      ElTag(v-for='i in tags' @close='deleteVideoTag(i)' closable size='small') {{ i.text }}
+      ElButton(@click='isTagEditDialogVisible = true' size='mini') 编辑标签
       .reference(slot='reference')
         .select-overlay(v-show='isSelectable && selected')
           FaIcon(name='check-circle-o' scale='3')
@@ -32,6 +33,7 @@
           )
         div
           span.caption(:style='captionStyle') {{ video.label }}
+    TagEditDialog(:id='id' :visible.sync='isTagEditDialogVisible')
 </template>
 
 
@@ -41,13 +43,16 @@ import Vue from 'vue';
 // @ts-ignore
 import FaIcon from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/check-circle-o';
-
 import {
   Popover as ElPopover,
   Tag as ElTag,
   Input as ElInput,
   Button as ElButton,
+  Dialog as ElDialog,
+  Message,
+  Notification,
 } from 'element-ui';
+
 import { videoComputedMinxin } from '../store/video';
 import {
   VideoResponse,
@@ -67,20 +72,30 @@ import {
   PRELOAD_VIDEO,
   VideoTagsDeleteActionPayload,
   VIDEO_TAGS,
+  TAG,
+  TagCreateActionPayload,
+  VideoTagsCreateActionPayload,
 } from '../mutation-types';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import { isFileProtocol } from '@/packtools';
 
+import TagEditDialog from './TagEditDialog.vue';
+import TagSelect from './TagSelect.vue';
 import LightboxTaskStatus from './LightboxTaskStatus.vue';
 import { preloadVideo, preloadImage } from '@/preload';
 import { tagComputedMinxin } from '@/store/tag';
+import { isUndefined } from 'util';
 
 export default Vue.extend({
   components: {
     LightboxTaskStatus,
+    TagSelect,
+    TagEditDialog,
     FaIcon,
     ElPopover,
     ElTag,
+    ElInput,
+    ElButton,
   },
   props: {
     value: { type: Boolean },
@@ -98,6 +113,8 @@ export default Vue.extend({
     return {
       isLoadVideo: false,
       isAutoplay: false,
+      tagSelectModel: [],
+      isTagEditDialogVisible: false,
       forceShrink: false,
       src: null as string | null,
       poster: null as string | null,
