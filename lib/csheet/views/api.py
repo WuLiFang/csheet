@@ -148,12 +148,13 @@ class Tag(Resource):
         parser.add_argument('videos', type=six.text_type,
                             required=True, action='append')
         args = parser.parse_args()
-
         with core.database_session() as sess:
             tag = core.get_tag(id_, sess)
-            videos = [core.get_video(i, sess) for i in args.videos]
+            videos = [core.get_video(i, sess, database.Video)
+                      for i in args.videos]
             tag.mtime = time.time()
             tag.videos += videos
+            print(tag.videos)
             return tag.serialize()
 
     @staticmethod

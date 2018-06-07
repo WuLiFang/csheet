@@ -141,3 +141,12 @@ export interface TagUpdateMutationPayload extends TagId {
 
 export type TagDeleteActionPayload = TagId;
 export type TagDeleteMutationPayload = TagId;
+
+export const VIDEOS_ADD_TAG = 'videos_add_tag';
+
+export interface VideosAddTagActionPayload extends TagId {
+  data: { videos: string[] };
+}
+export interface VideosAddTagMutationsPayload extends TagId {
+  videos: string[];
+}

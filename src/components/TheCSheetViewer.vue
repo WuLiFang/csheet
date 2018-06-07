@@ -99,8 +99,8 @@ export default Vue.extend({
       isAutoNext: false,
       isShowVideo: true,
       isFileProtocol,
-      src: <string | null>null,
-      poster: <string | null>null,
+      src: null as string | null,
+      poster: null as string | null,
       duration: 0,
     };
   },
@@ -190,7 +190,7 @@ export default Vue.extend({
       }
 
       // By label
-      const video = _.find(this.videoStore.storage, i => i.label == hash);
+      const video = _.find(this.videoStore.storage, i => i.label === hash);
       if (video) {
         this.video = video;
         return;
@@ -270,7 +270,7 @@ export default Vue.extend({
       }
       const id = this.videoId;
       return preloadImage(this.posterURL).then(image => {
-        if (this.videoId != id) {
+        if (this.videoId !== id) {
           return;
         }
         this.poster = image.src;
@@ -282,7 +282,7 @@ export default Vue.extend({
       }
       const id = this.videoId;
       preloadVideo(this.srcURL).then(video => {
-        if (this.videoId != id) {
+        if (this.videoId !== id) {
           return;
         }
         this.src = video.src;
@@ -290,7 +290,7 @@ export default Vue.extend({
       });
     },
     preload(video: VideoResponse) {
-      let payload: VideoPreloadActionPayload = {
+      const payload: VideoPreloadActionPayload = {
         id: video.uuid,
         role: VideoRole.poster,
       };

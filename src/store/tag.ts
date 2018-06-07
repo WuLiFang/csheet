@@ -23,25 +23,41 @@ import {
   TagUpdateActionPayload,
   TagDeleteActionPayload,
   TagDeleteMutationPayload,
+  VIDEOS_ADD_TAG,
+  VideosAddTagActionPayload,
+  VideosAddTagMutationsPayload,
 } from '../mutation-types';
-import { isFileProtocol } from '../packtools';
+import { SkipIfIsFileProtocol } from '../packtools';
 import { getDataFromAppElement } from '@/datatools';
 import { TagResponse } from '@/interface';
 
+interface TagStoreByText {
+  [id: string]: TagResponse[];
+}
 export const getters: GetterTree<TagState, RootState> = {
   tags(contextState): TagResponse[] {
     return _.sortBy(_.values(contextState.storage), i => i.text);
+  },
+  tagStoreByText(contextState): TagStoreByText {
+    return _.groupBy(contextState.storage, i => i.text);
+  },
+  getTagByTextArray(contextState, contextGetters) {
+    return (textArray: string[]): TagResponse[] => {
+      return _.flatMap(textArray, i => contextGetters.tagStoreByText[i]);
+    };
   },
 };
 
 interface TagComputedMixin extends DefaultComputed {
   tagStore: () => TagState;
   tags: () => TagResponse[];
+  tagStoreByText: () => TagStoreByText;
+  getTagByTextArray: () => (textArray: string[]) => TagResponse[];
 }
 
 export const tagComputedMinxin = {
   ...mapState(['tagStore']),
-  ...mapGetters(['tags']),
+  ...mapGetters(['tags', 'tagStoreByText', 'getTagByTextArray']),
 } as TagComputedMixin;
 
 function parseDataFromPage(): TagState['storage'] {
@@ -54,7 +70,7 @@ function parseDataFromPage(): TagState['storage'] {
   parsed.forEach(value => {
     ret[value.id] = value;
   });
-  return {};
+  return ret;
 }
 
 const state: TagState = {
@@ -83,35 +99,53 @@ function HandleTagReponse(
 }
 
 const actions: ActionTree<TagState, RootState> = {
-  async [TAG.CREATE](context, payload: TagCreateActionPayload) {
-    return axios.post('/api/tag', payload.data).then(response => {
-      HandleTagReponse(response, context);
-      return response;
-    });
+  [TAG.CREATE]: async (context, payload: TagCreateActionPayload) => {
+    return SkipIfIsFileProtocol(() => {
+      return axios.post('/api/tag', payload.data).then(response => {
+        HandleTagReponse(response, context);
+        return response;
+      });
+    })();
   },
   async [TAG.READ](context, payload: TagReadActionPayload) {
-    if (isFileProtocol) {
-      return;
-    }
-    return axios.get(`/api/tag/${payload.id}`).then(response => {
-      HandleTagReponse(response, context);
-      return response;
-    });
+    return SkipIfIsFileProtocol(() => {
+      return axios.get(`/api/tag/${payload.id}`).then(response => {
+        HandleTagReponse(response, context);
+        return response;
+      });
+    })();
   },
   async [TAG.UPDATE](context, payload: TagUpdateActionPayload) {
-    if (isFileProtocol) {
-      return;
-    }
-    return axios.put(`/api/tag/${payload.id}`, payload.data).then(response => {
-      HandleTagReponse(response, context);
-      return response;
-    });
+    return SkipIfIsFileProtocol(() => {
+      return axios
+        .put(`/api/tag/${payload.id}`, payload.data)
+        .then(response => {
+          HandleTagReponse(response, context);
+          return response;
+        });
+    })();
   },
   async [TAG.DELETE](context, payload: TagDeleteActionPayload) {
-    if (isFileProtocol) {
-      return;
-    }
-    return axios.delete(`/api/tag/${payload.id}`);
+    return SkipIfIsFileProtocol(() => {
+      return axios.delete(`/api/tag/${payload.id}`);
+    })();
+  },
+  async [VIDEOS_ADD_TAG](context, payload: VideosAddTagActionPayload) {
+    return SkipIfIsFileProtocol(() => {
+      return axios
+        .post(`/api/tag/${payload.id}`, payload.data)
+        .then(response => {
+          HandleTagReponse(response, context);
+          return response;
+        })
+        .then(() => {
+          const mutationPayload: VideosAddTagMutationsPayload = {
+            id: payload.id,
+            videos: payload.data.videos,
+          };
+          context.commit(VIDEOS_ADD_TAG, mutationPayload);
+        });
+    })();
   },
 };
 

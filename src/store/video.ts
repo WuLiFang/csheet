@@ -34,6 +34,8 @@ import {
   UPDATE_VIDEO_BLOB_WHITELIST,
   VideoUpdateBlobWhiteListMapMutationPayload,
   UPDATE_VIDEO_APPEARED,
+  VIDEOS_ADD_TAG,
+  VideosAddTagMutationsPayload,
 } from '../mutation-types';
 import { VideoResponse, VideoRole } from '../interface';
 import { isFileProtocol } from '../packtools';
@@ -240,6 +242,17 @@ const mutations: MutationTree<VideoState> = {
     payload: VideoUpdateBlobWhiteListMapMutationPayload,
   ) {
     contextState.blobWhiteListMap.set(payload.key, payload.value);
+  },
+  [VIDEOS_ADD_TAG](contextState, payload: VideosAddTagMutationsPayload) {
+    payload.videos.map(i => {
+      const video = contextState.storage[i];
+      if (!video) {
+        return;
+      }
+      if (!video.tags.includes(payload.id)) {
+        video.tags.push(payload.id);
+      }
+    });
   },
 };
 

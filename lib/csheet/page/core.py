@@ -87,7 +87,7 @@ class BasePage(object):
         f = TemporaryFile(suffix='.zip',
                           prefix=self.title)
         with ZipFile(f, 'w', allowZip64=True) as zipfile:
-            self._pack_page(videos, zipfile)
+            self._pack_page(videos, zipfile, session)
             self._pack_videos(videos, zipfile)
 
         f.seek(0)
@@ -129,10 +129,10 @@ class BasePage(object):
             zipfile.write(filetools.dist_path(relative_path), i)
         return index_page
 
-    def _pack_page(self, videos, zipfile):
+    def _pack_page(self, videos, zipfile, session):
         try:
             self.is_pack = True
-            index_page = self.render(videos)
+            index_page = self.render(videos, tags=self.tags(videos, session))
         finally:
             self.is_pack = False
         index_page = self._pack_entry(zipfile, index_page, 'vendors~csheet')
@@ -140,6 +140,16 @@ class BasePage(object):
         index_page = self._pack_entry(zipfile, index_page, 'csheet_noscript')
         zipfile.writestr('{}.html'.format(self.title.replace('\\', '_')),
                          index_page.encode('utf-8'))
+
+    def tags(self, videos, session):
+        """Page related tags.  """
+
+        ret = session.query(database.Tag).filter(
+            database.Tag.videos.any(
+                database.Video.uuid.in_(i.uuid for i in videos))
+        ).all()
+        ret = tuple(i.serialize() for i in ret)
+        return ret
 
 
 def dumps(obj):

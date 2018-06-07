@@ -40,9 +40,11 @@ def render_csheet_page():
         if 'pack' in request.args:
             return packed_page(page, sess)
         page.update_later(sess)
+        videos = page.videos(sess)
         rendered = page.render(
-            page.videos(sess),
+            videos,
             tasks=page.tasks(sess),
+            tags=page.tags(videos, sess),
             template='csheet_app.html',
             request=request,
             session=session)
@@ -78,7 +80,8 @@ def render_local_dir():
         if 'pack' in request.args:
             return packed_page(page, sess)
 
-        return page.render(page.videos(sess), 'csheet_app.html', request=request)
+        videos = page.videos(sess)
+        return page.render(videos, 'csheet_app.html', request=request, tags=page.tags(videos, sess))
 
 
 def packed_page(page, database_session):

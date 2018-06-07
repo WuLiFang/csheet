@@ -78,7 +78,7 @@ export interface VideoResponse {
   thumb_mtime: number;
   uuid: string;
   related_tasks: string[];
-  tags: string[];
+  tags: Array<string | number>;
 }
 
 export enum VideoRole {

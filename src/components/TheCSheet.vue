@@ -1,12 +1,12 @@
 <template lang="pug">
   div.the-csheet
     .select-toolbar(v-show='isEditingTags')
-      span.label 编辑标签
-      TagSelect(v-model='selectedTags' size='mini')
+      span.label 为所选添加标签
+      TagSelect(v-model='selectedTagTextArray' size='mini')
       ElButtonGroup
         ElButton(@click='selectAll', size='mini' icon='el-icon-edit') 全选
         ElButton(@click='reverseSelection', size='mini' icon='el-icon-edit') 反选
-        ElButton(@click='accept', size='mini' icon='el-icon-check' type="primary" :disabled='selectedTags.length === 0') 确定
+        ElButton(@click='accept', size='mini' icon='el-icon-check' type="primary" :disabled='selectedTags.length === 0 || selectedVideos.length === 0') 确定
         ElButton(@click='reject', size='mini' icon='el-icon-close' type="info") 取消
     div.control(v-show='!current')
       div {{avaliableCount}}/{{totalCount}}
@@ -40,13 +40,13 @@
           )
           ElCheckbox(v-model='isFilterUser' v-show='myTaskCount') 当前用户({{myTaskCount}})
         .tag
-          TagSelect(v-model='filterTags' size='mini' placeholder='标签过滤')
+          TagSelect(v-model='filterTagTextArray' size='mini' placeholder='标签过滤')
         .buttons
           ElButton(@click='editTag', size='mini' icon='el-icon-edit' v-show='!isEditingTags' ) 编辑标签
           ElButton(
             size='mini'
             v-show='filterText || filterArtist'
-            @click='filterText = ""; filterArtist = ""; filterTags = []'
+            @click='filterText = ""; filterArtist = ""; filterTagTextArray = []'
           ) 重置过滤
       div.pack(v-if='isShowPack')
         a(:href="packURL" :download="packFilename" @click='isShowPack = false')
@@ -86,6 +86,8 @@ import {
   RadioGroup as ElRadioGroup,
   RadioButton as ElRadioRadioButton,
   Autocomplete as ElAutocomplete,
+  Notification,
+  Message,
 } from 'element-ui';
 
 import { isFileProtocol } from '../packtools';
@@ -95,10 +97,16 @@ import {
   TaskStage,
   TaskStatus,
   CGTeamWorkTaskData,
+  TagResponse,
 } from '../interface';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import { tagComputedMinxin } from '@/store/tag';
 import { isUndefined } from 'util';
+import {
+  TagUpdateActionPayload,
+  VideosAddTagActionPayload,
+  VIDEOS_ADD_TAG,
+} from '@/mutation-types';
 
 interface VideoSelectState {
   [id: string]: boolean | undefined;
@@ -127,20 +135,20 @@ export default Vue.extend({
       statusStage: TaskStage.director,
       filterText: '',
       filterArtist: '',
-      filterTags: [],
-      selectedTags: [],
-      videoSelectState: <VideoSelectState>{},
+      filterTagTextArray: [] as string[],
+      selectedTagTextArray: [] as string[],
+      videoSelectState: {} as VideoSelectState,
       isEditingTags: false,
       avaliableCount: -1,
       totalCount: -1,
-      statusSelect: <StatusSelectResult>{
+      statusSelect: {
         [TaskStatus.Close]: false,
         [TaskStatus.Retake]: true,
         [TaskStatus.Wait]: true,
         [TaskStatus.Check]: true,
         [TaskStatus.Approve]: true,
         other: true,
-      },
+      } as StatusSelectResult,
       TaskStage,
     };
   },
@@ -179,6 +187,17 @@ export default Vue.extend({
     visibleVideos(): VideoResponse[] {
       return this.videos.filter(this.filter);
     },
+    selectedVideos(): VideoResponse[] {
+      return Object.keys(this.videoSelectState)
+        .filter(i => this.videoSelectState[i])
+        .map(i => this.videoStore.storage[i]);
+    },
+    filterTags(): TagResponse[] {
+      return this.getTagByTextArray(this.filterTagTextArray);
+    },
+    selectedTags(): TagResponse[] {
+      return this.getTagByTextArray(this.selectedTagTextArray);
+    },
   },
   methods: {
     onclick(video: VideoResponse) {
@@ -193,7 +212,7 @@ export default Vue.extend({
       );
     },
     filterByStatus(video: VideoResponse): boolean {
-      let status = this.getGeneralStatus(video.uuid, this.statusStage);
+      const status = this.getGeneralStatus(video.uuid, this.statusStage);
 
       if (status === null && !this.statusSelect.other) {
         return false;
@@ -225,7 +244,7 @@ export default Vue.extend({
         return true;
       }
       return this.filterTags.every(i => {
-        return video.tags.includes(i);
+        return video.tags.includes(i.id);
       });
     },
     count() {
@@ -252,9 +271,6 @@ export default Vue.extend({
     },
     editTag() {
       this.isEditingTags = true;
-      if (this.filterTags) {
-        this.selectedTags = this.filterTags;
-      }
     },
     reverseSelection() {
       this.visibleVideos.map(i => {
@@ -273,11 +289,33 @@ export default Vue.extend({
       });
     },
     accept() {
+      Promise.all(
+        this.selectedTags.map(i => {
+          const payload: VideosAddTagActionPayload = {
+            id: i.id,
+            data: { videos: this.selectedVideos.map(j => j.uuid) },
+          };
+          return this.$store.dispatch(VIDEOS_ADD_TAG, payload);
+        }),
+      )
+        .then(() => {
+          Message({ message: '添加标签成功', type: 'success' });
+          this.clearSelection();
+        })
+        .catch(reason => {
+          Notification({
+            title: '添加标签失败',
+            message: String(reason),
+            type: 'error',
+          });
+        });
+
       this.isEditingTags = false;
     },
     reject() {
       this.clearSelection();
       this.isEditingTags = false;
+      Message('取消编辑');
     },
   },
 

@@ -29,7 +29,7 @@ export interface StatusSelectResult {
 }
 
 export default Vue.extend({
-  props: { select: { type: <() => StatusSelectResult>Object } },
+  props: { select: { type: Object as () => StatusSelectResult } },
   components: {
     ElSwitch: Switch,
   },
@@ -49,9 +49,9 @@ export default Vue.extend({
       },
     },
     allStatus(): TaskStatusText[] {
-      return <TaskStatusText[]>Object.keys(TaskStatus).filter(
+      return Object.keys(TaskStatus).filter(
         i => !isNaN(Number.parseInt(i)),
-      );
+      ) as TaskStatusText[];
     },
   },
   methods: {

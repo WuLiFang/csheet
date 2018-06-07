@@ -74,15 +74,18 @@ export default Vue.extend({
     isShowTitle: { default: false },
     isShowStatus: { default: false },
     isVisible: { default: false },
-    statusStage: { type: <() => TaskStage>Number, default: TaskStage.director },
+    statusStage: {
+      type: Number as () => TaskStage,
+      default: TaskStage.director,
+    },
   },
   data() {
     return {
       isLoadVideo: false,
       isAutoplay: false,
       forceShrink: false,
-      src: <string | null>null,
-      poster: <string | null>null,
+      src: null as string | null,
+      poster: null as string | null,
       ratio: 0.5625,
     };
   },
@@ -173,7 +176,7 @@ export default Vue.extend({
     onmouseenter() {
       this.isLoadVideo = true;
       this.isAutoplay = true;
-      let payload: VideoPreloadActionPayload = {
+      const payload: VideoPreloadActionPayload = {
         id: this.id,
         role: VideoRole.preview,
       };
