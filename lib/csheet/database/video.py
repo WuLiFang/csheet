@@ -37,6 +37,7 @@ class Video(core.Base, core.SerializableMixin):
     task_id = Column(String, ForeignKey('CGTeamWorkTask.uuid'))
     task = orm.relationship('CGTeamWorkTask')
     tags = orm.relationship('Tag', secondary=core.VIDEO_TAG)
+    tags_mtime = Column(Float)
 
     def __init__(self, src=None, poster=None, uuid=None):
 

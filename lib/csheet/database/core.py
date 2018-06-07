@@ -131,7 +131,8 @@ def _upgrade_database(engine):
                           ('preview_atime', 'FLOAT'),
                           ('poster_atime', 'FLOAT'),
                           ('module', 'VARCHAR'),
-                          ('task_id', 'VARCHAR')):
+                          ('task_id', 'VARCHAR'),
+                          ('tags_mtime', 'FLOAT')):
         try:
             engine.execute(
                 'ALTER TABLE Video ADD COLUMN {} {}'.format(column, type_))

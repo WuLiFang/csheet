@@ -152,8 +152,9 @@ class Tag(Resource):
             tag = core.get_tag(id_, sess)
             videos = [core.get_video(i, sess, database.Video)
                       for i in args.videos]
-            tag.mtime = time.time()
-            tag.videos += videos
+            new_videos = [i for i in videos if i not in tag.videos]
+            _update_tags_mtime(new_videos)
+            tag.videos += new_videos
             return tag.serialize()
 
     @staticmethod
@@ -167,7 +168,6 @@ class Tag(Resource):
         with core.database_session() as sess:
             tag = core.get_tag(id_, sess)
             tag.text = args.text
-            tag.mtime = time.time()
             return tag.serialize()
 
     @staticmethod
@@ -180,6 +180,12 @@ class Tag(Resource):
             sess.delete(tag)
 
             return make_response('已删除标签: {}'.format(text))
+
+
+def _update_tags_mtime(videos):
+    now = time.time()
+    for i in videos:
+        i.tags_mtime = now
 
 
 API.add_resource(Tag, '/tag/<id_>')
@@ -208,7 +214,7 @@ class TagManage(Resource):
             tag = sess.query(database.Tag).filter_by(
                 text=args.text).one_or_none()
             if not tag:
-                tag = database.Tag(text=args.text, mtime=time.time())
+                tag = database.Tag(text=args.text)
                 sess.add(tag)
                 sess.commit()
             return tag.serialize()
@@ -236,6 +242,7 @@ class VideoTag(Resource):
             tags = _parse_tags(sess)
             video = core.get_video(video_id, sess, database.Video)
             video.tags += tags
+            video.tags_mtime = time.time()
             sess.commit()
             return video.serialize()
 
@@ -257,6 +264,7 @@ class VideoTag(Resource):
                 video.tags = tags
             elif args.action == 'delete':
                 video.tags = [i for i in video.tags if i not in tags]
+            video.tags_mtime = time.time()
             sess.commit()
             return video.serialize()
 
@@ -267,6 +275,7 @@ class VideoTag(Resource):
         with core.database_session() as sess:
             video = core.get_video(video_id, sess, database.Video)
             video.tags = None
+            video.tags_mtime = time.time()
             sess.commit()
             return video.serialize()
 

@@ -35,7 +35,8 @@ def get_updated_asset(since, sess):
     query = sess.query(Video).filter(
         or_(_role_updated_criterion('thumb', since),
             _role_updated_criterion('preview', since),
-            _role_updated_criterion('poster', since))
+            _role_updated_criterion('poster', since),
+            Video.tags_mtime >= since),
     ).order_by(Video.label)
     result = query.all()
     result = Video.format_videos(result)
