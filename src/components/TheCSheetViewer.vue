@@ -13,7 +13,7 @@
       ) 刷新
       .video-control(v-show='src')
         ElCheckbox(v-model='isEnablePreview' label='视频' size='mini')
-        ElCheckbox(v-model='isAutoPlay' label='自动播放' size='mini')
+        ElCheckbox(v-model='isAutoPlay' v-show='isEnablePreview' label='自动播放' size='mini')
         ElButton(v-show='isAutoPlay' @click='isAutoNext ? pause(): play()' size='mini')
           span(v-if='isAutoNext')
             FaIcon(name='sort-alpha-asc')
