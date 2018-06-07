@@ -253,6 +253,12 @@ export default Vue.extend({
     },
   },
   watch: {
+    isEnablePreview(value) {
+      if (!value && this.src) {
+        this.src = null;
+        this.videoElement.load();
+      }
+    },
     posterURL(value) {
       this.updateRatio();
     },
