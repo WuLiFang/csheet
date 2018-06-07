@@ -3,7 +3,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from sqlalchemy import Column, String, orm, Integer
+from sqlalchemy import Column, String, orm, Integer, Float
 
 from . import core
 
@@ -14,6 +14,7 @@ class Tag(core.Base, core.SerializableMixin):
     __tablename__ = 'Tag'
     id = Column(Integer, primary_key=True)
     text = Column(String, unique=True)
+    mtime = Column(Float)
     videos = orm.relationship('Video', secondary=core.VIDEO_TAG)
 
     def serialize(self):

@@ -6,7 +6,7 @@ from __future__ import (absolute_import, division, print_function,
 import six
 from flask import abort, make_response, session
 from flask_restful import Api, Resource, reqparse
-
+import time
 from . import core
 from .app import APP
 from .login import require_login
@@ -152,6 +152,7 @@ class Tag(Resource):
         with core.database_session() as sess:
             tag = core.get_tag(id_, sess)
             videos = [core.get_video(i, sess) for i in args.videos]
+            tag.mtime = time.time()
             tag.videos += videos
             return tag.serialize()
 
@@ -166,6 +167,7 @@ class Tag(Resource):
         with core.database_session() as sess:
             tag = core.get_tag(id_, sess)
             tag.text = args.text
+            tag.mtime = time.time()
             return tag.serialize()
 
     @staticmethod
@@ -206,7 +208,7 @@ class TagManage(Resource):
             tag = sess.query(database.Tag).filter_by(
                 text=args.text).one_or_none()
             if not tag:
-                tag = database.Tag(text=args.text)
+                tag = database.Tag(text=args.text, mtime=time.time())
                 sess.add(tag)
                 sess.commit()
             return tag.serialize()
