@@ -60,8 +60,8 @@ import {
   UPDATE_VIDEO_POSITION,
   VideoPreloadActionPayload,
   PRELOAD_VIDEO,
-  VideoDeleteTagActionPayload,
-  VIDEO_DELETE_TAG,
+  VideoTagsDeleteActionPayload,
+  VIDEO_TAGS,
 } from '../mutation-types';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import { isFileProtocol } from '@/packtools';
@@ -217,13 +217,13 @@ export default Vue.extend({
       });
     },
     deleteVideoTag(tag: TagResponse) {
-      const payload: VideoDeleteTagActionPayload = {
+      const payload: VideoTagsDeleteActionPayload = {
         id: this.video.uuid,
         data: {
           tags: [tag.id],
         },
       };
-      this.$store.dispatch(VIDEO_DELETE_TAG, payload);
+      this.$store.dispatch(VIDEO_TAGS.DELETE, payload);
     },
   },
   watch: {

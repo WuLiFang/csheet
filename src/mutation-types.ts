@@ -147,16 +147,29 @@ export interface VideosAddTagMutationsPayload extends TagIdPayload {
   videos: string[];
 }
 
-export const VIDEO_UPDATE_TAG = 'video_upadte_tag';
-export interface VideoUpdateTagActionPayload extends VideoIdPayload {
+export enum VIDEO_TAGS {
+  // CREATE = 'create_video_tags',
+  READ = 'read_video_tags',
+  UPDATE = 'update_video_tags',
+  DELETE = 'delete_video_tags',
+}
+export type VideoTagsReadActionPayload = VideoIdPayload;
+
+export interface VideoTagsUpdateActionPayload extends VideoIdPayload {
   data: {
     tags: TagId[];
   };
 }
 
-export const VIDEO_DELETE_TAG = 'video_delete_tag';
-export interface VideoDeleteTagActionPayload extends VideoIdPayload {
+export interface VideoTagsDeleteActionPayload extends VideoIdPayload {
   data: {
     tags: TagId[];
   };
+}
+
+export const READ_VIDEO_TAGS_IF_FOUND_UNDEFINED =
+  'read_video_tags_if_found_undefined';
+
+export interface VideoTagsReadIfFoundUndefinedActionPayload {
+  video: VideoResponse;
 }

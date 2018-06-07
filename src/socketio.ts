@@ -16,8 +16,13 @@ import {
   VideoUpdateBlobWhiteListMapMutationPayload,
   UPDATE_VIDEO_BLOB_WHITELIST,
   UPDATE_VIDEO_APPEARED,
+  VideoTagsReadActionPayload,
+  VIDEO_TAGS,
+  READ_VIDEO_TAGS_IF_FOUND_UNDEFINED,
+  VideoTagsReadIfFoundUndefinedActionPayload,
 } from './mutation-types';
 import { WSAVERNOTSUPPORTED } from 'constants';
+import { isUndefined } from 'util';
 
 const isSupportNotify =
   typeof Notification === 'function' &&
@@ -60,23 +65,33 @@ export default class SocketIO {
   }
   public on_asset_update(message: VideoResponse[]) {
     _.each(message, value => {
-      if (!this.store.state.videoStore.storage[value.uuid]) {
+      if (isUndefined(this.store.state.videoStore.storage[value.uuid])) {
         return;
       }
-      const payload: VideoUpdateMutationPayload = {
-        id: value.uuid,
-        data: value,
+      const actionPayload: VideoTagsReadIfFoundUndefinedActionPayload = {
+        video: value,
       };
-      this.store.commit(VIDEO.UPDATE, payload);
-      const thumb = this.store.getters.getVideoURI(value.uuid, VideoRole.thumb);
-      if (isSupportNotify) {
-        new Notify('文件更新', {
-          body: value.label,
-          icon: thumb,
-          timeout: 2,
-          tag: value.uuid,
-        }).show();
-      }
+      this.store
+        .dispatch(READ_VIDEO_TAGS_IF_FOUND_UNDEFINED, actionPayload)
+        .then(() => {
+          const mutationPayload: VideoUpdateMutationPayload = {
+            id: value.uuid,
+            data: value,
+          };
+          this.store.commit(VIDEO.UPDATE, mutationPayload);
+          const thumb = this.store.getters.getVideoURI(
+            value.uuid,
+            VideoRole.thumb,
+          );
+          if (isSupportNotify) {
+            new Notify('文件更新', {
+              body: value.label,
+              icon: thumb,
+              timeout: 2,
+              tag: value.uuid,
+            }).show();
+          }
+        });
     });
   }
   public requestUpdate(uuidList: string[]) {

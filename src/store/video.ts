@@ -7,6 +7,7 @@ import {
   mapGetters,
   mapState,
   ActionContext,
+  StoreOptions,
 } from 'vuex';
 import { DefaultComputed } from 'vue/types/options';
 
@@ -14,7 +15,13 @@ import * as _ from 'lodash';
 import axios from 'axios';
 import { AxiosResponse } from 'axios';
 
-import { RootState, VideoState, IDMap, LoadStatus } from './types';
+import {
+  RootState,
+  VideoState,
+  IDMap,
+  LoadStatus,
+  CombinedRootState,
+} from './types';
 import {
   VIDEO,
   VideoUpdateMutationPayload,
@@ -38,13 +45,18 @@ import {
   UPDATE_VIDEO_APPEARED,
   VIDEOS_ADD_TAG,
   VideosAddTagMutationsPayload,
-  VIDEO_UPDATE_TAG,
-  VideoDeleteTagActionPayload,
-  VIDEO_DELETE_TAG,
-  VideoUpdateTagActionPayload,
+  VideoTagsDeleteActionPayload,
+  VideoTagsUpdateActionPayload,
+  TAG,
+  VIDEO_TAGS,
+  VideoTagsReadActionPayload,
+  TagUpdateMutationPayload,
+  READ_VIDEO_TAGS_IF_FOUND_UNDEFINED,
+  VideoTagsReadIfFoundUndefinedActionPayload,
 } from '../mutation-types';
-import { VideoResponse, VideoRole } from '../interface';
+import { VideoResponse, VideoRole, TagResponse } from '../interface';
 import { isFileProtocol, SkipIfIsFileProtocol } from '../packtools';
+import { isUndefined } from 'util';
 
 const blobHub = new Map<string, Blob>();
 
@@ -274,7 +286,7 @@ function isElementAppread(element: HTMLElement, expand = 10): boolean {
   return ret;
 }
 
-function HandleVideoReponse(
+async function HandleVideoReponse(
   response: AxiosResponse,
   context: ActionContext<VideoState, RootState>,
 ) {
@@ -283,8 +295,29 @@ function HandleVideoReponse(
     id: data.uuid,
     data,
   };
-  context.commit(VIDEO.UPDATE, mutationPayload);
-  return response;
+  const actionPayload: VideoTagsReadIfFoundUndefinedActionPayload = {
+    video: data,
+  };
+  return context
+    .dispatch(READ_VIDEO_TAGS_IF_FOUND_UNDEFINED, actionPayload)
+    .then(() => {
+      context.commit(VIDEO.UPDATE, mutationPayload);
+      return response;
+    });
+}
+
+function HandleTagsReponse(
+  response: AxiosResponse,
+  context: ActionContext<VideoState, RootState>,
+) {
+  const dataArray: TagResponse[] = response.data;
+  dataArray.map(data => {
+    const mutationPayload: TagUpdateMutationPayload = {
+      id: data.id,
+      data,
+    };
+    context.commit(TAG.UPDATE, mutationPayload);
+  });
 }
 
 const actions: ActionTree<VideoState, RootState> = {
@@ -330,7 +363,7 @@ const actions: ActionTree<VideoState, RootState> = {
     context.commit(CLEAR_VIDEO_BLOB);
     return ret;
   },
-  async [VIDEO_UPDATE_TAG](context, payload: VideoUpdateTagActionPayload) {
+  async [VIDEO_TAGS.UPDATE](context, payload: VideoTagsUpdateActionPayload) {
     return SkipIfIsFileProtocol(() => {
       return axios
         .put(`/api/video_tag/${payload.id}`, {
@@ -340,7 +373,7 @@ const actions: ActionTree<VideoState, RootState> = {
         .then(response => HandleVideoReponse(response, context));
     })();
   },
-  async [VIDEO_DELETE_TAG](context, payload: VideoDeleteTagActionPayload) {
+  async [VIDEO_TAGS.DELETE](context, payload: VideoTagsDeleteActionPayload) {
     return SkipIfIsFileProtocol(() => {
       return axios
         .put(`/api/video_tag/${payload.id}`, {
@@ -349,6 +382,35 @@ const actions: ActionTree<VideoState, RootState> = {
         })
         .then(response => HandleVideoReponse(response, context));
     })();
+  },
+  async [VIDEO_TAGS.READ](context, payload: VideoTagsReadActionPayload) {
+    return SkipIfIsFileProtocol(() => {
+      return axios
+        .get(`/api/video_tag/${payload.id}`)
+        .then(response => HandleTagsReponse(response, context));
+    })();
+  },
+  async [READ_VIDEO_TAGS_IF_FOUND_UNDEFINED](
+    context,
+    payload: VideoTagsReadIfFoundUndefinedActionPayload,
+  ) {
+    const video = payload.video;
+    return new Promise((resolve, reject) => {
+      if (
+        video.tags.some(i =>
+          isUndefined(
+            (context.rootState as CombinedRootState).tagStore.storage[i],
+          ),
+        )
+      ) {
+        const tagsPayload: VideoTagsReadActionPayload = { id: video.uuid };
+        return context
+          .dispatch(VIDEO_TAGS.READ, tagsPayload)
+          .then(resolve)
+          .catch(reject);
+      }
+      resolve();
+    });
   },
 };
 
