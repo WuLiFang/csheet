@@ -1,16 +1,18 @@
 <template lang="pug">
     .file-info(v-if='videoData')
       .time(v-show='videoData.poster_mtime')
-        | 图像
-        |
+        span.text
+          | 图像
+          |
         FaIcon.icon(name='file-image-o')
         |
         | :
         RelativeTime(:timestamp='videoData.poster_mtime')
       br
       .time(v-show='videoData.src_mtime')
-        | 视频
-        |
+        span.text
+          | 视频
+          |
         FaIcon.icon(name='file-video-o')
         |
         | :
@@ -72,9 +74,17 @@ export default Vue.extend({
   opacity: 0.5;
   text-align: left;
   transition: 0.2s ease-in-out;
+  .text {
+    visibility: hidden;
+    position: absolute;
+  }
   &:hover {
     background: black;
     opacity: 1;
+    .text {
+      position: relative;
+      visibility: visible;
+    }
   }
 }
 </style>
