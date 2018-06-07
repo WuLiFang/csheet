@@ -21,7 +21,12 @@
 import Vue from 'vue';
 import _ from 'lodash';
 
-import { Select as ElSelect, Option as ElOption } from 'element-ui';
+import {
+  Select as ElSelect,
+  Option as ElOption,
+  Message,
+  Notification,
+} from 'element-ui';
 // @ts-ignore
 import FaIcon from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/tags';
@@ -29,6 +34,7 @@ import 'vue-awesome/icons/tags';
 import { tagComputedMinxin } from '@/store/tag';
 import { TagResponse } from '@/interface';
 import { TagCreateActionPayload, TAG } from '@/mutation-types';
+import { isUndefined } from 'util';
 
 export default Vue.extend({
   components: {
@@ -52,12 +58,27 @@ export default Vue.extend({
         return this.value;
       },
       set(value: string[]) {
-        const created = _.difference(value, this.value);
-        created.map(i => {
-          const payload: TagCreateActionPayload = { data: { text: i } };
-          this.$store.dispatch(TAG.CREATE, payload);
-        });
-        this.$emit('input', value);
+        const created = value.filter(i => isUndefined(this.tagStoreByText[i]));
+        const message = created.join(',');
+        Promise.all(
+          created.map(i => {
+            const payload: TagCreateActionPayload = { data: { text: i } };
+            return this.$store.dispatch(TAG.CREATE, payload);
+          }),
+        )
+          .then(() => {
+            this.$emit('input', value);
+            if (message) {
+              Notification({
+                title: '成功添加了标签',
+                message,
+                type: 'success',
+              });
+            }
+          })
+          .catch(() => {
+            Notification({ title: '创建标签失败', message, type: 'error' });
+          });
       },
     },
   },

@@ -42,7 +42,12 @@ import Vue from 'vue';
 import FaIcon from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/check-circle-o';
 
-import { Popover as ElPopover, Tag as ElTag } from 'element-ui';
+import {
+  Popover as ElPopover,
+  Tag as ElTag,
+  Input as ElInput,
+  Button as ElButton,
+} from 'element-ui';
 import { videoComputedMinxin } from '../store/video';
 import {
   VideoResponse,
