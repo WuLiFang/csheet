@@ -6,6 +6,7 @@ export interface IDMap<T> {
 
 export interface RootState {
   username: string;
+  isEnablePreview: boolean;
 }
 
 export enum LoadStatus {

@@ -12,7 +12,7 @@
         icon='el-icon-refresh'
       ) 刷新
       .video-control(v-show='src')
-        ElCheckbox(v-model='isShowVideo' label='视频' size='mini')
+        ElCheckbox(v-model='isEnablePreview' label='视频' size='mini')
         ElCheckbox(v-model='isAutoPlay' label='自动播放' size='mini')
         ElButton(v-show='isAutoPlay' @click='isAutoNext ? pause(): play()' size='mini')
           span(v-if='isAutoNext')
@@ -27,14 +27,14 @@
       Spinner(size='large' message='读取中' text-fg-color='white')
     img.center(
       draggable
-      v-show='poster && (!src || !isShowVideo)'
+      v-show='poster && (!src || !isEnablePreview)'
       :src='poster'
       @dragstart='ondragstart' 
     )
     video.center(
       draggable
       ref='video'
-      v-show='isShowVideo && src'
+      v-show='isEnablePreview && src'
       :poster='poster'
       :src='src'
       :autoplay='isAutoPlay'
@@ -76,6 +76,7 @@ import {
   VideoPreloadActionPayload,
   VideoUpdateBlobWhiteListMapMutationPayload,
   UPDATE_VIDEO_BLOB_WHITELIST,
+  UPDATE_IS_ENABLE_PREVIEW,
 } from '../mutation-types';
 import { preloadVideo, preloadImage } from '@/preload';
 import { isNull } from 'util';
@@ -97,7 +98,6 @@ export default Vue.extend({
       isForce: false,
       isAutoPlay: false,
       isAutoNext: false,
-      isShowVideo: true,
       isFileProtocol,
       src: null as string | null,
       poster: null as string | null,
@@ -112,6 +112,14 @@ export default Vue.extend({
       },
       set(value: string | null) {
         this.$emit('update:videoId', value);
+      },
+    },
+    isEnablePreview: {
+      get(): boolean {
+        return this.$store.state.isEnablePreview;
+      },
+      set(value: boolean) {
+        this.$store.commit(UPDATE_IS_ENABLE_PREVIEW, value);
       },
     },
     posterURL(): string | null {

@@ -178,3 +178,5 @@ export const READ_VIDEO_TAGS_IF_FOUND_UNDEFINED =
 export interface VideoTagsReadIfFoundUndefinedActionPayload {
   video: VideoResponse;
 }
+
+export const UPDATE_IS_ENABLE_PREVIEW = 'update_is_enble_preview';

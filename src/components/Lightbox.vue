@@ -144,7 +144,7 @@ export default Vue.extend({
       return this.getVideoURI(this.id, VideoRole.thumb);
     },
     srcURL(): string | null {
-      if (this.isLoadVideo) {
+      if (this.isLoadVideo && this.isEnablePreview) {
         return this.getBlobURL(this.id, VideoRole.preview);
       }
       return null;
@@ -176,6 +176,9 @@ export default Vue.extend({
     },
     tags(): TagResponse[] {
       return this.video.tags.map(i => this.tagStore.storage[i]);
+    },
+    isEnablePreview(): boolean {
+      return this.$store.state.isEnablePreview;
     },
   },
   methods: {
