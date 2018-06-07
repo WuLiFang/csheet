@@ -1,12 +1,12 @@
 <template lang="pug">
   ElSelect.tag-select(
     v-model='result'
-    :size='size'
-    prefix-icon='el-icon-edit-outline'
-    :placeholder='placeholder' 
     multiple
     filterable
-    allow-create
+    prefix-icon='el-icon-edit-outline'
+    :size='size'
+    :placeholder='placeholder' 
+    :allow-create='allowCreate'
   )
     i.prefix(slot='prefix')
       FaIcon.icon(name='tags')
@@ -39,6 +39,7 @@ export default Vue.extend({
   props: {
     value: { type: Array as () => string[] },
     size: { default: 'mini' },
+    allowCreate: { default: false },
     placeholder: { default: '选择标签' },
   },
   data() {
