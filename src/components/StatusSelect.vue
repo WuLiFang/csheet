@@ -29,7 +29,7 @@ export interface StatusSelectResult {
 }
 
 export default Vue.extend({
-  props: { select: { type: Object as () => StatusSelectResult } },
+  props: { value: { type: Object as () => StatusSelectResult } },
   components: {
     ElSwitch: Switch,
   },
@@ -42,10 +42,10 @@ export default Vue.extend({
     ...CGTeamWorkTaskComputedMixin,
     result: {
       get(): StatusSelectResult {
-        return this.select;
+        return this.value;
       },
       set(value: StatusSelectResult) {
-        this.$emit('update:select', value);
+        this.$emit('input', value);
       },
     },
     allStatus(): TaskStatusText[] {

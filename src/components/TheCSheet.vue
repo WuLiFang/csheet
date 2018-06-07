@@ -20,7 +20,7 @@
           ElOption(label='组长' :value='TaskStage.leader')
           ElOption(label='导演' :value='TaskStage.director')
           ElOption(label='客户' :value='TaskStage.client')
-        StatusSelect(v-show='isShowStatus' :select.sync='statusSelect')
+        StatusSelect(v-show='isShowStatus' v-model='statusSelect')
       .filter
         .label
           ElInput(
