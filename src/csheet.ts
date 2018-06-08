@@ -1,19 +1,14 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-
+import { isFileProtocol } from '@/packtools';
+import SocketIO from '@/socketio';
 // @ts-ignore
 import { Icon } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
-
+import Vue from 'vue';
+import Vuex from 'vuex';
 import TheCSheet from './components/TheCSheet.vue';
-
-import SocketIO from './socketio';
 import _store from './store';
-import { VideoResponse } from '@/interface';
-import { VIDEO, VideoUpdateMutationPayload } from '@/mutation-types';
-import { isFileProtocol } from '@/packtools';
 
 Vue.use(Vuex);
 Vue.use(Icon);

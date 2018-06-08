@@ -1,10 +1,10 @@
 import {
-  VideoResponse,
   CGTeamWorkTaskData,
-  VideoRole,
   TagResponse,
+  VideoResponse,
+  VideoRole,
 } from './interface';
-import { LoadStatus, PositionData } from './store/types';
+import { IDMap, PositionData } from './store/types';
 
 export enum VIDEO {
   // CREATE = 'create_video',
@@ -36,13 +36,15 @@ export interface VideoSetVisibilityMutationPayload {
 }
 
 export const UPDATE_VIDEO_APPEARING = 'update_video_appearing';
+export const FILTER_VIDEOS = 'filter_videos';
 
 export interface VideoUpdateAppearingMutationPayload {
   id: string;
   value?: boolean;
 }
 export const PRELOAD_VIDEO = 'preload_video';
-
+export const UPDATE_VIDEO_SELECT_STATE = 'update_video_select_state';
+export type VideoUpdateSelectStateMutationPayload = IDMap<boolean>;
 export interface VideoPreloadActionPayload {
   id: string;
   role: VideoRole;
@@ -178,5 +180,11 @@ export const READ_VIDEO_TAGS_IF_FOUND_UNDEFINED =
 export interface VideoTagsReadIfFoundUndefinedActionPayload {
   video: VideoResponse;
 }
+export const UPDATE_ROOT_STATE = 'update_root_state';
 
-export const UPDATE_IS_ENABLE_PREVIEW = 'update_is_enble_preview';
+export interface StateUpdateMutationPayload<T, K extends keyof T = keyof T> {
+  key: K;
+  value: T[K];
+}
+
+export const UPDATE_VIDEO_STATE = 'update_video_state';

@@ -1,9 +1,7 @@
 <template lang="pug">
   .lightbox(
-    v-show='isVisible'
     draggable
     :class='{shrink: (!video.thumb_mtime || forceShrink)}'
-    :hidden='!isVisible'
     @click='onclick'
     @dragstart='ondragstart'
     @mouseenter="onmouseenter" 
@@ -13,7 +11,10 @@
       ElTag(v-for='i in tags' @close='deleteVideoTag(i)' closable size='small') {{ i.text }}
       ElButton(v-if='!isFileProtocol' @click='isTagEditDialogVisible = true' size='mini') 编辑标签
       .reference(slot='reference')
-        .select-overlay(v-if='!isFileProtocol' v-show='isSelectable && selected')
+        .select-overlay(
+          v-if='!isFileProtocol'
+          v-show='isEditingTags && isSelected'
+        )
           FaIcon(name='check-circle-o' scale='3')
         video(
           ref='video'
@@ -24,72 +25,55 @@
           muted 
           loop 
         )
-        div.up-display(:style='upDisplayStyle')
+        .top-display(:style='upDisplayStyle')
           .artist(v-if='task') {{task.artist}}
           LightboxTaskStatus.status(
             v-if='taskId' 
             :id='taskId' 
             :statusStage='statusStage'
           )
-        div
-          span.caption(:style='captionStyle') {{ video.label }}
+        .bottom-display
+          span.bottom-display(:style='captionStyle') {{ video.label }}
     TagEditDialog(:id='id' :visible.sync='isTagEditDialogVisible')
 </template>
 
-
-<script lang="ts">
+<script lang='ts'>
+import { isFileProtocol } from '@/packtools';
+import { preloadImage, preloadVideo } from '@/preload';
+import { RootComputedMixin } from '@/store';
+import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
+import { tagComputedMinxin } from '@/store/tag';
+import {
+  Button as ElButton,
+  Input as ElInput,
+  Popover as ElPopover,
+  Tag as ElTag,
+} from 'element-ui';
 import Vue from 'vue';
-
 // @ts-ignore
 import FaIcon from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/check-circle-o';
 import {
-  Popover as ElPopover,
-  Tag as ElTag,
-  Input as ElInput,
-  Button as ElButton,
-  Dialog as ElDialog,
-  Message,
-  Notification,
-} from 'element-ui';
-
-import { videoComputedMinxin } from '../store/video';
-import {
+  CGTeamWorkTaskData,
+  TagResponse,
   VideoResponse,
   VideoRole,
-  CGTeamWorkTaskData,
-  TaskStage,
-  TaskStatus,
-  TagResponse,
 } from '../interface';
 import {
-  VideoSetVisibilityMutationPayload,
-  SET_VIDEO_VISIBILITY,
-  VideoUpdateAppearingMutationPayload,
-  VideoUpdatePositionMutationPayload,
-  UPDATE_VIDEO_POSITION,
-  VideoPreloadActionPayload,
   PRELOAD_VIDEO,
+  UPDATE_VIDEO_SELECT_STATE,
+  VideoPreloadActionPayload,
   VideoTagsDeleteActionPayload,
+  VideoUpdateSelectStateMutationPayload,
   VIDEO_TAGS,
-  TAG,
-  TagCreateActionPayload,
-  VideoTagsCreateActionPayload,
 } from '../mutation-types';
-import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
-import { isFileProtocol } from '@/packtools';
-
-import TagEditDialog from './TagEditDialog.vue';
-import TagSelect from './TagSelect.vue';
+import { videoComputedMinxin } from '../store/video';
 import LightboxTaskStatus from './LightboxTaskStatus.vue';
-import { preloadVideo, preloadImage } from '@/preload';
-import { tagComputedMinxin } from '@/store/tag';
-import { isUndefined } from 'util';
+import TagEditDialog from './TagEditDialog.vue';
 
 export default Vue.extend({
   components: {
     LightboxTaskStatus,
-    TagSelect,
     TagEditDialog,
     FaIcon,
     ElPopover,
@@ -98,16 +82,7 @@ export default Vue.extend({
     ElButton,
   },
   props: {
-    value: { type: Boolean },
     id: { type: String },
-    isSelectable: { default: false },
-    isShowTitle: { default: false },
-    isShowStatus: { default: false },
-    isVisible: { default: false },
-    statusStage: {
-      type: Number as () => TaskStage,
-      default: TaskStage.director,
-    },
   },
   data() {
     return {
@@ -126,16 +101,17 @@ export default Vue.extend({
     ...videoComputedMinxin,
     ...CGTeamWorkTaskComputedMixin,
     ...tagComputedMinxin,
-    selected: {
+    ...RootComputedMixin,
+    isSelected: {
       get(): boolean {
-        return this.value;
+        return this.videoStore.selectStateMap[this.id];
       },
       set(value: boolean) {
-        this.$emit('input', value);
+        const payload: VideoUpdateSelectStateMutationPayload = {
+          [this.id]: value,
+        };
+        this.$store.commit(UPDATE_VIDEO_SELECT_STATE, payload);
       },
-    },
-    top(): number {
-      return this.$el.offsetTop;
     },
     video(): VideoResponse {
       return this.videoStore.storage[this.id];
@@ -150,7 +126,7 @@ export default Vue.extend({
       return null;
     },
     captionStyle(): object {
-      if (this.isShowTitle) {
+      if (this.isFixedTitleDisplay) {
         return {
           transform: 'none',
         };
@@ -158,7 +134,7 @@ export default Vue.extend({
       return {};
     },
     upDisplayStyle(): object {
-      if (this.isShowStatus) {
+      if (this.isFixedStatusDisplay) {
         return {
           transform: 'none',
         };
@@ -183,8 +159,8 @@ export default Vue.extend({
   },
   methods: {
     onclick() {
-      if (this.isSelectable) {
-        this.selected = !this.selected;
+      if (this.isEditingTags) {
+        this.isSelected = !this.isSelected;
       } else {
         this.$emit('click', this.video);
       }
@@ -304,7 +280,7 @@ export default Vue.extend({
     height: 100%;
     background: rgba($color: green, $alpha: 0.2);
   }
-  .up-display {
+  .top-display {
     position: absolute;
     top: 0;
     display: flex;
@@ -323,7 +299,7 @@ export default Vue.extend({
     transition: 0.3s ease-in-out;
     transform: translateY(-100%);
   }
-  .caption {
+  .bottom-display {
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -337,16 +313,16 @@ export default Vue.extend({
     transform: translateY(100%);
   }
   &:hover {
-    .caption,
-    .up-display {
+    .bottom-display,
+    .top-display {
       transform: none;
     }
   }
   &.shrink {
     background: rgba(255, 255, 255, 0.2);
     width: 10px;
-    .caption,
-    .up-display {
+    .bottom-display,
+    .top-display {
       display: none;
     }
   }

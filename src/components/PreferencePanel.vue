@@ -1,0 +1,203 @@
+<template lang="pug">
+  .preference-panel
+    .count {{videoPlayList.length}}/{{imagePlayList.length}}/{{videoStore.visibleVideos.length}}
+    .title
+      ElCheckbox(v-model='isFixedTitleDisplayModel') 标题
+    .status
+      ElCheckbox(
+        v-if='hasTaskStorage'
+        v-model='isFixedStatusDisplayModel'
+      ) 任务信息
+      ElSelect.mode(
+        v-model='statusStageModel'
+        v-show='isFixedStatusDisplayModel'
+        size='mini' )
+        .prefix(slot='prefix')
+          span 阶段
+        ElOption(label='组长' :value='TaskStage.leader')
+        ElOption(label='导演' :value='TaskStage.director')
+        ElOption(label='客户' :value='TaskStage.client')
+    .filter
+      .status
+        StatusSelect(
+          v-show='isFixedStatusDisplayModel' 
+          v-model='statusFilterModel')
+      .label
+        ElInput(
+          size='mini'
+          placeholder='标题正则过滤' 
+          prefix-icon='el-icon-search'
+          v-model='labelFilterModel'
+        )
+      .artist(v-if='artists.length > 0')
+        ElAutocomplete(
+          v-model='artistFilterModel'
+          :fetch-suggestions='artistSearch'
+          size='mini'
+          prefix-icon='el-icon-info'
+          placeholder='人员过滤' 
+        )
+        ElCheckbox(
+          v-model='isFilterUser'
+          v-show='currentUserTaskCount'
+        ) 当前用户({{currentUserTaskCount}})
+      .tag
+        TagSelect(
+          v-model='tagTextFilterModel' 
+          size='mini' 
+          placeholder='标签过滤')
+      .buttons
+        ElButton(
+          v-if='!isFileProtocol'
+          v-show='!isEditingTagsModel' 
+          size='mini'
+          icon='el-icon-edit'
+          @click='isEditingTagsModel = true'
+        ) 添加标签
+        ElButton(
+          size='mini'
+          v-show='isFilterEnabled'
+          @click='resetFilters'
+        ) 重置过滤
+        PackButton
+</template>
+<script lang="ts">
+import Vue from 'vue';
+
+import _ from 'lodash';
+
+import PackButton from './PackButton.vue';
+import StatusSelect from './StatusSelect.vue';
+import TagSelect from './TagSelect.vue';
+import {
+  Input as ElInput,
+  Checkbox as ElCheckbox,
+  Button as ElButton,
+  Select as ElSelect,
+  Option as ElOption,
+  Autocomplete as ElAutocomplete,
+} from 'element-ui';
+import {
+  RootComputedMixin,
+  stateSetter,
+  mapWritableState,
+  mapRootStateModelMixin,
+  getDefaultStatusFilter,
+} from '@/store';
+import { RootState, StatusSelectResult } from '@/store/types';
+import { UPDATE_ROOT_STATE, FILTER_VIDEOS } from '@/mutation-types';
+import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
+import { TaskStage, TaskStatus } from '@/interface';
+import { isFileProtocol } from '@/packtools';
+import { videoComputedMinxin } from '@/store/video';
+import { isNull } from 'util';
+
+export default Vue.extend({
+  components: {
+    StatusSelect,
+    TagSelect,
+    ElInput,
+    ElCheckbox,
+    ElButton,
+    ElSelect,
+    ElOption,
+    ElAutocomplete,
+    PackButton,
+  },
+  data() {
+    return {
+      TaskStage,
+      isFileProtocol,
+    };
+  },
+  computed: {
+    ...CGTeamWorkTaskComputedMixin,
+    ...mapRootStateModelMixin,
+    ...videoComputedMinxin,
+    hasTaskStorage(): boolean {
+      return !_.isEmpty(this.cgTeamworkTaskStore.storage);
+    },
+    isFilterUser: {
+      get(): boolean {
+        return this.artistFilterModel === this.usernameModel;
+      },
+      set(value: boolean) {
+        if (value) {
+          this.artistFilterModel = this.usernameModel;
+        } else {
+          this.artistFilterModel = '';
+        }
+      },
+    },
+    currentUserTaskCount(): number {
+      return this.getAritstTaskCount(this.usernameModel);
+    },
+    isFilterEnabled() {
+      const defaultStatusFilter = getDefaultStatusFilter();
+      return (
+        this.labelFilterModel ||
+        this.artistFilterModel ||
+        this.tagTextFilterModel.length > 0 ||
+        Object.keys(this.statusFilterModel).some(i => {
+          const key = i as keyof StatusSelectResult;
+          return this.statusFilterModel[key] !== defaultStatusFilter[key];
+        })
+      );
+    },
+  },
+  methods: {
+    artistSearch(queryString: string, cb: (result: any[]) => void) {
+      const result = queryString
+        ? this.artists.filter(i => i.includes(queryString))
+        : this.artists;
+      cb(
+        result.map(i => {
+          return {
+            value: i,
+          };
+        }),
+      );
+    },
+    resetFilters() {
+      this.labelFilterModel = '';
+      this.artistFilterModel = '';
+      this.tagTextFilterModel = [];
+      this.statusFilterModel = getDefaultStatusFilter();
+    },
+  },
+});
+</script>
+
+<style lang="scss" scoped>
+.preference-panel {
+  div {
+    display: flex;
+    flex-direction: column;
+  }
+  .mode {
+    width: 6em;
+    align-self: flex-end;
+    .prefix {
+      height: 100%;
+      display: inline-flex;
+      justify-content: center;
+    }
+  }
+  .filter {
+    margin: 1em 0;
+  }
+  .pack {
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+}
+</style>
+<style lang="scss">
+.preference-panel {
+  .filter {
+    .el-input {
+      width: 10em;
+    }
+  }
+}
+</style>

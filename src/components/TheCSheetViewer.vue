@@ -12,8 +12,8 @@
         icon='el-icon-refresh'
       ) 刷新
       .video-control(v-show='src')
-        ElCheckbox(v-model='isEnablePreview' label='视频' size='mini')
-        ElCheckbox(v-model='isAutoPlay' v-show='isEnablePreview' label='自动播放' size='mini')
+        ElCheckbox(v-model='isEnablePreviewModel' label='视频' size='mini')
+        ElCheckbox(v-model='isAutoPlay' v-show='isEnablePreviewModel' label='自动播放' size='mini')
         ElButton(v-show='isAutoPlay' @click='isAutoNext ? pause(): play()' size='mini')
           span(v-if='isAutoNext')
             FaIcon(name='sort-alpha-asc')
@@ -27,14 +27,14 @@
       Spinner(size='large' message='读取中' text-fg-color='white')
     img.center(
       draggable
-      v-show='poster && (!src || !isEnablePreview)'
+      v-show='poster && (!src || !isEnablePreviewModel)'
       :src='poster'
       @dragstart='ondragstart' 
     )
     video.center(
       draggable
       ref='video'
-      v-show='isEnablePreview && src'
+      v-show='isEnablePreviewModel && src'
       :poster='poster'
       :src='src'
       :autoplay='isAutoPlay'
@@ -76,10 +76,10 @@ import {
   VideoPreloadActionPayload,
   VideoUpdateBlobWhiteListMapMutationPayload,
   UPDATE_VIDEO_BLOB_WHITELIST,
-  UPDATE_IS_ENABLE_PREVIEW,
 } from '../mutation-types';
 import { preloadVideo, preloadImage } from '@/preload';
 import { isNull } from 'util';
+import { mapRootStateModelMixin } from '@/store';
 
 export default Vue.extend({
   components: {
@@ -106,20 +106,13 @@ export default Vue.extend({
   },
   computed: {
     ...videoComputedMinxin,
+    ...mapRootStateModelMixin,
     id: {
       get(): string | null {
         return this.videoId;
       },
       set(value: string | null) {
         this.$emit('update:videoId', value);
-      },
-    },
-    isEnablePreview: {
-      get(): boolean {
-        return this.$store.state.isEnablePreview;
-      },
-      set(value: boolean) {
-        this.$store.commit(UPDATE_IS_ENABLE_PREVIEW, value);
       },
     },
     posterURL(): string | null {
@@ -147,23 +140,8 @@ export default Vue.extend({
       const hash = this.video ? `#${this.video.label}` : '';
       return `${window.location.href.split('#')[0]}${hash}`;
     },
-    videoPlayList(): VideoResponse[] {
-      return _.filter(this.videoStore.storage, i => !isNull(i.preview_mtime));
-    },
-    imagePlayList(): VideoResponse[] {
-      return _.filter(this.videoStore.storage, i => !isNull(i.poster_mtime));
-    },
   },
   methods: {
-    getVisibleVideo(): VideoResponse[] {
-      return _.sortBy(
-        _.filter(this.videoStore.storage, i => {
-          const element = this.videoElementHub.get(i.uuid);
-          return element ? !element.hidden : false;
-        }),
-        v => v.label,
-      );
-    },
     refresh() {
       const payload: VideoReadActionPayload = { id: this.videoId };
       this.isForce = true;
@@ -207,7 +185,7 @@ export default Vue.extend({
       // By index.
       const match = /^image(\d+)/.exec(hash);
       if (match) {
-        this.video = this.imagePlayList[Number(match[1])];
+        this.id = this.imagePlayList[Number(match[1])];
       }
     },
     setupShortcut() {
@@ -231,22 +209,19 @@ export default Vue.extend({
       if (this.isAutoNext) {
         const state = this.findIndex(this.videoPlayList);
         const target = state.array[state.index + 1] || state.array[0];
-        const url = this.getVideoURI(target.uuid, VideoRole.preview);
+        const url = this.getVideoURI(target, VideoRole.preview);
         if (!url) {
           return;
         }
         preloadVideo(url).then(() => {
-          this.video = target;
+          this.id = target;
         });
       }
     },
-    findIndex(videoArray: VideoResponse[], defaultIndex = 0) {
-      const array = _.sortBy(
-        _.intersection(videoArray, this.getVisibleVideo()),
-        i => i.label,
-      );
-      const index: number = this.video
-        ? videoArray.indexOf(this.video)
+    findIndex(videoArray: string[], defaultIndex = 0) {
+      const array = _.intersection(videoArray, this.videoStore.visibleVideos);
+      const index: number = this.videoId
+        ? videoArray.indexOf(this.videoId)
         : defaultIndex;
       return {
         index,
@@ -256,19 +231,19 @@ export default Vue.extend({
     jumpNextImage() {
       const state = this.findIndex(this.imagePlayList);
       const target = state.array[state.index + 1] || state.array[0];
-      this.video = target;
+      this.id = target;
     },
     jumpPrevImage() {
       const state = this.findIndex(this.imagePlayList);
       const target =
         state.array[state.index - 1] || state.array[state.array.length - 1];
-      this.video = target;
+      this.id = target;
     },
-    prev(array: VideoResponse[]): VideoResponse | null {
+    prev(array: string[]): string | null {
       const state = this.findIndex(this.imagePlayList);
       return state.array[state.index - 1] || null;
     },
-    next(array: VideoResponse[]): VideoResponse | null {
+    next(array: string[]): string | null {
       const state = this.findIndex(this.imagePlayList);
       return state.array[state.index + 1] || null;
     },
@@ -297,9 +272,9 @@ export default Vue.extend({
         this.duration = video.duration;
       });
     },
-    preload(video: VideoResponse) {
+    preload(id: string) {
       const payload: VideoPreloadActionPayload = {
-        id: video.uuid,
+        id,
         role: VideoRole.poster,
       };
       this.$store.dispatch(PRELOAD_VIDEO, payload);
@@ -330,7 +305,7 @@ export default Vue.extend({
         window.location.replace(this.url);
         const blobWhitelist = _.uniq(
           _.compact([
-            this.video,
+            this.id,
             this.prev(this.imagePlayList),
             this.next(this.imagePlayList),
             this.next(this.videoPlayList),
@@ -340,7 +315,7 @@ export default Vue.extend({
 
         const payload: VideoUpdateBlobWhiteListMapMutationPayload = {
           key: 'viewer',
-          value: blobWhitelist.map(i => i.uuid),
+          value: blobWhitelist,
         };
         this.$store.commit(UPDATE_VIDEO_BLOB_WHITELIST, payload);
       } else {

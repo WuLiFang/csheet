@@ -20,6 +20,8 @@ import {
   IDMap,
   LoadStatus,
   CGTeamworkTaskState,
+  CGTeamWorkTaskGetters,
+  mapGettersMixin,
 } from './types';
 import {
   CGTeamWorkTaskResponse,
@@ -72,16 +74,15 @@ export const getters: GetterTree<CGTeamworkTaskState, RootState> = {
   },
 };
 
-interface CGTeamWorkTaskComputedMixin extends DefaultComputed {
+interface CGTeamWorkTaskComputedMixin
+  extends DefaultComputed,
+    mapGettersMixin<CGTeamWorkTaskGetters> {
   cgTeamworkTaskStore: () => CGTeamworkTaskState;
-  getGeneralStatus: () => (id: string, stage?: TaskStage) => TaskStatus | null;
-  artists: () => string[];
-  getAritstTaskCount: () => (artist: string) => number;
 }
 
 export const CGTeamWorkTaskComputedMixin = {
   ...mapState(['cgTeamworkTaskStore']),
-  ...mapGetters(['getGeneralStatus', 'artists', 'getAritstTaskCount']),
+  ...mapGetters(Object.keys(getters)),
 } as CGTeamWorkTaskComputedMixin;
 
 function parseDataFromPage(): CGTeamworkTaskState['storage'] {

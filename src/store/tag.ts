@@ -14,7 +14,14 @@ import * as _ from 'lodash';
 import axios from 'axios';
 import { AxiosResponse } from 'axios';
 
-import { RootState, LoadStatus, TagState } from './types';
+import {
+  RootState,
+  LoadStatus,
+  TagState,
+  TagStoreByText,
+  TagGetters,
+  mapGettersMixin,
+} from './types';
 import {
   TAG,
   TagReadActionPayload,
@@ -31,9 +38,6 @@ import { SkipIfIsFileProtocol } from '../packtools';
 import { getDataFromAppElement } from '@/datatools';
 import { TagResponse } from '@/interface';
 
-interface TagStoreByText {
-  [id: string]: TagResponse[];
-}
 export const getters: GetterTree<TagState, RootState> = {
   tags(contextState): TagResponse[] {
     return _.sortBy(_.values(contextState.storage), i => i.text);
@@ -48,16 +52,15 @@ export const getters: GetterTree<TagState, RootState> = {
   },
 };
 
-interface TagComputedMixin extends DefaultComputed {
+interface TagComputedMixin
+  extends DefaultComputed,
+    mapGettersMixin<TagGetters> {
   tagStore: () => TagState;
-  tags: () => TagResponse[];
-  tagStoreByText: () => TagStoreByText;
-  getTagByTextArray: () => (textArray: string[]) => TagResponse[];
 }
 
 export const tagComputedMinxin = {
   ...mapState(['tagStore']),
-  ...mapGetters(['tags', 'tagStoreByText', 'getTagByTextArray']),
+  ...mapGetters(Object.keys(getters)),
 } as TagComputedMixin;
 
 function parseDataFromPage(): TagState['storage'] {
