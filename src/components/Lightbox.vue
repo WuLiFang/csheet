@@ -205,14 +205,7 @@ export default Vue.extend({
       this.isHover = false;
       this.videoElement.pause();
     },
-    updateRatio() {
-      if (!this.posterURL) {
-        return;
-      }
-      preloadImage(this.posterURL).then(image => {
-        this.ratio = image.naturalHeight / image.naturalWidth;
-      });
-    },
+
     deleteVideoTag(tag: TagResponse) {
       const payload: VideoTagsDeleteActionPayload = {
         id: this.video.uuid,
@@ -221,6 +214,18 @@ export default Vue.extend({
         },
       };
       this.$store.dispatch(VIDEO_TAGS.DELETE, payload);
+    },
+    loadPoster() {
+      const value = this.posterURL;
+      if (!value) {
+        return;
+      }
+      preloadImage(value).then(image => {
+        if (this.posterURL === value) {
+          this.ratio = image.naturalHeight / image.naturalWidth;
+          this.poster = image.src;
+        }
+      });
     },
     loadSrc() {
       const value = this.srcURL;
@@ -237,8 +242,7 @@ export default Vue.extend({
   },
   watch: {
     posterURL(value) {
-      this.updateRatio();
-      this.poster = value
+      this.loadPoster();
     },
     srcURL(value) {
       if (value) {
@@ -253,7 +257,7 @@ export default Vue.extend({
   },
   mounted() {
     this.poster = this.posterURL;
-    this.updateRatio();
+    this.loadPoster();
     this.$nextTick(() => {
       this.videoElementHub.set(this.id, this.$el);
     });
