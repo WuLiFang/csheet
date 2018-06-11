@@ -61,19 +61,24 @@ class BasePage(object):
 
         raise NotImplementedError
 
-    def render(self, videos, template='csheet.html', **context):
+    def render(self, videos, template='csheet.html', database_session=None, **context):
         """Render the page.  """
 
         env = Environment(
             loader=FileSystemLoader(self.templates_folder),
         )
-
         template = env.get_template(template)
 
-        return template.render(config=self,
-                               videos=videos,
-                               dumps=dumps,
-                               dump=dump_videos, **context)
+        return template.render(**self._template_context(context, videos, database_session))
+
+    def _template_context(self, context, videos, database_session=None):
+        context.setdefault('config', self)
+        context.setdefault('videos', videos)
+        context.setdefault('dumps', dumps)
+        context.setdefault('dump', dump_videos)
+        if database_session:
+            context.setdefault('tags', self.tags(videos, database_session))
+        return context
 
     def archive(self, session):
         """Archive page and assets to a temporary file.  """
@@ -132,7 +137,7 @@ class BasePage(object):
     def _pack_page(self, videos, zipfile, session):
         try:
             self.is_pack = True
-            index_page = self.render(videos, tags=self.tags(videos, session))
+            index_page = self.render(videos, database_session=session)
         finally:
             self.is_pack = False
         index_page = self._pack_entry(zipfile, index_page, 'vendors~csheet')

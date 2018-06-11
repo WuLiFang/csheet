@@ -163,6 +163,13 @@ class CGTeamWorkPage(BasePage):
         data = query.all()
         return [i.to_task_info() for i in data]
 
+    def _template_context(self, context, videos, database_session=None):
+        context = super(CGTeamWorkPage, self)._template_context(
+            context, videos, database_session)
+        if database_session:
+            context.setdefault('tasks', self.tasks(database_session))
+        return context
+
 
 def _get_submit_file(submit_file_data):
     try:

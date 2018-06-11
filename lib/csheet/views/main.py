@@ -40,14 +40,12 @@ def render_csheet_page():
         if 'pack' in request.args:
             return packed_page(page, sess)
         page.update_later(sess)
-        videos = page.videos(sess)
         rendered = page.render(
-            videos,
-            tasks=page.tasks(sess),
-            tags=page.tags(videos, sess),
+            page.videos(sess),
             template='csheet_app.html',
             request=request,
-            session=session)
+            session=session,
+            database_session=sess)
 
     # Respon with cookies set.
     resp = make_response(rendered)
