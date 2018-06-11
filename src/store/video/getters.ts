@@ -1,4 +1,5 @@
 import { TaskStatus, VideoResponse, VideoRole } from '@/interface';
+import { isFileProtocol } from '@/packtools';
 import {
   CombinedGetters,
   CombinedRootState,
@@ -32,7 +33,14 @@ export const getters: GetterTree<VideoState, RootState> = {
   },
   getBlobURL(contextState, contextGetter) {
     return (id: string, role: VideoRole, isForce = false) => {
-      const url = contextGetter.getVideoURI(id, role, isForce);
+      const url = (contextGetter as CombinedGetters).getVideoURI(
+        id,
+        role,
+        isForce,
+      );
+      if (isFileProtocol) {
+        return url;
+      }
       if (!url) {
         return null;
       }

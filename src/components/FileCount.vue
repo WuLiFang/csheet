@@ -8,7 +8,7 @@
         FaIcon(name='file-image-o')
         | {{imageCount}}
     .right
-      i.total(v-show='totalCount > 0')
+      i.total
         FaIcon(scale='1.2' name='file-o')
         | {{totalCount}}
 </template>

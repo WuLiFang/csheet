@@ -2,7 +2,7 @@
   .preference-panel
     FileCount
     .preference
-      .video
+      .video(v-if='videoPlayList.length > 0')
         ElCheckbox(v-model='isEnablePreviewModel') 视频
       .title
         ElCheckbox(v-model='isFixedTitleDisplayModel') 标题
@@ -43,7 +43,7 @@
           v-model='isFilterUser'
           v-show='currentUserTaskCount'
         ) 当前用户({{currentUserTaskCount}})
-      .tag
+      .tag(v-if='tags.length > 0')
         TagSelect(
           v-model='tagTextFilterModel' 
           size='mini' 
@@ -98,6 +98,7 @@ import { TaskStage, TaskStatus } from '@/interface';
 import { isFileProtocol } from '@/packtools';
 import { videoComputedMinxin } from '@/store/video';
 import { isNull } from 'util';
+import { tagComputedMinxin } from '@/store/tag';
 
 export default Vue.extend({
   components: {
@@ -123,6 +124,7 @@ export default Vue.extend({
     ...CGTeamWorkTaskComputedMixin,
     ...mapRootStateModelMixin,
     ...videoComputedMinxin,
+    ...tagComputedMinxin,
     hasTaskStorage(): boolean {
       return !_.isEmpty(this.cgTeamworkTaskStore.storage);
     },

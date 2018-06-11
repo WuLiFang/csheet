@@ -1,6 +1,6 @@
 import { TagResponse, VideoResponse } from '@/interface';
 import * as type from '@/mutation-types';
-import { isFileProtocol, SkipIfIsFileProtocol } from '@/packtools';
+import { SkipIfIsFileProtocol } from '@/packtools';
 import {
   CombinedGetters,
   CombinedRootState,
@@ -48,31 +48,34 @@ function HandleTagsReponse(
 
 export const actions: ActionTree<VideoState, RootState> = {
   async [type.VIDEO.READ](context, payload: type.VideoReadActionPayload) {
-    if (isFileProtocol) {
-      return;
-    }
-    return axios
-      .get(`/api/video/${payload.id}`)
-      .then(response => HandleVideoReponse(response, context));
+    return SkipIfIsFileProtocol(() => {
+      return axios
+        .get(`/api/video/${payload.id}`)
+        .then(response => HandleVideoReponse(response, context));
+    })();
   },
   async [type.PRELOAD_VIDEO](context, payload: type.VideoPreloadActionPayload) {
-    const url = context.getters.getVideoURI(payload.id, payload.role);
+    return SkipIfIsFileProtocol(() => {
+      const url = context.getters.getVideoURI(payload.id, payload.role);
 
-    if (!url || context.state.blobURLMap[url]) {
-      return;
-    }
-    const actionPayload: type.PreloadURLActionPayload = { url };
-    return context.dispatch(type.PRELOAD_URL, actionPayload);
+      if (!url || context.state.blobURLMap[url]) {
+        return;
+      }
+      const actionPayload: type.PreloadURLActionPayload = { url };
+      return context.dispatch(type.PRELOAD_URL, actionPayload);
+    })();
   },
   async [type.PRELOAD_URL](context, payload: type.PreloadURLActionPayload) {
-    return axios.get(payload.url, { responseType: 'blob' }).then(response => {
-      const mutationPayload: type.UpdateBlobHubMutationPayload = {
-        url: payload.url,
-        blob: response.data as Blob,
-      };
-      context.commit(type.UPDATE_BLOB_HUB, mutationPayload);
-      return response;
-    });
+    return SkipIfIsFileProtocol(() => {
+      return axios.get(payload.url, { responseType: 'blob' }).then(response => {
+        const mutationPayload: type.UpdateBlobHubMutationPayload = {
+          url: payload.url,
+          blob: response.data as Blob,
+        };
+        context.commit(type.UPDATE_BLOB_HUB, mutationPayload);
+        return response;
+      });
+    })();
   },
   [type.UPDATE_VIDEO_APPEARED](context) {
     const ret = context.state.visibleVideos.filter(i => {
@@ -139,23 +142,27 @@ export const actions: ActionTree<VideoState, RootState> = {
     context,
     payload: type.VideoTagsReadIfFoundUndefinedActionPayload,
   ) {
-    const video = payload.video;
-    return new Promise((resolve, reject) => {
-      if (
-        video.tags.some(i =>
-          isUndefined(
-            (context.rootState as CombinedRootState).tagStore.storage[i],
-          ),
-        )
-      ) {
-        const tagsPayload: type.VideoTagsReadActionPayload = { id: video.uuid };
-        return context
-          .dispatch(type.VIDEO_TAGS.READ, tagsPayload)
-          .then(resolve)
-          .catch(reject);
-      }
-      resolve();
-    });
+    return SkipIfIsFileProtocol(() => {
+      const video = payload.video;
+      return new Promise((resolve, reject) => {
+        if (
+          video.tags.some(i =>
+            isUndefined(
+              (context.rootState as CombinedRootState).tagStore.storage[i],
+            ),
+          )
+        ) {
+          const tagsPayload: type.VideoTagsReadActionPayload = {
+            id: video.uuid,
+          };
+          return context
+            .dispatch(type.VIDEO_TAGS.READ, tagsPayload)
+            .then(resolve)
+            .catch(reject);
+        }
+        resolve();
+      });
+    })();
   },
   [type.FILTER_VIDEOS](context) {
     context.commit(
