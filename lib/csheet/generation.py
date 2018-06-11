@@ -7,22 +7,27 @@ import logging
 import os
 import time
 
+import six
 from gevent import spawn
 from sqlalchemy import or_
 
 from wlf import ffmpeg
 
 from . import setting
-from .filename import filter_filename
 from .database import Video, session_scope
-from .workertools import work_forever
 from .exceptions import WorkerIdle
+from .filename import filter_filename
+from .workertools import work_forever
 
 LOGGER = logging.getLogger(__name__)
 
 
+@six.python_2_unicode_compatible
 class GenaratableVideo(Video):
     """Video that has method for generation.  """
+
+    def __str__(self):
+        return '<GeneratableVideo, label={}, uuid={}>'.format(self.label, self.uuid)
 
     def try_apply(self, method, source, target):
         """Apply generate method with generation errors handled.
@@ -52,7 +57,6 @@ class GenaratableVideo(Video):
         """
 
         LOGGER.info('Generate %s for: %s', target, self)
-
         generated = method(self)
         mediainfo = ffmpeg.probe(generated)
         if mediainfo.error:
@@ -61,6 +65,7 @@ class GenaratableVideo(Video):
         setattr(self, '{}_mtime'.format(target),
                 getattr(self, '{}_mtime'.format(source)))
         self.touch(target)
+        LOGGER.info('Generation success: %s', generated)
 
     def touch(self, target):
         """Set access time on target role.

@@ -26,7 +26,7 @@ LOG_CONFIG = {'version': 1,
                       'formatter': 'standard',
                       'class': 'logging.handlers.RotatingFileHandler',
                       'filename': '/var/log/csheet_generation.log',
-                      'maxBytes': 1024,
+                      'maxBytes': 102400,
                       'backupCount': 3
                   }
               },
