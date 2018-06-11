@@ -45,11 +45,13 @@ export default Vue.extend({
 .file-count {
   display: flex;
   flex-direction: row;
+  text-align: center;
   .left,
   .right {
     flex: auto;
     display: flex;
     flex-direction: column;
+
     justify-content: center;
   }
   .right {
