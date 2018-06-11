@@ -167,7 +167,7 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .preference-panel {
-  div {
+  div:not(.file-count) {
     display: flex;
     flex-direction: column;
   }

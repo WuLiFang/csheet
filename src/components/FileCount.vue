@@ -1,14 +1,16 @@
 <template lang="pug">
   .file-count
-    i.video(v-show='videoCount > 0')
-      FaIcon(name='file-video-o')
-      | {{videoCount}}
-    i.image(v-show='imageCount > 0')
-      FaIcon(name='file-image-o')
-      | {{imageCount}}
-    i.total(v-show='totalCount > 5')
-      FaIcon(name='file-o')
-      | {{totalCount}}
+    .left
+      i.video(v-show='videoCount > 0')
+        FaIcon( name='file-video-o')
+        | {{videoCount}}
+      i.image(v-show='imageCount > 0')
+        FaIcon(name='file-image-o')
+        | {{imageCount}}
+    .right
+      i.total(v-show='totalCount > 0')
+        FaIcon(scale='1.2' name='file-o')
+        | {{totalCount}}
 </template>
 <script lang="ts">
 import Vue from 'vue';
@@ -39,3 +41,19 @@ export default Vue.extend({
   },
 });
 </script>
+<style lang="scss" scoped>
+.file-count {
+  display: flex;
+  flex-direction: row;
+  .left,
+  .right {
+    flex: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .right {
+    font-size: 1.2em;
+  }
+}
+</style>
