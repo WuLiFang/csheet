@@ -57,17 +57,26 @@ export const actions: ActionTree<VideoState, RootState> = {
   async [type.PRELOAD_VIDEO](context, payload: type.VideoPreloadActionPayload) {
     return SkipIfIsFileProtocol(() => {
       const url = context.getters.getVideoURI(payload.id, payload.role);
-
+      const config = { ...payload };  // Create new obejct to save config to avoid mutation in other place.
       if (!url || context.state.blobURLMap[url]) {
         return;
       }
-      const actionPayload: type.PreloadURLActionPayload = { url };
+      const actionPayload: type.PreloadURLActionPayload = {
+        url,
+        onprogress(event: ProgressEvent) {
+          if (payload.onprogress) {
+            payload.onprogress(event, config);
+          }
+        },
+      };
       return context.dispatch(type.PRELOAD_URL, actionPayload);
     })();
   },
   async [type.PRELOAD_URL](context, payload: type.PreloadURLActionPayload) {
     return SkipIfIsFileProtocol(() => {
-      return axios.get(payload.url, { responseType: 'blob' }).then(response => {
+      return axios.get(payload.url, {
+        responseType: 'blob', onDownloadProgress: payload.onprogress,
+      }).then(response => {
         const mutationPayload: type.UpdateBlobHubMutationPayload = {
           url: payload.url,
           blob: response.data as Blob,

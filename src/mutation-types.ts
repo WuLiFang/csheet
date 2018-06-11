@@ -48,6 +48,7 @@ export type VideoUpdateSelectStateMutationPayload = IDMap<boolean>;
 export interface VideoPreloadActionPayload {
   id: string;
   role: VideoRole;
+  onprogress?: (event: ProgressEvent, config: VideoPreloadActionPayload) => void;
 }
 export const UPDATE_BLOB_HUB = 'update_blob_hub';
 export interface UpdateBlobHubMutationPayload {
@@ -58,6 +59,7 @@ export interface UpdateBlobHubMutationPayload {
 export const PRELOAD_URL = 'preload_url';
 export interface PreloadURLActionPayload {
   url: string;
+  onprogress?: (event: ProgressEvent) => void;
 }
 
 export const CLEAR_VIDEO_BLOB = 'clear_video_blob';

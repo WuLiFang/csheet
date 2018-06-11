@@ -21,10 +21,9 @@
           span(v-else)
             FaIcon(name='magic')
             | 自动
-
-    .center.failed(v-if='video && !(video.preview_mtime || video.poster_mtime)') 读取失败
+    .center.failed(v-if='video && !(video.preview_mtime || video.poster_mtime)') 不可用
     .center(v-else-if='! (poster || src)')
-      Spinner(size='large' message='读取中' text-fg-color='white')
+      Spinner(size='large' :message='loadingMessage' text-fg-color='white')
     img.center(
       draggable
       v-show='poster && (!src || !isEnablePreviewModel)'
@@ -81,6 +80,18 @@ import { preloadVideo, preloadImage } from '@/preload';
 import { isNull } from 'util';
 import { mapRootStateModelMixin } from '@/store';
 
+function formatBytes(bytes: number, decimals = 2) {
+  if (bytes === 0) {
+    return '0 Bytes';
+  }
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return (
+    parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i]
+  );
+}
+
 export default Vue.extend({
   components: {
     Spinner,
@@ -99,6 +110,7 @@ export default Vue.extend({
       isAutoPlay: false,
       isAutoNext: false,
       isFileProtocol,
+      posterProgressEvent: null as ProgressEvent | null,
       src: null as string | null,
       poster: null as string | null,
       duration: 0,
@@ -139,6 +151,14 @@ export default Vue.extend({
     url(): string {
       const hash = this.video ? `#${this.video.label}` : '';
       return `${window.location.href.split('#')[0]}${hash}`;
+    },
+    loadingMessage(): string {
+      if (isNull(this.posterProgressEvent)) {
+        return '读取中';
+      }
+      const total = this.posterProgressEvent.total;
+      const loadded = this.posterProgressEvent.loaded;
+      return `${(loadded / total * 100).toFixed(2)}%@${formatBytes(total)}`;
     },
   },
   methods: {
@@ -276,6 +296,7 @@ export default Vue.extend({
       const payload: VideoPreloadActionPayload = {
         id,
         role: VideoRole.poster,
+        onprogress: this.onLoadProgress,
       };
       this.$store.dispatch(PRELOAD_VIDEO, payload);
       payload.role = VideoRole.preview;
@@ -294,12 +315,21 @@ export default Vue.extend({
         this.videoElement.pause();
       }
     },
+    onLoadProgress(event: ProgressEvent, config: VideoPreloadActionPayload) {
+      if (config.id !== this.videoId) {
+        return;
+      }
+      if (config.role === VideoRole.poster) {
+        this.posterProgressEvent = event;
+      }
+    },
   },
   watch: {
     videoId(value: string | null) {
       this.duration = 0;
       this.src = null;
       this.poster = null;
+      this.posterProgressEvent = null;
       if (value) {
         this.scrollTo(value);
         window.location.replace(this.url);
