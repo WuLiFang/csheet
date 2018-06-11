@@ -70,7 +70,7 @@ export default Vue.extend({
             this.$emit('input', value);
             if (message) {
               Notification({
-                title: '成功添加了标签',
+                title: '成功创建了标签',
                 message,
                 type: 'success',
               });
