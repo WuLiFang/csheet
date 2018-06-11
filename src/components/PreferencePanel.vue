@@ -128,7 +128,10 @@ export default Vue.extend({
     },
     isFilterUser: {
       get(): boolean {
-        return this.artistFilterModel === [this.usernameModel];
+        return (
+          this.artistFilterModel.length === 1 &&
+          this.artistFilterModel[0] === this.usernameModel
+        );
       },
       set(value: boolean) {
         if (value) {
