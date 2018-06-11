@@ -238,6 +238,7 @@ export default Vue.extend({
   watch: {
     posterURL(value) {
       this.updateRatio();
+      this.poster = value
     },
     srcURL(value) {
       if (value) {
