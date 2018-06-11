@@ -1,5 +1,6 @@
 import { getDataFromAppElement } from '@/datatools';
 import { TaskStage, TaskStatus } from '@/interface';
+import { isFileProtocol } from '@/packtools';
 import { isUndefined } from 'util';
 import Vue from 'vue';
 import { DefaultComputed } from 'vue/types/options';
@@ -24,7 +25,7 @@ export function getDefaultStatusFilter(): StatusSelectResult {
 const store: Store = {
   strict: process.env.NODE_ENV !== 'production',
   state: {
-    username: getDataFromAppElement('username', ''),
+    username: isFileProtocol ? '' : getDataFromAppElement('username', ''),
     isEnablePreview: true,
     isFixedTitleDisplay: false,
     isFixedStatusDisplay: false,
