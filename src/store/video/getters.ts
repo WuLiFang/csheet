@@ -67,16 +67,16 @@ export const getters: GetterTree<VideoState, RootState> = {
   },
   filterByArtist(contextState, contextGetter, rootState) {
     return (video: VideoResponse): boolean => {
-      if (!rootState.artistFilter) {
+      if (rootState.artistFilter.length === 0) {
         return true;
       }
       return video.related_tasks.some(i => {
         const task = (rootState as CombinedRootState).cgTeamworkTaskStore
           .storage[i];
-        if (!task) {
-          return false;
-        }
-        return task.artist_array.indexOf(rootState.artistFilter) >= 0;
+        return (
+          task &&
+          task.artist_array.some(j => rootState.artistFilter.includes(j))
+        );
       });
     };
   },

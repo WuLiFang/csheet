@@ -42,7 +42,6 @@ export const mutations: MutationTree<VideoState> = {
     payload: type.VideoUpdateBlobWhiteListMapMutationPayload,
   ) {
     contextState.blobWhiteListMap.set(payload.key, payload.value);
-    console.log(contextState.blobWhiteListMap);
   },
   [type.VIDEOS_ADD_TAG](
     contextState,

@@ -19,7 +19,7 @@ export interface RootState {
   isEditingTags: boolean;
   statusStage: TaskStage;
   labelFilter: string;
-  artistFilter: string;
+  artistFilter: string[];
   tagTextFilter: string[];
   statusFilter: StatusSelectResult;
 }

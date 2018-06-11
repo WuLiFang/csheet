@@ -30,9 +30,8 @@
           v-model='labelFilterModel'
         )
       .artist(v-if='artists.length > 0')
-        ElAutocomplete(
+        ArtistSelect(
           v-model='artistFilterModel'
-          :fetch-suggestions='artistSearch'
           size='mini'
           prefix-icon='el-icon-info'
           placeholder='人员过滤' 
@@ -66,9 +65,6 @@ import Vue from 'vue';
 
 import _ from 'lodash';
 
-import PackButton from './PackButton.vue';
-import StatusSelect from './StatusSelect.vue';
-import TagSelect from './TagSelect.vue';
 import {
   Input as ElInput,
   Checkbox as ElCheckbox,
@@ -77,6 +73,12 @@ import {
   Option as ElOption,
   Autocomplete as ElAutocomplete,
 } from 'element-ui';
+
+import PackButton from './PackButton.vue';
+import StatusSelect from './StatusSelect.vue';
+import TagSelect from './TagSelect.vue';
+import ArtistSelect from './ArtistSelect.vue';
+
 import {
   RootComputedMixin,
   stateSetter,
@@ -84,6 +86,7 @@ import {
   mapRootStateModelMixin,
   getDefaultStatusFilter,
 } from '@/store';
+
 import { RootState, StatusSelectResult } from '@/store/types';
 import { UPDATE_ROOT_STATE, FILTER_VIDEOS } from '@/mutation-types';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
@@ -103,6 +106,7 @@ export default Vue.extend({
     ElOption,
     ElAutocomplete,
     PackButton,
+    ArtistSelect,
   },
   data() {
     return {
@@ -119,13 +123,13 @@ export default Vue.extend({
     },
     isFilterUser: {
       get(): boolean {
-        return this.artistFilterModel === this.usernameModel;
+        return this.artistFilterModel === [this.usernameModel];
       },
       set(value: boolean) {
         if (value) {
-          this.artistFilterModel = this.usernameModel;
+          this.artistFilterModel = [this.usernameModel];
         } else {
-          this.artistFilterModel = '';
+          this.artistFilterModel = [];
         }
       },
     },
@@ -146,21 +150,9 @@ export default Vue.extend({
     },
   },
   methods: {
-    artistSearch(queryString: string, cb: (result: any[]) => void) {
-      const result = queryString
-        ? this.artists.filter(i => i.includes(queryString))
-        : this.artists;
-      cb(
-        result.map(i => {
-          return {
-            value: i,
-          };
-        }),
-      );
-    },
     resetFilters() {
       this.labelFilterModel = '';
-      this.artistFilterModel = '';
+      this.artistFilterModel = [];
       this.tagTextFilterModel = [];
       this.statusFilterModel = getDefaultStatusFilter();
     },

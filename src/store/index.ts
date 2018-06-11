@@ -31,7 +31,7 @@ const store: Store = {
     isEditingTags: false,
     statusStage: TaskStage.director,
     labelFilter: '',
-    artistFilter: '',
+    artistFilter: [],
     tagTextFilter: [],
     statusFilter: getDefaultStatusFilter(),
   },
@@ -130,7 +130,7 @@ export const mapRootStateModelMixin = {
     'labelFilter',
     mutations.UPDATE_ROOT_STATE,
   ),
-  artistFilterModel: mapWritableState<RootState, string>(
+  artistFilterModel: mapWritableState<RootState, string[]>(
     'artistFilter',
     mutations.UPDATE_ROOT_STATE,
   ),
