@@ -1,28 +1,18 @@
 import * as _ from 'lodash';
-import * as io from 'socket.io-client';
 import Notify from 'notifyjs';
+import * as io from 'socket.io-client';
+import { isUndefined } from 'util';
 import { Store } from 'vuex';
-
-import { isFileProtocol } from './packtools';
-import { CombinedRootState, RootState } from './store/types';
 import { VideoResponse, VideoRole } from './interface';
 import {
-  VideoUpdateMutationPayload,
-  VIDEO,
-  VideoPreloadActionPayload,
-  PRELOAD_VIDEO,
-  CLEAR_VIDEO_BLOB,
-  VideoClearBlobMutationPayload,
-  VideoUpdateBlobWhiteListMapMutationPayload,
-  UPDATE_VIDEO_BLOB_WHITELIST,
-  UPDATE_VIDEO_APPEARED,
-  VideoTagsReadActionPayload,
-  VIDEO_TAGS,
   READ_VIDEO_TAGS_IF_FOUND_UNDEFINED,
+  UPDATE_VIDEO_APPEARED,
+  VIDEO,
   VideoTagsReadIfFoundUndefinedActionPayload,
+  VideoUpdateMutationPayload,
 } from './mutation-types';
-import { WSAVERNOTSUPPORTED } from 'constants';
-import { isUndefined } from 'util';
+import { isFileProtocol } from './packtools';
+import { CombinedRootState, RootState } from './store/types';
 
 const isSupportNotify =
   typeof Notification === 'function' &&
@@ -95,6 +85,8 @@ export default class SocketIO {
     });
   }
   public requestUpdate(uuidList: string[]) {
-    this.socket.emit('request update', uuidList);
+    if (uuidList.length > 0) {
+      this.socket.emit('request update', uuidList);
+    }
   }
 }

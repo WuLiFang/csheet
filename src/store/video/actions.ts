@@ -8,7 +8,6 @@ import {
   VideoState,
 } from '@/store/types';
 import { isElementAppread } from '@/store/video/core';
-import { elementHub } from '@/store/video/getters';
 import axios, { AxiosResponse } from 'axios';
 import { isUndefined } from 'util';
 import { ActionContext, ActionTree } from 'vuex';
@@ -76,11 +75,11 @@ export const actions: ActionTree<VideoState, RootState> = {
     });
   },
   [type.UPDATE_VIDEO_APPEARED](context) {
-    const ret: string[] = [];
-    elementHub.forEach((value, key) => {
-      if (isElementAppread(value)) {
-        ret.push(key);
-      }
+    const ret = context.state.visibleVideos.filter(i => {
+      const element = (context.getters as CombinedGetters).videoElementHub.get(
+        i,
+      );
+      return element && isElementAppread(element);
     });
     const mutationPayload: type.VideoUpdateBlobWhiteListMapMutationPayload = {
       key: 'appeared',
