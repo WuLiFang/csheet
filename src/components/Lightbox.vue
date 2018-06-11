@@ -32,8 +32,8 @@
             :id='taskId' 
             :statusStage='statusStage'
           )
-        .bottom-display
-          span.bottom-display(:style='captionStyle') {{ video.label }}
+        .bottom-display(:style='captionStyle')
+          span {{ video.label }}
     TagEditDialog(:id='id' :visible.sync='isTagEditDialogVisible')
 </template>
 
