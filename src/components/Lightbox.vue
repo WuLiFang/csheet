@@ -21,7 +21,7 @@
           :poster='poster' 
           :src='src' 
           :width='200 / ratio'
-          @loadeddata="onloadeddata"
+          :autoplay='isHover'
           muted 
           loop 
         )
@@ -70,6 +70,7 @@ import {
 import { videoComputedMinxin } from '../store/video';
 import LightboxTaskStatus from './LightboxTaskStatus.vue';
 import TagEditDialog from './TagEditDialog.vue';
+import { isNull } from 'util';
 
 export default Vue.extend({
   components: {
@@ -86,8 +87,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      isLoadVideo: false,
-      isAutoplay: false,
+      isHover: false,
       tagSelectModel: [],
       isTagEditDialogVisible: false,
       forceShrink: false,
@@ -120,7 +120,7 @@ export default Vue.extend({
       return this.getVideoURI(this.id, VideoRole.thumb);
     },
     srcURL(): string | null {
-      if (this.isLoadVideo && this.isEnablePreview) {
+      if (this.isEnablePreview) {
         return this.getBlobURL(this.id, VideoRole.preview);
       }
       return null;
@@ -190,8 +190,8 @@ export default Vue.extend({
       }
     },
     onmouseenter() {
-      this.isLoadVideo = true;
-      this.isAutoplay = true;
+      this.isHover = true;
+      this.loadSrc();
       const payload: VideoPreloadActionPayload = {
         id: this.id,
         role: VideoRole.preview,
@@ -202,13 +202,8 @@ export default Vue.extend({
       this.play();
     },
     onmouseleave() {
-      this.isAutoplay = false;
+      this.isHover = false;
       this.videoElement.pause();
-    },
-    onloadeddata() {
-      if (this.isAutoplay) {
-        this.play();
-      }
     },
     updateRatio() {
       if (!this.posterURL) {
@@ -227,24 +222,31 @@ export default Vue.extend({
       };
       this.$store.dispatch(VIDEO_TAGS.DELETE, payload);
     },
+    loadSrc() {
+      const value = this.srcURL;
+      if (!value) {
+        return;
+      }
+      preloadVideo(value).then(video => {
+        if (this.srcURL === value) {
+          this.ratio = video.videoHeight / video.videoWidth;
+          this.src = video.src;
+        }
+      });
+    },
   },
   watch: {
-    isEnablePreview(value) {
-      if (!value && this.src) {
-        this.src = null;
-        this.videoElement.load();
-      }
-    },
     posterURL(value) {
       this.updateRatio();
     },
     srcURL(value) {
       if (value) {
-        preloadVideo(value).then(video => {
-          this.ratio = video.videoHeight / video.videoWidth;
-          this.src = video.src;
-        });
-        this.isLoadVideo = false;
+        if (this.isHover) {
+          this.loadSrc();
+        }
+      } else {
+        this.src = null;
+        this.videoElement.load();
       }
     },
   },

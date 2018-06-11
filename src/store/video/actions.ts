@@ -55,14 +55,14 @@ export const actions: ActionTree<VideoState, RootState> = {
       .get(`/api/video/${payload.id}`)
       .then(response => HandleVideoReponse(response, context));
   },
-  [type.PRELOAD_VIDEO](context, payload: type.VideoPreloadActionPayload) {
+  async [type.PRELOAD_VIDEO](context, payload: type.VideoPreloadActionPayload) {
     const url = context.getters.getVideoURI(payload.id, payload.role);
 
     if (!url || context.state.blobURLMap[url]) {
       return;
     }
     const actionPayload: type.PreloadURLActionPayload = { url };
-    context.dispatch(type.PRELOAD_URL, actionPayload);
+    return context.dispatch(type.PRELOAD_URL, actionPayload);
   },
   async [type.PRELOAD_URL](context, payload: type.PreloadURLActionPayload) {
     return axios.get(payload.url, { responseType: 'blob' }).then(response => {
