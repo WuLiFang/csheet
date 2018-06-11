@@ -1,24 +1,27 @@
 <template lang="pug">
   .preference-panel
-    .count {{videoPlayList.length}}/{{imagePlayList.length}}/{{videoStore.visibleVideos.length}}
-    .title
-      ElCheckbox(v-model='isFixedTitleDisplayModel') 标题
-    .status
-      ElCheckbox(
-        v-if='hasTaskStorage'
-        v-model='isFixedStatusDisplayModel'
-      ) 任务信息
-      ElSelect.mode(
-        v-model='statusStageModel'
-        v-show='isFixedStatusDisplayModel'
-        size='mini' )
-        .prefix(slot='prefix')
-          span 阶段
-        ElOption(label='组长' :value='TaskStage.leader')
-        ElOption(label='导演' :value='TaskStage.director')
-        ElOption(label='客户' :value='TaskStage.client')
+    FileCount
+    .preference
+      .video
+        ElCheckbox(v-model='isEnablePreviewModel') 视频
+      .title
+        ElCheckbox(v-model='isFixedTitleDisplayModel') 标题
+      .status
+        ElCheckbox(
+          v-if='hasTaskStorage'
+          v-model='isFixedStatusDisplayModel'
+        ) 任务信息
     .filter
       .status
+        ElSelect.mode(
+          v-model='statusStageModel'
+          v-show='isFixedStatusDisplayModel'
+          size='mini' )
+          .prefix(slot='prefix')
+            span 阶段
+          ElOption(label='组长' :value='TaskStage.leader')
+          ElOption(label='导演' :value='TaskStage.director')
+          ElOption(label='客户' :value='TaskStage.client')
         StatusSelect(
           v-show='isFixedStatusDisplayModel' 
           v-model='statusFilterModel')
@@ -74,6 +77,7 @@ import {
   Autocomplete as ElAutocomplete,
 } from 'element-ui';
 
+import FileCount from './FileCount.vue';
 import PackButton from './PackButton.vue';
 import StatusSelect from './StatusSelect.vue';
 import TagSelect from './TagSelect.vue';
@@ -107,6 +111,7 @@ export default Vue.extend({
     ElAutocomplete,
     PackButton,
     ArtistSelect,
+    FileCount,
   },
   data() {
     return {
@@ -175,12 +180,12 @@ export default Vue.extend({
       justify-content: center;
     }
   }
-  .filter {
-    margin: 1em 0;
+  .filter,
+  .preference {
+    margin: 0.5em 0;
   }
   .pack {
-    margin-top: 1em;
-    margin-bottom: 1em;
+    margin: 1em 0;
   }
 }
 </style>
