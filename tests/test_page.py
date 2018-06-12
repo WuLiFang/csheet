@@ -22,7 +22,7 @@ def test_cgteamwork():
     assert isinstance(tasks, list)
     assert videos
     assert len(videos) == 102
-    assert len(tasks) == 730
+    assert len(tasks) == 812
 
 
 def test_local():

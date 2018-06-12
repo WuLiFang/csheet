@@ -18,7 +18,6 @@ def _inject_text(js_file):
 
 def main():
     tasks = [
-        ('/login', 'login.html', ''),
         ('/', 'index.html', _inject_text('/index.js')),
         ('/local?root=D%3A%5CUsers%5C34357%5CPictures%5CCollection',
          'local.html', _inject_text('/csheet.js'))

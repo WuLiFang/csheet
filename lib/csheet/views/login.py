@@ -5,8 +5,8 @@ from __future__ import (absolute_import, division, print_function,
 
 from functools import wraps
 
-from flask import flash, redirect, render_template, request, session, url_for
-from six import text_type
+import six
+from flask import make_response, redirect, request, session
 
 import cgtwq
 
@@ -14,23 +14,32 @@ from ..__about__ import __version__
 from .app import APP
 
 
-@APP.route('/login', methods=['GET', 'POST'])
-def login():
-    """Login on teamwork.   """
+def auth_login():
+    """Login with auth data.  """
 
-    if request.method == 'POST':
-        try:
-            account_info = cgtwq.login(request.form['account'],
-                                       request.form['password'])
-        except cgtwq.CGTeamWorkException as ex:
-            flash(text_type(ex))
-            return redirect(request.full_path)
-        for k, v in account_info._asdict().items():
-            session[k] = v
+    auth = request.authorization
+    if not auth:
+        return False
+    account_info = cgtwq.login(auth.username,
+                               auth.password)
 
-        resp = redirect(request.args.get('from', '/'))
-        return resp
-    return render_template('login.html', __version__=__version__)
+    for k, v in account_info._asdict().items():
+        session[k] = v
+    return True
+
+
+def authenticate(message=None):
+    """Sends a 401 response that enables basic auth"""
+
+    resp = make_response(message or 'Login required', 401)
+    resp.headers['WWW-Authenticate'] = 'Basic realm="CGTeamWork"'
+    return resp
+
+
+def validate_auth():
+    """Validate auth.  """
+
+    return session.get('token') or auth_login()
 
 
 @APP.route('/logout', methods=['GET', 'POST'])
@@ -48,12 +57,15 @@ def require_login(func):
 
     @wraps(func)
     def _func(*args, **kwargs):
+        msg = '请登录CGTeamWork'
         try:
-            if session.get('token'):
+            if validate_auth():
                 return func(*args, **kwargs)
         except cgtwq.LoginError:
-            pass
-
-        return redirect(url_for('login', **{'from': request.full_path}))
+            session['token'] = None
+            msg = '登录过期'
+        except cgtwq.CGTeamWorkException as ex:
+            msg = six.text_type(ex)
+        return authenticate(msg)
 
     return _func
