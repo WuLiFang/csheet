@@ -57,7 +57,7 @@ def require_login(func):
 
     @wraps(func)
     def _func(*args, **kwargs):
-        msg = '请登录CGTeamWork'
+        msg = '请使用和CGTeamWork相同的帐号和密码登录'
         try:
             if validate_auth():
                 return func(*args, **kwargs)
