@@ -323,13 +323,17 @@ export default Vue.extend({
         this.posterProgressEvent = event;
       }
     },
-  },
-  watch: {
-    videoId(value: string | null) {
+    reset() {
       this.duration = 0;
       this.src = null;
       this.poster = null;
       this.posterProgressEvent = null;
+      this.isForce = false;
+    },
+  },
+  watch: {
+    videoId(value: string | null) {
+      this.reset();
       if (value) {
         this.scrollTo(value);
         window.location.replace(this.url);
