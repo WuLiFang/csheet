@@ -30,7 +30,7 @@ const store: Store = {
     isFixedTitleDisplay: false,
     isFixedStatusDisplay: false,
     isEditingTags: false,
-    statusStage: TaskStage.director,
+    statusStage: isFileProtocol ? TaskStage.director : TaskStage.leader,
     labelFilter: '',
     artistFilter: [],
     tagTextFilter: [],
