@@ -1,4 +1,4 @@
-version: '3.5'
+version: '2.3'
 services:
   web:
     image: 'csheet'
@@ -17,6 +17,7 @@ services:
     volumes: 
      - ${CSHEET_STORAGE:-/srv/csheet}/srv:/srv/csheet
      - database:/var/db
+    cpu_shares: 128
   nginx:
     image: 'nginx'
     depends_on:
