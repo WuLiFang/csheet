@@ -13,8 +13,8 @@ from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.types import VARCHAR, TypeDecorator, Unicode
 
-from wlf.path import get_unicode as u
 from wlf.path import PurePath
+from wlf.path import get_unicode as u
 
 from .. import setting
 
@@ -132,7 +132,11 @@ def _upgrade_database(engine):
                           ('poster_atime', 'FLOAT'),
                           ('module', 'VARCHAR'),
                           ('task_id', 'VARCHAR'),
-                          ('tags_mtime', 'FLOAT')):
+                          ('tags_mtime', 'FLOAT'),
+                          ('thumb_broken_mtime', 'FLOAT'),
+                          ('poster_broken_mtime', 'FLOAT'),
+                          ('preview_broken_mtime', 'FLOAT'),
+                          ('src_broken_mtime', 'FLOAT'),):
         try:
             engine.execute(
                 'ALTER TABLE Video ADD COLUMN {} {}'.format(column, type_))

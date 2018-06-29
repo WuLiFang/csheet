@@ -42,6 +42,8 @@ class GenaratableVideo(Video):
             self.apply(method, target, source)
         except (OSError, ffmpeg.GenerateError):
             self.is_need_update = True
+            setattr(self, '{}_broken_mtime'.format(source),
+                    getattr(self, '{}_mtime'.format(source)))
             LOGGER.warning('Generation failed', exc_info=True)
 
     def apply(self, method, target, source):
@@ -155,6 +157,8 @@ def _get_video(source, target, session, **kwargs):
 
     source_column = getattr(Video, source)
     source_mtime_column = getattr(Video, '{}_mtime'.format(source))
+    source_broken_mtime_column = getattr(
+        Video, '{}_broken_mtime'.format(source))
     target_column = getattr(Video, target)
     target_mtime_column = getattr(Video, '{}_mtime'.format(target))
     target_atime_column = getattr(Video, '{}_atime'.format(target))
@@ -162,6 +166,8 @@ def _get_video(source, target, session, **kwargs):
     video = session.query(GenaratableVideo).filter(
         source_column.isnot(None),
         source_mtime_column.isnot(None),
+        or_(source_broken_mtime_column.is_(None),
+            source_broken_mtime_column != source_mtime_column),
         or_(target_atime_column.is_(None),
             target_atime_column < time.time() - min_interval),
         or_(target_column.is_(None),
