@@ -13,12 +13,13 @@ from zipfile import ZipFile
 from gevent import sleep, spawn
 from jinja2 import Environment, FileSystemLoader, Undefined
 
-from wlf.path import get_encoded as e
 from wlf.path import PurePath
+from wlf.path import get_encoded as e
 
-from .. import __about__, database, filetools
+from .. import __about__, database, filetools, setting
 from ..__about__ import __version__
 from ..filename import filter_filename
+from ..task import update_page
 from ..video import HTMLVideo
 
 LOGGER = logging.getLogger(__name__)
@@ -49,6 +50,10 @@ class BasePage(object):
 
     def update_later(self, session):
         """Run sync in another thread.  """
+
+        if setting.BROKER_URI:
+            update_page.apply_async((self,))
+            return
 
         if self.videos(session):
             spawn(lambda: self.update(database.Session()))

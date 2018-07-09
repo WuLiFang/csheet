@@ -1,10 +1,26 @@
 version: '2.3'
 services:
+  redis:
+    image: 'redis'
   web:
     image: 'csheet'
     volumes: 
      - ${CSHEET_STORAGE:-/srv/csheet}/srv:/srv/csheet
      - database:/var/db
+    depends_on:
+      - redis
+    environment: 
+      CSHEET_BROKER_URI: redis://redis
+  worker:
+    image: 'csheet'
+    command: 'run worker'
+    volumes: 
+     - database:/var/db
+    depends_on:
+      - redis
+    environment: 
+      CSHEET_BROKER_URI: redis://redis
+      C_FORCE_ROOT: 1
   watch:
     image: 'csheet'
     command: 'run watch'
@@ -32,6 +48,5 @@ services:
         source: ${CSHEET_STORAGE:-/srv/csheet}/etc/nginx.conf
         target: /etc/nginx/nginx.conf
         read_only: true
-        
 volumes:
     database:
