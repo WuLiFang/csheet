@@ -5,10 +5,9 @@ from __future__ import absolute_import, print_function, unicode_literals
 import logging
 
 import generate_test_page
-
-from csheet import generation, APP, watch, SOCKETIO
-from wlf import mp_logging
 import util
+from csheet import APP, SOCKETIO, generation, watch
+from wlf import mp_logging
 
 PORT = 5001
 

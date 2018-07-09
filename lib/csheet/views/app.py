@@ -9,8 +9,8 @@ import os
 from flask import Flask
 from flask_socketio import SocketIO
 from raven.contrib.flask import Sentry
-from .. import filetools
 
+from .. import filetools
 from ..__about__ import __name__ as name
 from ..__about__ import __version__
 
