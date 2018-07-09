@@ -9,7 +9,8 @@ services:
     environment: 
       WORKER_CONNECTIONS: 10240
       SENTRY_DSN: ${SENTRY_DSN}
-      
+  worker:
+    restart: always
   watch:
     volumes: 
      - /z:/z
