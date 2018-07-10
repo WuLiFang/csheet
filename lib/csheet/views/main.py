@@ -39,7 +39,7 @@ def render_csheet_page():
     with core.database_session() as sess:
         if 'pack' in request.args:
             return packed_page(page, sess)
-        page.update_later()
+        page.update_async()
         rendered = page.render(
             page.videos(sess),
             template='csheet_app.html',
@@ -73,7 +73,7 @@ def render_local_dir():
     root = request.args['root']
     page = LocalPage(root)
     with core.database_session() as sess:
-        page.update_later()
+        page.update_async()
 
         if 'pack' in request.args:
             return packed_page(page, sess)

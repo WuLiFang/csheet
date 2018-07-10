@@ -10,6 +10,7 @@ import flask
 
 from cgtwq import DesktopClient
 from csheet import APP, database, setting
+from csheet.task import CELERY
 
 skip_if_not_logged_in = skipIf(not DesktopClient.is_logged_in(),  # pylint: disable=invalid-name
                                'CGTeamWork is not logged in.')
@@ -25,6 +26,7 @@ def setup():
     setting.STORAGE = storage
     setting.ENGI = engine_uri
     database.core.bind(engine_uri)
+    CELERY.conf.task_always_eager = True
 
 
 def path(*other):

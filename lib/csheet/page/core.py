@@ -48,7 +48,7 @@ class BasePage(object):
         """Update database with this config.  """
         pass
 
-    def update_later(self):
+    def update_async(self):
         """Run sync in another thread.  """
 
         update_page.delay(self)
