@@ -11,10 +11,10 @@ import webbrowser
 from socket import gethostbyname, gethostname
 
 from wlf import mp_logging
-from wlf.path import get_encoded as e
 from wlf.path import Path
+from wlf.path import get_encoded as e
 
-from . import filetools, generation, model, page, watch
+from . import filetools, generation, page, watch
 from .__about__ import __version__
 from .views import APP, SOCKETIO
 

@@ -10,13 +10,13 @@ from abc import abstractmethod
 from tempfile import TemporaryFile
 from zipfile import ZipFile
 
-from gevent import sleep, spawn
+from gevent import sleep
 from jinja2 import Environment, FileSystemLoader, Undefined
 
 from wlf.path import PurePath
 from wlf.path import get_encoded as e
 
-from .. import __about__, database, filetools, setting
+from .. import __about__, database, filetools
 from ..__about__ import __version__
 from ..filename import filter_filename
 from ..task import update_page
@@ -48,17 +48,10 @@ class BasePage(object):
         """Update database with this config.  """
         pass
 
-    def update_later(self, session):
+    def update_later(self):
         """Run sync in another thread.  """
 
-        if setting.BROKER_URI:
-            update_page.apply_async((self,))
-            return
-
-        if self.videos(session):
-            spawn(lambda: self.update(database.Session()))
-        else:
-            self.update(session)
+        update_page.delay(self)
 
     @property
     def title(self):

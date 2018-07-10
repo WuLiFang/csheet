@@ -6,19 +6,17 @@ import logging
 
 import generate_test_page
 import util
-from csheet import APP, SOCKETIO, generation, watch
-from wlf import mp_logging
+from csheet import APP, SOCKETIO, generation, task, watch
 
 PORT = 5001
 
 
 def main():
-
-    mp_logging.basic_config(level=logging.DEBUG)
+    task.CELERY.conf.task_always_eager = True
+    logging.basicConfig(level=logging.DEBUG)
     util.setup()
 
     generate_test_page.main()
-
     generation.GENERATION_TASKS.pop()
     generation.start()
     watch.start()
