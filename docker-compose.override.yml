@@ -13,6 +13,11 @@ services:
     environment: 
       # CSHEET_DEBUG: 1
       SENTRY_DSN: ${SENTRY_DSN}
+  worker:
+    environment: 
+      SENTRY_DSN: ${SENTRY_DSN}
+    external_links:
+      - sentry-server:sentry
   watch:
     external_links:
       - sentry-server:sentry

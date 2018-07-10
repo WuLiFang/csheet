@@ -15,7 +15,7 @@ services:
     image: 'csheet'
     command: 'run worker'
     volumes: 
-     - database:/var/db
+      - database:/var/db
     depends_on:
       - redis
     environment: 
