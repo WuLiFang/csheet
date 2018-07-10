@@ -4,9 +4,8 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import cgtwq
-
 import util
-from csheet import page, video, database
+from csheet import database, page, video
 from wlf.path import get_encoded as e
 
 
@@ -15,7 +14,7 @@ def test_cgteamwork():
     cfg = page.CGTeamWorkPage(
         '梦塔', '合成', 'MT_EP07_05', cgtwq.DesktopClient.token())
     with database.session_scope() as sess:
-        cfg.update_later(sess)
+        cfg.update_later()
         videos = cfg.videos(sess)
         tasks = cfg.tasks(sess)
     assert isinstance(videos, list)
@@ -28,7 +27,7 @@ def test_cgteamwork():
 def test_local():
     cfg = page.LocalPage('D:/Users/34357/Pictures/Collection')
     with database.session_scope() as sess:
-        cfg.update_later(sess)
+        cfg.update_later()
         videos = cfg.videos(sess)
     assert isinstance(videos, list)
     for i in videos:
@@ -42,7 +41,7 @@ def test_pack():
     cfg = page.CGTeamWorkPage(
         '梦塔', '合成', 'MT_EP06_03', cgtwq.DesktopClient.token())
     with database.session_scope() as sess:
-        cfg.update_later(sess)
+        cfg.update_later()
         file_ = cfg.archive(sess)
     with open(e(util.path('storage', 'packed.zip')), 'wb') as f:
         f.write(file_.read())
