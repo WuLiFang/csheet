@@ -9,11 +9,10 @@ import logging
 
 import cgtwq
 
-from ..mimecheck import is_mimetype
-from ..video import HTMLVideo
-
 from ..database import CGTeamWorkTask
 from ..database.cgteamworktask import TaskDataRow
+from ..mimecheck import is_mimetype
+from ..video import HTMLVideo
 from .core import BasePage
 
 LOGGER = logging.getLogger(__name__)
@@ -115,12 +114,14 @@ class CGTeamWorkPage(BasePage):
         data = [TaskDataRow(*i) for i in data]
         shots = sorted(set(i.shot for i in data))
 
-        for shot in shots:
-            self._get_video(data, shot, session)
+        with session.no_autoflush:
+            for shot in shots:
+                self._get_video(data, shot, session)
         session.commit()
 
     def _update_task(self, data, session):
         assert isinstance(data, TaskDataRow), type(data)
+
         task = session.query(CGTeamWorkTask).get(
             data.id) or CGTeamWorkTask(uuid=data.id)
         assert isinstance(task, CGTeamWorkTask)
