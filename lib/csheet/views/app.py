@@ -23,6 +23,13 @@ APP.config['storage'] = os.getenv('CSHEET_STORAGE')
 if os.getenv('CSHEET_DEBUG'):
     logging.basicConfig(level=logging.DEBUG)
 else:
+    def _set_default_encoding(encoding):
+        # XXX: need more clean way to fix sentry encoding error.
+        import sys
+        reload(sys)
+        sys.setdefaultencoding(encoding)
+    _set_default_encoding('utf-8')
+
     SENTRY = Sentry(APP, logging=bool(os.getenv('SENTRY_DSN')),
                     level=logging.WARNING)
 
