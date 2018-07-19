@@ -10,7 +10,7 @@ from flask import Flask
 from flask_socketio import SocketIO
 from raven.contrib.flask import Sentry
 
-from .. import filetools
+from .. import filetools, setting
 from ..__about__ import __name__ as name
 from ..__about__ import __version__
 
@@ -26,7 +26,8 @@ else:
     SENTRY = Sentry(APP, logging=bool(os.getenv('SENTRY_DSN')),
                     level=logging.WARNING)
 
-SOCKETIO = SocketIO(APP, path='/api/socket.io')
+SOCKETIO = SocketIO(APP, path='/api/socket.io',
+                    message_queue=setting.BROKER_URI if setting.BROKER_URI else None)
 
 
 @APP.route('/test_sentry')
