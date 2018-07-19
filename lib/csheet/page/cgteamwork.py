@@ -8,6 +8,7 @@ import json
 import logging
 
 import cgtwq
+from wlf.decorators import run_with_clock
 
 from ..database import CGTeamWorkTask
 from ..database.cgteamworktask import TaskDataRow
@@ -153,6 +154,7 @@ class CGTeamWorkPage(BasePage):
             '_'.join(
                 [self.project, self.prefix.strip(self.code).strip('_'), self.pipeline]))
 
+    @run_with_clock('收集任务信息')
     def tasks(self, session):
         """Video related task data.  """
 
@@ -162,7 +164,9 @@ class CGTeamWorkPage(BasePage):
             CGTeamWorkTask.shot.startswith(self.prefix)
         ).order_by(CGTeamWorkTask.shot)
         data = query.all()
-        return [i.to_task_info() for i in data]
+
+        with session.no_autoflush:
+            return [i.to_task_info() for i in data]
 
     def _template_context(self, context, videos, database_session=None):
         context = super(CGTeamWorkPage, self)._template_context(
