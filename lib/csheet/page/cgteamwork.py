@@ -23,7 +23,7 @@ class CGTeamWorkPage(BasePage):
     """Csheet page from cgteamwork. """
 
     render_pipeline = {'灯光':  '渲染', '合成':  '输出'}
-    module = 'shot_task'
+    module = 'shot'
 
     def __init__(self, project, pipeline, prefix, token):
         cgtwq.PROJECT.token = token
@@ -48,8 +48,8 @@ class CGTeamWorkPage(BasePage):
         database.token = self.token
         module = database[self.module]
 
-        select = module.filter(cgtwq.Filter('pipeline', self.pipeline) &
-                               cgtwq.Filter('shot.shot', self.prefix, 'has'))
+        select = module.filter((cgtwq.Field('flow_name') == self.pipeline) &
+                               cgtwq.Field('shot.shot').has(self.prefix))
         shots = sorted(
             set(i for i in select['shot.shot'] if i and i.startswith(self.prefix)))
         select = module.filter(cgtwq.Field('shot.shot') | shots)
@@ -178,7 +178,7 @@ class CGTeamWorkPage(BasePage):
 
 def _get_submit_file(submit_file_data):
     try:
-        return json.loads(submit_file_data)['file_path'][0]
+        return submit_file_data['file_path'][0]
     except (TypeError, KeyError, IndexError):
         pass
     return None
