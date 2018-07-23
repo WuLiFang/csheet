@@ -145,6 +145,7 @@ class CGTeamWorkPage(BasePage):
 
         return task
 
+    @run_with_clock('收集视频信息')
     def videos(self, session):
         query = session.query(HTMLVideo)
         query = query.filter(
