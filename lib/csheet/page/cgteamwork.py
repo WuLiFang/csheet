@@ -183,10 +183,12 @@ class CGTeamWorkPage(BasePage):
 
 
 def _get_submit_file(submit_file_data):
+    if not submit_file_data:
+        return
     try:
         return json.loads(submit_file_data)['file_path'][0]
     except (TypeError, KeyError, IndexError):
-        pass
+        LOGGER.warn('Parse submit file data fail: %s', repr(submit_file_data))
     return None
 
 
