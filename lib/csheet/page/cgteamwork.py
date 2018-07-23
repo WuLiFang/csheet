@@ -44,16 +44,22 @@ class CGTeamWorkPage(BasePage):
     def select(self):
         """Get cgteamwork database select from the config. """
 
-        database = cgtwq.Database(self.database)
-        database.token = self.token
-        module = database[self.module]
+        module = self._module()
 
-        select = module.filter((cgtwq.Field('flow_name') == self.pipeline) &
+        # Get shots.
+        select = module.filter((cgtwq.Field('pipeline') == self.pipeline) &
                                cgtwq.Field('shot.shot').has(self.prefix))
         shots = sorted(
             set(i for i in select['shot.shot'] if i and i.startswith(self.prefix)))
-        select = module.filter(cgtwq.Field('shot.shot') | shots)
+
+        # Select from shots.
+        select = module.filter(cgtwq.Field('shot.shot').in_(shots))
         return select
+
+    def _module(self):
+        database = cgtwq.Database(self.database)
+        database.token = self.token
+        return database.module(self.module)
 
     @classmethod
     def _get_poster(cls, data):
@@ -178,7 +184,7 @@ class CGTeamWorkPage(BasePage):
 
 def _get_submit_file(submit_file_data):
     try:
-        return submit_file_data['file_path'][0]
+        return json.loads(submit_file_data)['file_path'][0]
     except (TypeError, KeyError, IndexError):
         pass
     return None

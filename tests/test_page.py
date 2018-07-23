@@ -25,6 +25,22 @@ def test_cgteamwork():
     assert len(tasks) == 814
 
 
+@util.skip_if_not_logged_in
+def test_cgteamwork_video():
+    util.setup()
+    cfg = page.CGTeamWorkPage(
+        '仙剑', '合成', 'XJ_EP01_01_sc042', cgtwq.DesktopClient.token())
+    with database.session_scope() as sess:
+        cfg.update_async()
+        videos = cfg.videos(sess)
+        tasks = cfg.tasks(sess)
+        assert videos[0].src
+    assert isinstance(videos, list)
+    assert isinstance(tasks, list)
+    assert len(videos) == 1
+    assert len(tasks) == 10
+
+
 def test_local():
     util.setup()
     cfg = page.LocalPage('D:/Users/34357/Pictures/Collection')
