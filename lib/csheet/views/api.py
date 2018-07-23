@@ -81,6 +81,8 @@ class TaskField(Resource):
 
         parser = reqparse.RequestParser()
         parser.add_argument('value', required=True)
+        parser.add_argument('is_status', action='store_true')
+        parser.add_argument('message', default='')
         args = parser.parse_args()
 
         with core.database_session() as sess:
@@ -90,7 +92,10 @@ class TaskField(Resource):
 
             if not entry.flow.has_field_permission(name):
                 abort(make_response('无权限修改', 403))
-            entry[name] = args.value
+            if args.is_status:
+                entry.flow.update(name, args.value, args.message)
+            else:
+                entry[name] = args.value
             return task.get_entry_data(session['token'])
 
 

@@ -6,7 +6,7 @@
           | {{childStatus.text}}
     span.edit(v-show='hasPermission')
       Button.el-icon-check(v-show='status != TaskStatus.Approve' plain size='mini' type='success' @click='approve')
-      Button.el-icon-close(v-show='status != TaskStatus.Retake' plain size='mini' type='danger' @click='retake')
+      Button.el-icon-close(plain size='mini' type='danger' @click='retake')
 </template>
 
 <script lang="ts">
@@ -71,7 +71,7 @@ export default Vue.extend({
       const payload: CGTeamWorkTaskUpdateFieldActionPayload = {
         id: this.taskId,
         field: this.field,
-        data: { value: 'Approve' },
+        data: { value: 'Approve', is_status: true },
       };
       this.$store
         .dispatch(UPDATE_CGTEAMWORK_TASK_FIELD, payload)
@@ -86,8 +86,11 @@ export default Vue.extend({
           const payload: CGTeamWorkTaskUpdateFieldActionPayload = {
             id: this.taskId,
             field: this.field,
-            reason: `返修原因: ${result.value}`,
-            data: { value: 'Retake' },
+            data: {
+              value: 'Retake',
+              is_status: true,
+              message: result.value,
+            },
           };
           this.$store
             .dispatch(UPDATE_CGTEAMWORK_TASK_FIELD, payload)

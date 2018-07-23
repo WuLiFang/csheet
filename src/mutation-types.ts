@@ -48,7 +48,10 @@ export type VideoUpdateSelectStateMutationPayload = IDMap<boolean>;
 export interface VideoPreloadActionPayload {
   id: string;
   role: VideoRole;
-  onprogress?: (event: ProgressEvent, config: VideoPreloadActionPayload) => void;
+  onprogress?: (
+    event: ProgressEvent,
+    config: VideoPreloadActionPayload,
+  ) => void;
 }
 export const UPDATE_BLOB_HUB = 'update_blob_hub';
 export interface UpdateBlobHubMutationPayload {
@@ -102,9 +105,10 @@ export const UPDATE_CGTEAMWORK_TASK_FIELD = 'update_cgteamwork_task_field';
 export interface CGTeamWorkTaskUpdateFieldActionPayload {
   id: string;
   field: string;
-  reason?: string;
   data: {
     value: string;
+    is_status?: boolean;
+    message?: string;
   };
 }
 

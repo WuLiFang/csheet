@@ -1,45 +1,39 @@
+import { isFileProtocol } from '@/packtools';
+import axios, { AxiosResponse } from 'axios';
+import * as _ from 'lodash';
 import Vue from 'vue';
+import { DefaultComputed } from 'vue/types/options';
 import {
-  Module,
-  MutationTree,
+  ActionContext,
   ActionTree,
   GetterTree,
   mapGetters,
   mapState,
-  ActionContext,
+  Module,
+  MutationTree,
 } from 'vuex';
-import { DefaultComputed } from 'vue/types/options';
-
-import * as _ from 'lodash';
-import axios from 'axios';
-import { AxiosResponse } from 'axios';
-
 import {
-  RootState,
-  VideoState,
-  IDMap,
-  LoadStatus,
-  CGTeamworkTaskState,
-  CGTeamWorkTaskGetters,
-  mapGettersMixin,
-} from './types';
-import {
-  CGTeamWorkTaskResponse,
   CGTeamWorkTaskData,
+  CGTeamWorkTaskResponse,
   parseCGTeamWorkTaskResponse,
-  TaskStatus,
   TaskStage,
+  TaskStatus,
 } from '../interface';
 import {
-  CGTEAMWORK_TASK,
+  CGTeamWorkTaskCreateNoteActionPayload,
   CGTeamWorkTaskReadActionPayload,
   CGTeamWorkTaskReadMutationPayload,
   CGTeamWorkTaskUpdateFieldActionPayload,
-  UPDATE_CGTEAMWORK_TASK_FIELD,
+  CGTEAMWORK_TASK,
   CREATE_CGTEAMWORK_TASK_NOTE,
-  CGTeamWorkTaskCreateNoteActionPayload,
+  UPDATE_CGTEAMWORK_TASK_FIELD,
 } from '../mutation-types';
-import { isFileProtocol } from '@/packtools';
+import {
+  CGTeamWorkTaskGetters,
+  CGTeamworkTaskState,
+  mapGettersMixin,
+  RootState,
+} from './types';
 
 export const getters: GetterTree<CGTeamworkTaskState, RootState> = {
   getGeneralStatus(contextState) {
@@ -157,14 +151,6 @@ const actions: ActionTree<CGTeamworkTaskState, RootState> = {
       .put(`/api/task/${payload.id}/${payload.field}`, payload.data)
       .then(response => {
         handleCGTeamWorkTaskResponse(context, response);
-        if (payload.reason) {
-          const notePayload: CGTeamWorkTaskCreateNoteActionPayload = {
-            id: payload.id,
-            text: payload.reason,
-          };
-          context.dispatch(CREATE_CGTEAMWORK_TASK_NOTE, notePayload);
-        }
-        return response;
       });
   },
   async [CREATE_CGTEAMWORK_TASK_NOTE](
