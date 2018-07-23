@@ -50,7 +50,7 @@ def get_video(uuid, sess, cls=CGTeamWorkVideo):
 def get_select(database, ids):
     """Get task select from database from id list.  """
 
-    module = cgtwq.Database(database)['shot_task']
+    module = cgtwq.Database(database)['shot']
     return module.select(*ids)
 
 
