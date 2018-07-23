@@ -25,6 +25,6 @@ raven = {extras = ["flask"]}
 sqlalchemy = "*"
 flask-socketio = "*"
 flask-restful = "*"
-cgtwq = {file = "https://github.com/WuLiFang/cgtwq/archive/2.0.0.tar.gz"}
+cgtwq = {file = "https://github.com/WuLiFang/cgtwq/archive/2.2.1.tar.gz"}
 wlf = {file = "https://github.com/WuLiFang/wlf/archive/0.4.1.tar.gz"}
 celery = {extras = ["redis"]}
