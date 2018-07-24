@@ -35,17 +35,18 @@ def render_csheet_page():
     pipeline = request.args['pipeline']
     token = session['token']
     page = CGTeamWorkPage(project, pipeline, prefix, token)
+    page.update_async()
 
     with core.database_session() as sess:
-        if 'pack' in request.args:
-            return packed_page(page, sess)
-        page.update_async()
-        rendered = page.render(
-            page.videos(sess),
-            template='csheet_app.html',
-            request=request,
-            session=session,
-            database_session=sess)
+        with sess.no_autoflush:
+            if 'pack' in request.args:
+                return packed_page(page, sess)
+            rendered = page.render(
+                page.videos(sess),
+                template='csheet_app.html',
+                request=request,
+                session=session,
+                database_session=sess)
 
     # Respon with cookies set.
     resp = make_response(rendered)
