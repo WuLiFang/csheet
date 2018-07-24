@@ -8,6 +8,7 @@ import os
 from flask import make_response, render_template, request, send_file, session
 
 import cgtwq
+from wlf.decorators import run_with_clock
 
 from . import core
 from ..__about__ import __version__
@@ -27,6 +28,7 @@ def render_main():
     return render_csheet_page()
 
 
+@run_with_clock('生成色板页面')
 def render_csheet_page():
     """Csheet page.  """
 
