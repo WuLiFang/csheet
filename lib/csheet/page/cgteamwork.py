@@ -7,6 +7,8 @@ from __future__ import (absolute_import, division, print_function,
 import json
 import logging
 
+from sqlalchemy import orm
+
 import cgtwq
 from wlf.decorators import run_with_clock
 
@@ -152,6 +154,10 @@ class CGTeamWorkPage(BasePage):
             HTMLVideo.database == self.database,
             HTMLVideo.pipeline == self.pipeline,
             HTMLVideo.label.startswith(self.prefix)
+        ).options(
+            orm.selectinload(HTMLVideo.related_tasks)
+        ).options(
+            orm.selectinload(HTMLVideo.tags)
         ).order_by(HTMLVideo.label)
         return query.all()
 

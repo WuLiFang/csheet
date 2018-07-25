@@ -13,7 +13,7 @@ services:
     environment: 
       # CSHEET_DEBUG: 1
       SENTRY_DSN: ${SENTRY_DSN}
-  worker:
+  socketio:
     environment: 
       SENTRY_DSN: ${SENTRY_DSN}
     external_links:

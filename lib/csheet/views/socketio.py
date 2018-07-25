@@ -4,6 +4,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import logging
+import os
 import time
 
 from gevent import sleep, spawn
@@ -99,5 +100,7 @@ def on_request_update(message):
 def start_broadcast():
     """Start broadcast.  """
 
+    if os.getenv('CSHEET_NO_SOCKETIO'):
+        return
     spawn(broadcast_forever)
     LOGGER.debug('Start broadcast')

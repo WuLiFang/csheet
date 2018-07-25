@@ -9,6 +9,12 @@ services:
     environment: 
       WORKER_CONNECTIONS: 10240
       SENTRY_DSN: ${SENTRY_DSN}
+  socketio:
+    restart: always
+    environment: 
+      SENTRY_DSN: ${SENTRY_DSN}
+    external_links:
+      - sentry-server:sentry
   worker:
     restart: always
   watch:

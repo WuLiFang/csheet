@@ -10,6 +10,16 @@ services:
     depends_on:
       - redis
     environment: 
+      CSHEET_NO_SOCKETIO: 1
+      CSHEET_BROKER_URI: redis://redis
+  socketio:
+    image: 'csheet'
+    command: 'run socketio'
+    volumes: 
+     - database:/var/db
+    depends_on:
+      - redis
+    environment: 
       CSHEET_BROKER_URI: redis://redis
   worker:
     image: 'csheet'
@@ -38,6 +48,7 @@ services:
     image: 'nginx'
     depends_on:
       - web
+      - socketio
     volumes:
       - ${CSHEET_STORAGE:-/srv/csheet}/srv:/srv/csheet
       - type: bind

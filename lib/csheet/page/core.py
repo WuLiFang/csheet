@@ -12,6 +12,7 @@ from zipfile import ZipFile
 
 from gevent import sleep
 from jinja2 import Environment, FileSystemLoader, Undefined
+from sqlalchemy import orm
 
 from wlf.path import PurePath
 from wlf.path import get_encoded as e
@@ -147,7 +148,9 @@ class BasePage(object):
     def tags(self, videos, session):
         """Page related tags.  """
 
-        ret = session.query(database.Tag).filter(
+        ret = session.query(database.Tag).options(
+            orm.selectinload(database.Tag.videos)
+        ).filter(
             database.Tag.videos.any(
                 database.Video.uuid.in_(i.uuid for i in videos))
         ).all()

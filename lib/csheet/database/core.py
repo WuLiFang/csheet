@@ -5,6 +5,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import json
 import logging
+import os
 from contextlib import contextmanager
 from functools import wraps
 
@@ -118,7 +119,8 @@ def bind(uri=None):
 
     uri = uri or setting.ENGINE_URI
     LOGGER.debug('Bind to engine: %s', uri)
-    engine = create_engine(uri)
+    engine = create_engine(uri, echo=(
+        os.getenv('CSHEET_DEBUG', False) and True))
     Session.configure(bind=engine)
     Base.metadata.create_all(engine)
     _upgrade_database(engine)
