@@ -120,7 +120,7 @@ def bind(uri=None):
     uri = uri or setting.ENGINE_URI
     LOGGER.debug('Bind to engine: %s', uri)
     engine = create_engine(uri, echo=(
-        os.getenv('CSHEET_DEBUG', False) and True))
+        os.getenv('CSHEET_DEBUG_SQL', False) and True))
     Session.configure(bind=engine)
     Base.metadata.create_all(engine)
     _upgrade_database(engine)
