@@ -2,6 +2,7 @@
 
 if [ "$1" = "run" ]; then
     if [ "$2" = "" ]; then
+        export CHSEET_NO_SOCKETIO=1
         gunicorn -w 1 \
             --worker-connections $WORKER_CONNECTIONS \
             -k gevent \
