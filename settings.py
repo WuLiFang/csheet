@@ -42,4 +42,7 @@ LOGGING_CONFIG = {'version': 1,
                           'level': 'INFO',
                           'propagate': True
                       },
+                      'csheet': {
+                          'level': 'INFO',
+                      },
                   }}
