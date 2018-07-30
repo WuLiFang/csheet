@@ -117,6 +117,7 @@ def update_one_chunk(is_strict=True):
         LOGGER.debug('No video need update.')
         if is_strict:
             raise WorkerIdle
+        return
     LOGGER.info('Start update videos, count: %s', len(chunk))
     chunk.update_mtime('src', 'src_mtime')
     chunk.update_mtime('poster', 'poster_mtime')

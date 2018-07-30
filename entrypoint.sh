@@ -14,9 +14,6 @@ if [ "$1" = "run" ]; then
             -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker \
             -b 0.0.0.0:80 csheet:APP
         ;;
-    "generation" )
-        python ./run_generation_worker.py
-        ;;
     "worker" )
         celery -A csheet.CELERY worker --loglevel=info
         ;;

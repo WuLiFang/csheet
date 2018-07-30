@@ -23,6 +23,7 @@ services:
     command: 'run worker'
     volumes: 
       - ${CSHEET_STORAGE:-/srv/csheet}/etc:/etc/csheet:ro
+      - ${CSHEET_STORAGE:-/srv/csheet}/srv:/srv/csheet
       - database:/var/db
     depends_on:
       - redis
@@ -38,14 +39,6 @@ services:
       - redis
     environment: 
       C_FORCE_ROOT: 1
-  generation:
-    image: 'csheet'
-    command: 'run generation'
-    volumes: 
-      - ${CSHEET_STORAGE:-/srv/csheet}/etc:/etc/csheet:ro
-      - ${CSHEET_STORAGE:-/srv/csheet}/srv:/srv/csheet
-      - database:/var/db
-    cpu_shares: 128
   nginx:
     image: 'nginx'
     depends_on:

@@ -18,13 +18,8 @@ services:
       - sentry-server:sentry
     volumes: 
       - /z:/z:ro
+    scale: 2
   beat:
-    restart: always
-    external_links:
-      - sentry-server:sentry
-  generation:
-    volumes: 
-     - /z:/z:ro
     restart: always
     external_links:
       - sentry-server:sentry

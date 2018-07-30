@@ -4,7 +4,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import generate_test_page
 import util
-from csheet import APP, SOCKETIO, generation, watch
+from csheet import APP, SOCKETIO, generation
 
 PORT = 5001
 
@@ -14,7 +14,6 @@ def main():
 
     generate_test_page.main()
     generation.GENERATION_TASKS.pop()
-    generation.start()
 
     SOCKETIO.run(APP,
                  'localhost', PORT,

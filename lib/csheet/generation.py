@@ -13,7 +13,7 @@ from sqlalchemy import or_
 
 from wlf import ffmpeg
 
-from .core import APP
+from .core import APP, CELERY
 from .database import Video, session_scope
 from .exceptions import WorkerIdle
 from .filename import filter_filename
@@ -226,7 +226,36 @@ def _do_generate():
             raise WorkerIdle
 
 
+@CELERY.task(ignore_result=True)
+def generate(**i):
+    """Celery Generate task.  """
+
+    i['method'] = getattr(GenaratableVideo, 'generate_{}'.format(i['target']))
+    with session_scope() as sess:
+        execute_generate_task(sess, **i)
+
+
+@APP.before_first_request
 def start():
     """Start generation thread.  """
 
-    spawn(generate_forever)
+    if APP.testing:
+        spawn(generate_forever)
+
+
+@CELERY.on_after_configure.connect
+def setup_periodic_tasks(sender, **_):
+    """Setup periodic tasks.  """
+
+    sender.add_periodic_task(
+        1, generate.s(source='poster',
+                      target='thumb',
+                      min_interval=1), expire=1)
+    sender.add_periodic_task(
+        10, generate.s(source='src',
+                       target='poster',
+                       min_interval=10), expire=0.1)
+    sender.add_periodic_task(
+        10, generate.s(source='src',
+                       target='preview',
+                       min_interval=100), expire=0.1)

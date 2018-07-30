@@ -23,13 +23,6 @@ services:
   beat:
     external_links:
       - sentry-server:sentry
-  generation:
-    external_links:
-      - sentry-server:sentry
-    volumes:
-      - 'D:/:/d:ro'
-      - 'E:/:/e:ro'
-      - '/z:/z:ro'
   nginx:
     command: [nginx-debug, '-g', 'daemon off;']
     ports:
