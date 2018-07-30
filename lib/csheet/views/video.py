@@ -10,9 +10,9 @@ from flask import send_file
 
 import cgtwq
 
-from ..filename import filter_filename
-from .app import APP
 from . import core
+from ..core import APP
+from ..filename import filter_filename
 
 LOGGER = logging.getLogger(__name__)
 

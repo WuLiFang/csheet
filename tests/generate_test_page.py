@@ -7,9 +7,8 @@ from __future__ import (absolute_import, division, print_function,
 from requests.utils import quote
 
 import cgtwq
-import util
-from csheet.views import APP
 import csheet
+import util
 
 
 def _inject_text(js_file):
@@ -23,12 +22,12 @@ def main():
          'local.html', _inject_text('/csheet.js'))
     ]
 
-    original_root_path = APP.root_path
+    original_root_path = csheet.APP.root_path
     original_tempaltes_folder = csheet.page.core.BasePage.templates_folder
-    APP.root_path = util.path('../public')
+    csheet.APP.root_path = util.path('../public')
     csheet.page.core.BasePage.templates_folder = util.path(
         '../public/templates')
-    client = APP.test_client()
+    client = csheet.APP.test_client()
     if cgtwq.DesktopClient.is_logged_in():
         tasks.append((quote(b'/?pipeline=合成&project=梦塔&prefix=MT_EP06_',
                             safe=b'/?=&'), 'csheet.html', _inject_text('/csheet.js')))
@@ -43,7 +42,7 @@ def main():
             f.write(inject_text)
 
     csheet.page.core.BasePage.templates_folder = original_tempaltes_folder
-    APP.root_path = original_root_path
+    csheet.APP.root_path = original_root_path
 
 
 if __name__ == '__main__':

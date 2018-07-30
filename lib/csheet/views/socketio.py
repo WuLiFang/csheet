@@ -10,9 +10,8 @@ import time
 from gevent import sleep, spawn
 from sqlalchemy import and_, or_
 
-from .. import setting
+from ..core import APP, SOCKETIO
 from ..database import Video, session_scope
-from .app import APP, SOCKETIO
 from .core import database_session
 
 LOGGER = logging.getLogger()
@@ -68,7 +67,7 @@ def broadcast_forever():
         with session_scope() as sess:
             broadcast_updated_asset(since=last_broadcast_time, session=sess)
         last_broadcast_time = time.time()
-        sleep(setting.BROADCAST_INTERVAL, False)
+        sleep(APP.config['BROADCAST_INTERVAL'], False)
 
 
 @SOCKETIO.on('connect')
@@ -82,7 +81,8 @@ def on_request_update(message):
     with database_session() as sess:
         query = sess.query(Video).filter(
             Video.uuid.in_(message),
-            Video.last_update_time < time.time() - setting.BROADCAST_INTERVAL,
+            (Video.last_update_time < time.time()
+             - APP.config['BROADCAST_INTERVAL']),
             Video.is_need_update != True,
         )
         videos = query.all()

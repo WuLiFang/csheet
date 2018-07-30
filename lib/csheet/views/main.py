@@ -12,8 +12,8 @@ from wlf.decorators import run_with_clock
 
 from . import core
 from ..__about__ import __version__
+from ..core import APP
 from ..page import CGTeamWorkPage, LocalPage
-from .app import APP
 from .login import require_login
 
 

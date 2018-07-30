@@ -1,0 +1,60 @@
+# -*- coding=UTF-8 -*-
+"""Application core.  """
+
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
+import logging
+import logging.config
+
+from celery import Celery
+from flask import Flask
+from flask_socketio import SocketIO
+from raven.contrib.flask import Sentry
+
+from . import database, filetools
+from .__about__ import __name__ as name
+from .__about__ import __version__
+
+APP = Flask(name, root_path=filetools.dist_path())
+APP.secret_key = ('}w\xb7\xa3]\xfaI\x94Z\x14\xa9\xa5}\x16\xb3'
+                  '\xf7\xd6\xb2R\xb0\xf5\xc6*.\xb3I\xb7\x066V\xd6\x8d')
+APP.config.from_object('csheet.default_settings')
+APP.config.from_envvar('CSHEET_SETTINGS', silent=True)
+
+SENTRY = Sentry(APP, dsn=APP.config['SENTRY_DSN'])
+
+SOCKETIO = SocketIO(APP,
+                    path='/api/socket.io',
+                    message_queue=APP.config['MESSAGE_QUEUE'])
+
+CELERY = Celery('csheet', broker=APP.config['BROKER_URL'])
+CELERY.conf.accept_content = ['json', 'pickle']
+CELERY.conf.task_serializer = 'pickle'
+
+
+@APP.before_first_request
+def init_loggging():
+    """Initiate logging.  """
+
+    logging.config.dictConfig(APP.config['LOGGING_CONFIG'])
+
+
+@APP.before_first_request
+def init_db():
+    """Initiate db.  """
+
+    database.core.bind(APP.config['ENGINE_URL'], APP.config['DEBUG_SQL'])
+
+
+init_db()
+
+
+def _set_default_encoding(encoding):
+    # XXX: need more clean way to fix sentry encoding error.
+    import sys
+    reload(sys)
+    sys.setdefaultencoding(encoding)
+
+
+_set_default_encoding('utf-8')

@@ -13,14 +13,15 @@ ENV PYTHONPATH=lib
 ENV LANG=en_US.utf-8
 
 LABEL author="NateScarlet@Gmail.com"
-ENV CSHEET_STORAGE=/srv/csheet
-ENV CSHEET_ENGINE_URI=sqlite:////var/db/csheet.db
+ENV CSHEET_SETTINGS=/etc/csheet/settings.py
 ENV WORKER_CONNECTIONS=1000
 
-COPY . /csheet
-WORKDIR /csheet
+WORKDIR /app
 
+COPY ./Pipfile* ./
 RUN pipenv install --system --deploy
+
+COPY . ./
 
 FROM build AS test
 

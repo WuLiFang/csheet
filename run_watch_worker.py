@@ -3,13 +3,13 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from csheet import watch
-from wlf import mp_logging
 import logging
+
+from csheet import core, watch
 
 
 def main():
-    mp_logging.basic_config()
+    core.init_loggging()
     logging.info('Start watch worker')
     watch.update_forever()
 

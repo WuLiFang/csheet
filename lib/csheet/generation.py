@@ -13,7 +13,7 @@ from sqlalchemy import or_
 
 from wlf import ffmpeg
 
-from . import setting
+from .core import APP
 from .database import Video, session_scope
 from .exceptions import WorkerIdle
 from .filename import filter_filename
@@ -114,7 +114,7 @@ class GenaratableVideo(Video):
         assert output
         return ffmpeg.generate_mp4(
             src, output,
-            limit_size=setting.PREVIEW_SIZE_LIMIT)
+            limit_size=APP.config['PREVIEW_SIZE_LIMIT'])
 
 
 def execute_generate_task(session, **kwargs):
@@ -204,7 +204,7 @@ GENERATION_TASKS = [
 def output_path(*other):
     """Get output path.  """
 
-    path = os.path.join(setting.STORAGE, *other)
+    path = os.path.join(APP.config['STORAGE'], *other)
     try:
         os.makedirs(os.path.dirname(path))
     except OSError:

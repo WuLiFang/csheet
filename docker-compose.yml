@@ -5,43 +5,42 @@ services:
   web:
     image: 'csheet'
     volumes: 
-     - ${CSHEET_STORAGE:-/srv/csheet}/srv:/srv/csheet
-     - database:/var/db
+      - ${CSHEET_STORAGE:-/srv/csheet}/etc:/etc/csheet:ro
+      - ${CSHEET_STORAGE:-/srv/csheet}/srv:/srv/csheet
+      - database:/var/db
     depends_on:
       - redis
-    environment: 
-      CSHEET_BROKER_URI: redis://redis
   socketio:
     image: 'csheet'
     command: 'run socketio'
     volumes: 
-     - database:/var/db
+      - ${CSHEET_STORAGE:-/srv/csheet}/etc:/etc/csheet:ro
+      - database:/var/db
     depends_on:
       - redis
-    environment: 
-      CSHEET_BROKER_URI: redis://redis
   worker:
     image: 'csheet'
     command: 'run worker'
     volumes: 
+      - ${CSHEET_STORAGE:-/srv/csheet}/etc:/etc/csheet:ro
       - database:/var/db
     depends_on:
       - redis
     environment: 
-      CSHEET_BROKER_URI: redis://redis
       C_FORCE_ROOT: 1
   watch:
     image: 'csheet'
     command: 'run watch'
     volumes: 
-     - ${CSHEET_STORAGE:-/srv/csheet}/srv:/srv/csheet
-     - database:/var/db
+      - ${CSHEET_STORAGE:-/srv/csheet}/etc:/etc/csheet:ro
+      - database:/var/db
   generation:
     image: 'csheet'
     command: 'run generation'
     volumes: 
-     - ${CSHEET_STORAGE:-/srv/csheet}/srv:/srv/csheet
-     - database:/var/db
+      - ${CSHEET_STORAGE:-/srv/csheet}/etc:/etc/csheet:ro
+      - ${CSHEET_STORAGE:-/srv/csheet}/srv:/srv/csheet
+      - database:/var/db
     cpu_shares: 128
   nginx:
     image: 'nginx'
@@ -49,14 +48,8 @@ services:
       - web
       - socketio
     volumes:
-      - ${CSHEET_STORAGE:-/srv/csheet}/srv:/srv/csheet
-      - type: bind
-        source: ${CSHEET_STORAGE:-/srv/csheet}/etc
-        target: /etc/csheet
-        read_only: true
-      - type: bind
-        source: ${CSHEET_STORAGE:-/srv/csheet}/etc/nginx.conf
-        target: /etc/nginx/nginx.conf
-        read_only: true
+      - ${CSHEET_STORAGE:-/srv/csheet}/etc:/etc/csheet:ro
+      - ${CSHEET_STORAGE:-/srv/csheet}/srv:/srv/csheet:ro
+      - ${CSHEET_STORAGE:-/srv/csheet}/etc/nginx.conf:/etc/nginx/nginx.conf:ro
 volumes:
     database:

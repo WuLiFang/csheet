@@ -11,7 +11,7 @@ from flask import make_response, redirect, request, session
 import cgtwq
 
 from ..__about__ import __version__
-from .app import APP
+from ..core import APP
 
 
 def auth_login():

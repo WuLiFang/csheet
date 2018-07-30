@@ -3,5 +3,4 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from . import login, main, api, video, socketio
-from .app import APP, SOCKETIO
+from . import api, login, main, socketio, video

@@ -6,13 +6,8 @@ from __future__ import (absolute_import, division, print_function,
 
 import logging
 
-from celery import Celery
-
-from . import database, setting
-
-CELERY = Celery('csheet', broker=setting.BROKER_URI)
-CELERY.conf.accept_content = ['json', 'pickle']
-CELERY.conf.task_serializer = 'pickle'
+from . import database
+from .core import CELERY
 
 LOGGER = logging.getLogger(__name__)
 

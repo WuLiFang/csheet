@@ -11,7 +11,7 @@ from flask_restful import Api, Resource, reqparse
 
 from . import core
 from .. import database
-from .app import APP
+from ..core import APP
 from .login import require_login
 
 API = Api(APP, '/api')

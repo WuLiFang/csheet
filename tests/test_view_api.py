@@ -10,7 +10,7 @@ from unittest import TestCase, main, skip
 from requests.utils import quote
 
 from cgtwq import DesktopClient
-from csheet.views import APP
+from csheet import APP
 from util import skip_if_not_logged_in
 
 

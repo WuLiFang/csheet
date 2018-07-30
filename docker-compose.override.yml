@@ -10,14 +10,8 @@ services:
       - '/z:/z'
     external_links:
       - sentry-server:sentry
-    environment: 
-      # CSHEET_DEBUG: 1
-      SENTRY_DSN: ${SENTRY_DSN}
   socketio:
-    environment: 
-      SENTRY_DSN: ${SENTRY_DSN}
     external_links:
-      # CSHEET_DEBUG: 1
       - sentry-server:sentry
   watch:
     external_links:
@@ -26,9 +20,6 @@ services:
       - 'D:/:/d'
       - 'E:/:/e'
       - '/z:/z'
-    environment: 
-      # CSHEET_DEBUG: 1
-      SENTRY_DSN: ${SENTRY_DSN}
   generation:
     external_links:
       - sentry-server:sentry
@@ -36,9 +27,6 @@ services:
       - 'D:/:/d'
       - 'E:/:/e'
       - '/z:/z'
-    environment: 
-      # CSHEET_DEBUG: 1
-      SENTRY_DSN: ${SENTRY_DSN}
   nginx:
     command: [nginx-debug, '-g', 'daemon off;']
     ports:

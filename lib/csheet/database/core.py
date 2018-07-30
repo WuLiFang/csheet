@@ -5,7 +5,6 @@ from __future__ import (absolute_import, division, print_function,
 
 import json
 import logging
-import os
 from contextlib import contextmanager
 from functools import wraps
 
@@ -16,8 +15,6 @@ from sqlalchemy.types import VARCHAR, TypeDecorator, Unicode
 
 from wlf.path import PurePath
 from wlf.path import get_unicode as u
-
-from .. import setting
 
 Base = declarative_base()  # pylint: disable=invalid-name
 Session = orm.sessionmaker()  # pylint: disable=invalid-name
@@ -114,13 +111,11 @@ class SerializableMixin(object):
         return {i.name: self._encode(getattr(self, i.name)) for i in self.__table__.columns}
 
 
-def bind(uri=None):
+def bind(url, is_echo=False):
     """Bind model to database.  """
 
-    uri = uri or setting.ENGINE_URI
-    LOGGER.debug('Bind to engine: %s', uri)
-    engine = create_engine(uri, echo=(
-        os.getenv('CSHEET_DEBUG_SQL', False) and True))
+    LOGGER.debug('Bind to engine: %s', url)
+    engine = create_engine(url, echo=is_echo)
     Session.configure(bind=engine)
     Base.metadata.create_all(engine)
     _upgrade_database(engine)

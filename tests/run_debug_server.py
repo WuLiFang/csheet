@@ -2,8 +2,6 @@
 """Contactsheet test.  """
 from __future__ import absolute_import, print_function, unicode_literals
 
-import logging
-
 import generate_test_page
 import util
 from csheet import APP, SOCKETIO, generation, watch
@@ -12,7 +10,6 @@ PORT = 5001
 
 
 def main():
-    logging.basicConfig(level=logging.DEBUG)
     util.setup()
 
     generate_test_page.main()
