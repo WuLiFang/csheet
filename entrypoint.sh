@@ -23,6 +23,9 @@ if [ "$1" = "run" ]; then
     "worker" )
         celery -A csheet.CELERY worker --loglevel=info
         ;;
+    "beat" )
+        celery -A csheet.CELERY beat --loglevel=info
+        ;;
     * )
         echo "Can not recognize argument: $2"
         ;;

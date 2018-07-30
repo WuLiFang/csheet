@@ -7,7 +7,7 @@ from csheet import core, generation
 
 
 def main():
-    core.init_loggging()
+    core.init()
     generation.LOGGER.info('Start generation worker')
     generation.generate_forever()
 

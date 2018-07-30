@@ -5,9 +5,18 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 ENGINE_URL = 'sqlite:////var/db/csheet.db'
-BROKER_URL = 'redis://redis/0'
-MESSAGE_QUEUE = 'redis://redis/1'
-SENTRY_DSN = None  # Replace your value
+MESSAGE_QUEUE = 'redis://redis/0'
+
+with open('SENTRY_DSN') as f:
+    SENTRY_DSN = f.read()
+
+CELERY_CONFIG = {
+    'accept_content': ['json', 'pickle'],
+    'task_serializer': 'pickle',
+    'broker_url': 'redis://redis/1',
+    'result_backend': 'redis://redis/2',
+}
+
 LOGGING_CONFIG = {'version': 1,
                   'disable_existing_loggers': True,
                   'formatters': {

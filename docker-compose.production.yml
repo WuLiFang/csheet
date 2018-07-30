@@ -11,28 +11,28 @@ services:
       SENTRY_DSN: ${SENTRY_DSN}
   socketio:
     restart: always
-    environment: 
-      SENTRY_DSN: ${SENTRY_DSN}
     external_links:
       - sentry-server:sentry
   worker:
     restart: always
+    external_links:
+      - sentry-server:sentry
+  beat:
+    restart: always
+    external_links:
+      - sentry-server:sentry
   watch:
     volumes: 
      - /z:/z
     restart: always
     external_links:
       - sentry-server:sentry
-    environment: 
-      SENTRY_DSN: ${SENTRY_DSN}
   generation:
     volumes: 
      - /z:/z
     restart: always
     external_links:
       - sentry-server:sentry
-    environment: 
-      SENTRY_DSN: ${SENTRY_DSN}
   nginx:
     restart: always
     ports:

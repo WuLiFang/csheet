@@ -73,12 +73,12 @@ class Path(TypeDecorator):
         return PurePath(value)
 
 
-class JSONEncodedDict(TypeDecorator):
+class JSONData(TypeDecorator):
     """Represents an immutable structure as a json-encoded string.
 
     Usage::
 
-        JSONEncodedDict(255)
+        JSONData(255)
 
     """
     # pylint: disable=abstract-method

@@ -28,21 +28,7 @@ SOCKETIO = SocketIO(APP,
                     path='/api/socket.io',
                     message_queue=APP.config['MESSAGE_QUEUE'])
 
-CELERY = Celery('csheet', broker=APP.config['BROKER_URL'])
-CELERY.conf.accept_content = ['json', 'pickle']
-CELERY.conf.task_serializer = 'pickle'
-
-
-def init_loggging():
-    """Initiate logging.  """
-
-    logging.config.dictConfig(APP.config['LOGGING_CONFIG'])
-
-
-def init_db():
-    """Initiate db.  """
-
-    database.core.bind(APP.config['ENGINE_URL'], APP.config['DEBUG_SQL'])
+CELERY = Celery('csheet')
 
 
 def _set_default_encoding(encoding):
@@ -52,6 +38,13 @@ def _set_default_encoding(encoding):
     sys.setdefaultencoding(encoding)
 
 
-init_db()
-init_loggging()
-_set_default_encoding('utf-8')
+def init():
+    """Initiate application.  """
+
+    logging.config.dictConfig(APP.config['LOGGING_CONFIG'])
+    CELERY.config_from_object(APP.config['CELERY_CONFIG'])
+    database.core.bind(APP.config['ENGINE_URL'], APP.config['DEBUG_SQL'])
+    _set_default_encoding('utf-8')
+
+
+init()

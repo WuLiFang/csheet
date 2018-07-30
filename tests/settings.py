@@ -10,6 +10,12 @@ TESTING = True
 STORAGE = util.path('storage')
 ENGINE_URL = 'sqlite:///{}\\csheet.db'.format(STORAGE)
 
+CELERY_CONFIG = {
+    'accept_content': ['json', 'pickle'],
+    'task_serializer': 'pickle',
+    'task_always_eager': True
+}
+
 LOGGING_CONFIG = {'version': 1,
                   'disable_existing_loggers': False,
                   'formatters': {

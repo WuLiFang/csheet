@@ -4,14 +4,13 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import logging
-import os
 import time
 
 from gevent import sleep, spawn
 from sqlalchemy import and_, or_
 
-from ..core import APP, SOCKETIO
-from ..database import Video, session_scope
+from ..core import APP, CELERY, SOCKETIO
+from ..database import Meta, Video, session_scope
 from .core import database_session
 
 LOGGER = logging.getLogger()
@@ -43,30 +42,31 @@ def get_updated_asset(since, sess):
     return result
 
 
-def broadcast_updated_asset(since, session):
+@CELERY.task
+def broadcast_updated_asset(session=None):
     """Broad cast all newly updated asset.
 
-    Args:
-        since (float): Timestamp
     """
 
-    data = get_updated_asset(since, session)
-    assert isinstance(data, list), type(data)
-    if data:
-        SOCKETIO.emit('asset update', data, broadcast=True)
-        LOGGER.debug('Broadcast updated asset, count: %s', len(data))
-    else:
-        LOGGER.debug('No updated assets.')
+    data_key = 'LastBroadcastTime'
+    now = time.time()
+    with session_scope(session) as sess:
+        since = Meta.get(data_key, sess, default=now)
+        data = get_updated_asset(since, sess)
+        assert isinstance(data, list), type(data)
+        if data:
+            SOCKETIO.emit('asset update', data, broadcast=True)
+            LOGGER.info('Broadcast updated asset, count: %s', len(data))
+        else:
+            LOGGER.debug('No updated assets.')
+        Meta.set(data_key, now, sess)
 
 
 def broadcast_forever():
     """Start broadcast.  """
 
-    last_broadcast_time = time.time() - 10
     while True:
-        with session_scope() as sess:
-            broadcast_updated_asset(since=last_broadcast_time, session=sess)
-        last_broadcast_time = time.time()
+        broadcast_updated_asset()
         sleep(APP.config['BROADCAST_INTERVAL'], False)
 
 
@@ -100,7 +100,15 @@ def on_request_update(message):
 def start_broadcast():
     """Start broadcast.  """
 
-    if os.getenv('CSHEET_NO_SOCKETIO'):
-        return
-    spawn(broadcast_forever)
-    LOGGER.debug('Start broadcast')
+    if APP.testing:
+        spawn(broadcast_forever)
+        LOGGER.debug('Start broadcast')
+
+
+@CELERY.on_after_configure.connect
+def setup_periodic_tasks(sender, **_):
+    """Setup periodic tasks.  """
+
+    sender.add_periodic_task(
+        APP.config['BROADCAST_INTERVAL'],
+        broadcast_updated_asset)

@@ -21,9 +21,7 @@ def setup():
     """Setup test env.  """
 
     csheet.core.APP.config.from_object('settings')
-    csheet.core.CELERY.conf.task_always_eager = True
-    csheet.core.init_db()
-    csheet.core.init_loggging()
+    csheet.core.init()
 
 
 def path(*other):

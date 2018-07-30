@@ -2,7 +2,6 @@
 """Default application settings.  """
 
 ENGINE_URL = 'sqlite:///:memory:'
-BROKER_URL = None
 MESSAGE_QUEUE = None
 SENTRY_DSN = None
 
@@ -32,3 +31,7 @@ LOGGING_CONFIG = {'version': 1,
                           'propagate': True
                       },
                   }}
+CELERY_CONFIG = {
+    'accept_content': ['json', 'pickle'],
+    'task_serializer': 'pickle',
+}

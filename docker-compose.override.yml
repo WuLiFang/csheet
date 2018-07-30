@@ -13,6 +13,12 @@ services:
   socketio:
     external_links:
       - sentry-server:sentry
+  worker:
+    external_links:
+      - sentry-server:sentry
+  beat:
+    external_links:
+      - sentry-server:sentry
   watch:
     external_links:
       - sentry-server:sentry

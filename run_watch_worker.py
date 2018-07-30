@@ -9,7 +9,7 @@ from csheet import core, watch
 
 
 def main():
-    core.init_loggging()
+    core.init()
     logging.info('Start watch worker')
     watch.update_forever()
 
