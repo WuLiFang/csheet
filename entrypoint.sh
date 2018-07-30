@@ -3,7 +3,7 @@
 if [ "$1" = "run" ]; then
     case $2 in
     "" )
-        export CHSEET_NO_SOCKETIO=1
+        export CSHEET_NO_SOCKETIO=1
         gunicorn -w 1 \
             --worker-connections $WORKER_CONNECTIONS \
             -k gevent \

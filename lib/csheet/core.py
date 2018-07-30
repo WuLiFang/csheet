@@ -33,21 +33,16 @@ CELERY.conf.accept_content = ['json', 'pickle']
 CELERY.conf.task_serializer = 'pickle'
 
 
-@APP.before_first_request
 def init_loggging():
     """Initiate logging.  """
 
     logging.config.dictConfig(APP.config['LOGGING_CONFIG'])
 
 
-@APP.before_first_request
 def init_db():
     """Initiate db.  """
 
     database.core.bind(APP.config['ENGINE_URL'], APP.config['DEBUG_SQL'])
-
-
-init_db()
 
 
 def _set_default_encoding(encoding):
@@ -57,4 +52,6 @@ def _set_default_encoding(encoding):
     sys.setdefaultencoding(encoding)
 
 
+init_db()
+init_loggging()
 _set_default_encoding('utf-8')
