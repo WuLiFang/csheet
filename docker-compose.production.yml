@@ -8,7 +8,6 @@ services:
       - sentry-server:sentry
     environment: 
       WORKER_CONNECTIONS: 10240
-      SENTRY_DSN: ${SENTRY_DSN}
   socketio:
     restart: always
     external_links:
