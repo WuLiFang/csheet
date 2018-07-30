@@ -42,7 +42,7 @@ def get_updated_asset(since, sess):
     return result
 
 
-@CELERY.task
+@CELERY.task(ignore_result=True)
 def broadcast_updated_asset(session=None):
     """Broad cast all newly updated asset.
 

@@ -38,12 +38,6 @@ services:
       - redis
     environment: 
       C_FORCE_ROOT: 1
-  watch:
-    image: 'csheet'
-    command: 'run watch'
-    volumes: 
-      - ${CSHEET_STORAGE:-/srv/csheet}/etc:/etc/csheet:ro
-      - database:/var/db
   generation:
     image: 'csheet'
     command: 'run generation'

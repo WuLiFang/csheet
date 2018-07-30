@@ -12,7 +12,7 @@ from .core import CELERY
 LOGGER = logging.getLogger(__name__)
 
 
-@CELERY.task
+@CELERY.task(ignore_result=True)
 def update_page(page):
     """Update page data.  """
 

@@ -13,10 +13,11 @@ from sqlalchemy import or_
 
 from wlf.path import get_encoded as e
 
-from .filename import filter_filename
+from .core import APP, CELERY
 from .database import Session, Video
-from .workertools import work_forever
 from .exceptions import WorkerIdle
+from .filename import filter_filename
+from .workertools import work_forever
 
 LOGGER = logging.getLogger(__name__)
 
@@ -107,13 +108,15 @@ class Chunk(list):
         return {k: getmtime(v) for k, v in pathdata.items()}
 
 
-def update_one_chunk():
+@CELERY.task(ignore_result=True)
+def update_one_chunk(is_strict=True):
     """Get a update chunk then update it.  """
 
     chunk = Chunk.get()
     if not chunk:
         LOGGER.debug('No video need update.')
-        raise WorkerIdle
+        if is_strict:
+            raise WorkerIdle
     LOGGER.info('Start update videos, count: %s', len(chunk))
     chunk.update_mtime('src', 'src_mtime')
     chunk.update_mtime('poster', 'poster_mtime')
@@ -125,7 +128,17 @@ def update_forever():
     work_forever(update_one_chunk, LOGGER, label='update')
 
 
+@APP.before_first_request
 def start():
     """Start watch.  """
 
-    spawn(update_forever)
+    if APP.testing:
+        spawn(update_forever)
+
+
+@CELERY.on_after_configure.connect
+def setup_periodic_tasks(sender, **_):
+    """Setup periodic tasks.  """
+
+    sender.add_periodic_task(
+        0.5, update_one_chunk.s(is_strict=False), expire=0.2)

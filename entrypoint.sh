@@ -17,9 +17,6 @@ if [ "$1" = "run" ]; then
     "generation" )
         python ./run_generation_worker.py
         ;;
-    "watch" )
-        python ./run_watch_worker.py
-        ;;
     "worker" )
         celery -A csheet.CELERY worker --loglevel=info
         ;;

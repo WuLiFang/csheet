@@ -2,7 +2,7 @@ version: '2.3'
 services:
   web:
     volumes: 
-     - /z:/z
+     - /z:/z:ro
     restart: always
     external_links:
       - sentry-server:sentry
@@ -16,19 +16,15 @@ services:
     restart: always
     external_links:
       - sentry-server:sentry
-  beat:
-    restart: always
-    external_links:
-      - sentry-server:sentry
-  watch:
     volumes: 
-     - /z:/z
+      - /z:/z:ro
+  beat:
     restart: always
     external_links:
       - sentry-server:sentry
   generation:
     volumes: 
-     - /z:/z
+     - /z:/z:ro
     restart: always
     external_links:
       - sentry-server:sentry

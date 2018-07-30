@@ -15,7 +15,6 @@ def main():
     generate_test_page.main()
     generation.GENERATION_TASKS.pop()
     generation.start()
-    watch.start()
 
     SOCKETIO.run(APP,
                  'localhost', PORT,
