@@ -97,11 +97,11 @@ class Chunk(list):
 
 
 @CELERY.task(ignore_result=True)
-def update_one_chunk(is_strict=True):
+def update_one_chunk(size, is_strict=True):
     """Get a update chunk then update it.  """
 
     with session_scope() as sess:
-        chunk = Chunk.get(sess)
+        chunk = Chunk.get(sess, size)
         if not chunk:
             LOGGER.debug('No video need update.')
             if is_strict:
@@ -131,4 +131,7 @@ def setup_periodic_tasks(sender, **_):
     """Setup periodic tasks.  """
 
     sender.add_periodic_task(
-        0.5, update_one_chunk.s(is_strict=False), expire=0.2)
+        APP.config['WATCH_INTERVAL'],
+        update_one_chunk.s(size=APP.config['WATCH_CHUNK_SIZE'],
+                           is_strict=False),
+        expire=0.2)
