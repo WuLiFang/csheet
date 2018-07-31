@@ -15,10 +15,10 @@ if [ "$1" = "run" ]; then
             -b 0.0.0.0:80 csheet:APP
         ;;
     "worker" )
-        celery -A csheet.CELERY worker --loglevel=info
+        celery -A csheet.CELERY worker
         ;;
     "beat" )
-        celery -A csheet.CELERY beat --loglevel=info
+        celery -A csheet.CELERY beat
         ;;
     * )
         echo "Can not recognize argument: $2"
