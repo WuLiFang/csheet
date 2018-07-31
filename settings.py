@@ -15,6 +15,7 @@ CELERY_CONFIG = {
     'task_serializer': 'pickle',
     'broker_url': 'redis://redis/1',
     'result_backend': 'redis://redis/2',
+    'worker_hijack_root_logger': False
 }
 
 LOGGING_CONFIG = {'version': 1,
@@ -37,12 +38,12 @@ LOGGING_CONFIG = {'version': 1,
                       },
                   },
                   'loggers': {
-                      '': {
-                          'handlers': ['stream', 'sentry'],
+                      'csheet': {
                           'level': 'INFO',
                           'propagate': True
                       },
-                      'csheet': {
-                          'level': 'INFO',
-                      },
-                  }}
+                  },
+                  'root': {
+                      'handlers': ['stream', 'sentry'],
+                      'level': 'INFO',
+                  }, }
