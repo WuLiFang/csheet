@@ -111,4 +111,5 @@ def setup_periodic_tasks(sender, **_):
 
     sender.add_periodic_task(
         APP.config['BROADCAST_INTERVAL'],
-        broadcast_updated_asset)
+        broadcast_updated_asset,
+        expires=APP.config['DAEMON_TASK_EXPIRES'])

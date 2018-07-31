@@ -79,7 +79,7 @@ class Chunk(list):
                 setattr(k, src_column, None)
             elif v != prev_value:
                 LOGGER.info('File changed: %s: %s -> %s',
-                            src_column, prev_value, v)
+                            getattr(k, src_column), prev_value, v)
                 setattr(k, mtime_column, v)
 
     def get_mtimedata(self, src_column):
@@ -101,8 +101,8 @@ def update_one_chunk(size, is_strict=True):
     """Get a update chunk then update it.  """
 
     with session_scope() as sess:
-        with database_lock(sess, 'update') as acquired:
-            if not acquired:
+        with database_lock(sess, 'update') as is_acquired:
+            if not is_acquired:
                 return
             chunk = Chunk.get(sess, size)
             if not chunk:
@@ -137,4 +137,4 @@ def setup_periodic_tasks(sender, **_):
         APP.config['WATCH_INTERVAL'],
         update_one_chunk.s(size=APP.config['WATCH_CHUNK_SIZE'],
                            is_strict=False),
-        expire=0.2)
+        expires=APP.config['DAEMON_TASK_EXPIRES'])

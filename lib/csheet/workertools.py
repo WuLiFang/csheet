@@ -4,8 +4,10 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import sys
+import time
 from contextlib import contextmanager
 
+import sqlalchemy.exc
 from gevent import sleep
 
 from .database import Meta
@@ -45,17 +47,43 @@ def _handle_worker_exceptions(logger, **kwargs):
     return fail_delay
 
 
+class Locked(Exception):
+    """Lock has been locked.  """
+
+
 @contextmanager
-def database_lock(session, id_):
+def database_lock(session, id_, expire=600, is_block=False):
     """Worker lock. """
 
     key = 'Lock-{}'.format(id_)
-    if Meta.get(key, session):
+
+    def _block_until_acquired():
+        try:
+            value = Meta.get(key, session)
+        except sqlalchemy.exc.OperationalError:
+            _handle_locked()
+            return _block_until_acquired()
+
+        try:
+            while time.time() - value < expire:
+                _handle_locked()
+        except TypeError:
+            pass
+        Meta.set(key, time.time(), session)
+
+    def _handle_locked():
+        if is_block:
+            time.sleep(1)
+        else:
+            raise Locked
+
+    try:
+        _block_until_acquired()
+    except Locked:
         yield False
         return
 
-    Meta.set(key, True, session)
     try:
         yield True
     finally:
-        Meta.set(key, False, session)
+        Meta.set(key, None, session)
