@@ -7,6 +7,7 @@ import logging
 import os
 import time
 
+import psutil
 import six
 from gevent import spawn
 from sqlalchemy import or_
@@ -117,7 +118,7 @@ class GenaratableVideo(Video):
             limit_size=APP.config['PREVIEW_SIZE_LIMIT'])
 
 
-def execute_generate_task(session, **kwargs):
+def execute_generate_task(**kwargs):
     """Generate from source to target.
 
     Args:
@@ -131,22 +132,22 @@ def execute_generate_task(session, **kwargs):
         bool: `True` if generated, `False` if nothing to generate.
     """
 
-    source = kwargs.pop('source')
-    target = kwargs.pop('target')
-    method = kwargs.pop('method')
+    with session_scope() as sess:
+        source = kwargs.pop('source')
+        target = kwargs.pop('target')
+        method = kwargs.pop('method')
 
-    video = _get_video(source, target, session, **kwargs)
-    if video is None:
-        LOGGER.debug('No %s need generate.', target)
-        return False
-    assert isinstance(video, GenaratableVideo), type(video)
+        video = _get_video(source, target, sess, **kwargs)
+        if video is None:
+            LOGGER.debug('No %s need generate.', target)
+            return False
+        assert isinstance(video, GenaratableVideo), type(video)
 
-    video.touch(target)
-    setattr(video, '{}_mtime'.format(target), None)
-    session.commit()
-    session.refresh(video)
-    video.try_apply(method, source, target)
-    session.commit()
+        video.touch(target)
+        setattr(video, '{}_mtime'.format(target), None)
+        sess.commit()
+
+        video.try_apply(method, source, target)
 
     return True
 
@@ -219,20 +220,27 @@ def generate_forever():
 
 
 def _do_generate():
-    with session_scope() as sess:
-        result = any(execute_generate_task(sess, **i)
-                     for i in GENERATION_TASKS)
-        if not result:
-            raise WorkerIdle
+    result = any(execute_generate_task(**i)
+                 for i in GENERATION_TASKS)
+    if not result:
+        raise WorkerIdle
 
 
 @CELERY.task(ignore_result=True)
 def generate(**i):
     """Celery Generate task.  """
 
-    i['method'] = getattr(GenaratableVideo, 'generate_{}'.format(i['target']))
-    with session_scope() as sess:
-        execute_generate_task(sess, **i)
+    require = {'thumb': 5 * 2 * 20,
+               'poster': 0.5 * 2 * 30,
+               'preview': 1 * 2 ** 30}.get(i['target'], 2 ** 30)
+    if psutil.virtual_memory().available < require:
+        LOGGER.warning('Not enough memory, skip task.')
+        return
+
+    i['method'] = getattr(
+        GenaratableVideo, 'generate_{}'.format(i['target']))
+
+    execute_generate_task(**i)
 
 
 @APP.before_first_request

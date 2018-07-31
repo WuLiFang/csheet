@@ -4,9 +4,11 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import sys
+from contextlib import contextmanager
 
 from gevent import sleep
 
+from .database import Meta
 from .exceptions import WorkerIdle
 
 
@@ -41,3 +43,19 @@ def _handle_worker_exceptions(logger, **kwargs):
 
     logger.error('Error during %s.', label, exc_info=True)
     return fail_delay
+
+
+@contextmanager
+def database_lock(session, id_):
+    """Worker lock. """
+
+    key = 'Lock-{}'.format(id_)
+    if Meta.get(key, session):
+        yield False
+        return
+
+    Meta.set(key, True, session)
+    try:
+        yield True
+    finally:
+        Meta.set(key, False, session)

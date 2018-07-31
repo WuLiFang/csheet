@@ -16,7 +16,7 @@ from .core import APP, CELERY
 from .database import Video, session_scope
 from .exceptions import WorkerIdle
 from .filename import filter_filename
-from .workertools import work_forever
+from .workertools import database_lock, work_forever
 
 LOGGER = logging.getLogger(__name__)
 
@@ -101,15 +101,18 @@ def update_one_chunk(size, is_strict=True):
     """Get a update chunk then update it.  """
 
     with session_scope() as sess:
-        chunk = Chunk.get(sess, size)
-        if not chunk:
-            LOGGER.debug('No video need update.')
-            if is_strict:
-                raise WorkerIdle
-            return
-        LOGGER.info('Start update videos, count: %s', len(chunk))
-        chunk.update_mtime('src', 'src_mtime')
-        chunk.update_mtime('poster', 'poster_mtime')
+        with database_lock(sess, 'update') as acquired:
+            if not acquired:
+                return
+            chunk = Chunk.get(sess, size)
+            if not chunk:
+                LOGGER.debug('No video need update.')
+                if is_strict:
+                    raise WorkerIdle
+                return
+            LOGGER.info('Start update videos, count: %s', len(chunk))
+            chunk.update_mtime('src', 'src_mtime')
+            chunk.update_mtime('poster', 'poster_mtime')
 
 
 def update_forever():

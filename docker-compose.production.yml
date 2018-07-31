@@ -22,7 +22,7 @@ services:
       - /z:/z:ro
     cpu_shares: 128
     cpus: 10
-    mem_limit: 2G
+    mem_limit: 3G
   beat:
     restart: always
     external_links:
