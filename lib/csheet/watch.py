@@ -6,7 +6,6 @@ from __future__ import (absolute_import, division, print_function,
 import logging
 import os
 import time
-from contextlib import closing
 
 from gevent import spawn
 from sqlalchemy import or_
@@ -14,7 +13,7 @@ from sqlalchemy import or_
 from wlf.path import get_encoded as e
 
 from .core import APP, CELERY
-from .database import Session, Video
+from .database import Video, session_scope
 from .exceptions import WorkerIdle
 from .filename import filter_filename
 from .workertools import work_forever
@@ -38,7 +37,7 @@ class Chunk(list):
     """Chunk for update.  """
 
     @classmethod
-    def get(cls, size=50, min_update_interval=1):
+    def get(cls, session, size=50, min_update_interval=1):
         """Get update chunk from local database.
             size (int, optional): Defaults to 50. Chunk size.
             min_update_interval (int, optional): Defaults to 1.
@@ -48,24 +47,21 @@ class Chunk(list):
             Chunk: Chunk for update.
         """
 
-        session = Session()
+        current_time = time.time()
+        videos = session.query(Video).filter(
+            Video.is_need_update.is_(True),
+            Video.src.isnot(None) | Video.poster.isnot(None),
+            or_(Video.last_update_time.is_(None),
+                Video.last_update_time < current_time - min_update_interval)
+        ).order_by(Video.last_update_time).limit(size).all()
 
-        with closing(session):
-            current_time = time.time()
-            videos = session.query(Video).filter(
-                Video.is_need_update.is_(True),
-                Video.src.isnot(None) | Video.poster.isnot(None),
-                or_(Video.last_update_time.is_(None),
-                    Video.last_update_time < current_time - min_update_interval)
-            ).order_by(Video.last_update_time).limit(size).all()
+        for i in videos:
+            assert isinstance(i, Video), type(i)
+            i.is_need_update = False
+            i.last_update_time = current_time
+        session.commit()
 
-            for i in videos:
-                assert isinstance(i, Video), type(i)
-                i.is_need_update = False
-                i.last_update_time = current_time
-            session.commit()
-
-            return cls(videos)
+        return cls(videos)
 
     def update_mtime(self, src_column, mtime_column):
         """Update mtime column from source column
@@ -76,20 +72,15 @@ class Chunk(list):
         """
 
         mtimedata = self.get_mtimedata(src_column)
-        sess = Session()
-        with closing(sess):
-            for k, v in mtimedata.items():
-                assert isinstance(k, Video), type(k)
-                prev_value = getattr(k, mtime_column)
-                if v is None:
-                    setattr(k, src_column, None)
-                elif v != prev_value:
-                    LOGGER.info('File changed: %s: %s -> %s',
-                                src_column, prev_value, v)
-                    setattr(k, mtime_column, v)
-
-            sess.add_all(self)
-            sess.commit()
+        for k, v in mtimedata.items():
+            assert isinstance(k, Video), type(k)
+            prev_value = getattr(k, mtime_column)
+            if v is None:
+                setattr(k, src_column, None)
+            elif v != prev_value:
+                LOGGER.info('File changed: %s: %s -> %s',
+                            src_column, prev_value, v)
+                setattr(k, mtime_column, v)
 
     def get_mtimedata(self, src_column):
         """Get mtime data for a column.
@@ -101,10 +92,7 @@ class Chunk(list):
             dict[Video: float|None]: Mtime data dictionary.
         """
 
-        sess = Session()
-        with closing(sess):
-            sess.add_all(self)
-            pathdata = {i: getattr(i, src_column) for i in self}
+        pathdata = {i: getattr(i, src_column) for i in self}
         return {k: getmtime(v) for k, v in pathdata.items()}
 
 
@@ -112,15 +100,16 @@ class Chunk(list):
 def update_one_chunk(is_strict=True):
     """Get a update chunk then update it.  """
 
-    chunk = Chunk.get()
-    if not chunk:
-        LOGGER.debug('No video need update.')
-        if is_strict:
-            raise WorkerIdle
-        return
-    LOGGER.info('Start update videos, count: %s', len(chunk))
-    chunk.update_mtime('src', 'src_mtime')
-    chunk.update_mtime('poster', 'poster_mtime')
+    with session_scope() as sess:
+        chunk = Chunk.get(sess)
+        if not chunk:
+            LOGGER.debug('No video need update.')
+            if is_strict:
+                raise WorkerIdle
+            return
+        LOGGER.info('Start update videos, count: %s', len(chunk))
+        chunk.update_mtime('src', 'src_mtime')
+        chunk.update_mtime('poster', 'poster_mtime')
 
 
 def update_forever():
