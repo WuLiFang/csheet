@@ -20,10 +20,9 @@ services:
       - sentry-server:sentry
     volumes: 
       - /z:/z:ro
-    scale: 2
     cpu_shares: 128
-    cpus: 5
-    mem_limit: 1G
+    cpus: 10
+    mem_limit: 2G
   beat:
     restart: always
     external_links:

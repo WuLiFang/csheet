@@ -45,5 +45,5 @@ LOGGING_CONFIG = {'version': 1,
                   },
                   'root': {
                       'handlers': ['stream', 'sentry'],
-                      'level': 'INFO',
+                      'level': 'WARNING',
                   }, }
