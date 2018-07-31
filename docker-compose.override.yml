@@ -20,6 +20,9 @@ services:
       - 'D:/:/d:ro'
       - 'E:/:/e:ro'
       - '/z:/z:ro'
+    cpu_shares: 128
+    cpus: 4
+    mem_limit: 1G
   beat:
     external_links:
       - sentry-server:sentry
