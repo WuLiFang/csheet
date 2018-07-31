@@ -1,5 +1,7 @@
 version: '2.3'
 services:
+  redis:
+    restart: always
   web:
     volumes: 
      - /z:/z:ro
@@ -19,6 +21,9 @@ services:
     volumes: 
       - /z:/z:ro
     scale: 2
+    cpu_shares: 128
+    cpus: 5
+    mem_limit: 1G
   beat:
     restart: always
     external_links:
