@@ -6,6 +6,7 @@ from __future__ import (absolute_import, division, print_function,
 
 ENGINE_URL = 'sqlite:////var/db/csheet.db'
 MESSAGE_QUEUE = 'redis://redis/0'
+PREVIEW_SIZE_LIMIT = 20 * 2 ** 20  # 20MB
 
 with open('SENTRY_DSN') as f:
     SENTRY_DSN = f.read()
