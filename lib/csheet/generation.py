@@ -7,6 +7,7 @@ import logging
 import os
 import time
 
+import psutil
 import six
 from gevent import spawn
 from sqlalchemy import and_, or_
@@ -14,10 +15,11 @@ from sqlalchemy import and_, or_
 from wlf import ffmpeg
 
 from .core import APP, CELERY
-from .database import Meta, Video, session_scope
+from .database import Video, session_scope
 from .exceptions import WorkerIdle
 from .filename import filter_filename
-from .workertools import database_lock, work_forever
+from .workertools import (database_single_instance, work_forever,
+                          worker_concurrency)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -79,6 +81,7 @@ class GenaratableVideo(Video):
 
         setattr(self, '{}_atime'.format(target), time.time())
 
+    @worker_concurrency(value=psutil.cpu_count(), is_block=True, timeout=5)
     def generate_thumb(self):
         """Generate thumb for video.  """
 
@@ -92,6 +95,7 @@ class GenaratableVideo(Video):
             src, output,
             height=200)
 
+    @worker_concurrency(value=1, is_block=True, timeout=20)
     def generate_poster(self):
         """Generate thumb for video.  """
 
@@ -104,6 +108,7 @@ class GenaratableVideo(Video):
         return ffmpeg.generate_jpg(
             src, output)
 
+    @worker_concurrency(value=1, is_block=False)
     def generate_preview(self):
         """Generate preview for video.  """
 
@@ -145,19 +150,19 @@ def execute_generate_task(**kwargs):
 
         video.touch(target)
         setattr(video, '{}_mtime'.format(target), None)
-        sess.commit()
 
-        with sess.no_autoflush:
-            video.try_apply(method, source, target)
+        video.try_apply(method, source, target)
 
     return True
 
 
 def _get_video(source, target, session, **kwargs):
 
-    video = session.query(GenaratableVideo
-                          ).filter(_need_generation_criterion(source, target, **kwargs)
-                                   ).order_by(getattr(Video, '{}_atime'.format(target))).first()
+    video = session.query(
+        GenaratableVideo
+    ).filter(
+        _need_generation_criterion(source, target, **kwargs)
+    ).order_by(getattr(Video, '{}_atime'.format(target))).first()
     return video
 
 
@@ -241,41 +246,48 @@ def generate(video_id, source, target):
     method = getattr(GenaratableVideo, 'generate_{}'.format(target))
     with session_scope() as sess:
         video = sess.query(GenaratableVideo).get(video_id)
-        with database_lock(sess, 'generate_{}'.format(target), is_block=True):
-            video.try_apply(method, source, target)
+        video.try_apply(method, source, target)
 
 
-@CELERY.task(ignore_result=True)
 def discover_tasks(source, target, session, limit=100, **kwargs):
     """Discover generation tasks.  """
+
+    kwargs['min_interval'] = max(
+        kwargs.get('min_interval', 0),
+        APP.config['DAEMON_TASK_EXPIRES'])
+    method = getattr(GenaratableVideo, 'generate_{}'.format(target))
+    lock = getattr(method, '_lock')
+
+    if not lock.acquire(block=False):
+        LOGGER.debug('During generation, skip discover: %s -> %s',
+                     source, target)
+        return
+    lock.release()
 
     videos = session.query(GenaratableVideo).filter(
         _need_generation_criterion(source, target, **kwargs)).limit(limit).all()
     if not videos:
+        LOGGER.debug('No generation task discovered: %s -> %s', source, target)
         return
     for i in videos:
         generate.apply_async(args=(i.uuid, source, target),
                              expires=APP.config['DAEMON_TASK_EXPIRES'])
-        i.touch(target)
     LOGGER.info('Discovered generation tasks: %s -> %s : count %s',
                 source, target, len(videos))
 
 
 @CELERY.task(ignore_result=True)
+@database_single_instance(name='generation.discover', is_block=False)
 def discover_all_tasks():
     """Discover all generation tasks.  """
 
     with session_scope() as sess:
-        with database_lock(sess, 'discover_generation_tasks') as is_acquired:
-            if not is_acquired:
-                return
-            discover_tasks('poster', 'thumb', sess, min_interval=1)
-            discover_tasks('preview', 'poster', sess, min_interval=60,
-                           conditions=(Video.poster.is_(None),),
-                           limit=10)
-            if not Meta.get('Lock-generate_preview', sess):
-                discover_tasks('src', 'preview', sess,
-                               min_interval=120, limit=1)
+        discover_tasks('poster', 'thumb', sess, min_interval=1)
+        discover_tasks('preview', 'poster', sess, min_interval=60,
+                       conditions=(Video.poster.is_(None),),
+                       limit=10)
+        discover_tasks('src', 'preview', sess,
+                       min_interval=120, limit=1)
 
 
 @APP.before_first_request
@@ -290,5 +302,6 @@ def start():
 def setup_periodic_tasks(sender, **_):
     """Setup periodic tasks.  """
 
-    sender.add_periodic_task(1, discover_all_tasks,
-                             expires=APP.config['DAEMON_TASK_EXPIRES'])
+    sender.add_periodic_task(APP.config['GENERATION_DISCOVER_INTERVAL'],
+                             discover_all_tasks,
+                             expires=APP.config['GENERATION_DISCOVER_INTERVAL'])

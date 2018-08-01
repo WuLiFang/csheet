@@ -16,21 +16,18 @@ class Meta(core.Base):
     value = Column(core.JSONData)
 
     @classmethod
-    def get(cls, key, session, default=None):
+    def get(cls, key, default=None):
         """Get metadata value.  """
 
-        item = session.query(cls).get(key)
-        if not item:
-            return default
-        return item.value
+        with core.session_scope() as sess:
+            item = sess.query(cls).get(key)
+            if not item:
+                return default
+            return item.value
 
     @classmethod
-    def set(cls, key, value, session):
+    def set(cls, key, value):
         """Set metadata value.  """
 
-        item = session.query(cls).get(key)
-        if not item:
-            item = cls(key=key)
-            session.add(item)
-        item.value = value
-        session.commit()
+        with core.session_scope() as sess:
+            sess.merge(cls(key=key, value=value))

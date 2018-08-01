@@ -5,7 +5,8 @@ from __future__ import (absolute_import, division, print_function,
 
 import sys
 import time
-from contextlib import contextmanager
+from functools import wraps
+from multiprocessing import Semaphore
 
 import sqlalchemy.exc
 from gevent import sleep
@@ -51,39 +52,105 @@ class Locked(Exception):
     """Lock has been locked.  """
 
 
-@contextmanager
-def database_lock(session, id_, expire=600, is_block=False):
-    """Worker lock. """
+class DatabaseLock(object):
+    """Database lock.  """
+    expire = 600
 
-    key = 'Lock-{}'.format(id_)
+    def __init__(self, name):
+        self.name = name
+        self.key = 'Lock-{}'.format(name)
+        self.expire_at = None
+        self.acquire_time = None
+        self._start_clock_time = None
 
-    def _block_until_acquired():
-        try:
-            value = Meta.get(key, session)
-        except sqlalchemy.exc.OperationalError:
-            _handle_locked()
-            return _block_until_acquired()
+    def __enter__(self):
+        self.acquire()
+        return self
 
-        try:
-            while time.time() - value < expire:
-                _handle_locked()
-        except TypeError:
-            pass
-        Meta.set(key, time.time(), session)
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.release()
 
-    def _handle_locked():
-        if is_block:
+    def _handle_locked(self, is_block, timeout):
+        if timeout and time.clock() > self._start_clock_time + timeout:
+            raise Locked('Time out')
+        elif is_block:
             time.sleep(1)
         else:
             raise Locked
 
-    try:
-        _block_until_acquired()
-    except Locked:
-        yield False
-        return
+    def _acquire(self, is_block, timeout):
 
-    try:
-        yield True
-    finally:
-        Meta.set(key, None, session)
+        value = Meta.get(self.key)
+
+        try:
+            while time.time() - value < self.expire:
+                self._handle_locked(is_block, timeout)
+        except TypeError:
+            pass
+        except Locked:
+            return False
+
+        now = time.time()
+        Meta.set(self.key, now)
+        self.acquire_time = now
+
+        return True
+
+    def acquire(self, block=True, timeout=None):
+        """Acquire the lock.  """
+
+        is_block = block
+        self._start_clock_time = time.clock()
+
+        while True:
+            try:
+                return self._acquire(block, timeout)
+            except sqlalchemy.exc.OperationalError:
+                try:
+                    self._handle_locked(is_block, timeout)
+                except Locked:
+                    return False
+
+    def release(self):
+        """Release the lock.  """
+
+        if not self.acquire_time:
+            raise RuntimeError('Can not release lock that not acquired.')
+        while time.time() < self.acquire_time + self.expire:
+            try:
+                return Meta.set(self.key, None)
+            except sqlalchemy.exc.OperationalError:
+                self._handle_locked(is_block=True, timeout=None)
+
+
+def worker_concurrency(value=1, is_block=True, timeout=120, lock_cls=Semaphore):
+    """Decorator factory for set task concurrency on single worker.  """
+
+    _lock = lock_cls(value)
+
+    def _wrap(func):
+        @wraps(func)
+        def _func(*args, **kwargs):
+            if _lock.acquire(block=is_block, timeout=timeout):
+                try:
+                    return func(*args, **kwargs)
+                finally:
+                    _lock.release()
+            if is_block:
+                raise Locked
+            return None
+
+        setattr(_func, '_lock', _lock)
+
+        return _func
+
+    return _wrap
+
+
+def database_single_instance(name, is_block=True, timeout=120):
+    """Decorator factory for set task concurrency to 1 on same database.  """
+
+    return worker_concurrency(value=name,
+                              is_block=is_block,
+                              timeout=timeout,
+                              lock_cls=DatabaseLock)

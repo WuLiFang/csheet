@@ -16,7 +16,7 @@ from .core import APP, CELERY
 from .database import Video, session_scope
 from .exceptions import WorkerIdle
 from .filename import filter_filename
-from .workertools import database_lock, work_forever
+from .workertools import database_single_instance, work_forever
 
 LOGGER = logging.getLogger(__name__)
 
@@ -48,18 +48,13 @@ class Chunk(list):
         """
 
         current_time = time.time()
+
         videos = session.query(Video).filter(
             Video.is_need_update.is_(True),
             Video.src.isnot(None) | Video.poster.isnot(None),
             or_(Video.last_update_time.is_(None),
                 Video.last_update_time < current_time - min_update_interval)
         ).order_by(Video.last_update_time).limit(size).all()
-
-        for i in videos:
-            assert isinstance(i, Video), type(i)
-            i.is_need_update = False
-            i.last_update_time = current_time
-        session.commit()
 
         return cls(videos)
 
@@ -97,22 +92,27 @@ class Chunk(list):
 
 
 @CELERY.task(ignore_result=True)
+@database_single_instance(name='watch.update', is_block=False)
 def update_one_chunk(size, is_strict=True):
     """Get a update chunk then update it.  """
 
     with session_scope() as sess:
-        with database_lock(sess, 'update') as is_acquired:
-            if not is_acquired:
-                return
-            chunk = Chunk.get(sess, size)
-            if not chunk:
-                LOGGER.debug('No video need update.')
-                if is_strict:
-                    raise WorkerIdle
-                return
-            LOGGER.info('Start update videos, count: %s', len(chunk))
-            chunk.update_mtime('src', 'src_mtime')
-            chunk.update_mtime('poster', 'poster_mtime')
+        chunk = Chunk.get(sess, size)
+        if not chunk:
+            LOGGER.debug('No video need update.')
+            if is_strict:
+                raise WorkerIdle
+            return
+        LOGGER.info('Start update videos, count: %s', len(chunk))
+        chunk.update_mtime('src', 'src_mtime')
+        chunk.update_mtime('poster', 'poster_mtime')
+        sess.query(Video).filter(
+            Video.uuid.in_([i.uuid for i in chunk])
+        ).update(
+            {'is_need_update': False,
+             'last_update_time': time.time()},
+            synchronize_session=False
+        )
 
 
 def update_forever():
@@ -137,4 +137,4 @@ def setup_periodic_tasks(sender, **_):
         APP.config['WATCH_INTERVAL'],
         update_one_chunk.s(size=APP.config['WATCH_CHUNK_SIZE'],
                            is_strict=False),
-        expires=APP.config['DAEMON_TASK_EXPIRES'])
+        expires=APP.config['WATCH_INTERVAL'])

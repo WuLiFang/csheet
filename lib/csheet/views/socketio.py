@@ -11,9 +11,10 @@ from sqlalchemy import and_, or_
 
 from ..core import APP, CELERY, SOCKETIO
 from ..database import Meta, Video, session_scope
+from ..workertools import worker_concurrency
 from .core import database_session
 
-LOGGER = logging.getLogger()
+LOGGER = logging.getLogger(__name__)
 
 
 def _role_updated_criterion(role, since):
@@ -43,6 +44,7 @@ def get_updated_asset(since, sess):
 
 
 @CELERY.task(ignore_result=True)
+@worker_concurrency(value=1, is_block=False)
 def broadcast_updated_asset(session=None):
     """Broad cast all newly updated asset.
 
@@ -51,7 +53,7 @@ def broadcast_updated_asset(session=None):
     data_key = 'LastBroadcastTime'
     now = time.time()
     with session_scope(session) as sess:
-        since = Meta.get(data_key, sess, default=now)
+        since = Meta.get(data_key, default=now)
         data = get_updated_asset(since, sess)
         assert isinstance(data, list), type(data)
         if data:
@@ -59,7 +61,7 @@ def broadcast_updated_asset(session=None):
             LOGGER.info('Broadcast updated asset, count: %s', len(data))
         else:
             LOGGER.debug('No updated assets.')
-        Meta.set(data_key, now, sess)
+        Meta.set(data_key, now)
 
 
 def broadcast_forever():
@@ -79,21 +81,15 @@ def on_connect():
 def on_request_update(message):
     assert isinstance(message, list), type(message)
     with database_session() as sess:
-        query = sess.query(Video).filter(
+        sess.query(Video).filter(
             Video.uuid.in_(message),
             (Video.last_update_time < time.time()
              - APP.config['BROADCAST_INTERVAL']),
             Video.is_need_update != True,
-        )
-        videos = query.all()
-        if not videos:
-            return
+        ).update({'is_need_update': True},
+                 synchronize_session=False)
 
-        for i in videos:
-            assert isinstance(i, Video)
-            i.is_need_update = True
-        sess.commit()
-        LOGGER.debug('Accepted video update requests, count: %s', len(videos))
+    LOGGER.debug('Accepted video update requests, count: %s', len(message))
 
 
 @APP.before_first_request
@@ -112,4 +108,4 @@ def setup_periodic_tasks(sender, **_):
     sender.add_periodic_task(
         APP.config['BROADCAST_INTERVAL'],
         broadcast_updated_asset,
-        expires=APP.config['DAEMON_TASK_EXPIRES'])
+        expires=APP.config['BROADCAST_INTERVAL'])

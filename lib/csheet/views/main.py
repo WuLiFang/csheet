@@ -40,15 +40,14 @@ def render_csheet_page():
     page.update_async()
 
     with core.database_session() as sess:
-        with sess.no_autoflush:
-            if 'pack' in request.args:
-                return packed_page(page, sess)
-            rendered = page.render(
-                page.videos(sess),
-                template='csheet_app.html',
-                request=request,
-                session=session,
-                database_session=sess)
+        if 'pack' in request.args:
+            return packed_page(page, sess)
+        rendered = page.render(
+            page.videos(sess),
+            template='csheet_app.html',
+            request=request,
+            session=session,
+            database_session=sess)
 
     # Respon with cookies set.
     resp = make_response(rendered)

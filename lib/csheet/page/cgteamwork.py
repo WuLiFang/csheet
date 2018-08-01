@@ -123,9 +123,8 @@ class CGTeamWorkPage(BasePage):
         data = [TaskDataRow(*i) for i in data]
         shots = sorted(set(i.shot for i in data))
 
-        with session.no_autoflush:
-            for shot in shots:
-                self._get_video(data, shot, session)
+        for shot in shots:
+            self._get_video(data, shot, session)
         session.commit()
 
     def _update_task(self, data, session):
@@ -178,8 +177,7 @@ class CGTeamWorkPage(BasePage):
         ).order_by(CGTeamWorkTask.shot)
         data = query.all()
 
-        with session.no_autoflush:
-            return [i.to_task_info() for i in data]
+        return [i.to_task_info() for i in data]
 
     def _template_context(self, context, videos, database_session=None):
         context = super(CGTeamWorkPage, self)._template_context(
