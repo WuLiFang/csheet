@@ -52,7 +52,7 @@ class BasePage(object):
     def update_async(self):
         """Run sync in another thread.  """
 
-        update_page.delay(self)
+        update_page.apply_async((self,), countdown=3)
 
     @property
     def title(self):
