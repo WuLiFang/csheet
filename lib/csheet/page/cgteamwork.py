@@ -97,21 +97,19 @@ class CGTeamWorkPage(BasePage):
                   self._get_poster(data_render))
         src = (self._get_src(data_render) or
                self._get_src(data_current))
-        video = (session.query(HTMLVideo).get(uuid) or
-                 HTMLVideo(uuid=uuid))
-        video.src = src
-        video.poster = poster
-        video.label = shot
-        video.database = self.database
-        video.module = self.module
-        video.pipeline = self.pipeline
 
-        tasks = [self._update_task(i, session)
-                 for i in data if i.shot == shot]
-
-        video.related_tasks = tasks
-        video.task_id = uuid
-        session.add(video)
+        session.merge(HTMLVideo(
+            uuid=uuid,
+            task_id=uuid,
+            src=src,
+            poster=poster,
+            label=shot,
+            database=self.database,
+            module=self.module,
+            pipeline=self.pipeline,
+            related_tasks=[self._update_task(i, session)
+                           for i in data if i.shot == shot],))
+        session.commit()
 
     def update(self, session):
         """Sync local database with cgteamwork database.  """
@@ -125,24 +123,22 @@ class CGTeamWorkPage(BasePage):
 
         for shot in shots:
             self._get_video(data, shot, session)
-        session.commit()
 
     def _update_task(self, data, session):
         assert isinstance(data, TaskDataRow), type(data)
 
-        task = session.query(CGTeamWorkTask).get(
-            data.id) or CGTeamWorkTask(uuid=data.id)
-        assert isinstance(task, CGTeamWorkTask)
-        task.database = self.database
-        task.module = self.module
-        task.pipeline = data.pipeline
-        task.artist = data.artist
-        task.shot = data.shot
-        task.leader_status = data.leader_status
-        task.director_status = data.director_status
-        task.client_status = data.client_status
-        task.note_num = data.note_num
-        session.add(task)
+        task = session.merge(CGTeamWorkTask(
+            uuid=data.id,
+            database=self.database,
+            module=self.module,
+            pipeline=data.pipeline,
+            artist=data.artist,
+            shot=data.shot,
+            leader_status=data.leader_status,
+            director_status=data.director_status,
+            client_status=data.client_status,
+            note_num=data.note_num,))
+        session.commit()
 
         return task
 

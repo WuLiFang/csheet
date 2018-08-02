@@ -43,16 +43,15 @@ class Video(core.Base, core.SerializableMixin):
     tags = orm.relationship('Tag', secondary=core.VIDEO_TAG)
     tags_mtime = Column(Float)
 
-    def __init__(self, src=None, poster=None, uuid=None):
+    def __init__(self, src=None, poster=None, uuid=None, label=None, **kwargs):
 
-        label = None
-        if (poster or src):
+        if not label and (poster or src):
             label = PurePath(poster or src).stem
         super(Video, self).__init__(uuid=uuid,
                                     label=label,
                                     src=src,
                                     poster=poster,
-                                    is_need_update=True)
+                                    **kwargs)
 
     def serialize(self):
         ret = super(Video, self).serialize()
