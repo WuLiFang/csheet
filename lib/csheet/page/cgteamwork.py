@@ -98,7 +98,7 @@ class CGTeamWorkPage(BasePage):
         src = (self._get_src(data_render) or
                self._get_src(data_current))
 
-        session.merge(HTMLVideo(
+        return session.merge(HTMLVideo(
             uuid=uuid,
             task_id=uuid,
             src=src,
@@ -109,7 +109,6 @@ class CGTeamWorkPage(BasePage):
             pipeline=self.pipeline,
             related_tasks=[self._update_task(i, session)
                            for i in data if i.shot == shot],))
-        session.commit()
 
     def update(self, session):
         """Sync local database with cgteamwork database.  """
@@ -121,13 +120,15 @@ class CGTeamWorkPage(BasePage):
         data = [TaskDataRow(*i) for i in data]
         shots = sorted(set(i.shot for i in data))
 
-        for shot in shots:
-            self._get_video(data, shot, session)
+        with session.no_autoflush:
+            for shot in shots:
+                self._get_video(data, shot, session)
+        session.commit()
 
     def _update_task(self, data, session):
         assert isinstance(data, TaskDataRow), type(data)
 
-        task = session.merge(CGTeamWorkTask(
+        return session.merge(CGTeamWorkTask(
             uuid=data.id,
             database=self.database,
             module=self.module,
@@ -138,9 +139,6 @@ class CGTeamWorkPage(BasePage):
             director_status=data.director_status,
             client_status=data.client_status,
             note_num=data.note_num,))
-        session.commit()
-
-        return task
 
     @run_with_clock('收集视频信息')
     def videos(self, session):
