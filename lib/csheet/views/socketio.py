@@ -86,9 +86,12 @@ def on_request_update(message):
     with database_session() as sess:
         sess.query(Video).filter(
             Video.uuid.in_(message),
-            (Video.last_update_time < time.time()
-             - APP.config['BROADCAST_INTERVAL']),
-            Video.is_need_update != True,
+            sqlalchemy.or_(
+                Video.last_update_time.is_(None),
+                (Video.last_update_time <
+                 time.time() - APP.config['BROADCAST_INTERVAL'])
+            ),
+            Video.is_need_update.isnot(True),
         ).update({'is_need_update': True},
                  synchronize_session=False)
 
