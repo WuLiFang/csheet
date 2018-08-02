@@ -78,13 +78,18 @@ class DatabaseLock(object):
         else:
             raise Locked
 
-    def _acquire(self, is_block, timeout):
+    def acquire(self, block=True, timeout=None):
+        """Acquire the lock.  """
+
+        is_block = block
+        self._start_clock_time = time.clock()
 
         value = Meta.get(self.key)
 
         try:
             while time.time() - value < self.expire:
                 self._handle_locked(is_block, timeout)
+                value = Meta.get(self.key)
         except TypeError:
             pass
         except Locked:
@@ -95,21 +100,6 @@ class DatabaseLock(object):
         self.acquire_time = now
 
         return True
-
-    def acquire(self, block=True, timeout=None):
-        """Acquire the lock.  """
-
-        is_block = block
-        self._start_clock_time = time.clock()
-
-        while True:
-            try:
-                return self._acquire(block, timeout)
-            except sqlalchemy.exc.OperationalError:
-                try:
-                    self._handle_locked(is_block, timeout)
-                except Locked:
-                    return False
 
     def release(self):
         """Release the lock.  """
@@ -123,7 +113,7 @@ class DatabaseLock(object):
                 self._handle_locked(is_block=True, timeout=None)
 
 
-def worker_concurrency(value=1, is_block=True, timeout=120, lock_cls=Semaphore):
+def worker_concurrency(value=1, is_block=True, timeout=10, lock_cls=Semaphore):
     """Decorator factory for set task concurrency on single worker.  """
 
     _lock = lock_cls(value)
@@ -147,7 +137,7 @@ def worker_concurrency(value=1, is_block=True, timeout=120, lock_cls=Semaphore):
     return _wrap
 
 
-def database_single_instance(name, is_block=True, timeout=120):
+def database_single_instance(name, is_block=True, timeout=10):
     """Decorator factory for set task concurrency to 1 on same database.  """
 
     return worker_concurrency(value=name,

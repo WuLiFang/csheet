@@ -9,8 +9,9 @@ import time
 
 import psutil
 import six
+import sqlalchemy
+import sqlalchemy.exc
 from gevent import spawn
-from sqlalchemy import and_, or_
 
 from wlf import ffmpeg
 
@@ -18,7 +19,7 @@ from .core import APP, CELERY
 from .database import Video, session_scope
 from .exceptions import WorkerIdle
 from .filename import filter_filename
-from .workertools import (database_single_instance, work_forever,
+from .workertools import (Locked, database_single_instance, work_forever,
                           worker_concurrency)
 
 LOGGER = logging.getLogger(__name__)
@@ -178,16 +179,16 @@ def _need_generation_criterion(source, target, **kwargs):
     target_mtime_column = getattr(Video, '{}_mtime'.format(target))
     target_atime_column = getattr(Video, '{}_atime'.format(target))
 
-    return and_(
+    return sqlalchemy.and_(
         source_column.isnot(None),
         source_mtime_column.isnot(None),
-        or_(source_broken_mtime_column.is_(None),
-            source_broken_mtime_column != source_mtime_column),
-        or_(target_atime_column.is_(None),
-            target_atime_column < time.time() - min_interval),
-        or_(target_column.is_(None),
-            target_mtime_column.is_(None),
-            (target_mtime_column != source_mtime_column)),
+        sqlalchemy.or_(source_broken_mtime_column.is_(None),
+                       source_broken_mtime_column != source_mtime_column),
+        sqlalchemy.or_(target_atime_column.is_(None),
+                       target_atime_column < time.time() - min_interval),
+        sqlalchemy.or_(target_column.is_(None),
+                       target_mtime_column.is_(None),
+                       (target_mtime_column != source_mtime_column)),
         *conditions
     )
 
@@ -239,7 +240,9 @@ def _do_generate():
         raise WorkerIdle
 
 
-@CELERY.task(ignore_result=True)
+@CELERY.task(ignore_result=True,
+             autoretry_for=(sqlalchemy.exc.OperationalError, Locked),
+             retry_backoff=True)
 def generate(video_id, source, target):
     """Celery Generate task.  """
 
@@ -276,7 +279,9 @@ def discover_tasks(source, target, session, limit=100, **kwargs):
                 source, target, len(videos))
 
 
-@CELERY.task(ignore_result=True)
+@CELERY.task(ignore_result=True,
+             autoretry_for=(sqlalchemy.exc.OperationalError,),
+             retry_backoff=True)
 @database_single_instance(name='generation.discover', is_block=False)
 def discover_all_tasks():
     """Discover all generation tasks.  """

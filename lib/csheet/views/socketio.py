@@ -6,8 +6,9 @@ from __future__ import (absolute_import, division, print_function,
 import logging
 import time
 
+import sqlalchemy
+import sqlalchemy.exc
 from gevent import sleep, spawn
-from sqlalchemy import and_, or_
 
 from ..core import APP, CELERY, SOCKETIO
 from ..database import Meta, Video, session_scope
@@ -18,7 +19,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 def _role_updated_criterion(role, since):
-    return and_(
+    return sqlalchemy.and_(
         getattr(Video, role).isnot(None),
         getattr(Video, '{}_mtime'.format(role)).isnot(None),
         getattr(Video, '{}_atime'.format(role)) >= since,
@@ -33,17 +34,19 @@ def get_updated_asset(since, sess):
     """
 
     query = sess.query(Video).filter(
-        or_(_role_updated_criterion('thumb', since),
-            _role_updated_criterion('preview', since),
-            _role_updated_criterion('poster', since),
-            Video.tags_mtime >= since),
+        sqlalchemy.or_(_role_updated_criterion('thumb', since),
+                       _role_updated_criterion('preview', since),
+                       _role_updated_criterion('poster', since),
+                       Video.tags_mtime >= since),
     ).order_by(Video.label)
     result = query.all()
     result = Video.format_videos(result)
     return result
 
 
-@CELERY.task(ignore_result=True)
+@CELERY.task(ignore_result=True,
+             autoretry_for=(sqlalchemy.exc.OperationalError,),
+             retry_backoff=True)
 @worker_concurrency(value=1, is_block=False)
 def broadcast_updated_asset(session=None):
     """Broad cast all newly updated asset.
