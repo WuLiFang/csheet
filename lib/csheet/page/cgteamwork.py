@@ -118,6 +118,10 @@ class CGTeamWorkPage(BasePage):
         select = self.select()
         data = select.get_fields(*TaskDataRow.fields)
         data = [TaskDataRow(*i) for i in data]
+
+        # Server will have duplicated task id (Yes, they did.)
+        data = {i.id: i for i in data}.values()
+
         shots = sorted(set(i.shot for i in data))
 
         with session.no_autoflush:
