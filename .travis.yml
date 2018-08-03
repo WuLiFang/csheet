@@ -4,8 +4,7 @@ python:
 node_js:
   - "node"
 install:
-  - npm install -g cnpm
-  - cnpm i
+  - npm i
   - yes "" | sudo add-apt-repository ppa:mc3man/trusty-media
   - sudo apt-get update
   - sudo apt-get install ffmpeg && ffmpeg -version
