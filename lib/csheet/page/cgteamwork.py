@@ -114,13 +114,15 @@ class CGTeamWorkPage(BasePage):
         data = [TaskDataRow(*i) for i in data]
 
         shots = sorted(set(i.shot for i in data))
-        LOGGER.info('Revcived page data from cgteamwork server: '
+        LOGGER.info('Recived page data from cgteamwork server: '
                     '%s, shot_count=%s, task_count=%s',
                     self, len(shots), len(data))
 
-        tasks = [session.merge(self._task_from_data(i)) for i in data]
-        for shot in shots:
-            session.merge(self._video_from_data(data, tasks, shot))
+        assert len(set([i.id for i in data])) == len(data)
+        with session.no_autoflush:
+            tasks = [session.merge(self._task_from_data(i)) for i in data]
+            for shot in shots:
+                session.merge(self._video_from_data(data, tasks, shot))
         session.commit()
 
     def _task_from_data(self, data):
