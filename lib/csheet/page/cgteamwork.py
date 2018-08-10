@@ -83,7 +83,7 @@ class CGTeamWorkPage(BasePage):
             return ret
         return None
 
-    def _get_video(self, data, shot, session):
+    def _video_from_data(self, data, tasks, shot):
         data_current = _filter_data(
             data, shot=shot, pipeline=self.pipeline).next()
         try:
@@ -98,7 +98,7 @@ class CGTeamWorkPage(BasePage):
         src = (self._get_src(data_render) or
                self._get_src(data_current))
 
-        return session.merge(HTMLVideo(
+        return HTMLVideo(
             uuid=uuid,
             task_id=uuid,
             src=src,
@@ -107,8 +107,7 @@ class CGTeamWorkPage(BasePage):
             database=self.database,
             module=self.module,
             pipeline=self.pipeline,
-            related_tasks=[self._update_task(i, session)
-                           for i in data if i.shot == shot],))
+            related_tasks=[i for i in tasks if i.shot == shot],)
 
     def update(self, session):
         """Sync local database with cgteamwork database.  """
@@ -121,18 +120,18 @@ class CGTeamWorkPage(BasePage):
 
         # Server will have duplicated task id (Yes, they did.)
         data = {i.id: i for i in data}.values()
-
         shots = sorted(set(i.shot for i in data))
 
         with session.no_autoflush:
+            tasks = [session.merge(self._task_from_data(i)) for i in data]
             for shot in shots:
-                self._get_video(data, shot, session)
+                session.merge(self._video_from_data(data, tasks, shot))
         session.commit()
 
-    def _update_task(self, data, session):
+    def _task_from_data(self, data):
         assert isinstance(data, TaskDataRow), type(data)
 
-        return session.merge(CGTeamWorkTask(
+        return CGTeamWorkTask(
             uuid=data.id,
             database=self.database,
             module=self.module,
@@ -142,7 +141,7 @@ class CGTeamWorkPage(BasePage):
             leader_status=data.leader_status,
             director_status=data.director_status,
             client_status=data.client_status,
-            note_num=data.note_num,))
+            note_num=data.note_num,)
 
     @run_with_clock('收集视频信息')
     def videos(self, session):
