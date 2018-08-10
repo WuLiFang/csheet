@@ -43,8 +43,8 @@ def _update_page(lock_name, page_getter):
     @database_single_instance(lock_name, is_block=False)
     def _run():
         page = page_getter()
-        LOGGER.debug('Start update page: %s', page)
+        LOGGER.info('Start update page: %s', page)
         with database.session_scope() as sess:
             page.update(sess)
-        LOGGER.debug('Page updated: %s', page)
+        LOGGER.info('Page updated: %s', page)
     _run()
