@@ -39,15 +39,15 @@ def render_csheet_page():
     page = CGTeamWorkPage(project, pipeline, prefix, token)
     page.update_async()
 
-    with core.database_session() as sess:
-        if 'pack' in request.args:
-            return packed_page(page, sess)
-        rendered = page.render(
-            page.videos(sess),
-            template='csheet_app.html',
-            request=request,
-            session=session,
-            database_session=sess)
+    sess = core.database_session()
+    if 'pack' in request.args:
+        return packed_page(page, sess)
+    rendered = page.render(
+        page.videos(sess),
+        template='csheet_app.html',
+        request=request,
+        session=session,
+        database_session=sess)
 
     # Respon with cookies set.
     resp = make_response(rendered)
@@ -74,14 +74,14 @@ def render_local_dir():
 
     root = request.args['root']
     page = LocalPage(root)
-    with core.database_session() as sess:
-        page.update_async()
+    sess = core.database_session()
+    page.update_async()
 
-        if 'pack' in request.args:
-            return packed_page(page, sess)
+    if 'pack' in request.args:
+        return packed_page(page, sess)
 
-        videos = page.videos(sess)
-        return page.render(videos, 'csheet_app.html', request=request, tags=page.tags(videos, sess))
+    videos = page.videos(sess)
+    return page.render(videos, 'csheet_app.html', request=request, tags=page.tags(videos, sess))
 
 
 def packed_page(page, database_session):

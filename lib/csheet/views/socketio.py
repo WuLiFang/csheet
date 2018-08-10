@@ -13,7 +13,6 @@ from gevent import sleep, spawn
 from ..core import APP, CELERY, SOCKETIO
 from ..database import Meta, Video, session_scope
 from ..workertools import worker_concurrency
-from .core import database_session
 
 LOGGER = logging.getLogger(__name__)
 
@@ -83,7 +82,7 @@ def on_connect():
 @SOCKETIO.on('request update')
 def on_request_update(message):
     assert isinstance(message, list), type(message)
-    with database_session() as sess:
+    with session_scope() as sess:
         sess.query(Video).filter(
             Video.uuid.in_(message),
             sqlalchemy.or_(

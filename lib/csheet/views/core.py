@@ -7,18 +7,28 @@ from flask import abort, g, session
 
 import cgtwq
 
-from ..database import CGTeamWorkTask, Session, Tag, Video, session_scope
+from ..core import APP
+from ..database import CGTeamWorkTask, Session, Tag, Video
 from .datamodel import ProjectInfo
 
 
 def database_session():
     """Get database session.  """
 
-    if not hasattr(g, 'database_session'):
+    if 'database_session' not in g:
         g.database_session = Session()
-    sess = g.database_session
+    return g.database_session
 
-    return session_scope(sess)
+
+@APP.teardown_appcontext
+def close_database_session(exc=None):
+    """Close database session, if opened."""
+
+    sess = g.pop('database_session', None)
+    if sess is not None:
+        if exc:
+            sess.rollbcak()
+        sess.close()
 
 
 class CGTeamWorkVideo(Video):

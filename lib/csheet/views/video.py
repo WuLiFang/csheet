@@ -37,9 +37,9 @@ def response_video(uuid, role):
     if role not in VIDEO_ROLES:
         return 'Role must in {}'.format(VIDEO_ROLES), 400
 
-    with core.database_session() as sess:
-        video = core.get_video(uuid, sess)
-        return _try_send_file(video, role, sess)
+    sess = core.database_session()
+    video = core.get_video(uuid, sess)
+    return _try_send_file(video, role, sess)
 
 
 def _try_send_file(video, role, sess):
