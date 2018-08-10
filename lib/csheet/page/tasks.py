@@ -45,6 +45,10 @@ def _update_page(lock_name, page_getter):
         page = page_getter()
         LOGGER.info('Start update page: %s', page)
         with database.session_scope() as sess:
-            page.update(sess)
+            try:
+                page.update(sess)
+            except:
+                LOGGER.error('Page update failed.', exc_info=True)
+                raise
         LOGGER.info('Page updated: %s', page)
     _run()
