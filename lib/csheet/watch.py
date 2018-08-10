@@ -79,7 +79,7 @@ class Chunk(list):
              autoretry_for=(sqlalchemy.exc.OperationalError,),
              retry_backoff=True)
 @database_single_instance(name='watch.update', is_block=False)
-def update_one_chunk(size, is_strict=True):
+def update_one_chunk(size=50, is_strict=True):
     """Get a update chunk then update it.  """
 
     with session_scope() as sess:
