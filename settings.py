@@ -12,8 +12,8 @@ with open('SENTRY_DSN') as f:
     SENTRY_DSN = f.read()
 
 CELERY_CONFIG = {
-    'accept_content': ['json', 'pickle'],
-    'task_serializer': 'pickle',
+    'accept_content': ['json'],
+    'task_serializer': 'json',
     'broker_url': 'redis://redis/1',
     'result_backend': 'redis://redis/2',
     'worker_hijack_root_logger': False
@@ -23,7 +23,7 @@ LOGGING_CONFIG = {'version': 1,
                   'disable_existing_loggers': True,
                   'formatters': {
                       'standard': {
-                          'format': '%(levelname)-6s[%(asctime)s]:%(name)s: %(message)s'
+                          'format': '%(levelname)-7s[%(asctime)s]:%(name)s: %(message)s'
                       },
                   },
                   'handlers': {

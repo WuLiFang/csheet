@@ -12,7 +12,7 @@ from sqlalchemy import orm
 import cgtwq
 from wlf.decorators import run_with_clock
 
-from ..database import CGTeamWorkTask
+from ..database import CGTeamWorkTask, Video
 from ..database.cgteamworktask import TaskDataRow
 from ..mimecheck import is_mimetype
 from ..video import HTMLVideo
@@ -40,8 +40,24 @@ class CGTeamWorkPage(BasePage):
         self.token = token
 
     def __repr__(self):
-        return 'CGTeamWorKConfig<project={}, pipeline={}, prefix={}>'.format(
+        return 'CGTeamWorkPage<project={}, pipeline={}, prefix={}>'.format(
             self.project, self.pipeline, self.prefix)
+
+    @property
+    def title(self):
+        return '{}色板'.format(
+            '_'.join(
+                [self.project, self.prefix.strip(self.code).strip('_'), self.pipeline]))
+
+    @property
+    def update_task(self):
+        """Celery task to update page data.  """
+
+        from .tasks import update_cgteamwork_page
+        return update_cgteamwork_page.s(project=self.project,
+                                        pipeline=self.pipeline,
+                                        prefix=self.prefix,
+                                        token=self.token)
 
     def select(self):
         """Get cgteamwork database select from the config. """
@@ -63,26 +79,6 @@ class CGTeamWorkPage(BasePage):
         database.token = self.token
         return database.module(self.module)
 
-    @classmethod
-    def _get_poster(cls, data):
-        if data is None:
-            return None
-        image_data = data[3]
-        submit_file_data = data[4]
-        return (_get_poster_from_image(image_data)
-                or _get_poster_from_submit(submit_file_data))
-
-    @classmethod
-    def _get_src(cls, data):
-        if data is None:
-            return None
-        submit_file_data = data[4]
-
-        ret = _get_submit_file(submit_file_data)
-        if ret and is_mimetype(ret, 'video'):
-            return ret
-        return None
-
     def _video_from_data(self, data, tasks, shot):
         data_current = _filter_data(
             data, shot=shot, pipeline=self.pipeline).next()
@@ -93,10 +89,10 @@ class CGTeamWorkPage(BasePage):
             data_render = None
 
         uuid = data_current.id
-        poster = (self._get_poster(data_current) or
-                  self._get_poster(data_render))
-        src = (self._get_src(data_render) or
-               self._get_src(data_current))
+        poster = (_get_poster(data_current) or
+                  _get_poster(data_render))
+        src = (_get_src(data_render) or
+               _get_src(data_current))
 
         return HTMLVideo(
             uuid=uuid,
@@ -118,11 +114,16 @@ class CGTeamWorkPage(BasePage):
         data = select.get_fields(*TaskDataRow.fields)
         data = [TaskDataRow(*i) for i in data]
 
-        # Server will have duplicated task id (Yes, they did.)
-        data = {i.id: i for i in data}.values()
         shots = sorted(set(i.shot for i in data))
+        id_list = [i.id for i in data]
 
         with session.no_autoflush:
+            session.query(CGTeamWorkTask).filter(
+                CGTeamWorkTask.uuid.in_(id_list)
+            ).all()
+            session.query(Video).filter(
+                Video.uuid.in_(id_list)
+            ).all()
             tasks = [session.merge(self._task_from_data(i)) for i in data]
             for shot in shots:
                 session.merge(self._video_from_data(data, tasks, shot))
@@ -156,12 +157,6 @@ class CGTeamWorkPage(BasePage):
             orm.selectinload(HTMLVideo.tags)
         ).order_by(HTMLVideo.label)
         return query.all()
-
-    @property
-    def title(self):
-        return '{}色板'.format(
-            '_'.join(
-                [self.project, self.prefix.strip(self.code).strip('_'), self.pipeline]))
 
     @run_with_clock('收集任务信息')
     def tasks(self, session):
@@ -216,3 +211,23 @@ def _filter_data(data, **kwargs):
 
     return (i for i in data
             if all(i[i._fields.index(j)] == kwargs[j] for j in kwargs))
+
+
+def _get_poster(data):
+    if data is None:
+        return None
+    image_data = data[3]
+    submit_file_data = data[4]
+    return (_get_poster_from_image(image_data)
+            or _get_poster_from_submit(submit_file_data))
+
+
+def _get_src(data):
+    if data is None:
+        return None
+    submit_file_data = data[4]
+
+    ret = _get_submit_file(submit_file_data)
+    if ret and is_mimetype(ret, 'video'):
+        return ret
+    return None

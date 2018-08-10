@@ -20,7 +20,7 @@ LOGGING_CONFIG = {'version': 1,
                   'disable_existing_loggers': False,
                   'formatters': {
                       'standard': {
-                          'format': '%(levelname)-6s[%(asctime)s]:%(name)s: %(message)s'
+                          'format': '%(levelname)-7s[%(asctime)s]:%(name)s: %(message)s'
                       },
                   },
                   'handlers': {
@@ -33,6 +33,12 @@ LOGGING_CONFIG = {'version': 1,
                   'loggers': {
                       '': {
                           'handlers': ['stream'],
+                          'level': 'INFO',
+                      },
+                      'celery.app.trace': {
+                          'level': 'INFO',
+                      },
+                      'csheet': {
                           'level': 'DEBUG',
                           'propagate': True
                       },

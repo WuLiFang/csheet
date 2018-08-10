@@ -20,7 +20,6 @@ from wlf.path import get_encoded as e
 from .. import __about__, database, filetools
 from ..__about__ import __version__
 from ..filename import filter_filename
-from ..task import update_page
 from ..video import HTMLVideo
 
 LOGGER = logging.getLogger(__name__)
@@ -39,6 +38,18 @@ class BasePage(object):
     is_pack = False
     assets = _read_assets()
 
+    @property
+    def title(self):
+        """Csheet title.  """
+
+        raise NotImplementedError
+
+    @property
+    def update_task(self):
+        """Celery task to update page data.  """
+
+        raise NotImplementedError
+
     @abstractmethod
     def videos(self, session):
         """Videos for the csheet page.  """
@@ -52,13 +63,7 @@ class BasePage(object):
     def update_async(self):
         """Run sync in another thread.  """
 
-        update_page.apply_async((self,), countdown=3)
-
-    @property
-    def title(self):
-        """Csheet title.  """
-
-        raise NotImplementedError
+        self.update_task.apply_async(countdown=3)
 
     def render(self, videos, template='csheet.html', database_session=None, **context):
         """Render the page.  """

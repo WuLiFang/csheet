@@ -6,10 +6,10 @@ from __future__ import (absolute_import, division, print_function,
 
 import logging
 import os
-
 from mimetypes import guess_type
 
-from wlf.path import PurePath, get_unicode as u
+from wlf.path import PurePath
+from wlf.path import get_unicode as u
 
 from ..filename import filter_filename
 from ..filetools import uuid_from_path
@@ -24,6 +24,16 @@ class LocalPage(BasePage):
 
     def __init__(self, root):
         self.root = u(root)
+
+    @property
+    def title(self):
+        return '{}色板'.format(self.root)
+
+    @property
+    def update_task(self):
+        """Celery task to update page data.  """
+        from .tasks import update_local_page
+        return update_local_page.s(root=self.root)
 
     def update(self, session):
         """Scan root for videos.  """
@@ -60,10 +70,6 @@ class LocalPage(BasePage):
             HTMLVideo.poster.startswith(root)
         ).order_by(HTMLVideo.label)
         return query.all()
-
-    @property
-    def title(self):
-        return '{}色板'.format(self.root)
 
 
 def _sort_file(path, images, videos):
