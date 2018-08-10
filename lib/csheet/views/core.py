@@ -27,7 +27,7 @@ def close_database_session(exc=None):
     sess = g.pop('database_session', None)
     if sess is not None:
         if exc:
-            sess.rollbcak()
+            sess.rollback()
         sess.close()
 
 
