@@ -12,6 +12,7 @@ from sqlalchemy import orm
 import cgtwq
 from wlf.decorators import run_with_clock
 
+from ..core import APP
 from ..database import CGTeamWorkTask, Video
 from ..database.cgteamworktask import TaskDataRow
 from ..mimecheck import is_mimetype
@@ -116,14 +117,17 @@ class CGTeamWorkPage(BasePage):
 
         shots = sorted(set(i.shot for i in data))
         id_list = [i.id for i in data]
+        id_chunks = [id_list[i:i + APP.config['SQL_QUERY_CHUNK_SIZE']]
+                     for i in range(0, len(id_list), APP.config['SQL_QUERY_CHUNK_SIZE'])]
 
         with session.no_autoflush:
-            session.query(CGTeamWorkTask).filter(
-                CGTeamWorkTask.uuid.in_(id_list)
-            ).all()
-            session.query(Video).filter(
-                Video.uuid.in_(id_list)
-            ).all()
+            for chunk in id_chunks:
+                session.query(CGTeamWorkTask).filter(
+                    CGTeamWorkTask.uuid.in_(chunk)
+                ).all()
+                session.query(Video).filter(
+                    Video.uuid.in_(chunk)
+                ).all()
             tasks = [session.merge(self._task_from_data(i)) for i in data]
             for shot in shots:
                 session.merge(self._video_from_data(data, tasks, shot))
