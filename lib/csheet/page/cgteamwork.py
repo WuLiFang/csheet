@@ -124,8 +124,9 @@ class CGTeamWorkPage(BasePage):
 
         shots = sorted(set(i.shot for i in data))
 
-        for shot in shots:
-            self._get_video(data, shot, session)
+        with session.no_autoflush:
+            for shot in shots:
+                self._get_video(data, shot, session)
         session.commit()
 
     def _update_task(self, data, session):
