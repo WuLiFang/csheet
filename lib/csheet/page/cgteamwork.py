@@ -106,31 +106,22 @@ class CGTeamWorkPage(BasePage):
             pipeline=self.pipeline,
             related_tasks=[i for i in tasks if i.shot == shot],)
 
+    @run_with_clock('更新页面数据')
     def update(self, session):
         """Sync local database with cgteamwork database.  """
-
-        LOGGER.info('Sync with cgteamwork: %s', self)
 
         select = self.select()
         data = select.get_fields(*TaskDataRow.fields)
         data = [TaskDataRow(*i) for i in data]
 
         shots = sorted(set(i.shot for i in data))
-        id_list = [i.id for i in data]
-        id_chunks = [id_list[i:i + APP.config['SQL_QUERY_CHUNK_SIZE']]
-                     for i in range(0, len(id_list), APP.config['SQL_QUERY_CHUNK_SIZE'])]
+        LOGGER.info('Revcived page data from cgteamwork server: '
+                    '%s, shot_count=%s, task_count=%s',
+                    self, len(shots), len(data))
 
-        with session.no_autoflush:
-            for chunk in id_chunks:
-                session.query(CGTeamWorkTask).filter(
-                    CGTeamWorkTask.uuid.in_(chunk)
-                ).all()
-                session.query(Video).filter(
-                    Video.uuid.in_(chunk)
-                ).all()
-            tasks = [session.merge(self._task_from_data(i)) for i in data]
-            for shot in shots:
-                session.merge(self._video_from_data(data, tasks, shot))
+        tasks = [session.merge(self._task_from_data(i)) for i in data]
+        for shot in shots:
+            session.merge(self._video_from_data(data, tasks, shot))
         session.commit()
 
     def _task_from_data(self, data):
