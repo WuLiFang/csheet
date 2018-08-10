@@ -12,8 +12,7 @@ from sqlalchemy import orm
 import cgtwq
 from wlf.decorators import run_with_clock
 
-from ..core import APP
-from ..database import CGTeamWorkTask, Video
+from ..database import CGTeamWorkTask
 from ..database.cgteamworktask import TaskDataRow
 from ..mimecheck import is_mimetype
 from ..video import HTMLVideo
