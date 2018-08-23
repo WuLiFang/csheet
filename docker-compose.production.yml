@@ -3,12 +3,13 @@ services:
   redis:
     restart: always
   web:
-    volumes: 
-     - /z:/z:ro
+    volumes:
+      - '/z:/z:ro'
+      - '/y:/y:ro'
     restart: always
     external_links:
       - sentry-server:sentry
-    environment: 
+    environment:
       WORKER_CONNECTIONS: 10240
   socketio:
     restart: always
@@ -18,8 +19,9 @@ services:
     restart: always
     external_links:
       - sentry-server:sentry
-    volumes: 
-      - /z:/z:ro
+    volumes:
+      - '/z:/z:ro'
+      - '/y:/y:ro'
     cpu_shares: 128
     mem_limit: 2G
   beat:
@@ -29,5 +31,5 @@ services:
   nginx:
     restart: always
     ports:
-     - "60000:80"
-     - "60001:443"
+      - '60000:80'
+      - '60001:443'
