@@ -7,6 +7,7 @@ from __future__ import (absolute_import, division, print_function,
 import json
 import logging
 
+import sqlalchemy.exc
 from sqlalchemy import orm
 
 import cgtwq
@@ -121,8 +122,16 @@ class CGTeamWorkPage(BasePage):
         assert len(set([i.id for i in data])) == len(data)
         tasks = [self._task_from_data(i) for i in data]
         videos = [self._video_from_data(data, tasks, shot) for shot in shots]
-        _ = [session.merge(i) for i in tasks + videos]
-        session.commit()
+        with session.no_autoflush:
+            _ = [session.merge(i) for i in tasks + videos]
+        try:
+            session.commit()
+        except sqlalchemy.exc.OperationalError:
+            LOGGER.warning(
+                'Commit page data failed, Retry with autoflush', exc_info=True)
+            session.rollback()
+            _ = [session.merge(i) for i in tasks + videos]
+            session.commit()
 
     def _task_from_data(self, data):
         assert isinstance(data, TaskDataRow), type(data)
