@@ -25,6 +25,9 @@ class LocalPage(BasePage):
     def __init__(self, root):
         self.root = u(root)
 
+    def __repr__(self):
+        return 'LocalPage<root={}>'.format(self.root)
+
     @property
     def title(self):
         return '{}色板'.format(self.root)
