@@ -119,10 +119,9 @@ class CGTeamWorkPage(BasePage):
                     self, len(shots), len(data))
 
         assert len(set([i.id for i in data])) == len(data)
-        with session.no_autoflush:
-            tasks = [session.merge(self._task_from_data(i)) for i in data]
-            for shot in shots:
-                session.merge(self._video_from_data(data, tasks, shot))
+        tasks = [self._task_from_data(i) for i in data]
+        videos = [self._video_from_data(data, tasks, shot) for shot in shots]
+        _ = [session.merge(i) for i in tasks + videos]
         session.commit()
 
     def _task_from_data(self, data):
