@@ -25,13 +25,14 @@ LOGGER = logging.getLogger(__name__)
 def getmtime(path):
     """Get mtime for database path.  """
 
-    if path:
-        path = filter_filename(path)
-        try:
-            return os.path.getmtime(e(path))
-        except OSError:
-            LOGGER.warning('File removed: %s', path)
-    return None
+    if not path:
+        return None
+    path = filter_filename(path)
+    path_e = e(path)
+    if not os.path.exists(path_e):
+        LOGGER.warning('File removed: %s', path)
+        return None
+    return os.path.getmtime(path_e)
 
 
 class Chunk(list):
@@ -67,11 +68,14 @@ class Chunk(list):
             mtime_column (str): Mtime column name.
         """
 
-        session.bulk_update_mappings(
-            Video,
-            [{'uuid': i.uuid,
-              mtime_column:  getmtime(getattr(i, src_column))}
-             for i in self])
+        mappings = [{'uuid': i.uuid,
+                     mtime_column:  getmtime(getattr(i, src_column))}
+                    for i in self]
+        for i in mappings:
+            # Clear removed filename from database.
+            if i[mtime_column] is None:
+                i[src_column] = None
+        session.bulk_update_mappings(Video, mappings)
         session.commit()
 
 
