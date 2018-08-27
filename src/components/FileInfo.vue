@@ -9,20 +9,24 @@
         | :
         RelativeTime(:timestamp='videoData.poster_mtime')
       br
-      .time(v-show='videoData.src_mtime')
+      .time(v-show='videoData.src_mtime || videoData.preview_mtime')
         span.text
           | 视频
           |
         FaIcon.icon(name='file-video-o')
         |
         | :
-        RelativeTime(:timestamp='videoData.src_mtime')
+        RelativeTime(:timestamp='videoData.src_mtime || videoData.preview_mtime')
         span.message(v-show='videoData.preview_mtime != videoData.src_mtime')
-          span.outdated(v-if='videoData.preview_mtime')
+          span.outdated(v-if='!videoData.src_mtime && videoData.preview_mtime')
+            | 源文件已删除
+          span.outdated(v-else-if='videoData.preview_mtime')
             | 预览非最新:
             RelativeTime(:timestamp='videoData.preview_mtime')
           span.notready(v-else)
             | 预览未就绪: 等待转码
+
+
 </template>
 
 
