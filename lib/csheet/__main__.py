@@ -14,9 +14,9 @@ from wlf import mp_logging
 from wlf.path import Path
 from wlf.path import get_encoded as e
 
-from . import filetools, generation, page, watch
+from . import database, filetools, generation, page, watch
 from .__about__ import __version__
-from .views import APP, SOCKETIO
+from .core import APP, SOCKETIO
 
 LOGGER = logging.getLogger(__name__)
 
@@ -67,7 +67,7 @@ def render_staic_page(dir_):
     # TODO: Implement static page.
     page_ = page.LocalPage(dir_)
     page_.static_folder = filetools.path('static')
-    with model.session_scope() as sess:
+    with database.session_scope() as sess:
         page_.update(sess)
         html = page_.render(page_.videos(sess))
 
