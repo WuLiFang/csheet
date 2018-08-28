@@ -5,10 +5,8 @@ services:
     ports:
       - '60000:80'
     volumes:
-      - 'D:/:/d:ro'
-      - 'E:/:/e:ro'
-      - '/z:/z:ro'
-      - '/y:/y:ro'
+      - '/mnt/y:/y:ro'
+      - '/mnt/z:/z:ro'
     external_links:
       - sentry-server:sentry
   socketio:
@@ -18,10 +16,8 @@ services:
     external_links:
       - sentry-server:sentry
     volumes:
-      - 'D:/:/d:ro'
-      - 'E:/:/e:ro'
-      - '/z:/z:ro'
-      - '/y:/y:ro'
+      - '/mnt/y:/y:ro'
+      - '/mnt/z:/z:ro'
     cpu_shares: 128
     cpus: 4
     mem_limit: 1G

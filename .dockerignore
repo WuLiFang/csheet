@@ -6,3 +6,4 @@ tests/storage
 !tests/storage/.gitignore
 tests/images/*/*
 tests/pages/
+example_config/

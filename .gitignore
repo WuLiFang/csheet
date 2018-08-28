@@ -26,10 +26,7 @@ yarn-error.log*
 *.pyc
 node_modules
 dist/
-/SENTRY_DSN
+SENTRY_DSN
 
-# Certification
-*.pem
-*.key
-*.crt
-/req.conf
+# Local config
+/*.local

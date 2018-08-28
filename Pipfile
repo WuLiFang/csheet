@@ -8,6 +8,7 @@ pylint = "~=1.9"
 "autopep8" = "*"
 rope = "*"
 pytest = "*"
+fire = "*"
 
 [packages]
 gevent = "*"

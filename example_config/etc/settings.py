@@ -4,11 +4,12 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import os
+
 ENGINE_URL = 'sqlite:////var/db/csheet.db'
 MESSAGE_QUEUE = 'redis://redis/0'
 PREVIEW_SIZE_LIMIT = 20 * 2 ** 20  # 20MB
-
-with open('SENTRY_DSN') as f:
+with open(os.path.join(os.path.dirname(__file__), 'SENTRY_DSN')) as f:
     SENTRY_DSN = f.read()
 
 CELERY_CONFIG = {
