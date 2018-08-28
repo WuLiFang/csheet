@@ -3,15 +3,13 @@ docker-machine env | Invoke-Expression
 
 function check_result ($reson) {
     if ($LASTEXITCODE) {
-        Write-Output $reson
-        exit 1
+        throw $reson
     }
 }
 
 function check_sentry_key () {
     if (-not $SENTRY_SECRET_KEY){
-        "Get-SentryKey first"
-        exit 1
+        throw "Get-SentryKey first"
     }
 }
 
