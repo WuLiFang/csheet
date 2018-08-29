@@ -3,6 +3,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import json
 import os
 
 from flask import make_response, render_template, request, send_file, session
@@ -51,20 +52,24 @@ def render_csheet_page():
 
     # Respon with cookies set.
     resp = make_response(rendered)
-    cookie_life = 60 * 60 * 24 * 90
-    resp.set_cookie('project', project, max_age=cookie_life)
-    resp.set_cookie('pipeline', pipeline, max_age=cookie_life)
-    resp.set_cookie('prefix', prefix, max_age=cookie_life)
+    resp.set_cookie('project', project, max_age=APP.config['COOKIE_LIFE'])
+    resp.set_cookie('pipeline', pipeline, max_age=APP.config['COOKIE_LIFE'])
+    resp.set_cookie('prefix', prefix, max_age=APP.config['COOKIE_LIFE'])
 
     return resp
 
 
 def render_index(token):
     """Index page."""
+
     cgtwq.PROJECT.token = token
+    projects = [{'code': i[0], 'name':i[1]}
+                for i in cgtwq.PROJECT.all().get_fields('code', 'full_name')]
+
     return render_template(
         'index.html',
-        projects=cgtwq.PROJECT.names(),
+        projects=projects,
+        dumps=json.dumps,
         __version__=__version__)
 
 
@@ -81,7 +86,12 @@ def render_local_dir():
         return packed_page(page, sess)
 
     videos = page.videos(sess)
-    return page.render(videos, 'csheet_app.html', request=request, tags=page.tags(videos, sess))
+    rendered = page.render(videos, 'csheet_app.html',
+                           request=request, tags=page.tags(videos, sess))
+
+    resp = make_response(rendered)
+    resp.set_cookie('root', root, max_age=APP.config['COOKIE_LIFE'])
+    return resp
 
 
 def packed_page(page, database_session):
