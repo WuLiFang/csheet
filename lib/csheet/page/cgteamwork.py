@@ -126,12 +126,13 @@ class CGTeamWorkPage(BasePage):
             _ = [session.merge(i) for i in tasks + videos]
         try:
             session.commit()
-        except sqlalchemy.exc.OperationalError:
+        except sqlalchemy.exc.IntegrityError:
             LOGGER.warning(
                 'Commit page data failed, Retry with autoflush', exc_info=True)
             session.rollback()
-            _ = [session.merge(i) for i in tasks + videos]
-            session.commit()
+            for i in tasks + videos:
+                session.merge(i)
+                session.commit()
 
     def _task_from_data(self, data):
         assert isinstance(data, TaskDataRow), type(data)
