@@ -19,7 +19,8 @@ export function getCookie(name: string, defaultValue = '') {
   }
   return decodeURIComponent(
     value
-      .replace(/\\\\/g, '\\')
+      .replace(/%/g, '%25')
+      .replace(/\\\\/g, '%5C')
       .replace(
         /\\(\d{3})/g,
         (match, str) => `%${parseInt(str, 8).toString(16)}`,
