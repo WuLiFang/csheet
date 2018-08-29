@@ -16,7 +16,7 @@ from wlf.path import get_encoded as e
 
 from . import database, filetools, generation, page, watch
 from .__about__ import __version__
-from .core import APP, SOCKETIO
+from .core import APP, CELERY, SOCKETIO
 
 LOGGER = logging.getLogger(__name__)
 
@@ -58,6 +58,7 @@ def main():
     if args.port:
         if args.storage:
             APP.config['storage'] = args.storage
+        CELERY.conf['task_always_eager'] = True
         run_server(args.port, args.dir)
     elif args.dir:
         render_staic_page(args.dir)
