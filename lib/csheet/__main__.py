@@ -29,6 +29,15 @@ def _setup_logging(default_level=logging.INFO):
         mp_logging.basic_config(level=default_level)
 
 
+def clear_lock():
+    """Clear database lock.  """
+
+    with database.session_scope() as sess:
+        sess.query(database.Meta).filter(
+            database.Meta.key.startswith('Lock-')
+        ).delete(synchronize_session=False)
+
+
 def serve(host='0.0.0.0', port=80, storage=None):
     """Run csheet server forever.
         port (int, optional): Defaults to 80. Listenling port.

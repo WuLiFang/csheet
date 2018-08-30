@@ -11,7 +11,6 @@ import subprocess
 
 import fire
 
-from csheet import database
 from csheet.__about__ import __version__
 from wlf.pathtools import make_path_finder
 
@@ -59,24 +58,6 @@ def build_image():
     subprocess.call(['docker', 'build', file_path(),
                      '--tag', 'csheet:latest',
                      '--tag', 'csheet:{}'.format(__version__)])
-
-
-def build_dist():
-    subprocess.call(['npm', 'run', 'build'])
-
-
-def build():
-    build_dist()
-    build_image()
-
-
-def clear_lock():
-    """Clear database lock.  """
-
-    with database.session_scope() as sess:
-        sess.query(database.Meta).filter(
-            database.Meta.key.startswith('Lock-')
-        ).delete(synchronize_session=False)
 
 
 def install_compose_for_boot2docker(host, ssh_port=22):
