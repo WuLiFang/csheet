@@ -62,10 +62,12 @@ def render_csheet_page():
 def render_index():
     """Index page."""
 
-    token = session['token']
-    cgtwq.PROJECT.token = token
-    projects = [{'code': i[0], 'name':i[1]}
-                for i in cgtwq.PROJECT.all().get_fields('code', 'full_name')]
+    projects = []
+    if not APP.config['IS_LOCAL_MODE']:
+        token = session['token']
+        cgtwq.PROJECT.token = token
+        projects = [{'code': i[0], 'name':i[1]}
+                    for i in cgtwq.PROJECT.all().get_fields('code', 'full_name')]
 
     return render_template(
         'index.html',

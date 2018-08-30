@@ -8,6 +8,7 @@ import logging
 import os
 import webbrowser
 
+import cgtwq
 import fire
 
 from wlf import mp_logging
@@ -39,6 +40,9 @@ def serve(host='0.0.0.0', port=80, storage='/srv/csheet'):
     APP.config['ENGINE_URL'] = 'sqlite:///{}\\csheet.db'.format(storage)
     CELERY.conf['task_always_eager'] = True
     APP.config['IS_STANDALONE'] = True
+    if not cgtwq.DesktopClient.executable():
+        LOGGER.info('未安装CGTeamWork, 将以本地模式运行')
+        APP.config['IS_LOCAL_MODE'] = True
 
     address = 'https://{}:{}'.format(host, port)
     print(address)

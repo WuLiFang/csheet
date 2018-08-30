@@ -16,6 +16,7 @@ COOKIE_LIFE = 60 * 60 * 24 * 90  # 3 mounth
 
 IS_STANDALONE = False
 DEBUG_SQL = False
+IS_LOCAL_MODE = False
 LOGGING_CONFIG = {'version': 1,
                   'disable_existing_loggers': False,
                   'formatters': {

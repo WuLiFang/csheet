@@ -5,10 +5,9 @@ from __future__ import (absolute_import, division, print_function,
 
 from functools import wraps
 
+import cgtwq
 import six
 from flask import make_response, redirect, request, session
-
-import cgtwq
 
 from ..__about__ import __version__
 from ..core import APP
@@ -57,6 +56,9 @@ def require_login(func):
 
     @wraps(func)
     def _func(*args, **kwargs):
+        if APP.config['IS_LOCAL_MODE']:
+            return func(*args, **kwargs)
+
         msg = '请使用和CGTeamWork相同的帐号和密码登录'
         try:
             if validate_auth():
@@ -67,5 +69,4 @@ def require_login(func):
         except cgtwq.CGTeamWorkException as ex:
             msg = six.text_type(ex)
         return authenticate(msg)
-
     return _func
