@@ -58,7 +58,7 @@ def serve(host=None, port=None, storage=None):
     APP.config['CELERY_CONFIG']['task_always_eager'] = True
     init()
 
-    address = 'https://{}:{}'.format(host, port)
+    address = 'http://{}:{}'.format(host, port)
     print(address)
     LOGGER.info('服务器运行于: %s', address)
 
