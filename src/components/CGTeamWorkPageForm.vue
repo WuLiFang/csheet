@@ -70,7 +70,7 @@ export default Vue.extend({
                 callback();
               }
             },
-            trigger: 'change',
+            trigger: 'blur',
           },
         ],
       },
