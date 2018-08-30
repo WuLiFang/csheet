@@ -50,6 +50,9 @@ class LocalPage(BasePage):
 
         # Create videos.
         labels = sorted(set(videos.keys() + images.keys()))
+        LOGGER.info('Scan finished: '
+                    '%s, image_count=%s, video_count=%s',
+                    self, len(images), len(videos))
         for label in labels:
             self._create_video(label, videos, images, session)
 
