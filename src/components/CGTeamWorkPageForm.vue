@@ -1,9 +1,6 @@
 <template lang="pug">
   ElForm(
     label-width='80px' 
-    v-loading.fullscreen='is_opening' 
-    element-loading-text='正在生成'
-    element-loading-background="rgba(0, 0, 0, 0.8)"
   )
     ElFormItem(label='项目')
       ElSelect(v-model='form.project' @change='setDefaultPrefix')
@@ -31,7 +28,7 @@ import {
   Form as ElForm,
   FormItem as ElFormItem,
 } from 'element-ui';
-import { projects } from '@/index';
+import { projects, showFullScreenLoading } from '@/index';
 import { getCookie, buildURL } from '@/datatools';
 
 export default Vue.extend({
@@ -63,11 +60,11 @@ export default Vue.extend({
   },
   methods: {
     open() {
-      this.is_opening = true;
+      showFullScreenLoading();
       location.href = buildURL('', this.form);
     },
     pack() {
-      this.is_opening = true;
+      showFullScreenLoading();
       location.href = buildURL('', { ...this.form, pack: '1' });
     },
     setDefaultPrefix() {

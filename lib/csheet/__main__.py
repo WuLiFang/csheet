@@ -16,7 +16,7 @@ from wlf.path import get_encoded as e
 
 from . import database, filetools, page
 from .__about__ import __version__
-from .core import APP, CELERY, SOCKETIO, init
+from .core import APP, SOCKETIO, init
 
 LOGGER = logging.getLogger(__name__)
 

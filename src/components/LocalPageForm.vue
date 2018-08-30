@@ -1,9 +1,6 @@
 <template lang="pug">
   ElForm(
     label-width='80px' 
-    v-loading.fullscreen='is_opening' 
-    element-loading-text='正在生成'
-    element-loading-background="rgba(0, 0, 0, 0.8)"
   )
     ElFormItem(label='路径')
       ElInput(v-model='form.root')
@@ -24,7 +21,7 @@ import {
   Form as ElForm,
   FormItem as ElFormItem,
 } from 'element-ui';
-import { projects } from '@/index';
+import { projects, showFullScreenLoading } from '@/index';
 import { getCookie, buildURL } from '@/datatools';
 import { setInterval } from 'timers';
 
@@ -40,16 +37,15 @@ export default Vue.extend({
       form: {
         root: getCookie('root', 'Y:\\资源\\动态素材\\灰、尘、土'),
       },
-      is_opening: false,
     };
   },
   methods: {
     open() {
-      this.is_opening = true;
+      showFullScreenLoading();
       location.href = buildURL('local', this.form);
     },
     pack() {
-      this.is_opening = true;
+      showFullScreenLoading();
       location.href = buildURL('local', { ...this.form, pack: '1' });
     },
   },
