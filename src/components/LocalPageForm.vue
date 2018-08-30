@@ -4,6 +4,7 @@
     :model='form'
     :rules='rules'
     ref='form'
+    @submit.native.prevent='open'
   )
     ElFormItem(label='路径' prop='root')
       ElInput(v-model='form.root')

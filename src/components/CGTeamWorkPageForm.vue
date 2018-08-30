@@ -4,6 +4,7 @@
     :model='form'
     :rules='rules'
     ref='form'
+    @submit.native.prevent='open'
   )
     ElFormItem(label='项目' prop='project')
       ElSelect(v-model='form.project' @change='setDefaultPrefix')
