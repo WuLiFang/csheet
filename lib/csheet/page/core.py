@@ -6,6 +6,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import json
 import logging
+import re
 from abc import abstractmethod
 from tempfile import TemporaryFile
 from zipfile import ZipFile
@@ -14,6 +15,7 @@ from gevent import sleep
 from jinja2 import Environment, FileSystemLoader, Undefined
 from sqlalchemy import orm
 
+from wlf.codectools import get_unicode as u
 from wlf.path import PurePath
 from wlf.path import get_encoded as e
 
@@ -144,11 +146,12 @@ class BasePage(object):
             index_page = self.render(videos, database_session=session)
         finally:
             self.is_pack = False
-        index_page = self._pack_entry(zipfile, index_page, 'vendors~csheet')
+        index_page = self._pack_entry(zipfile, index_page, 'chunk-vendors')
         index_page = self._pack_entry(zipfile, index_page, 'csheet')
         index_page = self._pack_entry(zipfile, index_page, 'csheet_noscript')
-        zipfile.writestr('{}.html'.format(self.title.replace('\\', '_')),
-                         index_page.encode('utf-8'))
+        zipfile.writestr(
+            '{}.html'.format(get_valid_filename(self.title)),
+            index_page.encode('utf-8'))
 
     def tags(self, videos, session):
         """Page related tags.  """
@@ -161,6 +164,20 @@ class BasePage(object):
         ).all()
         ret = tuple(i.serialize() for i in ret)
         return ret
+
+
+def get_valid_filename(string):
+    """Get valid filename.
+
+    Args:
+        string (str): Input string.
+
+    Returns:
+        str: Safe filename.
+    """
+
+    string = u(string).strip().replace(' ', '_')
+    return re.sub(r'[^-\w.]', '%', string, flags=re.U)
 
 
 def dumps(obj):
