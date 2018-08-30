@@ -1,11 +1,11 @@
 # -*- coding=UTF-8 -*-
 """Default application settings.  """
 
-ENGINE_URL = 'sqlite:///:memory:'
 MESSAGE_QUEUE = None
 SENTRY_DSN = None
 
 STORAGE = '/srv/csheet'
+ENGINE_URL = 'sqlite:////srv/csheet/csheet.db'
 BROADCAST_INTERVAL = 5
 PREVIEW_SIZE_LIMIT = 10 * 2 ** 20  # 10MB
 WATCH_INTERVAL = 1

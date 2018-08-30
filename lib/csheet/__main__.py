@@ -29,15 +29,16 @@ def _setup_logging(default_level=logging.INFO):
         mp_logging.basic_config(level=default_level)
 
 
-def serve(host='0.0.0.0', port=80, storage='/srv/csheet'):
+def serve(host='0.0.0.0', port=80, storage=None):
     """Run csheet server forever.
         port (int, optional): Defaults to 80. Listenling port.
-        storage (str, optional): Defaults to '/srv/csheet'. Storage path.
+        storage (str, optional): Defaults to None. Storage path.
     """
 
     _setup_logging()
-    APP.config['STORAGE'] = storage
-    APP.config['ENGINE_URL'] = 'sqlite:///{}\\csheet.db'.format(storage)
+    if storage:
+        APP.config['STORAGE'] = storage
+        APP.config['ENGINE_URL'] = 'sqlite:///{}\\csheet.db'.format(storage)
     APP.config['IS_STANDALONE'] = True
     if not cgtwq.DesktopClient.executable():
         LOGGER.info('未安装CGTeamWork, 将以本地模式运行')
