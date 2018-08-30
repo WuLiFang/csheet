@@ -6,9 +6,9 @@ from __future__ import (absolute_import, division, print_function,
 import json
 import os
 
+import cgtwq
 from flask import make_response, render_template, request, send_file, session
 
-import cgtwq
 from wlf.decorators import run_with_clock
 
 from . import core
@@ -19,17 +19,16 @@ from .login import require_login
 
 
 @APP.route('/')
-@require_login
 def render_main():
     """main page.  """
 
-    token = session['token']
     if not request.args:
-        return render_index(token)
+        return render_index()
     return render_csheet_page()
 
 
 @run_with_clock('生成色板页面')
+@require_login
 def render_csheet_page():
     """Csheet page.  """
 
@@ -59,9 +58,11 @@ def render_csheet_page():
     return resp
 
 
-def render_index(token):
+@require_login
+def render_index():
     """Index page."""
 
+    token = session['token']
     cgtwq.PROJECT.token = token
     projects = [{'code': i[0], 'name':i[1]}
                 for i in cgtwq.PROJECT.all().get_fields('code', 'full_name')]
