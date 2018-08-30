@@ -14,7 +14,7 @@ from wlf import mp_logging
 from wlf.path import Path
 from wlf.path import get_encoded as e
 
-from . import database, filetools, generation, page, watch
+from . import database, filetools, page
 from .__about__ import __version__
 from .core import APP, CELERY, SOCKETIO
 
@@ -30,8 +30,6 @@ def run_server(port=5000, local_dir=None):
     address = 'https://{}:{}'.format(host_ip, port)
     print(address)
     LOGGER.info('服务器运行于: %s', address)
-    watch.start()
-    generation.start()
     SOCKETIO.run(APP, '0.0.0.0', port, debug=False)
 
     return (host_ip, port)
@@ -59,6 +57,7 @@ def main():
         if args.storage:
             APP.config['storage'] = args.storage
         CELERY.conf['task_always_eager'] = True
+        APP.config['IS_STANDALONE'] = True
         run_server(args.port, args.dir)
     elif args.dir:
         render_staic_page(args.dir)

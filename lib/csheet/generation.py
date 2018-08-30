@@ -299,7 +299,7 @@ def discover_all_tasks():
 def start():
     """Start generation thread.  """
 
-    if APP.testing:
+    if APP.config['IS_STANDALONE']:
         spawn(generate_forever)
 
 

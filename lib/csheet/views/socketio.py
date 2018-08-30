@@ -101,7 +101,7 @@ def on_request_update(message):
 def start_broadcast():
     """Start broadcast.  """
 
-    if APP.testing:
+    if APP.config['IS_STANDALONE']:
         spawn(broadcast_forever)
         LOGGER.debug('Start broadcast')
 

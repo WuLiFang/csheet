@@ -7,6 +7,7 @@ from __future__ import (absolute_import, division, print_function,
 import util
 
 TESTING = True
+IS_STANDALONE = True
 STORAGE = util.path('storage')
 ENGINE_URL = 'sqlite:///{}\\csheet.db'.format(STORAGE)
 

@@ -14,6 +14,7 @@ WATCH_CHUNK_SIZE = 50
 DAEMON_TASK_EXPIRES = 3
 COOKIE_LIFE = 60 * 60 * 24 * 90  # 3 mounth
 
+IS_STANDALONE = False
 DEBUG_SQL = False
 LOGGING_CONFIG = {'version': 1,
                   'disable_existing_loggers': False,
