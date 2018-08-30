@@ -46,6 +46,12 @@ export default Vue.extend({
       this.is_opening = true;
       location.href = buildURL('local', this.form);
     },
+    beforeunload() {
+      this.is_opening = false;
+    },
+  },
+  mounted() {
+    window.addEventListener('beforeunload', this.beforeunload);
   },
 });
 </script>

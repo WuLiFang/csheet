@@ -80,6 +80,12 @@ export default Vue.extend({
         );
       });
     },
+    beforeunload() {
+      this.is_opening = false;
+    },
+  },
+  mounted() {
+    window.addEventListener('beforeunload', this.beforeunload);
   },
 });
 </script>
