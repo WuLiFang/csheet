@@ -85,12 +85,6 @@ export default Vue.extend({
         );
       });
     },
-    onload() {
-      this.is_opening = false;
-    },
-  },
-  mounted() {
-    window.addEventListener('load', this.onload);
   },
 });
 </script>

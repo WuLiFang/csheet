@@ -26,6 +26,7 @@ import {
 } from 'element-ui';
 import { projects } from '@/index';
 import { getCookie, buildURL } from '@/datatools';
+import { setInterval } from 'timers';
 
 export default Vue.extend({
   components: {
@@ -51,12 +52,6 @@ export default Vue.extend({
       this.is_opening = true;
       location.href = buildURL('local', { ...this.form, pack: '1' });
     },
-    onload() {
-      this.is_opening = false;
-    },
-  },
-  mounted() {
-    window.addEventListener('load', this.onload);
   },
 });
 </script>
