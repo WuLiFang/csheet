@@ -32,7 +32,7 @@ def run_server(port=5000, local_dir=None):
     LOGGER.info('服务器运行于: %s', address)
     watch.start()
     generation.start()
-    SOCKETIO.run(APP, '0.0.0.0', port)
+    SOCKETIO.run(APP, '0.0.0.0', port, debug=False)
 
     return (host_ip, port)
 
