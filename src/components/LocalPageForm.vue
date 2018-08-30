@@ -8,7 +8,8 @@
     ElFormItem(label='路径')
       ElInput(v-model='form.root')
     ElFormItem
-      ElButton(type='primary' @click='open' :disabled='is_opening') 打开
+      ElButton(type='primary' @click='open') 打开
+      ElButton(icon="el-icon-message" @click='pack') 打包
 
 </template>
 <script lang="ts">
@@ -45,6 +46,10 @@ export default Vue.extend({
     open() {
       this.is_opening = true;
       location.href = buildURL('local', this.form);
+    },
+    pack() {
+      this.is_opening = true;
+      location.href = buildURL('local', { ...this.form, pack: '1' });
     },
     onload() {
       this.is_opening = false;

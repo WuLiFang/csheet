@@ -61,7 +61,6 @@
           v-show='isFilterEnabled'
           @click='resetFilters'
         ) 重置过滤
-        PackButton
 </template>
 <script lang="ts">
 import Vue from 'vue';
@@ -78,7 +77,6 @@ import {
 } from 'element-ui';
 
 import FileCount from './FileCount.vue';
-import PackButton from './PackButton.vue';
 import StatusSelect from './StatusSelect.vue';
 import TagSelect from './TagSelect.vue';
 import ArtistSelect from './ArtistSelect.vue';
@@ -110,7 +108,6 @@ export default Vue.extend({
     ElSelect,
     ElOption,
     ElAutocomplete,
-    PackButton,
     ArtistSelect,
     FileCount,
   },
