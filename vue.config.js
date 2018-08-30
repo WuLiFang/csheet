@@ -31,8 +31,6 @@ module.exports = {
         path: 'dist'
       }]);
     }
-
-    config.devServer.publicPath('static/');
   },
   devServer: {
     contentBase: path.join(__dirname, 'tests/pages'),
