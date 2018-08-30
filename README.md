@@ -9,14 +9,19 @@
 
 # 使用方法
 
-## 构建
+## 需求
 
 需求:
 
 - [python2.7.15](https://www.python.org/downloads/release/python-2715/)或[更新](https://www.python.org/downloads/)(python3未测试)
 - [node.js](https://nodejs.org/en/download/)
+- [源代码](https://github.com/WuLiFang/csheet/archive/master.zip)
 
-安装了需求的软件之后运行[setup.cmd](./setup.cmd) 即可构建
+## 构建
+
+1. 下载并解压源代码
+2. 安装需求的软件
+3. 运行[setup.cmd](./setup.cmd) 
 
 构建好的文件会在`dist`文件夹中
 
