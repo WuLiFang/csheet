@@ -44,3 +44,9 @@
 使用Docker部署
 
 请自行参考[manage.py](./manage.py)中的内容
+
+# NO LICENSE 版权保留
+
+吾立方内部使用, 其他人使用需先联系获取授权
+
+[项目主页](https://github.com/WuLiFang/csheet)
