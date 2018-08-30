@@ -38,12 +38,15 @@ def clear_lock():
         ).delete(synchronize_session=False)
 
 
-def serve(host='0.0.0.0', port=80, storage=None):
+def serve(host=None, port=None, storage=None):
     """Run csheet server forever.
-        port (int, optional): Defaults to 80. Listenling port.
+        host (int, optional): Defaults to None. Listenling host ip.
+        port (int, optional): Defaults to None. Listenling port.
         storage (str, optional): Defaults to None. Storage path.
     """
 
+    host = host or APP.config['HOST']
+    port = port or APP.config['PORT']
     _setup_logging()
     if storage:
         APP.config['STORAGE'] = storage

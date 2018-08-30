@@ -1,6 +1,8 @@
 # -*- coding=UTF-8 -*-
 """Default application settings.  """
 
+HOST = '0.0.0.0'
+PORT = 80
 MESSAGE_QUEUE = None
 SENTRY_DSN = None
 
