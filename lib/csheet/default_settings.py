@@ -7,7 +7,7 @@ MESSAGE_QUEUE = None
 SENTRY_DSN = None
 
 STORAGE = '/srv/csheet'
-ENGINE_URL = 'sqlite:////srv/csheet/csheet.db'
+ENGINE_URL = 'sqlite:///:memory:'
 BROADCAST_INTERVAL = 5
 PREVIEW_SIZE_LIMIT = 10 * 2 ** 20  # 10MB
 WATCH_INTERVAL = 1

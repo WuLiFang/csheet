@@ -8,9 +8,9 @@ import logging
 import os
 import webbrowser
 
-import cgtwq
 import fire
 
+import cgtwq
 from wlf import mp_logging
 from wlf.path import get_encoded as e
 
@@ -50,7 +50,12 @@ def serve(host=None, port=None, storage=None):
     _setup_logging()
     if storage:
         APP.config['STORAGE'] = storage
-        APP.config['ENGINE_URL'] = 'sqlite:///{}\\csheet.db'.format(storage)
+    try:
+        os.makedirs(APP.config['STORAGE'])
+    except OSError:
+        pass
+    APP.config['ENGINE_URL'] = 'sqlite:///{}/csheet.db'.format(
+        APP.config['STORAGE'])
     APP.config['IS_STANDALONE'] = True
     if not cgtwq.DesktopClient.executable():
         LOGGER.info('未安装CGTeamWork, 将以本地模式运行')
