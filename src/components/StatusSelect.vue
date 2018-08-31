@@ -35,7 +35,7 @@ export default Vue.extend({
     },
     allStatus(): TaskStatusText[] {
       return Object.keys(TaskStatus).filter(i =>
-        isNaN(Number.parseInt(i)),
+        isNaN(Number.parseInt(i, 10)),
       ) as TaskStatusText[];
     },
   },
