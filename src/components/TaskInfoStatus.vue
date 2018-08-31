@@ -12,24 +12,22 @@ export default Vue.extend({
     status: { type: Number as () => TaskStatus },
   },
   computed: {
-    statusText(): TaskStatusText | null {
-      return (TaskStatus[this.status] as TaskStatusText) || null;
+    statusText(): TaskStatusText {
+      return TaskStatus[this.status] as TaskStatusText;
     },
     text(): string {
       return this.l10n(this.statusText);
     },
   },
   methods: {
-    l10n(text: TaskStatusText | null): string {
-      if (!text) {
-        return '未设置';
-      }
+    l10n(text: TaskStatusText): string {
       return {
         Close: '关闭',
         Wait: '等待',
         Check: '检查',
         Retake: '返修',
         Approve: '通过',
+        Unset: '未设置',
       }[text];
     },
   },

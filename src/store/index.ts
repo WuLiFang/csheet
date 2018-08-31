@@ -1,5 +1,5 @@
 import { getDataFromAppElement } from '@/datatools';
-import { TaskStage, TaskStatus } from '@/interface';
+import { TaskStage } from '@/interface';
 import { isFileProtocol } from '@/packtools';
 import { isUndefined } from 'util';
 import Vue from 'vue';
@@ -13,12 +13,12 @@ import videoStore from './video';
 
 export function getDefaultStatusFilter(): StatusSelectResult {
   return {
-    [TaskStatus.Close]: false,
-    [TaskStatus.Retake]: true,
-    [TaskStatus.Wait]: true,
-    [TaskStatus.Check]: true,
-    [TaskStatus.Approve]: true,
-    other: true,
+    Close: false,
+    Retake: true,
+    Wait: true,
+    Check: true,
+    Approve: true,
+    Unset: true,
   };
 }
 

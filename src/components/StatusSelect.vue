@@ -2,14 +2,10 @@
   .status-select()
     ElSwitch(
       v-for='i in allStatus'
-      :active-text='taskStatusTextL10n(TaskStatus[i])' 
+      :active-text='taskStatusTextL10n(i)' 
       :key='i' 
-      v-model='result[i]'
+      :value='result[i]'
       @input='v => oninput(i, v)'
-    )
-    ElSwitch(
-      active-text='其他'
-      v-model='result.other'
     )
 </template>
 
@@ -38,17 +34,15 @@ export default Vue.extend({
       return this.value;
     },
     allStatus(): TaskStatusText[] {
-      return Object.keys(TaskStatus).filter(
-        i => !isNaN(Number.parseInt(i)),
+      return Object.keys(TaskStatus).filter(i =>
+        isNaN(Number.parseInt(i)),
       ) as TaskStatusText[];
     },
   },
   methods: {
     taskStatusTextL10n,
-    oninput(key: keyof StatusSelectResult, value: boolean) {
-      const val = _.clone(this.value);
-      val[key] = value;
-      this.$emit('input', val);
+    oninput(key: TaskStatusText, value: boolean) {
+      this.$emit('input', { ...this.value, ...{ [key]: value } });
     },
   },
 });

@@ -16,10 +16,10 @@ export interface StringMap<T> {
 
 export type CGTeamWorkTaskResponse = [
   string,
-  string,
-  TaskStatusText,
-  TaskStatusText,
-  TaskStatusText,
+  string | null,
+  TaskStatusText | null,
+  TaskStatusText | null,
+  TaskStatusText | null,
   number,
   string,
   StringMap<boolean>
@@ -30,11 +30,11 @@ export function parseCGTeamWorkTaskResponse(
 ): CGTeamWorkTaskData {
   return {
     pipeline: response[0],
-    artist: response[1],
-    artist_array: response[1] ? response[1].split(',') : [],
-    leader_status: TaskStatus[response[2]],
-    director_status: TaskStatus[response[3]],
-    client_status: TaskStatus[response[4]],
+    artist: response[1] || '',
+    artist_array: (response[1] || '').split(','),
+    leader_status: TaskStatus[response[2] || 'Unset'],
+    director_status: TaskStatus[response[3] || 'Unset'],
+    client_status: TaskStatus[response[4] || 'Unset'],
     note_num: response[5],
     id: response[6],
     permissions: response[7],
@@ -48,6 +48,7 @@ export enum TaskStatus {
   Wait,
   Check,
   Approve,
+  Unset,
 }
 
 export enum TaskStage {
@@ -56,26 +57,26 @@ export enum TaskStage {
   client,
 }
 
-export type TaskStatusText = 'Wait' | 'Check' | 'Approve' | 'Retake' | 'Close';
+export type TaskStatusText = keyof typeof TaskStatus;
 
 export interface VideoResponse {
-  database: string;
-  module: string;
-  is_need_update: boolean;
+  database: string | null;
+  module: string | null;
+  is_need_update: boolean | null;
   label: string;
-  last_update_time: number;
-  pipeline: string;
-  poster: string;
-  poster_atime: number;
-  poster_mtime: number;
-  preview: string;
-  preview_atime: number;
-  preview_mtime: number;
-  src: string;
-  src_mtime: number;
-  thumb: string;
-  thumb_atime: number;
-  thumb_mtime: number;
+  last_update_time: number | null;
+  pipeline: string | null;
+  poster: string | null;
+  poster_atime: number | null;
+  poster_mtime: number | null;
+  preview: string | null;
+  preview_atime: number | null;
+  preview_mtime: number | null;
+  src: string | null;
+  src_mtime: number | null;
+  thumb: string | null;
+  thumb_atime: number | null;
+  thumb_mtime: number | null;
   uuid: string;
   related_tasks: string[];
   tags: Array<string | number>;

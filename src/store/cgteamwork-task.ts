@@ -37,10 +37,10 @@ import {
 
 export const getters: GetterTree<CGTeamworkTaskState, RootState> = {
   getGeneralStatus(contextState) {
-    return (id: string, stage = TaskStage.client): TaskStatus | null => {
+    return (id: string, stage = TaskStage.client): TaskStatus => {
       const task = contextState.storage[id];
       if (!task) {
-        return null;
+        return TaskStatus.Unset;
       }
       let data: TaskStatus[] = [];
       type stageMapItem = [TaskStage, TaskStatus];

@@ -1,4 +1,9 @@
-import { TaskStatus, VideoResponse, VideoRole } from '@/interface';
+import {
+  TaskStatus,
+  TaskStatusText,
+  VideoResponse,
+  VideoRole,
+} from '@/interface';
 import { isFileProtocol } from '@/packtools';
 import {
   CombinedGetters,
@@ -57,12 +62,7 @@ export const getters: GetterTree<VideoState, RootState> = {
         video.uuid,
         castRootState.statusStage,
       );
-      if (status === null && !castRootState.statusFilter.other) {
-        return false;
-      } else if (status !== null && !castRootState.statusFilter[status]) {
-        return false;
-      }
-      return true;
+      return castRootState.statusFilter[TaskStatus[status] as TaskStatusText];
     };
   },
   filterByLabel(contextState, contextGetter, rootState) {

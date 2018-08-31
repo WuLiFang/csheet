@@ -29,12 +29,10 @@ export default Vue.extend({
     text(): string {
       return taskStatusTextL10n(this.statusText);
     },
-    statusText(): TaskStatusText | null {
-      return this.status === null
-        ? null
-        : (TaskStatus[this.status] as TaskStatusText);
+    statusText(): TaskStatusText {
+      return TaskStatus[this.status] as TaskStatusText;
     },
-    status(): TaskStatus | null {
+    status(): TaskStatus {
       return this.getGeneralStatus(this.id, this.statusStage);
     },
   },

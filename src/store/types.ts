@@ -23,14 +23,7 @@ export interface RootState {
   tagTextFilter: string[];
   statusFilter: StatusSelectResult;
 }
-export interface StatusSelectResult {
-  [TaskStatus.Close]: boolean;
-  [TaskStatus.Retake]: boolean;
-  [TaskStatus.Wait]: boolean;
-  [TaskStatus.Check]: boolean;
-  [TaskStatus.Approve]: boolean;
-  other: boolean;
-}
+export type StatusSelectResult = { [name in keyof typeof TaskStatus]: boolean };
 
 export enum LoadStatus {
   notReady,
@@ -66,7 +59,7 @@ export interface CombinedRootState extends RootState {
 
 export type mapGettersMixin<T> = { [K in keyof T]: () => T[K] };
 export interface CGTeamWorkTaskGetters {
-  getGeneralStatus: (id: string, stage?: TaskStage) => TaskStatus | null;
+  getGeneralStatus: (id: string, stage?: TaskStage) => TaskStatus;
   artists: string[];
   getAritstTaskCount: (artist: string) => number;
 }
