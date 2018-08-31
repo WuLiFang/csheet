@@ -8,7 +8,7 @@
     @mouseleave="onmouseleave" 
   )
     ElPopover(trigger="hover" :disabled='isFileProtocol && tags.length === 0')
-      ElTag(v-for='i in tags' :key='i' @close='deleteVideoTag(i)' closable size='small') {{ i.text }}
+      ElTag(v-for='i in tags' :key='i.id' @close='deleteVideoTag(i)' closable size='small') {{ i.text }}
       ElButton(v-if='!isFileProtocol' @click='isTagEditDialogVisible = true' size='mini') 编辑标签
       .reference(slot='reference')
         .select-overlay(
