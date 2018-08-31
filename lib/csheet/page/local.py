@@ -53,20 +53,10 @@ class LocalPage(BasePage):
         LOGGER.info('Scan finished: '
                     '%s, image_count=%s, video_count=%s',
                     self, len(images), len(videos))
-        for label in labels:
-            self._create_video(label, videos, images, session)
-
+        videos = [_get_video(label, videos, images) for label in labels]
+        with session.no_autoflush:
+            _ = [session.merge(i) for i in videos]
         session.commit()
-
-    @staticmethod
-    def _create_video(label, videos, images, session):
-        src, poster = videos.get(label), images.get(label)
-        uuid = uuid_from_path(poster or src)
-        video = session.query(HTMLVideo).get(uuid) or HTMLVideo(uuid=uuid)
-        video.src = src
-        video.poster = poster
-        video.label = label
-        session.add(video)
 
     def videos(self, session):
         root = filter_filename(self.root)
@@ -76,6 +66,16 @@ class LocalPage(BasePage):
             HTMLVideo.poster.startswith(root)
         ).order_by(HTMLVideo.label)
         return query.all()
+
+
+def _get_video(label, videos, images):
+    src, poster = videos.get(label), images.get(label)
+    return HTMLVideo(
+        uuid=uuid_from_path(poster or src),
+        src=src,
+        poster=poster,
+        label=label,
+    )
 
 
 def _sort_file(path, images, videos):
