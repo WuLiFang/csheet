@@ -9,6 +9,7 @@ import os
 from mimetypes import guess_type
 
 from wlf.path import PurePath
+from wlf.path import get_encoded as e
 from wlf.path import get_unicode as u
 
 from ..filename import filter_filename
@@ -43,9 +44,9 @@ class LocalPage(BasePage):
         # Scan root.
         videos = {}
         images = {}
-        for dirpath, _, filenames in os.walk(filter_filename(self.root)):
+        for dirpath, _, filenames in os.walk(e(filter_filename(self.root))):
             for filename in filenames:
-                fullpath = os.path.join(dirpath, filename)
+                fullpath = u(os.path.join(dirpath, filename))
                 _sort_file(fullpath, images, videos)
 
         # Create videos.
@@ -91,6 +92,7 @@ def _sort_file(path, images, videos):
 
 def _set_label_dict(dict_, label, value):
     if label in dict_:
-        LOGGER.warning('Duplicated label: %s', value)
-    else:
-        dict_[label] = value
+        LOGGER.warning('Duplicated label, use bigger file: %s', value)
+        if os.path.getsize(e(value)) <= os.path.getsize(e(dict_[label])):
+            return
+    dict_[label] = value
