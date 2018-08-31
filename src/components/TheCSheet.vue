@@ -5,7 +5,7 @@
     Lightbox(
       v-for='video in videos'
       :id='video.uuid' 
-      :key='video.label' 
+      :key='video.uuid' 
       @click="onclick" 
     )
     TheCSheetViewer(:videoId.sync='current')
