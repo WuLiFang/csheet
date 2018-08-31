@@ -20,7 +20,8 @@ $color-close: rgb(0, 0, 0);
   &[status='Close'] {
     background: rgba($color: $color-close, $alpha: $alpha);
   }
-  &:not([status]) {
+  &:not([status]),
+  &[status='Unset'] {
     background: rgba($color: white, $alpha: 0.2);
     color: black;
     border: 1px solid black;
