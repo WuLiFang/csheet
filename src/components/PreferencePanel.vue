@@ -147,7 +147,7 @@ export default Vue.extend({
       const defaultStatusFilter = getDefaultStatusFilter();
       return (
         this.labelFilterModel ||
-        this.artistFilterModel ||
+        this.artistFilterModel.length > 0 ||
         this.tagTextFilterModel.length > 0 ||
         Object.keys(this.statusFilterModel).some(i => {
           const key = i as keyof typeof TaskStatus;
