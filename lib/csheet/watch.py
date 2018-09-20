@@ -93,7 +93,7 @@ def update_one_chunk(size=50, is_strict=True):
             if is_strict:
                 raise WorkerIdle
             return
-        LOGGER.info('Start update videos, count: %s', len(chunk))
+        LOGGER.info('Start check video changes, count: %s', len(chunk))
         chunk.update_mtime('src', 'src_mtime', sess)
         chunk.update_mtime('poster', 'poster_mtime', sess)
         sess.query(Video).filter(
