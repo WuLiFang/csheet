@@ -21,7 +21,7 @@
           span(v-else)
             FaIcon(name='magic')
             | 自动
-    .center.failed(v-if='video && !(video.preview_mtime || video.poster_mtime)') 不可用
+    .center.failed(v-if='video && !(video.preview || video.poster)') 不可用
     .center(v-else-if='! (poster || src)')
       Spinner(size='large' :message='loadingMessage' text-fg-color='white')
     img.center(
@@ -158,7 +158,7 @@ export default Vue.extend({
       }
       const total = this.posterProgressEvent.total;
       const loadded = this.posterProgressEvent.loaded;
-      return `${(loadded / total * 100).toFixed(2)}%@${formatBytes(total)}`;
+      return `${((loadded / total) * 100).toFixed(2)}%@${formatBytes(total)}`;
     },
   },
   methods: {
