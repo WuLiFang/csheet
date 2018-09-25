@@ -16,6 +16,12 @@ export enum VIDEO {
 interface VideoIdPayload {
   id: string;
 }
+export interface VideoUpdateActionPayload extends VideoIdPayload {
+  data: {
+    key: keyof VideoResponse;
+    value: any;
+  };
+}
 export interface VideoUpdateMutationPayload extends VideoIdPayload {
   data: VideoResponse;
 }

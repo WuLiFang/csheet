@@ -54,10 +54,17 @@ export const actions: ActionTree<VideoState, RootState> = {
         .then(response => HandleVideoReponse(response, context));
     })();
   },
+  async [type.VIDEO.UPDATE](context, payload: type.VideoUpdateActionPayload) {
+    return SkipIfIsFileProtocol(() => {
+      return axios
+        .put(`/api/video/${payload.id}`, payload.data)
+        .then(response => HandleVideoReponse(response, context));
+    })();
+  },
   async [type.PRELOAD_VIDEO](context, payload: type.VideoPreloadActionPayload) {
     return SkipIfIsFileProtocol(() => {
       const url = context.getters.getVideoURI(payload.id, payload.role);
-      const config = { ...payload };  // Create new obejct to save config to avoid mutation in other place.
+      const config = { ...payload }; // Create new obejct to save config to avoid mutation in other place.
       if (!url || context.state.blobURLMap[url]) {
         return;
       }
@@ -74,16 +81,19 @@ export const actions: ActionTree<VideoState, RootState> = {
   },
   async [type.PRELOAD_URL](context, payload: type.PreloadURLActionPayload) {
     return SkipIfIsFileProtocol(() => {
-      return axios.get(payload.url, {
-        responseType: 'blob', onDownloadProgress: payload.onprogress,
-      }).then(response => {
-        const mutationPayload: type.UpdateBlobHubMutationPayload = {
-          url: payload.url,
-          blob: response.data as Blob,
-        };
-        context.commit(type.UPDATE_BLOB_HUB, mutationPayload);
-        return response;
-      });
+      return axios
+        .get(payload.url, {
+          responseType: 'blob',
+          onDownloadProgress: payload.onprogress,
+        })
+        .then(response => {
+          const mutationPayload: type.UpdateBlobHubMutationPayload = {
+            url: payload.url,
+            blob: response.data as Blob,
+          };
+          context.commit(type.UPDATE_BLOB_HUB, mutationPayload);
+          return response;
+        });
     })();
   },
   [type.UPDATE_VIDEO_APPEARED](context) {

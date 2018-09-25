@@ -132,6 +132,23 @@ class Video(Resource):
         video = core.get_video(id_, sess)
         return video.serialize()
 
+    @staticmethod
+    def put(id_):
+        """Change field value.  """
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('key', required=True)
+        parser.add_argument('value', required=True)
+        args = parser.parse_args()
+
+        sess = core.database_session()
+        video = core.get_video(id_, sess)
+        if args.key not in video.__table__.columns:
+            raise KeyError
+        setattr(video, args.key, args.value)
+        sess.commit()
+        return video.serialize()
+
 
 API.add_resource(Video, '/video/<id_>')
 

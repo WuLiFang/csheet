@@ -18,11 +18,14 @@
         | :
         RelativeTime(:timestamp='videoData.src_mtime || videoData.preview_mtime')
         span.message(v-show='videoData.preview_mtime != videoData.src_mtime')
-          span.outdated(v-if='!videoData.src_mtime && videoData.preview_mtime')
-            | 源文件已删除
-          span.outdated(v-else-if='videoData.preview_mtime')
+          span.outdated(v-if='videoData.preview_mtime')
             | 预览非最新:
             RelativeTime(:timestamp='videoData.preview_mtime')
+          span.outdated(v-if='!videoData.src_mtime && videoData.preview_mtime')
+            | 源文件已删除
+          span.broken(v-else-if='videoData.src_broken_mtime')
+            span.outdated 转码失败
+            ElButton(@click='retryTranscode' size='mini') 重试
           span.notready(v-else)
             | 预览未就绪: 等待转码
 
@@ -33,6 +36,7 @@
 <script lang="ts">
 import Vue from 'vue';
 
+import { Button as ElButton } from 'element-ui';
 import * as moment from 'moment';
 // @ts-ignore
 import FaIcon from 'vue-awesome/components/Icon';
@@ -43,17 +47,31 @@ import RelativeTime from './RelativeTime.vue';
 
 import { VideoResponse } from '../interface';
 import { videoComputedMinxin } from '../store/video';
+import { VIDEO, VideoUpdateActionPayload } from '@/mutation-types';
 
 export default Vue.extend({
   props: { id: { type: String } },
   components: {
     RelativeTime,
     FaIcon,
+    ElButton,
   },
   computed: {
     ...videoComputedMinxin,
     videoData(): VideoResponse {
       return this.videoStore.storage[this.id];
+    },
+  },
+  methods: {
+    retryTranscode() {
+      const payload: VideoUpdateActionPayload = {
+        id: this.id,
+        data: {
+          key: 'src_broken_mtime',
+          value: null,
+        },
+      };
+      this.$store.dispatch(VIDEO.UPDATE, payload);
     },
   },
 });

@@ -80,6 +80,7 @@ export interface VideoResponse {
   uuid: string;
   related_tasks: string[];
   tags: Array<string | number>;
+  src_broken_mtime: number | null;
 }
 
 export enum VideoRole {
