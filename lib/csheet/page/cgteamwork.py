@@ -155,15 +155,20 @@ class CGTeamWorkPage(BasePage):
     def videos(self, session):
         query = session.query(HTMLVideo)
         query = query.filter(
-            HTMLVideo.database == self.database,
-            HTMLVideo.pipeline == self.pipeline,
-            HTMLVideo.label.startswith(self.prefix)
+            self._video_criterion()
         ).options(
             orm.selectinload(HTMLVideo.related_tasks)
         ).options(
             orm.selectinload(HTMLVideo.tags)
         ).order_by(HTMLVideo.label)
         return query.all()
+
+    def _video_criterion(self):
+        return sqlalchemy.and_(
+            HTMLVideo.database == self.database,
+            HTMLVideo.pipeline == self.pipeline,
+            HTMLVideo.label.startswith(self.prefix)
+        )
 
     @run_with_clock('收集任务信息')
     def tasks(self, session):

@@ -8,6 +8,8 @@ import logging
 import os
 from mimetypes import guess_type
 
+import sqlalchemy
+
 from wlf.path import PurePath
 from wlf.path import get_encoded as e
 from wlf.path import get_unicode as u
@@ -60,13 +62,18 @@ class LocalPage(BasePage):
         session.commit()
 
     def videos(self, session):
-        root = filter_filename(self.root)
         query = session.query(HTMLVideo)
         query = query.filter(
-            HTMLVideo.src.startswith(root) |
-            HTMLVideo.poster.startswith(root)
+            self._video_criterion()
         ).order_by(HTMLVideo.label)
         return query.all()
+
+    def _video_criterion(self):
+        root = filter_filename(self.root)
+        return sqlalchemy.or_(
+            HTMLVideo.src.startswith(root),
+            HTMLVideo.poster.startswith(root)
+        )
 
 
 def _get_video(label, videos, images):

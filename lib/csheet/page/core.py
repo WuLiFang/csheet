@@ -58,6 +58,10 @@ class BasePage(object):
         pass
 
     @abstractmethod
+    def _video_criterion(self):
+        pass
+
+    @abstractmethod
     def update(self, session):
         """Update database with this config.  """
         pass
@@ -83,7 +87,7 @@ class BasePage(object):
         context.setdefault('dumps', dumps)
         context.setdefault('dump', dump_videos)
         if database_session:
-            context.setdefault('tags', self.tags(videos, database_session))
+            context.setdefault('tags', self.tags(database_session))
         return context
 
     def archive(self, session):
@@ -153,14 +157,13 @@ class BasePage(object):
             '{}.html'.format(get_valid_filename(self.title)),
             index_page.encode('utf-8'))
 
-    def tags(self, videos, session):
+    def tags(self, session):
         """Page related tags.  """
 
         ret = session.query(database.Tag).options(
             orm.selectinload(database.Tag.videos)
         ).filter(
-            database.Tag.videos.any(
-                database.Video.uuid.in_(i.uuid for i in videos))
+            database.Tag.videos.any(self._video_criterion())
         ).all()
         ret = tuple(i.serialize() for i in ret)
         return ret
