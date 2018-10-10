@@ -13,6 +13,7 @@
       ElRadio(v-model='form.pipeline' label='合成')
       ElRadio(v-model='form.pipeline' label='灯光')
       ElRadio(v-model='form.pipeline' label='动画')
+      ElRadio(v-model='form.pipeline' label='特效')
     ElFormItem(label='前缀' prop='prefix')
       ElInput(v-model='form.prefix' ref='inputPrefix')
     ElFormItem

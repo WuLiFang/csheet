@@ -6,9 +6,9 @@ from __future__ import (absolute_import, division, print_function,
 import json
 import os
 
-import cgtwq
 from flask import make_response, render_template, request, send_file, session
 
+import cgtwq
 from wlf.decorators import run_with_clock
 
 from . import core
@@ -90,7 +90,7 @@ def render_local_dir():
 
     videos = page.videos(sess)
     rendered = page.render(videos, 'csheet_app.html',
-                           request=request, tags=page.tags(videos, sess))
+                           request=request, tags=page.tags(sess))
 
     resp = make_response(rendered)
     resp.set_cookie('root', root, max_age=APP.config['COOKIE_LIFE'])
