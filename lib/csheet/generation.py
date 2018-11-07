@@ -11,6 +11,7 @@ import psutil
 import six
 import sqlalchemy
 import sqlalchemy.exc
+from celery.schedules import crontab
 from gevent import spawn
 
 from wlf import ffmpeg
@@ -283,16 +284,25 @@ def discover_tasks(source, target, session, limit=100, **kwargs):
              autoretry_for=(sqlalchemy.exc.OperationalError,),
              retry_backoff=True)
 @database_single_instance(name='generation.discover', is_block=False)
-def discover_all_tasks():
-    """Discover all generation tasks.  """
+def discover_light_tasks():
+    """Discover light generation tasks.  """
 
     with session_scope() as sess:
         discover_tasks('poster', 'thumb', sess, min_interval=1)
         discover_tasks('preview', 'poster', sess, min_interval=60,
                        conditions=(Video.poster.is_(None),),
                        limit=10)
-        discover_tasks('src', 'preview', sess,
-                       min_interval=120, limit=1)
+
+
+@CELERY.task(ignore_result=True,
+             autoretry_for=(sqlalchemy.exc.OperationalError,),
+             retry_backoff=True)
+@database_single_instance(name='generation.discover_heavy', is_block=False)
+def discover_heavy_tasks():
+    """Discover heavy generation tasks.  """
+    raise RuntimeError('test')
+    with session_scope() as sess:
+        discover_tasks('src', 'preview', sess, min_interval=120, limit=1)
 
 
 @APP.before_first_request
@@ -307,6 +317,9 @@ def start():
 def setup_periodic_tasks(sender, **_):
     """Setup periodic tasks.  """
 
-    sender.add_periodic_task(APP.config['GENERATION_DISCOVER_INTERVAL'],
-                             discover_all_tasks,
-                             expires=APP.config['GENERATION_DISCOVER_INTERVAL'])
+    sender.add_periodic_task(APP.config['GENERATION_LIGHT_DISCOVER_SCHEDULE'],
+                             discover_light_tasks,
+                             expires=5)
+    sender.add_periodic_task(APP.config['GENERATION_HEAVY_DISCOVER_SCHEDULE'],
+                             discover_heavy_tasks,
+                             expires=60)

@@ -1,5 +1,6 @@
 # -*- coding=UTF-8 -*-
 """Default application settings.  """
+from celery.schedules import crontab
 
 HOST = '0.0.0.0'
 PORT = 80
@@ -11,7 +12,9 @@ ENGINE_URL = 'sqlite:///:memory:'
 BROADCAST_INTERVAL = 5
 PREVIEW_SIZE_LIMIT = 10 * 2 ** 20  # 10MB
 WATCH_INTERVAL = 1
-GENERATION_DISCOVER_INTERVAL = 5
+GENERATION_LIGHT_DISCOVER_SCHEDULE = 5
+GENERATION_HEAVY_DISCOVER_SCHEDULE = crontab(minute='*/1', hour='0-2,11-23')
+
 WATCH_CHUNK_SIZE = 50
 DAEMON_TASK_EXPIRES = 3
 COOKIE_LIFE = 60 * 60 * 24 * 90  # 3 mounth
@@ -43,4 +46,6 @@ LOGGING_CONFIG = {'version': 1,
 CELERY_CONFIG = {
     'accept_content': ['json'],
     'task_serializer': 'json',
+    'enable_utc': True,
+    'timezone': 'UTC',
 }
