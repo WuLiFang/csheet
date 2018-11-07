@@ -300,7 +300,7 @@ def discover_light_tasks():
 @database_single_instance(name='generation.discover_heavy', is_block=False)
 def discover_heavy_tasks():
     """Discover heavy generation tasks.  """
-    raise RuntimeError('test')
+    
     with session_scope() as sess:
         discover_tasks('src', 'preview', sess, min_interval=120, limit=1)
 
