@@ -7,3 +7,5 @@ tests/storage
 tests/images/*/*
 tests/pages/
 example_config/
+**/.pytest_cache/
+**/__pycache__/
