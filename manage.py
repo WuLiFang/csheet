@@ -53,11 +53,10 @@ def push_image(repo, host=None, ssh_port=22):
             subprocess.call(['docker', 'push', remote_tag])
 
 
-def build_image():
-    subprocess.call(['git', 'clean', '-fdX', '*.pyc'])
+def build_image(name='csheet'):
     subprocess.call(['docker', 'build', file_path(),
-                     '--tag', 'csheet:latest',
-                     '--tag', 'csheet:{}'.format(__version__)])
+                     '--tag', '{}:latest'.format(name),
+                     '--tag', '{}:{}'.format(name, __version__)])
 
 
 def install_compose_for_boot2docker(host, ssh_port=22):
