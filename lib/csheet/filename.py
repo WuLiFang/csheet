@@ -35,9 +35,7 @@ def filter_filename(path, platform=None):
         pattern = '^{}'.format(pattern)
         path = re.sub(pattern, dst, path, 1, re.I)
 
-    if platform == sys.platform:
-        path = os.path.normpath(path)
-    elif platform == 'win32':
+    if platform == 'win32':
         path = path.replace('/', '\\')
     else:
         path = path.replace('\\', '/')
