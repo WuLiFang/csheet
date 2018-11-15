@@ -1,10 +1,19 @@
-FROM python:3 AS base
+FROM node AS frontend-build
 
-RUN apt-get install ffmpeg
+WORKDIR /app
+
+COPY ./package*.json ./
+RUN npm i
+
+COPY . ./
+RUN npm run build
+
+FROM python:3 AS backend-build
+
+RUN apt-get update
+RUN apt-get -y install ffmpeg && ffmpeg -version
 
 RUN pip install pipenv gunicorn gevent-websocket
-
-FROM base AS build
 
 ENV PYTHONPATH=lib
 ENV LANG=en_US.utf-8
@@ -18,13 +27,14 @@ COPY ./Pipfile* ./
 RUN pipenv install --system --deploy
 
 COPY . ./
+COPY --from=frontend-build ./dist ./
 
-FROM build AS test
+FROM backend-build AS backend-test
 
 RUN pip install pytest
 RUN set -ex && python -m pytest ./tests
 
-FROM build AS release
+FROM backend-build AS release
 
 LABEL author="NateScarlet@Gmail.com"
 CMD ["run"]
