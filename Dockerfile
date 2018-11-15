@@ -28,7 +28,7 @@ COPY ./Pipfile* ./
 RUN pipenv install --system --deploy
 
 COPY . ./
-COPY --from=frontend-build ./dist ./
+COPY --from=frontend-build /app/dist ./
 
 FROM backend-build AS backend-test
 
