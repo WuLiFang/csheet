@@ -12,6 +12,7 @@ FROM python:3 AS backend-build
 
 RUN apt-get update
 RUN apt-get -y install ffmpeg && ffmpeg -version
+RUN apt-get clean
 
 RUN pip install pipenv gunicorn gevent-websocket
 
