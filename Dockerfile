@@ -1,5 +1,7 @@
 FROM node AS frontend-build
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 WORKDIR /app
 
 COPY ./package*.json ./
@@ -9,6 +11,8 @@ COPY . ./
 RUN npm run build
 
 FROM python:3 AS backend-build
+
+ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
 RUN apt-get -y install ffmpeg && ffmpeg -version
