@@ -1,4 +1,4 @@
-version: '2.3'
+version: '2.4'
 services:
   web:
     build: '.'
@@ -7,23 +7,13 @@ services:
     volumes:
       - '/mnt/y:/y:ro'
       - '/mnt/z:/z:ro'
-    external_links:
-      - sentry-server:sentry
-  socketio:
-    external_links:
-      - sentry-server:sentry
   worker:
-    external_links:
-      - sentry-server:sentry
     volumes:
       - '/mnt/y:/y:ro'
       - '/mnt/z:/z:ro'
     cpu_shares: 128
     cpus: 4
     mem_limit: 1G
-  beat:
-    external_links:
-      - sentry-server:sentry
   nginx:
     command: [nginx-debug, '-g', 'daemon off;']
     ports:

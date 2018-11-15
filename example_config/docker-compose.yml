@@ -1,0 +1,55 @@
+version: '2.4'
+services:
+  redis:
+    image: 'redis'
+  web:
+    image: 'csheet'
+    volumes:
+      - ./settings.py:/etc/csheet/settings.py:ro
+      - ./srv:/srv/csheet
+      - database:/var/db
+    depends_on:
+      - redis
+    env_file:
+      - ./csheet.env
+  socketio:
+    image: 'csheet'
+    command: 'run socketio'
+    volumes:
+      - ./settings.py:/etc/csheet/settings.py:ro
+      - database:/var/db
+    depends_on:
+      - redis
+    env_file:
+      - ./csheet.env
+  worker:
+    image: 'csheet'
+    command: 'run worker'
+    volumes:
+      - ./settings.py:/etc/csheet/settings.py:ro
+      - ./srv:/srv/csheet
+      - database:/var/db
+    depends_on:
+      - redis
+    env_file:
+      - ./csheet.env
+  beat:
+    image: 'csheet'
+    command: 'run beat'
+    volumes:
+      - ./settings.py:/etc/csheet/settings.py:ro
+      - database:/var/db
+    depends_on:
+      - redis
+    env_file:
+      - ./csheet.env
+  nginx:
+    image: 'nginx'
+    depends_on:
+      - web
+      - socketio
+    volumes:
+      - ./srv:/srv/csheet:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+volumes:
+  database:
