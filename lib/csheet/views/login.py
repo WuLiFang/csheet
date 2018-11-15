@@ -22,7 +22,7 @@ def auth_login():
     account_info = cgtwq.login(auth.username,
                                auth.password)
 
-    for k, v in account_info._asdict().items():
+    for k, v in list(account_info._asdict().items()):
         session[k] = v
     return True
 

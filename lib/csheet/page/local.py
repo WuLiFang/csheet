@@ -52,7 +52,7 @@ class LocalPage(BasePage):
                 _sort_file(fullpath, images, videos)
 
         # Create videos.
-        labels = sorted(set(videos.keys() + images.keys()))
+        labels = sorted(set(list(videos.keys()) + list(images.keys())))
         LOGGER.info('Scan finished: '
                     '%s, image_count=%s, video_count=%s',
                     self, len(images), len(videos))

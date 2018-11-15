@@ -1,8 +1,8 @@
 language: python
 python:
-  - "2.7"
+  - '3.6'
 node_js:
-  - "node"
+  - 'node'
 install:
   - npm i
   - yes "" | sudo add-apt-repository ppa:mc3man/trusty-media

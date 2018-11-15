@@ -57,7 +57,7 @@ def serve(host=None, port=None, storage=None):
     APP.config['ENGINE_URL'] = 'sqlite:///{}/csheet.db'.format(
         APP.config['STORAGE'])
     APP.config['IS_STANDALONE'] = True
-    if not cgtwq.DesktopClient.executable():
+    if not cgtwq.DesktopClient().executable():
         LOGGER.info('未安装CGTeamWork, 将以本地模式运行')
         APP.config['IS_LOCAL_MODE'] = True
     APP.config['CELERY_CONFIG']['task_always_eager'] = True

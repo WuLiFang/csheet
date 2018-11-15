@@ -31,20 +31,12 @@ SOCKETIO = SocketIO(APP,
 CELERY = Celery('csheet')
 
 
-def _set_default_encoding(encoding):
-    # XXX: need more clean way to fix sentry encoding error.
-    import sys
-    reload(sys)
-    sys.setdefaultencoding(encoding)
-
-
 def init():
     """Initiate application.  """
 
     logging.config.dictConfig(APP.config['LOGGING_CONFIG'])
     CELERY.config_from_object(APP.config['CELERY_CONFIG'])
     database.core.bind(APP.config['ENGINE_URL'], APP.config['DEBUG_SQL'])
-    _set_default_encoding('utf-8')
 
 
 init()

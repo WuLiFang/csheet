@@ -11,7 +11,7 @@ import flask
 import csheet
 from cgtwq import DesktopClient
 
-skip_if_not_logged_in = skipIf(not DesktopClient.is_logged_in(),  # pylint: disable=invalid-name
+skip_if_not_logged_in = skipIf(not DesktopClient().is_logged_in(),  # pylint: disable=invalid-name
                                'CGTeamWork is not logged in.')
 
 ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -38,6 +38,6 @@ def path(*other):
 def _login():
     """For test client login.  """
 
-    flask.session['token'] = DesktopClient.token()
+    flask.session['token'] = DesktopClient().token()
     flask.session['name'] = 'Test user'
     return 'Logged in'

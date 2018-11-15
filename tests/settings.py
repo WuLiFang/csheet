@@ -12,7 +12,7 @@ TESTING = True
 IS_STANDALONE = True
 STORAGE = util.path('storage')
 ENGINE_URL = 'sqlite:///{}\\csheet.db'.format(STORAGE)
-IS_LOCAL_MODE = cgtwq.DesktopClient.executable() is None
+IS_LOCAL_MODE = cgtwq.DesktopClient().executable() is None
 
 CELERY_CONFIG = {
     'accept_content': ['json', 'pickle'],

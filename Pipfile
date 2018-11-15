@@ -1,10 +1,10 @@
 [[source]]
-url = "https://mirrors.aliyun.com/pypi/simple"
+url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
 [dev-packages]
-pylint = "~=1.9"
+pylint = "*"
 "autopep8" = "*"
 rope = "*"
 pytest = "*"
@@ -18,4 +18,5 @@ flask-socketio = "*"
 flask-restful = "*"
 celery = {extras = ["redis"]}
 fire = "*"
+wlf = {git = "https://github.com/WuLiFang/wlf",ref = "0.5.2"}
 cgtwq = {git = "https://github.com/WuLiFang/cgtwq",ref = "3.0.0-alpha.6"}

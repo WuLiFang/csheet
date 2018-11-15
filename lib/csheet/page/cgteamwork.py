@@ -81,11 +81,11 @@ class CGTeamWorkPage(BasePage):
         return database.module(self.module)
 
     def _video_from_data(self, data, tasks, shot):
-        data_current = _filter_data(
-            data, shot=shot, pipeline=self.pipeline).next()
+        data_current = next(_filter_data(
+            data, shot=shot, pipeline=self.pipeline))
         try:
-            data_render = _filter_data(
-                data, shot=shot, pipeline=self.render_pipeline).next()
+            data_render = next(_filter_data(
+                data, shot=shot, pipeline=self.render_pipeline))
         except StopIteration:
             data_render = None
 

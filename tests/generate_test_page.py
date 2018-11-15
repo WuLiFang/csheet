@@ -4,11 +4,16 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from requests.utils import quote
+import typing
 
 import cgtwq
+from requests.utils import quote
+
 import csheet
 import util
+
+if typing.TYPE_CHECKING:
+    import werkzeug
 
 
 def _inject_text(js_file):
@@ -28,17 +33,17 @@ def main():
     csheet.page.core.BasePage.templates_folder = util.path(
         '../public/templates')
     client = csheet.APP.test_client()
-    if cgtwq.DesktopClient.is_logged_in():
-        tasks.append((quote(b'/?pipeline=合成&project=梦塔&prefix=MT_EP06_',
+    if cgtwq.DesktopClient().is_logged_in():
+        tasks.append((quote('/?pipeline=合成&project=梦塔&prefix=MT_EP06_',
                             safe=b'/?=&'), 'csheet.html', _inject_text('/csheet.js')))
         client.post('/_login')
     else:
         print('CGTeamWork not logged in')
 
     for page, filename, inject_text in tasks:
-        resp = client.get(page)
-        with open(util.path('pages', filename), 'w') as f:
-            f.write(resp.data)
+        resp = client.get(page)  # type: werkzeug.wrappers.Response
+        with open(util.path('pages', filename), 'w', encoding='utf-8') as f:
+            f.write(str(resp.data, 'utf-8'))
             f.write(inject_text)
 
     csheet.page.core.BasePage.templates_folder = original_tempaltes_folder

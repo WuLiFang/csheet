@@ -14,7 +14,7 @@ def test_filter_filename():
         'X:/abc/2': '/x/abc/2',
         'X:/abc\\2\\3': '/x/abc/2/3',
     }
-    for input_, expected in test_case.items():
+    for input_, expected in list(test_case.items()):
         result = filename.filter_filename(input_, 'linux')
         assert result == expected
     test_case = {
@@ -22,6 +22,6 @@ def test_filter_filename():
         '/x/abc/2': 'X:\\abc\\2',
         '/x/abc/2/3': 'X:\\abc\\2\\3',
     }
-    for input_, expected in test_case.items():
+    for input_, expected in list(test_case.items()):
         result = filename.filter_filename(input_, 'win32')
         assert result == expected

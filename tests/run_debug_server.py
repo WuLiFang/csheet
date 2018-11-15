@@ -1,6 +1,6 @@
 # -*- coding=UTF-8 -*-
 """Contactsheet test.  """
-from __future__ import absolute_import, print_function, unicode_literals
+
 
 import generate_test_page
 import util

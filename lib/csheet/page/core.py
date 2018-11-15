@@ -123,7 +123,7 @@ class BasePage(object):
         data = {'full': video.poster,
                 'preview': video.preview,
                 'thumb': video.thumb}
-        for role, filename in data.items():
+        for role, filename in list(data.items()):
             if not filename:
                 continue
 
@@ -138,7 +138,7 @@ class BasePage(object):
 
     def _pack_entry(self, zipfile, index_page, entry):
         entry_data = self.assets[entry]
-        for i in entry_data.values():
+        for i in list(entry_data.values()):
             relative_path = i.lstrip('/')
             index_page = index_page.replace(i, relative_path)
             zipfile.write(filetools.dist_path(relative_path), i)

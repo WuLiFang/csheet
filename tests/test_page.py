@@ -13,7 +13,7 @@ from wlf.path import get_encoded as e
 def test_cgteamwork():
     util.setup()
     cfg = page.CGTeamWorkPage(
-        '梦塔', '合成', 'MT_EP07_05', cgtwq.DesktopClient.token())
+        '梦塔', '合成', 'MT_EP07_05', cgtwq.DesktopClient().token())
     with database.session_scope() as sess:
         cfg.update_async()
         videos = cfg.videos(sess)
@@ -29,7 +29,7 @@ def test_cgteamwork():
 def test_cgteamwork_video():
     util.setup()
     cfg = page.CGTeamWorkPage(
-        '仙剑', '合成', 'XJ_EP01_01_sc042', cgtwq.DesktopClient.token())
+        '仙剑', '合成', 'XJ_EP01_01_sc042', cgtwq.DesktopClient().token())
     with database.session_scope() as sess:
         cfg.update_async()
         videos = cfg.videos(sess)
@@ -57,7 +57,7 @@ def test_local():
 def test_pack():
     util.setup()
     cfg = page.CGTeamWorkPage(
-        '梦塔', '合成', 'MT_EP06_03', cgtwq.DesktopClient.token())
+        '梦塔', '合成', 'MT_EP06_03', cgtwq.DesktopClient().token())
     with database.session_scope() as sess:
         cfg.update_async()
         file_ = cfg.archive(sess)

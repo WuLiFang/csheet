@@ -3,8 +3,8 @@
 
 import os
 import re
-import sys
 import string
+import sys
 
 from wlf.path import get_unicode as u
 
@@ -58,10 +58,10 @@ def get_filename_filters(platform=None):
     if not filters:
         if (platform or sys.platform) == 'win32':
             drive_letter_conv = [
-                '/{}/:{}:/'.format(i.lower(), i) for i in string.uppercase]
+                '/{}/:{}:/'.format(i.lower(), i) for i in string.ascii_uppercase]
         else:
             drive_letter_conv = [
-                '{}:/:/{}/'.format(i, i.lower()) for i in string.uppercase]
+                '{}:/:/{}/'.format(i, i.lower()) for i in string.ascii_uppercase]
         filters = ','.join(drive_letter_conv)
     filters += ','
     return filters

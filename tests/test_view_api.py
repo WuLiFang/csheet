@@ -7,9 +7,9 @@ from __future__ import (absolute_import, division, print_function,
 import re
 from unittest import TestCase, main, skip
 
+from cgtwq import DesktopClient
 from requests.utils import quote
 
-from cgtwq import DesktopClient
 from csheet import APP
 from util import skip_if_not_logged_in
 
@@ -21,7 +21,7 @@ class ViewTestCase(TestCase):
     @skip('TODO')
     def test_main(self):
         recv = self.app.get('/')
-        if DesktopClient.is_logged_in():
+        if DesktopClient().is_logged_in():
             self.assertEqual(recv.status_code, 200)
         else:
             self.assertEqual(recv.status_code, 503)
@@ -37,17 +37,17 @@ class CGTeamworkTestCase(TestCase):
             '/login', data={'account': 'lubo', 'password': ''})
         # To initiate images
         url = quote(
-            b'/?pipeline=合成&project=梦塔&prefix=MT_EP06_01_', safe=b'/?=&')
+            '/?pipeline=合成&project=梦塔&prefix=MT_EP06_01_', safe=b'/?=&')
         recv = self.client.get(url)
         self.assertEqual(recv.status_code, 200)
         self.uuid_list = re.findall('data-uuid="(.+)"', recv.data)
-        self.assert_(self.uuid_list)
+        self.assertTrue(self.uuid_list)
 
     @skip('TODO: API Changed')
     def test_database_field(self):
         for i in self.uuid_list:
-            url = (b'/api/image/field'
-                   b'?field=test&pipeline=合成&uuid={}').format(i)
+            url = ('/api/image/field'
+                   '?field=test&pipeline=合成&uuid={}').format(i)
             result = self.client.get(url)
             self.assertEqual(result.status_code, 200)
             self.assertEqual(result.content_type, 'application/json')
