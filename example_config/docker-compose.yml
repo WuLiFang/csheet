@@ -2,8 +2,10 @@ version: '2.4'
 services:
   redis:
     image: 'redis'
+    restart: on-failure
   db:
     image: 'postgres:11'
+    restart: on-failure
     environment:
       POSTGRES_USER: csheet
       POSTGRES_PASSWORD: csheet
@@ -11,6 +13,7 @@ services:
       - pgdata:/var/lib/postgresql/data
   web:
     image: 'csheet'
+    restart: on-failure
     volumes:
       - ./settings.py:/etc/csheet/settings.py:ro
       - ./srv:/srv/csheet
@@ -21,6 +24,7 @@ services:
       - ./csheet.env
   socketio:
     image: 'csheet'
+    restart: on-failure
     command: 'run socketio'
     volumes:
       - ./settings.py:/etc/csheet/settings.py:ro
@@ -30,6 +34,7 @@ services:
       - ./csheet.env
   worker:
     image: 'csheet'
+    restart: on-failure
     command: 'run worker'
     volumes:
       - ./settings.py:/etc/csheet/settings.py:ro
@@ -40,6 +45,7 @@ services:
       - ./csheet.env
   beat:
     image: 'csheet'
+    restart: on-failure
     command: 'run beat'
     volumes:
       - ./settings.py:/etc/csheet/settings.py:ro
@@ -49,6 +55,7 @@ services:
       - ./csheet.env
   nginx:
     image: 'nginx'
+    restart: on-failure
     depends_on:
       - web
       - socketio
