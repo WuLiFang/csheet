@@ -16,14 +16,9 @@ raven = {extras = ["flask"],version = "*"}
 sqlalchemy = "*"
 flask-socketio = "*"
 flask-restful = "*"
-celery = {git = "https://github.com/celery/celery",ref = "master"}
-billiard = {git = "https://github.com/celery/billiard",ref = "master"}
-amqp = {git = "https://github.com/celery/py-amqp",ref = "master"}
-kombu = {git = "https://github.com/celery/kombu",ref = "master"}
-vine = {git = "https://github.com/celery/vine",ref = "master"}
-redis = "*"
 fire = "*"
 wlf = {git = "https://github.com/WuLiFang/wlf",ref = "0.5.2"}
 cgtwq = {git = "https://github.com/WuLiFang/cgtwq",ref = "3.0.0-alpha.6"}
 environs = "*"
 psycopg2 = "*"
+celery = {extras = ["redis"],version = "*"}
