@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "32e4329d4b84469935edc06c8c82fe335a56ba398b3fc5d40faee556aa4455c9"
+            "sha256": "bc41471ffcb1c34686de5970b425f8c49e480dc6c000ba86a8625d8f24d52b08"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -38,6 +38,7 @@
             "hashes": [
                 "sha256:471aee25f3992bd325afa3772f1063dbdbbca947a041b8b89466dc00d606f8b6"
             ],
+            "markers": "extra == 'flask'",
             "version": "==1.4"
         },
         "celery": {
@@ -99,6 +100,14 @@
                 "sha256:5b94b49521f6456670fdb30cd82a4eca9412788a93fa6dd6df72c94d5a8ff2d7"
             ],
             "version": "==7.0"
+        },
+        "environs": {
+            "hashes": [
+                "sha256:11bbc9bf031069a6a877ba021080738bf920e913b9142f3507d07aaac392f261",
+                "sha256:f7a34a7361927dc1457565ccafe2d11b371fba4ea3322a7d015e462da9a9c2d4"
+            ],
+            "index": "pypi",
+            "version": "==4.0.0"
         },
         "fire": {
             "hashes": [
@@ -239,11 +248,25 @@
             ],
             "version": "==1.1.0"
         },
+        "marshmallow": {
+            "hashes": [
+                "sha256:a2052f62b18f6dad520f465e437f63ab8812423975d48b9ebd30a735466e782a",
+                "sha256:e1b79eb3b815b49918c64114dda691b8767b48a1f66dd1d8c0cd5842b74257c2"
+            ],
+            "version": "==2.16.3"
+        },
         "pycparser": {
             "hashes": [
                 "sha256:a988718abfad80b6b157acce7bf130a30876d27603738ac39f140993246b25b3"
             ],
             "version": "==2.19"
+        },
+        "python-dotenv": {
+            "hashes": [
+                "sha256:122290a38ece9fe4f162dc7c95cae3357b983505830a154d3c98ef7f6c6cea77",
+                "sha256:4a205787bc829233de2a823aa328e44fd9996fedb954989a21f1fc67c13d7a77"
+            ],
+            "version": "==0.9.1"
         },
         "python-engineio": {
             "hashes": [
@@ -279,10 +302,11 @@
         },
         "redis": {
             "hashes": [
-                "sha256:03b1b3d5c360091760666a2865ca60fcfbcfc5b54d0c4df21728e94c96caa7cb",
-                "sha256:abfbc9a18e9388f3de53d2ae90b174669d50e289fef90850177e63af902ea992"
+                "sha256:2100750629beff143b6a200a2ea8e719fcf26420adabb81402895e144c5083cf",
+                "sha256:8e0bdd2de02e829b6225b25646f9fb9daffea99a252610d040409a6738541f0a"
             ],
-            "version": "==3.0.0.post1"
+            "markers": "extra == 'redis'",
+            "version": "==3.0.1"
         },
         "six": {
             "hashes": [

@@ -22,11 +22,11 @@ APP.secret_key = ('}w\xb7\xa3]\xfaI\x94Z\x14\xa9\xa5}\x16\xb3'
 APP.config.from_object('csheet.default_settings')
 APP.config.from_envvar('CSHEET_SETTINGS', silent=True)
 
-SENTRY = Sentry(APP, dsn=APP.config['SENTRY_DSN'])
+SENTRY = Sentry(APP, dsn=APP.config['BACKEND_SENTRY_DSN'])
 
 SOCKETIO = SocketIO(APP,
                     path='/api/socket.io',
-                    message_queue=APP.config['MESSAGE_QUEUE'])
+                    MESSAGE_QUEUE_URL=APP.config['MESSAGE_QUEUE_URL'])
 
 CELERY = Celery('csheet')
 
@@ -36,7 +36,7 @@ def init():
 
     logging.config.dictConfig(APP.config['LOGGING_CONFIG'])
     CELERY.config_from_object(APP.config['CELERY_CONFIG'])
-    database.core.bind(APP.config['ENGINE_URL'], APP.config['DEBUG_SQL'])
+    database.core.bind(APP.config['DATABASE_URL'], APP.config['DEBUG_SQL'])
 
 
 init()

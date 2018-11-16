@@ -20,3 +20,4 @@ celery = {extras = ["redis"]}
 fire = "*"
 wlf = {git = "https://github.com/WuLiFang/wlf",ref = "0.5.2"}
 cgtwq = {git = "https://github.com/WuLiFang/cgtwq",ref = "3.0.0-alpha.6"}
+environs = "*"

@@ -9,10 +9,10 @@ import cgtwq
 import util
 
 TESTING = True
-IS_STANDALONE = True
+STANDALONE = True
 STORAGE = util.path('storage')
-ENGINE_URL = 'sqlite:///{}\\csheet.db'.format(STORAGE)
-IS_LOCAL_MODE = cgtwq.DesktopClient().executable() is None
+DATABASE_URL = 'sqlite:///{}\\csheet.db'.format(STORAGE)
+LOCAL_MODE = cgtwq.DesktopClient().executable() is None
 
 CELERY_CONFIG = {
     'accept_content': ['json', 'pickle'],

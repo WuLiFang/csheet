@@ -309,7 +309,7 @@ def discover_heavy_tasks():
 def start():
     """Start generation thread.  """
 
-    if APP.config['IS_STANDALONE']:
+    if APP.config['STANDALONE']:
         spawn(generate_forever)
 
 

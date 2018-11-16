@@ -115,7 +115,7 @@ def update_forever():
 def start():
     """Start watch.  """
 
-    if APP.config['IS_STANDALONE']:
+    if APP.config['STANDALONE']:
         spawn(update_forever)
 
 
