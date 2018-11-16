@@ -3,7 +3,7 @@ services:
   redis:
     image: 'redis'
   db:
-    image: 'postgress:11'
+    image: 'postgres:11'
     environment:
       POSTGRES_USER: csheet
       POSTGRES_PASSWORD: csheet
@@ -16,7 +16,7 @@ services:
       - ./srv:/srv/csheet
     depends_on:
       - redis
-      - postgress
+      - db
     env_file:
       - ./csheet.env
   socketio:

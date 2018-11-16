@@ -2,8 +2,6 @@ version: '2.4'
 services:
   web:
     build: '.'
-    ports:
-      - '60000:80'
     volumes:
       - '/mnt/y:/y:ro'
       - '/mnt/z:/z:ro'
@@ -18,4 +16,3 @@ services:
     command: [nginx-debug, '-g', 'daemon off;']
     ports:
       - 80:80
-      - 443:443
