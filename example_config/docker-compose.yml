@@ -2,14 +2,21 @@ version: '2.4'
 services:
   redis:
     image: 'redis'
+  postgress:
+    image: 'postgress:11'
+    environment:
+      POSTGRES_USER: csheet
+      POSTGRES_PASSWORD: csheet
+    volumes:
+      - pgdata:/var/lib/postgresql/data
   web:
     image: 'csheet'
     volumes:
       - ./settings.py:/etc/csheet/settings.py:ro
       - ./srv:/srv/csheet
-      - database:/var/db
     depends_on:
       - redis
+      - postgress
     env_file:
       - ./csheet.env
   socketio:
@@ -17,9 +24,8 @@ services:
     command: 'run socketio'
     volumes:
       - ./settings.py:/etc/csheet/settings.py:ro
-      - database:/var/db
     depends_on:
-      - redis
+      - web
     env_file:
       - ./csheet.env
   worker:
@@ -28,7 +34,6 @@ services:
     volumes:
       - ./settings.py:/etc/csheet/settings.py:ro
       - ./srv:/srv/csheet
-      - database:/var/db
     depends_on:
       - redis
     env_file:
@@ -38,7 +43,6 @@ services:
     command: 'run beat'
     volumes:
       - ./settings.py:/etc/csheet/settings.py:ro
-      - database:/var/db
     depends_on:
       - redis
     env_file:
@@ -52,4 +56,4 @@ services:
       - ./srv:/srv/csheet:ro
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
 volumes:
-  database:
+  pgdata:
