@@ -8,7 +8,8 @@ import logging
 from contextlib import contextmanager
 from functools import wraps
 
-from sqlalchemy import Column, ForeignKey, String, Table, create_engine, orm
+from sqlalchemy import (Column, ForeignKey, Integer, String, Table,
+                        create_engine, orm)
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.types import VARCHAR, TypeDecorator, Unicode
@@ -26,7 +27,7 @@ VIDEO_TASK = Table('Video-CGTeamWorkTask', Base.metadata,
 
 VIDEO_TAG = Table('Video-Tag', Base.metadata,
                   Column('video_id', String, ForeignKey('Video.uuid')),
-                  Column('tag_id', String, ForeignKey('Tag.id')))
+                  Column('tag_id', Integer, ForeignKey('Tag.id')))
 
 
 @contextmanager
