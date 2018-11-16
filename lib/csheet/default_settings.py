@@ -2,8 +2,6 @@
 """Default application settings.  """
 from celery.schedules import crontab
 
-HOST = '0.0.0.0'
-PORT = 80
 MESSAGE_QUEUE = None
 SENTRY_DSN = None
 

@@ -38,18 +38,16 @@ def clear_lock():
         ).delete(synchronize_session=False)
 
 
-def serve(host=None, port=None, storage=None):
+def runserver(host='0.0.0.0', port='80'):
     """Run csheet server forever.
-        host (int, optional): Defaults to None. Listenling host ip.
-        port (int, optional): Defaults to None. Listenling port.
-        storage (str, optional): Defaults to None. Storage path.
+        host (str, optional): Defaults to '0.0.0.0'. Listenling host ip.
+        port (int, optional): Defaults to 80. Listenling port.
     """
 
-    host = host or APP.config['HOST']
-    port = port or APP.config['PORT']
+    host = host
+    port = port
     _setup_logging()
-    if storage:
-        APP.config['STORAGE'] = storage
+
     try:
         os.makedirs(APP.config['STORAGE'])
     except OSError:
