@@ -14,6 +14,7 @@ FROM python:3 AS backend-build
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+RUN sed -i "s@http://.\+\.debian\.org@http://mirrors.aliyun.com@g" /etc/apt/sources.list && cat /etc/apt/sources.list
 RUN apt-get update
 RUN apt-get -y install ffmpeg && ffmpeg -version
 RUN apt-get clean

@@ -9,3 +9,4 @@ tests/pages/
 example_config/
 **/.pytest_cache/
 **/__pycache__/
+Dockerfile
