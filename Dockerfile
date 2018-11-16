@@ -19,6 +19,7 @@ RUN apt-get update
 RUN apt-get -y install ffmpeg && ffmpeg -version
 RUN apt-get clean
 
+ENV PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple
 RUN pip install pipenv gunicorn gevent-websocket
 
 ENV PYTHONPATH=lib
