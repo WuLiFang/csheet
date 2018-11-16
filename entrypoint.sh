@@ -14,16 +14,19 @@ if [ "$1" = "run" ]; then
             -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker \
             -b 0.0.0.0:80 csheet:APP
         ;;
-    "worker" )
-        celery -A csheet.CELERY --uid 1000 worker
-        ;;
     "beat" )
-        celery -A csheet.CELERY --uid 1000 beat
+        celery -A csheet.CELERY beat
+        ;;
+    "worker" )
+        useradd worker
+        setfacl -R -m d:u:worker:rwX /srv/csheet 
+        setfacl -R -m u:worker:rwX /srv/csheet 
+        celery -A csheet.CELERY worker --uid $(id -u worker) --gid $(id -g worker)
         ;;
     * )
         echo "Can not recognize argument: $2"
         ;;
     esac
-else
+else 
    /bin/bash -l -c "$*"
 fi
