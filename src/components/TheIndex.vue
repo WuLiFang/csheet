@@ -1,6 +1,6 @@
 <template lang="pug">
   #the-index
-    h1 色板工具{{version}}
+    h1 色板工具 {{VERSION}}
     #tabs
       ElTabs
         ElTabPane(label='CGTeamWork')
@@ -14,7 +14,6 @@ import Vue from 'vue';
 import Cookies from 'js-cookie';
 import CGTeamWorkPageForm from './CGTeamWorkPageForm.vue';
 import LocalPageForm from './LocalPageForm.vue';
-import { version } from '@/index';
 import {
   Tag as ElTag,
   Input as ElInput,
@@ -35,11 +34,6 @@ export default Vue.extend({
     ElTabPane,
     CGTeamWorkPageForm,
     LocalPageForm,
-  },
-  data() {
-    return {
-      version,
-    };
   },
 });
 </script>

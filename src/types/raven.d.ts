@@ -1,0 +1,1 @@
+declare module 'raven-js/plugins/vue' 

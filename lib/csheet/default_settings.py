@@ -27,6 +27,7 @@ COOKIE_LIFE = _ENV.int('COOKIE_LIFE', 60 * 60 * 24 * 90)  # 3 mounth
 STANDALONE = _ENV.bool('STANDALONE', False)
 DEBUG_SQL = _ENV.bool('DEBUG_SQL', False)
 LOCAL_MODE = _ENV.bool('LOCAL_MODE', False)
+USE_X_SENDFILE = _ENV.bool('USE_X_SENDFILE', False)
 
 LOGGING_CONFIG = {'version': 1,
                   'disable_existing_loggers': True,

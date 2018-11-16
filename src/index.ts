@@ -16,15 +16,12 @@ interface Project {
 export const projects = JSON.parse(
   getDataFromAppElement('projects'),
 ) as Project[];
-export const version = JSON.parse(getDataFromAppElement('version')) as string;
 
 export function showFullScreenLoading() {
-  return Loading.service(
-    {
-      fullscreen: true,
-      text: '正在生成',
-      background: 'rgba(0, 0, 0, 0.8)',
-    },
-  );
+  return Loading.service({
+    fullscreen: true,
+    text: '正在生成',
+    background: 'rgba(0, 0, 0, 0.8)',
+  });
 }
 vue.$mount('#app');

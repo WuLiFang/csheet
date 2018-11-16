@@ -1,6 +1,6 @@
 {
   "name": "csheet",
-  "version": "4.9.1",
+  "version": "5.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -19,6 +19,7 @@
     "lodash": "^4.17.10",
     "moment": "^2.22.1",
     "notifyjs": "^3.0.0",
+    "raven-js": "^3.27.0",
     "socket.io-client": "^2.1.0",
     "typescript": "^3.0.1",
     "vue": "^2.5.16",

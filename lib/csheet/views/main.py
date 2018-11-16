@@ -12,7 +12,6 @@ import cgtwq
 from wlf.decorators import run_with_clock
 
 from . import core
-from ..__about__ import __version__
 from ..core import APP
 from ..page import CGTeamWorkPage, LocalPage
 from .login import require_login
@@ -72,8 +71,7 @@ def render_index():
     return render_template(
         'index.html',
         projects=projects,
-        dumps=json.dumps,
-        __version__=__version__)
+        dumps=json.dumps)
 
 
 @APP.route('/local')

@@ -82,7 +82,9 @@ class BasePage(object):
         return template.render(**self._template_context(context, videos, database_session))
 
     def _template_context(self, context, videos, database_session=None):
+        from ..core import APP
         context.setdefault('config', self)
+        context.setdefault('SENTRY_DSN', APP.config['FRONTEND_SENTRY_DSN'])
         context.setdefault('videos', videos)
         context.setdefault('dumps', dumps)
         context.setdefault('dump', dump_videos)

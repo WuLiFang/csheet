@@ -16,20 +16,30 @@ module.exports = {
       .entry('csheet_noscript')
       .add('./src/csheet.scss')
       .end();
-    config.plugin('html').use(htmlPlugin, [{
-      template: 'public/templates/index.html',
-      filename: 'templates/index.html',
-      chunks: ['chunk-vendors', 'index'],
-    }, ]);
-    config.plugin('html_csheet').use(htmlPlugin, [{
-      template: 'public/templates/csheet.html',
-      filename: 'templates/csheet.html',
-      chunks: ['chunk-vendors', 'csheet'],
-    }, ]);
+    config.plugin('html').use(htmlPlugin, [
+      {
+        template: 'public/templates/index.html',
+        filename: 'templates/index.html',
+        chunks: ['chunk-vendors', 'index'],
+      },
+    ]);
+    config.plugin('html_csheet').use(htmlPlugin, [
+      {
+        template: 'public/templates/csheet.html',
+        filename: 'templates/csheet.html',
+        chunks: ['chunk-vendors', 'csheet'],
+      },
+    ]);
+    config.plugin('define').tap(args => {
+      args[0].VERSION = JSON.stringify(require('./package.json').version);
+      return args;
+    });
     if (process.env.NODE_ENV === 'production') {
-      config.plugin('asset').use(assetPlugin, [{
-        path: 'dist'
-      }]);
+      config.plugin('asset').use(assetPlugin, [
+        {
+          path: 'dist',
+        },
+      ]);
     }
   },
   devServer: {
