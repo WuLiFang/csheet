@@ -2,7 +2,7 @@ version: '2.4'
 services:
   redis:
     image: 'redis'
-  postgress:
+  db:
     image: 'postgress:11'
     environment:
       POSTGRES_USER: csheet
