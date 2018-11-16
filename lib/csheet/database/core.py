@@ -118,36 +118,3 @@ def bind(url, is_echo=False):
     engine = create_engine(url, echo=is_echo)
     Session.configure(bind=engine)
     Base.metadata.create_all(engine)
-    _upgrade_database(engine)
-
-
-def _upgrade_database(engine):
-    for column, type_ in (('database', 'VARCHAR'),
-                          ('pipeline', 'VARCHAR'),
-                          ('thumb_atime', 'FLOAT'),
-                          ('preview_atime', 'FLOAT'),
-                          ('poster_atime', 'FLOAT'),
-                          ('module', 'VARCHAR'),
-                          ('task_id', 'VARCHAR'),
-                          ('tags_mtime', 'FLOAT'),
-                          ('thumb_broken_mtime', 'FLOAT'),
-                          ('poster_broken_mtime', 'FLOAT'),
-                          ('preview_broken_mtime', 'FLOAT'),
-                          ('src_broken_mtime', 'FLOAT'),):
-        try:
-            engine.execute(
-                'ALTER TABLE Video ADD COLUMN {} {}'.format(column, type_))
-        except OperationalError:
-            continue
-    for column, type_ in (('artist', 'VARCHAR'),
-                          ('shot', 'VARCHAR'),
-                          ('pipeline', 'VARCHAR'),
-                          ('leader_status', 'VARCHAR'),
-                          ('director_status', 'VARCHAR'),
-                          ('client_status', 'VARCHAR'),
-                          ('note_num', 'INTEGER'),):
-        try:
-            engine.execute(
-                'ALTER TABLE CGTeamWorkTask ADD COLUMN {} {}'.format(column, type_))
-        except OperationalError:
-            continue
