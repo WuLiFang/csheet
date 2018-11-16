@@ -10,7 +10,7 @@ RUN npm i
 COPY . ./
 RUN npm run build
 
-FROM python:3 AS backend-prepare
+FROM python:3.6 AS backend-prepare
 
 ARG DEBIAN_FRONTEND=noninteractive
 
