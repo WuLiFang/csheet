@@ -19,8 +19,7 @@ if [ "$1" = "run" ]; then
         ;;
     "worker" )
         useradd worker
-        setfacl -R -m d:u:worker:rwX /srv/csheet 
-        setfacl -R -m u:worker:rwX /srv/csheet 
+        chown worker ${STORAGE:-/srv/csheet}
         celery -A csheet.CELERY worker --uid $(id -u worker) --gid $(id -g worker)
         ;;
     * )

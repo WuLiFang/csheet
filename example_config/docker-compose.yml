@@ -1,7 +1,7 @@
 version: '2.4'
 services:
-  redis:
-    image: 'redis'
+  rabbitmq:
+    image: rabbitmq
     restart: on-failure
   db:
     image: 'postgres:11'
@@ -18,7 +18,7 @@ services:
       - ./settings.py:/etc/csheet/settings.py:ro
       - ./srv:/srv/csheet
     depends_on:
-      - redis
+      - rabbitmq
       - db
     env_file:
       - ./csheet.env
@@ -40,7 +40,7 @@ services:
       - ./settings.py:/etc/csheet/settings.py:ro
       - ./srv:/srv/csheet
     depends_on:
-      - redis
+      - rabbitmq
     env_file:
       - ./csheet.env
   beat:
@@ -50,7 +50,7 @@ services:
     volumes:
       - ./settings.py:/etc/csheet/settings.py:ro
     depends_on:
-      - redis
+      - rabbitmq
     env_file:
       - ./csheet.env
   nginx:
