@@ -19,7 +19,8 @@ from wlf.path import get_unicode as u
 
 Base = declarative_base()  # pylint: disable=invalid-name
 BaseMeta = declarative_base()  # pylint: disable=invalid-name
-Session = orm.sessionmaker()  # pylint: disable=invalid-name
+Session = orm.scoped_session(  # pylint: disable=invalid-name
+    orm.sessionmaker())
 LOGGER = logging.getLogger(__name__)
 
 VIDEO_TASK = Table('Video-CGTeamWorkTask', Base.metadata,
