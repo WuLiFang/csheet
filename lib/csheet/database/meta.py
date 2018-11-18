@@ -8,7 +8,7 @@ from sqlalchemy import Column, String
 from . import core
 
 
-class Meta(core.Base):
+class Meta(core.BaseMeta):
     """Application meta data.  """
 
     __tablename__ = 'Meta'

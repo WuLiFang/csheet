@@ -10,7 +10,6 @@ from functools import wraps
 
 from sqlalchemy import (Column, ForeignKey, Integer, String, Table,
                         create_engine, orm)
-from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.types import VARCHAR, TypeDecorator, Unicode
 
@@ -18,6 +17,7 @@ from wlf.path import PurePath
 from wlf.path import get_unicode as u
 
 Base = declarative_base()  # pylint: disable=invalid-name
+BaseMeta = declarative_base()  # pylint: disable=invalid-name
 Session = orm.sessionmaker()  # pylint: disable=invalid-name
 LOGGER = logging.getLogger(__name__)
 
@@ -115,7 +115,13 @@ class SerializableMixin(object):
 def bind(url, is_echo=False):
     """Bind model to database.  """
 
+    from ..core import APP
+
     LOGGER.debug('Bind to engine: %s', url)
     engine = create_engine(url, echo=is_echo)
-    Session.configure(bind=engine)
+    meta_engine = create_engine(
+        f"sqlite:///{APP.config['STORAGE']}/meta.db", echo=is_echo)
+    Session.configure(binds={Base: engine,
+                             BaseMeta: meta_engine})
     Base.metadata.create_all(engine)
+    BaseMeta.metadata.create_all(meta_engine)
