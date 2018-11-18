@@ -38,7 +38,9 @@ def init():
     logging.config.dictConfig(APP.config['LOGGING_CONFIG'])
     CELERY.config_from_object(APP.config['CELERY_CONFIG'])
     database.core.bind(
-        APP.config['DATABASE_URL'], APP.config['DATABASE_URL_META'], APP.config['DEBUG_SQL'])
+        url=APP.config['DATABASE_URL'],
+        url_meta=APP.config['DATABASE_URL_META'],
+        is_echo=APP.config['DEBUG_SQL'])
 
 
 init()

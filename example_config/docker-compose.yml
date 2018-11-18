@@ -28,6 +28,7 @@ services:
     command: 'run socketio'
     volumes:
       - ./settings.py:/etc/csheet/settings.py:ro
+      - ./srv:/srv/csheet
     depends_on:
       - web
     env_file:
@@ -49,6 +50,7 @@ services:
     command: 'run beat'
     volumes:
       - ./settings.py:/etc/csheet/settings.py:ro
+      - ./srv:/srv/csheet
     depends_on:
       - rabbitmq
     env_file:
