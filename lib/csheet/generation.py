@@ -189,7 +189,7 @@ def _need_generation_criterion(source, target, **kwargs):
                        target_atime_column < time.time() - min_interval),
         sqlalchemy.or_(target_column.is_(None),
                        target_mtime_column.is_(None),
-                       (target_mtime_column != source_mtime_column)),
+                       sqlalchemy.func.abs(target_mtime_column - source_mtime_column)) > 1e-4,
         *conditions
     )
 
@@ -300,7 +300,7 @@ def discover_light_tasks():
 @database_single_instance(name='generation.discover_heavy', is_block=False)
 def discover_heavy_tasks():
     """Discover heavy generation tasks.  """
-    
+
     with session_scope() as sess:
         discover_tasks('src', 'preview', sess, min_interval=120, limit=1)
 
