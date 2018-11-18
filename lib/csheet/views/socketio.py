@@ -59,7 +59,7 @@ def broadcast_updated_asset(session=None):
         data = get_updated_asset(since, sess)
         assert isinstance(data, list), type(data)
         if data:
-            SOCKETIO.emit('asset update', data, broadcast=True)
+            SOCKETIO.emit('asset update', data)
             LOGGER.info('Broadcast updated asset, count: %s', len(data))
         else:
             LOGGER.debug('No updated assets.')

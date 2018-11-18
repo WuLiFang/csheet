@@ -25,9 +25,9 @@ APP.config.from_envvar('CSHEET_SETTINGS', silent=True)
 
 SENTRY = Sentry(APP, dsn=APP.config['BACKEND_SENTRY_DSN'])
 
-SOCKETIO = SocketIO(APP,
+SOCKETIO = SocketIO(app=APP,
                     path='/api/socket.io',
-                    MESSAGE_QUEUE_URL=APP.config['MESSAGE_QUEUE_URL'])
+                    message_queue=APP.config['MESSAGE_QUEUE_URL'])
 
 CELERY = Celery('csheet')
 
