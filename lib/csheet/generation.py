@@ -20,7 +20,8 @@ from .core import APP, CELERY
 from .database import Video, session_scope
 from .exceptions import WorkerIdle
 from .filename import filter_filename
-from .workertools import Locked, work_forever, worker_concurrency
+from .workertools import (Locked, database_single_instance, work_forever,
+                          worker_concurrency)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -282,6 +283,7 @@ def discover_tasks(source, target, session, limit=100, **kwargs):
 @CELERY.task(ignore_result=True,
              autoretry_for=(sqlalchemy.exc.OperationalError,),
              retry_backoff=True)
+@database_single_instance(name='generation.discover', is_block=False)
 def discover_light_tasks():
     """Discover light generation tasks.  """
 
@@ -295,6 +297,7 @@ def discover_light_tasks():
 @CELERY.task(ignore_result=True,
              autoretry_for=(sqlalchemy.exc.OperationalError,),
              retry_backoff=True)
+@database_single_instance(name='generation.discover_heavy', is_block=False)
 def discover_heavy_tasks():
     """Discover heavy generation tasks.  """
 

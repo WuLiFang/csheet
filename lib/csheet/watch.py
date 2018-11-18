@@ -17,7 +17,7 @@ from .core import APP, CELERY
 from .database import Video, session_scope
 from .exceptions import WorkerIdle
 from .filename import filter_filename
-from .workertools import work_forever
+from .workertools import database_single_instance, work_forever
 
 LOGGER = logging.getLogger(__name__)
 
@@ -82,6 +82,7 @@ class Chunk(list):
 @CELERY.task(ignore_result=True,
              autoretry_for=(sqlalchemy.exc.OperationalError,),
              retry_backoff=True)
+@database_single_instance(name='watch.update', is_block=False)
 def update_one_chunk(size=50, is_strict=True):
     """Get a update chunk then update it.  """
 

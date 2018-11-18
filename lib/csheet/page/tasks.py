@@ -10,6 +10,7 @@ import sqlalchemy.exc
 
 from .. import database
 from ..core import CELERY
+from ..workertools import database_single_instance
 from .cgteamwork import CGTeamWorkPage
 from .local import LocalPage
 
@@ -39,6 +40,7 @@ def update_cgteamwork_page(project, pipeline, prefix, token):
 
 
 def _update_page(lock_name, page_getter):
+    @database_single_instance(lock_name, is_block=False)
     def _run():
         page = page_getter()
         LOGGER.info('Start update page: %s', page)
