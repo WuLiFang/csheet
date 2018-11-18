@@ -18,8 +18,8 @@ from wlf.path import get_unicode as u
 
 Base = declarative_base()  # pylint: disable=invalid-name
 BaseMeta = declarative_base()  # pylint: disable=invalid-name
-Session = orm.scoped_session(  # pylint: disable=invalid-name
-    orm.sessionmaker())
+session_factory = orm.sessionmaker()  # pylint: disable=invalid-name
+Session = orm.scoped_session(session_factory)  # pylint: disable=invalid-name
 LOGGER = logging.getLogger(__name__)
 
 VIDEO_TASK = Table('Video-CGTeamWorkTask', Base.metadata,
@@ -120,7 +120,7 @@ def bind(url, url_meta=None, is_echo=False):
     url_meta = url_meta or url
     engine = create_engine(url, echo=is_echo)
     meta_engine = create_engine(url_meta, echo=is_echo)
-    Session.configure(binds={Base: engine,
-                             BaseMeta: meta_engine})
+    session_factory.configure(binds={Base: engine,
+                                     BaseMeta: meta_engine})
     Base.metadata.create_all(engine)
     BaseMeta.metadata.create_all(meta_engine)
