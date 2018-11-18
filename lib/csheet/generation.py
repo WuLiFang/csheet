@@ -11,7 +11,6 @@ import psutil
 import six
 import sqlalchemy
 import sqlalchemy.exc
-from celery.schedules import crontab
 from gevent import spawn
 
 from wlf import ffmpeg

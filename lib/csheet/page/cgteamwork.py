@@ -199,7 +199,8 @@ def _get_submit_file(submit_file_data):
         filelist = data.get('file_path') or data.get('path')
         return filelist[0]
     except (TypeError, IndexError):
-        LOGGER.warn('Parse submit file data fail: %s', repr(submit_file_data))
+        LOGGER.warning('Parse submit file data fail: %s',
+                       repr(submit_file_data))
     return None
 
 
