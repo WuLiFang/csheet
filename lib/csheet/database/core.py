@@ -113,16 +113,13 @@ class SerializableMixin(object):
         return {i.name: self._encode(getattr(self, i.name)) for i in self.__table__.columns}
 
 
-def bind(url, is_echo=False):
+def bind(url, url_meta=None, is_echo=False):
     """Bind model to database.  """
 
-    from ..core import APP
-
     LOGGER.debug('Bind to engine: %s', url)
+    url_meta = url_meta or url
     engine = create_engine(url, echo=is_echo)
-    os.makedirs(APP.config['STORAGE'], exist_ok=True)
-    meta_engine = create_engine(
-        f"sqlite:///{APP.config['STORAGE']}/meta.db", echo=is_echo)
+    meta_engine = create_engine(url_meta, echo=is_echo)
     Session.configure(binds={Base: engine,
                              BaseMeta: meta_engine})
     Base.metadata.create_all(engine)
