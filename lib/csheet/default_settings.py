@@ -6,7 +6,6 @@ from environs import Env
 _ENV = Env()
 
 MESSAGE_QUEUE_URL = _ENV('MESSAGE_QUEUE_URL', None)
-BROKER_URL = _ENV('BROKER_URL', None)
 RESULT_BACKEND_URL = _ENV('RESULT_BACKEND_URL', None)
 BACKEND_SENTRY_DSN = _ENV('BACKEND_SENTRY_DSN', None)
 FRONTEND_SENTRY_DSN = _ENV('FRONTEND_SENTRY_DSN', None)
@@ -66,7 +65,7 @@ CELERY_CONFIG = {
     'task_serializer': 'json',
     'enable_utc': True,
     'timezone': 'UTC',
-    'broker_url': BROKER_URL,
+    'broker_url': MESSAGE_QUEUE_URL,
     'result_backend': RESULT_BACKEND_URL,
     'worker_hijack_root_logger': False,
 }
