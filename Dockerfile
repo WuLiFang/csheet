@@ -1,4 +1,4 @@
-FROM node AS frontend-build
+FROM node:10 AS frontend-build
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN set -e
