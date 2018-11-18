@@ -188,7 +188,7 @@ def _need_generation_criterion(source, target, **kwargs):
                        target_atime_column < time.time() - min_interval),
         sqlalchemy.or_(target_column.is_(None),
                        target_mtime_column.is_(None),
-                       sqlalchemy.func.abs(target_mtime_column - source_mtime_column)) > 1e-4,
+                       (sqlalchemy.func.abs(target_mtime_column - source_mtime_column)) > 1e-4),
         *conditions
     )
 
