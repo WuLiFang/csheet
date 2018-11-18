@@ -5,6 +5,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import json
 import logging
+import os
 from contextlib import contextmanager
 from functools import wraps
 
@@ -119,6 +120,7 @@ def bind(url, is_echo=False):
 
     LOGGER.debug('Bind to engine: %s', url)
     engine = create_engine(url, echo=is_echo)
+    os.makedirs(APP.config['STORAGE'], exist_ok=True)
     meta_engine = create_engine(
         f"sqlite:///{APP.config['STORAGE']}/meta.db", echo=is_echo)
     Session.configure(binds={Base: engine,
