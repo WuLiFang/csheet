@@ -47,7 +47,7 @@ class CGTeamWorkPage(BasePage):
 
     @property
     def id(self):
-        return base64.b64encode(':'.join([self.project, self.pipeline, self.prefix]))
+        return base64.b64encode(':'.join([self.project, self.pipeline, self.prefix]).encode('utf-8'))
 
     @property
     def title(self):
