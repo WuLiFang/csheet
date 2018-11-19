@@ -7,7 +7,7 @@
   </head>
 
   <body>
-    <div id="app" data-projects="{{ dumps(projects) }}">
+    <div id="app" data-projects="{{ projects | dumps }}">
       <noscript class="noscript">
         <link href="static/css/bootstrap.min.css" rel="stylesheet" />
         <div class="container">

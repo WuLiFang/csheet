@@ -17,11 +17,11 @@
     <div
       id="app"
       data-id="{{ config.id | escape }}"
-      data-video="{{ dump(videos) | escape }}"
-      data-task="{{ dumps(tasks) | escape }}"
+      data-video="{{ videos | default([]) | dumps }}"
+      data-task="{{ tasks | default([]) | dumps }}"
       data-username="{{ session and session.get('name') | default('', True) | escape }}"
-      data-tag="{{ dumps(tags) | escape }}"
-      data-sentry-dsn="{{ SENTRY_DSN | default('', True) | escape }}"
+      data-tag="{{ tags | default([]) | dumps }}"
+      data-sentry-dsn="{{ SENTRY_DSN | escape }}"
     >
       <noscript class="noscript">
         <link

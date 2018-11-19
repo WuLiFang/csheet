@@ -58,9 +58,7 @@ def render_page(page: BasePage, database_session):
 
     rendered = page.render(
         template='main_app.html',
-        database_session=database_session,
-        request=request,
-        session=session,)
+        database_session=database_session)
 
     resp = make_response(rendered)
     for k, v in request.args.items():
@@ -84,8 +82,7 @@ def render_index():
 
     return render_template(
         'index.html',
-        projects=projects,
-        dumps=json.dumps)
+        projects=projects)
 
 
 def packed_page(page, database_session):

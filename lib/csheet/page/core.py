@@ -12,6 +12,7 @@ from abc import abstractmethod
 from tempfile import TemporaryFile
 from zipfile import ZipFile
 
+from flask import render_template
 from gevent import sleep
 from jinja2 import Environment, FileSystemLoader, Undefined
 from sqlalchemy import orm
@@ -127,19 +128,11 @@ class BasePage(object):
     def render(self, template='main.html', database_session=None, **context):
         """Render the page.  """
 
-        env = Environment(
-            loader=FileSystemLoader(self.templates_folder),
-        )
-        template = env.get_template(template)
-
-        return template.render(**self._process_context(context, database_session))
+        return render_template(template, **self._process_context(context, database_session))
 
     def _process_context(self, context, database_session=None):
         from ..core import APP
         context.setdefault('config', self)
-        context.setdefault('SENTRY_DSN', APP.config['FRONTEND_SENTRY_DSN'])
-        context.setdefault('dumps', dumps)
-        context.setdefault('dump', dump_videos)
         if database_session:
             context.setdefault('videos', self.videos(database_session))
             context.setdefault('tags', self.tags(database_session))
@@ -236,17 +229,3 @@ def get_valid_filename(string):
 
     string = u(string).strip().replace(' ', '_')
     return re.sub(r'[^-\w.]', '%', string, flags=re.U)
-
-
-def dumps(obj):
-    """`json.dumps` for jinja template data.  """
-
-    if isinstance(obj, Undefined):
-        return ''
-    return json.dumps(obj)
-
-
-def dump_videos(videos):
-    """Dump videos to string data.  """
-
-    return json.dumps(database.Video.format_videos(videos))
