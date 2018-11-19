@@ -18,8 +18,8 @@ FROM python:3.6 AS backend-prepare
 ARG DEBIAN_FRONTEND=noninteractive
 RUN set -e
 
-ARG DEBIAN_MIRROR=http://mirrors.aliyun.com
-RUN if [ ! -z $DEBIAN_MIRROR ]; then sed -i "s@http://.\+\.debian\.org@$DEBIAN_MIRROR@g" /etc/apt/sources.list && cat /etc/apt/sources.list; fi
+ARG DEBIAN_MIRROR=http://mirrors.aliyun.com/debian
+RUN if [ ! -z $DEBIAN_MIRROR ]; then sed -i "s@http://.\+\.debian\.org/debian@$DEBIAN_MIRROR@g" /etc/apt/sources.list && cat /etc/apt/sources.list; fi
 RUN apt-get update
 RUN apt-get -y install ffmpeg && ffmpeg -version
 RUN apt-get clean
