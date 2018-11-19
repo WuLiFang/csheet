@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit",
+    "backend": "pipenv run python ./tests/run_debug_server.py"
   },
   "dependencies": {
     "@types/js-cookie": "^2.1.0",
