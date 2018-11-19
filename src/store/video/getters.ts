@@ -32,7 +32,7 @@ export const getters: GetterTree<VideoState, RootState> = {
     return (id: string) => {
       const element = elementHub.get(id);
       if (element) {
-        window.scroll(undefined, element.offsetTop);
+        window.scroll(element.offsetLeft, element.offsetTop);
       }
     };
   },
