@@ -10,9 +10,9 @@ import sqlalchemy
 import sqlalchemy.exc
 from gevent import sleep, spawn
 
-from ..core import APP, CELERY, SOCKETIO
-from ..database import Meta, Video, session_scope
-from ..workertools import worker_concurrency
+from .core import APP, CELERY, SOCKETIO
+from .database import Meta, Video, session_scope
+from .workertools import worker_concurrency
 
 LOGGER = logging.getLogger(__name__)
 
