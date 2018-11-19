@@ -20,7 +20,7 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
-  - docker build .
+  - docker build . --build-arg NPM_MIRROR= --build-arg DEBIAN_MIRROR= --build-arg PIP_MIRROR=
   - npm run build
   - export PYTHONPATH=lib
   - coverage run -m pytest ./tests && coverage report

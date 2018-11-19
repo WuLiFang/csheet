@@ -6,7 +6,8 @@ RUN set -e
 WORKDIR /app
 
 COPY ./package*.json ./
-RUN npm config set registry https://registry.npm.taobao.org/
+ARG NPM_MIRROR=https://registry.npm.taobao.org/
+RUN if [ ! -z $NPM_MIRROR ]; then npm config set registry $NPM_MIRROR; fi
 RUN npm i
 
 COPY . ./
@@ -17,12 +18,14 @@ FROM python:3.6 AS backend-prepare
 ARG DEBIAN_FRONTEND=noninteractive
 RUN set -e
 
-RUN sed -i "s@http://.\+\.debian\.org@http://mirrors.aliyun.com@g" /etc/apt/sources.list && cat /etc/apt/sources.list
+ARG DEBIAN_MIRROR=http://mirrors.aliyun.com
+RUN if [ ! -z $DEBIAN_MIRROR ]; then sed -i "s@http://.\+\.debian\.org@$DEBIAN_MIRROR@g" /etc/apt/sources.list && cat /etc/apt/sources.list; fi
 RUN apt-get update
 RUN apt-get -y install ffmpeg && ffmpeg -version
 RUN apt-get clean
 
-ENV PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple
+ARG PIP_MIRROR=https://mirrors.aliyun.com/pypi/simple
+ENV PIP_INDEX_URL=$PIP_MIRROR
 RUN pip install pipenv gunicorn gevent-websocket
 
 WORKDIR /app
