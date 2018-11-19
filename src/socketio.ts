@@ -35,30 +35,29 @@ export default class SocketIO {
   constructor(store: Store<RootState>) {
     this.store = store as Store<CombinedRootState>;
     this.socket = io(`/`, { path: '/api/socket.io' });
-    this.socket.on('asset update', (message: VideoResponse[]) =>
-      this.on_asset_update(message)
-    );
-    this.socket.on('connect', this.on_connect.bind(this));
-    this.socket.on('disconnect', this.on_disconnect.bind(this));
+    this.socket.on('asset update', this.onAssetUpdate.bind(this));
+    this.socket.on('connect', this.onConnect.bind(this));
+    this.socket.on('disconnect', this.onDisconnect.bind(this));
     this.socket.on('page update', this.onPageUpdated.bind(this));
     setInterval(this.updateAppeared, 2000);
   }
 
-  public on_connect() {
+  public onConnect() {
     const msg = '已建立连接';
     if (isSupportNotify) {
       new Notify(msg, { timeout: 2, tag: msg }).show();
     }
   }
-  public on_disconnect() {
+  public onDisconnect() {
     const msg = '连接断开';
     if (isSupportNotify) {
       new Notify(msg, { timeout: 2, tag: msg }).show();
     }
   }
-  public on_asset_update(message: VideoResponse[]) {
-    _.each(message, value => {
-      if (isUndefined(this.store.state.videoStore.storage[value.uuid])) {
+  public onAssetUpdate(message: VideoResponse[]) {
+    message.forEach(value => {
+      if (!(value.uuid in this.store.state.videoStore.storage)) {
+        console.debug(value.uuid, 'not found in store, skip');
         return;
       }
       const actionPayload: VideoTagsReadIfFoundUndefinedActionPayload = {
