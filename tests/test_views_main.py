@@ -1,6 +1,8 @@
 # -*- coding=UTF-8 -*-
 """Test `csheet.views.main` module.  """
 
+from urllib.parse import quote
+
 import pytest
 from flask import Response
 
@@ -17,7 +19,7 @@ def _client():
 
 
 def test_json(client):
-    url_list = ['/?root=D%3A%5CUsers%5C34357%5CPictures%5CCollection']
+    url_list = [f"/?root={quote(util.path('storage', 'local'))}"]
     if util.IS_CGTEAMWORK_LOGGED_IN:
         url_list.append(
             '/?pipeline=%E5%90%88%E6%88%90&project=%E6%A2%A6%E5%A1%94&prefix=MT_EP06_')

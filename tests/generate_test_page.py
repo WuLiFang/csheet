@@ -5,8 +5,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import typing
-
-from requests.utils import quote
+from urllib.parse import quote
 
 import cgtwq
 import csheet
@@ -23,8 +22,8 @@ def _inject_text(js_file):
 def main():
     tasks = [
         ('/', 'index.html', _inject_text('/index.js')),
-        ('/?root=D%3A%5CUsers%5C34357%5CPictures%5CCollection',
-         'local.html', _inject_text('/csheet.js'))
+        (f"/?root={quote(util.path('storage', 'local'))}",
+         'local.html', _inject_text('/main.js'))
     ]
 
     original_root_path = csheet.APP.root_path
