@@ -16,11 +16,12 @@
   <body>
     <div
       id="app"
-      data-page="{{ dump(videos) }}"
-      data-task="{{ dumps(tasks) }}"
-      data-username="{{ session and session.get('name') | default('', True) }}"
-      data-tag="{{ dumps(tags) }}"
-      data-sentry-dsn="{{ SENTRY_DSN | default('', True) }}"
+      data-id="{{ config.id | escape }}"
+      data-page="{{ dump(videos) | escape }}"
+      data-task="{{ dumps(tasks) | escape }}"
+      data-username="{{ session and session.get('name') | default('', True) | escape }}"
+      data-tag="{{ dumps(tags) | escape }}"
+      data-sentry-dsn="{{ SENTRY_DSN | default('', True) | escape }}"
     >
       <noscript class="noscript">
         <link

@@ -34,7 +34,8 @@ class LocalPage(BasePage):
 
     @property
     def id(self):
-        return base64.b64encode(':'.join([self.root]).encode('utf-8'))
+        options = ':'.join([self.root])
+        return base64.b64encode(options.encode('utf-8')).decode()
 
     @property
     def title(self):
