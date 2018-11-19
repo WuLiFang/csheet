@@ -4,6 +4,7 @@
     .detail(v-if='video')
       TaskInfo(:id="video.uuid")
       FileInfo(:id="video.uuid")
+      Tags(:id='video.uuid')
     .topright
       ElButton(
         @click='refresh' 
@@ -79,6 +80,7 @@ import {
 import { preloadVideo, preloadImage } from '@/preload';
 import { isNull } from 'util';
 import { mapRootStateModelMixin } from '@/store';
+import Tags from '@/components/Tags.vue';
 
 function formatBytes(bytes: number, decimals = 2) {
   if (bytes === 0) {
@@ -100,6 +102,7 @@ export default Vue.extend({
     ElButton,
     ElCheckbox,
     FaIcon,
+    Tags,
   },
   props: {
     videoId: { type: String, default: null },
@@ -410,6 +413,9 @@ export default Vue.extend({
     margin: 5px;
     max-height: 100%;
     overflow-y: auto;
+    .tags {
+      max-width: 10em;
+    }
   }
   .topright {
     position: fixed;

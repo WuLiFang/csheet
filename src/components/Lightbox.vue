@@ -7,34 +7,29 @@
     @mouseenter="onmouseenter" 
     @mouseleave="onmouseleave" 
   )
-    ElPopover(trigger="hover" :disabled='isFileProtocol && tags.length === 0')
-      ElTag(v-for='i in tags' :key='i.id' @close='deleteVideoTag(i)' closable size='small') {{ i.text }}
-      ElButton(v-if='!isFileProtocol' @click='isTagEditDialogVisible = true' size='mini') 编辑标签
-      .reference(slot='reference')
-        .select-overlay(
-          v-if='!isFileProtocol'
-          v-show='isEditingTags && isSelected'
-        )
-          FaIcon(name='check-circle-o' scale='3')
-        video(
-          ref='video'
-          :poster='poster' 
-          :src='src' 
-          :width='200 / ratio'
-          :autoplay='isHover'
-          muted 
-          loop 
-        )
-        .top-display(:style='upDisplayStyle')
-          .artist(v-if='task') {{task.artist}}
-          LightboxTaskStatus.status(
-            v-if='taskId' 
-            :id='taskId' 
-            :statusStage='statusStage'
-          )
-        .bottom-display(:style='captionStyle')
-          span {{ video.label }}
-    TagEditDialog(:id='id' :visible.sync='isTagEditDialogVisible')
+    .select-overlay(
+      v-if='!isFileProtocol'
+      v-show='isEditingTags && isSelected'
+    )
+      FaIcon(name='check-circle-o' scale='3')
+    video(
+      ref='video'
+      :poster='poster' 
+      :src='src' 
+      :width='200 / ratio'
+      :autoplay='isHover'
+      muted 
+      loop 
+    )
+    .top-display(:style='upDisplayStyle')
+      .artist(v-if='task') {{task.artist}}
+      LightboxTaskStatus.status(
+        v-if='taskId' 
+        :id='taskId' 
+        :statusStage='statusStage'
+      )
+    .bottom-display(:style='captionStyle')
+      span {{ video.label }}
 </template>
 
 <script lang='ts'>
@@ -69,18 +64,14 @@ import {
 } from '../mutation-types';
 import { videoComputedMinxin } from '../store/video';
 import LightboxTaskStatus from '@/components/LightboxTaskStatus.vue';
-import TagEditDialog from '@/components/TagEditDialog.vue';
 import { isNull } from 'util';
 
 export default Vue.extend({
   components: {
     LightboxTaskStatus,
-    TagEditDialog,
     FaIcon,
     ElPopover,
-    ElTag,
     ElInput,
-    ElButton,
   },
   props: {
     id: { type: String },
@@ -100,7 +91,6 @@ export default Vue.extend({
   computed: {
     ...videoComputedMinxin,
     ...CGTeamWorkTaskComputedMixin,
-    ...tagComputedMinxin,
     ...RootComputedMixin,
     isSelected: {
       get(): boolean {
@@ -149,9 +139,6 @@ export default Vue.extend({
     },
     task(): CGTeamWorkTaskData | undefined {
       return this.cgTeamworkTaskStore.storage[this.video.uuid];
-    },
-    tags(): TagResponse[] {
-      return this.video.tags.map(i => this.tagStore.storage[i]);
     },
     isEnablePreview(): boolean {
       return this.$store.state.isEnablePreview;
@@ -204,16 +191,6 @@ export default Vue.extend({
     onmouseleave() {
       this.isHover = false;
       this.videoElement.pause();
-    },
-
-    deleteVideoTag(tag: TagResponse) {
-      const payload: VideoTagsDeleteActionPayload = {
-        id: this.video.uuid,
-        data: {
-          tags: [tag.id],
-        },
-      };
-      this.$store.dispatch(VIDEO_TAGS.DELETE, payload);
     },
     loadPoster() {
       const value = this.posterURL;
