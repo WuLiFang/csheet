@@ -15,6 +15,7 @@ import cgTeamworkTaskStore from './cgteamwork-task';
 import tagStore from './tag';
 import { RootState, StatusSelectResult } from './types';
 import videoStore from './video';
+import { PAGE_PATH } from '@/constants';
 
 export function getDefaultStatusFilter(): StatusSelectResult {
   return {
@@ -55,32 +56,35 @@ const store: Store = {
   },
   actions: {
     [mutations.REFETCH_PAGE_DATA](contextState) {
-      Axios.get(location.href).then((value: AxiosResponse<PageResponse>) => {
-        value.data.videos.forEach(i => {
-          const payload: mutations.VideoUpdateMutationPayload = {
-            id: i.uuid,
-            data: i,
-          };
-          contextState.commit(mutations.VIDEO.UPDATE, payload);
-        });
-        value.data.tags.forEach(i => {
-          const payload: mutations.TagUpdateMutationPayload = {
-            id: i.id,
-            data: i,
-          };
-          contextState.commit(mutations.TAG.UPDATE, payload);
-        });
-        if (value.data.tasks) {
-          value.data.tasks.forEach(i => {
-            const task = parseCGTeamWorkTaskResponse(i);
-            const payload: mutations.CGTeamWorkTaskReadMutationPayload = {
-              id: task.id,
-              data: task,
+      Axios.get(`/api/page${PAGE_PATH}`).then(
+        (value: AxiosResponse<PageResponse>) => {
+          value.data.videos.forEach(i => {
+            const payload: mutations.VideoUpdateMutationPayload = {
+              id: i.uuid,
+              data: i,
             };
-            contextState.commit(mutations.CGTEAMWORK_TASK.READ, payload);
+            contextState.commit(mutations.VIDEO.UPDATE, payload);
           });
+          value.data.tags.forEach(i => {
+            const payload: mutations.TagUpdateMutationPayload = {
+              id: i.id,
+              data: i,
+            };
+            contextState.commit(mutations.TAG.UPDATE, payload);
+          });
+          if (value.data.tasks) {
+            value.data.tasks.forEach(i => {
+              const task = parseCGTeamWorkTaskResponse(i);
+              const payload: mutations.CGTeamWorkTaskReadMutationPayload = {
+                id: task.id,
+                data: task,
+              };
+              contextState.commit(mutations.CGTEAMWORK_TASK.READ, payload);
+            });
+          }
+          contextState.dispatch(mutations.FILTER_VIDEOS);
         }
-      });
+      );
     },
   },
   getters: {

@@ -17,6 +17,7 @@
     <div
       id="app"
       data-id="{{ config.id | escape }}"
+      data-path="{{ request.full_path | escape }}"
       data-video="{{ videos | default([]) | dumps }}"
       data-task="{{ tasks | default([]) | dumps }}"
       data-username="{{ session and session.get('name') | default('', True) | escape }}"

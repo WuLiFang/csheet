@@ -19,6 +19,8 @@ from .login import require_login
 
 
 @APP.route('/')
+@APP.route('/api/page')
+@APP.route('/api/page/')
 @require_login
 def render_main():
     """main page.  """

@@ -3,7 +3,9 @@ import { VideoResponse } from '@/interface';
 import { VideoState } from '@/store/types';
 
 function parseDataFromPage(): VideoState['storage'] {
-  const parsed = JSON.parse(getDataFromAppElement('video')) as VideoResponse[];
+  const parsed = JSON.parse(
+    getDataFromAppElement('video', '[]')
+  ) as VideoResponse[];
   const ret: VideoState['storage'] = {};
   parsed.forEach(value => {
     ret[value.uuid] = value;
