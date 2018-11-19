@@ -2,11 +2,11 @@ import { getDataFromAppElement } from '@/datatools';
 import { Loading } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import Vue from 'vue';
-import TheIndex from './components/TheIndex.vue';
+import Index from './views/Index.vue';
 
 Vue.use(Loading);
 const vue = new Vue({
-  render: h => h(TheIndex),
+  render: h => h(Index),
 });
 interface Project {
   code: string;

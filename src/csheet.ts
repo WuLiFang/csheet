@@ -9,9 +9,9 @@ import Raven from 'raven-js';
 import RavenVue from 'raven-js/plugins/vue';
 import Vue from 'vue';
 import Vuex from 'vuex';
-import TheCSheet from './components/TheCSheet.vue';
 import { getDataFromAppElement } from './datatools';
 import _store from './store';
+import CSheet from './views/CSheet.vue';
 
 // Setup sentry
 const SENTRY_DSN = getDataFromAppElement('sentryDsn');
@@ -30,7 +30,7 @@ moment.locale(navigator.language);
 const store = new Vuex.Store(_store);
 const vue = new Vue({
   store,
-  render: h => h(TheCSheet),
+  render: h => h(CSheet),
 }).$mount('#app');
 
 if (!isFileProtocol) {
