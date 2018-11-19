@@ -194,9 +194,8 @@ class CGTeamWorkPage(core.BasePage):
 
         return [i.to_task_info() for i in data]
 
-    def _template_context(self, context, videos, database_session=None):
-        context = super(CGTeamWorkPage, self)._template_context(
-            context, videos, database_session)
+    def _process_context(self, context, database_session=None):
+        context = super()._process_context(context, database_session)
         if database_session:
             context.setdefault('tasks', self.tasks(database_session))
         return context

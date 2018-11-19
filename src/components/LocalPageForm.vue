@@ -48,7 +48,7 @@ export default Vue.extend({
             validator: (
               rule: any,
               value: string,
-              callback: (error?: Error) => void,
+              callback: (error?: Error) => void
             ) => {
               if (!(/^\/.*/.test(value) || /^\w:[\\/].*/.test(value))) {
                 callback(new Error('请使用绝对路径'));
@@ -74,7 +74,7 @@ export default Vue.extend({
       this.formComponent.validate((valid: boolean) => {
         if (valid) {
           showFullScreenLoading();
-          location.href = buildURL('local', this.form);
+          location.href = buildURL('', this.form);
         }
       });
     },
@@ -82,7 +82,7 @@ export default Vue.extend({
       this.formComponent.validate((valid: boolean) => {
         if (valid) {
           showFullScreenLoading();
-          location.href = buildURL('local', { ...this.form, pack: '1' });
+          location.href = buildURL('', { ...this.form, pack: '1' });
         }
       });
     },

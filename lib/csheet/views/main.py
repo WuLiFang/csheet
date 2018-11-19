@@ -14,45 +14,59 @@ from wlf.decorators import run_with_clock
 from . import core
 from ..core import APP
 from ..page import CGTeamWorkPage, LocalPage
+from ..page.core import BasePage
 from .login import require_login
 
 
 @APP.route('/')
+@require_login
 def render_main():
     """main page.  """
 
     if not request.args:
         return render_index()
-    return render_csheet_page()
-
-
-@run_with_clock('生成色板页面')
-@require_login
-def render_csheet_page():
-    """Csheet page.  """
-
-    project = request.args['project']
-    prefix = request.args['prefix']
-    pipeline = request.args['pipeline']
-    token = session['token']
-    page = CGTeamWorkPage(project, pipeline, prefix, token)
-    page.update_async()
-
+    page: BasePage = get_page()
     sess = core.database_session()
     if 'pack' in request.args:
         return packed_page(page, sess)
-    rendered = page.render(
-        page.videos(sess),
-        template='main_app.html',
-        request=request,
-        session=session,
-        database_session=sess)
+    return render_page(page, sess)
 
-    # Respon with cookies set.
+
+def get_page() -> BasePage:
+    """Get page from request args.
+
+    Returns:
+        BasePage
+    """
+
+    kwargs: dict = request.args
+    if 'root' in kwargs:
+        page = LocalPage(kwargs['root'])
+    else:
+        page = CGTeamWorkPage(kwargs['project'],
+                              kwargs['pipeline'],
+                              kwargs['prefix'],
+                              session['token'])
+    return page
+
+
+@run_with_clock('生成色板页面')
+def render_page(page: BasePage, database_session):
+    """Csheet page.  """
+
+    page.update_async()
+
+    rendered = page.render(
+        template='main_app.html',
+        database_session=database_session,
+        request=request,
+        session=session,)
+
     resp = make_response(rendered)
-    resp.set_cookie('project', project, max_age=APP.config['COOKIE_LIFE'])
-    resp.set_cookie('pipeline', pipeline, max_age=APP.config['COOKIE_LIFE'])
-    resp.set_cookie('prefix', prefix, max_age=APP.config['COOKIE_LIFE'])
+    for k, v in request.args.items():
+        if k not in ('root', 'project', 'pipeline', 'prefix'):
+            continue
+        resp.set_cookie(k, v, max_age=APP.config['COOKIE_LIFE'])
 
     return resp
 
@@ -72,27 +86,6 @@ def render_index():
         'index.html',
         projects=projects,
         dumps=json.dumps)
-
-
-@APP.route('/local')
-def render_local_dir():
-    """Render page for local dir.  """
-
-    root = request.args['root']
-    page = LocalPage(root)
-    sess = core.database_session()
-    page.update_async()
-
-    if 'pack' in request.args:
-        return packed_page(page, sess)
-
-    videos = page.videos(sess)
-    rendered = page.render(videos, 'main_app.html',
-                           request=request, tags=page.tags(sess))
-
-    resp = make_response(rendered)
-    resp.set_cookie('root', root, max_age=APP.config['COOKIE_LIFE'])
-    return resp
 
 
 def packed_page(page, database_session):
