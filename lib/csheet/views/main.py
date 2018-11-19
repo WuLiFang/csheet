@@ -43,7 +43,7 @@ def render_csheet_page():
         return packed_page(page, sess)
     rendered = page.render(
         page.videos(sess),
-        template='csheet_app.html',
+        template='main_app.html',
         request=request,
         session=session,
         database_session=sess)
@@ -87,7 +87,7 @@ def render_local_dir():
         return packed_page(page, sess)
 
     videos = page.videos(sess)
-    rendered = page.render(videos, 'csheet_app.html',
+    rendered = page.render(videos, 'main_app.html',
                            request=request, tags=page.tags(sess))
 
     resp = make_response(rendered)

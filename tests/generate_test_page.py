@@ -6,9 +6,9 @@ from __future__ import (absolute_import, division, print_function,
 
 import typing
 
-import cgtwq
 from requests.utils import quote
 
+import cgtwq
 import csheet
 import util
 
@@ -35,7 +35,7 @@ def main():
     client = csheet.APP.test_client()
     if cgtwq.DesktopClient().is_logged_in():
         tasks.append((quote('/?pipeline=合成&project=梦塔&prefix=MT_EP06_',
-                            safe=b'/?=&'), 'csheet.html', _inject_text('/csheet.js')))
+                            safe=b'/?=&'), 'main.html', _inject_text('/main.js')))
         client.post('/_login')
     else:
         print('CGTeamWork not logged in')

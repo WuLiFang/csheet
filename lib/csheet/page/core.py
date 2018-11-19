@@ -77,7 +77,7 @@ class BasePage(object):
 
         self.update_task.apply_async(countdown=3)
 
-    def render(self, videos, template='csheet.html', database_session=None, **context):
+    def render(self, videos, template='main.html', database_session=None, **context):
         """Render the page.  """
 
         env = Environment(

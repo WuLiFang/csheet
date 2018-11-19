@@ -10,11 +10,11 @@ module.exports = {
       .entry('index')
       .add('./src/index.ts')
       .end()
-      .entry('csheet')
-      .add('./src/csheet.ts')
+      .entry('main')
+      .add('./src/main.ts')
       .end()
-      .entry('csheet_noscript')
-      .add('./src/csheet.scss')
+      .entry('main_noscript')
+      .add('./src/main.scss')
       .end();
     config.plugin('html').use(htmlPlugin, [
       {
@@ -23,11 +23,11 @@ module.exports = {
         chunks: ['chunk-vendors', 'index'],
       },
     ]);
-    config.plugin('html_csheet').use(htmlPlugin, [
+    config.plugin('html_main').use(htmlPlugin, [
       {
-        template: 'public/templates/csheet.html',
-        filename: 'templates/csheet.html',
-        chunks: ['chunk-vendors', 'csheet'],
+        template: 'public/templates/main.html',
+        filename: 'templates/main.html',
+        chunks: ['chunk-vendors', 'main'],
       },
     ]);
     config.plugin('define').tap(args => {
