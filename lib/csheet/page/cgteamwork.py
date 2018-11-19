@@ -14,16 +14,16 @@ from sqlalchemy import orm
 import cgtwq
 from wlf.decorators import run_with_clock
 
+from . import core
 from ..database import CGTeamWorkTask
 from ..database.cgteamworktask import TaskDataRow
 from ..mimecheck import is_mimetype
 from ..video import HTMLVideo
-from .core import BasePage
 
 LOGGER = logging.getLogger(__name__)
 
 
-class CGTeamWorkPage(BasePage):
+class CGTeamWorkPage(core.BasePage):
     """Csheet page from cgteamwork. """
 
     render_pipeline = {'灯光':  '渲染', '合成':  '输出'}
@@ -45,10 +45,17 @@ class CGTeamWorkPage(BasePage):
         return 'CGTeamWorkPage<project={}, pipeline={}, prefix={}>'.format(
             self.project, self.pipeline, self.prefix)
 
+    @classmethod
+    def from_id(cls, id_, **kwrags):
+        token = kwrags.pop('token')
+        _, project, pipeline, prefix = core.parse_id(id_)
+        return cls(project, pipeline, prefix, token)
+
     @property
     def id(self):
-        options = ':'.join([self.project, self.pipeline, self.prefix])
-        return base64.b64encode(options.encode('utf-8')).decode()
+        id_ = core.ID_DETERMINER.join(
+            [self.__class__.__name__, self.project, self.pipeline, self.prefix])
+        return base64.b64encode(id_.encode('utf-8')).decode()
 
     @property
     def title(self):
@@ -61,9 +68,7 @@ class CGTeamWorkPage(BasePage):
         """Celery task to update page data.  """
 
         from .tasks import update_cgteamwork_page
-        return update_cgteamwork_page.s(project=self.project,
-                                        pipeline=self.pipeline,
-                                        prefix=self.prefix,
+        return update_cgteamwork_page.s(id_=self.id,
                                         token=self.token)
 
     def select(self):

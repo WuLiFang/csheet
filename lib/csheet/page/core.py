@@ -4,6 +4,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import base64
 import json
 import logging
 import re
@@ -25,11 +26,40 @@ from ..filename import filter_filename
 from ..video import HTMLVideo
 
 LOGGER = logging.getLogger(__name__)
+ID_DETERMINER = '\n'
 
 
 def _read_assets():
     with open(filetools.dist_path('webpack-assets.json')) as f:
         return json.load(f)
+
+
+PAGE_REGISTRY = {}
+
+
+def parse_id(id_):
+    """Parse id to parts.
+
+    Args:
+        id_ (str)
+    Returns:
+        list
+    """
+    return base64.b64decode(id_).decode().split(ID_DETERMINER)
+
+
+def page_from_id(id_, **kwargs):
+    """Get page fron id.    
+
+    Args:
+        id_ (str): Page id.
+
+    Return:
+        BasePage
+    """
+
+    type_ = parse_id(id_)[0]
+    return PAGE_REGISTRY[type_].from_id(id_, **kwargs)
 
 
 class BasePage(object):
@@ -39,6 +69,22 @@ class BasePage(object):
     version = __about__.__version__
     is_pack = False
     assets = _read_assets()
+
+    @classmethod
+    def __init_subclass__(cls):
+        PAGE_REGISTRY[cls.__name__] = cls
+
+    @classmethod
+    def from_id(cls, id_, **kwargs):
+        """Get page fron id.    
+
+        Args:
+            id_ (str): Page id.
+
+        Return:
+            cls
+        """
+        raise NotImplementedError
 
     @property
     def id(self):
@@ -56,7 +102,8 @@ class BasePage(object):
     def update_task(self):
         """Celery task to update page data.  """
 
-        raise NotImplementedError
+        from .tasks import update_base_page
+        return update_base_page.s(id_=self.id)
 
     @abstractmethod
     def videos(self, session):

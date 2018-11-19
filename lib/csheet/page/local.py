@@ -15,15 +15,15 @@ from wlf.path import PurePath
 from wlf.path import get_encoded as e
 from wlf.path import get_unicode as u
 
+from . import core
 from ..filename import filter_filename
 from ..filetools import uuid_from_path
 from ..video import HTMLVideo
-from .core import BasePage
 
 LOGGER = logging.getLogger(__name__)
 
 
-class LocalPage(BasePage):
+class LocalPage(core.BasePage):
     """Csheet page from a local folder.  """
 
     def __init__(self, root):
@@ -32,20 +32,19 @@ class LocalPage(BasePage):
     def __repr__(self):
         return 'LocalPage<root={}>'.format(self.root)
 
+    @classmethod
+    def from_id(cls, id_, **kwargs):
+        _, root = core.parse_id(id_)
+        return cls(root)
+
     @property
     def id(self):
-        options = ':'.join([self.root])
-        return base64.b64encode(options.encode('utf-8')).decode()
+        id_ = core.ID_DETERMINER.join([self.__class__.__name__, self.root])
+        return base64.b64encode(id_.encode('utf-8')).decode()
 
     @property
     def title(self):
         return '{}色板'.format(self.root)
-
-    @property
-    def update_task(self):
-        """Celery task to update page data.  """
-        from .tasks import update_local_page
-        return update_local_page.s(root=self.root)
 
     def update(self, session):
         """Scan root for videos.  """

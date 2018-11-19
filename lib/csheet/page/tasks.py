@@ -12,8 +12,6 @@ from . import core
 from .. import database
 from ..core import CELERY, SOCKETIO
 from ..workertools import database_single_instance
-from .cgteamwork import CGTeamWorkPage
-from .local import LocalPage
 
 LOGGER = logging.getLogger(__name__)
 
@@ -21,19 +19,19 @@ LOGGER = logging.getLogger(__name__)
 @CELERY.task(ignore_result=True,
              autoretry_for=(sqlalchemy.exc.OperationalError,),
              retry_backoff=True)
-def update_local_page(root):
-    """Update local page data.  """
+def update_base_page(id_):
+    """Update base page data.  """
 
-    _update_page(lambda: LocalPage(root))
+    _update_page(lambda: core.page_from_id(id_))
 
 
 @CELERY.task(ignore_result=True,
              autoretry_for=(sqlalchemy.exc.OperationalError,),
              retry_backoff=True)
-def update_cgteamwork_page(project, pipeline, prefix, token):
+def update_cgteamwork_page(id_, token):
     """Update cgteamwork page data.  """
 
-    _update_page(lambda: CGTeamWorkPage(project, pipeline, prefix, token))
+    _update_page(lambda: core.page_from_id(id_, token=token))
 
 
 def _update_page(page_getter):
