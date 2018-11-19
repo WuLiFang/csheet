@@ -58,21 +58,3 @@ class Video(core.Base, core.SerializableMixin):
         ret['related_tasks'] = [i.uuid for i in self.related_tasks]
         ret['tags'] = [i.id for i in self.tags]
         return ret
-
-    @staticmethod
-    def format_videos(videos):
-        """Format videos for front end.
-
-        Args:
-            videos (list[Video]): Videos to format.
-
-        Returns:
-            list[tuple]: Formated video infos.
-        """
-
-        ret = []
-        for i in videos:
-            assert isinstance(i, Video)
-            row = i.serialize()
-            ret.append(row)
-        return ret
