@@ -3,7 +3,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import json
 import os
 
 from flask import make_response, render_template, request, send_file, session
@@ -13,6 +12,7 @@ from wlf.decorators import run_with_clock
 
 from . import core
 from ..core import APP
+from ..filters import dumps
 from ..page import CGTeamWorkPage, LocalPage
 from ..page.core import BasePage
 from .login import require_login
@@ -29,7 +29,41 @@ def render_main():
     sess = core.database_session()
     if 'pack' in request.args:
         return packed_page(page, sess)
-    return render_page(page, sess)
+
+    handler = {
+        'application/json': lambda: _page_data(page, sess),
+        'text/html': lambda: _render_page(page, sess),
+    }
+    mimetypes = request.accept_mimetypes
+    best = mimetypes.best_match(handler.keys(), default='text/html')
+    return handler[best]()
+
+
+@run_with_clock('生成色板页面')
+def _render_page(page: BasePage, database_session):
+    """Csheet page.  """
+
+    page.update_async()
+
+    rendered = page.render(
+        template='main_app.html',
+        database_session=database_session)
+
+    resp = make_response(rendered)
+    for k, v in request.args.items():
+        if k not in ('root', 'project', 'pipeline', 'prefix'):
+            continue
+        resp.set_cookie(k, v, max_age=APP.config['COOKIE_LIFE'])
+
+    return resp
+
+
+def _page_data(page: BasePage, database_session):
+
+    data = page.data(database_session)
+    resp = make_response(dumps(data))
+    resp.headers['Content-Type'] = 'application/json'
+    return resp
 
 
 def get_page() -> BasePage:
@@ -48,25 +82,6 @@ def get_page() -> BasePage:
                               kwargs['prefix'],
                               session['token'])
     return page
-
-
-@run_with_clock('生成色板页面')
-def render_page(page: BasePage, database_session):
-    """Csheet page.  """
-
-    page.update_async()
-
-    rendered = page.render(
-        template='main_app.html',
-        database_session=database_session)
-
-    resp = make_response(rendered)
-    for k, v in request.args.items():
-        if k not in ('root', 'project', 'pipeline', 'prefix'):
-            continue
-        resp.set_cookie(k, v, max_age=APP.config['COOKIE_LIFE'])
-
-    return resp
 
 
 @require_login

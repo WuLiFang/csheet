@@ -137,6 +137,14 @@ class BasePage(object):
             context.setdefault('tags', self.tags(database_session))
         return context
 
+    def data(self, database_session):
+        """Page related data.  """
+
+        return {
+            'videos': self.videos(database_session),
+            'tags': self.tags(database_session),
+        }
+
     def archive(self, session):
         """Archive page and assets to a temporary file.  """
 

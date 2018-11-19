@@ -200,6 +200,13 @@ class CGTeamWorkPage(core.BasePage):
             context.setdefault('tasks', self.tasks(database_session))
         return context
 
+    def data(self, database_session):
+        """Page related data.  """
+
+        ret = super().data(database_session)
+        ret['tasks'] = self.tasks(database_session)
+        return ret
+
 
 def _get_submit_file(submit_file_data):
     if not submit_file_data:
