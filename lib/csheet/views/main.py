@@ -62,7 +62,7 @@ def _page_data(page: BasePage, database_session):
 
     data = page.data(database_session)
     resp = make_response(dumps(data))
-    resp.headers['Content-Type'] = 'application/json'
+    resp.headers['Content-Type'] = 'application/json; charset=utf-8'
     return resp
 
 
