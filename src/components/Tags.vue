@@ -18,10 +18,10 @@ import { Tag, Button } from 'element-ui';
 })
 export default class Tags extends Vue {
   @Prop(String)
-  id!: string;
+  public id!: string;
 
-  isFileProtocol = isFileProtocol;
-  isTagEditDialogVisible = false;
+  private isFileProtocol = isFileProtocol;
+  private isTagEditDialogVisible = false;
 
   get video(): VideoResponse {
     return this.$store.state.videoStore.storage[this.id];
@@ -29,7 +29,7 @@ export default class Tags extends Vue {
   get tags(): TagResponse[] {
     return this.video.tags.map(i => this.$store.state.tagStore.storage[i]);
   }
-  deleteVideoTag(tag: TagResponse) {
+  private deleteVideoTag(tag: TagResponse) {
     const payload: VideoTagsDeleteActionPayload = {
       id: this.video.uuid,
       data: {

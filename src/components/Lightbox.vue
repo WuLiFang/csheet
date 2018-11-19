@@ -169,7 +169,7 @@ export default Vue.extend({
           '/' +
           plainData;
       }
-      event.dataTransfer.setData('text/plain', plainData);
+      event.dataTransfer!.setData('text/plain', plainData);
     },
     play() {
       if (this.videoElement.readyState > 1) {

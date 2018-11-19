@@ -190,7 +190,7 @@ export default Vue.extend({
           '/' +
           plainData;
       }
-      event.dataTransfer.setData('text/plain', plainData);
+      event.dataTransfer!.setData('text/plain', plainData);
     },
     parseHash() {
       const hash = window.location.hash.slice(1);
