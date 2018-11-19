@@ -46,14 +46,14 @@ def get_updated_asset(since, sess):
              autoretry_for=(sqlalchemy.exc.OperationalError,),
              retry_backoff=True)
 @worker_concurrency(value=1, is_block=False)
-def broadcast_updated_asset(session=None):
+def broadcast_updated_asset():
     """Broad cast all newly updated asset.
 
     """
 
     data_key = 'LastBroadcastTime'
     now = time.time()
-    with session_scope(session) as sess:
+    with session_scope() as sess:
         since = Meta.get(data_key, default=now)
         data = get_updated_asset(since, sess)
         assert isinstance(data, list), type(data)
