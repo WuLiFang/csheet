@@ -50,7 +50,6 @@ FROM backend-build AS release
 RUN set +e
 ENV LANG=en_US.utf-8
 ENV CSHEET_SETTINGS=/etc/csheet/settings.py
-ENV DATABASE_URL_META=sqlite:////srv/csheet/meta.db
 ENV WORKER_CONNECTIONS=1000
 
 LABEL author="NateScarlet@Gmail.com"

@@ -8,7 +8,7 @@ from sqlalchemy import Column, String
 from . import core
 
 
-class Meta(core.BaseMeta):
+class Meta(core.Base):
     """Application meta data.  """
 
     __tablename__ = 'Meta'
@@ -19,15 +19,15 @@ class Meta(core.BaseMeta):
     def get(cls, key, default=None):
         """Get metadata value.  """
 
-        with core.session_scope() as sess:
-            item = sess.query(cls).get(key)
-            if not item:
-                return default
-            return item.value
+        item = core.Session().query(cls).get(key)
+        if not item:
+            return default
+        return item.value
 
     @classmethod
     def set(cls, key, value):
         """Set metadata value.  """
 
         with core.session_scope() as sess:
+            sess.query(cls).filter(cls.key == key).with_for_update().all()
             sess.merge(cls(key=key, value=value))

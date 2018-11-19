@@ -32,6 +32,11 @@ SOCKETIO = SocketIO(app=APP,
 CELERY = Celery('csheet')
 
 
+@APP.teardown_request
+def _teardown_session(_):
+    database.Session.remove()
+
+
 def init():
     """Initiate application.  """
 
@@ -39,7 +44,6 @@ def init():
     CELERY.config_from_object(APP.config['CELERY_CONFIG'])
     database.core.bind(
         url=APP.config['DATABASE_URL'],
-        url_meta=APP.config['DATABASE_URL_META'],
         is_echo=APP.config['DEBUG_SQL'])
 
 

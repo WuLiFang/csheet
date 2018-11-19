@@ -62,16 +62,17 @@ class LocalPage(core.BasePage):
                     '%s, image_count=%s, video_count=%s',
                     self, len(images), len(videos))
         videos = [_get_video(label, videos, images) for label in labels]
-        with session.no_autoflush:
-            _ = [session.merge(i) for i in videos]
+        self._video_query(session).with_for_update().all()
+        _ = [session.merge(i) for i in videos]
         session.commit()
 
     def videos(self, session):
-        query = session.query(HTMLVideo)
-        query = query.filter(
+        return self._video_query(session).all()
+
+    def _video_query(self, session):
+        return session.query(HTMLVideo).filter(
             self._video_criterion()
         ).order_by(HTMLVideo.label)
-        return query.all()
 
     def _video_criterion(self):
         root = filter_filename(self.root)

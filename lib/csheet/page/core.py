@@ -14,7 +14,6 @@ from zipfile import ZipFile
 
 from flask import render_template
 from gevent import sleep
-from jinja2 import Environment, FileSystemLoader, Undefined
 from sqlalchemy import orm
 
 from wlf.codectools import get_unicode as u

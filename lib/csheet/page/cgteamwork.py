@@ -133,19 +133,10 @@ class CGTeamWorkPage(core.BasePage):
         assert len(set([i.id for i in data])) == len(data)
         tasks = [self._task_from_data(i) for i in data]
         videos = [self._video_from_data(data, tasks, shot) for shot in shots]
-
-        def _update():
-            _ = [session.merge(i) for i in tasks + videos]
-            session.commit()
-
-        try:
-            with session.no_autoflush:
-                _update()
-        except sqlalchemy.exc.IntegrityError:
-            LOGGER.warning(
-                'Commit page data failed, Retry with autoflush', exc_info=True)
-            session.rollback()
-            _update()
+        self._video_query(session).with_for_update().all()
+        self._task_query(session).with_for_update().all()
+        _ = [session.merge(i) for i in tasks + videos]
+        session.commit()
 
     def _task_from_data(self, data):
         assert isinstance(data, TaskDataRow), type(data)
@@ -162,8 +153,7 @@ class CGTeamWorkPage(core.BasePage):
             client_status=data.client_status,
             note_num=data.note_num,)
 
-    @run_with_clock('收集视频信息')
-    def videos(self, session):
+    def _video_query(self, session):
         query = session.query(HTMLVideo)
         query = query.filter(
             self._video_criterion()
@@ -172,7 +162,10 @@ class CGTeamWorkPage(core.BasePage):
         ).options(
             orm.selectinload(HTMLVideo.tags)
         ).order_by(HTMLVideo.label)
-        return query.all()
+        return query
+
+    def videos(self, session):
+        return self._video_query(session).all()
 
     def _video_criterion(self):
         return sqlalchemy.and_(
@@ -181,16 +174,19 @@ class CGTeamWorkPage(core.BasePage):
             HTMLVideo.label.startswith(self.prefix)
         )
 
-    @run_with_clock('收集任务信息')
-    def tasks(self, session):
-        """Video related task data.  """
-
+    def _task_query(self, session):
         query = session.query(CGTeamWorkTask)
         query = query.filter(
             CGTeamWorkTask.database == self.database,
             CGTeamWorkTask.shot.startswith(self.prefix)
         ).order_by(CGTeamWorkTask.shot)
-        data = query.all()
+        return query
+
+    @run_with_clock('收集任务信息')
+    def tasks(self, session):
+        """Video related task data.  """
+
+        data = self._task_query(session).all()
 
         return [i.to_task_info() for i in data]
 

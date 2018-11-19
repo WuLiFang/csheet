@@ -17,7 +17,7 @@ from .core import APP, CELERY
 from .database import Video, session_scope
 from .exceptions import WorkerIdle
 from .filename import filter_filename
-from .workertools import database_single_instance, work_forever
+from .workertools import work_forever
 
 LOGGER = logging.getLogger(__name__)
 
@@ -56,7 +56,7 @@ class Chunk(list):
             Video.src.isnot(None) | Video.poster.isnot(None),
             sqlalchemy.or_(Video.last_update_time.is_(None),
                            Video.last_update_time < current_time - min_update_interval)
-        ).order_by(Video.last_update_time).limit(size).all()
+        ).order_by(Video.last_update_time).limit(size).with_for_update().all()
 
         return cls(videos)
 
@@ -82,7 +82,6 @@ class Chunk(list):
 @CELERY.task(ignore_result=True,
              autoretry_for=(sqlalchemy.exc.OperationalError,),
              retry_backoff=True)
-@database_single_instance(name='watch.update', is_block=False)
 def update_one_chunk(size=50, is_strict=True):
     """Get a update chunk then update it.  """
 

@@ -11,7 +11,7 @@ import sqlalchemy.exc
 from gevent import sleep, spawn
 
 from .core import APP, CELERY, SOCKETIO
-from .database import Meta, Video, session_scope
+from .database import Meta, Session, Video, session_scope
 from .filters import dumps
 from .workertools import worker_concurrency
 
@@ -26,14 +26,14 @@ def _role_updated_criterion(role, since):
     )
 
 
-def get_updated_asset(since, sess):
+def get_updated_asset(since):
     """Get all newly updated asset from local database.
 
     Args:
         since (float): Timestamp
     """
 
-    query = sess.query(Video).filter(
+    query = Session().query(Video).filter(
         sqlalchemy.or_(_role_updated_criterion('thumb', since),
                        _role_updated_criterion('preview', since),
                        _role_updated_criterion('poster', since),
@@ -53,16 +53,15 @@ def broadcast_updated_asset():
 
     data_key = 'LastBroadcastTime'
     now = time.time()
-    with session_scope() as sess:
-        since = Meta.get(data_key, default=now)
-        data = get_updated_asset(since, sess)
-        assert isinstance(data, list), type(data)
-        if data:
-            SOCKETIO.emit('asset update', dumps(data))
-            LOGGER.info('Broadcast updated asset, count: %s', len(data))
-        else:
-            LOGGER.debug('No updated assets.')
-        Meta.set(data_key, now)
+    since = Meta.get(data_key, default=now)
+    data = get_updated_asset(since)
+    assert isinstance(data, list), type(data)
+    if data:
+        SOCKETIO.emit('asset update', dumps(data))
+        LOGGER.info('Broadcast updated asset, count: %s', len(data))
+    else:
+        LOGGER.debug('No updated assets.')
+    Meta.set(data_key, now)
 
 
 def broadcast_forever():

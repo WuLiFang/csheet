@@ -11,7 +11,6 @@ import sqlalchemy.exc
 from . import core
 from .. import database
 from ..core import CELERY, SOCKETIO
-from ..workertools import database_single_instance
 
 LOGGER = logging.getLogger(__name__)
 
@@ -37,15 +36,12 @@ def update_cgteamwork_page(id_, token):
 def _update_page(page_getter):
     page: core.BasePage = page_getter()
 
-    @database_single_instance(page.id, is_block=False)
-    def _run():
-        LOGGER.info('Start update page: %s', page)
-        with database.session_scope() as sess:
-            try:
-                page.update(sess)
-                SOCKETIO.emit('page update', page.id)
-            except:
-                LOGGER.error('Page update failed.', exc_info=True)
-                raise
-        LOGGER.info('Page updated: %s', page)
-    _run()
+    LOGGER.info('Start update page: %s', page)
+    with database.session_scope() as sess:
+        try:
+            page.update(sess)
+            SOCKETIO.emit('page update', page.id)
+        except:
+            LOGGER.error('Page update failed.', exc_info=True)
+            raise
+    LOGGER.info('Page updated: %s', page)

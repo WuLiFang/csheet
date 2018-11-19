@@ -18,11 +18,10 @@ from wlf.path import get_unicode as u
 
 # pylint: disable=invalid-name
 Base = declarative_base()
-BaseMeta = declarative_base()
-Session = orm.sessionmaker()
+session_factory = orm.sessionmaker()
+Session = orm.scoped_session(session_factory)
 # pylint: enable=invalid-name
 
-SESSION = orm.scoped_session(Session)
 LOGGER = logging.getLogger(__name__)
 VIDEO_TASK = Table('Video-CGTeamWorkTask', Base.metadata,
                    Column('video_id', String, ForeignKey('Video.uuid')),
@@ -34,7 +33,7 @@ VIDEO_TAG = Table('Video-Tag', Base.metadata,
 
 
 @contextmanager
-def session_scope(session=None):
+def session_scope(session=None, is_close=False):
     """Session scope context.  """
 
     sess = session or Session()
@@ -46,7 +45,8 @@ def session_scope(session=None):
         sess.rollback()
         raise
     finally:
-        sess.close()
+        if is_close:
+            sess.close()
 
 
 def _skip_process_if_is_none(process):
@@ -115,14 +115,10 @@ class SerializableMixin(object):
         return {i.name: self._encode(getattr(self, i.name)) for i in self.__table__.columns}
 
 
-def bind(url, url_meta=None, is_echo=False):
+def bind(url, is_echo=False):
     """Bind model to database.  """
 
     LOGGER.debug('Bind to engine: %s', url)
-    url_meta = url_meta or url
     engine = create_engine(url, echo=is_echo)
-    meta_engine = create_engine(url_meta, echo=is_echo)
-    Session.configure(binds={Base: engine,
-                             BaseMeta: meta_engine})
+    session_factory.configure(binds={Base: engine})
     Base.metadata.create_all(engine)
-    BaseMeta.metadata.create_all(meta_engine)

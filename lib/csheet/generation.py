@@ -16,11 +16,10 @@ from gevent import spawn
 from wlf import ffmpeg
 
 from .core import APP, CELERY
-from .database import Video, session_scope
+from .database import Session, Video, session_scope
 from .exceptions import WorkerIdle
 from .filename import filter_filename
-from .workertools import (Locked, database_single_instance, work_forever,
-                          worker_concurrency)
+from .workertools import Locked, work_forever, worker_concurrency
 
 LOGGER = logging.getLogger(__name__)
 
@@ -163,7 +162,7 @@ def _get_video(source, target, session, **kwargs):
         GenaratableVideo
     ).filter(
         _need_generation_criterion(source, target, **kwargs)
-    ).order_by(getattr(Video, '{}_atime'.format(target))).first()
+    ).order_by(getattr(Video, '{}_atime'.format(target))).with_for_update().first()
     return video
 
 
@@ -248,11 +247,11 @@ def generate(video_id, source, target):
 
     method = getattr(GenaratableVideo, 'generate_{}'.format(target))
     with session_scope() as sess:
-        video = sess.query(GenaratableVideo).get(video_id)
+        video = sess.query(GenaratableVideo).with_for_update().get(video_id)
         video.try_apply(method, source, target)
 
 
-def discover_tasks(source, target, session, limit=100, **kwargs):
+def discover_tasks(source, target, limit=100, **kwargs):
     """Discover generation tasks.  """
 
     kwargs['min_interval'] = max(
@@ -267,7 +266,7 @@ def discover_tasks(source, target, session, limit=100, **kwargs):
         return
     lock.release()
 
-    videos = session.query(GenaratableVideo).filter(
+    videos = Session().query(GenaratableVideo).filter(
         _need_generation_criterion(source, target, **kwargs)).limit(limit).all()
     if not videos:
         LOGGER.debug('No generation task discovered: %s -> %s', source, target)
@@ -282,26 +281,22 @@ def discover_tasks(source, target, session, limit=100, **kwargs):
 @CELERY.task(ignore_result=True,
              autoretry_for=(sqlalchemy.exc.OperationalError,),
              retry_backoff=True)
-@database_single_instance(name='generation.discover', is_block=False)
 def discover_light_tasks():
     """Discover light generation tasks.  """
 
-    with session_scope() as sess:
-        discover_tasks('poster', 'thumb', sess, min_interval=1)
-        discover_tasks('preview', 'poster', sess, min_interval=60,
-                       conditions=(Video.poster.is_(None),),
-                       limit=10)
+    discover_tasks('poster', 'thumb', min_interval=1)
+    discover_tasks('preview', 'poster', min_interval=60,
+                   conditions=(Video.poster.is_(None),),
+                   limit=10)
 
 
 @CELERY.task(ignore_result=True,
              autoretry_for=(sqlalchemy.exc.OperationalError,),
              retry_backoff=True)
-@database_single_instance(name='generation.discover_heavy', is_block=False)
 def discover_heavy_tasks():
     """Discover heavy generation tasks.  """
 
-    with session_scope() as sess:
-        discover_tasks('src', 'preview', sess, min_interval=120, limit=1)
+    discover_tasks('src', 'preview', min_interval=120, limit=1)
 
 
 @APP.before_first_request
