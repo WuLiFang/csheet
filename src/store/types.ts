@@ -12,8 +12,6 @@ export interface IDMap<T> {
 }
 
 export interface RootState {
-  id: string;
-  username: string;
   isEnablePreview: boolean;
   isFixedTitleDisplay: boolean;
   isFixedStatusDisplay: boolean;

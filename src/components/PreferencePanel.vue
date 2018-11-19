@@ -97,7 +97,7 @@ import { isFileProtocol } from '@/packtools';
 import { videoComputedMinxin } from '@/store/video';
 import { isNull } from 'util';
 import { tagComputedMinxin } from '@/store/tag';
-
+import { USERNAME } from '@/constants';
 export default Vue.extend({
   components: {
     StatusSelect,
@@ -129,19 +129,19 @@ export default Vue.extend({
       get(): boolean {
         return (
           this.artistFilterModel.length === 1 &&
-          this.artistFilterModel[0] === this.usernameModel
+          this.artistFilterModel[0] === USERNAME
         );
       },
       set(value: boolean) {
         if (value) {
-          this.artistFilterModel = [this.usernameModel];
+          this.artistFilterModel = [USERNAME];
         } else {
           this.artistFilterModel = [];
         }
       },
     },
     currentUserTaskCount(): number {
-      return this.getAritstTaskCount(this.usernameModel);
+      return this.getAritstTaskCount(USERNAME);
     },
     isFilterEnabled() {
       const defaultStatusFilter = getDefaultStatusFilter();

@@ -14,6 +14,7 @@ import Notify from 'notifyjs';
 import * as io from 'socket.io-client';
 import { isUndefined } from 'util';
 import { Store } from 'vuex';
+import { PAGE_ID } from './constants';
 
 const isSupportNotify =
   typeof Notification === 'function' &&
@@ -37,8 +38,9 @@ export default class SocketIO {
     this.socket.on('asset update', (message: VideoResponse[]) =>
       this.on_asset_update(message)
     );
-    this.socket.on('connect', this.on_connect);
-    this.socket.on('disconnect', this.on_disconnect);
+    this.socket.on('connect', this.on_connect.bind(this));
+    this.socket.on('disconnect', this.on_disconnect.bind(this));
+    this.socket.on('page update', this.onPageUpdated.bind(this));
     setInterval(this.updateAppeared, 2000);
   }
 
@@ -89,7 +91,7 @@ export default class SocketIO {
    * onPageUpdated
    */
   public onPageUpdated(id: string) {
-    if (id !== this.store.state.id) {
+    if (id !== PAGE_ID) {
       return;
     }
     this.store.dispatch(REFETCH_PAGE_DATA);

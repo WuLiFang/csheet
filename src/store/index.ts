@@ -30,8 +30,6 @@ export function getDefaultStatusFilter(): StatusSelectResult {
 const store: Store = {
   strict: process.env.NODE_ENV !== 'production',
   state: {
-    id: getDataFromAppElement('id', ''),
-    username: isFileProtocol ? '' : getDataFromAppElement('username', ''),
     isEnablePreview: true,
     isFixedTitleDisplay: false,
     isFixedStatusDisplay: false,
@@ -57,11 +55,7 @@ const store: Store = {
   },
   actions: {
     [mutations.REFETCH_PAGE_DATA](contextState) {
-      Axios.get(location.href, {
-        headers: {
-          accept: 'application/json',
-        },
-      }).then((value: AxiosResponse<PageResponse>) => {
+      Axios.get(location.href).then((value: AxiosResponse<PageResponse>) => {
         value.data.videos.forEach(i => {
           const payload: mutations.VideoUpdateMutationPayload = {
             id: i.uuid,
@@ -143,10 +137,6 @@ export function mapWritableState<
 }
 
 export const mapRootStateModelMixin = {
-  usernameModel: mapWritableState<RootState, string>(
-    'username',
-    mutations.UPDATE_ROOT_STATE
-  ),
   isEnablePreviewModel: mapWritableState<RootState, boolean>(
     'isEnablePreview',
     mutations.UPDATE_ROOT_STATE

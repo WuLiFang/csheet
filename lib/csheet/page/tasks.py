@@ -43,7 +43,7 @@ def _update_page(page_getter):
         with database.session_scope() as sess:
             try:
                 page.update(sess)
-                SOCKETIO.emit('page updated', page.id)
+                SOCKETIO.emit('page update', page.id)
             except:
                 LOGGER.error('Page update failed.', exc_info=True)
                 raise
