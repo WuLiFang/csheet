@@ -25,6 +25,7 @@ export function getDefaultStatusFilter(): StatusSelectResult {
 const store: Store = {
   strict: process.env.NODE_ENV !== 'production',
   state: {
+    id: getDataFromAppElement('id', ''),
     username: isFileProtocol ? '' : getDataFromAppElement('username', ''),
     isEnablePreview: true,
     isFixedTitleDisplay: false,
@@ -44,7 +45,7 @@ const store: Store = {
   mutations: {
     [mutations.UPDATE_ROOT_STATE](
       state,
-      payload: mutations.StateUpdateMutationPayload<RootState>,
+      payload: mutations.StateUpdateMutationPayload<RootState>
     ) {
       state[payload.key] = payload.value;
     },
@@ -75,7 +76,7 @@ export const RootComputedMixin = {
 
 export function stateSetter<T, P extends T[K], K extends keyof T = keyof T>(
   type: string,
-  key: K,
+  key: K
 ) {
   return function(this: Vue, value: P) {
     const payload: mutations.StateUpdateMutationPayload<T> = {
@@ -105,43 +106,43 @@ export function mapWritableState<
 export const mapRootStateModelMixin = {
   usernameModel: mapWritableState<RootState, string>(
     'username',
-    mutations.UPDATE_ROOT_STATE,
+    mutations.UPDATE_ROOT_STATE
   ),
   isEnablePreviewModel: mapWritableState<RootState, boolean>(
     'isEnablePreview',
-    mutations.UPDATE_ROOT_STATE,
+    mutations.UPDATE_ROOT_STATE
   ),
   isFixedTitleDisplayModel: mapWritableState<RootState, boolean>(
     'isFixedTitleDisplay',
-    mutations.UPDATE_ROOT_STATE,
+    mutations.UPDATE_ROOT_STATE
   ),
   isFixedStatusDisplayModel: mapWritableState<RootState, boolean>(
     'isFixedStatusDisplay',
-    mutations.UPDATE_ROOT_STATE,
+    mutations.UPDATE_ROOT_STATE
   ),
   isEditingTagsModel: mapWritableState<RootState, boolean>(
     'isEditingTags',
-    mutations.UPDATE_ROOT_STATE,
+    mutations.UPDATE_ROOT_STATE
   ),
   statusStageModel: mapWritableState<RootState, TaskStage>(
     'statusStage',
-    mutations.UPDATE_ROOT_STATE,
+    mutations.UPDATE_ROOT_STATE
   ),
   labelFilterModel: mapWritableState<RootState, string>(
     'labelFilter',
-    mutations.UPDATE_ROOT_STATE,
+    mutations.UPDATE_ROOT_STATE
   ),
   artistFilterModel: mapWritableState<RootState, string[]>(
     'artistFilter',
-    mutations.UPDATE_ROOT_STATE,
+    mutations.UPDATE_ROOT_STATE
   ),
   tagTextFilterModel: mapWritableState<RootState, string[]>(
     'tagTextFilter',
-    mutations.UPDATE_ROOT_STATE,
+    mutations.UPDATE_ROOT_STATE
   ),
   statusFilterModel: mapWritableState<RootState, StatusSelectResult>(
     'statusFilter',
-    mutations.UPDATE_ROOT_STATE,
+    mutations.UPDATE_ROOT_STATE
   ),
 };
 export default store;

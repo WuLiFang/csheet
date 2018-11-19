@@ -12,6 +12,7 @@ export interface IDMap<T> {
 }
 
 export interface RootState {
+  id: string;
   username: string;
   isEnablePreview: boolean;
   isFixedTitleDisplay: boolean;
@@ -70,7 +71,7 @@ export interface VideoGetters {
   getVideoURI: (
     id: string,
     role: VideoRole,
-    isForce?: boolean,
+    isForce?: boolean
   ) => string | null;
   getBlobURL: (id: string, role: VideoRole, isForce?: boolean) => string | null;
   videoElementHub: ElementHub;
