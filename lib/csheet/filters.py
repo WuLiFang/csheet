@@ -8,7 +8,7 @@ from .core import APP
 
 
 def _json_default(obj):
-    if isinstance(obj, database.Video):
+    if isinstance(obj, database.core.SerializableMixin):
         return obj.serialize()
 
     return json.JSONEncoder().default(obj)

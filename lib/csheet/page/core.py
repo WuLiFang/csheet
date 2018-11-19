@@ -131,7 +131,6 @@ class BasePage(object):
         return render_template(template, **self._process_context(context, database_session))
 
     def _process_context(self, context, database_session=None):
-        from ..core import APP
         context.setdefault('config', self)
         if database_session:
             context.setdefault('videos', self.videos(database_session))
@@ -213,7 +212,6 @@ class BasePage(object):
         ).filter(
             database.Tag.videos.any(self._video_criterion())
         ).all()
-        ret = tuple(i.serialize() for i in ret)
         return ret
 
 
