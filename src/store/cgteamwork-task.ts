@@ -104,7 +104,13 @@ const state: CGTeamworkTaskState = { storage: parseDataFromPage() };
 const mutations: MutationTree<CGTeamworkTaskState> = {
   [CGTEAMWORK_TASK.READ](
     contextState,
-    payload: CGTeamWorkTaskReadMutationPayload,
+    payload: CGTeamWorkTaskReadMutationPayload
+  ) {
+    Vue.set(contextState.storage, payload.id, payload.data);
+  },
+  [CGTEAMWORK_TASK.UPDATE](
+    contextState,
+    payload: CGTeamWorkTaskReadMutationPayload
   ) {
     Vue.set(contextState.storage, payload.id, payload.data);
   },
@@ -112,7 +118,7 @@ const mutations: MutationTree<CGTeamworkTaskState> = {
 
 function handleCGTeamWorkTaskResponse(
   context: ActionContext<CGTeamworkTaskState, RootState>,
-  response: AxiosResponse,
+  response: AxiosResponse
 ) {
   if (response.status !== 200) {
     return;
@@ -128,7 +134,7 @@ function handleCGTeamWorkTaskResponse(
 const actions: ActionTree<CGTeamworkTaskState, RootState> = {
   async [CGTEAMWORK_TASK.READ](
     context,
-    payload: CGTeamWorkTaskReadActionPayload,
+    payload: CGTeamWorkTaskReadActionPayload
   ) {
     if (isFileProtocol) {
       return;
@@ -140,7 +146,7 @@ const actions: ActionTree<CGTeamworkTaskState, RootState> = {
   },
   async [UPDATE_CGTEAMWORK_TASK_FIELD](
     context,
-    payload: CGTeamWorkTaskUpdateFieldActionPayload,
+    payload: CGTeamWorkTaskUpdateFieldActionPayload
   ) {
     if (isFileProtocol) {
       return;
@@ -153,7 +159,7 @@ const actions: ActionTree<CGTeamworkTaskState, RootState> = {
   },
   async [CREATE_CGTEAMWORK_TASK_NOTE](
     context,
-    payload: CGTeamWorkTaskCreateNoteActionPayload,
+    payload: CGTeamWorkTaskCreateNoteActionPayload
   ) {
     return axios.post(`api/task_note/${payload.id}`, { text: payload.text });
   },

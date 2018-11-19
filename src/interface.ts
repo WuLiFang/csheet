@@ -26,7 +26,7 @@ export type CGTeamWorkTaskResponse = [
 ];
 
 export function parseCGTeamWorkTaskResponse(
-  response: CGTeamWorkTaskResponse,
+  response: CGTeamWorkTaskResponse
 ): CGTeamWorkTaskData {
   return {
     pipeline: response[0],
@@ -98,4 +98,10 @@ export interface TagResponse {
   id: number;
   text: string;
   videos: string[];
+}
+
+export interface PageResponse {
+  videos: VideoResponse[];
+  tags: TagResponse[];
+  tasks?: CGTeamWorkTaskResponse[];
 }

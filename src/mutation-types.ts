@@ -56,7 +56,7 @@ export interface VideoPreloadActionPayload {
   role: VideoRole;
   onprogress?: (
     event: ProgressEvent,
-    config: VideoPreloadActionPayload,
+    config: VideoPreloadActionPayload
   ) => void;
 }
 export const UPDATE_BLOB_HUB = 'update_blob_hub';
@@ -200,3 +200,4 @@ export interface StateUpdateMutationPayload<T, K extends keyof T = keyof T> {
 }
 
 export const UPDATE_VIDEO_STATE = 'update_video_state';
+export const REFETCH_PAGE_DATA = 'REFETCH_PAGE_DATA';

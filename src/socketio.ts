@@ -1,6 +1,7 @@
 import { VideoResponse, VideoRole } from '@/interface';
 import {
   READ_VIDEO_TAGS_IF_FOUND_UNDEFINED,
+  REFETCH_PAGE_DATA,
   UPDATE_VIDEO_APPEARED,
   VIDEO,
   VideoTagsReadIfFoundUndefinedActionPayload,
@@ -34,7 +35,7 @@ export default class SocketIO {
     this.store = store as Store<CombinedRootState>;
     this.socket = io(`/`, { path: '/api/socket.io' });
     this.socket.on('asset update', (message: VideoResponse[]) =>
-      this.on_asset_update(message),
+      this.on_asset_update(message)
     );
     this.socket.on('connect', this.on_connect);
     this.socket.on('disconnect', this.on_disconnect);
@@ -71,7 +72,7 @@ export default class SocketIO {
           this.store.commit(VIDEO.UPDATE, mutationPayload);
           const thumb = this.store.getters.getVideoURI(
             value.uuid,
-            VideoRole.thumb,
+            VideoRole.thumb
           );
           if (isSupportNotify) {
             new Notify('文件更新', {
@@ -83,6 +84,15 @@ export default class SocketIO {
           }
         });
     });
+  }
+  /**
+   * onPageUpdated
+   */
+  public onPageUpdated(id: string) {
+    if (id !== this.store.state.id) {
+      return;
+    }
+    this.store.dispatch(REFETCH_PAGE_DATA);
   }
   public requestUpdate(uuidList: string[]) {
     if (uuidList.length > 0) {

@@ -1,6 +1,11 @@
 import { getDataFromAppElement } from '@/datatools';
-import { TaskStage } from '@/interface';
+import {
+  PageResponse,
+  parseCGTeamWorkTaskResponse,
+  TaskStage,
+} from '@/interface';
 import { isFileProtocol } from '@/packtools';
+import Axios, { AxiosResponse } from 'axios';
 import { isUndefined } from 'util';
 import Vue from 'vue';
 import { DefaultComputed } from 'vue/types/options';
@@ -48,6 +53,40 @@ const store: Store = {
       payload: mutations.StateUpdateMutationPayload<RootState>
     ) {
       state[payload.key] = payload.value;
+    },
+  },
+  actions: {
+    [mutations.REFETCH_PAGE_DATA](contextState) {
+      Axios.get(location.href, {
+        headers: {
+          accept: 'application/json',
+        },
+      }).then((value: AxiosResponse<PageResponse>) => {
+        value.data.videos.forEach(i => {
+          const payload: mutations.VideoUpdateMutationPayload = {
+            id: i.uuid,
+            data: i,
+          };
+          contextState.commit(mutations.VIDEO.UPDATE, payload);
+        });
+        value.data.tags.forEach(i => {
+          const payload: mutations.TagUpdateMutationPayload = {
+            id: i.id,
+            data: i,
+          };
+          contextState.commit(mutations.TAG.UPDATE, payload);
+        });
+        if (value.data.tasks) {
+          value.data.tasks.forEach(i => {
+            const task = parseCGTeamWorkTaskResponse(i);
+            const payload: mutations.CGTeamWorkTaskReadMutationPayload = {
+              id: task.id,
+              data: task,
+            };
+            contextState.commit(mutations.CGTEAMWORK_TASK.READ, payload);
+          });
+        }
+      });
     },
   },
   getters: {
