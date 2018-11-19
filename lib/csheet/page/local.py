@@ -4,6 +4,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import base64
 import logging
 import os
 from mimetypes import guess_type
@@ -30,6 +31,10 @@ class LocalPage(BasePage):
 
     def __repr__(self):
         return 'LocalPage<root={}>'.format(self.root)
+
+    @property
+    def id(self):
+        return base64.b64encode(':'.join([self.root]))
 
     @property
     def title(self):

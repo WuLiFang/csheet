@@ -8,6 +8,7 @@ import logging
 
 import sqlalchemy.exc
 
+from . import core
 from .. import database
 from ..core import CELERY
 from ..workertools import database_single_instance
@@ -23,8 +24,7 @@ LOGGER = logging.getLogger(__name__)
 def update_local_page(root):
     """Update local page data.  """
 
-    _update_page('page.tasks.update_local_page-{}'.format(root),
-                 lambda: LocalPage(root))
+    _update_page(lambda: LocalPage(root))
 
 
 @CELERY.task(ignore_result=True,
@@ -33,16 +33,14 @@ def update_local_page(root):
 def update_cgteamwork_page(project, pipeline, prefix, token):
     """Update cgteamwork page data.  """
 
-    _update_page(
-        'page.tasks.update_cgteamwork_page-{}'.format(
-            '_'.join([project, pipeline, prefix])),
-        lambda: CGTeamWorkPage(project, pipeline, prefix, token))
+    _update_page(lambda: CGTeamWorkPage(project, pipeline, prefix, token))
 
 
-def _update_page(lock_name, page_getter):
-    @database_single_instance(lock_name, is_block=False)
+def _update_page(page_getter):
+    page: core.BasePage = page_getter()
+
+    @database_single_instance(page.id, is_block=False)
     def _run():
-        page = page_getter()
         LOGGER.info('Start update page: %s', page)
         with database.session_scope() as sess:
             try:

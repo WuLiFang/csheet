@@ -4,6 +4,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import base64
 import json
 import logging
 
@@ -43,6 +44,10 @@ class CGTeamWorkPage(BasePage):
     def __repr__(self):
         return 'CGTeamWorkPage<project={}, pipeline={}, prefix={}>'.format(
             self.project, self.pipeline, self.prefix)
+
+    @property
+    def id(self):
+        return base64.b64encode(':'.join([self.project, self.pipeline, self.prefix]))
 
     @property
     def title(self):

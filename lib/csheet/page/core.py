@@ -41,6 +41,12 @@ class BasePage(object):
     assets = _read_assets()
 
     @property
+    def id(self):
+        """"Page global id.  """
+
+        raise NotImplementedError
+
+    @property
     def title(self):
         """Csheet title.  """
 
