@@ -14,7 +14,7 @@
 <script lang="ts">
 import Vue from 'vue';
 
-import TaskInfoStatusEdit from './TaskInfoStatusEdit.vue';
+import TaskInfoStatusEdit from '@/components/TaskInfoStatusEdit.vue';
 import { CGTeamWorkTaskComputedMixin } from '../store/cgteamwork-task';
 import { CGTeamWorkTaskData } from '../interface';
 

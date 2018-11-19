@@ -68,8 +68,8 @@ import {
   VIDEO_TAGS,
 } from '../mutation-types';
 import { videoComputedMinxin } from '../store/video';
-import LightboxTaskStatus from './LightboxTaskStatus.vue';
-import TagEditDialog from './TagEditDialog.vue';
+import LightboxTaskStatus from '@/components/LightboxTaskStatus.vue';
+import TagEditDialog from '@/components/TagEditDialog.vue';
 import { isNull } from 'util';
 
 export default Vue.extend({

@@ -19,7 +19,7 @@ import {
   Notification,
 } from 'element-ui';
 
-import TagSelect from './TagSelect.vue';
+import TagSelect from '@/components/TagSelect.vue';
 import { isFileProtocol } from '@/packtools';
 import { RootComputedMixin, mapRootStateModelMixin } from '@/store';
 import { TagResponse } from '@/interface';

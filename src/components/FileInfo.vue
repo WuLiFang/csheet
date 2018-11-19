@@ -43,7 +43,7 @@ import FaIcon from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/file-video-o';
 import 'vue-awesome/icons/file-image-o';
 
-import RelativeTime from './RelativeTime.vue';
+import RelativeTime from '@/components/RelativeTime.vue';
 
 import { VideoResponse } from '../interface';
 import { videoComputedMinxin } from '../store/video';

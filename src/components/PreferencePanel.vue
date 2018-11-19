@@ -76,10 +76,10 @@ import {
   Autocomplete as ElAutocomplete,
 } from 'element-ui';
 
-import FileCount from './FileCount.vue';
-import StatusSelect from './StatusSelect.vue';
-import TagSelect from './TagSelect.vue';
-import ArtistSelect from './ArtistSelect.vue';
+import FileCount from '@/components/FileCount.vue';
+import StatusSelect from '@/components/StatusSelect.vue';
+import TagSelect from '@/components/TagSelect.vue';
+import ArtistSelect from '@/components/ArtistSelect.vue';
 
 import {
   RootComputedMixin,

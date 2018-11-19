@@ -61,8 +61,8 @@ import FaIcon from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/magic';
 import 'vue-awesome/icons/sort-alpha-asc';
 
-import TaskInfo from './TaskInfo.vue';
-import FileInfo from './FileInfo.vue';
+import TaskInfo from '@/components/TaskInfo.vue';
+import FileInfo from '@/components/FileInfo.vue';
 
 import { isFileProtocol } from '../packtools';
 import { videoComputedMinxin } from '../store/video';

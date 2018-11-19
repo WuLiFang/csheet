@@ -7,7 +7,7 @@
 import Vue from 'vue';
 import _ from 'lodash';
 
-import TaskInfoPiplineBadge from './TaskInfoPiplineBadge.vue';
+import TaskInfoPiplineBadge from '@/components/TaskInfoPiplineBadge.vue';
 import { CGTeamWorkTaskComputedMixin } from '../store/cgteamwork-task';
 import { CGTeamWorkTaskData, VideoResponse } from '../interface';
 import { videoComputedMinxin } from '../store/video';

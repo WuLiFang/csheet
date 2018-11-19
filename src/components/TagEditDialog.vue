@@ -25,7 +25,7 @@ import {
   Notification,
 } from 'element-ui';
 
-import TagSelect from './TagSelect.vue';
+import TagSelect from '@/components/TagSelect.vue';
 import { VideoResponse, TagResponse } from '@/interface';
 import { videoComputedMinxin } from '@/store/video';
 import { tagComputedMinxin } from '@/store/tag';

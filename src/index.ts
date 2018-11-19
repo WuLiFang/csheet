@@ -1,8 +1,8 @@
 import { getDataFromAppElement } from '@/datatools';
+import Index from '@/views/Index.vue';
 import { Loading } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import Vue from 'vue';
-import Index from './views/Index.vue';
 
 Vue.use(Loading);
 const vue = new Vue({

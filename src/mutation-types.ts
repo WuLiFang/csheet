@@ -3,8 +3,8 @@ import {
   TagResponse,
   VideoResponse,
   VideoRole,
-} from './interface';
-import { IDMap, PositionData } from './store/types';
+} from '@/interface';
+import { IDMap, PositionData } from '@/store/types';
 
 export enum VIDEO {
   // CREATE = 'create_video',

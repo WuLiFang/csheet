@@ -1,18 +1,18 @@
-import * as _ from 'lodash';
-import Notify from 'notifyjs';
-import * as io from 'socket.io-client';
-import { isUndefined } from 'util';
-import { Store } from 'vuex';
-import { VideoResponse, VideoRole } from './interface';
+import { VideoResponse, VideoRole } from '@/interface';
 import {
   READ_VIDEO_TAGS_IF_FOUND_UNDEFINED,
   UPDATE_VIDEO_APPEARED,
   VIDEO,
   VideoTagsReadIfFoundUndefinedActionPayload,
   VideoUpdateMutationPayload,
-} from './mutation-types';
-import { isFileProtocol } from './packtools';
-import { CombinedRootState, RootState } from './store/types';
+} from '@/mutation-types';
+import { isFileProtocol } from '@/packtools';
+import { CombinedRootState, RootState } from '@/store/types';
+import * as _ from 'lodash';
+import Notify from 'notifyjs';
+import * as io from 'socket.io-client';
+import { isUndefined } from 'util';
+import { Store } from 'vuex';
 
 const isSupportNotify =
   typeof Notification === 'function' &&

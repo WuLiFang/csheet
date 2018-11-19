@@ -14,7 +14,7 @@ import Vue from 'vue';
 
 import { Button, ButtonGroup, MessageBox, Message } from 'element-ui';
 
-import TaskInfoStatus from './TaskInfoStatus.vue';
+import TaskInfoStatus from '@/components/TaskInfoStatus.vue';
 import {
   FieldResponse,
   TaskStatus,

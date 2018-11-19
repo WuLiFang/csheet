@@ -16,12 +16,12 @@ import Vue from 'vue';
 
 import * as _ from 'lodash';
 
-import Lightbox from './Lightbox.vue';
-import TagEditToobar from './TagEditToobar.vue';
-import PreferencePanel from './PreferencePanel.vue';
-import StatusSelect from './StatusSelect.vue';
-import TheCSheetViewer from './TheCSheetViewer.vue';
-import TagSelect from './TagSelect.vue';
+import Lightbox from '@/components/Lightbox.vue';
+import TagEditToobar from '@/components/TagEditToobar.vue';
+import PreferencePanel from '@/components/PreferencePanel.vue';
+import StatusSelect from '@/components/StatusSelect.vue';
+import TheCSheetViewer from '@/components/TheCSheetViewer.vue';
+import TagSelect from '@/components/TagSelect.vue';
 import {
   Button as ElButton,
   ButtonGroup as ElButtonGroup,

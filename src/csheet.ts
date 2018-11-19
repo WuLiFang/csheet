@@ -1,5 +1,8 @@
+import { getDataFromAppElement } from '@/datatools';
 import { isFileProtocol } from '@/packtools';
 import SocketIO from '@/socketio';
+import _store from '@/store';
+import CSheet from '@/views/CSheet.vue';
 // @ts-ignore
 import { Icon } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -9,9 +12,6 @@ import Raven from 'raven-js';
 import RavenVue from 'raven-js/plugins/vue';
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { getDataFromAppElement } from './datatools';
-import _store from './store';
-import CSheet from './views/CSheet.vue';
 
 // Setup sentry
 const SENTRY_DSN = getDataFromAppElement('sentryDsn');

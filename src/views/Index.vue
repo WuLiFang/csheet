@@ -12,8 +12,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import Cookies from 'js-cookie';
-import CGTeamWorkPageForm from './CGTeamWorkPageForm.vue';
-import LocalPageForm from './LocalPageForm.vue';
+import CGTeamWorkPageForm from '@/components/CGTeamWorkPageForm.vue';
+import LocalPageForm from '@/components/LocalPageForm.vue';
 import {
   Tag as ElTag,
   Input as ElInput,

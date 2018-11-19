@@ -11,9 +11,9 @@ import Vue from 'vue';
 
 import { Popover } from 'element-ui';
 
-import TaskInfoStatusEdit from './TaskInfoStatusEdit.vue';
-import TaskInfoStatus from './TaskInfoStatus.vue';
-import TaskInfoPiplineBadgePoper from './TaskInfoPiplineBadgePoper.vue';
+import TaskInfoStatusEdit from '@/components/TaskInfoStatusEdit.vue';
+import TaskInfoStatus from '@/components/TaskInfoStatus.vue';
+import TaskInfoPiplineBadgePoper from '@/components/TaskInfoPiplineBadgePoper.vue';
 
 import { TaskStatus, CGTeamWorkTaskData } from '../interface';
 import { StringIterator } from 'lodash';
