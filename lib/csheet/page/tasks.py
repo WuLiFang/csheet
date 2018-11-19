@@ -10,7 +10,7 @@ import sqlalchemy.exc
 
 from . import core
 from .. import database
-from ..core import CELERY
+from ..core import CELERY, SOCKETIO
 from ..workertools import database_single_instance
 from .cgteamwork import CGTeamWorkPage
 from .local import LocalPage
@@ -45,6 +45,7 @@ def _update_page(page_getter):
         with database.session_scope() as sess:
             try:
                 page.update(sess)
+                SOCKETIO.emit('page updated', page.id)
             except:
                 LOGGER.error('Page update failed.', exc_info=True)
                 raise
