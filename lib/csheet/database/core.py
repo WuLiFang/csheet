@@ -16,12 +16,14 @@ from sqlalchemy.types import VARCHAR, TypeDecorator, Unicode
 from wlf.path import PurePath
 from wlf.path import get_unicode as u
 
-Base = declarative_base()  # pylint: disable=invalid-name
-BaseMeta = declarative_base()  # pylint: disable=invalid-name
-session_factory = orm.sessionmaker()  # pylint: disable=invalid-name
-Session = orm.scoped_session(session_factory)  # pylint: disable=invalid-name
-LOGGER = logging.getLogger(__name__)
+# pylint: disable=invalid-name
+Base = declarative_base()
+BaseMeta = declarative_base()
+Session = orm.sessionmaker()
+# pylint: enable=invalid-name
 
+SESSION = orm.scoped_session(Session)
+LOGGER = logging.getLogger(__name__)
 VIDEO_TASK = Table('Video-CGTeamWorkTask', Base.metadata,
                    Column('video_id', String, ForeignKey('Video.uuid')),
                    Column('task_id', String, ForeignKey('CGTeamWorkTask.uuid')))
@@ -120,7 +122,7 @@ def bind(url, url_meta=None, is_echo=False):
     url_meta = url_meta or url
     engine = create_engine(url, echo=is_echo)
     meta_engine = create_engine(url_meta, echo=is_echo)
-    session_factory.configure(binds={Base: engine,
-                                     BaseMeta: meta_engine})
+    Session.configure(binds={Base: engine,
+                             BaseMeta: meta_engine})
     Base.metadata.create_all(engine)
     BaseMeta.metadata.create_all(meta_engine)
