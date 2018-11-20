@@ -12,6 +12,7 @@ from gevent import sleep, spawn
 
 from .core import APP, CELERY, SOCKETIO
 from .database import Meta, Session, Video, session_scope
+from .encoder import serialize
 from .workertools import worker_concurrency
 
 LOGGER = logging.getLogger(__name__)
@@ -54,9 +55,8 @@ def broadcast_updated_asset():
     now = time.time()
     since = Meta.get(data_key, default=now)
     data = get_updated_asset(since)
-    assert isinstance(data, list), type(data)
     if data:
-        SOCKETIO.emit('asset update', data)
+        SOCKETIO.emit('asset update', serialize(data))
         LOGGER.info('Broadcast updated asset, count: %s', len(data))
     else:
         LOGGER.debug('No updated assets.')

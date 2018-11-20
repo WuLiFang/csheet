@@ -14,3 +14,9 @@ class JSONEncoder(json.JSONEncoder):
             return o.serialize()
 
         return super().default(o)
+
+
+def serialize(obj):
+    """Convert object to json capable object"""
+
+    return json.loads(json.dumps(obj))
