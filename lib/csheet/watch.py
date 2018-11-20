@@ -51,12 +51,17 @@ class Chunk(list):
 
         current_time = time.time()
 
-        videos = session.query(Video).filter(
-            Video.is_need_update.is_(True),
-            Video.src.isnot(None) | Video.poster.isnot(None),
-            sqlalchemy.or_(Video.last_update_time.is_(None),
-                           Video.last_update_time < current_time - min_update_interval)
-        ).order_by(Video.last_update_time).limit(size).with_for_update().all()
+        videos = (session
+                  .query(Video)
+                  .with_for_update(skip_locked=True)
+                  .filter(
+                      Video.is_need_update.is_(True),
+                      Video.src.isnot(None) | Video.poster.isnot(None),
+                      sqlalchemy.or_(Video.last_update_time.is_(None),
+                                     Video.last_update_time < current_time - min_update_interval))
+                  .order_by(Video.last_update_time)
+                  .limit(size)
+                  .all())
 
         return cls(videos)
 

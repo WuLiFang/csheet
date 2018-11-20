@@ -5,7 +5,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import cgtwq
 import util
-from csheet import database, page, video
+from csheet import APP, database, page, video
 from wlf.path import get_encoded as e
 
 
@@ -58,7 +58,9 @@ def test_pack():
     util.setup()
     cfg = page.CGTeamWorkPage(
         '梦塔', '合成', 'MT_EP06_03', cgtwq.DesktopClient().token())
-    with database.session_scope(is_close=True) as sess:
+    with database.session_scope(is_close=True) as sess,\
+            APP.app_context(),\
+            APP.test_request_context():
         cfg.update_async()
         file_ = cfg.archive(sess)
     with open(e(util.path('storage', 'packed.zip')), 'wb') as f:

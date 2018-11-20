@@ -62,8 +62,7 @@ class LocalPage(core.BasePage):
                     '%s, image_count=%s, video_count=%s',
                     self, len(images), len(videos))
         videos = [_get_video(label, videos, images) for label in labels]
-        self._video_query(session).with_for_update().all()
-        _ = [session.merge(i) for i in videos]
+        self._video_query(session).with_for_update().merge_result(videos)
         session.commit()
 
     def videos(self, session):

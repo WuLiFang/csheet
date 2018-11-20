@@ -3,32 +3,12 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from flask import abort, g, session
+from flask import abort, session
 
 import cgtwq
 
-from ..core import APP
-from ..database import CGTeamWorkTask, Session, Tag, Video
+from ..database import CGTeamWorkTask, Tag, Video
 from .datamodel import ProjectInfo
-
-
-def database_session():
-    """Get database session.  """
-
-    if 'database_session' not in g:
-        g.database_session = Session()
-    return g.database_session
-
-
-@APP.teardown_appcontext
-def close_database_session(exc=None):
-    """Close database session, if opened."""
-
-    sess = g.pop('database_session', None)
-    if sess is not None:
-        if exc:
-            sess.rollback()
-        sess.close()
 
 
 class CGTeamWorkVideo(Video):

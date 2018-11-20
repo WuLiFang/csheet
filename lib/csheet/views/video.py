@@ -11,6 +11,7 @@ from flask import send_file
 import cgtwq
 
 from . import core
+from .. import database
 from ..core import APP
 from ..filename import filter_filename
 
@@ -37,7 +38,7 @@ def response_video(uuid, role):
     if role not in VIDEO_ROLES:
         return 'Role must in {}'.format(VIDEO_ROLES), 400
 
-    sess = core.database_session()
+    sess = database.Session()
     video = core.get_video(uuid, sess)
     return _try_send_file(video, role, sess)
 
@@ -62,13 +63,13 @@ def _handle_not_eixsits(video, role, sess):
 
 def _get_note_url_template(select):
     note_url_template = ((
-        'http://{server_ip}/index.php?'
+        '{url}/index.php?'
         'controller=v_note'
         '&method=show_page'
         '&db={database}'
         '&module={module}'
         '&task_id=${{taskId}}').format(
-            server_ip=cgtwq.server.setting.SERVER_IP,
+            url=cgtwq.core.CONFIG['URL'],
             database=select.module.database.name,
             module=select.module.name))
     return note_url_template

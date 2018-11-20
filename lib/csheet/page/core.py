@@ -18,7 +18,6 @@ from sqlalchemy import orm
 
 from wlf.codectools import get_unicode as u
 from wlf.path import PurePath
-from wlf.path import get_encoded as e
 
 from .. import __about__, database, filetools
 from ..__about__ import __version__
@@ -156,7 +155,7 @@ class BasePage(object):
         f = TemporaryFile(suffix='.zip',
                           prefix=self.title)
         with ZipFile(f, 'w', allowZip64=True) as zipfile:
-            self._pack_page(videos, zipfile, session)
+            self._pack_page(zipfile, session)
             self._pack_videos(videos, zipfile)
 
         f.seek(0)
@@ -185,7 +184,7 @@ class BasePage(object):
 
             filename = filter_filename(filename)
             arcname = video.get(role, is_pack=True)
-            zipfile.write(e(filename), arcname.encode('utf-8'))
+            zipfile.write(filename, arcname)
 
             LOGGER.debug('Write zipfile: %s -> %s',
                          filename, arcname)
@@ -198,15 +197,15 @@ class BasePage(object):
             zipfile.write(filetools.dist_path(relative_path), i)
         return index_page
 
-    def _pack_page(self, videos, zipfile, session):
+    def _pack_page(self, zipfile, session):
         try:
             self.is_pack = True
-            index_page = self.render(videos, database_session=session)
+            index_page = self.render(database_session=session)
         finally:
             self.is_pack = False
         index_page = self._pack_entry(zipfile, index_page, 'chunk-vendors')
-        index_page = self._pack_entry(zipfile, index_page, 'csheet')
-        index_page = self._pack_entry(zipfile, index_page, 'csheet_noscript')
+        index_page = self._pack_entry(zipfile, index_page, 'main')
+        index_page = self._pack_entry(zipfile, index_page, 'main_noscript')
         zipfile.writestr(
             '{}.html'.format(get_valid_filename(self.title)),
             index_page.encode('utf-8'))

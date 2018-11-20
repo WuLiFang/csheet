@@ -46,7 +46,7 @@ class Task(Resource):
 
         token = session['token']
 
-        sess = core.database_session()
+        sess = database.Session()
         task = core.get_task(id_, sess)
         task.update(token, sess)
         return task.get_entry_data(token)
@@ -56,7 +56,7 @@ API.add_resource(Task, '/task/<id_>')
 
 
 def _get_entry(uuid):
-    sess = core.database_session()
+    sess = database.Session()
     entry = core.get_task(uuid, sess).to_entry()
     entry.token = session['token']
     return entry
@@ -85,7 +85,7 @@ class TaskField(Resource):
         parser.add_argument('message', default='')
         args = parser.parse_args()
 
-        sess = core.database_session()
+        sess = database.Session()
         task = core.get_task(uuid, sess)
         entry = task.to_entry()
         entry.token = session['token']
@@ -128,7 +128,7 @@ class Video(Resource):
     @staticmethod
     def get(id_):
         """Get video info from database.  """
-        sess = core.database_session()
+        sess = database.Session()
         video = core.get_video(id_, sess)
         return video.serialize()
 
@@ -141,7 +141,7 @@ class Video(Resource):
         parser.add_argument('value', required=True)
         args = parser.parse_args()
 
-        sess = core.database_session()
+        sess = database.Session()
         video = core.get_video(id_, sess)
         if args.key not in video.__table__.columns:
             raise KeyError
@@ -160,7 +160,7 @@ class Tag(Resource):
     def get(id_):
         """Get tag info from database.  """
 
-        sess = core.database_session()
+        sess = database.Session()
         tag = core.get_tag(id_, sess)
         return tag.serialize()
 
@@ -172,7 +172,7 @@ class Tag(Resource):
         parser.add_argument('videos', type=six.text_type,
                             required=True, action='append')
         args = parser.parse_args()
-        sess = core.database_session()
+        sess = database.Session()
         tag = core.get_tag(id_, sess)
         videos = [core.get_video(i, sess, database.Video)
                   for i in args.videos]
@@ -190,7 +190,7 @@ class Tag(Resource):
         parser.add_argument('text', required=True)
         args = parser.parse_args()
 
-        sess = core.database_session()
+        sess = database.Session()
         tag = core.get_tag(id_, sess)
         tag.text = args.text
         session.commit()
@@ -200,7 +200,7 @@ class Tag(Resource):
     def delete(id_):
         """Delete tag.  """
 
-        sess = core.database_session()
+        sess = database.Session()
         tag = core.get_tag(id_, sess)
         text = tag.text
         sess.delete(tag)
@@ -225,7 +225,7 @@ class TagManage(Resource):
     def get():
         """Get all tag info from database.  """
 
-        sess = core.database_session()
+        sess = database.Session()
         return [i.serialize() for i in sess.query(database.Tag).all()]
 
     @staticmethod
@@ -237,7 +237,7 @@ class TagManage(Resource):
                             required=True)
         args = parser.parse_args()
 
-        sess = core.database_session()
+        sess = database.Session()
         tag = sess.query(database.Tag).filter_by(
             text=args.text).one_or_none()
         if not tag:
@@ -257,7 +257,7 @@ class VideoTag(Resource):
     def get(video_id):
         """Get video tag infos.  """
 
-        sess = core.database_session()
+        sess = database.Session()
         video = core.get_video(video_id, sess, database.Video)
         return tuple(i.serialize() for i in video.tags)
 
@@ -265,7 +265,7 @@ class VideoTag(Resource):
     def post(video_id):
         """Add tag to video.  """
 
-        sess = core.database_session()
+        sess = database.Session()
         tags = _parse_tags(sess)
         video = core.get_video(video_id, sess, database.Video)
         video.tags += tags
@@ -283,7 +283,7 @@ class VideoTag(Resource):
                             required=True, choices=('update', 'delete'))
         args = parser.parse_args()
 
-        sess = core.database_session()
+        sess = database.Session()
         tags = [core.get_tag(i, sess)
                 for i in args.tags] if args.tags else []
         video = core.get_video(video_id, sess, database.Video)
@@ -299,7 +299,7 @@ class VideoTag(Resource):
     def delete(video_id):
         """Remove all tag from video.  """
 
-        sess = core.database_session()
+        sess = database.Session()
         video = core.get_video(video_id, sess, database.Video)
         video.tags = None
         video.tags_mtime = time.time()

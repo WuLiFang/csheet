@@ -29,5 +29,5 @@ class Meta(core.Base):
         """Set metadata value.  """
 
         with core.session_scope() as sess:
-            sess.query(cls).filter(cls.key == key).with_for_update().all()
+            sess.query(cls).with_for_update().get(key)
             sess.merge(cls(key=key, value=value))

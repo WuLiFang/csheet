@@ -67,7 +67,7 @@ class CGTeamWorkTask(core.Base, core.SerializableMixin):
     leader_status = Column(String)
     director_status = Column(String)
     client_status = Column(String)
-    note_num = Column(Integer)
+    note_num = Column(Integer, default=0)
 
     def to_entry(self):
         """Convert to entry.

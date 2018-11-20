@@ -8,7 +8,7 @@ import logging
 import logging.config
 import os
 
-from celery import Celery
+from celery import Celery, Task
 from flask import Flask
 from flask_socketio import SocketIO
 from raven.contrib.flask import Sentry
@@ -29,11 +29,24 @@ SOCKETIO = SocketIO(app=APP,
                     path='/api/socket.io',
                     message_queue=APP.config['MESSAGE_QUEUE_URL'])
 
-CELERY = Celery('csheet')
+
+class ContextTask(Task):
+    """Task with flask app context.  """
+
+    def __call__(self, *args, **kwargs):
+        with APP.app_context():
+            return self.run(*args, **kwargs)
+
+    def run(self, *args, **kwargs):
+        """The body of the task executed by workers."""
+        raise NotImplementedError('Tasks must define the run method.')
 
 
-@APP.teardown_request
-def _teardown_session(_):
+CELERY = Celery(APP.import_name, task_cls=ContextTask)
+
+
+@APP.teardown_appcontext
+def _teardown_session(_exc):
     database.Session.remove()
 
 

@@ -10,7 +10,7 @@ from flask import make_response, render_template, request, send_file, session
 import cgtwq
 from wlf.decorators import run_with_clock
 
-from . import core
+from .. import database
 from ..core import APP
 from ..filters import dumps
 from ..page import CGTeamWorkPage, LocalPage
@@ -28,7 +28,7 @@ def render_main():
     if not request.args:
         return render_index()
     page: BasePage = get_page()
-    sess = core.database_session()
+    sess = database.Session()
     if 'pack' in request.args:
         return packed_page(page, sess)
 

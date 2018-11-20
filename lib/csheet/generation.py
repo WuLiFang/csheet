@@ -158,11 +158,11 @@ def execute_generate_task(**kwargs):
 
 def _get_video(source, target, session, **kwargs):
 
-    video = session.query(
-        GenaratableVideo
-    ).filter(
-        _need_generation_criterion(source, target, **kwargs)
-    ).order_by(getattr(Video, '{}_atime'.format(target))).with_for_update().first()
+    video = (session.query(GenaratableVideo)
+             .with_for_update(skip_locked=True)
+             .filter(_need_generation_criterion(source, target, **kwargs))
+             .order_by(getattr(Video, '{}_atime'.format(target)))
+             .first())
     return video
 
 
@@ -266,8 +266,12 @@ def discover_tasks(source, target, limit=100, **kwargs):
         return
     lock.release()
 
-    videos = Session().query(GenaratableVideo).filter(
-        _need_generation_criterion(source, target, **kwargs)).limit(limit).all()
+    videos = (Session()
+              .query(GenaratableVideo)
+              .with_for_update(skip_locked=True)
+              .filter(_need_generation_criterion(source, target, **kwargs))
+              .limit(limit)
+              .all())
     if not videos:
         LOGGER.debug('No generation task discovered: %s -> %s', source, target)
         return

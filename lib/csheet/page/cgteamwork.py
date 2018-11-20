@@ -130,12 +130,11 @@ class CGTeamWorkPage(core.BasePage):
                     '%s, shot_count=%s, task_count=%s',
                     self, len(shots), len(data))
 
-        assert len(set([i.id for i in data])) == len(data)
         tasks = [self._task_from_data(i) for i in data]
-        videos = [self._video_from_data(data, tasks, shot) for shot in shots]
-        self._video_query(session).with_for_update().all()
-        self._task_query(session).with_for_update().all()
-        _ = [session.merge(i) for i in tasks + videos]
+        self._video_query(session).with_for_update().merge_result(tasks)
+        videos = [self._video_from_data(data, tasks, shot)
+                  for shot in shots]
+        self._task_query(session).with_for_update().merge_result(videos)
         session.commit()
 
     def _task_from_data(self, data):
@@ -151,7 +150,7 @@ class CGTeamWorkPage(core.BasePage):
             leader_status=data.leader_status,
             director_status=data.director_status,
             client_status=data.client_status,
-            note_num=data.note_num,)
+            note_num=int(data.note_num) if data.note_num else 0,)
 
     def _video_query(self, session):
         query = session.query(HTMLVideo)
