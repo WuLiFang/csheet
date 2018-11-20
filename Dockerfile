@@ -1,3 +1,13 @@
+FROM scratch as root
+
+WORKDIR /frontend
+COPY src ./src/
+COPY public ./public/
+COPY *.js *.json ./
+WORKDIR /backend
+COPY lib ./lib/
+COPY *.py *.sh *.json ./
+
 FROM node:10 AS frontend-build
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -10,7 +20,7 @@ ARG NPM_MIRROR=https://registry.npm.taobao.org/
 RUN if [ ! -z $NPM_MIRROR ]; then npm config set registry $NPM_MIRROR; fi
 RUN npm i
 
-COPY . ./
+COPY --from=root /frontend ./
 RUN npm run build
 
 FROM python:3.6 AS backend-prepare
@@ -35,7 +45,7 @@ ENV PYTHONPATH=lib
 
 FROM backend-prepare AS backend-build
 
-COPY . ./
+COPY --from=root /backend ./
 COPY --from=frontend-build /app/dist/ /app/dist/
 
 FROM backend-prepare AS backend-test
@@ -43,6 +53,7 @@ FROM backend-prepare AS backend-test
 RUN pip install pytest
 
 COPY --from=backend-build /app/ ./
+COPY tests ./tests/
 RUN python -m pytest ./tests
 
 FROM backend-build AS release
