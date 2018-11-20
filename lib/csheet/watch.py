@@ -81,7 +81,6 @@ class Chunk(list):
             if i[mtime_column] is None:
                 i[src_column] = None
         session.bulk_update_mappings(Video, mappings)
-        session.commit()
 
 
 @CELERY.task(ignore_result=True,
