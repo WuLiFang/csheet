@@ -12,7 +12,6 @@ pytest = "*"
 [packages]
 gevent = "*"
 flask = "*"
-raven = {extras = ["flask"],version = "*"}
 sqlalchemy = "*"
 flask-socketio = "*"
 flask-restful = "*"
@@ -22,3 +21,4 @@ cgtwq = {git = "https://github.com/WuLiFang/cgtwq",ref = "3.0.0-alpha.6"}
 environs = "*"
 psycopg2 = "*"
 celery = {extras = ["redis"],version = "*"}
+sentry-sdk = {extras = ["flask"],version = "*"}

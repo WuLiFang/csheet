@@ -52,13 +52,6 @@ LOGGING_CONFIG = {'version': 1,
                       'handlers': ['stream'],
                       'level': 'WARNING',
                   }, }
-if BACKEND_SENTRY_DSN:
-    LOGGING_CONFIG['handlers']['sentry'] = {
-        'level': 'ERROR',
-        'class': 'raven.handlers.logging.SentryHandler',
-        'dsn': BACKEND_SENTRY_DSN,
-    }
-    LOGGING_CONFIG['root']['handlers'].append('sentry')
 
 CELERY_CONFIG = {
     'accept_content': ['json'],

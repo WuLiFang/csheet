@@ -11,7 +11,6 @@ import os
 import flask
 from celery import Celery, Task
 from flask_socketio import SocketIO
-from raven.contrib.flask import Sentry
 
 from . import database, filetools
 from .__about__ import __name__ as name
@@ -24,8 +23,6 @@ APP.secret_key = os.getenv('SECRET_KEY', ('}w\xb7\xa3]\xfaI\x94Z\x14\xa9\xa5}\x1
                                           '\xf7\xd6\xb2R\xb0\xf5\xc6*.\xb3I\xb7\x066V\xd6\x8d'))
 APP.config.from_object('csheet.default_settings')
 APP.config.from_envvar('CSHEET_SETTINGS', silent=True)
-
-SENTRY = Sentry(APP, dsn=APP.config['BACKEND_SENTRY_DSN'])
 
 SOCKETIO = SocketIO(app=APP,
                     path='/api/socket.io',
@@ -61,6 +58,12 @@ def init():
     database.core.bind(
         url=APP.config['DATABASE_URL'],
         is_echo=APP.config['DEBUG_SQL'])
+
+    import sentry_sdk
+    from sentry_sdk.integrations.celery import CeleryIntegration
+    from sentry_sdk.integrations.flask import FlaskIntegration
+    sentry_sdk.init(dsn=APP.config['BACKEND_SENTRY_DSN'],
+                    integrations=[FlaskIntegration(), CeleryIntegration()])
 
 
 init()
