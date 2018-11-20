@@ -49,21 +49,21 @@ export default Vue.extend({
   },
   computed: {
     ...CGTeamWorkTaskComputedMixin,
-    model(): CGTeamWorkTaskData {
+    model(): CGTeamWorkTaskData | undefined {
       return this.cgTeamworkTaskStore.storage[this.taskId];
     },
     fieldsValue(): StringMap<TaskStatus | null> {
       return {
-        leader_status: this.model.leader_status,
-        director_status: this.model.director_status,
-        client_status: this.model.client_status,
+        leader_status: this.model ? this.model.leader_status : null,
+        director_status: this.model ? this.model.director_status : null,
+        client_status: this.model ? this.model.client_status : null,
       };
     },
     status(): TaskStatus | null {
       return this.fieldsValue[this.field];
     },
     hasPermission(): boolean {
-      return this.model.permissions[this.field];
+      return this.model ? this.model.permissions[this.field] : false;
     },
   },
   methods: {
