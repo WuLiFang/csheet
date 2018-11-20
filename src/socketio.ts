@@ -12,7 +12,6 @@ import { CombinedRootState, RootState } from '@/store/types';
 import * as _ from 'lodash';
 import Notify from 'notifyjs';
 import * as io from 'socket.io-client';
-import { isUndefined } from 'util';
 import { Store } from 'vuex';
 import { PAGE_ID } from './constants';
 
@@ -55,6 +54,9 @@ export default class SocketIO {
     }
   }
   public onAssetUpdate(message: VideoResponse[]) {
+    if (!(message instanceof Array)) {
+      console.error(`Wrong message type: ${message}`);
+    }
     message.forEach(value => {
       if (!(value.uuid in this.store.state.videoStore.storage)) {
         console.debug(value.uuid, 'not found in store, skip');

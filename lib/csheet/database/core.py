@@ -3,11 +3,11 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import json
 import logging
 from contextlib import contextmanager
 from functools import wraps
 
+from flask import json
 from sqlalchemy import (Column, ForeignKey, Integer, String, Table,
                         create_engine, orm)
 from sqlalchemy.ext.declarative import declarative_base

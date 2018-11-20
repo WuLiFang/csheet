@@ -5,14 +5,14 @@ from __future__ import (absolute_import, division, print_function,
 
 import os
 
-from flask import make_response, render_template, request, send_file, session
+from flask import (json, make_response, render_template, request, send_file,
+                   session)
 
 import cgtwq
 from wlf.decorators import run_with_clock
 
 from .. import database
 from ..core import APP
-from ..filters import dumps
 from ..page import CGTeamWorkPage, LocalPage
 from ..page.core import BasePage
 from .login import require_login
@@ -63,9 +63,7 @@ def _render_page(page: BasePage, database_session):
 def _page_data(page: BasePage, database_session):
 
     data = page.data(database_session)
-    resp = make_response(dumps(data))
-    resp.headers['Content-Type'] = 'application/json; charset=utf-8'
-    return resp
+    return json.jsonify(data)
 
 
 def get_page() -> BasePage:

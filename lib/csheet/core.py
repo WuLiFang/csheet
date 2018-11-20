@@ -8,16 +8,18 @@ import logging
 import logging.config
 import os
 
+import flask
 from celery import Celery, Task
-from flask import Flask
 from flask_socketio import SocketIO
 from raven.contrib.flask import Sentry
 
 from . import database, filetools
 from .__about__ import __name__ as name
 from .__about__ import __version__
+from .encoder import JSONEncoder
 
-APP = Flask(name, root_path=filetools.dist_path())
+APP = flask.Flask(name, root_path=filetools.dist_path())
+APP.json_encoder = JSONEncoder
 APP.secret_key = os.getenv('SECRET_KEY', ('}w\xb7\xa3]\xfaI\x94Z\x14\xa9\xa5}\x16\xb3'
                                           '\xf7\xd6\xb2R\xb0\xf5\xc6*.\xb3I\xb7\x066V\xd6\x8d'))
 APP.config.from_object('csheet.default_settings')
@@ -27,7 +29,8 @@ SENTRY = Sentry(APP, dsn=APP.config['BACKEND_SENTRY_DSN'])
 
 SOCKETIO = SocketIO(app=APP,
                     path='/api/socket.io',
-                    message_queue=APP.config['MESSAGE_QUEUE_URL'])
+                    message_queue=APP.config['MESSAGE_QUEUE_URL'],
+                    json=flask.json)
 
 
 class ContextTask(Task):
