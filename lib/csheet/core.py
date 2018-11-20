@@ -8,8 +8,8 @@ import logging
 import logging.config
 import os
 
+import celery
 import flask
-from celery import Celery, Task
 from flask_socketio import SocketIO
 
 from . import database, filetools
@@ -29,7 +29,7 @@ SOCKETIO = SocketIO(app=APP,
                     message_queue=APP.config['MESSAGE_QUEUE_URL'])
 
 
-class ContextTask(Task):
+class ContextTask(celery.Task):
     """Task with flask app context.  """
 
     def __call__(self, *args, **kwargs):
@@ -41,11 +41,15 @@ class ContextTask(Task):
         raise NotImplementedError('Tasks must define the run method.')
 
 
-CELERY = Celery(APP.import_name, task_cls=ContextTask)
+CELERY = celery.Celery(APP.import_name, task_cls=ContextTask)
 
 
 @APP.teardown_appcontext
-def _teardown_session(_exc):
+def _teardown_session(exc):
+    sess = database.Session()
+    if exc:
+        sess.rollback()
+    sess.close()
     database.Session.remove()
 
 
@@ -63,7 +67,9 @@ def init():
         import sentry_sdk
         from sentry_sdk.integrations.celery import CeleryIntegration
         from sentry_sdk.integrations.flask import FlaskIntegration
-        sentry_sdk.init(dsn=dsn, integrations=[FlaskIntegration(), CeleryIntegration()])
+        sentry_sdk.init(
+            dsn=dsn,
+            integrations=[FlaskIntegration(), CeleryIntegration()])
 
 
 init()
