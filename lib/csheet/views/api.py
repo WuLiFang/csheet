@@ -179,7 +179,7 @@ class Tag(Resource):
         new_videos = [i for i in videos if i not in tag.videos]
         _update_tags_mtime(new_videos)
         tag.videos += new_videos
-        session.commit()
+        sess.commit()
         return tag.serialize()
 
     @staticmethod
@@ -193,7 +193,7 @@ class Tag(Resource):
         sess = database.Session()
         tag = core.get_tag(id_, sess)
         tag.text = args.text
-        session.commit()
+        sess.commit()
         return tag.serialize()
 
     @staticmethod
