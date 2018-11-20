@@ -96,7 +96,7 @@ class CGTeamWorkTask(core.Base, core.SerializableMixin):
         self.leader_status = data.leader_status
         self.director_status = data.director_status
         self.client_status = data.client_status
-        self.note_num = data.note_num
+        self.note_num = int(data.note_num) if data.note_num else 0
         session.add(self)
         session.commit()
 
