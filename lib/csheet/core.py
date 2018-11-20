@@ -26,8 +26,7 @@ APP.config.from_envvar('CSHEET_SETTINGS', silent=True)
 
 SOCKETIO = SocketIO(app=APP,
                     path='/api/socket.io',
-                    message_queue=APP.config['MESSAGE_QUEUE_URL'],
-                    json=flask.json)
+                    message_queue=APP.config['MESSAGE_QUEUE_URL'])
 
 
 class ContextTask(Task):
@@ -59,11 +58,12 @@ def init():
         url=APP.config['DATABASE_URL'],
         is_echo=APP.config['DEBUG_SQL'])
 
-    import sentry_sdk
-    from sentry_sdk.integrations.celery import CeleryIntegration
-    from sentry_sdk.integrations.flask import FlaskIntegration
-    sentry_sdk.init(dsn=APP.config['BACKEND_SENTRY_DSN'],
-                    integrations=[FlaskIntegration(), CeleryIntegration()])
+    dsn = APP.config['BACKEND_SENTRY_DSN']
+    if dsn:
+        import sentry_sdk
+        from sentry_sdk.integrations.celery import CeleryIntegration
+        from sentry_sdk.integrations.flask import FlaskIntegration
+        sentry_sdk.init(dsn=dsn, integrations=[FlaskIntegration(), CeleryIntegration()])
 
 
 init()
