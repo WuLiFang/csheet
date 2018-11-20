@@ -18,5 +18,6 @@ class JSONEncoder(json.JSONEncoder):
 
 def normalize(obj):
     """Convert object to json capable object"""
-
+    # XXX: should be handle by framework
+    # but `flask-socketio` has strange behavior
     return json.loads(json.dumps(obj))
