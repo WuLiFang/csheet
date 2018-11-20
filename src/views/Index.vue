@@ -35,8 +35,14 @@ export default Vue.extend({
     CGTeamWorkPageForm,
     LocalPageForm,
   },
+  data() {
+    return {
+      VERSION
+    }
+  }
 });
 </script>
+
 <style lang="scss" scoped>
 #the-index {
   max-width: 800px;
