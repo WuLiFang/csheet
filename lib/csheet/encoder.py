@@ -16,7 +16,7 @@ class JSONEncoder(json.JSONEncoder):
         return super().default(o)
 
 
-def serialize(obj):
+def normalize(obj):
     """Convert object to json capable object"""
 
     return json.loads(json.dumps(obj))
