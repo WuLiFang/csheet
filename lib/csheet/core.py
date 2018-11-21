@@ -69,6 +69,7 @@ def init():
         from sentry_sdk.integrations.flask import FlaskIntegration
         sentry_sdk.init(
             dsn=dsn,
+            release=__version__,
             integrations=[FlaskIntegration(), CeleryIntegration()])
 
 
