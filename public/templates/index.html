@@ -7,7 +7,11 @@
   </head>
 
   <body>
-    <div id="app" data-projects="{{ projects | tojson | forceescape }}">
+    <div
+      id="app"
+      data-projects="{{ projects | tojson | forceescape }}"
+      data-sentry-dsn="{{ SENTRY_DSN | escape }}"
+    >
       <noscript class="noscript">
         <link href="static/css/bootstrap.min.css" rel="stylesheet" />
         <div class="container">

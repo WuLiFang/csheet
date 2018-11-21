@@ -1,4 +1,5 @@
 import { getDataFromAppElement } from '@/datatools';
+import '@/sentry';
 import Index from '@/views/Index.vue';
 import { Loading } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -14,7 +15,7 @@ interface Project {
 }
 
 export const projects = JSON.parse(
-  getDataFromAppElement('projects'),
+  getDataFromAppElement('projects')
 ) as Project[];
 
 export function showFullScreenLoading() {
