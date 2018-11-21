@@ -142,7 +142,7 @@ export default Vue.extend({
     },
     video: {
       get(): VideoResponse | null {
-        return this.videoStore.storage[this.videoId];
+        return this.videoStore.storage[this.videoId] || null;
       },
       set(value: VideoResponse | null) {
         this.id = value ? value.uuid : null;
@@ -184,8 +184,8 @@ export default Vue.extend({
           decodeURI(
             window.location.pathname.slice(
               0,
-              window.location.pathname.lastIndexOf('/'),
-            ),
+              window.location.pathname.lastIndexOf('/')
+            )
           ) +
           '/' +
           plainData;
@@ -199,7 +199,7 @@ export default Vue.extend({
       }
 
       // By label
-      const video = _.find(this.videoStore.storage, i => i.label === hash);
+      const video = _.find(this.videoStore.storage, i => i!.label === hash);
       if (video) {
         this.video = video;
         return;
@@ -346,7 +346,7 @@ export default Vue.extend({
             this.prev(this.imagePlayList),
             this.next(this.imagePlayList),
             this.next(this.videoPlayList),
-          ]),
+          ])
         );
         blobWhitelist.map(this.preload);
 

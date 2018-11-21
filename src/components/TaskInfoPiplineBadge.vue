@@ -35,16 +35,22 @@ export default Vue.extend({
   },
   computed: {
     ...CGTeamWorkTaskComputedMixin,
-    model(): CGTeamWorkTaskData {
+    model(): CGTeamWorkTaskData | undefined {
       return this.cgTeamworkTaskStore.storage[this.taskId];
     },
     field(): string | undefined {
       return this.permissionedFields[0];
     },
     generalStatus(): TaskStatus | null {
+      if (!this.model) {
+        return null;
+      }
       return this.getGeneralStatus(this.model.id);
     },
     permissionedFields(): string[] {
+      if (!this.model) {
+        return [];
+      }
       const map = this.model.permissions;
       const fields = Object.keys(map);
       return fields.filter(i => map[i]);

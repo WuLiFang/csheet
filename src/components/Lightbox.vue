@@ -94,7 +94,7 @@ export default Vue.extend({
     ...RootComputedMixin,
     isSelected: {
       get(): boolean {
-        return this.videoStore.selectStateMap[this.id];
+        return this.videoStore.selectStateMap[this.id] || false;
       },
       set(value: boolean) {
         const payload: VideoUpdateSelectStateMutationPayload = {
@@ -103,7 +103,7 @@ export default Vue.extend({
         this.$store.commit(UPDATE_VIDEO_SELECT_STATE, payload);
       },
     },
-    video(): VideoResponse {
+    video(): VideoResponse | undefined {
       return this.videoStore.storage[this.id];
     },
     posterURL(): string | null {
@@ -138,7 +138,7 @@ export default Vue.extend({
       return this.task ? this.task.id : null;
     },
     task(): CGTeamWorkTaskData | undefined {
-      return this.cgTeamworkTaskStore.storage[this.video.uuid];
+      return this.video && this.cgTeamworkTaskStore.storage[this.video.uuid];
     },
     isEnablePreview(): boolean {
       return this.$store.state.isEnablePreview;
@@ -153,6 +153,9 @@ export default Vue.extend({
       }
     },
     ondragstart(event: DragEvent) {
+      if (!this.video) {
+        return;
+      }
       let plainData = this.video.poster || this.video.src;
       if (!plainData) {
         return;
@@ -163,8 +166,8 @@ export default Vue.extend({
           decodeURI(
             window.location.pathname.slice(
               0,
-              window.location.pathname.lastIndexOf('/'),
-            ),
+              window.location.pathname.lastIndexOf('/')
+            )
           ) +
           '/' +
           plainData;

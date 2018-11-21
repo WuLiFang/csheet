@@ -70,7 +70,9 @@ export default Vue.extend({
     ...videoComputedMinxin,
     ...RootComputedMixin,
     videos(): VideoResponse[] {
-      return this.videoStore.visibleVideos.map(i => this.videoStore.storage[i]);
+      return this.videoStore.visibleVideos
+        .map(i => this.videoStore.storage[i]!)
+        .filter(i => i);
     },
   },
   methods: {

@@ -58,7 +58,7 @@ export default Vue.extend({
   },
   computed: {
     ...videoComputedMinxin,
-    videoData(): VideoResponse {
+    videoData(): VideoResponse | undefined {
       return this.videoStore.storage[this.id];
     },
   },

@@ -1,49 +1,48 @@
+import { getDataFromAppElement } from '@/datatools';
+import { TagResponse } from '@/interface';
+import axios, { AxiosResponse } from 'axios';
+import * as _ from 'lodash';
 import Vue from 'vue';
+import { DefaultComputed } from 'vue/types/options';
 import {
-  Module,
-  MutationTree,
+  ActionContext,
   ActionTree,
   GetterTree,
   mapGetters,
   mapState,
-  ActionContext,
+  Module,
+  MutationTree,
 } from 'vuex';
-import { DefaultComputed } from 'vue/types/options';
-
-import * as _ from 'lodash';
-import axios from 'axios';
-import { AxiosResponse } from 'axios';
-
-import {
-  RootState,
-  LoadStatus,
-  TagState,
-  TagStoreByText,
-  TagGetters,
-  mapGettersMixin,
-} from './types';
 import {
   TAG,
-  TagReadActionPayload,
-  TagUpdateMutationPayload,
   TagCreateActionPayload,
-  TagUpdateActionPayload,
   TagDeleteActionPayload,
   TagDeleteMutationPayload,
-  VIDEOS_ADD_TAG,
+  TagReadActionPayload,
+  TagUpdateActionPayload,
+  TagUpdateMutationPayload,
   VideosAddTagActionPayload,
   VideosAddTagMutationsPayload,
+  VIDEOS_ADD_TAG,
 } from '../mutation-types';
 import { SkipIfIsFileProtocol } from '../packtools';
-import { getDataFromAppElement } from '@/datatools';
-import { TagResponse } from '@/interface';
+import {
+  mapGettersMixin,
+  RootState,
+  TagGetters,
+  TagState,
+  TagStoreByText,
+} from './types';
 
 export const getters: GetterTree<TagState, RootState> = {
   tags(contextState): TagResponse[] {
-    return _.sortBy(_.values(contextState.storage), i => i.text);
+    return _.sortBy(
+      _.values(contextState.storage) as TagResponse[],
+      i => i.text
+    );
   },
   tagStoreByText(contextState): TagStoreByText {
-    return _.groupBy(contextState.storage, i => i.text);
+    return _.groupBy(contextState.storage, i => i!.text) as TagStoreByText;
   },
   getTagByTextArray(contextState, contextGetters) {
     return (textArray: string[]): TagResponse[] => {
@@ -91,7 +90,7 @@ const mutations: MutationTree<TagState> = {
 
 function HandleTagReponse(
   response: AxiosResponse,
-  context: ActionContext<TagState, RootState>,
+  context: ActionContext<TagState, RootState>
 ) {
   const data: TagResponse = response.data;
   const mutationPayload: TagUpdateMutationPayload = {

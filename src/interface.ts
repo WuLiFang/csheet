@@ -11,7 +11,7 @@ export interface CGTeamWorkTaskData {
 }
 
 export interface StringMap<T> {
-  [id: string]: T;
+  [id: string]: T | undefined;
 }
 
 export type CGTeamWorkTaskResponse = [

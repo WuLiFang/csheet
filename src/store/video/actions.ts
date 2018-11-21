@@ -14,7 +14,7 @@ import { ActionContext, ActionTree } from 'vuex';
 
 async function HandleVideoReponse(
   response: AxiosResponse,
-  context: ActionContext<VideoState, RootState>,
+  context: ActionContext<VideoState, RootState>
 ) {
   const data: VideoResponse = response.data;
   const mutationPayload: type.VideoUpdateMutationPayload = {
@@ -34,7 +34,7 @@ async function HandleVideoReponse(
 
 function HandleTagsReponse(
   response: AxiosResponse,
-  context: ActionContext<VideoState, RootState>,
+  context: ActionContext<VideoState, RootState>
 ) {
   const dataArray: TagResponse[] = response.data;
   dataArray.map(data => {
@@ -99,7 +99,7 @@ export const actions: ActionTree<VideoState, RootState> = {
   [type.UPDATE_VIDEO_APPEARED](context) {
     const ret = context.state.visibleVideos.filter(i => {
       const element = (context.getters as CombinedGetters).videoElementHub.get(
-        i,
+        i
       );
       return element && isElementAppread(element);
     });
@@ -113,7 +113,7 @@ export const actions: ActionTree<VideoState, RootState> = {
   },
   async [type.VIDEO_TAGS.CREATE](
     context,
-    payload: type.VideoTagsCreateActionPayload,
+    payload: type.VideoTagsCreateActionPayload
   ) {
     return SkipIfIsFileProtocol(() => {
       return axios
@@ -123,7 +123,7 @@ export const actions: ActionTree<VideoState, RootState> = {
   },
   async [type.VIDEO_TAGS.UPDATE](
     context,
-    payload: type.VideoTagsUpdateActionPayload,
+    payload: type.VideoTagsUpdateActionPayload
   ) {
     return SkipIfIsFileProtocol(() => {
       return axios
@@ -136,7 +136,7 @@ export const actions: ActionTree<VideoState, RootState> = {
   },
   async [type.VIDEO_TAGS.DELETE](
     context,
-    payload: type.VideoTagsDeleteActionPayload,
+    payload: type.VideoTagsDeleteActionPayload
   ) {
     return SkipIfIsFileProtocol(() => {
       return axios
@@ -149,7 +149,7 @@ export const actions: ActionTree<VideoState, RootState> = {
   },
   async [type.VIDEO_TAGS.READ](
     context,
-    payload: type.VideoTagsReadActionPayload,
+    payload: type.VideoTagsReadActionPayload
   ) {
     return SkipIfIsFileProtocol(() => {
       return axios
@@ -159,7 +159,7 @@ export const actions: ActionTree<VideoState, RootState> = {
   },
   async [type.READ_VIDEO_TAGS_IF_FOUND_UNDEFINED](
     context,
-    payload: type.VideoTagsReadIfFoundUndefinedActionPayload,
+    payload: type.VideoTagsReadIfFoundUndefinedActionPayload
   ) {
     return SkipIfIsFileProtocol(() => {
       const video = payload.video;
@@ -167,8 +167,8 @@ export const actions: ActionTree<VideoState, RootState> = {
         if (
           video.tags.some(i =>
             isUndefined(
-              (context.rootState as CombinedRootState).tagStore.storage[i],
-            ),
+              (context.rootState as CombinedRootState).tagStore.storage[i]
+            )
           )
         ) {
           const tagsPayload: type.VideoTagsReadActionPayload = {
@@ -186,9 +186,10 @@ export const actions: ActionTree<VideoState, RootState> = {
   [type.FILTER_VIDEOS](context) {
     context.commit(
       type.FILTER_VIDEOS,
-      Object.keys(context.state.storage).filter(i =>
-        (context.getters as CombinedGetters).filter(context.state.storage[i]),
-      ),
+      Object.keys(context.state.storage).filter(i => {
+        const video = context.state.storage[i];
+        return video && (context.getters as CombinedGetters).filter(video);
+      })
     );
   },
 };

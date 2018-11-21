@@ -59,11 +59,11 @@ export const getters: GetterTree<CGTeamworkTaskState, RootState> = {
     };
   },
   artists(contextState): string[] {
-    return _.uniq(_.flatMap(contextState.storage, i => i.artist_array)).sort();
+    return _.uniq(_.flatMap(contextState.storage, i => i!.artist_array)).sort();
   },
   getAritstTaskCount(contextState) {
     return (artist: string) =>
-      _.filter(contextState.storage, i => i.artist_array.indexOf(artist) >= 0)
+      _.filter(contextState.storage, i => i!.artist_array.indexOf(artist) >= 0)
         .length;
   },
 };

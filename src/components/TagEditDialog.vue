@@ -57,11 +57,11 @@ export default Vue.extend({
         this.$emit('update:visible', value);
       },
     },
-    video(): VideoResponse {
+    video(): VideoResponse | undefined {
       return this.videoStore.storage[this.id];
     },
     selectedTags(): TagResponse[] {
-      return _.flatMap(this.tagSelectModel, i => this.tagStoreByText[i]);
+      return _.flatMap(this.tagSelectModel, i => this.tagStoreByText[i] || []);
     },
   },
   watch: {
@@ -73,8 +73,11 @@ export default Vue.extend({
   },
   methods: {
     reset() {
+      if (!this.video) {
+        return;
+      }
       this.tagSelectModel = this.video.tags.map(
-        i => this.tagStore.storage[i].text,
+        i => this.tagStore.storage[i]!.text
       );
     },
     accept() {

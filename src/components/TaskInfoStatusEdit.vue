@@ -60,10 +60,10 @@ export default Vue.extend({
       };
     },
     status(): TaskStatus | null {
-      return this.fieldsValue[this.field];
+      return this.fieldsValue[this.field] || null;
     },
     hasPermission(): boolean {
-      return this.model ? this.model.permissions[this.field] : false;
+      return this.model ? this.model.permissions[this.field] || false : false;
     },
   },
   methods: {

@@ -12,8 +12,6 @@ import {
   RootState,
   VideoState,
 } from '@/store/types';
-import * as _ from 'lodash';
-import { isNull } from 'util';
 import { GetterTree } from 'vuex';
 import { getPath } from './core';
 
@@ -41,7 +39,7 @@ export const getters: GetterTree<VideoState, RootState> = {
       const url = (contextGetter as CombinedGetters).getVideoURI(
         id,
         role,
-        isForce,
+        isForce
       );
       if (isFileProtocol) {
         return url;
@@ -60,7 +58,7 @@ export const getters: GetterTree<VideoState, RootState> = {
     return (video: VideoResponse): boolean => {
       const status: TaskStatus = contextGetter.getGeneralStatus(
         video.uuid,
-        castRootState.statusStage,
+        castRootState.statusStage
       );
       return castRootState.statusFilter[TaskStatus[status] as TaskStatusText];
     };
@@ -81,6 +79,9 @@ export const getters: GetterTree<VideoState, RootState> = {
       return video.related_tasks.some(i => {
         const task = (rootState as CombinedRootState).cgTeamworkTaskStore
           .storage[i];
+        if (!task) {
+          return true;
+        }
         return (
           task &&
           task.artist_array.some(j => rootState.artistFilter.includes(j))
@@ -113,18 +114,20 @@ export const getters: GetterTree<VideoState, RootState> = {
     };
   },
   videoPlayList(contextState, contextGetter): string[] {
-    return _.reject(contextState.visibleVideos, i =>
-      isNull(contextState.storage[i].preview_mtime),
-    );
+    return contextState.visibleVideos.filter(i => {
+      const video = contextState.storage[i];
+      return !(video && video.preview_mtime);
+    });
   },
   imagePlayList(contextState, contextGetter): string[] {
-    return _.reject(contextState.visibleVideos, i =>
-      isNull(contextState.storage[i].poster_mtime),
-    );
+    return contextState.visibleVideos.filter(i => {
+      const video = contextState.storage[i];
+      return video && video.poster_mtime;
+    });
   },
   selectedVideos(contextState): string[] {
     return Object.keys(contextState.selectStateMap).filter(
-      i => contextState.selectStateMap[i],
+      i => contextState.selectStateMap[i]
     );
   },
 };

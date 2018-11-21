@@ -8,7 +8,7 @@ import {
 } from '../interface';
 
 export interface IDMap<T> {
-  [id: string]: T;
+  [id: string]: T | undefined;
 }
 
 export interface RootState {
@@ -37,7 +37,7 @@ export interface PositionData {
 export interface VideoState {
   storage: IDMap<VideoResponse>;
   blobURLMap: IDMap<string>;
-  blobWhiteListMap: Map<string, string[]>;
+  blobWhiteListMap: Map<string, string[] | undefined>;
   selectStateMap: IDMap<boolean>;
   visibleVideos: string[];
 }
@@ -63,7 +63,7 @@ export interface CGTeamWorkTaskGetters {
   getAritstTaskCount: (artist: string) => number;
 }
 
-export type ElementHub = Map<string, HTMLElement>;
+export type ElementHub = Map<string, HTMLElement | undefined>;
 export interface VideoGetters {
   scrollTo: (id: string) => void;
   getVideoURI: (
@@ -85,7 +85,7 @@ export interface VideoGetters {
 }
 
 export interface TagStoreByText {
-  [id: string]: TagResponse[];
+  [id: string]: TagResponse[] | undefined;
 }
 export interface TagGetters {
   tags: TagResponse[];

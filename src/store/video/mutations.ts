@@ -9,18 +9,20 @@ export const mutations: MutationTree<VideoState> = {
   },
   [type.UPDATE_BLOB_HUB](
     contextState,
-    payload: type.UpdateBlobHubMutationPayload,
+    payload: type.UpdateBlobHubMutationPayload
   ) {
     Vue.set(
       contextState.blobURLMap,
       payload.url,
-      URL.createObjectURL(payload.blob),
+      URL.createObjectURL(payload.blob)
     );
   },
   [type.CLEAR_VIDEO_BLOB](contextState) {
     const whiteList: string[] = [];
     for (const value of contextState.blobWhiteListMap.values()) {
-      whiteList.push(...value);
+      if (value) {
+        whiteList.push(...value);
+      }
     }
     const exp = new RegExp('/videos/([^.]+)..*');
     Object.keys(contextState.blobURLMap)
@@ -33,19 +35,22 @@ export const mutations: MutationTree<VideoState> = {
       })
       .forEach(i => {
         const url = contextState.blobURLMap[i];
+        if (!url) {
+          return;
+        }
         URL.revokeObjectURL(url);
         Vue.delete(contextState.blobURLMap, i);
       });
   },
   [type.UPDATE_VIDEO_BLOB_WHITELIST](
     contextState,
-    payload: type.VideoUpdateBlobWhiteListMapMutationPayload,
+    payload: type.VideoUpdateBlobWhiteListMapMutationPayload
   ) {
     contextState.blobWhiteListMap.set(payload.key, payload.value);
   },
   [type.VIDEOS_ADD_TAG](
     contextState,
-    payload: type.VideosAddTagMutationsPayload,
+    payload: type.VideosAddTagMutationsPayload
   ) {
     payload.videos.map(i => {
       const video = contextState.storage[i];
@@ -59,10 +64,10 @@ export const mutations: MutationTree<VideoState> = {
   },
   [type.UPDATE_VIDEO_SELECT_STATE](
     contextState,
-    payload: type.VideoUpdateSelectStateMutationPayload,
+    payload: type.VideoUpdateSelectStateMutationPayload
   ) {
     Object.keys(payload).map(i =>
-      Vue.set(contextState.selectStateMap, i, payload[i]),
+      Vue.set(contextState.selectStateMap, i, payload[i])
     );
   },
   [type.FILTER_VIDEOS](contextState, value) {

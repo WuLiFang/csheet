@@ -1,5 +1,5 @@
 <template lang="pug">
-    .task-info-pipeline-badge-poper
+    .task-info-pipeline-badge-poper(v-if='model')
         span 制作者: {{model.artist}}
         TaskInfoStatusEdit(:taskId='model.id' field='leader_status')
             template(slot-scope='status') 组长状态: {{status.text}}
@@ -27,7 +27,7 @@ export default Vue.extend({
   },
   computed: {
     ...CGTeamWorkTaskComputedMixin,
-    model(): CGTeamWorkTaskData {
+    model(): CGTeamWorkTaskData | undefined {
       return this.cgTeamworkTaskStore.storage[this.taskId];
     },
   },

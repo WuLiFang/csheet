@@ -23,7 +23,7 @@ export default Vue.extend({
   },
   computed: {
     ...CGTeamWorkTaskComputedMixin,
-    task(): CGTeamWorkTaskData {
+    task(): CGTeamWorkTaskData | undefined {
       return this.cgTeamworkTaskStore.storage[this.id];
     },
     text(): string {
