@@ -289,7 +289,7 @@ def discover_light_tasks():
     """Discover light generation tasks.  """
 
     discover_tasks('poster', 'thumb', min_interval=1)
-    discover_tasks('preview', 'poster', min_interval=60,
+    discover_tasks('src', 'poster', min_interval=60,
                    conditions=(Video.poster.is_(None),),
                    limit=10)
 
