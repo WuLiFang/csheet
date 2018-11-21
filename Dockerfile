@@ -42,6 +42,7 @@ WORKDIR /app
 COPY ./Pipfile* ./
 RUN pipenv install --system --deploy
 ENV PYTHONPATH=lib
+ENV PYTHONIOENCODING=utf-8
 
 FROM backend-prepare AS backend-build
 
@@ -58,12 +59,11 @@ RUN python -m pytest ./tests
 
 FROM backend-build AS release
 
-RUN set +e
-ENV LANG=en_US.utf-8
+ENV LANG=C.UTF-8
 ENV CSHEET_SETTINGS=/etc/csheet/settings.py
 ENV WORKER_CONNECTIONS=1000
 
+RUN set +e
 LABEL author="NateScarlet@Gmail.com"
-
 ENTRYPOINT [ "./entrypoint.sh" ]
 CMD ["run"]
