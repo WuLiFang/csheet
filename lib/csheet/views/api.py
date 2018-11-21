@@ -49,6 +49,7 @@ class Task(Resource):
         sess = database.Session()
         task = core.get_task(id_, sess)
         task.update(token, sess)
+        sess.commit()
         return task.get_entry_data(token)
 
 

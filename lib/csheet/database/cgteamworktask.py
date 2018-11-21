@@ -98,7 +98,6 @@ class CGTeamWorkTask(core.Base, core.SerializableMixin):
         self.client_status = data.client_status
         self.note_num = int(data.note_num) if data.note_num else 0
         session.add(self)
-        session.commit()
 
     def to_task_info(self):
         """Convert to task info for frontend.  """

@@ -80,7 +80,10 @@ def on_connect():
 def on_request_update(message):
     assert isinstance(message, list), type(message)
     with session_scope() as sess:
-        sess.query(Video).filter(
+        (sess
+        .query(Video)
+        .with_for_update(skip_locked=True)
+        .filter(
             Video.uuid.in_(message),
             sqlalchemy.or_(
                 Video.last_update_time.is_(None),
@@ -89,7 +92,7 @@ def on_request_update(message):
             ),
             Video.is_need_update.isnot(True),
         ).update({'is_need_update': True},
-                 synchronize_session=False)
+                 synchronize_session=False))
 
     LOGGER.debug('Accepted video update requests, count: %s', len(message))
 

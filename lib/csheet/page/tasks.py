@@ -38,10 +38,6 @@ def _update_page(page_getter):
 
     LOGGER.info('Start update page: %s', page)
     with database.session_scope() as sess:
-        try:
-            page.update(sess)
-            SOCKETIO.emit('page update', page.id)
-        except:
-            LOGGER.error('Page update failed.', exc_info=True)
-            raise
+        page.update(sess)
+    SOCKETIO.emit('page update', page.id)
     LOGGER.info('Page updated: %s', page)

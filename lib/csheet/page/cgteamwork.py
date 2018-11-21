@@ -135,7 +135,6 @@ class CGTeamWorkPage(core.BasePage):
         videos = [self._video_from_data(data, tasks, shot)
                   for shot in shots]
         self._task_query(session).with_for_update().merge_result(videos)
-        session.commit()
 
     def _task_from_data(self, data):
         assert isinstance(data, TaskDataRow), type(data)
