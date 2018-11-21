@@ -35,52 +35,21 @@ def getmtime(path):
     return os.path.getmtime(path_e)
 
 
-class Chunk(list):
-    """Chunk for update.  """
+def update_mtime(video, src_column, mtime_column):
+    """Update mtime column from source column
 
-    @classmethod
-    def get(cls, session, size=50, min_update_interval=1):
-        """Get update chunk from local database.
-            size (int, optional): Defaults to 50. Chunk size.
-            min_update_interval (int, optional): Defaults to 1.
-                Ignore newly updated items by seconds.
+    Args:
+        video (Video): Video to update.
+        src_column (str): Source column name.
+        mtime_column (str): Mtime column name.
+    """
 
-        Returns:
-            Chunk: Chunk for update.
-        """
-
-        current_time = time.time()
-
-        videos = (session
-                  .query(Video)
-                  .with_for_update(skip_locked=True)
-                  .filter(
-                      Video.is_need_update.is_(True),
-                      Video.src.isnot(None) | Video.poster.isnot(None),
-                      sqlalchemy.or_(Video.last_update_time.is_(None),
-                                     Video.last_update_time < current_time - min_update_interval))
-                  .order_by(Video.last_update_time)
-                  .limit(size)
-                  .all())
-
-        return cls(videos)
-
-    def update_mtime(self, src_column, mtime_column, session):
-        """Update mtime column from source column
-
-        Args:
-            src_column (str): Source column name.
-            mtime_column (str): Mtime column name.
-        """
-
-        mappings = [{'uuid': i.uuid,
-                     mtime_column:  getmtime(getattr(i, src_column))}
-                    for i in self]
-        for i in mappings:
-            # Clear removed filename from database.
-            if i[mtime_column] is None:
-                i[src_column] = None
-        session.bulk_update_mappings(Video, mappings)
+    mtime = getmtime(getattr(video, src_column))
+    if mtime is not None:
+        setattr(video, mtime_column, mtime)
+    else:
+        # Clear removed filename from database.
+        setattr(video, src_column, None)
 
 
 @CELERY.task(ignore_result=True,
@@ -90,22 +59,31 @@ def update_one_chunk(size=50, is_strict=True):
     """Get a update chunk then update it.  """
 
     with session_scope() as sess:
-        chunk = Chunk.get(sess, size)
-        if not chunk:
-            LOGGER.debug('No video need update.')
-            if is_strict:
-                raise WorkerIdle
-            return
-        LOGGER.info('Start check video changes, count: %s', len(chunk))
-        chunk.update_mtime('src', 'src_mtime', sess)
-        chunk.update_mtime('poster', 'poster_mtime', sess)
-        sess.query(Video).filter(
-            Video.uuid.in_([i.uuid for i in chunk])
-        ).update(
-            {'is_need_update': False,
-             'last_update_time': time.time()},
-            synchronize_session=False
-        )
+        with sess.no_autoflush:
+            chunk = (sess
+                     .query(Video)
+                     .with_for_update(skip_locked=True)
+                     .filter(
+                         Video.is_need_update.is_(True),
+                         Video.src.isnot(None) | Video.poster.isnot(None),
+                         sqlalchemy.or_(Video.last_update_time < time.time() - 1,
+                                        Video.last_update_time.is_(None)))
+                     .order_by(Video.last_update_time)
+                     .limit(size)
+                     .all())
+
+            if chunk:
+                LOGGER.info('Start check video changes, count: %s', len(chunk))
+            else:
+                LOGGER.debug('No video need update.')
+                if is_strict:
+                    raise WorkerIdle
+
+            for i in chunk:
+                update_mtime(i, 'src', 'src_mtime')
+                update_mtime(i, 'poster', 'poster_mtime')
+                i.is_need_update = False
+                i.last_update_time = time.time()
 
 
 def update_forever():
