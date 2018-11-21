@@ -46,10 +46,8 @@ CELERY = celery.Celery(APP.import_name, task_cls=ContextTask)
 
 @APP.teardown_appcontext
 def _teardown_session(exc):
-    sess = database.Session()
-    if exc:
-        sess.rollback()
-    sess.close()
+    if exc and database.Session.registry.has():
+        database.Session().rollback()
     database.Session.remove()
 
 
