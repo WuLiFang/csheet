@@ -15,7 +15,7 @@
       ElRadio(v-model='form.pipeline' label='动画')
       ElRadio(v-model='form.pipeline' label='特效')
     ElFormItem(label='前缀' prop='prefix')
-      ElInput(v-model='form.prefix' ref='inputPrefix')
+      ElInput(v-model='form.prefix' ref='inputPrefix' @keyup.native.enter='open')
     ElFormItem
       ElButton(type='primary' @click='open') 打开
       ElButton(icon="el-icon-message" @click='pack') 打包
@@ -64,7 +64,7 @@ export default Vue.extend({
             validator: (
               rule: any,
               value: string,
-              callback: (error?: Error) => void,
+              callback: (error?: Error) => void
             ) => {
               if (!value.includes('_')) {
                 callback(new Error('至少包含一个下划线`_`'));
@@ -118,7 +118,7 @@ export default Vue.extend({
         this.inputPrefix.focus();
         this.inputPrefix.setSelectionRange(
           project.code.length + 3,
-          project.code.length + 5,
+          project.code.length + 5
         );
       });
     },

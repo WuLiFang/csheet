@@ -7,7 +7,7 @@
     @submit.native.prevent='open'
   )
     ElFormItem(label='路径' prop='root')
-      ElInput(v-model='form.root')
+      ElInput(v-model='form.root' @keyup.native.enter='open')
     ElFormItem
       ElButton(type='primary' @click='open') 打开
       ElButton(icon="el-icon-message" @click='pack') 打包
