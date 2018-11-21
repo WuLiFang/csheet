@@ -6,7 +6,7 @@
 import Vue from 'vue';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import {
-  CGTeamWorkTaskData,
+  CGTeamWorkTaskResponse,
   TaskStatusText,
   TaskStatus,
   TaskStage,
@@ -23,7 +23,7 @@ export default Vue.extend({
   },
   computed: {
     ...CGTeamWorkTaskComputedMixin,
-    task(): CGTeamWorkTaskData | undefined {
+    task(): CGTeamWorkTaskResponse | undefined {
       return this.cgTeamworkTaskStore.storage[this.id];
     },
     text(): string {

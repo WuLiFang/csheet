@@ -34,7 +34,7 @@ import {
   VideoResponse,
   TaskStage,
   TaskStatus,
-  CGTeamWorkTaskData,
+  CGTeamWorkTaskResponse,
   TagResponse,
 } from '../interface';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';

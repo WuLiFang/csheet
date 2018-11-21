@@ -19,7 +19,7 @@ import {
   FieldResponse,
   TaskStatus,
   TaskStatusText,
-  CGTeamWorkTaskData,
+  CGTeamWorkTaskResponse,
   StringMap,
 } from '../interface';
 import { CGTeamWorkTaskComputedMixin } from '../store/cgteamwork-task';
@@ -49,7 +49,7 @@ export default Vue.extend({
   },
   computed: {
     ...CGTeamWorkTaskComputedMixin,
-    model(): CGTeamWorkTaskData | undefined {
+    model(): CGTeamWorkTaskResponse | undefined {
       return this.cgTeamworkTaskStore.storage[this.taskId];
     },
     fieldsValue(): StringMap<TaskStatus | null> {
@@ -63,7 +63,12 @@ export default Vue.extend({
       return this.fieldsValue[this.field] || null;
     },
     hasPermission(): boolean {
-      return this.model ? this.model.permissions[this.field] || false : false;
+      return (
+        (this.model &&
+          this.model.permissions &&
+          this.model.permissions[this.field]) ||
+        false
+      );
     },
   },
   methods: {

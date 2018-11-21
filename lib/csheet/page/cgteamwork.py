@@ -184,9 +184,7 @@ class CGTeamWorkPage(core.BasePage):
     def tasks(self, session):
         """Video related task data.  """
 
-        data = self._task_query(session).all()
-
-        return [i.to_task_info() for i in data]
+        return self._task_query(session).all()
 
     def _process_context(self, context, database_session=None):
         context = super()._process_context(context, database_session)

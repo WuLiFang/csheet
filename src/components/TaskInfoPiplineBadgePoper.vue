@@ -16,7 +16,7 @@ import Vue from 'vue';
 
 import TaskInfoStatusEdit from '@/components/TaskInfoStatusEdit.vue';
 import { CGTeamWorkTaskComputedMixin } from '../store/cgteamwork-task';
-import { CGTeamWorkTaskData } from '../interface';
+import { CGTeamWorkTaskResponse } from '../interface';
 
 export default Vue.extend({
   props: {
@@ -27,7 +27,7 @@ export default Vue.extend({
   },
   computed: {
     ...CGTeamWorkTaskComputedMixin,
-    model(): CGTeamWorkTaskData | undefined {
+    model(): CGTeamWorkTaskResponse | undefined {
       return this.cgTeamworkTaskStore.storage[this.taskId];
     },
   },

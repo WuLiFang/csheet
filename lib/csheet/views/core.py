@@ -52,7 +52,7 @@ def _get_model(uuid, sess, cls):
     return ret
 
 
-def get_task(task_id, session_):
+def get_task(task_id, session_) -> CGTeamWorkTask:
     """Get entry from taks_id.  """
 
     return _get_model(task_id, session_, CGTeamWorkTask)

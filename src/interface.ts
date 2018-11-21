@@ -1,4 +1,8 @@
-export interface CGTeamWorkTaskData {
+export interface StringMap<T> {
+  [id: string]: T | undefined;
+}
+
+export type CGTeamWorkTaskResponse = {
   pipeline: string;
   artist: string;
   artist_array: string[];
@@ -7,39 +11,8 @@ export interface CGTeamWorkTaskData {
   client_status: TaskStatus;
   note_num: number;
   id: string;
-  permissions: StringMap<boolean>;
-}
-
-export interface StringMap<T> {
-  [id: string]: T | undefined;
-}
-
-export type CGTeamWorkTaskResponse = [
-  string,
-  string | null,
-  TaskStatusText | null,
-  TaskStatusText | null,
-  TaskStatusText | null,
-  number,
-  string,
-  StringMap<boolean>
-];
-
-export function parseCGTeamWorkTaskResponse(
-  response: CGTeamWorkTaskResponse
-): CGTeamWorkTaskData {
-  return {
-    pipeline: response[0],
-    artist: response[1] || '',
-    artist_array: (response[1] || '').split(','),
-    leader_status: TaskStatus[response[2] || 'Unset'],
-    director_status: TaskStatus[response[3] || 'Unset'],
-    client_status: TaskStatus[response[4] || 'Unset'],
-    note_num: response[5],
-    id: response[6],
-    permissions: response[7],
-  };
-}
+  permissions: StringMap<boolean> | undefined;
+};
 
 export enum TaskStatus {
   // First appeared status take priority.

@@ -1,9 +1,5 @@
-import { getDataFromAppElement } from '@/datatools';
-import {
-  PageResponse,
-  parseCGTeamWorkTaskResponse,
-  TaskStage,
-} from '@/interface';
+import { PAGE_PATH } from '@/constants';
+import { PageResponse, TaskStage } from '@/interface';
 import { isFileProtocol } from '@/packtools';
 import Axios, { AxiosResponse } from 'axios';
 import { isUndefined } from 'util';
@@ -15,7 +11,6 @@ import cgTeamworkTaskStore from './cgteamwork-task';
 import tagStore from './tag';
 import { RootState, StatusSelectResult } from './types';
 import videoStore from './video';
-import { PAGE_PATH } from '@/constants';
 
 export function getDefaultStatusFilter(): StatusSelectResult {
   return {
@@ -74,10 +69,9 @@ const store: Store = {
           });
           if (value.data.tasks) {
             value.data.tasks.forEach(i => {
-              const task = parseCGTeamWorkTaskResponse(i);
               const payload: mutations.CGTeamWorkTaskReadMutationPayload = {
-                id: task.id,
-                data: task,
+                id: i.id,
+                data: i,
               };
               contextState.commit(mutations.CGTEAMWORK_TASK.READ, payload);
             });

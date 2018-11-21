@@ -50,7 +50,11 @@ class Task(Resource):
         task = core.get_task(id_, sess)
         task.update(token, sess)
         sess.commit()
-        return task.get_entry_data(token)
+        ret = task.serialize()
+        entry = task.to_entry()
+        ret['permissions'] = {i: entry.flow.has_field_permission(i)
+                              for i in ('leader_status', 'director_status', 'client_status')}
+        return ret
 
 
 API.add_resource(Task, '/task/<id_>')

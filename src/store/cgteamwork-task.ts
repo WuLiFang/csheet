@@ -12,13 +12,7 @@ import {
   Module,
   MutationTree,
 } from 'vuex';
-import {
-  CGTeamWorkTaskData,
-  CGTeamWorkTaskResponse,
-  parseCGTeamWorkTaskResponse,
-  TaskStage,
-  TaskStatus,
-} from '../interface';
+import { CGTeamWorkTaskResponse, TaskStage, TaskStatus } from '../interface';
 import {
   CGTeamWorkTaskCreateNoteActionPayload,
   CGTeamWorkTaskReadActionPayload,
@@ -91,10 +85,8 @@ function parseDataFromPage(): CGTeamworkTaskState['storage'] {
   const time = new Date().getTime();
   const parsed = JSON.parse(data) as CGTeamWorkTaskResponse[];
   const ret: CGTeamworkTaskState['storage'] = {};
-  parsed.forEach(value => {
-    value[7] = value[7] || {};
-    const task = parseCGTeamWorkTaskResponse(value);
-    ret[task.id] = task;
+  parsed.forEach(i => {
+    ret[i.id] = i;
   });
   return ret;
 }
@@ -118,12 +110,12 @@ const mutations: MutationTree<CGTeamworkTaskState> = {
 
 function handleCGTeamWorkTaskResponse(
   context: ActionContext<CGTeamworkTaskState, RootState>,
-  response: AxiosResponse
+  response: AxiosResponse<CGTeamWorkTaskResponse>
 ) {
   if (response.status !== 200) {
     return;
   }
-  const data: CGTeamWorkTaskData = parseCGTeamWorkTaskResponse(response.data);
+  const data = response.data;
   const mutationPayload: CGTeamWorkTaskReadMutationPayload = {
     id: data.id,
     data,

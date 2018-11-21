@@ -15,29 +15,6 @@ from . import core
 LOGGER = logging.getLogger(__name__)
 
 
-class TaskInfo(namedtuple(
-        'TaskInfo',
-        ('pipeline', 'artist', 'leader_status',
-         'director_status', 'client_status', 'note_num', 'id'))):
-    """Task information.  """
-
-    def sort_key(self):
-        """Key for list sort . """
-
-        pipeline = self.pipeline
-        return (
-            pipeline == '输出',
-            pipeline == '合成',
-            pipeline == '渲染',
-            pipeline == '灯光',
-            pipeline == '特效',
-            pipeline == '解算',
-            pipeline == '动画',
-            pipeline == 'Layout',
-            pipeline
-        )
-
-
 class TaskDataRow(namedtuple('VideoDataRow',
                              ('id', 'pipeline', 'shot',
                               'image', 'submit_file_path',
@@ -98,29 +75,3 @@ class CGTeamWorkTask(core.Base, core.SerializableMixin):
         self.client_status = data.client_status
         self.note_num = int(data.note_num) if data.note_num else 0
         session.add(self)
-
-    def to_task_info(self):
-        """Convert to task info for frontend.  """
-
-        return TaskInfo(
-            pipeline=self.pipeline,
-            artist=self.artist,
-            leader_status=self.leader_status,
-            director_status=self.director_status,
-            client_status=self.client_status,
-            note_num=self.note_num,
-            id=self.uuid
-        )
-
-    def get_entry_data(self, token):
-        """CGTeamWork Entry data for frontend.  """
-
-        data = self.to_task_info()
-
-        entry = self.to_entry()
-        entry.token = token
-        permissions = {i: entry.flow.has_field_permission(i)
-                       for i in TaskInfo._fields
-                       if i.endswith('status')}
-        data += tuple([permissions])
-        return data

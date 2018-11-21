@@ -1,5 +1,5 @@
 import {
-  CGTeamWorkTaskData,
+  CGTeamWorkTaskResponse,
   TagResponse,
   TaskStage,
   TaskStatus,
@@ -43,7 +43,7 @@ export interface VideoState {
 }
 
 export interface CGTeamworkTaskState {
-  storage: IDMap<CGTeamWorkTaskData>;
+  storage: IDMap<CGTeamWorkTaskResponse>;
 }
 
 export interface TagState {

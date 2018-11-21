@@ -1,5 +1,5 @@
 import {
-  CGTeamWorkTaskData,
+  CGTeamWorkTaskResponse,
   TagResponse,
   VideoResponse,
   VideoRole,
@@ -93,7 +93,7 @@ export enum CGTEAMWORK_TASK {
 
 export interface CGTeamWorkTaskReadMutationPayload {
   id: string;
-  data: CGTeamWorkTaskData;
+  data: CGTeamWorkTaskResponse;
 }
 
 export interface CGTeamWorkTaskReadActionPayload {

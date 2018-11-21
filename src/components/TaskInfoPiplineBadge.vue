@@ -15,7 +15,7 @@ import TaskInfoStatusEdit from '@/components/TaskInfoStatusEdit.vue';
 import TaskInfoStatus from '@/components/TaskInfoStatus.vue';
 import TaskInfoPiplineBadgePoper from '@/components/TaskInfoPiplineBadgePoper.vue';
 
-import { TaskStatus, CGTeamWorkTaskData } from '../interface';
+import { TaskStatus, CGTeamWorkTaskResponse } from '../interface';
 import { StringIterator } from 'lodash';
 import { CGTeamWorkTaskComputedMixin } from '../store/cgteamwork-task';
 import {
@@ -35,7 +35,7 @@ export default Vue.extend({
   },
   computed: {
     ...CGTeamWorkTaskComputedMixin,
-    model(): CGTeamWorkTaskData | undefined {
+    model(): CGTeamWorkTaskResponse | undefined {
       return this.cgTeamworkTaskStore.storage[this.taskId];
     },
     field(): string | undefined {
@@ -48,7 +48,7 @@ export default Vue.extend({
       return this.getGeneralStatus(this.model.id);
     },
     permissionedFields(): string[] {
-      if (!this.model) {
+      if (!(this.model && this.model.permissions)) {
         return [];
       }
       const map = this.model.permissions;

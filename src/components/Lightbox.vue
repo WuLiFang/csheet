@@ -49,7 +49,7 @@ import Vue from 'vue';
 import FaIcon from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/check-circle-o';
 import {
-  CGTeamWorkTaskData,
+  CGTeamWorkTaskResponse,
   TagResponse,
   VideoResponse,
   VideoRole,
@@ -137,7 +137,7 @@ export default Vue.extend({
     taskId(): string | null {
       return this.task ? this.task.id : null;
     },
-    task(): CGTeamWorkTaskData | undefined {
+    task(): CGTeamWorkTaskResponse | undefined {
       return this.video && this.cgTeamworkTaskStore.storage[this.video.uuid];
     },
     isEnablePreview(): boolean {
