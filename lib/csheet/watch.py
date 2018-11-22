@@ -68,7 +68,7 @@ def update_one_chunk(size=50, is_strict=True):
                          Video.src.isnot(None) | Video.poster.isnot(None),
                          sqlalchemy.or_(Video.last_update_time < time.time() - 1,
                                         Video.last_update_time.is_(None)))
-                     .order_by(Video.last_update_time.is_(None).desc(), Video.last_update_time)
+                     .order_by(Video.last_update_time.isnot(None), Video.last_update_time)
                      .limit(size)
                      .all())
 
