@@ -10,7 +10,7 @@ from functools import wraps
 from flask import json
 from sqlalchemy import (Column, ForeignKey, Integer, String, Table,
                         create_engine, orm)
-from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import OperationalError, ProgrammingError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.types import VARCHAR, TypeDecorator, Unicode
 
@@ -130,5 +130,5 @@ def _migrate(engine):
     for sql in ('ALTER TABLE CGTeamWorkTask RENAME COLUMN artist TO artists',):
         try:
             engine.execute(sql)
-        except OperationalError:
+        except (OperationalError, ProgrammingError):
             continue
