@@ -1,7 +1,7 @@
 FROM scratch as root
 
 WORKDIR /frontend
-COPY src ./src/
+COPY frontend ./frontend/
 COPY public ./public/
 COPY *.js *.json ./
 WORKDIR /backend

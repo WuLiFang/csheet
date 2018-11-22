@@ -5,20 +5,21 @@ module.exports = {
   assetsDir: 'static',
   pages: {
     index: {
-      entry: 'src/index.ts',
+      entry: 'frontend/index.ts',
       template: 'public/templates/index.html',
       filename: 'templates/index.html',
     },
     main: {
-      entry: 'src/main.ts',
+      entry: 'frontend/main.ts',
       template: 'public/templates/main.html',
       filename: 'templates/main.html',
     },
   },
   chainWebpack: config => {
+    config.resolve.alias.set('@', path.resolve('frontend'));
     config
       .entry('main_noscript')
-      .add(path.resolve('src/main.scss'))
+      .add(path.resolve('frontend/main.scss'))
       .end();
     config.plugin('define').tap(args => {
       args[0].VERSION = JSON.stringify(require('./package.json').version);
