@@ -22,7 +22,8 @@
       loop 
     )
     .top-display(:style='upDisplayStyle')
-      .artist(v-if='task') {{task.artist}}
+      .artists(v-if='task') 
+        span.artist(v-for='i in task.artists') {{i}}
       LightboxTaskStatus.status(
         v-if='taskId' 
         :id='taskId' 

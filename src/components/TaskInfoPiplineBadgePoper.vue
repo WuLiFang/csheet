@@ -1,6 +1,8 @@
 <template lang="pug">
     .task-info-pipeline-badge-poper(v-if='model')
-        span 制作者: {{model.artist}}
+        .artists
+          span 制作者: 
+          span.artist(v-for='i in model.artists') {{i}}
         TaskInfoStatusEdit(:taskId='model.uuid' field='leader_status')
             template(slot-scope='status') 组长状态: {{status.text}}
         TaskInfoStatusEdit(:taskId='model.uuid' field='director_status')
@@ -33,3 +35,8 @@ export default Vue.extend({
   },
 });
 </script>
+<style lang="scss" scoped>
+.artist {
+  margin: 0 0.2em;
+}
+</style>
