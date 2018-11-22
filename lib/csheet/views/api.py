@@ -96,7 +96,7 @@ class TaskField(Resource):
             entry.flow.update(name, args.value, args.message)
         else:
             entry[name] = args.value
-        return task.get_entry_data(session['token'])
+        return Task.get(uuid)
 
 
 API.add_resource(TaskField, '/task/<uuid>/<name>')
