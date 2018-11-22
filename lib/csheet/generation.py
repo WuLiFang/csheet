@@ -158,10 +158,11 @@ def execute_generate_task(**kwargs):
 
 def _get_video(source, target, session, **kwargs):
 
+    atime_column = getattr(Video, '{}_atime'.format(target))
     video = (session.query(GenaratableVideo)
              .with_for_update(skip_locked=True)
              .filter(_need_generation_criterion(source, target, **kwargs))
-             .order_by(getattr(Video, '{}_atime'.format(target)).nullsfirst())
+             .order_by(atime_column.is_(None).desc(), atime_column)
              .first())
     return video
 
