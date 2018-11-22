@@ -161,7 +161,7 @@ def _get_video(source, target, session, **kwargs):
     video = (session.query(GenaratableVideo)
              .with_for_update(skip_locked=True)
              .filter(_need_generation_criterion(source, target, **kwargs))
-             .order_by(getattr(Video, '{}_atime'.format(target)).nullfirst())
+             .order_by(getattr(Video, '{}_atime'.format(target)).nullsfirst())
              .first())
     return video
 
