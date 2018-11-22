@@ -21,8 +21,8 @@ def test_cgteamwork():
     assert isinstance(videos, list)
     assert isinstance(tasks, list)
     assert videos
-    assert len(videos) == 103
-    assert len(tasks) == 814
+    assert len(videos) == 92
+    assert len(tasks) == 738
 
 
 @util.skip_if_not_logged_in
