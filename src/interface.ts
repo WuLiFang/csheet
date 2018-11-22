@@ -3,14 +3,16 @@ export interface StringMap<T> {
 }
 
 export type CGTeamWorkTaskResponse = {
+  uuid: string;
+  database: string;
+  module: string;
+  shot: string;
   pipeline: string;
-  artist: string;
-  artist_array: string[];
-  leader_status: TaskStatus;
-  director_status: TaskStatus;
-  client_status: TaskStatus;
+  artists: string[];
+  leader_status: string;
+  director_status: string;
+  client_status: string;
   note_num: number;
-  id: string;
   permissions: StringMap<boolean> | undefined;
 };
 

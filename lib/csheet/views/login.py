@@ -5,9 +5,10 @@ from __future__ import (absolute_import, division, print_function,
 
 from functools import wraps
 
-import cgtwq
 import six
 from flask import make_response, redirect, request, session
+
+import cgtwq
 
 from ..__about__ import __version__
 from ..core import APP

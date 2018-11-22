@@ -130,26 +130,11 @@ class CGTeamWorkPage(core.BasePage):
                     '%s, shot_count=%s, task_count=%s',
                     self, len(shots), len(data))
 
-        tasks = [self._task_from_data(i) for i in data]
+        tasks = [i.parse(self.database, self.module) for i in data]
         self._video_query(session).with_for_update().merge_result(tasks)
         videos = [self._video_from_data(data, tasks, shot)
                   for shot in shots]
         self._task_query(session).with_for_update().merge_result(videos)
-
-    def _task_from_data(self, data):
-        assert isinstance(data, TaskDataRow), type(data)
-
-        return CGTeamWorkTask(
-            uuid=data.id,
-            database=self.database,
-            module=self.module,
-            pipeline=data.pipeline,
-            artist=data.artist,
-            shot=data.shot,
-            leader_status=data.leader_status,
-            director_status=data.director_status,
-            client_status=data.client_status,
-            note_num=int(data.note_num) if data.note_num else 0,)
 
     def _video_query(self, session):
         query = session.query(HTMLVideo)

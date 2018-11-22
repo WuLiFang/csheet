@@ -11,26 +11,7 @@ from ..database import CGTeamWorkTask, Tag, Video
 from .datamodel import ProjectInfo
 
 
-class CGTeamWorkVideo(Video):
-    """Video for cgteamwork task.  """
-
-    def get_entry(self):
-        """Get entry from this video.  """
-
-        return self.task.to_entry()
-
-    def get_select(self):
-        """Get related selection from this video.  """
-
-        id_list = [i.uuid for i in self.related_tasks]
-        if not id_list:
-            abort(404, 'Not found related cgteamwork task.')
-        return cgtwq.Database(
-            self.database).module(
-                self.module).select(*id_list)
-
-
-def get_video(uuid, sess, cls=CGTeamWorkVideo):
+def get_video(uuid, sess, cls=Video):
     """Get video from uuid.  """
 
     assert issubclass(cls, Video)

@@ -44,14 +44,11 @@ class Task(Resource):
     def get(id_):
         """Get task info.  """
 
-        token = session['token']
-
         sess = database.Session()
         task = core.get_task(id_, sess)
-        task.update(token, sess)
+        entry = task.update(session['token'], sess)
         sess.commit()
         ret = task.serialize()
-        entry = task.to_entry()
         ret['permissions'] = {i: entry.flow.has_field_permission(i)
                               for i in ('leader_status', 'director_status', 'client_status')}
         return ret
@@ -62,8 +59,7 @@ API.add_resource(Task, '/task/<id_>')
 
 def _get_entry(uuid):
     sess = database.Session()
-    entry = core.get_task(uuid, sess).to_entry()
-    entry.token = session['token']
+    entry = core.get_task(uuid, sess).to_entry(session['token'])
     return entry
 
 
@@ -92,8 +88,7 @@ class TaskField(Resource):
 
         sess = database.Session()
         task = core.get_task(uuid, sess)
-        entry = task.to_entry()
-        entry.token = session['token']
+        entry = task.to_entry(session['token'])
 
         if not entry.flow.has_field_permission(name):
             abort(make_response('无权限修改', 403))

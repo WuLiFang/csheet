@@ -2,7 +2,7 @@
     Popover.task-info-pipeline-badge(trigger="hover" placement='bottom-end' effect='dark' v-if='model') 
       TaskInfoPiplineBadgePoper(:model='model' :taskId='taskId')
       span.status(slot='reference')
-        TaskInfoStatusEdit( v-if='field' :taskId='model.id' :field='field') {{model.pipeline}}
+        TaskInfoStatusEdit( v-if='field' :taskId='model.uuid' :field='field') {{model.pipeline}}
         TaskInfoStatus( v-else :status='generalStatus') {{model.pipeline}}
 </template>
 
@@ -45,7 +45,7 @@ export default Vue.extend({
       if (!this.model) {
         return null;
       }
-      return this.getGeneralStatus(this.model.id);
+      return this.getGeneralStatus(this.model.uuid);
     },
     permissionedFields(): string[] {
       if (!(this.model && this.model.permissions)) {

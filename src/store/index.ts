@@ -70,7 +70,7 @@ const store: Store = {
           if (value.data.tasks) {
             value.data.tasks.forEach(i => {
               const payload: mutations.CGTeamWorkTaskReadMutationPayload = {
-                id: i.id,
+                id: i.uuid,
                 data: i,
               };
               contextState.commit(mutations.CGTEAMWORK_TASK.READ, payload);

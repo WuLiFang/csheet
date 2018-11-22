@@ -3,19 +3,9 @@
 
 from urllib.parse import quote
 
-import pytest
 from flask import Response
 
 import util
-from csheet import APP
-
-
-@pytest.fixture(name='client')
-def _client():
-    client = APP.test_client()
-    if util.IS_CGTEAMWORK_LOGGED_IN:
-        client.post('/_login')
-    return client
 
 
 def test_json(client):

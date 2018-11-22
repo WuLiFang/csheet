@@ -135,7 +135,7 @@ export default Vue.extend({
       return this.$refs.video as HTMLVideoElement;
     },
     taskId(): string | null {
-      return this.task ? this.task.id : null;
+      return this.task ? this.task.uuid : null;
     },
     task(): CGTeamWorkTaskResponse | undefined {
       return this.video && this.cgTeamworkTaskStore.storage[this.video.uuid];

@@ -27,6 +27,7 @@ import {
   UPDATE_CGTEAMWORK_TASK_FIELD,
   CGTeamWorkTaskUpdateFieldActionPayload,
 } from '@/mutation-types';
+import { parseTaskStatus } from '@/datatools';
 
 function errorMessage(error: any) {
   Message({ message: error.response.data, type: 'error' });
@@ -35,7 +36,7 @@ function errorMessage(error: any) {
 export default Vue.extend({
   props: {
     taskId: { type: String },
-    field: { type: String as () => 'leader_status' | 'directory_status' },
+    field: { type: String as () => 'leader_status' | 'director_status' },
   },
   components: {
     TaskInfoStatus,
@@ -54,9 +55,15 @@ export default Vue.extend({
     },
     fieldsValue(): StringMap<TaskStatus | null> {
       return {
-        leader_status: this.model ? this.model.leader_status : null,
-        director_status: this.model ? this.model.director_status : null,
-        client_status: this.model ? this.model.client_status : null,
+        leader_status: this.model
+          ? parseTaskStatus(this.model.leader_status)
+          : null,
+        director_status: this.model
+          ? parseTaskStatus(this.model.director_status)
+          : null,
+        client_status: this.model
+          ? parseTaskStatus(this.model.client_status)
+          : null,
       };
     },
     status(): TaskStatus | null {

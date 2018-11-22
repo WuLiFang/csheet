@@ -83,8 +83,7 @@ export const getters: GetterTree<VideoState, RootState> = {
           return true;
         }
         return (
-          task &&
-          task.artist_array.some(j => rootState.artistFilter.includes(j))
+          task && task.artists.some(j => rootState.artistFilter.includes(j))
         );
       });
     };

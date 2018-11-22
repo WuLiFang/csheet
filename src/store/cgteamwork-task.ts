@@ -1,3 +1,4 @@
+import { parseTaskStatus } from '@/datatools';
 import { isFileProtocol } from '@/packtools';
 import axios, { AxiosResponse } from 'axios';
 import * as _ from 'lodash';
@@ -38,26 +39,26 @@ export const getters: GetterTree<CGTeamworkTaskState, RootState> = {
       }
       let data: TaskStatus[] = [];
       type stageMapItem = [TaskStage, TaskStatus];
+      const types = '';
       const stageMap: stageMapItem[] = [
-        [TaskStage.leader, task.leader_status],
-        [TaskStage.director, task.director_status],
-        [TaskStage.client, task.client_status],
+        [TaskStage.leader, parseTaskStatus(task.leader_status)],
+        [TaskStage.director, parseTaskStatus(task.director_status)],
+        [TaskStage.client, parseTaskStatus(task.client_status)],
       ];
       stageMap.forEach(i => {
         if (stage >= i[0]) {
           data.push(i[1]);
         }
       });
-      data = data.filter(i => typeof i !== 'undefined');
       return Math.min(...data);
     };
   },
   artists(contextState): string[] {
-    return _.uniq(_.flatMap(contextState.storage, i => i!.artist_array)).sort();
+    return _.uniq(_.flatMap(contextState.storage, i => i!.artists)).sort();
   },
   getAritstTaskCount(contextState) {
     return (artist: string) =>
-      _.filter(contextState.storage, i => i!.artist_array.indexOf(artist) >= 0)
+      _.filter(contextState.storage, i => i!.artists.indexOf(artist) >= 0)
         .length;
   },
 };
@@ -86,7 +87,7 @@ function parseDataFromPage(): CGTeamworkTaskState['storage'] {
   const parsed = JSON.parse(data) as CGTeamWorkTaskResponse[];
   const ret: CGTeamworkTaskState['storage'] = {};
   parsed.forEach(i => {
-    ret[i.id] = i;
+    ret[i.uuid] = i;
   });
   return ret;
 }
@@ -117,7 +118,7 @@ function handleCGTeamWorkTaskResponse(
   }
   const data = response.data;
   const mutationPayload: CGTeamWorkTaskReadMutationPayload = {
-    id: data.id,
+    id: data.uuid,
     data,
   };
   context.commit(CGTEAMWORK_TASK.READ, mutationPayload);

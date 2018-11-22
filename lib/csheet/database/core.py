@@ -10,6 +10,7 @@ from functools import wraps
 from flask import json
 from sqlalchemy import (Column, ForeignKey, Integer, String, Table,
                         create_engine, orm)
+from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.types import VARCHAR, TypeDecorator, Unicode
 
@@ -122,3 +123,12 @@ def bind(url, is_echo=False):
     engine = create_engine(url, echo=is_echo)
     session_factory.configure(binds={Base: engine})
     Base.metadata.create_all(engine)
+    _migrate(engine)
+
+
+def _migrate(engine):
+    for sql in ('ALTER TABLE CGTeamWorkTask RENAME COLUMN artist TO artists',):
+        try:
+            engine.execute(sql)
+        except OperationalError:
+            continue
