@@ -3,33 +3,23 @@ const assetPlugin = require('assets-webpack-plugin');
 const htmlPlugin = require('html-webpack-plugin');
 module.exports = {
   assetsDir: 'static',
+  pages: {
+    index: {
+      entry: 'src/index.ts',
+      template: 'public/templates/index.html',
+      filename: 'templates/index.html',
+    },
+    main: {
+      entry: 'src/main.ts',
+      template: 'public/templates/main.html',
+      filename: 'templates/main.html',
+    },
+  },
   chainWebpack: config => {
-    config.entryPoints
-      .clear()
-      .end()
-      .entry('index')
-      .add('./src/index.ts')
-      .end()
-      .entry('main')
-      .add('./src/main.ts')
-      .end()
+    config
       .entry('main_noscript')
-      .add('./src/main.scss')
+      .add(path.resolve('src/main.scss'))
       .end();
-    config.plugin('html').use(htmlPlugin, [
-      {
-        template: 'public/templates/index.html',
-        filename: 'templates/index.html',
-        chunks: ['chunk-vendors', 'index'],
-      },
-    ]);
-    config.plugin('html_main').use(htmlPlugin, [
-      {
-        template: 'public/templates/main.html',
-        filename: 'templates/main.html',
-        chunks: ['chunk-vendors', 'main'],
-      },
-    ]);
     config.plugin('define').tap(args => {
       args[0].VERSION = JSON.stringify(require('./package.json').version);
       return args;
@@ -37,7 +27,7 @@ module.exports = {
     if (process.env.NODE_ENV === 'production') {
       config.plugin('asset').use(assetPlugin, [
         {
-          path: 'dist',
+          path: path.resolve('dist'),
         },
       ]);
     }
