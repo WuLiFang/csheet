@@ -5,7 +5,7 @@ COPY frontend ./frontend/
 COPY public ./public/
 COPY *.js *.json ./
 WORKDIR /backend
-COPY lib ./lib/
+COPY backend ./backend/
 COPY *.py *.sh *.json ./
 
 FROM node:10 AS frontend-build
@@ -41,7 +41,7 @@ RUN pip install pipenv gunicorn gevent-websocket
 WORKDIR /app
 COPY ./Pipfile* ./
 RUN pipenv install --system --deploy
-ENV PYTHONPATH=lib
+ENV PYTHONPATH=backend
 ENV PYTHONIOENCODING=utf-8
 
 FROM backend-prepare AS backend-build
@@ -55,7 +55,7 @@ RUN pip install pytest
 
 COPY --from=backend-build /app/ ./
 COPY tests ./tests/
-RUN python -m pytest ./tests
+RUN python -m pytest ./backend/tests
 
 FROM backend-build AS release
 

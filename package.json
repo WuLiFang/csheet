@@ -6,9 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "backend": "pipenv run python ./tests/run_debug_server.py",
-    "test:unit": "vue-cli-service test:unit",
-    "test:backend": "pipenv run pytest lib"
+    "backend": "pipenv run python ./backend/tests/run_debug_server.py",
+    "test:backend": "pipenv run pytest backend"
   },
   "dependencies": {
     "axios": "^0.18.0",
