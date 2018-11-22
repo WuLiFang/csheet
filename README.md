@@ -45,7 +45,7 @@
 
 使用 Docker 部署
 
-请自行参考[build.py](./build.py)中的内容
+请自行参考 [build.py](./build.py) [example_config](./example_config) 中的内容
 
 ## NO LICENSE 版权保留
 
