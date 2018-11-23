@@ -1,23 +1,31 @@
 <template lang="pug">
-    span.relative-time.el-icon-time {{fromNow}}
+  time.relative-time.el-icon-time(
+    v-if='moment.isValid()'
+    :datetime='moment.toISOString()'
+    :title='moment.format("llll:ss")'
+  ) {{moment.fromNow()}}
+  span(v-else) 不可用
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import * as moment from 'moment';
+import moment from 'moment';
+import { Vue, Prop, Component } from 'vue-property-decorator';
 
-export default Vue.extend({
-  props: { timestamp: { type: Number } },
-  computed: {
-    fromNow(): string {
-      if (!this.timestamp) {
-        return '未知';
-      }
-      return moment(this.timestamp * 1000).fromNow();
-    },
-  },
-});
+@Component({})
+export default class RelativeTime extends Vue {
+  @Prop({ type: Number })
+  value!: number | string;
+
+  get moment() {
+    if (typeof this.value === 'number' && this.value < 1e12) {
+      return moment.unix(this.value);
+    }
+    return moment(this.value);
+  }
+}
 </script>
+
+
 <style lang="scss" scoped>
 .relative-time {
   margin: 0 1em;
