@@ -1,7 +1,6 @@
 
 FROM scratch as frontend-files
 
-WORKDIR /app
 COPY frontend ./frontend/
 COPY public ./public/
 COPY *.js *.json ./
@@ -20,12 +19,11 @@ RUN if [ ! -z $NPM_MIRROR ]; then \
 WORKDIR /app
 COPY ./package*.json ./
 RUN npm i
-COPY --from=frontend-files /app/ /app/
+COPY --from=frontend-files / ./
 RUN npm run build
 
 FROM scratch as backend-files
 
-WORKDIR /app
 COPY backend ./backend/
 COPY *.py *.sh *.json ./
 
@@ -55,7 +53,7 @@ ENV PYTHONPATH=backend
 
 FROM backend-prepare AS backend-build
 
-COPY --from=backend-files /app/ /app/
+COPY --from=backend-files / ./
 COPY --from=frontend-build /app/dist/ /app/dist/
 
 FROM backend-prepare AS backend-test
