@@ -55,11 +55,10 @@ export default class SocketIO {
   }
   public onAssetUpdate(message: VideoResponse[]) {
     if (!(message instanceof Array)) {
-      console.error(`Wrong message type: ${message}`);
+      throw new Error(`Wrong message type: ${JSON.stringify(message)}`);
     }
     message.forEach(value => {
       if (!(value.uuid in this.store.state.videoStore.storage)) {
-        console.debug(value.uuid, 'not found in store, skip');
         return;
       }
       const actionPayload: VideoTagsReadIfFoundUndefinedActionPayload = {
