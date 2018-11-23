@@ -14,8 +14,8 @@
       ) 刷新
       .video-control(v-show='src')
         ElCheckbox(v-model='isEnablePreviewModel' label='视频' size='mini')
-        ElCheckbox(v-model='isAutoPlay' v-show='isEnablePreviewModel' label='自动播放' size='mini')
-        ElButton(v-show='isAutoPlay' @click='isAutoNext ? pause(): play()' size='mini')
+        ElCheckbox(v-model='isAutoPlay' @change='isAutoNext ? pause(): play()' v-show='isEnablePreviewModel' label='自动播放' size='mini')
+        ElButton(v-show='isAutoPlay' @click='play' size='mini')
           span(v-if='isAutoNext')
             FaIcon(name='sort-alpha-asc')
             | 顺序
@@ -41,7 +41,8 @@
       :loop='!isAutoNext'
       :controls='!isAutoNext && duration > 0.1'
       @dragstart='ondragstart' 
-      @ended='onended'
+      @ended='autoNext'
+      @waiting='autoNext'
     )
     .prev(@click='jumpPrevImage')
     .next(@click='jumpNextImage')
@@ -225,7 +226,7 @@ export default Vue.extend({
         }
       });
     },
-    onended() {
+    autoNext() {
       if (!this.video) {
         return;
       }
@@ -329,6 +330,7 @@ export default Vue.extend({
     reset() {
       this.duration = 0;
       this.src = null;
+      if (this.videoElement) { this.videoElement.load()};
       this.poster = null;
       this.posterProgressEvent = null;
       this.isForce = false;
