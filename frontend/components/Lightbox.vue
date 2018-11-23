@@ -15,7 +15,8 @@
     video(
       ref='video'
       :poster='poster' 
-      :src='src' 
+      :src='src'
+      :height='200'
       :width='200 / ratio'
       :autoplay='isHover'
       muted 
