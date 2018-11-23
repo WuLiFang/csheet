@@ -49,14 +49,17 @@ class Locked(Exception):
     """Lock has been locked.  """
 
 
-def worker_concurrency(value=1, is_block=True, timeout=10, lock_cls=Semaphore):
+def worker_concurrency(value=1, is_block=True, timeout=5, lock_cls=Semaphore):
     """Decorator factory for set task concurrency on single worker.  """
 
     _lock = lock_cls(value)
+    _timeout = timeout
 
     def _wrap(func):
+
         @wraps(func)
         def _func(*args, **kwargs):
+            timeout = _timeout() if callable(_timeout) else _timeout
             if _lock.acquire(block=is_block, timeout=timeout):
                 try:
                     return func(*args, **kwargs)

@@ -28,49 +28,50 @@ LOGGER = logging.getLogger(__name__)
 class GenaratableVideo(Video):
     """Video that has method for generation.  """
 
+    @property
+    def methods(self):
+        """Generation methods.
+
+        Returns:
+            dict: target field name as key,
+                function as value.
+        """
+
+        return {'thumb': _generate_thumb,
+                'poster': _generate_poster,
+                'preview': _generate_preview, }
+
     def __str__(self):
         return '<GeneratableVideo, label={}, uuid={}>'.format(self.label, self.uuid)
 
-    def try_apply(self, method, source, target):
-        """Apply generate method with generation errors handled.
-
-        Args:
-            method ((GeneratableVideo) => None | PurePath): Generation method.
-            target (str): Target role name.
-            source (str): Source role name.
-        """
-
-        try:
-            self.apply(method, target, source)
-        except (OSError, ffmpeg.GenerateError):
-            self.is_need_update = True
-            setattr(self, '{}_broken_mtime'.format(source),
-                    getattr(self, '{}_mtime'.format(source)))
-            LOGGER.warning('Generation failed', exc_info=True)
-
-    def apply(self, method, target, source):
+    def generate(self, source, target):
         """Apply generate method on video.
 
         Args:
-            method ((GeneratableVideo) => None | PurePath): Generation method.
-            target (str): Target role name.
-            source (str): Source role name.
+            source (str): Source field name.
+            target (str): Target field name.
 
         Raises:
             ffmpeg.GenerateError: When generation failed.
         """
 
+        method = self.methods[target]
+        src = getattr(self, source)
+        assert src, f'Source file path invalid, {self}'
+
         LOGGER.info('Generate %s for: %s', target, self)
-        generated = method(self)
-        mediainfo = ffmpeg.probe(generated)
+        src = filter_filename(src)
+        dst = output_path(target, self.uuid)
+        result = method(src, dst)
+        mediainfo = ffmpeg.probe(result)
         if mediainfo.error:
             raise ffmpeg.GenerateError(mediainfo.error)
-        setattr(self, target, generated)
+        setattr(self, target, result)
         setattr(self, '{}_mtime'.format(target),
                 getattr(self, '{}_mtime'.format(source)))
         self.touch(target)
         LOGGER.info('Generation success: %s -> %s',
-                    getattr(self, source), generated)
+                    src, result)
 
     def touch(self, target):
         """Set access time on target role.
@@ -81,52 +82,37 @@ class GenaratableVideo(Video):
 
         setattr(self, '{}_atime'.format(target), time.time())
 
-    @worker_concurrency(value=psutil.cpu_count(), is_block=True, timeout=5)
-    def generate_thumb(self):
-        """Generate thumb for video.  """
 
-        if not self.poster:
-            return None
+def _interval():
+    return APP.config['BROADCAST_INTERVAL']
 
-        src = filter_filename(self.poster)
-        output = output_path('thumb', self.uuid)
-        assert output
-        return ffmpeg.generate_jpg(
-            src, output,
-            height=200)
 
-    @worker_concurrency(value=1, is_block=True, timeout=20)
-    def generate_poster(self):
-        """Generate thumb for video.  """
+@worker_concurrency(value=psutil.cpu_count(), timeout=_interval)
+def _generate_thumb(src, dst):
+    """Generate thumb.  """
 
-        if not self.src:
-            return None
+    return ffmpeg.generate_jpg(src, dst, height=200)
 
-        src = filter_filename(self.src)
-        output = output_path('poster', self.uuid)
-        assert output
-        return ffmpeg.generate_jpg(
-            src, output)
 
-    @worker_concurrency(value=1, is_block=False)
-    def generate_preview(self):
-        """Generate preview for video.  """
+@worker_concurrency(value=1, timeout=_interval)
+def _generate_poster(src, dst):
+    """Generate poster.  """
 
-        if not self.src:
-            return None
+    return ffmpeg.generate_jpg(src, dst)
 
-        src = filter_filename(self.src)
-        output = output_path('preview', self.uuid)
-        assert output
-        return ffmpeg.generate_mp4(
-            src, output,
-            limit_size=APP.config['PREVIEW_SIZE_LIMIT'])
+
+@worker_concurrency(value=1, timeout=_interval)
+def _generate_preview(src, dst):
+    """Generate preview.  """
+
+    return ffmpeg.generate_mp4(src, dst, limit_size=APP.config['PREVIEW_SIZE_LIMIT'])
 
 
 def output_path(*other):
     """Get output path.  """
 
     path = os.path.join(APP.config['STORAGE'], *other)
+    assert path
     try:
         os.makedirs(os.path.dirname(path))
     except OSError:
@@ -135,22 +121,29 @@ def output_path(*other):
 
 
 @CELERY.task(ignore_result=True,
-             autoretry_for=(sqlalchemy.exc.OperationalError, Locked),
+             autoretry_for=(sqlalchemy.exc.OperationalError,),
              retry_backoff=True)
 def generate(video_id, source, target):
     """Celery Generate task.  """
 
-    method = getattr(GenaratableVideo, 'generate_{}'.format(target))
     with session_scope() as sess:
-        video = sess.query(GenaratableVideo).get(video_id)
-        video.try_apply(method, source, target)
+        video: GenaratableVideo = sess.query(GenaratableVideo).get(video_id)
+        try:
+            video.generate(source, target)
+        except (OSError, ffmpeg.GenerateError):
+            video.is_need_update = True
+            setattr(video, '{}_broken_mtime'.format(source),
+                    getattr(video, '{}_mtime'.format(source)))
+            LOGGER.warning('Generation failed', exc_info=True)
+        except Locked:
+            pass
 
 
 @CELERY.on_after_configure.connect
 def setup_periodic_tasks(sender, **_):
     """Setup periodic tasks.  """
 
-    sender.add_periodic_task(APP.config['GENERATION_DISCOVER_SCHEDULE'],
+    sender.add_periodic_task(_interval(),
                              discover_tasks,
                              expires=5)
 
@@ -176,7 +169,6 @@ def _discover_tasks(source, target, limit=100, **kwargs):
 
     videos = (Session()
               .query(GenaratableVideo)
-              .with_for_update(skip_locked=True)
               .filter(_need_generation_criterion(source, target, **kwargs))
               .order_by(atime_column.isnot(None), atime_column)
               .limit(limit)
@@ -207,15 +199,21 @@ def _need_generation_criterion(source, target, **kwargs):
     return sqlalchemy.and_(
         source_column.isnot(None),
         source_mtime_column.isnot(None),
-        sqlalchemy.or_(source_broken_mtime_column.is_(None),
-                       source_broken_mtime_column != source_mtime_column),
+        sqlalchemy.or_(
+            source_broken_mtime_column.is_(None),
+            _timstamp_not_same(source_broken_mtime_column,
+                               source_mtime_column)),
         sqlalchemy.or_(target_atime_column.is_(None),
                        target_atime_column < time.time() - min_interval),
         sqlalchemy.or_(target_column.is_(None),
                        target_mtime_column.is_(None),
-                       (sqlalchemy.func.abs(target_mtime_column - source_mtime_column)) > 1e-4),
-        *conditions
-    )
+                       _timstamp_not_same(target_mtime_column,
+                                          source_mtime_column)),
+        *conditions)
+
+
+def _timstamp_not_same(column_a, column_b):
+    return sqlalchemy.func.abs(column_a - column_b) > 1e-4
 
 
 @APP.before_first_request
@@ -256,4 +254,6 @@ GENERATION_TASKS = [
         'target': 'preview',
         'min_interval': 100
     },
+
+
 ]
