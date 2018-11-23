@@ -13,8 +13,13 @@
         icon='el-icon-refresh'
       ) 刷新
       .video-control(v-show='src')
-        ElCheckbox(v-model='isEnablePreviewModel' label='视频' size='mini')
-        ElCheckbox(v-model='isAutoPlay' @change='isAutoNext ? pause(): play()' v-show='isEnablePreviewModel' label='自动播放' size='mini')
+        ElCheckbox(v-model='$store.state.isEnablePreview' label='视频' size='mini')
+        ElCheckbox(
+          v-model='isAutoPlay' 
+          v-show='$store.state.isEnablePreview'
+          @change='isAutoNext ? pause(): play()'
+          label='自动播放'
+          size='mini')
         ElButton(v-show='isAutoPlay' @click='play' size='mini')
           span(v-if='isAutoNext')
             FaIcon(name='sort-alpha-asc')
@@ -26,15 +31,13 @@
     .center(v-else-if='! (poster || src)')
       Spinner(size='large' :message='loadingMessage' text-fg-color='white')
     img.center(
-      draggable
-      v-show='poster && (!src || !isEnablePreviewModel)'
+      v-show='poster && (!src || !$store.state.isEnablePreview)'
       :src='poster'
       @dragstart='ondragstart' 
+      draggable
     )
     video.center(
-      draggable
-      ref='video'
-      v-show='isEnablePreviewModel && src'
+      v-show='$store.state.isEnablePreview && src'
       :poster='poster'
       :src='src'
       :autoplay='isAutoPlay'
@@ -43,6 +46,8 @@
       @dragstart='ondragstart' 
       @ended='autoNext'
       @waiting='autoNext'
+      ref='video'
+      draggable
     )
     .prev(@click='jumpPrevImage')
     .next(@click='jumpNextImage')
@@ -58,18 +63,17 @@ import _ from 'lodash';
 import Spinner from 'vue-simple-spinner';
 import { Button as ElButton, Checkbox as ElCheckbox } from 'element-ui';
 
-// @ts-ignore
 import FaIcon from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/magic';
 import 'vue-awesome/icons/sort-alpha-asc';
 
 import TaskInfo from '@/components/TaskInfo.vue';
 import FileInfo from '@/components/FileInfo.vue';
+import Tags from '@/components/Tags.vue';
 
-import { isFileProtocol } from '../packtools';
-import { videoComputedMinxin } from '../store/video';
-import { LoadStatus } from '../store/types';
-import { VideoResponse, VideoRole } from '../interface';
+import { isFileProtocol } from '@/packtools';
+import { LoadStatus, DollarStore } from '@/store/types';
+import { VideoResponse, VideoRole } from '@/interface';
 import {
   VideoReadActionPayload,
   VIDEO,
@@ -79,9 +83,8 @@ import {
   UPDATE_VIDEO_BLOB_WHITELIST,
 } from '../mutation-types';
 import { preloadVideo, preloadImage } from '@/preload';
-import { isNull } from 'util';
-import { mapRootStateModelMixin } from '@/store';
-import Tags from '@/components/Tags.vue';
+import { Prop, Component, Watch } from 'vue-property-decorator';
+import { Store } from 'vuex';
 
 function formatBytes(bytes: number, decimals = 2) {
   if (bytes === 0) {
@@ -95,7 +98,7 @@ function formatBytes(bytes: number, decimals = 2) {
   );
 }
 
-export default Vue.extend({
+@Component({
   components: {
     Spinner,
     TaskInfo,
@@ -105,285 +108,296 @@ export default Vue.extend({
     FaIcon,
     Tags,
   },
-  props: {
-    videoId: { type: String, default: null },
-  },
-  data() {
-    return {
-      isForce: false,
-      isAutoPlay: false,
-      isAutoNext: false,
-      isFileProtocol,
-      posterProgressEvent: null as ProgressEvent | null,
-      src: null as string | null,
-      poster: null as string | null,
-      duration: 0,
-    };
-  },
-  computed: {
-    ...videoComputedMinxin,
-    ...mapRootStateModelMixin,
-    id: {
-      get(): string | null {
-        return this.videoId;
-      },
-      set(value: string | null) {
-        this.$emit('update:videoId', value);
-      },
-    },
-    posterURL(): string | null {
-      return this.isForce
-        ? this.getVideoURI(this.videoId, VideoRole.poster, true)
-        : this.getBlobURL(this.videoId, VideoRole.poster);
-    },
-    srcURL(): string | null {
-      return this.isForce
-        ? this.getVideoURI(this.videoId, VideoRole.preview, true)
-        : this.getBlobURL(this.videoId, VideoRole.preview);
-    },
-    video: {
-      get(): VideoResponse | null {
-        return this.videoStore.storage[this.videoId] || null;
-      },
-      set(value: VideoResponse | null) {
-        this.id = value ? value.uuid : null;
-      },
-    },
-    videoElement(): HTMLVideoElement | undefined {
-      return this.$refs.video as HTMLVideoElement | undefined;
-    },
-    url(): string {
-      const hash = this.video ? `#${this.video.label}` : '';
-      return `${window.location.href.split('#')[0]}${hash}`;
-    },
-    loadingMessage(): string {
-      if (isNull(this.posterProgressEvent)) {
-        return '读取中';
-      }
-      const total = this.posterProgressEvent.total;
-      const loadded = this.posterProgressEvent.loaded;
-      return `${((loadded / total) * 100).toFixed(2)}%@${formatBytes(total)}`;
-    },
-  },
-  methods: {
-    refresh() {
-      const payload: VideoReadActionPayload = { id: this.videoId };
-      this.isForce = true;
-      this.$store.dispatch(VIDEO.READ, payload);
-    },
-    ondragstart(event: DragEvent) {
-      if (!this.video) {
-        return;
-      }
-      let plainData = this.video.src || this.video.poster;
-      if (!plainData) {
-        return;
-      }
-      if (isFileProtocol) {
-        plainData =
-          window.location.origin +
-          decodeURI(
-            window.location.pathname.slice(
-              0,
-              window.location.pathname.lastIndexOf('/')
-            )
-          ) +
-          '/' +
-          plainData;
-      }
-      event.dataTransfer!.setData('text/plain', plainData);
-    },
-    parseHash() {
-      const hash = window.location.hash.slice(1);
-      if (!hash) {
-        return;
-      }
+})
+export default class TheCSheetViewer extends Vue {
+  @Prop({ type: String, default: null })
+  videoId!: string | null;
 
-      // By label
-      const video = _.find(this.videoStore.storage, i => i!.label === hash);
-      if (video) {
-        this.video = video;
-        return;
-      }
+  isForce = false;
+  isAutoPlay = false;
+  isAutoNext = false;
+  isFileProtocol = isFileProtocol;
+  posterProgressEvent: ProgressEvent | null = null;
+  src: string | null = null;
+  poster: string | null = null;
+  duration = 0;
 
-      // By index.
-      const match = /^image(\d+)/.exec(hash);
-      if (match) {
-        this.id = this.imagePlayList[Number(match[1])];
-      }
-    },
-    setupShortcut() {
-      window.addEventListener('keyup', (event: KeyboardEvent) => {
-        switch (event.key) {
-          case 'ArrowLeft': {
-            this.jumpPrevImage();
-            break;
-          }
-          case 'ArrowRight': {
-            this.jumpNextImage();
-            break;
-          }
+  $store!: DollarStore;
+
+  get id(): string | null {
+    return this.videoId;
+  }
+  set id(value: string | null) {
+    this.$emit('update:videoId', value);
+  }
+  get posterURL(): string | null {
+    if (!this.videoId) {
+      return null;
+    }
+    return this.isForce
+      ? this.$store.getters.getVideoURI(this.videoId, VideoRole.poster, true)
+      : this.$store.getters.getBlobURL(this.videoId, VideoRole.poster);
+  }
+  get srcURL(): string | null {
+    if (!this.videoId) {
+      return null;
+    }
+    return this.isForce
+      ? this.$store.getters.getVideoURI(this.videoId, VideoRole.preview, true)
+      : this.$store.getters.getBlobURL(this.videoId, VideoRole.preview);
+  }
+  get video(): VideoResponse | null {
+    if (!this.videoId) {
+      return null;
+    }
+    return this.$store.state.videoStore.storage[this.videoId] || null;
+  }
+  set video(value: VideoResponse | null) {
+    this.id = value ? value.uuid : null;
+  }
+  get videoElement(): HTMLVideoElement | undefined {
+    return this.$refs.video as HTMLVideoElement | undefined;
+  }
+  get url(): string {
+    const hash = this.video ? `#${this.video.label}` : '';
+    return `${window.location.href.split('#')[0]}${hash}`;
+  }
+  get loadingMessage(): string {
+    if (!this.posterProgressEvent) {
+      return '读取中';
+    }
+    const total = this.posterProgressEvent.total;
+    const loadded = this.posterProgressEvent.loaded;
+    return `${((loadded / total) * 100).toFixed(2)}%@${formatBytes(total)}`;
+  }
+
+  refresh() {
+    if (!this.videoId) {
+      return;
+    }
+    const payload: VideoReadActionPayload = { id: this.videoId };
+    this.isForce = true;
+    this.$store.dispatch(VIDEO.READ, payload);
+  }
+  ondragstart(event: DragEvent) {
+    if (!this.video) {
+      return;
+    }
+    let plainData = this.video.src || this.video.poster;
+    if (!plainData) {
+      return;
+    }
+    if (isFileProtocol) {
+      plainData =
+        window.location.origin +
+        decodeURI(
+          window.location.pathname.slice(
+            0,
+            window.location.pathname.lastIndexOf('/')
+          )
+        ) +
+        '/' +
+        plainData;
+    }
+    event.dataTransfer!.setData('text/plain', plainData);
+  }
+  parseHash() {
+    const hash = window.location.hash.slice(1);
+    if (!hash) {
+      return;
+    }
+
+    // By label
+    const video = _.find(
+      this.$store.state.videoStore.storage,
+      i => i!.label === hash
+    );
+    if (video) {
+      this.video = video;
+      return;
+    }
+
+    // By index.
+    const match = /^image(\d+)/.exec(hash);
+    if (match) {
+      this.id = this.$store.getters.imagePlayList[Number(match[1])];
+    }
+  }
+  setupShortcut() {
+    window.addEventListener('keyup', (event: KeyboardEvent) => {
+      switch (event.key) {
+        case 'ArrowLeft': {
+          this.jumpPrevImage();
+          break;
         }
-      });
-    },
-    autoNext() {
-      if (!this.video) {
-        return;
-      }
-      if (this.isAutoNext) {
-        const state = this.findIndex(this.videoPlayList);
-        const target = state.array[state.index + 1] || state.array[0];
-        const url = this.getVideoURI(target, VideoRole.preview);
-        if (!url) {
-          return;
+        case 'ArrowRight': {
+          this.jumpNextImage();
+          break;
         }
-        preloadVideo(url).then(() => {
-          this.id = target;
-        });
       }
-    },
-    findIndex(videoArray: string[], defaultIndex = 0) {
-      const array = _.intersection(videoArray, this.videoStore.visibleVideos);
-      const index: number = this.videoId
-        ? videoArray.indexOf(this.videoId)
-        : defaultIndex;
-      return {
-        index,
-        array,
-      };
-    },
-    jumpNextImage() {
-      const state = this.findIndex(this.imagePlayList);
+    });
+  }
+  autoNext() {
+    if (!this.video) {
+      return;
+    }
+    if (this.isAutoNext) {
+      const state = this.findIndex(this.$store.getters.videoPlayList);
       const target = state.array[state.index + 1] || state.array[0];
-      this.id = target;
-    },
-    jumpPrevImage() {
-      const state = this.findIndex(this.imagePlayList);
-      const target =
-        state.array[state.index - 1] || state.array[state.array.length - 1];
-      this.id = target;
-    },
-    prev(array: string[]): string | null {
-      const state = this.findIndex(this.imagePlayList);
-      return state.array[state.index - 1] || null;
-    },
-    next(array: string[]): string | null {
-      const state = this.findIndex(this.imagePlayList);
-      return state.array[state.index + 1] || null;
-    },
-    loadPoster() {
-      if (!this.posterURL) {
+      const url = this.$store.getters.getVideoURI(target, VideoRole.preview);
+      if (!url) {
         return;
       }
-      const id = this.videoId;
-      return preloadImage(this.posterURL).then(image => {
-        if (this.videoId !== id) {
-          return;
-        }
-        this.poster = image.src;
+      preloadVideo(url).then(() => {
+        this.id = target;
       });
-    },
-    loadSrc() {
-      if (!this.srcURL) {
+    }
+  }
+  findIndex(videoArray: string[], defaultIndex = 0) {
+    const array = _.intersection(
+      videoArray,
+      this.$store.state.videoStore.visibleVideos
+    );
+    const index: number = this.videoId
+      ? videoArray.indexOf(this.videoId)
+      : defaultIndex;
+    return {
+      index,
+      array,
+    };
+  }
+  jumpNextImage() {
+    const state = this.findIndex(this.$store.getters.imagePlayList);
+    const target = state.array[state.index + 1] || state.array[0];
+    this.id = target;
+  }
+  jumpPrevImage() {
+    const state = this.findIndex(this.$store.getters.imagePlayList);
+    const target =
+      state.array[state.index - 1] || state.array[state.array.length - 1];
+    this.id = target;
+  }
+  prev(array: string[]): string | null {
+    const state = this.findIndex(this.$store.getters.imagePlayList);
+    return state.array[state.index - 1] || null;
+  }
+  next(array: string[]): string | null {
+    const state = this.findIndex(this.$store.getters.imagePlayList);
+    return state.array[state.index + 1] || null;
+  }
+  loadPoster(url: string) {
+    const id = this.videoId;
+    return preloadImage(url).then(image => {
+      if (this.videoId !== id) {
         return;
       }
-      const id = this.videoId;
-      preloadVideo(this.srcURL).then(video => {
-        if (this.videoId !== id) {
-          return;
-        }
-        this.src = video.src;
-        this.duration = video.duration;
-      });
-    },
-    preload(id: string) {
-      const payload: VideoPreloadActionPayload = {
-        id,
-        role: VideoRole.poster,
-        onprogress: this.onLoadProgress,
-      };
-      this.$store.dispatch(PRELOAD_VIDEO, payload);
-      payload.role = VideoRole.preview;
-      this.$store.dispatch(PRELOAD_VIDEO, payload);
-    },
-    play() {
-      this.isAutoNext = true;
-      this.isAutoPlay = true;
-      if (this.videoElement) {
-        this.videoElement.play();
-      }
-    },
-    pause() {
-      this.isAutoNext = false;
-      if (this.videoElement) {
-        this.videoElement.pause();
-      }
-    },
-    onLoadProgress(event: ProgressEvent, config: VideoPreloadActionPayload) {
-      if (config.id !== this.videoId) {
+      this.poster = image.src;
+    });
+  }
+  loadSrc(url: string) {
+    const id = this.videoId;
+    preloadVideo(url).then(video => {
+      if (this.videoId !== id) {
         return;
       }
-      if (config.role === VideoRole.poster) {
-        this.posterProgressEvent = event;
-      }
-    },
-    reset() {
-      this.duration = 0;
-      this.src = null;
-      if (this.videoElement) { this.videoElement.load()};
-      this.poster = null;
-      this.posterProgressEvent = null;
-      this.isForce = false;
-    },
-  },
-  watch: {
-    videoId(value: string | null) {
-      this.reset();
-      if (value) {
-        this.scrollTo(value);
-        window.location.replace(this.url);
-        const blobWhitelist = _.uniq(
-          _.compact([
-            this.id,
-            this.prev(this.imagePlayList),
-            this.next(this.imagePlayList),
-            this.next(this.videoPlayList),
-          ])
-        );
-        blobWhitelist.map(this.preload);
+      this.src = video.src;
+      this.duration = video.duration;
+    });
+  }
+  preload(id: string) {
+    const payload: VideoPreloadActionPayload = {
+      id,
+      role: VideoRole.poster,
+      onprogress: this.onLoadProgress,
+    };
+    this.$store.dispatch(PRELOAD_VIDEO, payload);
+    payload.role = VideoRole.preview;
+    this.$store.dispatch(PRELOAD_VIDEO, payload);
+  }
+  play() {
+    this.isAutoNext = true;
+    this.isAutoPlay = true;
+    if (this.videoElement) {
+      this.videoElement.play();
+    }
+  }
+  pause() {
+    this.isAutoNext = false;
+    if (this.videoElement) {
+      this.videoElement.pause();
+    }
+  }
+  onLoadProgress(event: ProgressEvent, config: VideoPreloadActionPayload) {
+    if (config.id !== this.videoId) {
+      return;
+    }
+    if (config.role === VideoRole.poster) {
+      this.posterProgressEvent = event;
+    }
+  }
+  loadData() {
+    if (this.id) {
+      this.$store.getters.scrollTo(this.id);
+    }
+    const blobWhitelist = _.uniq(
+      _.compact([
+        this.id,
+        this.prev(this.$store.getters.imagePlayList),
+        this.next(this.$store.getters.imagePlayList),
+        this.next(this.$store.getters.videoPlayList),
+      ])
+    );
+    blobWhitelist.map(this.preload);
 
-        const payload: VideoUpdateBlobWhiteListMapMutationPayload = {
-          key: 'viewer',
-          value: blobWhitelist,
-        };
-        this.$store.commit(UPDATE_VIDEO_BLOB_WHITELIST, payload);
-      } else {
-        this.isAutoNext = false;
-      }
-    },
-    srcURL(value) {
-      if (value) {
-        this.loadSrc();
-      } else if (this.videoElement) {
+    const payload: VideoUpdateBlobWhiteListMapMutationPayload = {
+      key: 'viewer',
+      value: blobWhitelist,
+    };
+    this.$store.commit(UPDATE_VIDEO_BLOB_WHITELIST, payload);
+  }
+  @Watch('videoId')
+  onVideoIdChange(value: string | null) {
+    this.duration = 0;
+    this.posterProgressEvent = null;
+    this.isForce = false;
+    if (value) {
+      window.location.replace(this.url);
+      this.loadData();
+    } else {
+      this.isAutoNext = false;
+    }
+  }
+  @Watch('srcURL')
+  onSrcURLChange(value: TheCSheetViewer['srcURL']) {
+    if (value) {
+      this.loadSrc(value);
+    } else {
+      this.src = null;
+      if (this.videoElement) {
         this.videoElement.removeAttribute('src');
+        this.videoElement.load();
       }
-    },
-    posterURL(value) {
-      if (value) {
-        this.loadPoster();
-      } else if (this.videoElement) {
+    }
+  }
+  @Watch('posterURL')
+  onPosterURLChange(value: TheCSheetViewer['posterURL']) {
+    if (value) {
+      this.loadPoster(value);
+    } else {
+      this.poster = null;
+      if (this.videoElement) {
         this.videoElement.removeAttribute('poster');
       }
-    },
-  },
+    }
+  }
   mounted() {
     this.setupShortcut();
     this.parseHash();
-    this.loadSrc();
-    this.loadPoster();
-  },
-});
+    this.loadData();
+  }
+}
 </script>
+
 <style lang="scss" scoped>
 .the-csheet-viewer {
   color: white;

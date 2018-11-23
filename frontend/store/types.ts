@@ -6,6 +6,7 @@ import {
   VideoResponse,
   VideoRole,
 } from '../interface';
+import { Store } from 'vuex';
 
 export interface IDMap<T> {
   [id: string]: T | undefined;
@@ -101,3 +102,6 @@ export interface CombinedGetters
     VideoGetters,
     TagGetters,
     CGTeamWorkTaskGetters {}
+export declare class DollarStore extends Store<CombinedRootState> {
+  readonly getters: CombinedGetters;
+}
