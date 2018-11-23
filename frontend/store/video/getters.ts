@@ -115,7 +115,7 @@ export const getters: GetterTree<VideoState, RootState> = {
   videoPlayList(contextState, contextGetter): string[] {
     return contextState.visibleVideos.filter(i => {
       const video = contextState.storage[i];
-      return !(video && video.preview_mtime);
+      return video && video.preview_mtime;
     });
   },
   imagePlayList(contextState, contextGetter): string[] {
