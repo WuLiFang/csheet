@@ -1,6 +1,6 @@
 # -*- coding=UTF-8 -*-
 """Default application settings.  """
-from celery.schedules import crontab
+
 from environs import Env
 
 _ENV = Env()
@@ -15,8 +15,9 @@ DATABASE_URL = _ENV('DATABASE_URL', 'sqlite:///:memory:')
 BROADCAST_INTERVAL = _ENV.int('BROADCAST_INTERVAL', 5)
 PREVIEW_SIZE_LIMIT = _ENV.int('PREVIEW_SIZE_LIMIT', 10 * 2 ** 20)  # 10MB
 
-GENERATION_LIGHT_DISCOVER_SCHEDULE = 5
-GENERATION_HEAVY_DISCOVER_SCHEDULE = crontab(minute='*/1', hour='0-1,12-23')
+GENERATION_DISCOVER_SCHEDULE = 5
+# from celery.schedules import crontab
+# GENERATION_DISCOVER_SCHEDULE = crontab(minute='*/1', hour='0-1,12-23')
 
 WATCH_INTERVAL = _ENV.int('WATCH_INTERVAL', 1)
 WATCH_CHUNK_SIZE = _ENV.int('WATCH_CHUNK_SIZE', 50)

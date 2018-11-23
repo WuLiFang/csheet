@@ -123,6 +123,75 @@ class GenaratableVideo(Video):
             limit_size=APP.config['PREVIEW_SIZE_LIMIT'])
 
 
+def output_path(*other):
+    """Get output path.  """
+
+    path = os.path.join(APP.config['STORAGE'], *other)
+    try:
+        os.makedirs(os.path.dirname(path))
+    except OSError:
+        pass
+    return path
+
+
+@CELERY.task(ignore_result=True,
+             autoretry_for=(sqlalchemy.exc.OperationalError, Locked),
+             retry_backoff=True)
+def generate(video_id, source, target):
+    """Celery Generate task.  """
+
+    method = getattr(GenaratableVideo, 'generate_{}'.format(target))
+    with session_scope() as sess:
+        video = sess.query(GenaratableVideo).get(video_id)
+        video.try_apply(method, source, target)
+
+
+@CELERY.on_after_configure.connect
+def setup_periodic_tasks(sender, **_):
+    """Setup periodic tasks.  """
+
+    sender.add_periodic_task(APP.config['GENERATION_DISCOVER_SCHEDULE'],
+                             discover_tasks,
+                             expires=5)
+
+
+@CELERY.task(ignore_result=True,
+             autoretry_for=(sqlalchemy.exc.OperationalError,),
+             retry_backoff=True)
+def discover_tasks():
+    """Discover generation tasks.  """
+
+    _discover_tasks('poster', 'thumb', min_interval=1)
+    _discover_tasks('src', 'poster', min_interval=60,
+                    conditions=(Video.poster.is_(None),),
+                    limit=10)
+    _discover_tasks('src', 'preview', min_interval=120, limit=1)
+
+
+def _discover_tasks(source, target, limit=100, **kwargs):
+    kwargs['min_interval'] = max(
+        kwargs.get('min_interval', 0),
+        APP.config['DAEMON_TASK_EXPIRES'])
+    atime_column = getattr(Video, '{}_atime'.format(target))
+
+    videos = (Session()
+              .query(GenaratableVideo)
+              .with_for_update(skip_locked=True)
+              .filter(_need_generation_criterion(source, target, **kwargs))
+              .order_by(atime_column.isnot(None), atime_column)
+              .limit(limit)
+              .all())
+    if not videos:
+        LOGGER.debug('No generation task discovered: %s -> %s', source, target)
+        return False
+    for i in videos:
+        generate.apply_async(args=(i.uuid, source, target),
+                             expires=APP.config['DAEMON_TASK_EXPIRES'])
+    LOGGER.info('Discovered generation tasks: %s -> %s : count %s',
+                source, target, len(videos))
+    return True
+
+
 def _need_generation_criterion(source, target, **kwargs):
     min_interval = kwargs.pop('min_interval', 0)
     conditions = kwargs.pop('conditions', ())
@@ -149,6 +218,27 @@ def _need_generation_criterion(source, target, **kwargs):
     )
 
 
+@APP.before_first_request
+def start():
+    """Start generation thread.  """
+
+    if APP.config['STANDALONE']:
+        spawn(generate_forever)
+
+
+def generate_forever():
+    """Run as generate worker.  """
+
+    work_forever(_do_generate, LOGGER, label='update')
+
+
+def _do_generate():
+    result = any(_discover_tasks(limit=1, **i)
+                 for i in GENERATION_TASKS)
+    if not result:
+        raise WorkerIdle
+
+
 GENERATION_TASKS = [
     {
         'source': 'poster',
@@ -167,106 +257,3 @@ GENERATION_TASKS = [
         'min_interval': 100
     },
 ]
-
-
-def output_path(*other):
-    """Get output path.  """
-
-    path = os.path.join(APP.config['STORAGE'], *other)
-    try:
-        os.makedirs(os.path.dirname(path))
-    except OSError:
-        pass
-    return path
-
-
-def generate_forever():
-    """Run as generate worker.  """
-
-    work_forever(_do_generate, LOGGER, label='update')
-
-
-def _do_generate():
-    result = any(discover_tasks(limit=1, **i)
-                 for i in GENERATION_TASKS)
-    if not result:
-        raise WorkerIdle
-
-
-@CELERY.task(ignore_result=True,
-             autoretry_for=(sqlalchemy.exc.OperationalError, Locked),
-             retry_backoff=True)
-def generate(video_id, source, target):
-    """Celery Generate task.  """
-
-    method = getattr(GenaratableVideo, 'generate_{}'.format(target))
-    with session_scope() as sess:
-        video = sess.query(GenaratableVideo).get(video_id)
-        video.try_apply(method, source, target)
-
-
-def discover_tasks(source, target, limit=100, **kwargs):
-    """Discover generation tasks.  """
-
-    kwargs['min_interval'] = max(
-        kwargs.get('min_interval', 0),
-        APP.config['DAEMON_TASK_EXPIRES'])
-    atime_column = getattr(Video, '{}_atime'.format(target))
-
-    videos = (Session()
-              .query(GenaratableVideo)
-              .with_for_update(skip_locked=True)
-              .filter(_need_generation_criterion(source, target, **kwargs))
-              .order_by(atime_column.isnot(None), atime_column)
-              .limit(limit)
-              .all())
-    if not videos:
-        LOGGER.debug('No generation task discovered: %s -> %s', source, target)
-        return False
-    for i in videos:
-        generate.apply_async(args=(i.uuid, source, target),
-                             expires=APP.config['DAEMON_TASK_EXPIRES'])
-    LOGGER.info('Discovered generation tasks: %s -> %s : count %s',
-                source, target, len(videos))
-    return True
-
-
-@CELERY.task(ignore_result=True,
-             autoretry_for=(sqlalchemy.exc.OperationalError,),
-             retry_backoff=True)
-def discover_light_tasks():
-    """Discover light generation tasks.  """
-
-    discover_tasks('poster', 'thumb', min_interval=1)
-    discover_tasks('src', 'poster', min_interval=60,
-                   conditions=(Video.poster.is_(None),),
-                   limit=10)
-
-
-@CELERY.task(ignore_result=True,
-             autoretry_for=(sqlalchemy.exc.OperationalError,),
-             retry_backoff=True)
-def discover_heavy_tasks():
-    """Discover heavy generation tasks.  """
-
-    discover_tasks('src', 'preview', min_interval=120, limit=1)
-
-
-@APP.before_first_request
-def start():
-    """Start generation thread.  """
-
-    if APP.config['STANDALONE']:
-        spawn(generate_forever)
-
-
-@CELERY.on_after_configure.connect
-def setup_periodic_tasks(sender, **_):
-    """Setup periodic tasks.  """
-
-    sender.add_periodic_task(APP.config['GENERATION_LIGHT_DISCOVER_SCHEDULE'],
-                             discover_light_tasks,
-                             expires=5)
-    sender.add_periodic_task(APP.config['GENERATION_HEAVY_DISCOVER_SCHEDULE'],
-                             discover_heavy_tasks,
-                             expires=60)

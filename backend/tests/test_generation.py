@@ -7,5 +7,4 @@ from csheet import generation
 
 
 def test_discover_generate_task():
-    generation.discover_light_tasks()
-    generation.discover_heavy_tasks()
+    generation.discover_tasks()
