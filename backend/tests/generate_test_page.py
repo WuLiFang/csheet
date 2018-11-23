@@ -28,9 +28,9 @@ def main():
 
     original_root_path = csheet.APP.root_path
     original_tempaltes_folder = csheet.page.core.BasePage.templates_folder
-    csheet.APP.root_path = util.path('../public')
+    csheet.APP.root_path = util.path('../../public')
     csheet.page.core.BasePage.templates_folder = util.path(
-        '../public/templates')
+        '../../public/templates')
     client = csheet.APP.test_client()
     if cgtwq.DesktopClient().is_logged_in():
         tasks.append((quote('/?pipeline=合成&project=梦塔&prefix=MT_EP06_',

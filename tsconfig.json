@@ -10,25 +10,11 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "types": [
-      "node",
-      "mocha",
-      "chai"
-    ],
+    "types": ["node", "mocha", "chai"],
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["frontend/*"]
     }
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["frontend/**/*.ts", "frontend/**/*.tsx", "frontend/**/*.vue"],
+  "exclude": ["node_modules"]
 }

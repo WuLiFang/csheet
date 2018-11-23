@@ -34,7 +34,7 @@ module.exports = {
     }
   },
   devServer: {
-    contentBase: path.join(__dirname, 'tests/pages'),
+    contentBase: path.join(__dirname, 'backend/tests/pages'),
     proxy: 'http://localhost:5001',
   },
 };
