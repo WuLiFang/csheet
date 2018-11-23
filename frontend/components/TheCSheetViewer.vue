@@ -14,14 +14,20 @@ transition(name='dropdown')
         icon='el-icon-refresh'
       ) 刷新
       .video-control(v-show='src')
-        ElCheckbox(v-model='$store.state.isEnablePreview' label='视频' size='mini')
+        ElCheckbox(
+          v-model='isEnablePreview'
+          label='视频'
+          size='mini')
         ElCheckbox(
           v-model='isAutoPlay' 
-          v-show='$store.state.isEnablePreview'
-          @change='isAutoNext ? pause(): play()'
+          v-show='isEnablePreview'
+          @change='isAutoPlay ? play(): pause()'
           label='自动播放'
           size='mini')
-        ElButton(v-show='isAutoPlay' @click='play' size='mini')
+        ElButton(
+          v-show='isAutoPlay'
+          @click='isAutoNext = !isAutoNext'
+          size='mini')
           span(v-if='isAutoNext')
             FaIcon(name='sort-alpha-asc')
             | 顺序
@@ -31,25 +37,28 @@ transition(name='dropdown')
     FadeTransition
       .center.failed(v-if='video && !(video.preview || video.poster)') 不可用
       .center(v-else-if='! (poster || src)')
-        Spinner(size='large' :message='loadingMessage' text-fg-color='white')
+        Spinner(
+          :message='loadingMessage'
+          size='large'
+          text-fg-color='white')
     FadeTransition
       img.center(
-        v-show='poster && (!src || !$store.state.isEnablePreview)'
+        v-show='poster && (!src || !isEnablePreview)'
         :src='poster'
         @dragstart='ondragstart' 
         draggable
       )
     FadeTransition
       video.center(
-        v-show='$store.state.isEnablePreview && src'
+        v-show='isEnablePreview && src'
         :poster='poster'
         :src='src'
         :autoplay='isAutoPlay'
         :loop='!isAutoNext'
-        :controls='!isAutoNext && duration > 0.1'
+        :controls='duration > 0.1'
         @dragstart='ondragstart' 
         @ended='autoNext'
-        @waiting='autoNext'
+        @stalled='autoNext'
         ref='video'
         draggable
       )
@@ -85,6 +94,8 @@ import {
   VideoPreloadActionPayload,
   VideoUpdateBlobWhiteListMapMutationPayload,
   UPDATE_VIDEO_BLOB_WHITELIST,
+  StateUpdateMutationPayload,
+  UPDATE_ROOT_STATE,
 } from '../mutation-types';
 import { preloadVideo, preloadImage } from '@/preload';
 import { Prop, Component, Watch } from 'vue-property-decorator';
@@ -122,7 +133,7 @@ export default class TheCSheetViewer extends Vue {
   visible!: boolean;
 
   isForce = false;
-  isAutoPlay = false;
+  isAutoPlay = true;
   isAutoNext = false;
   isFileProtocol = isFileProtocol;
   posterProgressEvent: ProgressEvent | null = null;
@@ -143,6 +154,16 @@ export default class TheCSheetViewer extends Vue {
   }
   set isVisible(value: boolean) {
     this.$emit('update:visible', value);
+  }
+  get isEnablePreview(): boolean {
+    return this.$store.state.isEnablePreview;
+  }
+  set isEnablePreview(value: boolean) {
+    const payload: StateUpdateMutationPayload<DollarStore['state']> = {
+      key: 'isEnablePreview',
+      value,
+    };
+    this.$store.commit(UPDATE_ROOT_STATE, payload);
   }
   get posterURL(): string | null {
     if (!this.videoId) {
@@ -330,14 +351,11 @@ export default class TheCSheetViewer extends Vue {
     this.$store.dispatch(PRELOAD_VIDEO, payload);
   }
   play() {
-    this.isAutoNext = true;
-    this.isAutoPlay = true;
     if (this.videoElement) {
       this.videoElement.play();
     }
   }
   pause() {
-    this.isAutoNext = false;
     if (this.videoElement) {
       this.videoElement.pause();
     }
@@ -410,6 +428,14 @@ export default class TheCSheetViewer extends Vue {
       if (this.videoElement) {
         this.videoElement.removeAttribute('poster');
       }
+    }
+  }
+  @Watch('isEnablePreview')
+  onPreviewEnableChange(value: boolean) {
+    if (value) {
+      this.play();
+    } else {
+      this.pause();
     }
   }
   mounted() {
