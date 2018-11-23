@@ -1,6 +1,7 @@
 <template lang="pug">
-  .the-csheet-viewer(v-show='video')
-    .overlay(@click='video = null')
+transition(name='dropdown')
+  .the-csheet-viewer(v-show='isVisible')
+    .overlay(@click='isVisible = null')
     .detail(v-if='video')
       TaskInfo(:id="video.uuid")
       FileInfo(:id="video.uuid")
@@ -27,28 +28,31 @@
           span(v-else)
             FaIcon(name='magic')
             | 自动
-    .center.failed(v-if='video && !(video.preview || video.poster)') 不可用
-    .center(v-else-if='! (poster || src)')
-      Spinner(size='large' :message='loadingMessage' text-fg-color='white')
-    img.center(
-      v-show='poster && (!src || !$store.state.isEnablePreview)'
-      :src='poster'
-      @dragstart='ondragstart' 
-      draggable
-    )
-    video.center(
-      v-show='$store.state.isEnablePreview && src'
-      :poster='poster'
-      :src='src'
-      :autoplay='isAutoPlay'
-      :loop='!isAutoNext'
-      :controls='!isAutoNext && duration > 0.1'
-      @dragstart='ondragstart' 
-      @ended='autoNext'
-      @waiting='autoNext'
-      ref='video'
-      draggable
-    )
+    FadeTransition
+      .center.failed(v-if='video && !(video.preview || video.poster)') 不可用
+      .center(v-else-if='! (poster || src)')
+        Spinner(size='large' :message='loadingMessage' text-fg-color='white')
+    FadeTransition
+      img.center(
+        v-show='poster && (!src || !$store.state.isEnablePreview)'
+        :src='poster'
+        @dragstart='ondragstart' 
+        draggable
+      )
+    FadeTransition
+      video.center(
+        v-show='$store.state.isEnablePreview && src'
+        :poster='poster'
+        :src='src'
+        :autoplay='isAutoPlay'
+        :loop='!isAutoNext'
+        :controls='!isAutoNext && duration > 0.1'
+        @dragstart='ondragstart' 
+        @ended='autoNext'
+        @waiting='autoNext'
+        ref='video'
+        draggable
+      )
     .prev(@click='jumpPrevImage')
     .next(@click='jumpNextImage')
     .bottom
@@ -85,6 +89,7 @@ import {
 import { preloadVideo, preloadImage } from '@/preload';
 import { Prop, Component, Watch } from 'vue-property-decorator';
 import { Store } from 'vuex';
+import FadeTransition from '@/components/FadeTransition.vue';
 
 function formatBytes(bytes: number, decimals = 2) {
   if (bytes === 0) {
@@ -107,11 +112,14 @@ function formatBytes(bytes: number, decimals = 2) {
     ElCheckbox,
     FaIcon,
     Tags,
+    FadeTransition,
   },
 })
 export default class TheCSheetViewer extends Vue {
   @Prop({ type: String, default: null })
   videoId!: string | null;
+  @Prop(Boolean)
+  visible!: boolean;
 
   isForce = false;
   isAutoPlay = false;
@@ -129,6 +137,12 @@ export default class TheCSheetViewer extends Vue {
   }
   set id(value: string | null) {
     this.$emit('update:videoId', value);
+  }
+  get isVisible(): boolean {
+    return this.visible;
+  }
+  set isVisible(value: boolean) {
+    this.$emit('update:visible', value);
   }
   get posterURL(): string | null {
     if (!this.videoId) {
@@ -214,6 +228,7 @@ export default class TheCSheetViewer extends Vue {
     );
     if (video) {
       this.video = video;
+      this.isVisible = true;
       return;
     }
 
@@ -354,6 +369,13 @@ export default class TheCSheetViewer extends Vue {
       value: blobWhitelist,
     };
     this.$store.commit(UPDATE_VIDEO_BLOB_WHITELIST, payload);
+  }
+  @Watch('visible')
+  onVisibleChange(value: TheCSheetViewer['visible']) {
+    this.loadData();
+    if (!value) {
+      this.pause();
+    }
   }
   @Watch('videoId')
   onVideoIdChange(value: string | null) {
@@ -509,6 +531,29 @@ export default class TheCSheetViewer extends Vue {
     &:after {
       content: '>';
     }
+  }
+}
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: 0.2s ease-in-out;
+  .prev,
+  .next {
+    transition: 0.2s ease-out;
+  }
+}
+.dropdown-enter,
+.dropdown-appear,
+.dropdown-leave-to {
+  top: -100vh;
+  opacity: 0;
+  .prev {
+    left: -2%;
+  }
+  .next {
+    right: -2%;
+  }
+  .bottom {
+    position: fixed;
   }
 }
 </style>

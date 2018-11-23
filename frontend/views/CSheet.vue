@@ -1,14 +1,15 @@
 <template lang="pug">
   div.the-csheet
     TagEditToobar.select-toolbar
-    PreferencePanel.control(v-show='!current')
+    FadeTransition
+      PreferencePanel.control(v-show='!isViewerVisible')
     Lightbox(
       v-for='video in videos'
       :id='video.uuid' 
       :key='video.uuid' 
       @click="onclick" 
     )
-    TheCSheetViewer(:videoId.sync='current')
+    TheCSheetViewer(:videoId.sync='current' :visible.sync='isViewerVisible')
 </template>
 
 <script lang="ts">
@@ -47,6 +48,7 @@ import {
   FILTER_VIDEOS,
 } from '@/mutation-types';
 import { RootComputedMixin } from '@/store';
+import FadeTransition from '@/components/FadeTransition.vue';
 
 interface VideoSelectState {
   [id: string]: boolean | undefined;
@@ -60,10 +62,12 @@ export default Vue.extend({
     TagSelect,
     PreferencePanel,
     TagEditToobar,
+    FadeTransition,
   },
   data() {
     return {
       current: null as string | null,
+      isViewerVisible: false,
     };
   },
   computed: {
@@ -78,6 +82,7 @@ export default Vue.extend({
   methods: {
     onclick(video: VideoResponse) {
       this.current = video.uuid;
+      this.isViewerVisible = true;
     },
     filterVideos() {
       this.$store.dispatch(FILTER_VIDEOS);
