@@ -258,19 +258,13 @@ def discover_tasks(source, target, limit=100, **kwargs):
     kwargs['min_interval'] = max(
         kwargs.get('min_interval', 0),
         APP.config['DAEMON_TASK_EXPIRES'])
-    method = getattr(GenaratableVideo, 'generate_{}'.format(target))
-    lock = getattr(method, '_lock')
-
-    if not lock.acquire(block=False):
-        LOGGER.debug('During generation, skip discover: %s -> %s',
-                     source, target)
-        return
-    lock.release()
+    atime_column = getattr(Video, '{}_atime'.format(target))
 
     videos = (Session()
               .query(GenaratableVideo)
               .with_for_update(skip_locked=True)
               .filter(_need_generation_criterion(source, target, **kwargs))
+              .order_by(atime_column.isnot(None), atime_column)
               .limit(limit)
               .all())
     if not videos:
