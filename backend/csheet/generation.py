@@ -123,50 +123,6 @@ class GenaratableVideo(Video):
             limit_size=APP.config['PREVIEW_SIZE_LIMIT'])
 
 
-def execute_generate_task(**kwargs):
-    """Generate from source to target.
-
-    Args:
-        source (str): Source column name(`poster` or `src`)
-        target (str): Target column name(`thumb`, `poster` or `preview`)
-        method (Video => path | None): Generation function.
-        min_interval (int): Min generation interval.
-        conditions (tuple[SQLAlchemy criterion]): Addtional filter criterion.
-
-    Returns:
-        bool: `True` if generated, `False` if nothing to generate.
-    """
-
-    with session_scope() as sess:
-        source = kwargs.pop('source')
-        target = kwargs.pop('target')
-        method = kwargs.pop('method')
-
-        video = _get_video(source, target, sess, **kwargs)
-        if video is None:
-            LOGGER.debug('No %s need generate.', target)
-            return False
-        assert isinstance(video, GenaratableVideo), type(video)
-
-        video.touch(target)
-        setattr(video, '{}_mtime'.format(target), None)
-
-        video.try_apply(method, source, target)
-
-    return True
-
-
-def _get_video(source, target, session, **kwargs):
-
-    atime_column = getattr(Video, '{}_atime'.format(target))
-    video = (session.query(GenaratableVideo)
-             .with_for_update(skip_locked=True)
-             .filter(_need_generation_criterion(source, target, **kwargs))
-             .order_by(atime_column.isnot(None), atime_column)
-             .first())
-    return video
-
-
 def _need_generation_criterion(source, target, **kwargs):
     min_interval = kwargs.pop('min_interval', 0)
     conditions = kwargs.pop('conditions', ())
@@ -197,20 +153,17 @@ GENERATION_TASKS = [
     {
         'source': 'poster',
         'target': 'thumb',
-        'method': GenaratableVideo.generate_thumb,
         'min_interval': 1
     },
     {
         'source': 'src',
         'target': 'poster',
-        'method': GenaratableVideo.generate_poster,
         'min_interval': 10,
         'conditions': (Video.poster.is_(None),)
     },
     {
         'source': 'src',
         'target': 'preview',
-        'method': GenaratableVideo.generate_preview,
         'min_interval': 100
     },
 ]
@@ -234,7 +187,7 @@ def generate_forever():
 
 
 def _do_generate():
-    result = any(execute_generate_task(**i)
+    result = any(discover_tasks(limit=1, **i)
                  for i in GENERATION_TASKS)
     if not result:
         raise WorkerIdle
@@ -269,12 +222,13 @@ def discover_tasks(source, target, limit=100, **kwargs):
               .all())
     if not videos:
         LOGGER.debug('No generation task discovered: %s -> %s', source, target)
-        return
+        return False
     for i in videos:
         generate.apply_async(args=(i.uuid, source, target),
                              expires=APP.config['DAEMON_TASK_EXPIRES'])
     LOGGER.info('Discovered generation tasks: %s -> %s : count %s',
                 source, target, len(videos))
+    return True
 
 
 @CELERY.task(ignore_result=True,
