@@ -201,7 +201,7 @@ def generate(video_id, source, target):
 
     method = getattr(GenaratableVideo, 'generate_{}'.format(target))
     with session_scope() as sess:
-        video = sess.query(GenaratableVideo).with_for_update().get(video_id)
+        video = sess.query(GenaratableVideo).get(video_id)
         video.try_apply(method, source, target)
 
 
