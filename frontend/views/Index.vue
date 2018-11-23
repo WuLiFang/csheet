@@ -3,7 +3,7 @@
     h1 色板工具 {{VERSION}}
     #tabs
       ElTabs
-        ElTabPane(label='CGTeamWork')
+        ElTabPane(label='CGTeamWork' v-if='projects.length')
           CGTeamWorkPageForm
         ElTabPane(label='文件夹')
           LocalPageForm
@@ -14,6 +14,7 @@ import Vue from 'vue';
 import Cookies from 'js-cookie';
 import CGTeamWorkPageForm from '@/components/CGTeamWorkPageForm.vue';
 import LocalPageForm from '@/components/LocalPageForm.vue';
+import { projects } from '@/index';
 import {
   Tag as ElTag,
   Input as ElInput,
@@ -37,7 +38,8 @@ export default Vue.extend({
   },
   data() {
     return {
-      VERSION
+      VERSION,
+      projects
     }
   }
 });
