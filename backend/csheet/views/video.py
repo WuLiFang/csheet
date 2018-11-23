@@ -41,17 +41,17 @@ def response_video(uuid, role):
     sess = database.Session()
     video = core.get_video(uuid, sess)
     path = getattr(video, role)
+    if not path:
+        return 'No path data for this video role', 404
     try:
         return send_file(filter_filename(path), conditional=True)
     except IOError as ex:
-        if (ex.errno == errno.ENOENT 
-            and role in ('thumb', 'preview')):
+        if (ex.errno == errno.ENOENT
+                and role in ('thumb', 'preview')):
             setattr(video, role, None)
             sess.commit()
-            return 'No such file', 400
-        else:
-            raise
-
+            return 'No such file', 404
+        raise
 
 
 def _get_note_url_template(select):
