@@ -171,11 +171,12 @@ def _discover_tasks(source, target, limit=100, **kwargs):
         kwargs.get('min_interval', 0),
         APP.config['DAEMON_TASK_EXPIRES'])
     atime_column = getattr(Video, '{}_atime'.format(target))
+    mtime_column = getattr(Video, '{}_mtime'.format(target))
 
     videos = (Session()
               .query(GenaratableVideo)
               .filter(_need_generation_criterion(source, target, **kwargs))
-              .order_by(atime_column.isnot(None), atime_column)
+              .order_by(atime_column.isnot(None), atime_column, mtime_column)
               .limit(limit)
               .all())
     if not videos:
