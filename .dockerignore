@@ -2,10 +2,10 @@
 .vscode/
 Documentation/
 node_modules/
-tests/storage
-!tests/storage/.gitignore
-tests/images/*/*
-tests/pages/
+**/tests/storage
+**/!tests/storage/.gitignore
+**/tests/images/*/*
+**/tests/pages/
 example_config/
 **/.pytest_cache/
 **/__pycache__/
