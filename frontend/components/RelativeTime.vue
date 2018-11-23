@@ -17,7 +17,7 @@ export default class RelativeTime extends Vue {
   value!: number | string;
 
   get moment() {
-    if (typeof this.value === 'number' && this.value < 1e12) {
+    if (typeof this.value === 'number') {
       return moment.unix(this.value);
     }
     return moment(this.value);
