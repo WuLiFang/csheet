@@ -127,7 +127,8 @@ def bind(url, is_echo=False):
 
 
 def _migrate(engine):
-    for sql in ('ALTER TABLE "CGTeamWorkTask" RENAME COLUMN "artist" TO "artists"',):
+    for sql in ('ALTER TABLE "CGTeamWorkTask" RENAME COLUMN "artist" TO "artists"',
+                'ALTER TABLE "Video" ADD COLUMN generation_started FLOAT'):
         try:
             engine.execute(sql)
         except (OperationalError, ProgrammingError):

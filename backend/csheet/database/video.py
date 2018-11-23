@@ -33,6 +33,7 @@ class Video(core.Base, core.SerializableMixin):
     thumb_broken_mtime = Column(Float)
     is_need_update = Column(Boolean)
     last_update_time = Column(Float)
+    generation_started = Column(Float)
     database = Column(String)
     module = Column(String)
     pipeline = Column(String)

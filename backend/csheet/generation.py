@@ -15,8 +15,9 @@ from gevent import spawn
 
 from wlf import ffmpeg
 
-from .core import APP, CELERY
+from .core import APP, CELERY, SOCKETIO
 from .database import Session, Video, session_scope
+from .encoder import normalize
 from .exceptions import WorkerIdle
 from .filename import filter_filename
 from .workertools import Locked, work_forever, worker_concurrency
@@ -56,6 +57,7 @@ class GenaratableVideo(Video):
         """
 
         method = self.methods[target]
+
         src = getattr(self, source)
         assert src, f'Source file path invalid, {self}'
 
@@ -69,18 +71,10 @@ class GenaratableVideo(Video):
         setattr(self, target, result)
         setattr(self, '{}_mtime'.format(target),
                 getattr(self, '{}_mtime'.format(source)))
-        self.touch(target)
+        setattr(self, '{}_atime'.format(target), time.time())
         LOGGER.info('Generation success: %s -> %s',
                     src, result)
-
-    def touch(self, target):
-        """Set access time on target role.
-
-        Args:
-            target (str): Target role name.
-        """
-
-        setattr(self, '{}_atime'.format(target), time.time())
+        SOCKETIO.emit('asset update', normalize([self]))
 
 
 def _interval():
@@ -121,13 +115,19 @@ def output_path(*other):
 
 
 @CELERY.task(ignore_result=True,
-             autoretry_for=(sqlalchemy.exc.OperationalError,),
+             autoretry_for=(sqlalchemy.exc.OperationalError, Locked),
              retry_backoff=True)
 def generate(video_id, source, target):
     """Celery Generate task.  """
 
     with session_scope() as sess:
         video: GenaratableVideo = sess.query(GenaratableVideo).get(video_id)
+        now = time.time()
+        if video.generation_started and now - video.generation_started < 60 * 60 * 24:
+            # Max task time: 1 day
+            return
+        video.generation_started = now
+        sess.commit()
         try:
             video.generate(source, target)
         except (OSError, ffmpeg.GenerateError):
@@ -135,8 +135,13 @@ def generate(video_id, source, target):
             setattr(video, '{}_broken_mtime'.format(source),
                     getattr(video, '{}_mtime'.format(source)))
             LOGGER.warning('Generation failed', exc_info=True)
-        except Locked:
-            pass
+        except:
+            sess.rollback()
+            video.generation_started = None
+            sess.commit()
+            raise
+        finally:
+            video.generation_started = None
 
 
 @CELERY.on_after_configure.connect
@@ -197,6 +202,7 @@ def _need_generation_criterion(source, target, **kwargs):
     target_atime_column = getattr(Video, '{}_atime'.format(target))
 
     return sqlalchemy.and_(
+        Video.generation_started.is_(None),
         source_column.isnot(None),
         source_mtime_column.isnot(None),
         sqlalchemy.or_(
