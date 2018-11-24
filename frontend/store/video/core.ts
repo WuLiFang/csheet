@@ -1,38 +1,5 @@
 import { VideoResponse, VideoRole } from '@/interface';
-import { isFileProtocol } from '@/packtools';
 
-function getPackedPath(
-  videoData: VideoResponse,
-  role: VideoRole,
-): string | null {
-  if (!getMtime(videoData, role)) {
-    return null;
-  }
-  let ret: string | null = null;
-  switch (role) {
-    case VideoRole.thumb: {
-      ret = _getPackedPath(videoData, 'thumbs', '.jpg');
-      break;
-    }
-    case VideoRole.poster: {
-      ret = _getPackedPath(videoData, 'images', '.jpg');
-      break;
-    }
-    case VideoRole.preview: {
-      ret = _getPackedPath(videoData, 'previews', '.mp4');
-      break;
-    }
-  }
-  return ret;
-}
-
-function _getPackedPath(
-  videoData: VideoResponse,
-  folder: string,
-  suffix: string,
-) {
-  return `${folder}/${videoData.label}${suffix}`;
-}
 function getMtime(videoData: VideoResponse, role: VideoRole): number | null {
   switch (role) {
     case VideoRole.thumb: {
@@ -52,13 +19,19 @@ function getMtime(videoData: VideoResponse, role: VideoRole): number | null {
 function getPathWithMtime(
   videoData: VideoResponse,
   role: VideoRole,
-  isForce = false,
+  isForce = false
 ): string | null {
   const mtime = getMtime(videoData, role);
   if (!mtime) {
     return null;
   }
-  let ret = `/videos/${videoData.uuid}.${role}?timestamp=${mtime}`;
+  const suffix =
+    {
+      thumb: '.jpg',
+      poster: '.jpg',
+      preview: '.mp4',
+    }[role] || '';
+  let ret = `/video/${role}/${videoData.uuid}${suffix}?timestamp=${mtime}`;
   if (isForce) {
     ret += `?forceUpdateAt=${new Date().getTime()}`;
   }
@@ -68,11 +41,8 @@ function getPathWithMtime(
 export function getPath(
   videoData: VideoResponse,
   role: VideoRole,
-  isForce = false,
+  isForce = false
 ): string | null {
-  if (isFileProtocol) {
-    return getPackedPath(videoData, role);
-  }
   return getPathWithMtime(videoData, role, isForce);
 }
 

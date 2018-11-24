@@ -5,6 +5,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import errno
 import logging
+import os
 
 from flask import send_file
 
@@ -55,6 +56,22 @@ def response_video(uuid, role):
             sess.commit()
             return 'No such file', 404
         raise
+
+
+@APP.route('/video/<role>/<filename>')
+def response_video_file(role, filename):
+    """Response a video file.
+
+    Args:
+        role (str): File role
+        filename (str): Fileaname
+
+    Returns:
+        flask.Response
+    """
+
+    uuid, _ = os.path.splitext(filename)
+    return response_video(uuid, role)
 
 
 def _get_note_url_template(select):

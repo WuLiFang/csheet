@@ -173,7 +173,7 @@ class BasePage(object):
     @staticmethod
     def _pack_one_video(video, zipfile):
         assert isinstance(video, HTMLVideo)
-        data = {'full': video.poster,
+        data = {'poster': video.poster,
                 'preview': video.preview,
                 'thumb': video.thumb}
         for role, filename in list(data.items()):
