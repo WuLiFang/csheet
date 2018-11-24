@@ -51,7 +51,7 @@ def health_check():
 
 def clear_lock():
     with database.session_scope(is_close=True) as sess:
-        sess.query(database.Video).all().update(
+        sess.query(database.Video).update(
             {'generation_started': None},
             synchronize_session=False
         )
