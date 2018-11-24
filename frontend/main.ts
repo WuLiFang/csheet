@@ -2,7 +2,7 @@ import { isFileProtocol } from '@/packtools';
 import '@/sentry';
 import SocketIO from '@/socketio';
 import _store from '@/store';
-import CSheet from '@/views/CSheet.vue';
+import Main from '@/views/Main.vue';
 // @ts-ignore
 import { Icon } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -18,7 +18,7 @@ moment.locale(navigator.language);
 const store = new Vuex.Store(_store);
 const vue = new Vue({
   store,
-  render: h => h(CSheet),
+  render: h => h(Main),
 }).$mount('#app');
 
 if (!isFileProtocol) {
