@@ -115,7 +115,8 @@ class CGTeamWorkPage(core.BasePage):
             database=self.database,
             module=self.module,
             pipeline=self.pipeline,
-            related_tasks=[i for i in tasks if i.shot == shot],)
+            related_tasks=[i for i in tasks if i.shot == shot],
+            is_need_update=True,)
 
     @run_with_clock('更新页面数据')
     def update(self, session):

@@ -64,7 +64,6 @@ class LocalPage(core.BasePage):
         videos = [_get_video(label, videos, images) for label in labels]
         self._video_query(session).with_for_update().merge_result(videos)
 
-
     def videos(self, session):
         return self._video_query(session).all()
 
@@ -88,6 +87,7 @@ def _get_video(label, videos, images):
         src=src,
         poster=poster,
         label=label,
+        is_need_update=True,
     )
 
 
