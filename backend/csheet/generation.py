@@ -132,17 +132,16 @@ def generate(video_id, source, target):
         try:
             video.generate(source, target)
         except (OSError, ffmpeg.GenerateError):
-            video.is_need_update = True
+            video.generation_started = None
             setattr(video, '{}_broken_mtime'.format(source),
                     getattr(video, '{}_mtime'.format(source)))
-            LOGGER.warning('Generation failed', exc_info=True)
+            sess.commit()
+            raise
         except:
             sess.rollback()
             video.generation_started = None
             sess.commit()
             raise
-        finally:
-            video.generation_started = None
 
 
 @CELERY.on_after_configure.connect
