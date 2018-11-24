@@ -91,7 +91,7 @@ class CGTeamWorkPage(core.BasePage):
         database.token = self.token
         return database.module(self.module)
 
-    def _video_from_data(self, data, tasks, shot):
+    def _video_from_data(self, data, tasks, shot, session):
         data_current = next(_filter_data(
             data, shot=shot, pipeline=self.pipeline))
         try:
@@ -106,8 +106,8 @@ class CGTeamWorkPage(core.BasePage):
         src = (_get_src(data_render) or
                _get_src(data_current))
 
-        return HTMLVideo(
-            uuid=uuid,
+        instance = session.query(HTMLVideo).get(uuid) or HTMLVideo(uuid=uuid)
+        data = dict(
             task_id=uuid,
             src=src,
             poster=poster,
@@ -117,6 +117,12 @@ class CGTeamWorkPage(core.BasePage):
             pipeline=self.pipeline,
             related_tasks=[i for i in tasks if i.shot == shot],
             is_need_update=True,)
+
+        for k, v in data.items():
+            if v is None:
+                continue
+            setattr(instance, k, v)
+        return instance
 
     @run_with_clock('更新页面数据')
     def update(self, session):
@@ -133,7 +139,7 @@ class CGTeamWorkPage(core.BasePage):
 
         tasks = [i.parse(self.database, self.module) for i in data]
         self._video_query(session).with_for_update().merge_result(tasks)
-        videos = [self._video_from_data(data, tasks, shot)
+        videos = [self._video_from_data(data, tasks, shot, session)
                   for shot in shots]
         self._task_query(session).with_for_update().merge_result(videos)
 

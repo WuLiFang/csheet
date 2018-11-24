@@ -61,7 +61,8 @@ class LocalPage(core.BasePage):
         LOGGER.info('Scan finished: '
                     '%s, image_count=%s, video_count=%s',
                     self, len(images), len(videos))
-        videos = [_get_video(label, videos, images) for label in labels]
+        videos = [_get_video(label, videos, images, session)
+                  for label in labels]
         self._video_query(session).with_for_update().merge_result(videos)
 
     def videos(self, session):
@@ -80,15 +81,21 @@ class LocalPage(core.BasePage):
         )
 
 
-def _get_video(label, videos, images):
+def _get_video(label, videos, images, session):
     src, poster = videos.get(label), images.get(label)
-    return HTMLVideo(
-        uuid=uuid_from_path(poster or src),
+    uuid = uuid_from_path(poster or src)
+    instance = session.query(HTMLVideo).get(uuid) or HTMLVideo(uuid=uuid)
+    data = dict(
         src=src,
         poster=poster,
         label=label,
         is_need_update=True,
     )
+    for k, v in data.items():
+        if v is None:
+            continue
+        setattr(instance, k, v)
+    return instance
 
 
 def _sort_file(path, images, videos):
