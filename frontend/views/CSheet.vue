@@ -9,7 +9,7 @@
       :key='video.uuid' 
       @click="onclick" 
     )
-    TheCSheetViewer(:videoId.sync='current' :visible.sync='isViewerVisible')
+    TheViewer(:videoId.sync='current' :visible.sync='isViewerVisible')
 </template>
 
 <script lang="ts">
@@ -21,7 +21,7 @@ import Lightbox from '@/components/Lightbox.vue';
 import TagEditToobar from '@/components/TagEditToobar.vue';
 import PreferencePanel from '@/components/PreferencePanel.vue';
 import StatusSelect from '@/components/StatusSelect.vue';
-import TheCSheetViewer from '@/components/TheCSheetViewer.vue';
+import TheViewer from '@/components/TheViewer.vue';
 import TagSelect from '@/components/TagSelect.vue';
 import {
   Button as ElButton,
@@ -57,7 +57,7 @@ interface VideoSelectState {
 export default Vue.extend({
   components: {
     Lightbox,
-    TheCSheetViewer,
+    TheViewer,
     StatusSelect,
     TagSelect,
     PreferencePanel,

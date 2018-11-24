@@ -126,7 +126,7 @@ function formatBytes(bytes: number, decimals = 2) {
     FadeTransition,
   },
 })
-export default class TheCSheetViewer extends Vue {
+export default class TheViewer extends Vue {
   @Prop({ type: String, default: null })
   videoId!: string | null;
   @Prop(Boolean)
@@ -389,7 +389,7 @@ export default class TheCSheetViewer extends Vue {
     this.$store.commit(UPDATE_VIDEO_BLOB_WHITELIST, payload);
   }
   @Watch('visible')
-  onVisibleChange(value: TheCSheetViewer['visible']) {
+  onVisibleChange(value: TheViewer['visible']) {
     this.loadData();
     if (!value) {
       this.pause();
@@ -408,7 +408,7 @@ export default class TheCSheetViewer extends Vue {
     }
   }
   @Watch('srcURL')
-  onSrcURLChange(value: TheCSheetViewer['srcURL']) {
+  onSrcURLChange(value: TheViewer['srcURL']) {
     if (value) {
       this.loadSrc(value);
     } else {
@@ -420,7 +420,7 @@ export default class TheCSheetViewer extends Vue {
     }
   }
   @Watch('posterURL')
-  onPosterURLChange(value: TheCSheetViewer['posterURL']) {
+  onPosterURLChange(value: TheViewer['posterURL']) {
     if (value) {
       this.loadPoster(value);
     } else {
