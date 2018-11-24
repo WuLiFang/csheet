@@ -49,6 +49,14 @@ def health_check():
         _fix_broken_mtime('src', sess)
 
 
+def clear_lock():
+    with database.session_scope(is_close=True) as sess:
+        sess.query(database.Video).all().update(
+            {'generation_started': None},
+            synchronize_session=False
+        )
+
+
 def runserver(host='0.0.0.0', port=80):
     """Run csheet server forever.
         host (str, optional): Defaults to '0.0.0.0'. Listenling host ip.

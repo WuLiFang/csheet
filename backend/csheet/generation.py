@@ -123,8 +123,8 @@ def generate(video_id, source, target):
     with session_scope() as sess:
         video: GenaratableVideo = sess.query(GenaratableVideo).get(video_id)
         now = time.time()
-        if video.generation_started and now - video.generation_started < 60 * 60 * 24:
-            # Max task time: 1 day
+        if (video.generation_started
+                and now - video.generation_started <= APP.config['MAX_TASK_TIME']):
             return
         video.generation_started = now
         sess.commit()
@@ -203,7 +203,9 @@ def _need_generation_criterion(source, target, **kwargs):
     target_atime_column = getattr(Video, '{}_atime'.format(target))
 
     return sqlalchemy.and_(
-        Video.generation_started.is_(None),
+        sqlalchemy.or_(Video.generation_started.is_(None),
+                       time.time() - Video.generation_started
+                       > APP.config['MAX_TASK_TIME']),
         source_column.isnot(None),
         source_mtime_column.isnot(None),
         sqlalchemy.or_(
