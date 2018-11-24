@@ -29,6 +29,26 @@ def _setup_logging(default_level=logging.INFO):
         mp_logging.basic_config(level=default_level)
 
 
+def _fix_broken_mtime(target, sess):
+    path_column = getattr(database.Video, f'{target}')
+    mtime_column = getattr(database.Video, f'{target}_mtime')
+    query = sess.query(database.Video).filter(path_column.is_(None),
+                                              mtime_column.isnot(None))
+    print(f'File that {target} mtime without a path: {query.count()}')
+    query.update({f'{target}_mtime': None},
+                 synchronize_session=False)
+
+
+def health_check():
+    """Do database health check.  """
+
+    with database.session_scope(is_close=True) as sess:
+        _fix_broken_mtime('thumb', sess)
+        _fix_broken_mtime('poster', sess)
+        _fix_broken_mtime('preview', sess)
+        _fix_broken_mtime('src', sess)
+
+
 def runserver(host='0.0.0.0', port=80):
     """Run csheet server forever.
         host (str, optional): Defaults to '0.0.0.0'. Listenling host ip.
