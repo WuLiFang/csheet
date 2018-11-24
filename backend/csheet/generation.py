@@ -55,7 +55,7 @@ class GenaratableVideo(Video):
         Raises:
             ffmpeg.GenerateError: When generation failed.
         """
-
+        sess = sqlalchemy.orm.object_session(self)
         method = self.methods[target]
 
         src = getattr(self, source)
@@ -65,6 +65,7 @@ class GenaratableVideo(Video):
         src = filter_filename(src)
         dst = output_path(target, self.uuid)
         result = method(src, dst)
+        sess.add(self)  # XXX: May lose sess after generation
         mediainfo = ffmpeg.probe(result)
         if mediainfo.error:
             raise ffmpeg.GenerateError(mediainfo.error)
