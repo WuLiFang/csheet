@@ -1,7 +1,7 @@
 <template lang="pug">
 transition(name='dropdown')
   .the-csheet-viewer(v-show='isVisible')
-    .overlay(@click='isVisible = null')
+    .overlay(@click='isVisible = false')
     .detail(v-if='video')
       TaskInfo(:id="video.uuid")
       FileInfo(:id="video.uuid")
@@ -16,6 +16,7 @@ transition(name='dropdown')
       .video-control(v-show='src')
         ElCheckbox(
           v-model='isEnablePreview'
+          @click='value => value ? play() : puase()'
           label='视频'
           size='mini')
         ElCheckbox(
@@ -25,7 +26,7 @@ transition(name='dropdown')
           label='自动播放'
           size='mini')
         ElButton(
-          v-show='isAutoPlay'
+          v-show='isEnablePreview && isAutoPlay'
           @click='isAutoNext = !isAutoNext'
           size='mini')
           span(v-if='isAutoNext')
@@ -35,22 +36,8 @@ transition(name='dropdown')
             FaIcon(name='magic')
             | 自动
     FadeTransition
-      .center.failed(v-if='video && !(video.preview || video.poster)') 不可用
-      .center(v-else-if='! (poster || src)')
-        Spinner(
-          :message='loadingMessage'
-          size='large'
-          text-fg-color='white')
-    FadeTransition
-      img.center(
-        v-show='poster && (!src || !isEnablePreview)'
-        :src='poster'
-        @dragstart='ondragstart' 
-        draggable
-      )
-    FadeTransition
       video.center(
-        v-show='isEnablePreview && src'
+        v-if='isEnablePreview && src'
         :poster='poster'
         :src='src'
         :autoplay='isAutoPlay'
@@ -62,8 +49,20 @@ transition(name='dropdown')
         ref='video'
         draggable
       )
-    .prev(@click='jumpPrevImage')
-    .next(@click='jumpNextImage')
+      img.center(
+        v-else-if='poster'
+        :src='poster'
+        @dragstart='ondragstart' 
+        draggable
+      )
+      .center(v-else-if='video && (video.poster || video.preview)')
+        Spinner(
+          :message='loadingMessage'
+          size='large'
+          text-fg-color='white')
+      .center.failed(v-else) 不可用
+    .prev(@click='jumpPrev')
+    .next(@click='jumpNext')
     .bottom
       span.caption {{ video ? video.label : ''}}
 </template>
@@ -263,18 +262,18 @@ export default class TheViewer extends Vue {
     window.addEventListener('keyup', (event: KeyboardEvent) => {
       switch (event.key) {
         case 'ArrowLeft': {
-          this.jumpPrevImage();
+          this.jumpPrev();
           break;
         }
         case 'ArrowRight': {
-          this.jumpNextImage();
+          this.jumpNext();
           break;
         }
       }
     });
   }
   autoNext() {
-    if (!this.video) {
+    if (!this.video || !this.isEnablePreview) {
       return;
     }
     if (this.isAutoNext) {
@@ -302,23 +301,22 @@ export default class TheViewer extends Vue {
       array,
     };
   }
-  jumpNextImage() {
-    const state = this.findIndex(this.$store.getters.imagePlayList);
-    const target = state.array[state.index + 1] || state.array[0];
+  jumpPrev() {
+    const array = this.$store.state.videoStore.visibleVideos;
+    const target = this.prev(array) || array[array.length - 1];
     this.id = target;
   }
-  jumpPrevImage() {
-    const state = this.findIndex(this.$store.getters.imagePlayList);
-    const target =
-      state.array[state.index - 1] || state.array[state.array.length - 1];
+  jumpNext() {
+    const array = this.$store.state.videoStore.visibleVideos;
+    const target = this.next(array) || array[0];
     this.id = target;
   }
   prev(array: string[]): string | null {
-    const state = this.findIndex(this.$store.getters.imagePlayList);
+    const state = this.findIndex(array);
     return state.array[state.index - 1] || null;
   }
   next(array: string[]): string | null {
-    const state = this.findIndex(this.$store.getters.imagePlayList);
+    const state = this.findIndex(array);
     return state.array[state.index + 1] || null;
   }
   loadPoster(url: string) {
@@ -428,14 +426,6 @@ export default class TheViewer extends Vue {
       if (this.videoElement) {
         this.videoElement.removeAttribute('poster');
       }
-    }
-  }
-  @Watch('isEnablePreview')
-  onPreviewEnableChange(value: boolean) {
-    if (value) {
-      this.play();
-    } else {
-      this.pause();
     }
   }
   mounted() {
