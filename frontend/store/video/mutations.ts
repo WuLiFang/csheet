@@ -38,7 +38,6 @@ export const mutations: MutationTree<VideoState> = {
         if (!url) {
           return;
         }
-        console.debug('Revoke url', url);
         URL.revokeObjectURL(url);
         Vue.delete(contextState.blobURLMap, i);
       });
