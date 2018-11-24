@@ -45,9 +45,8 @@ def update_mtime(video, src_column, mtime_column):
     """
 
     mtime = getmtime(getattr(video, src_column))
-    if mtime is not None:
-        setattr(video, mtime_column, mtime)
-    else:
+    setattr(video, mtime_column, mtime)
+    if mtime is None:
         # Clear removed filename from database.
         setattr(video, src_column, None)
 

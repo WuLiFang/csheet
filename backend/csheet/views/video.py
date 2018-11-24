@@ -42,6 +42,9 @@ def response_video(uuid, role):
     video = core.get_video(uuid, sess)
     path = getattr(video, role)
     if not path:
+        if getattr(video, f'{role}_mtime'):
+            setattr(video, f'{role}_mtime', None)
+            sess.commit()
         return 'No path data for this video role', 404
     try:
         return send_file(filter_filename(path), conditional=True)
