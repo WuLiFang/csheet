@@ -80,7 +80,8 @@ export default Vue.extend({
       is_opening: false,
     };
   },
-  computed: {
+
+  methods: {
     inputPrefix(): HTMLInputElement {
       return (this.$refs.inputPrefix as ElInput).$refs
         .input as HTMLInputElement;
@@ -88,10 +89,8 @@ export default Vue.extend({
     formComponent(): ElForm {
       return this.$refs.form as ElForm;
     },
-  },
-  methods: {
     open() {
-      this.formComponent.validate((valid: boolean) => {
+      this.formComponent().validate((valid: boolean) => {
         if (valid) {
           showFullScreenLoading();
           location.href = buildURL('', this.form);
@@ -99,7 +98,7 @@ export default Vue.extend({
       });
     },
     pack() {
-      this.formComponent.validate((valid: boolean) => {
+      this.formComponent().validate((valid: boolean) => {
         if (valid) {
           showFullScreenLoading();
           location.href = buildURL('', this.form);
@@ -115,8 +114,8 @@ export default Vue.extend({
       this.form.prefix = `${project.code}_EP01`;
 
       this.$nextTick(() => {
-        this.inputPrefix.focus();
-        this.inputPrefix.setSelectionRange(
+        this.inputPrefix().focus();
+        this.inputPrefix().setSelectionRange(
           project.code.length + 3,
           project.code.length + 5
         );

@@ -141,6 +141,9 @@ export default class TheViewer extends Vue {
   duration = 0;
 
   $store!: DollarStore;
+  $refs!: Vue['$refs'] & {
+    video?: HTMLVideoElement;
+  };
 
   get id(): string | null {
     return this.videoId;
@@ -188,9 +191,6 @@ export default class TheViewer extends Vue {
   }
   set video(value: VideoResponse | null) {
     this.id = value ? value.uuid : null;
-  }
-  get videoElement(): HTMLVideoElement | undefined {
-    return this.$refs.video as HTMLVideoElement | undefined;
   }
   get url(): string {
     const hash = this.video ? `#${this.video.label}` : '';
@@ -349,13 +349,13 @@ export default class TheViewer extends Vue {
     this.$store.dispatch(PRELOAD_VIDEO, payload);
   }
   play() {
-    if (this.videoElement) {
-      this.videoElement.play();
+    if (this.$refs.video) {
+      this.$refs.video.play();
     }
   }
   pause() {
-    if (this.videoElement) {
-      this.videoElement.pause();
+    if (this.$refs.video) {
+      this.$refs.video.pause();
     }
   }
   onLoadProgress(event: ProgressEvent, config: VideoPreloadActionPayload) {
@@ -389,7 +389,11 @@ export default class TheViewer extends Vue {
   @Watch('visible')
   onVisibleChange(value: TheViewer['visible']) {
     this.loadData();
-    if (!value) {
+    if (this.visible) {
+      if (this.isAutoPlay) {
+        this.play();
+      }
+    } else {
       this.pause();
     }
   }
@@ -411,9 +415,9 @@ export default class TheViewer extends Vue {
       this.loadSrc(value);
     } else {
       this.src = null;
-      if (this.videoElement) {
-        this.videoElement.removeAttribute('src');
-        this.videoElement.load();
+      if (this.$refs.video) {
+        this.$refs.video.removeAttribute('src');
+        this.$refs.video.load();
       }
     }
   }
@@ -423,8 +427,8 @@ export default class TheViewer extends Vue {
       this.loadPoster(value);
     } else {
       this.poster = null;
-      if (this.videoElement) {
-        this.videoElement.removeAttribute('poster');
+      if (this.$refs.video) {
+        this.$refs.video.removeAttribute('poster');
       }
     }
   }
