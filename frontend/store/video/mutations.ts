@@ -24,7 +24,7 @@ export const mutations: MutationTree<VideoState> = {
         whiteList.push(...value);
       }
     }
-    const exp = new RegExp('/videos/([^.]+)..*');
+    const exp = new RegExp('/video/.+/([^.?]+)');
     Object.keys(contextState.blobURLMap)
       .filter(i => {
         const match = i.match(exp);
@@ -38,6 +38,7 @@ export const mutations: MutationTree<VideoState> = {
         if (!url) {
           return;
         }
+        console.debug('Revoke url', url);
         URL.revokeObjectURL(url);
         Vue.delete(contextState.blobURLMap, i);
       });
