@@ -273,20 +273,25 @@ export default class TheViewer extends Vue {
     });
   }
   autoNext() {
-    if (!this.video || !this.isEnablePreview) {
+    if (
+      !(
+        this.video &&
+        this.isEnablePreview &&
+        this.isAutoPlay &&
+        this.isAutoNext
+      )
+    ) {
       return;
     }
-    if (this.isAutoNext) {
-      const state = this.findIndex(this.$store.getters.videoPlayList);
-      const target = state.array[state.index + 1] || state.array[0];
-      const url = this.$store.getters.getVideoURI(target, VideoRole.preview);
-      if (!url) {
-        return;
-      }
-      preloadVideo(url).then(() => {
-        this.id = target;
-      });
+    const playList = this.$store.getters.videoPlayList;
+    const next = this.next(playList) || playList[0];
+    const url = this.$store.getters.getVideoURI(next, VideoRole.preview);
+    if (!url) {
+      return;
     }
+    preloadVideo(url).then(() => {
+      this.id = next;
+    });
   }
   findIndex(videoArray: string[], defaultIndex = 0) {
     const array = _.intersection(
