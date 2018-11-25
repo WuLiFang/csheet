@@ -89,7 +89,7 @@ def render_index():
     """Index page."""
 
     projects = []
-    if not APP.config['LOCAL_MODE']:
+    if APP.config['CGTEAMWORK_URL']:
         token = session['token']
         cgtwq.PROJECT.token = token
         projects = [{'code': i[0], 'name':i[1]}

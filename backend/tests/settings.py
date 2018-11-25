@@ -4,15 +4,12 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import cgtwq
-
 import util
 
 TESTING = True
 STANDALONE = True
 STORAGE = util.path('storage')
 DATABASE_URL = 'sqlite:///{}\\csheet.db'.format(STORAGE)
-LOCAL_MODE = cgtwq.DesktopClient().executable() is None
 
 CELERY_CONFIG = {
     'accept_content': ['json', 'pickle'],

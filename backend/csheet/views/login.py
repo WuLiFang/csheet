@@ -57,7 +57,7 @@ def require_login(func):
 
     @wraps(func)
     def _func(*args, **kwargs):
-        if APP.config['LOCAL_MODE']:
+        if not APP.config['CGTEAMWORK_URL']:
             return func(*args, **kwargs)
 
         msg = '请使用和CGTeamWork相同的帐号和密码登录'
