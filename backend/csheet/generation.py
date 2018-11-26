@@ -133,12 +133,14 @@ def generate(video_id, source, target):
             video.generate(source, target)
             video.generation_started = None
         except (OSError, ffmpeg.GenerateError):
+            sess.rollback()
             video.generation_started = None
             setattr(video, '{}_broken_mtime'.format(source),
                     getattr(video, '{}_mtime'.format(source)))
             sess.commit()
             raise
         except:
+            sess.rollback()
             video.generation_started = None
             sess.commit()
             raise
