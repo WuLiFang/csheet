@@ -6,8 +6,6 @@ from __future__ import (absolute_import, division, print_function,
 
 import logging
 
-import sqlalchemy.exc
-
 from . import core
 from .. import database
 from ..core import CELERY, SOCKETIO
@@ -15,18 +13,14 @@ from ..core import CELERY, SOCKETIO
 LOGGER = logging.getLogger(__name__)
 
 
-@CELERY.task(ignore_result=True,
-             autoretry_for=(sqlalchemy.exc.OperationalError,),
-             retry_backoff=True)
+@CELERY.task(ignore_result=True)
 def update_base_page(id_):
     """Update base page data.  """
 
     _update_page(lambda: core.page_from_id(id_))
 
 
-@CELERY.task(ignore_result=True,
-             autoretry_for=(sqlalchemy.exc.OperationalError,),
-             retry_backoff=True)
+@CELERY.task(ignore_result=True)
 def update_cgteamwork_page(id_, token):
     """Update cgteamwork page data.  """
 
