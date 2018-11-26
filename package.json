@@ -1,6 +1,6 @@
 {
   "name": "csheet",
-  "version": "5.0.0-rc2",
+  "version": "5.0.0-rc3",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
