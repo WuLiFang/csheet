@@ -61,9 +61,11 @@ class LocalPage(core.BasePage):
         LOGGER.info('Scan finished: '
                     '%s, image_count=%s, video_count=%s',
                     self, len(images), len(videos))
-        videos = [_get_video(label, videos, images, session)
-                  for label in labels]
-        self._video_query(session).with_for_update().merge_result(videos)
+        with session.no_autoflush:
+            videos = [_get_video(label, videos, images, session)
+                    for label in labels]
+            self._video_query(session).with_for_update().merge_result(videos)
+        session.flush()
 
     def videos(self, session):
         return self._video_query(session).all()
