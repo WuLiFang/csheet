@@ -32,19 +32,20 @@ FROM python:3.6 AS backend-prepare
 ARG DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8
 RUN set -e
+
 ARG DEBIAN_MIRROR=http://mirrors.aliyun.com/debian
 RUN if [ ! -z $DEBIAN_MIRROR ]; then \
     sed -i "s@http://.\+\.debian\.org/debian@$DEBIAN_MIRROR@g" /etc/apt/sources.list \
     && cat /etc/apt/sources.list; \
     fi
+RUN apt-get update
+RUN apt-get -y install ffmpeg && ffmpeg -version
+RUN apt-get clean
+
 ARG PIP_MIRROR=https://mirrors.aliyun.com/pypi/simple
 ENV PIP_INDEX_URL=$PIP_MIRROR
 ENV PIPENV_PYPI_MIRROR=$PIP_MIRROR
 ENV PYTHONIOENCODING=utf-8
-
-RUN apt-get update
-RUN apt-get -y install ffmpeg && ffmpeg -version
-RUN apt-get clean
 RUN pip install pipenv gunicorn gevent-websocket
 
 WORKDIR /app
