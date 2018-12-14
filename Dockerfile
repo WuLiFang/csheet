@@ -39,6 +39,7 @@ RUN if [ ! -z $DEBIAN_MIRROR ]; then \
     fi
 ARG PIP_MIRROR=https://mirrors.aliyun.com/pypi/simple
 ENV PIP_INDEX_URL=$PIP_MIRROR
+ENV PIPENV_PYPI_MIRROR=$PIP_MIRROR
 ENV PYTHONIOENCODING=utf-8
 
 RUN apt-get update
