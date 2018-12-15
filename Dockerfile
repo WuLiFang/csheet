@@ -42,15 +42,14 @@ RUN apt-get update
 RUN apt-get -y install ffmpeg && ffmpeg -version
 RUN apt-get clean
 
-ARG PIP_MIRROR=https://mirrors.aliyun.com/pypi/simple
+ARG PIP_MIRROR=https://mirrors.aliyun.com/pypi/simple/
 ENV PIP_INDEX_URL=$PIP_MIRROR
-ENV PIPENV_PYPI_MIRROR=$PIP_MIRROR
 ENV PYTHONIOENCODING=utf-8
-RUN pip install pipenv gunicorn gevent-websocket
+RUN pip install gunicorn gevent-websocket
 
 WORKDIR /app
-COPY ./Pipfile* ./
-RUN pipenv install --system --deploy
+COPY ./requirements.txt ./
+RUN pip install -r requirements.txt
 ENV PYTHONPATH=backend
 
 FROM backend-prepare AS backend-build
