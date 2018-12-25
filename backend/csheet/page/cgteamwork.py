@@ -138,14 +138,16 @@ class CGTeamWorkPage(core.BasePage):
                     self, len(shots), len(data))
 
         tasks = [i.parse(self.database, self.module) for i in data]
+
         with session.no_autoflush:
             tasks = list(self._task_query(session)
                          .with_for_update()
                          .merge_result(tasks))
+            session.flush()
             videos = [self._video_from_data(data, tasks, shot, session)
                       for shot in shots]
-            self._task_query(session).with_for_update().merge_result(videos)
-        session.flush()
+            self._video_query(session).with_for_update().merge_result(videos)
+            session.flush()
 
     def _video_query(self, session):
         query = session.query(HTMLVideo)
