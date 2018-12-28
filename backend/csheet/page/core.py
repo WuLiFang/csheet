@@ -48,7 +48,7 @@ def parse_id(id_):
 
 
 def page_from_id(id_, **kwargs):
-    """Get page fron id.    
+    """Get page from id.
 
     Args:
         id_ (str): Page id.
@@ -75,7 +75,7 @@ class BasePage(object):
 
     @classmethod
     def from_id(cls, id_, **kwargs):
-        """Get page fron id.    
+        """Get page from id.
 
         Args:
             id_ (str): Page id.

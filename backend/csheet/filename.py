@@ -55,11 +55,11 @@ def get_filename_filters(platform=None):
     filters = u(os.getenv('FILENAME_FILTER', ''))
     if not filters:
         if (platform or sys.platform) == 'win32':
-            drive_letter_conv = [
+            drive_letter_convert = [
                 '/{}/:{}:/'.format(i.lower(), i) for i in string.ascii_uppercase]
         else:
-            drive_letter_conv = [
+            drive_letter_convert = [
                 '{}:/:/{}/'.format(i, i.lower()) for i in string.ascii_uppercase]
-        filters = ','.join(drive_letter_conv)
+        filters = ','.join(drive_letter_convert)
     filters += ','
     return filters

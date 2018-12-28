@@ -1,5 +1,5 @@
 # -*- coding=UTF-8 -*-
-"""HTML video thumnail/preview generation.  """
+"""HTML video thumbnail/preview generation.  """
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 

@@ -46,8 +46,8 @@ class CGTeamWorkPage(core.BasePage):
             self.project, self.pipeline, self.prefix)
 
     @classmethod
-    def from_id(cls, id_, **kwrags):
-        token = kwrags.pop('token')
+    def from_id(cls, id_, **kwargs):
+        token = kwargs.pop('token')
         _, project, pipeline, prefix = core.parse_id(id_)
         return cls(project, pipeline, prefix, token)
 
@@ -133,7 +133,7 @@ class CGTeamWorkPage(core.BasePage):
         data = [TaskDataRow(*i) for i in data]
 
         shots = sorted(set(i.shot for i in data))
-        LOGGER.info('Recived page data from cgteamwork server: '
+        LOGGER.info('Received page data from cgteamwork server: '
                     '%s, shot_count=%s, task_count=%s',
                     self, len(shots), len(data))
 

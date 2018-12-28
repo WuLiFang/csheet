@@ -1,9 +1,8 @@
 # -*- coding=UTF-8 -*-
-"""All exceptions csheet server may thorw.   """
-
-from six import text_type
+"""All exceptions csheet server may throw.   """
 
 from flask import abort, escape, make_response
+from six import text_type
 
 
 def u_abort(status, msg):

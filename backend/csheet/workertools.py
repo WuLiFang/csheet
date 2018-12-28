@@ -17,7 +17,7 @@ def work_forever(func, logger, **kwargs):
 
         func(function): Target function.
         logger (logging.logger): Logger.
-        fail_delay (int, optional): Defaults to 1. Sleep time in seconeds when execute fails.
+        fail_delay (int, optional): Defaults to 1. Sleep time in seconds when execute fails.
         label (str, optional): Defaults to 'work', for logger message.
     """
 
@@ -35,10 +35,10 @@ def _handle_worker_exceptions(logger, **kwargs):
     fail_delay = kwargs.pop('fail_delay', 0.5)
     idle_delay = kwargs.pop('idle_delay', 10)
 
-    exctype, value = sys.exc_info()[:2]
-    if exctype is WorkerIdle:
+    exc_type, value = sys.exc_info()[:2]
+    if exc_type is WorkerIdle:
         return idle_delay
-    elif exctype in (KeyboardInterrupt, SystemExit):
+    elif exc_type in (KeyboardInterrupt, SystemExit):
         raise value
 
     logger.error('Error during %s.', label, exc_info=True)
