@@ -1,4 +1,5 @@
 import { VideoResponse, VideoRole } from '@/interface';
+import { isFileProtocol } from '@/packtools';
 
 function getMtime(videoData: VideoResponse, role: VideoRole): number | null {
   switch (role) {
@@ -31,7 +32,9 @@ function getPathWithMtime(
       poster: '.jpg',
       preview: '.mp4',
     }[role] || '';
-  let ret = `/video/${role}/${videoData.uuid}${suffix}?timestamp=${mtime}`;
+  let ret = isFileProtocol
+    ? `video/${role}/${videoData.label || videoData.uuid}${suffix}`
+    : `/video/${role}/${videoData.uuid}${suffix}?timestamp=${mtime}`;
   if (isForce) {
     ret += `?forceUpdateAt=${new Date().getTime()}`;
   }

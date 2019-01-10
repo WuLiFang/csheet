@@ -11,6 +11,7 @@
         "codectools",
         "csheet",
         "ffmpeg",
+        "forceescape",
         "functools",
         "getenv",
         "gevent",
@@ -28,6 +29,7 @@
         "sess",
         "socketio",
         "sqlite",
+        "tojson",
         "Vuex"
     ],
     "flagWords": []

@@ -7,6 +7,7 @@ from __future__ import (absolute_import, division, print_function,
 import base64
 import json
 import logging
+import os
 import re
 from abc import abstractmethod
 from tempfile import TemporaryFile
@@ -64,7 +65,6 @@ def page_from_id(id_, **kwargs):
 class BasePage(object):
     """Base class for render csheet page. """
 
-    templates_folder = filetools.dist_path('templates')
     version = __about__.__version__
     is_pack = False
     assets = _read_assets()
@@ -189,12 +189,15 @@ class BasePage(object):
             LOGGER.debug('Write zipfile: %s -> %s',
                          filename, arcname)
 
-    def _pack_entry(self, zipfile, index_page, entry):
-        entry_data = self.assets[entry]
-        for i in list(entry_data.values()):
-            relative_path = i.lstrip('/')
-            index_page = index_page.replace(i, relative_path)
-            zipfile.write(filetools.dist_path(relative_path), i)
+    def _pack_static(self, zipfile: ZipFile, index_page: str):
+        for dirpath, _, filenames in os.walk(filetools.dist_path('static')):
+            for i in filenames:
+                filename = os.path.join(dirpath, i)
+                arcname = (PurePath(filename)
+                           .relative_to(filetools.dist_path())
+                           .as_posix())
+                index_page = index_page.replace(f'/{arcname}', arcname)
+                zipfile.write(filename, arcname)
         return index_page
 
     def _pack_page(self, zipfile, session):
@@ -203,9 +206,7 @@ class BasePage(object):
             index_page = self.render(database_session=session)
         finally:
             self.is_pack = False
-        index_page = self._pack_entry(zipfile, index_page, 'chunk-vendors')
-        index_page = self._pack_entry(zipfile, index_page, 'main')
-        index_page = self._pack_entry(zipfile, index_page, 'main_noscript')
+        index_page = self._pack_static(zipfile, index_page)
         zipfile.writestr(
             '{}.html'.format(get_valid_filename(self.title)),
             index_page.encode('utf-8'))
