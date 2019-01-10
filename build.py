@@ -13,15 +13,22 @@ with open(file_path('package.json')) as f:
     __version__ = json.load(f)['version']
 
 
-def build_image(name='csheet'):
+def build_image(name='csheet', proxy=None):
     """Build docker image.  """
 
     with open(file_path('requirements.txt'), 'w', encoding='utf8') as f:
         f.write(subprocess.check_output(
             ['pipenv', 'lock', '-r'], encoding='utf8'))
-    subprocess.call(['docker', 'build', file_path(),
-                     '--tag', '{}:latest'.format(name),
-                     '--tag', '{}:{}'.format(name, __version__)])
+    command = ['docker', 'build', file_path(),
+               '--tag', '{}:latest'.format(name),
+               '--tag', '{}:{}'.format(name, __version__), ]
+    if proxy:
+        command.extend(
+            ['--build-arg',
+             f'HTTPS_PROXY={proxy}',
+             '--build-arg',
+             f'HTTP_PROXY={proxy}'])
+    subprocess.call(command)
 
 
 if __name__ == '__main__':
