@@ -1,6 +1,6 @@
 -i https://pypi.org/simple
 amqp==2.3.2
-aniso8601==4.0.1
+aniso8601==4.1.0
 billiard==3.5.0.5
 blinker==1.4
 celery==4.2.1
@@ -9,27 +9,27 @@ cffi==1.11.5 ; sys_platform == 'win32' and platform_python_implementation == 'CP
 click==7.0
 environs==4.1.0
 fire==0.1.3
-flask-restful==0.3.6
-flask-socketio==3.1.1
+flask-restful==0.3.7
+flask-socketio==3.1.2
 flask==1.0.2
-gevent==1.3.7
+gevent==1.4.0
 git+https://github.com/WuLiFang/cgtwq@321756a74d0dd0c3dd9cef078452a17ef9556016#egg=cgtwq
 git+https://github.com/WuLiFang/wlf@9a70cdde520f4d4e25c810e2cdacec1263f953b9#egg=wlf
 greenlet==0.4.15 ; platform_python_implementation == 'CPython'
 itsdangerous==1.1.0
 jinja2==2.10
-kombu==4.2.2
+kombu==4.2.2.post1
 markupsafe==1.1.0
-marshmallow==2.16.3
+marshmallow==2.17.0
 psycopg2==2.7.6.1
 pycparser==2.19
 python-dotenv==0.10.1
-python-engineio==3.1.0
-python-socketio==2.1.2
-pytz==2018.7
-sentry-sdk[flask]==0.6.2
+python-engineio==3.2.1
+python-socketio==3.1.1
+pytz==2018.9
+sentry-sdk[flask]==0.6.6
 six==1.12.0
 sqlalchemy==1.2.15
 urllib3==1.24.1
-vine==1.1.4
+vine==1.2.0
 werkzeug==0.14.1
