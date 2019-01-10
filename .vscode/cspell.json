@@ -33,7 +33,8 @@
         "socketio",
         "sqlite",
         "tojson",
-        "Vuex"
+        "Vuex",
+        "werkzeug"
     ],
     "flagWords": []
 }
