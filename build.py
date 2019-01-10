@@ -14,6 +14,11 @@ with open(file_path('package.json')) as f:
 
 
 def build_image(name='csheet'):
+    """Build docker image.  """
+
+    with open(file_path('requirements.txt'), 'w', encoding='utf8') as f:
+        f.write(subprocess.check_output(
+            ['pipenv', 'lock', '-r'], encoding='utf8'))
     subprocess.call(['docker', 'build', file_path(),
                      '--tag', '{}:latest'.format(name),
                      '--tag', '{}:{}'.format(name, __version__)])
