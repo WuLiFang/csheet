@@ -7,7 +7,7 @@
           CGTeamWorkPageForm
         ElTabPane(label='文件夹')
           LocalPageForm
-    footer &copy; 北京吾立方数码科技有限公司 2018
+    footer &copy; 北京吾立方数码科技有限公司 2018-2019
 </template>
 <script lang="ts">
 import Vue from 'vue';
@@ -39,9 +39,9 @@ export default Vue.extend({
   data() {
     return {
       VERSION,
-      projects
-    }
-  }
+      projects,
+    };
+  },
 });
 </script>
 
