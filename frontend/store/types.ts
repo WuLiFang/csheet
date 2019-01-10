@@ -1,3 +1,4 @@
+import { Store } from 'vuex';
 import {
   CGTeamWorkTaskResponse,
   TagResponse,
@@ -6,7 +7,6 @@ import {
   VideoResponse,
   VideoRole,
 } from '../interface';
-import { Store } from 'vuex';
 
 export interface IDMap<T> {
   [id: string]: T | undefined;

@@ -27,7 +27,6 @@ import {
 } from 'element-ui';
 import { projects, showFullScreenLoading } from '@/index';
 import { getCookie, buildURL } from '@/datatools';
-import { setInterval } from 'timers';
 
 export default Vue.extend({
   components: {

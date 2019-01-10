@@ -10,7 +10,7 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "types": ["node", "mocha", "chai"],
+    "types": ["mocha", "chai"],
     "paths": {
       "@/*": ["frontend/*"]
     }

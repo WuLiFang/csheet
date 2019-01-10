@@ -30,7 +30,7 @@ transition(name='dropdown')
           @click='isAutoNext = !isAutoNext'
           size='mini')
           span(v-if='isAutoNext')
-            FaIcon(name='sort-alpha-asc')
+            FaIcon(name='sort-alpha-down')
             | 顺序
           span(v-else)
             FaIcon(name='magic')
@@ -77,7 +77,7 @@ import { Button as ElButton, Checkbox as ElCheckbox } from 'element-ui';
 
 import FaIcon from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/magic';
-import 'vue-awesome/icons/sort-alpha-asc';
+import 'vue-awesome/icons/sort-alpha-down';
 
 import TaskInfo from '@/components/TaskInfo.vue';
 import FileInfo from '@/components/FileInfo.vue';

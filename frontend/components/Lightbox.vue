@@ -11,7 +11,7 @@
       v-if='!isFileProtocol'
       v-show='isEditingTags && isSelected'
     )
-      FaIcon(name='check-circle-o' scale='3')
+      FaIcon(name='regular/check-circle' scale='3')
     video(
       ref='video'
       :poster='poster' 
@@ -49,7 +49,7 @@ import {
 import Vue from 'vue';
 // @ts-ignore
 import FaIcon from 'vue-awesome/components/Icon';
-import 'vue-awesome/icons/check-circle-o';
+import 'vue-awesome/icons/regular/check-circle';
 import {
   CGTeamWorkTaskResponse,
   TagResponse,
@@ -66,7 +66,6 @@ import {
 } from '../mutation-types';
 import { videoComputedMinxin } from '../store/video';
 import LightboxTaskStatus from '@/components/LightboxTaskStatus.vue';
-import { isNull } from 'util';
 
 export default Vue.extend({
   components: {
@@ -241,7 +240,7 @@ export default Vue.extend({
     this.poster = this.posterURL;
     this.loadPoster();
     this.$nextTick(() => {
-      this.videoElementHub.set(this.id, this.$el);
+      this.videoElementHub.set(this.id, <HTMLElement | undefined>this.$el);
     });
   },
 });

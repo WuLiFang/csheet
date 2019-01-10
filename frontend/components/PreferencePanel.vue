@@ -95,7 +95,6 @@ import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import { TaskStage, TaskStatus } from '@/interface';
 import { isFileProtocol } from '@/packtools';
 import { videoComputedMinxin } from '@/store/video';
-import { isNull } from 'util';
 import { tagComputedMinxin } from '@/store/tag';
 import { USERNAME } from '@/constants';
 export default Vue.extend({

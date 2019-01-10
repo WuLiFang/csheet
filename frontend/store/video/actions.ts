@@ -9,7 +9,6 @@ import {
 } from '@/store/types';
 import { isElementAppread } from '@/store/video/core';
 import axios, { AxiosResponse } from 'axios';
-import { isUndefined } from 'util';
 import { ActionContext, ActionTree } from 'vuex';
 
 async function HandleVideoReponse(
@@ -165,10 +164,10 @@ export const actions: ActionTree<VideoState, RootState> = {
       const video = payload.video;
       return new Promise((resolve, reject) => {
         if (
-          video.tags.some(i =>
-            isUndefined(
-              (context.rootState as CombinedRootState).tagStore.storage[i]
-            )
+          video.tags.some(
+            i =>
+              (context.rootState as CombinedRootState).tagStore.storage[i] ===
+              undefined
           )
         ) {
           const tagsPayload: type.VideoTagsReadActionPayload = {

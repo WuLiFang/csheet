@@ -4,7 +4,7 @@
         span.text
           | 图像
           |
-        FaIcon.icon(name='file-image-o')
+        FaIcon.icon(name='regular/file-image')
         |
         | :
         RelativeTime(:value='videoData.poster_mtime')
@@ -13,7 +13,7 @@
         span.text
           | 视频
           |
-        FaIcon.icon(name='file-video-o')
+        FaIcon.icon(name='regular/file-video')
         |
         | :
         RelativeTime(:value='videoData.src_mtime || videoData.preview_mtime')
@@ -38,10 +38,9 @@ import Vue from 'vue';
 
 import { Button as ElButton } from 'element-ui';
 import * as moment from 'moment';
-// @ts-ignore
 import FaIcon from 'vue-awesome/components/Icon';
-import 'vue-awesome/icons/file-video-o';
-import 'vue-awesome/icons/file-image-o';
+import 'vue-awesome/icons/regular/file-video';
+import 'vue-awesome/icons/regular/file-image';
 
 import RelativeTime from '@/components/RelativeTime.vue';
 

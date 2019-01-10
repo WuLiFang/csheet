@@ -2,14 +2,14 @@
   .file-count
     .left
       i.video(v-show='videoCount > 0')
-        FaIcon( name='file-video-o')
+        FaIcon(name='regular/file-video')
         | {{videoCount}}
       i.image(v-show='imageCount > 0')
-        FaIcon(name='file-image-o')
+        FaIcon(name='regular/file-image')
         | {{imageCount}}
     .right
       i.total
-        FaIcon(scale='1.2' name='file-o')
+        FaIcon(scale='1.2' name='regular/file')
         | {{totalCount}}
 </template>
 <script lang="ts">
@@ -17,9 +17,9 @@ import Vue from 'vue';
 
 // @ts-ignore
 import FaIcon from 'vue-awesome/components/Icon';
-import 'vue-awesome/icons/file-o';
-import 'vue-awesome/icons/file-video-o';
-import 'vue-awesome/icons/file-image-o';
+import 'vue-awesome/icons/regular/file';
+import 'vue-awesome/icons/regular/file-video';
+import 'vue-awesome/icons/regular/file-image';
 
 import { videoComputedMinxin } from '@/store/video';
 

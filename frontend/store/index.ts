@@ -2,7 +2,6 @@ import { PAGE_PATH } from '@/constants';
 import { PageResponse, TaskStage } from '@/interface';
 import { isFileProtocol } from '@/packtools';
 import Axios, { AxiosResponse } from 'axios';
-import { isUndefined } from 'util';
 import Vue from 'vue';
 import { DefaultComputed } from 'vue/types/options';
 import { mapState, StoreOptions } from 'vuex';
@@ -125,9 +124,8 @@ export function mapWritableState<
 >(key: K, type: string, module?: keyof Store['modules']) {
   return {
     get(this: Vue): P {
-      const stateStore: T = isUndefined(module)
-        ? this.$store.state
-        : this.$store.state[module];
+      const stateStore: T =
+        module === undefined ? this.$store.state : this.$store.state[module];
       return stateStore[key] as P;
     },
     set: stateSetter<T, P>(type, key),

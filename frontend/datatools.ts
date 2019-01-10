@@ -1,5 +1,4 @@
 import Cookies from 'js-cookie';
-import { isUndefined } from 'util';
 import { TaskStatus } from './interface';
 export function getDataFromAppElement(name: string, defaultValue?: any) {
   const app = document.getElementById('app');
@@ -15,7 +14,7 @@ export function getDataFromAppElement(name: string, defaultValue?: any) {
 
 export function getCookie(name: string, defaultValue = '') {
   const value = Cookies.get(name);
-  if (isUndefined(value)) {
+  if (value === undefined) {
     return defaultValue;
   }
   return decodeURIComponent(

@@ -34,7 +34,6 @@ import 'vue-awesome/icons/tags';
 import { tagComputedMinxin } from '@/store/tag';
 import { TagResponse } from '@/interface';
 import { TagCreateActionPayload, TAG } from '@/mutation-types';
-import { isUndefined } from 'util';
 
 export default Vue.extend({
   components: {
@@ -58,13 +57,13 @@ export default Vue.extend({
         return this.value;
       },
       set(value: string[]) {
-        const created = value.filter(i => isUndefined(this.tagStoreByText[i]));
+        const created = value.filter(i => this.tagStoreByText[i] === undefined);
         const message = created.join(',');
         Promise.all(
           created.map(i => {
             const payload: TagCreateActionPayload = { data: { text: i } };
             return this.$store.dispatch(TAG.CREATE, payload);
-          }),
+          })
         )
           .then(() => {
             this.$emit('input', value);
