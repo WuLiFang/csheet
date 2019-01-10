@@ -24,7 +24,7 @@ marshmallow==2.17.0
 psycopg2==2.7.6.1
 pycparser==2.19
 python-dotenv==0.10.1
-python-engineio==3.2.1
+python-engineio==3.2.0
 python-socketio==3.1.1
 pytz==2018.9
 sentry-sdk[flask]==0.6.6
