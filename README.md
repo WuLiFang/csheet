@@ -11,19 +11,18 @@
 
 ### 需求
 
+- [git](https://git-scm.com/)
 - [python3.7](https://www.python.org/downloads/release/python-370/)或[更新](https://www.python.org/downloads/)
 - [node.js](https://nodejs.org/en/download/)
 - [ffmpeg4.0.2](https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-4.0.2-win64-static.zip)或[更新](https://ffmpeg.org/download.html)
 - [源代码](https://github.com/WuLiFang/csheet/archive/master.zip)
 
-### 构建
+### 安装
 
 1. 下载并解压源代码
-2. 安装需求的软件
-3. ffmpeg.exe 放到解压目录下或者[将所在目录设置在 PATH 中](https://www.java.com/zh_CN/download/help/path.xml)
-4. 运行[setup.cmd](./setup.cmd)
+2. 运行[setup.cmd](./setup.cmd)
 
-构建好的文件会在`dist`文件夹中
+成功后会有构建好的文件出现在 `dist` 文件夹中
 
 ### 运行
 
@@ -31,7 +30,7 @@
 
 使用默认配置时会使用本机 80 端口
 
-并使用当前盘符`/srv/csheet`作为存储路径
+并使用当前盘符 `/srv/csheet` 作为存储路径
 
 ### 配置
 
