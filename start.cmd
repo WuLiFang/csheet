@@ -1,3 +1,3 @@
 cd /d %~dp0
-pipenv run python -m csheet runserver
+py -3 -m pipenv run python -m csheet runserver
 PAUSE

@@ -13,7 +13,7 @@ flask-restful==0.3.7
 flask-socketio==3.1.2
 flask==1.0.2
 gevent==1.4.0
-git+https://github.com/WuLiFang/cgtwq@321756a74d0dd0c3dd9cef078452a17ef9556016#egg=cgtwq
+git+https://github.com/WuLiFang/cgtwq@7adc655cf769c5e317fc4a28b96e3612a31a4abc#egg=cgtwq
 git+https://github.com/WuLiFang/wlf@9a70cdde520f4d4e25c810e2cdacec1263f953b9#egg=wlf
 greenlet==0.4.15 ; platform_python_implementation == 'CPython'
 itsdangerous==1.1.0
@@ -24,7 +24,7 @@ marshmallow==2.17.0
 psycopg2==2.7.6.1
 pycparser==2.19
 python-dotenv==0.10.1
-python-engineio==3.2.0
+python-engineio==3.2.2
 python-socketio==3.1.1
 pytz==2018.9
 sentry-sdk[flask]==0.6.6

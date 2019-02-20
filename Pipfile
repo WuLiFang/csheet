@@ -17,9 +17,9 @@ flask-socketio = "*"
 flask-restful = "*"
 fire = "*"
 wlf = {git = "https://github.com/WuLiFang/wlf",ref = "0.5.3"}
-cgtwq = {git = "https://github.com/WuLiFang/cgtwq",ref = "3.0.0-alpha.7"}
+cgtwq = {git = "https://github.com/WuLiFang/cgtwq",ref = "3.0.0-alpha.8"}
 environs = "*"
 psycopg2 = "*"
-python-engineio = "==3.2.0"
+python-engineio = "~=3.2.2"
 celery = {version = "*"}
 sentry-sdk = {extras = ["flask"],version = "*"}
