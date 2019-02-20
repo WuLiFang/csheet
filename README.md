@@ -11,8 +11,6 @@
 
 ### 需求
 
-需求:
-
 - [python3.7](https://www.python.org/downloads/release/python-370/)或[更新](https://www.python.org/downloads/)
 - [node.js](https://nodejs.org/en/download/)
 - [ffmpeg4.0.2](https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-4.0.2-win64-static.zip)或[更新](https://ffmpeg.org/download.html)
@@ -37,7 +35,7 @@
 
 ### 配置
 
-参照 [default_settings.py](./lib/csheet/default_settings.py) 写一个配置文件
+参照 [default_settings.py](./backend/csheet/default_settings.py) 写一个配置文件
 
 然后设置环境变量`CSHEET_CONFIG`为配置文件的路径
 
