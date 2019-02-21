@@ -51,4 +51,4 @@ Linux 系统参考 [Dockerfile](./Dockerfile) 安装依赖
 
 [项目主页](https://github.com/WuLiFang/csheet)
 
-[源代码]: (./archive/master.zip)
+[源代码]: ./archive/master.zip
