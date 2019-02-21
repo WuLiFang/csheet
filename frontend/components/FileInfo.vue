@@ -1,42 +1,37 @@
 <template lang="pug">
-    .file-info(v-if='videoData')
-      .time(v-show='videoData.poster_mtime')
-        span.text
-          | 图像
-          |
-        FaIcon.icon(name='regular/file-image')
-        |
-        | :
-        RelativeTime(:value='videoData.poster_mtime')
-      br
-      .time(v-show='videoData.src_mtime || videoData.preview_mtime')
-        span.text
-          | 视频
-          |
-        FaIcon.icon(name='regular/file-video')
-        |
-        | :
-        RelativeTime(:value='videoData.src_mtime || videoData.preview_mtime')
-        span.message(v-show='videoData.preview_mtime != videoData.src_mtime')
-          span.outdated(v-if='videoData.preview_mtime')
-            | 预览非最新:
-            RelativeTime(:value='videoData.preview_mtime')
-          span.outdated(v-if='!videoData.src_mtime && videoData.preview_mtime')
-            | 源文件已删除
-          span.broken(v-else-if='videoData.src_broken_mtime')
-            span.outdated 转码失败
-            ElButton(@click='retryTranscode' size='mini') 重试
-          span.notready(v-else)
-            | 预览未就绪: 等待转码
-
-
+    dl.file-info(v-if='videoData')
+      template(v-show='videoData.poster_mtime')
+        dt
+          span 图像
+          FaIcon.icon(name='regular/file-image')
+        dd
+          RelativeTime(:value='videoData.poster_mtime')
+          .path(v-show='videoData.poster' :data-clipboard-text='videoData.poster') {{videoData.poster}}
+      template(v-show='videoData.src_mtime || videoData.preview_mtime')
+        dt
+          span 视频
+          FaIcon.icon(name='regular/file-video')
+        dd
+          RelativeTime(:value='videoData.src_mtime || videoData.preview_mtime')
+          .message(v-show='videoData.preview_mtime != videoData.src_mtime')
+            span.outdated(v-if='videoData.preview_mtime')
+              | 预览非最新:
+              RelativeTime(:value='videoData.preview_mtime')
+            span.outdated(v-if='!videoData.src_mtime && videoData.preview_mtime')
+              | 源文件已删除
+            span.broken(v-else-if='videoData.src_broken_mtime')
+              span.outdated 转码失败
+              ElButton(@click='retryTranscode' size='mini') 重试
+            span.notready(v-else)
+              | 预览未就绪: 等待转码
+          .path(v-show='videoData.src' :data-clipboard-text='videoData.src') {{videoData.src}}
 </template>
 
 
 <script lang="ts">
 import Vue from 'vue';
 
-import { Button as ElButton } from 'element-ui';
+import { Button as ElButton, Message } from 'element-ui';
 import * as moment from 'moment';
 import FaIcon from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/regular/file-video';
@@ -47,6 +42,7 @@ import RelativeTime from '@/components/RelativeTime.vue';
 import { VideoResponse } from '../interface';
 import { videoComputedMinxin } from '../store/video';
 import { VIDEO, VideoUpdateActionPayload } from '@/mutation-types';
+import clipboard from 'clipboard';
 
 export default Vue.extend({
   props: { id: { type: String } },
@@ -54,6 +50,11 @@ export default Vue.extend({
     RelativeTime,
     FaIcon,
     ElButton,
+  },
+  data(): { clipboard?: clipboard } {
+    return {
+      clipboard: undefined,
+    };
   },
   computed: {
     ...videoComputedMinxin,
@@ -73,6 +74,20 @@ export default Vue.extend({
       this.$store.dispatch(VIDEO.UPDATE, payload);
     },
   },
+  mounted() {
+    this.clipboard = new clipboard('.path', { container: this.$el });
+    this.clipboard.on('success', () => {
+      Message.success('已复制');
+    });
+    this.clipboard.on('error', () => {
+      Message.error('使用 Ctrl + V 复制');
+    });
+  },
+  destroyed() {
+    if (this.clipboard) {
+      this.clipboard.destroy();
+    }
+  },
 });
 </script>
 <style lang="scss" scoped>
@@ -81,9 +96,9 @@ export default Vue.extend({
   margin: 5px;
   .icon {
     vertical-align: -0.15em;
+    margin: 0 0.2em;
   }
-  .time {
-    display: inline-block;
+  .message {
     .outdated {
       background: crimson;
     }
@@ -91,20 +106,26 @@ export default Vue.extend({
       background: darkorange;
     }
   }
+  .relative-time {
+    margin: 0;
+  }
   color: white;
   opacity: 0.5;
   text-align: left;
   transition: 0.2s ease-in-out;
-  .text {
-    visibility: hidden;
-    position: absolute;
+  .path {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 10em;
+    &:hover {
+      text-decoration: underline;
+    }
   }
   &:hover {
     background: black;
     opacity: 1;
-    .text {
-      position: relative;
-      visibility: visible;
+    .path {
+      max-width: 100%;
     }
   }
 }
