@@ -10,11 +10,9 @@ FROM node:10 AS frontend-build
 ARG DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8
 RUN set -e
-ARG NPM_MIRROR=https://registry.npm.taobao.org/
-RUN if [ ! -z $NPM_MIRROR ]; then \
-    npm config set registry $NPM_MIRROR \
-    && npm config get registry; \
-    fi
+RUN ping -c 1 google.com || \
+    npm i mirror-config-china --registry=https://registry.npm.taobao.org &&\
+    npm config list
 
 WORKDIR /app
 COPY ./package*.json ./
