@@ -63,6 +63,16 @@ def get_local_ip():
     s.connect(('8.8.8.8', 1))  # connect() for UDP doesn't send packets
     return s.getsockname()[0]
 
+def get_avaliable_port(host, port=0, family=socket.AF_INET, type_=socket.SOCK_STREAM):
+    sock = socket.socket(family, type_)
+    try:
+        sock.bind((host, port))
+    except OSError:
+        return get_avaliable_port(host, port+1, family, type_)
+    ret = sock.getsockname()[1]
+    sock.close()
+    return ret
+
 def runserver(host='0.0.0.0', port=80):
     """Run csheet server forever.
         host (str, optional): Defaults to '0.0.0.0'. Listenling host ip.
@@ -81,11 +91,7 @@ def runserver(host='0.0.0.0', port=80):
     APP.config['CELERY_CONFIG']['task_always_eager'] = True
     init()
 
-    if port == 0:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.bind((host, 0))
-        port = sock.getsockname()[1]
-        sock.close()
+    port = get_avaliable_port(host, port)
 
     address = 'http://{}:{}'.format(get_local_ip() if host == '0.0.0.0' else host, port)
     print(address)
