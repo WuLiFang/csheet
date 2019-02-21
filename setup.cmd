@@ -1,3 +1,4 @@
+TITLE csheet setup
 cd /d %~dp0
 
 REM Install required programs

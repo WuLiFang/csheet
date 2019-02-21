@@ -1,3 +1,4 @@
+TITLE csheet server
 cd /d %~dp0
 IF NOT EXIST dist cmd /c setup.cmd
 set "PIPENV_VENV_IN_PROJECT=1"
