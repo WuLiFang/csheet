@@ -15,12 +15,13 @@
 - [python3.7](https://www.python.org/downloads/release/python-370/)或[更新](https://www.python.org/downloads/)
 - [node.js](https://nodejs.org/en/download/)
 - [ffmpeg4.0.2](https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-4.0.2-win64-static.zip)或[更新](https://ffmpeg.org/download.html)
-- [源代码](https://github.com/WuLiFang/csheet/archive/master.zip)
+- [源代码]
 
 ### 安装
 
-1. 下载并解压源代码
-2. 运行[setup.cmd](./setup.cmd)
+Windows 系统下载 [源代码] 后运行 [安装.cmd](./安装.cmd) 即可一键安装
+
+Linux 系统参考 [Dockerfile](./Dockerfile) 安装依赖
 
 成功后会有构建好的文件出现在 `dist` 文件夹中
 
@@ -49,3 +50,5 @@
 吾立方内部使用, 其他人使用需先联系获取授权
 
 [项目主页](https://github.com/WuLiFang/csheet)
+
+[源代码]: (./archive/master.zip)

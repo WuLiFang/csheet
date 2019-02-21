@@ -1,13 +1,12 @@
 cd /d %~dp0
 
 REM Install required programs
-choco --version || sudo install_chocolatey.cmd && %ProgramData%/chocolatey/bin/RefreshEnv.cmd
-git --version || sudo cinst -y git && %ProgramData%/chocolatey/bin/RefreshEnv.cmd
-py -3.7 --version || sudo cinst -y python3 && %ProgramData%/chocolatey/bin/RefreshEnv.cmd
-cmd /c npm --version || sudo cinst -y nodejs-lts && %ProgramData%/chocolatey/bin/RefreshEnv.cmd
+choco --version || CALL :SUDO install_chocolatey.cmd && cmd /c %ProgramData%/chocolatey/bin/RefreshEnv.cmd
+git --version || CALL :SUDO cinst -y git && cmd /c %ProgramData%/chocolatey/bin/RefreshEnv.cmd
+py -3.7 --version || CALL :SUDO cinst -y python3 && setx "PIPENV_VENV_IN_PROJECT" 1 && cmd /c %ProgramData%/chocolatey/bin/RefreshEnv.cmd
+cmd /c npm --version || CALL :SUDO cinst -y nodejs-lts && cmd /c %ProgramData%/chocolatey/bin/RefreshEnv.cmd
 
 REM Setup mirrors
-setx "PIPENV_VENV_IN_PROJECT" 1
 set "PIPENV_VENV_IN_PROJECT=1" 
 ping -n 1 google.com ^
     || set "PIP_MIRROR=https://mirrors.aliyun.com/pypi/simple" ^
@@ -22,3 +21,7 @@ cmd /c npm i -d
 REM Build frontend files
 cmd /c npm run build
 PAUSE
+
+:SUDO
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "Start-Process -Wait -FilePath powershell.exe -ArgumentList @('-NoProfile', '-InputFormat', 'None', '-ExecutionPolicy', 'Bypass', '-Command', 'cd', '%cd%', ';', '%*') -verb RunAs" 
+GOTO :EOF
