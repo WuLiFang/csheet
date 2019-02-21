@@ -46,8 +46,9 @@ ENV PYTHONIOENCODING=utf-8
 RUN pip install gunicorn gevent-websocket
 
 WORKDIR /app
-COPY ./requirements.txt ./
-RUN pip install -r requirements.txt
+RUN pip install pipenv
+COPY ./Pipfile* ./
+RUN pipenv install --system --deploy
 ENV PYTHONPATH=backend
 
 FROM backend-prepare AS backend-build
