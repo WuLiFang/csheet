@@ -11,8 +11,7 @@ node_js:
 install:
   - sudo apt-get install ffmpeg && ffmpeg -version
   - npm i
-  - pip install pipenv && pipenv --version
-  - pipenv install --system --deploy
+  - pip install -r requirements.txt
   - pip install coverage && coverage --version
 cache:
   - pip
