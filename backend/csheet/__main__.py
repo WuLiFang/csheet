@@ -6,12 +6,15 @@ from __future__ import (absolute_import, division, print_function,
 
 import logging
 import os
+import socket
+import sys
 import webbrowser
 
 import fire
 
 from wlf import mp_logging
 from wlf.path import get_encoded as e
+from wlf.singleton import SingleInstance
 
 from . import database, filetools, page
 from .__about__ import __version__
@@ -54,14 +57,18 @@ def clear_lock():
             {'generation_started': None},
             synchronize_session=False
         )
-
+        
+def get_local_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(('8.8.8.8', 1))  # connect() for UDP doesn't send packets
+    return s.getsockname()[0]
 
 def runserver(host='0.0.0.0', port=80):
     """Run csheet server forever.
         host (str, optional): Defaults to '0.0.0.0'. Listenling host ip.
         port (int, optional): Defaults to 80. Listenling port.
     """
-
+    dummy = SingleInstance()
     _setup_logging()
 
     try:
@@ -74,12 +81,18 @@ def runserver(host='0.0.0.0', port=80):
     APP.config['CELERY_CONFIG']['task_always_eager'] = True
     init()
 
-    address = 'http://{}:{}'.format(host, port)
+    if port == 0:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.bind((host, 0))
+        port = sock.getsockname()[1]
+        sock.close()
+
+    address = 'http://{}:{}'.format(get_local_ip() if host == '0.0.0.0' else host, port)
     print(address)
     LOGGER.info('服务器运行于: %s', address)
+    webbrowser.open(address)
 
     SOCKETIO.run(APP, host, port, debug=False)
-
 
 def _render(root):
     """Render page for a folder """
