@@ -1,5 +1,7 @@
 # 色板服务器
 
+[项目主页](https://github.com/WuLiFang/csheet)
+
 ## 功能
 
 - [x] 实时更新
@@ -41,6 +43,4 @@ Linux 系统参考 [Dockerfile](./Dockerfile) 安装依赖
 
 吾立方内部使用, 其他人使用需先联系获取授权
 
-[项目主页](https://github.com/WuLiFang/csheet)
-
-[源代码]: ./archive/master.zip
+[源代码]: https://github.com/WuLiFang/csheet/archive/master.zip
