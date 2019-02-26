@@ -27,7 +27,7 @@ class LocalPage(core.BasePage):
     """Csheet page from a local folder.  """
 
     def __init__(self, root):
-        self.root = u(root)
+        self.root = os.path.normcase(u(root))
 
     def __repr__(self):
         return 'LocalPage<root={}>'.format(self.root)
@@ -53,7 +53,7 @@ class LocalPage(core.BasePage):
         images = {}
         for dirpath, _, filenames in os.walk(e(filter_filename(self.root))):
             for filename in filenames:
-                fullpath = u(os.path.join(dirpath, filename))
+                fullpath = os.path.normcase(u(os.path.join(dirpath, filename)))
                 _sort_file(fullpath, images, videos)
 
         # Create videos.
@@ -63,7 +63,7 @@ class LocalPage(core.BasePage):
                     self, len(images), len(videos))
         with session.no_autoflush:
             videos = [_get_video(label, videos, images, session)
-                    for label in labels]
+                      for label in labels]
             self._video_query(session).with_for_update().merge_result(videos)
         session.flush()
 
