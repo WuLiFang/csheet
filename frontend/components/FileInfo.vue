@@ -115,6 +115,7 @@ export default Vue.extend({
   transition: 0.2s ease-in-out;
   .path {
     text-overflow: ellipsis;
+    white-space: nowrap;
     overflow: hidden;
     max-width: 10em;
     &:hover {
