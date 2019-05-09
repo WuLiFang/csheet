@@ -18,7 +18,7 @@ import { getPath } from './core';
 export const elementHub: ElementHub = new Map<string, HTMLElement>();
 export const getters: GetterTree<VideoState, RootState> = {
   getVideoURI(contextState) {
-    return (id: string, role: VideoRole, isForce = false) => {
+    return (id: string, role: VideoRole, isForce: boolean = false) => {
       const data = contextState.storage[id];
       if (!data) {
         return null;
@@ -35,7 +35,7 @@ export const getters: GetterTree<VideoState, RootState> = {
     };
   },
   getBlobURL(contextState, contextGetter) {
-    return (id: string, role: VideoRole, isForce = false) => {
+    return (id: string, role: VideoRole, isForce: boolean = false) => {
       const url = (contextGetter as CombinedGetters).getVideoURI(
         id,
         role,

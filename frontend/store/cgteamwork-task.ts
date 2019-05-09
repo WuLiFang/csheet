@@ -32,7 +32,7 @@ import {
 
 export const getters: GetterTree<CGTeamworkTaskState, RootState> = {
   getGeneralStatus(contextState) {
-    return (id: string, stage = TaskStage.client): TaskStatus => {
+    return (id: string, stage: TaskStage = TaskStage.client): TaskStatus => {
       const task = contextState.storage[id];
       if (!task) {
         return TaskStatus.Unset;

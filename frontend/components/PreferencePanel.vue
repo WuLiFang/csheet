@@ -23,12 +23,12 @@
           ElOption(label='导演' :value='TaskStage.director')
           ElOption(label='客户' :value='TaskStage.client')
         StatusSelect(
-          v-show='isFixedStatusDisplayModel' 
+          v-show='isFixedStatusDisplayModel'
           v-model='statusFilterModel')
       .label
         ElInput(
           size='mini'
-          placeholder='标题正则过滤' 
+          placeholder='标题正则过滤'
           prefix-icon='el-icon-search'
           v-model='labelFilterModel'
         )
@@ -37,7 +37,7 @@
           v-model='artistFilterModel'
           size='mini'
           prefix-icon='el-icon-info'
-          placeholder='人员过滤' 
+          placeholder='人员过滤'
         )
         ElCheckbox(
           v-model='isFilterUser'
@@ -45,13 +45,13 @@
         ) 当前用户({{currentUserTaskCount}})
       .tag(v-if='tags.length > 0')
         TagSelect(
-          v-model='tagTextFilterModel' 
-          size='mini' 
+          v-model='tagTextFilterModel'
+          size='mini'
           placeholder='标签过滤')
       .buttons
         ElButton(
           v-if='!isFileProtocol'
-          v-show='!isEditingTagsModel' 
+          v-show='!isEditingTagsModel'
           size='mini'
           icon='el-icon-edit'
           @click='isEditingTagsModel = true'
@@ -97,6 +97,8 @@ import { isFileProtocol } from '@/packtools';
 import { videoComputedMinxin } from '@/store/video';
 import { tagComputedMinxin } from '@/store/tag';
 import { USERNAME } from '@/constants';
+
+// @ts-ignore
 export default Vue.extend({
   components: {
     StatusSelect,
@@ -122,34 +124,45 @@ export default Vue.extend({
     ...videoComputedMinxin,
     ...tagComputedMinxin,
     hasTaskStorage(): boolean {
+      // @ts-ignore
       return !_.isEmpty(this.cgTeamworkTaskStore.storage);
     },
     isFilterUser: {
       get(): boolean {
         return (
+          // @ts-ignore
           this.artistFilterModel.length === 1 &&
+          // @ts-ignore
           this.artistFilterModel[0] === USERNAME
         );
       },
       set(value: boolean) {
         if (value) {
+          // @ts-ignore
           this.artistFilterModel = [USERNAME];
         } else {
+          // @ts-ignore
           this.artistFilterModel = [];
         }
       },
     },
     currentUserTaskCount(): number {
+      // @ts-ignore
       return this.getAritstTaskCount(USERNAME);
     },
     isFilterEnabled() {
       const defaultStatusFilter = getDefaultStatusFilter();
       return (
+        // @ts-ignore
         this.labelFilterModel ||
+        // @ts-ignore
         this.artistFilterModel.length > 0 ||
+        // @ts-ignore
         this.tagTextFilterModel.length > 0 ||
+        // @ts-ignore
         Object.keys(this.statusFilterModel).some(i => {
           const key = i as keyof typeof TaskStatus;
+          // @ts-ignore
           return this.statusFilterModel[key] !== defaultStatusFilter[key];
         })
       );
@@ -157,9 +170,13 @@ export default Vue.extend({
   },
   methods: {
     resetFilters() {
+      // @ts-ignore
       this.labelFilterModel = '';
+      // @ts-ignore
       this.artistFilterModel = [];
+      // @ts-ignore
       this.tagTextFilterModel = [];
+      // @ts-ignore
       this.statusFilterModel = getDefaultStatusFilter();
     },
   },
