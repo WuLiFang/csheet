@@ -33,6 +33,7 @@ module.exports = {
       ]);
     }
   },
+  lintOnSave: process.env.NODE_ENV !== 'production',
   devServer: {
     contentBase: path.join(__dirname, 'backend/tests/pages'),
     proxy: 'http://localhost:5001',

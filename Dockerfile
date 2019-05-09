@@ -18,6 +18,7 @@ WORKDIR /app
 COPY ./package*.json ./
 RUN npm i
 COPY --from=frontend-files / ./
+ENV NODE_ENV=production
 RUN npm run build
 
 FROM scratch as backend-files

@@ -21,7 +21,7 @@ before_script:
   - ./cc-test-reporter before-build
 script:
   - docker build . --build-arg NPM_MIRROR= --build-arg DEBIAN_MIRROR= --build-arg PIP_MIRROR=
-  - npm run build
+  - export NODE_ENV=production; npm run build
   - export PYTHONPATH=backend
   - coverage run -m pytest ./backend/tests && coverage report
 after_script:
