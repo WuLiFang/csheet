@@ -1,0 +1,6 @@
+{
+  "extends": "tslint-microsoft-contrib/recommended",
+  "rules": {
+    "no-unused-variable": true
+  }
+}
