@@ -49,7 +49,7 @@ export function getPath(
   return getPathWithMtime(videoData, role, isForce);
 }
 
-export function isElementAppread(element: HTMLElement, expand = 10): boolean {
+export function isElementAppeared(element: HTMLElement, expand = 10): boolean {
   if (!element || element.hidden) {
     return false;
   }

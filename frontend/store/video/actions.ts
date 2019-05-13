@@ -7,7 +7,7 @@ import {
   RootState,
   VideoState,
 } from '@/store/types';
-import { isElementAppread } from '@/store/video/core';
+import { isElementAppeared } from '@/store/video/core';
 import axios, { AxiosResponse } from 'axios';
 import { ActionContext, ActionTree } from 'vuex';
 
@@ -100,7 +100,7 @@ export const actions: ActionTree<VideoState, RootState> = {
       const element = (context.getters as CombinedGetters).videoElementHub.get(
         i
       );
-      return element && isElementAppread(element);
+      return element && isElementAppeared(element);
     });
     const mutationPayload: type.VideoUpdateBlobWhiteListMapMutationPayload = {
       key: 'appeared',
