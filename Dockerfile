@@ -26,7 +26,7 @@ FROM scratch as backend-files
 COPY backend ./backend/
 COPY *.py *.sh *.json ./
 
-FROM python:3.6 AS backend-prepare
+FROM python:3.7 AS backend-prepare
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8
