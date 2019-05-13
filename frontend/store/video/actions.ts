@@ -11,7 +11,7 @@ import { isElementAppeared } from '@/store/video/core';
 import axios, { AxiosResponse } from 'axios';
 import { ActionContext, ActionTree } from 'vuex';
 
-async function HandleVideoReponse(
+async function HandleVideoResponse(
   response: AxiosResponse,
   context: ActionContext<VideoState, RootState>
 ) {
@@ -31,7 +31,7 @@ async function HandleVideoReponse(
     });
 }
 
-function HandleTagsReponse(
+function HandleTagsResponse(
   response: AxiosResponse,
   context: ActionContext<VideoState, RootState>
 ) {
@@ -50,14 +50,14 @@ export const actions: ActionTree<VideoState, RootState> = {
     return SkipIfIsFileProtocol(() => {
       return axios
         .get(`/api/video/${payload.id}`)
-        .then(response => HandleVideoReponse(response, context));
+        .then(response => HandleVideoResponse(response, context));
     })();
   },
   async [type.VIDEO.UPDATE](context, payload: type.VideoUpdateActionPayload) {
     return SkipIfIsFileProtocol(() => {
       return axios
         .put(`/api/video/${payload.id}`, payload.data)
-        .then(response => HandleVideoReponse(response, context));
+        .then(response => HandleVideoResponse(response, context));
     })();
   },
   async [type.PRELOAD_VIDEO](context, payload: type.VideoPreloadActionPayload) {
@@ -117,7 +117,7 @@ export const actions: ActionTree<VideoState, RootState> = {
     return SkipIfIsFileProtocol(() => {
       return axios
         .post(`/api/video_tag/${payload.id}`, payload.data)
-        .then(response => HandleVideoReponse(response, context));
+        .then(response => HandleVideoResponse(response, context));
     })();
   },
   async [type.VIDEO_TAGS.UPDATE](
@@ -130,7 +130,7 @@ export const actions: ActionTree<VideoState, RootState> = {
           action: 'update',
           ...payload.data,
         })
-        .then(response => HandleVideoReponse(response, context));
+        .then(response => HandleVideoResponse(response, context));
     })();
   },
   async [type.VIDEO_TAGS.DELETE](
@@ -143,7 +143,7 @@ export const actions: ActionTree<VideoState, RootState> = {
           action: 'delete',
           ...payload.data,
         })
-        .then(response => HandleVideoReponse(response, context));
+        .then(response => HandleVideoResponse(response, context));
     })();
   },
   async [type.VIDEO_TAGS.READ](
@@ -153,7 +153,7 @@ export const actions: ActionTree<VideoState, RootState> = {
     return SkipIfIsFileProtocol(() => {
       return axios
         .get(`/api/video_tag/${payload.id}`)
-        .then(response => HandleTagsReponse(response, context));
+        .then(response => HandleTagsResponse(response, context));
     })();
   },
   async [type.READ_VIDEO_TAGS_IF_FOUND_UNDEFINED](

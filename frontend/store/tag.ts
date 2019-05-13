@@ -88,7 +88,7 @@ const mutations: MutationTree<TagState> = {
   },
 };
 
-function HandleTagReponse(
+function HandleTagResponse(
   response: AxiosResponse,
   context: ActionContext<TagState, RootState>
 ) {
@@ -104,7 +104,7 @@ const actions: ActionTree<TagState, RootState> = {
   [TAG.CREATE]: async (context, payload: TagCreateActionPayload) => {
     return SkipIfIsFileProtocol(() => {
       return axios.post('/api/tag', payload.data).then(response => {
-        HandleTagReponse(response, context);
+        HandleTagResponse(response, context);
         return response;
       });
     })();
@@ -112,7 +112,7 @@ const actions: ActionTree<TagState, RootState> = {
   async [TAG.READ](context, payload: TagReadActionPayload) {
     return SkipIfIsFileProtocol(() => {
       return axios.get(`/api/tag/${payload.id}`).then(response => {
-        HandleTagReponse(response, context);
+        HandleTagResponse(response, context);
         return response;
       });
     })();
@@ -122,7 +122,7 @@ const actions: ActionTree<TagState, RootState> = {
       return axios
         .put(`/api/tag/${payload.id}`, payload.data)
         .then(response => {
-          HandleTagReponse(response, context);
+          HandleTagResponse(response, context);
           return response;
         });
     })();
@@ -137,7 +137,7 @@ const actions: ActionTree<TagState, RootState> = {
       return axios
         .post(`/api/tag/${payload.id}`, payload.data)
         .then(response => {
-          HandleTagReponse(response, context);
+          HandleTagResponse(response, context);
           return response;
         })
         .then(() => {
