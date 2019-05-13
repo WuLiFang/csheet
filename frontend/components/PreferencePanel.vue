@@ -76,21 +76,13 @@ import {
   Autocomplete as ElAutocomplete,
 } from 'element-ui';
 
-import FileCount from '@/components/FileCount.vue';
-import StatusSelect from '@/components/StatusSelect.vue';
-import TagSelect from '@/components/TagSelect.vue';
-import ArtistSelect from '@/components/ArtistSelect.vue';
+import { default as FileCount } from '@/components/FileCount.vue';
+import { default as StatusSelect } from '@/components/StatusSelect.vue';
+import { default as TagSelect } from '@/components/TagSelect.vue';
+import { default as ArtistSelect } from '@/components/ArtistSelect.vue';
 
-import {
-  RootComputedMixin,
-  stateSetter,
-  mapWritableState,
-  mapRootStateModelMixin,
-  getDefaultStatusFilter,
-} from '@/store';
+import { mapRootStateModelMixin, getDefaultStatusFilter } from '@/store';
 
-import { RootState, StatusSelectResult } from '@/store/types';
-import { UPDATE_ROOT_STATE, FILTER_VIDEOS } from '@/mutation-types';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import { TaskStage, TaskStatus } from '@/interface';
 import { isFileProtocol } from '@/packtools';
@@ -161,7 +153,7 @@ export default Vue.extend({
         this.tagTextFilterModel.length > 0 ||
         // @ts-ignore
         Object.keys(this.statusFilterModel).some(i => {
-          const key = i as keyof typeof TaskStatus;
+          const key = <keyof typeof TaskStatus>i;
           // @ts-ignore
           return this.statusFilterModel[key] !== defaultStatusFilter[key];
         })

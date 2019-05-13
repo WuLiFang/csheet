@@ -1,8 +1,8 @@
 import { isFileProtocol } from '@/packtools';
 import '@/sentry';
-import SocketIO from '@/socketio';
-import _store from '@/store';
-import Main from '@/views/Main.vue';
+import { SocketIO } from '@/socketio';
+import { store as _store } from '@/store';
+import MainVue from '@/views/Main.vue';
 // @ts-ignore
 import { Icon } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -16,11 +16,11 @@ Vue.use(Icon);
 moment.locale(navigator.language);
 
 const store = new Vuex.Store(_store);
-const vue = new Vue({
+new Vue({
   store,
-  render: h => h(Main),
+  render: h => h(MainVue),
 }).$mount('#app');
 
 if (!isFileProtocol) {
-  const IO = new SocketIO(store);
+  new SocketIO(store);
 }

@@ -5,7 +5,7 @@
     filterable
     prefix-icon='el-icon-edit-outline'
     :size='size'
-    :placeholder='placeholder' 
+    :placeholder='placeholder'
     :allow-create='allowCreate'
   )
     i.prefix(slot='prefix')
@@ -24,15 +24,12 @@ import _ from 'lodash';
 import {
   Select as ElSelect,
   Option as ElOption,
-  Message,
   Notification,
 } from 'element-ui';
-// @ts-ignore
-import FaIcon from 'vue-awesome/components/Icon';
+import { default as FaIcon } from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/tags';
 
 import { tagComputedMinxin } from '@/store/tag';
-import { TagResponse } from '@/interface';
 import { TagCreateActionPayload, TAG } from '@/mutation-types';
 
 export default Vue.extend({
@@ -42,7 +39,7 @@ export default Vue.extend({
     FaIcon,
   },
   props: {
-    value: { type: Array as () => string[] },
+    value: { type: <() => string[]>Array },
     size: { default: 'mini' },
     allowCreate: { default: false },
     placeholder: { default: '选择或创建标签' },

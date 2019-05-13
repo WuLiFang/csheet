@@ -7,10 +7,10 @@
 import Vue from 'vue';
 import _ from 'lodash';
 
-import TaskInfoPiplineBadge from '@/components/TaskInfoPiplineBadge.vue';
-import { CGTeamWorkTaskComputedMixin } from '../store/cgteamwork-task';
-import { CGTeamWorkTaskResponse, VideoResponse } from '../interface';
-import { videoComputedMinxin } from '../store/video';
+import { default as TaskInfoPiplineBadge } from '@/components/TaskInfoPiplineBadge.vue';
+import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
+import { VideoResponse } from '@/interface';
+import { videoComputedMinxin } from '@/store/video';
 import {
   CGTeamWorkTaskReadActionPayload,
   CGTEAMWORK_TASK,

@@ -11,24 +11,10 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import Cookies from 'js-cookie';
 import CGTeamWorkPageForm from '@/components/CGTeamWorkPageForm.vue';
 import LocalPageForm from '@/components/LocalPageForm.vue';
 import { projects } from '@/index';
-import {
-  Tag as ElTag,
-  Input as ElInput,
-  Button as ElButton,
-  Dialog as ElDialog,
-  Radio as ElRadio,
-  Select as ElSelect,
-  Form as ElForm,
-  FormItem as ElFormItem,
-  Tabs as ElTabs,
-  TabPane as ElTabPane,
-  Message,
-  Notification,
-} from 'element-ui';
+import { Tabs as ElTabs, TabPane as ElTabPane } from 'element-ui';
 export default Vue.extend({
   components: {
     ElTabs,

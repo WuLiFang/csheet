@@ -5,11 +5,11 @@ import Axios, { AxiosResponse } from 'axios';
 import Vue from 'vue';
 import { DefaultComputed } from 'vue/types/options';
 import { mapState, StoreOptions } from 'vuex';
-import * as mutations from '../mutation-types';
-import cgTeamworkTaskStore from './cgteamwork-task';
-import tagStore from './tag';
-import { RootState, StatusSelectResult } from './types';
-import videoStore from './video';
+import * as mutations from '@/mutation-types';
+import { default as cgTeamworkTaskStore } from '@/store/cgteamwork-task';
+import { default as tagStore } from '@/store/tag';
+import { RootState, StatusSelectResult } from '@/store/types';
+import { default as videoStore } from '@/store/video';
 
 export function getDefaultStatusFilter(): StatusSelectResult {
   return {
@@ -22,7 +22,7 @@ export function getDefaultStatusFilter(): StatusSelectResult {
   };
 }
 
-const store: Store = {
+export const store: Store = {
   strict: process.env.NODE_ENV !== 'production',
   state: {
     isEnablePreview: true,
@@ -100,9 +100,9 @@ type stateMap<T> = { [name in keyof T]: () => T[name] };
 
 interface RootComputedMixin extends DefaultComputed, stateMap<RootState> {}
 
-export const RootComputedMixin = {
+export const RootComputedMixin = <RootComputedMixin>{
   ...mapState(Object.keys(store.state)),
-} as RootComputedMixin;
+};
 
 export function stateSetter<T, P extends T[K], K extends keyof T = keyof T>(
   type: string,
@@ -126,7 +126,7 @@ export function mapWritableState<
     get(this: Vue): P {
       const stateStore: T =
         module === undefined ? this.$store.state : this.$store.state[module];
-      return stateStore[key] as P;
+      return <P>stateStore[key];
     },
     set: stateSetter<T, P>(type, key),
   };

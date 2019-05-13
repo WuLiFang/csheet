@@ -32,15 +32,14 @@
 import Vue from 'vue';
 
 import { Button as ElButton, Message } from 'element-ui';
-import * as moment from 'moment';
-import FaIcon from 'vue-awesome/components/Icon';
+import { default as FaIcon } from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/regular/file-video';
 import 'vue-awesome/icons/regular/file-image';
 
-import RelativeTime from '@/components/RelativeTime.vue';
+import { default as RelativeTime } from '@/components/RelativeTime.vue';
 
-import { VideoResponse } from '../interface';
-import { videoComputedMinxin } from '../store/video';
+import { VideoResponse } from '@/interface';
+import { videoComputedMinxin } from '@/store/video';
 import { VIDEO, VideoUpdateActionPayload } from '@/mutation-types';
 import clipboard from 'clipboard';
 

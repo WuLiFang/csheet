@@ -1,6 +1,8 @@
 {
   "extends": "tslint-microsoft-contrib/recommended",
   "rules": {
-    "no-unused-variable": true
+    "no-unused-variable": true,
+    "export-name": false,
+    "no-backbone-get-set-outside-model": false
   }
 }

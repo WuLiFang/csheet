@@ -19,13 +19,10 @@ import Vue from 'vue';
 import {
   Input as ElInput,
   Button as ElButton,
-  Radio as ElRadio,
-  Select as ElSelect,
-  Option as ElOption,
   Form as ElForm,
   FormItem as ElFormItem,
 } from 'element-ui';
-import { projects, showFullScreenLoading } from '@/index';
+import { showFullScreenLoading } from '@/index';
 import { getCookie, buildURL } from '@/datatools';
 
 export default Vue.extend({
@@ -65,7 +62,7 @@ export default Vue.extend({
   },
   computed: {
     formComponent(): ElForm {
-      return this.$refs.form as ElForm;
+      return <ElForm>this.$refs.form;
     },
   },
   methods: {

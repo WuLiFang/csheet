@@ -57,6 +57,5 @@ export function isElementAppread(element: HTMLElement, expand = 10): boolean {
   const bottom = top + window.innerHeight + expand * 2;
   const ypos = element.offsetTop;
   const boxHeight = element.clientHeight;
-  const ret = top <= ypos + boxHeight && ypos <= bottom;
-  return ret;
+  return top <= ypos + boxHeight && ypos <= bottom;
 }

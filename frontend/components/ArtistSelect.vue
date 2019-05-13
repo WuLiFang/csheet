@@ -13,7 +13,7 @@
     :key='i'
     :label='i'
     :value='i')
-  
+
 </template>
 
 <script lang="ts">
@@ -33,7 +33,7 @@ export default Vue.extend({
     FaIcon,
   },
   props: {
-    value: { type: Array as () => string[] },
+    value: { type: <() => string[]>Array },
     size: { type: String },
     placeholder: { type: String },
   },

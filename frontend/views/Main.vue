@@ -5,9 +5,9 @@
       PreferencePanel.control(v-show='!isViewerVisible')
     Lightbox(
       v-for='video in videos'
-      :id='video.uuid' 
-      :key='video.uuid' 
-      @click="onclick" 
+      :id='video.uuid'
+      :key='video.uuid'
+      @click="onclick"
     )
     TheViewer(:videoId.sync='current' :visible.sync='isViewerVisible')
 </template>
@@ -17,41 +17,18 @@ import Vue from 'vue';
 
 import * as _ from 'lodash';
 
-import Lightbox from '@/components/Lightbox.vue';
-import TagEditToobar from '@/components/TagEditToobar.vue';
-import PreferencePanel from '@/components/PreferencePanel.vue';
-import StatusSelect from '@/components/StatusSelect.vue';
-import TheViewer from '@/components/TheViewer.vue';
-import TagSelect from '@/components/TagSelect.vue';
-import {
-  Button as ElButton,
-  ButtonGroup as ElButtonGroup,
-  Notification,
-  Message,
-} from 'element-ui';
+import { default as Lightbox } from '@/components/Lightbox.vue';
+import { default as TagEditToobar } from '@/components/TagEditToobar.vue';
+import { default as PreferencePanel } from '@/components/PreferencePanel.vue';
+import { default as StatusSelect } from '@/components/StatusSelect.vue';
+import { default as TheViewer } from '@/components/TheViewer.vue';
+import { default as TagSelect } from '@/components/TagSelect.vue';
+import { default as FadeTransition } from '@/components/FadeTransition.vue';
 
-import { videoComputedMinxin } from '../store/video';
-import {
-  VideoResponse,
-  TaskStage,
-  TaskStatus,
-  CGTeamWorkTaskResponse,
-  TagResponse,
-} from '../interface';
-import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
-import { tagComputedMinxin } from '@/store/tag';
-import {
-  TagUpdateActionPayload,
-  VideosAddTagActionPayload,
-  VIDEOS_ADD_TAG,
-  FILTER_VIDEOS,
-} from '@/mutation-types';
+import { videoComputedMinxin } from '@/store/video';
+import { VideoResponse } from '@/interface';
+import { FILTER_VIDEOS } from '@/mutation-types';
 import { RootComputedMixin } from '@/store';
-import FadeTransition from '@/components/FadeTransition.vue';
-
-interface VideoSelectState {
-  [id: string]: boolean | undefined;
-}
 
 export default Vue.extend({
   components: {
@@ -65,7 +42,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      current: null as string | null,
+      current: <string | null>null,
       isViewerVisible: false,
     };
   },

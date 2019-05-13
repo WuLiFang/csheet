@@ -5,15 +5,15 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { TaskStatus, TaskStatusText } from '../interface';
+import { TaskStatus, TaskStatusText } from '@/interface';
 
 export default Vue.extend({
   props: {
-    status: { type: Number as () => TaskStatus },
+    status: { type: <() => TaskStatus>Number },
   },
   computed: {
     statusText(): TaskStatusText {
-      return TaskStatus[this.status] as TaskStatusText;
+      return <TaskStatusText>TaskStatus[this.status];
     },
     text(): string {
       return this.l10n(this.statusText);

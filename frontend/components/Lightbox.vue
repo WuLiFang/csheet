@@ -4,8 +4,8 @@
     :class='{shrink: (!video.thumb_mtime || forceShrink)}'
     @click='onclick'
     @dragstart='ondragstart'
-    @mouseenter="onmouseenter" 
-    @mouseleave="onmouseleave" 
+    @mouseenter="onmouseenter"
+    @mouseleave="onmouseleave"
   )
     .select-overlay(
       v-if='!isFileProtocol'
@@ -14,20 +14,20 @@
       FaIcon(name='regular/check-circle' scale='3')
     video(
       ref='video'
-      :poster='poster' 
+      :poster='poster'
       :src='src'
       :height='200'
       :width='200 / ratio'
       :autoplay='isHover'
-      muted 
-      loop 
+      muted
+      loop
     )
     .top-display(:style='upDisplayStyle')
-      .artists(v-if='task') 
+      .artists(v-if='task')
         span.artist(v-for='i in task.artists') {{i}}
       LightboxTaskStatus.status(
-        v-if='taskId' 
-        :id='taskId' 
+        v-if='taskId'
+        :id='taskId'
         :statusStage='statusStage'
       )
     .bottom-display(:style='captionStyle')
@@ -39,33 +39,19 @@ import { isFileProtocol } from '@/packtools';
 import { preloadImage, preloadVideo } from '@/preload';
 import { RootComputedMixin } from '@/store';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
-import { tagComputedMinxin } from '@/store/tag';
-import {
-  Button as ElButton,
-  Input as ElInput,
-  Popover as ElPopover,
-  Tag as ElTag,
-} from 'element-ui';
+import { Input as ElInput, Popover as ElPopover } from 'element-ui';
 import Vue from 'vue';
-// @ts-ignore
-import FaIcon from 'vue-awesome/components/Icon';
+import { default as FaIcon } from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/regular/check-circle';
-import {
-  CGTeamWorkTaskResponse,
-  TagResponse,
-  VideoResponse,
-  VideoRole,
-} from '../interface';
+import { CGTeamWorkTaskResponse, VideoResponse, VideoRole } from '@/interface';
 import {
   PRELOAD_VIDEO,
   UPDATE_VIDEO_SELECT_STATE,
   VideoPreloadActionPayload,
-  VideoTagsDeleteActionPayload,
   VideoUpdateSelectStateMutationPayload,
-  VIDEO_TAGS,
-} from '../mutation-types';
-import { videoComputedMinxin } from '../store/video';
-import LightboxTaskStatus from '@/components/LightboxTaskStatus.vue';
+} from '@/mutation-types';
+import { videoComputedMinxin } from '@/store/video';
+import { default as LightboxTaskStatus } from '@/components/LightboxTaskStatus.vue';
 
 export default Vue.extend({
   components: {
@@ -83,8 +69,8 @@ export default Vue.extend({
       tagSelectModel: [],
       isTagEditDialogVisible: false,
       forceShrink: false,
-      src: null as string | null,
-      poster: null as string | null,
+      src: <string | null>null,
+      poster: <string | null>null,
       ratio: 0.5625,
       isFileProtocol,
     };
@@ -133,7 +119,7 @@ export default Vue.extend({
       return {};
     },
     videoElement(): HTMLVideoElement {
-      return this.$refs.video as HTMLVideoElement;
+      return <HTMLVideoElement>this.$refs.video;
     },
     taskId(): string | null {
       return this.task ? this.task.uuid : null;

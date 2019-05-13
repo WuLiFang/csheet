@@ -5,7 +5,7 @@
     :visible.sync='isVisible'
     :title='`编辑标签: ${video.label}`'
     )
-    TagSelect(v-model='tagSelectModel' allow-create size='') 
+    TagSelect(v-model='tagSelectModel' allow-create size='')
     span(slot='footer')
       ElButton(@click='reject') 取消
       ElButton(@click='reset') 重置
@@ -17,15 +17,13 @@ import Vue from 'vue';
 
 import _ from 'lodash';
 import {
-  Tag as ElTag,
-  Input as ElInput,
   Button as ElButton,
   Dialog as ElDialog,
   Message,
   Notification,
 } from 'element-ui';
 
-import TagSelect from '@/components/TagSelect.vue';
+import { default as TagSelect } from '@/components/TagSelect.vue';
 import { VideoResponse, TagResponse } from '@/interface';
 import { videoComputedMinxin } from '@/store/video';
 import { tagComputedMinxin } from '@/store/tag';
@@ -43,7 +41,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      tagSelectModel: [] as string[],
+      tagSelectModel: <string[]>[],
     };
   },
   computed: {

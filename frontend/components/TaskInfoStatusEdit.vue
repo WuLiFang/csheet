@@ -2,7 +2,7 @@
   span.task-info-edit(v-if='model')
     TaskInfoStatus(:status='status')
       template(slot-scope='childStatus')
-        slot(:text='childStatus.text') 
+        slot(:text='childStatus.text')
           | {{childStatus.text}}
     span.edit(v-show='hasPermission')
       Button.el-icon-check(v-show='status != TaskStatus.Approve' plain size='mini' type='success' @click='approve')
@@ -14,15 +14,9 @@ import Vue from 'vue';
 
 import { Button, ButtonGroup, MessageBox, Message } from 'element-ui';
 
-import TaskInfoStatus from '@/components/TaskInfoStatus.vue';
-import {
-  FieldResponse,
-  TaskStatus,
-  TaskStatusText,
-  CGTeamWorkTaskResponse,
-  StringMap,
-} from '../interface';
-import { CGTeamWorkTaskComputedMixin } from '../store/cgteamwork-task';
+import { default as TaskInfoStatus } from '@/components/TaskInfoStatus.vue';
+import { TaskStatus, CGTeamWorkTaskResponse, StringMap } from '@/interface';
+import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import {
   UPDATE_CGTEAMWORK_TASK_FIELD,
   CGTeamWorkTaskUpdateFieldActionPayload,
@@ -36,7 +30,7 @@ function errorMessage(error: any) {
 export default Vue.extend({
   props: {
     taskId: { type: String },
-    field: { type: String as () => 'leader_status' | 'director_status' },
+    field: { type: <() => 'leader_status' | 'director_status'>String },
   },
   components: {
     TaskInfoStatus,

@@ -1,7 +1,7 @@
 <template lang="pug">
     .task-info-pipeline-badge-poper(v-if='model')
         .artists
-          span 制作者: 
+          span 制作者:
           span.artist(v-for='i in model.artists') {{i}}
         TaskInfoStatusEdit(:taskId='model.uuid' field='leader_status')
             template(slot-scope='status') 组长状态: {{status.text}}
@@ -16,9 +16,9 @@
 <script lang="ts">
 import Vue from 'vue';
 
-import TaskInfoStatusEdit from '@/components/TaskInfoStatusEdit.vue';
-import { CGTeamWorkTaskComputedMixin } from '../store/cgteamwork-task';
-import { CGTeamWorkTaskResponse } from '../interface';
+import { default as TaskInfoStatusEdit } from '@/components/TaskInfoStatusEdit.vue';
+import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
+import { CGTeamWorkTaskResponse } from '@/interface';
 
 export default Vue.extend({
   props: {

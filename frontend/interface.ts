@@ -54,7 +54,7 @@ export interface VideoResponse {
   thumb_mtime: number | null;
   uuid: string;
   related_tasks: string[];
-  tags: Array<string | number>;
+  tags: (string | number)[];
   src_broken_mtime: number | null;
 }
 

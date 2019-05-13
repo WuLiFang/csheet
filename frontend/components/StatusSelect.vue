@@ -2,8 +2,8 @@
   .status-select()
     ElSwitch(
       v-for='i in allStatus'
-      :active-text='taskStatusTextL10n(i)' 
-      :key='i' 
+      :active-text='taskStatusTextL10n(i)'
+      :key='i'
       :value='result[i]'
       @input='v => oninput(i, v)'
     )
@@ -19,7 +19,7 @@ import { taskStatusTextL10n } from '@/statustools';
 import { StatusSelectResult } from '@/store/types';
 
 export default Vue.extend({
-  props: { value: { type: Object as () => StatusSelectResult } },
+  props: { value: { type: <() => StatusSelectResult>Object } },
   components: {
     ElSwitch: Switch,
   },
@@ -34,9 +34,9 @@ export default Vue.extend({
       return this.value;
     },
     allStatus(): TaskStatusText[] {
-      return Object.keys(TaskStatus).filter(i =>
-        isNaN(Number.parseInt(i, 10)),
-      ) as TaskStatusText[];
+      return <TaskStatusText[]>(
+        Object.keys(TaskStatus).filter(i => isNaN(Number.parseInt(i, 10)))
+      );
     },
   },
   methods: {

@@ -1,5 +1,4 @@
-import { getDataFromAppElement } from './datatools';
-import { isFileProtocol } from './packtools';
+import { getDataFromAppElement } from '@/datatools';
 
 export const PAGE_ID = getDataFromAppElement('id', '');
 export const IS_FILE_PROTOCOL = window.location.protocol === 'file:';

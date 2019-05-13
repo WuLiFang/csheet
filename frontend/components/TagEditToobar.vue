@@ -42,7 +42,7 @@ export default Vue.extend({
   data() {
     return {
       isFileProtocol,
-      selectedTagsText: [] as string[],
+      selectedTagsText: <string[]>[],
     };
   },
   computed: {
@@ -88,7 +88,7 @@ export default Vue.extend({
             data: { videos: this.selectedVideos },
           };
           return this.$store.dispatch(VIDEOS_ADD_TAG, payload);
-        }),
+        })
       )
         .then(() => {
           Message({ message: '添加标签成功', type: 'success' });

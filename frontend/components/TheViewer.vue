@@ -8,9 +8,9 @@ transition(name='dropdown')
       Tags(:id='video.uuid')
     .topright
       ElButton(
-        @click='refresh' 
-        v-if='!isFileProtocol' 
-        size='small' 
+        @click='refresh'
+        v-if='!isFileProtocol'
+        size='small'
         icon='el-icon-refresh'
       ) 刷新
       .video-control(v-show='src')
@@ -20,7 +20,7 @@ transition(name='dropdown')
           label='视频'
           size='mini')
         ElCheckbox(
-          v-model='isAutoPlay' 
+          v-model='isAutoPlay'
           v-show='isEnablePreview'
           @change='isAutoPlay ? play(): pause()'
           label='自动播放'
@@ -43,7 +43,7 @@ transition(name='dropdown')
         :autoplay='isAutoPlay'
         :loop='!isAutoNext'
         :controls='duration > 0.1'
-        @dragstart='ondragstart' 
+        @dragstart='ondragstart'
         @ended='autoNext'
         @stalled='autoNext'
         ref='video'
@@ -52,7 +52,7 @@ transition(name='dropdown')
       img.center(
         v-else-if='poster'
         :src='poster'
-        @dragstart='ondragstart' 
+        @dragstart='ondragstart'
         draggable
       )
       .center(v-else-if='video && (video.poster || video.preview)')
@@ -69,7 +69,6 @@ transition(name='dropdown')
 
 <script lang="ts">
 import Vue from 'vue';
-import axios from 'axios';
 
 import _ from 'lodash';
 import Spinner from 'vue-simple-spinner';
@@ -84,7 +83,7 @@ import FileInfo from '@/components/FileInfo.vue';
 import Tags from '@/components/Tags.vue';
 
 import { isFileProtocol } from '@/packtools';
-import { LoadStatus, DollarStore } from '@/store/types';
+import { DollarStore } from '@/store/types';
 import { VideoResponse, VideoRole } from '@/interface';
 import {
   VideoReadActionPayload,
@@ -95,11 +94,10 @@ import {
   UPDATE_VIDEO_BLOB_WHITELIST,
   StateUpdateMutationPayload,
   UPDATE_ROOT_STATE,
-} from '../mutation-types';
+} from '@/mutation-types';
 import { preloadVideo, preloadImage } from '@/preload';
 import { Prop, Component, Watch } from 'vue-property-decorator';
-import { Store } from 'vuex';
-import FadeTransition from '@/components/FadeTransition.vue';
+import { default as FadeTransition } from '@/components/FadeTransition.vue';
 
 function formatBytes(bytes: number, decimals = 2) {
   if (bytes === 0) {

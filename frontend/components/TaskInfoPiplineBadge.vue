@@ -1,5 +1,5 @@
 <template lang="pug">
-    Popover.task-info-pipeline-badge(trigger="hover" placement='bottom-end' effect='dark' v-if='model') 
+    Popover.task-info-pipeline-badge(trigger="hover" placement='bottom-end' effect='dark' v-if='model')
       TaskInfoPiplineBadgePoper(:model='model' :taskId='taskId')
       span.status(slot='reference')
         TaskInfoStatusEdit( v-if='field' :taskId='model.uuid' :field='field') {{model.pipeline}}
@@ -11,17 +11,12 @@ import Vue from 'vue';
 
 import { Popover } from 'element-ui';
 
-import TaskInfoStatusEdit from '@/components/TaskInfoStatusEdit.vue';
-import TaskInfoStatus from '@/components/TaskInfoStatus.vue';
-import TaskInfoPiplineBadgePoper from '@/components/TaskInfoPiplineBadgePoper.vue';
+import { default as TaskInfoStatusEdit } from '@/components/TaskInfoStatusEdit.vue';
+import { default as TaskInfoStatus } from '@/components/TaskInfoStatus.vue';
+import { default as TaskInfoPiplineBadgePoper } from '@/components/TaskInfoPiplineBadgePoper.vue';
 
-import { TaskStatus, CGTeamWorkTaskResponse } from '../interface';
-import { StringIterator } from 'lodash';
-import { CGTeamWorkTaskComputedMixin } from '../store/cgteamwork-task';
-import {
-  CGTeamWorkTaskReadActionPayload,
-  CGTEAMWORK_TASK,
-} from '@/mutation-types';
+import { TaskStatus, CGTeamWorkTaskResponse } from '@/interface';
+import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 
 export default Vue.extend({
   props: {
@@ -58,4 +53,3 @@ export default Vue.extend({
   },
 });
 </script>
-

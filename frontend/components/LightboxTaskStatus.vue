@@ -1,6 +1,6 @@
 <template lang="pug">
   .lightbox-task-status(:status='statusText')
-    | {{text}}  
+    | {{text}}
 </template>
 <script lang="ts">
 import Vue from 'vue';
@@ -17,7 +17,7 @@ export default Vue.extend({
   props: {
     id: { type: String },
     statusStage: {
-      type: Number as () => TaskStage,
+      type: <() => TaskStage>Number,
       default: TaskStage.director,
     },
   },
@@ -30,7 +30,7 @@ export default Vue.extend({
       return taskStatusTextL10n(this.statusText);
     },
     statusText(): TaskStatusText {
-      return TaskStatus[this.status] as TaskStatusText;
+      return <TaskStatusText>TaskStatus[this.status];
     },
     status(): TaskStatus {
       return this.getGeneralStatus(this.id, this.statusStage);

@@ -83,11 +83,10 @@ export default Vue.extend({
 
   methods: {
     inputPrefix(): HTMLInputElement {
-      return (this.$refs.inputPrefix as ElInput).$refs
-        .input as HTMLInputElement;
+      return <HTMLInputElement>(<ElInput>this.$refs.inputPrefix).$refs.input;
     },
     formComponent(): ElForm {
-      return this.$refs.form as ElForm;
+      return <ElForm>this.$refs.form;
     },
     open() {
       this.formComponent().validate((valid: boolean) => {

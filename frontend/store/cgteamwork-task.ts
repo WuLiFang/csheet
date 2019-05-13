@@ -13,7 +13,7 @@ import {
   Module,
   MutationTree,
 } from 'vuex';
-import { CGTeamWorkTaskResponse, TaskStage, TaskStatus } from '../interface';
+import { CGTeamWorkTaskResponse, TaskStage, TaskStatus } from '@/interface';
 import {
   CGTeamWorkTaskCreateNoteActionPayload,
   CGTeamWorkTaskReadActionPayload,
@@ -22,13 +22,13 @@ import {
   CGTEAMWORK_TASK,
   CREATE_CGTEAMWORK_TASK_NOTE,
   UPDATE_CGTEAMWORK_TASK_FIELD,
-} from '../mutation-types';
+} from '@/mutation-types';
 import {
   CGTeamWorkTaskGetters,
   CGTeamworkTaskState,
   mapGettersMixin,
   RootState,
-} from './types';
+} from '@/store/types';
 
 export const getters: GetterTree<CGTeamworkTaskState, RootState> = {
   getGeneralStatus(contextState) {
@@ -39,7 +39,6 @@ export const getters: GetterTree<CGTeamworkTaskState, RootState> = {
       }
       let data: TaskStatus[] = [];
       type stageMapItem = [TaskStage, TaskStatus];
-      const types = '';
       const stageMap: stageMapItem[] = [
         [TaskStage.leader, parseTaskStatus(task.leader_status)],
         [TaskStage.director, parseTaskStatus(task.director_status)],
@@ -69,10 +68,10 @@ interface CGTeamWorkTaskComputedMixin
   cgTeamworkTaskStore: () => CGTeamworkTaskState;
 }
 
-export const CGTeamWorkTaskComputedMixin = {
+export const CGTeamWorkTaskComputedMixin = <CGTeamWorkTaskComputedMixin>{
   ...mapState(['cgTeamworkTaskStore']),
   ...mapGetters(Object.keys(getters)),
-} as CGTeamWorkTaskComputedMixin;
+};
 
 function parseDataFromPage(): CGTeamworkTaskState['storage'] {
   const app = document.getElementById('app');
@@ -83,8 +82,7 @@ function parseDataFromPage(): CGTeamworkTaskState['storage'] {
   if (!data) {
     return {};
   }
-  const time = new Date().getTime();
-  const parsed = JSON.parse(data) as CGTeamWorkTaskResponse[];
+  const parsed = <CGTeamWorkTaskResponse[]>JSON.parse(data);
   const ret: CGTeamworkTaskState['storage'] = {};
   parsed.forEach(i => {
     ret[i.uuid] = i;

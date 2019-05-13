@@ -13,7 +13,7 @@ import * as _ from 'lodash';
 import Notify from 'notifyjs';
 import * as io from 'socket.io-client';
 import { Store } from 'vuex';
-import { PAGE_ID } from './constants';
+import { PAGE_ID } from '@/constants';
 
 const isSupportNotify =
   typeof Notification === 'function' &&
@@ -22,7 +22,7 @@ if (!isFileProtocol && isSupportNotify) {
   Notify.requestPermission();
 }
 
-export default class SocketIO {
+export class SocketIO {
   public socket: SocketIOClient.Socket;
   public store: Store<CombinedRootState>;
   public updateAppeared = _.throttle(() => {
@@ -32,13 +32,13 @@ export default class SocketIO {
     this.requestUpdate(appeared);
   }, 5000);
   constructor(store: Store<RootState>) {
-    this.store = store as Store<CombinedRootState>;
+    this.store = <Store<CombinedRootState>>store;
     this.socket = io(`/`, { path: '/api/socket.io' });
     this.socket.on('asset update', this.onAssetUpdate.bind(this));
     this.socket.on('connect', this.onConnect.bind(this));
     this.socket.on('disconnect', this.onDisconnect.bind(this));
     this.socket.on('page update', this.onPageUpdated.bind(this));
-    setInterval(this.updateAppeared, 2000);
+    setInterval(this.updateAppeared.bind(this), 2000);
   }
 
   public onConnect() {
@@ -102,3 +102,5 @@ export default class SocketIO {
     }
   }
 }
+
+export default SocketIO;

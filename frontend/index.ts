@@ -14,9 +14,9 @@ interface Project {
   name: string;
 }
 
-export const projects = JSON.parse(
+export const projects: Project[] = JSON.parse(
   getDataFromAppElement('projects')
-) as Project[];
+);
 
 export function showFullScreenLoading() {
   return Loading.service({
