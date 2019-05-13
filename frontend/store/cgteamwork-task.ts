@@ -55,7 +55,7 @@ export const getters: GetterTree<CGTeamworkTaskState, RootState> = {
   artists(contextState): string[] {
     return _.uniq(_.flatMap(contextState.storage, i => i!.artists)).sort();
   },
-  getAritstTaskCount(contextState) {
+  getArtistTaskCount(contextState) {
     return (artist: string) =>
       _.filter(contextState.storage, i => i!.artists.indexOf(artist) >= 0)
         .length;

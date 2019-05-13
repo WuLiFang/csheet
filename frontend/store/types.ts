@@ -61,7 +61,7 @@ export type mapGettersMixin<T> = { [K in keyof T]: () => T[K] };
 export interface CGTeamWorkTaskGetters {
   getGeneralStatus: (id: string, stage?: TaskStage) => TaskStatus;
   artists: string[];
-  getAritstTaskCount: (artist: string) => number;
+  getArtistTaskCount: (artist: string) => number;
 }
 
 export type ElementHub = Map<string, HTMLElement | undefined>;

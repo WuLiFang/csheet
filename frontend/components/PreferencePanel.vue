@@ -140,7 +140,7 @@ export default Vue.extend({
     },
     currentUserTaskCount(): number {
       // @ts-ignore
-      return this.getAritstTaskCount(USERNAME);
+      return this.getArtistTaskCount(USERNAME);
     },
     isFilterEnabled() {
       const defaultStatusFilter = getDefaultStatusFilter();
