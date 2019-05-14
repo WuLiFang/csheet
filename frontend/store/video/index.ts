@@ -17,7 +17,7 @@ interface VideoComputedMixin
   videoStore: () => VideoState;
 }
 
-export const videoComputedMinxin = {
+export const videoComputedMixin = {
   ...mapState(['videoStore']),
   ...mapGetters(Object.keys(getters)),
 } as VideoComputedMixin;

@@ -86,8 +86,8 @@ import { mapRootStateModelMixin, getDefaultStatusFilter } from '@/store';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import { TaskStage, TaskStatus } from '@/interface';
 import { isFileProtocol } from '@/packtools';
-import { videoComputedMinxin } from '@/store/video';
-import { tagComputedMinxin } from '@/store/tag';
+import { videoComputedMixin } from '@/store/video';
+import { tagComputedMixin } from '@/store/tag';
 import { USERNAME } from '@/constants';
 
 // @ts-ignore
@@ -113,8 +113,8 @@ export default Vue.extend({
   computed: {
     ...CGTeamWorkTaskComputedMixin,
     ...mapRootStateModelMixin,
-    ...videoComputedMinxin,
-    ...tagComputedMinxin,
+    ...videoComputedMixin,
+    ...tagComputedMixin,
     hasTaskStorage(): boolean {
       // @ts-ignore
       return !_.isEmpty(this.cgTeamworkTaskStore.storage);

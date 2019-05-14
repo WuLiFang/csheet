@@ -25,7 +25,7 @@ import { default as TheViewer } from '@/components/TheViewer.vue';
 import { default as TagSelect } from '@/components/TagSelect.vue';
 import { default as FadeTransition } from '@/components/FadeTransition.vue';
 
-import { videoComputedMinxin } from '@/store/video';
+import { videoComputedMixin } from '@/store/video';
 import { VideoResponse } from '@/interface';
 import { FILTER_VIDEOS } from '@/mutation-types';
 import { RootComputedMixin } from '@/store';
@@ -47,7 +47,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    ...videoComputedMinxin,
+    ...videoComputedMixin,
     ...RootComputedMixin,
     videos(): VideoResponse[] {
       return this.videoStore.visibleVideos

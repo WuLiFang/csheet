@@ -25,8 +25,8 @@ import {
 
 import { default as TagSelect } from '@/components/TagSelect.vue';
 import { VideoResponse, TagResponse } from '@/interface';
-import { videoComputedMinxin } from '@/store/video';
-import { tagComputedMinxin } from '@/store/tag';
+import { videoComputedMixin } from '@/store/video';
+import { tagComputedMixin } from '@/store/tag';
 import { VideoTagsUpdateActionPayload, VIDEO_TAGS } from '@/mutation-types';
 
 export default Vue.extend({
@@ -45,8 +45,8 @@ export default Vue.extend({
     };
   },
   computed: {
-    ...videoComputedMinxin,
-    ...tagComputedMinxin,
+    ...videoComputedMixin,
+    ...tagComputedMixin,
     isVisible: {
       get(): boolean {
         return this.visible;

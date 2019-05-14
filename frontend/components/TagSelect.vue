@@ -29,7 +29,7 @@ import {
 import { default as FaIcon } from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/tags';
 
-import { tagComputedMinxin } from '@/store/tag';
+import { tagComputedMixin } from '@/store/tag';
 import { TagCreateActionPayload, TAG } from '@/mutation-types';
 
 export default Vue.extend({
@@ -48,7 +48,7 @@ export default Vue.extend({
     return {};
   },
   computed: {
-    ...tagComputedMinxin,
+    ...tagComputedMixin,
     result: {
       get(): string[] {
         return this.value;

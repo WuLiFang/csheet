@@ -21,9 +21,9 @@ import {
   TagReadActionPayload,
   TagUpdateActionPayload,
   TagUpdateMutationPayload,
+  VIDEOS_ADD_TAG,
   VideosAddTagActionPayload,
   VideosAddTagMutationsPayload,
-  VIDEOS_ADD_TAG,
 } from '../mutation-types';
 import { skipIfIsFileProtocol } from '../packtools';
 import {
@@ -57,7 +57,7 @@ interface TagComputedMixin
   tagStore: () => TagState;
 }
 
-export const tagComputedMinxin = {
+export const tagComputedMixin = {
   ...mapState(['tagStore']),
   ...mapGetters(Object.keys(getters)),
 } as TagComputedMixin;

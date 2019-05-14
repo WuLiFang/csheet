@@ -21,14 +21,14 @@ import 'vue-awesome/icons/regular/file';
 import 'vue-awesome/icons/regular/file-video';
 import 'vue-awesome/icons/regular/file-image';
 
-import { videoComputedMinxin } from '@/store/video';
+import { videoComputedMixin } from '@/store/video';
 
 export default Vue.extend({
   components: {
     FaIcon,
   },
   computed: {
-    ...videoComputedMinxin,
+    ...videoComputedMixin,
     videoCount(): number {
       return this.videoPlayList.length;
     },

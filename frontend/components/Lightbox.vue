@@ -50,7 +50,7 @@ import {
   VideoPreloadActionPayload,
   VideoUpdateSelectStateMutationPayload,
 } from '@/mutation-types';
-import { videoComputedMinxin } from '@/store/video';
+import { videoComputedMixin } from '@/store/video';
 import { default as LightboxTaskStatus } from '@/components/LightboxTaskStatus.vue';
 
 export default Vue.extend({
@@ -76,7 +76,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    ...videoComputedMinxin,
+    ...videoComputedMixin,
     ...CGTeamWorkTaskComputedMixin,
     ...RootComputedMixin,
     isSelected: {

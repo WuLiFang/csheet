@@ -23,8 +23,8 @@ import TagSelect from '@/components/TagSelect.vue';
 import { isFileProtocol } from '@/packtools';
 import { RootComputedMixin, mapRootStateModelMixin } from '@/store';
 import { TagResponse } from '@/interface';
-import { tagComputedMinxin } from '@/store/tag';
-import { videoComputedMinxin } from '@/store/video';
+import { tagComputedMixin } from '@/store/tag';
+import { videoComputedMixin } from '@/store/video';
 
 import {
   UPDATE_VIDEO_SELECT_STATE,
@@ -47,8 +47,8 @@ export default Vue.extend({
   },
   computed: {
     ...RootComputedMixin,
-    ...tagComputedMinxin,
-    ...videoComputedMinxin,
+    ...tagComputedMixin,
+    ...videoComputedMixin,
     ...mapRootStateModelMixin,
     selectedTags(): TagResponse[] {
       return this.getTagByTextArray(this.selectedTagsText);

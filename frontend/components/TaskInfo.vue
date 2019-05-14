@@ -10,7 +10,7 @@ import _ from 'lodash';
 import { default as TaskInfoPiplineBadge } from '@/components/TaskInfoPiplineBadge.vue';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import { VideoResponse } from '@/interface';
-import { videoComputedMinxin } from '@/store/video';
+import { videoComputedMixin } from '@/store/video';
 import {
   CGTeamWorkTaskReadActionPayload,
   CGTEAMWORK_TASK,
@@ -25,7 +25,7 @@ export default Vue.extend({
   },
   computed: {
     ...CGTeamWorkTaskComputedMixin,
-    ...videoComputedMinxin,
+    ...videoComputedMixin,
     video(): VideoResponse | undefined {
       return this.videoStore.storage[this.id];
     },
