@@ -16,7 +16,7 @@
 import { FILTER_VIDEOS } from '@/mutation-types';
 import { RootComputedMixin } from '@/store';
 import { videoComputedMixin } from '@/store/video';
-import * as _ from 'lodash';
+import { debounce } from 'lodash';
 import Vue from 'vue';
 
 import { default as FadeTransition } from '@/components/FadeTransition.vue';
@@ -62,22 +62,22 @@ export default Vue.extend({
     filterVideos() {
       this.$store.dispatch(FILTER_VIDEOS);
     },
-    debouncedfilterVideos: _.debounce(function(this: any) {
+    debouncedFilterVideos: debounce(function(this: any) {
       this.filterVideos();
     }, 500),
   },
   watch: {
     labelFilter() {
-      this.debouncedfilterVideos();
+      this.debouncedFilterVideos();
     },
     artistFilter() {
-      this.debouncedfilterVideos();
+      this.debouncedFilterVideos();
     },
     tagTextFilter() {
-      this.debouncedfilterVideos();
+      this.debouncedFilterVideos();
     },
     statusFilter() {
-      this.debouncedfilterVideos();
+      this.debouncedFilterVideos();
     },
   },
   mounted() {
