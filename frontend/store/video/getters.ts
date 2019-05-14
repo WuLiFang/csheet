@@ -12,8 +12,8 @@ import {
   RootState,
   VideoState,
 } from '@/store/types';
-import { GetterTree } from 'vuex';
 import { getPath } from '@/store/video/core';
+import { GetterTree } from 'vuex';
 
 export const elementHub: ElementHub = new Map<string, HTMLElement>();
 export const getters: GetterTree<VideoState, RootState> = {
@@ -36,7 +36,7 @@ export const getters: GetterTree<VideoState, RootState> = {
   },
   getBlobURL(contextState, contextGetter) {
     return (id: string, role: VideoRole, isForce: boolean = false) => {
-      const url = (<CombinedGetters>contextGetter).getVideoURI(
+      const url = (contextGetter as CombinedGetters).getVideoURI(
         id,
         role,
         isForce
@@ -54,13 +54,13 @@ export const getters: GetterTree<VideoState, RootState> = {
     return elementHub;
   },
   filterByStatus(contextState, contextGetter, rootState) {
-    const castRootState = <CombinedRootState>rootState;
+    const castRootState = rootState as CombinedRootState;
     return (video: VideoResponse): boolean => {
       const status: TaskStatus = contextGetter.getGeneralStatus(
         video.uuid,
         castRootState.statusStage
       );
-      return castRootState.statusFilter[<TaskStatusText>TaskStatus[status]];
+      return castRootState.statusFilter[TaskStatus[status] as TaskStatusText];
     };
   },
   filterByLabel(contextState, contextGetter, rootState) {
@@ -77,9 +77,8 @@ export const getters: GetterTree<VideoState, RootState> = {
         return true;
       }
       return video.related_tasks.some(i => {
-        const task = (<CombinedRootState>rootState).cgTeamworkTaskStore.storage[
-          i
-        ];
+        const task = (rootState as CombinedRootState).cgTeamworkTaskStore
+          .storage[i];
         if (!task) {
           return true;
         }
@@ -90,8 +89,8 @@ export const getters: GetterTree<VideoState, RootState> = {
     };
   },
   filterByTag(contextState, contextGetter, rootState) {
-    const castGetters = <CombinedGetters>contextGetter;
-    const castRootState = <CombinedRootState>rootState;
+    const castGetters = contextGetter as CombinedGetters;
+    const castRootState = rootState as CombinedRootState;
     return (video: VideoResponse): boolean => {
       const tagFilter = castRootState.tagTextFilter;
       if (tagFilter.length === 0) {
@@ -103,7 +102,7 @@ export const getters: GetterTree<VideoState, RootState> = {
     };
   },
   filter(contextState, contextGetter) {
-    const castGetters = <CombinedGetters>contextGetter;
+    const castGetters = contextGetter as CombinedGetters;
     return (video: VideoResponse) => {
       return (
         castGetters.filterByArtist(video) &&

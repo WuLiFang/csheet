@@ -4,6 +4,10 @@
     "no-unused-variable": true,
     "export-name": false,
     "no-backbone-get-set-outside-model": false,
-    "quotemark": [true, "single"]
+    "quotemark": [true, "single"],
+    "prefer-type-cast": false,
+    "trailing-comma": [true, "es5"],
+    "arrow-parens": [true, "ban-single-arg-parens"],
+    "import-name": false
   }
 }

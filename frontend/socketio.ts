@@ -1,3 +1,4 @@
+import { PAGE_ID } from '@/constants';
 import { VideoResponse, VideoRole } from '@/interface';
 import {
   READ_VIDEO_TAGS_IF_FOUND_UNDEFINED,
@@ -13,7 +14,6 @@ import * as _ from 'lodash';
 import Notify from 'notifyjs';
 import * as io from 'socket.io-client';
 import { Store } from 'vuex';
-import { PAGE_ID } from '@/constants';
 
 const isSupportNotify =
   typeof Notification === 'function' &&
@@ -32,7 +32,7 @@ export class SocketIO {
     this.requestUpdate(appeared);
   }, 5000);
   constructor(store: Store<RootState>) {
-    this.store = <Store<CombinedRootState>>store;
+    this.store = store as Store<CombinedRootState>;
     this.socket = io(`/`, { path: '/api/socket.io' });
     this.socket.on('asset update', this.onAssetUpdate.bind(this));
     this.socket.on('connect', this.onConnect.bind(this));
@@ -68,8 +68,8 @@ export class SocketIO {
         .dispatch(READ_VIDEO_TAGS_IF_FOUND_UNDEFINED, actionPayload)
         .then(() => {
           const mutationPayload: VideoUpdateMutationPayload = {
-            id: value.uuid,
             data: value,
+            id: value.uuid,
           };
           this.store.commit(VIDEO.UPDATE, mutationPayload);
           const thumb = this.store.getters.getVideoURI(
@@ -80,8 +80,8 @@ export class SocketIO {
             new Notify('文件更新', {
               body: value.label,
               icon: thumb,
-              timeout: 2,
               tag: value.uuid,
+              timeout: 2,
             }).show();
           }
         });

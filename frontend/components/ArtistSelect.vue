@@ -19,23 +19,17 @@
 <script lang="ts">
 import Vue from 'vue';
 
-// @ts-ignore
 import FaIcon from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/users';
 
-import { Select as ElSelect, Option as ElOption } from 'element-ui';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
+import { Option as ElOption, Select as ElSelect } from 'element-ui';
 
 export default Vue.extend({
   components: {
-    ElSelect,
     ElOption,
+    ElSelect,
     FaIcon,
-  },
-  props: {
-    value: { type: <() => string[]>Array },
-    size: { type: String },
-    placeholder: { type: String },
   },
   computed: {
     ...CGTeamWorkTaskComputedMixin,
@@ -48,8 +42,14 @@ export default Vue.extend({
       },
     },
   },
+  props: {
+    placeholder: { type: String },
+    size: { type: String },
+    value: { type: Array as () => string[] },
+  },
 });
 </script>
+
 <style lang="scss">
 .artist-select {
   .prefix {
