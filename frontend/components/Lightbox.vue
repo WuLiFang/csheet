@@ -43,7 +43,7 @@ import { Input as ElInput, Popover as ElPopover } from 'element-ui';
 import Vue from 'vue';
 import { default as FaIcon } from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/regular/check-circle';
-import { CGTeamWorkTaskResponse, VideoResponse, VideoRole } from '@/interface';
+import { ICGTeamWorkTaskResponse, IVideoResponse, VideoRole } from '@/interface';
 import {
   PRELOAD_VIDEO,
   UPDATE_VIDEO_SELECT_STATE,
@@ -90,7 +90,7 @@ export default Vue.extend({
         this.$store.commit(UPDATE_VIDEO_SELECT_STATE, payload);
       },
     },
-    video(): VideoResponse | undefined {
+    video(): IVideoResponse | undefined {
       return this.videoStore.storage[this.id];
     },
     posterURL(): string | null {
@@ -124,7 +124,7 @@ export default Vue.extend({
     taskId(): string | null {
       return this.task ? this.task.uuid : null;
     },
-    task(): CGTeamWorkTaskResponse | undefined {
+    task(): ICGTeamWorkTaskResponse | undefined {
       return this.video && this.cgTeamworkTaskStore.storage[this.video.uuid];
     },
     isEnablePreview(): boolean {

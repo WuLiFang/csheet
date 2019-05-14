@@ -24,7 +24,7 @@ import {
 } from 'element-ui';
 
 import { default as TagSelect } from '@/components/TagSelect.vue';
-import { VideoResponse, TagResponse } from '@/interface';
+import { IVideoResponse, ITagResponse } from '@/interface';
 import { videoComputedMixin } from '@/store/video';
 import { tagComputedMixin } from '@/store/tag';
 import { VideoTagsUpdateActionPayload, VIDEO_TAGS } from '@/mutation-types';
@@ -55,11 +55,11 @@ export default Vue.extend({
         this.$emit('update:visible', value);
       },
     },
-    video(): VideoResponse | undefined {
+    video(): IVideoResponse | undefined {
       return this.videoStore.storage[this.id];
     },
-    selectedTags(): TagResponse[] {
-      return _.flatMap(this.tagSelectModel, i => this.tagStoreByText[i] || []);
+    selectedTags(): ITagResponse[] {
+      return _.flatMap(this.tagSelectModel, i => this.ITagStoreByText[i] || []);
     },
   },
   watch: {

@@ -1,7 +1,7 @@
-import { VideoResponse, VideoRole } from '@/interface';
+import { IVideoResponse, VideoRole } from '@/interface';
 import { isFileProtocol } from '@/packtools';
 
-function getMtime(videoData: VideoResponse, role: VideoRole): number | null {
+function getMtime(videoData: IVideoResponse, role: VideoRole): number | null {
   switch (role) {
     case VideoRole.thumb: {
       return videoData.thumb_mtime;
@@ -18,7 +18,7 @@ function getMtime(videoData: VideoResponse, role: VideoRole): number | null {
 }
 
 function getPathWithMtime(
-  videoData: VideoResponse,
+  videoData: IVideoResponse,
   role: VideoRole,
   isForce = false
 ): string | null {
@@ -42,7 +42,7 @@ function getPathWithMtime(
 }
 
 export function getPath(
-  videoData: VideoResponse,
+  videoData: IVideoResponse,
   role: VideoRole,
   isForce = false
 ): string | null {

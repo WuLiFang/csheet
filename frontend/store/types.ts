@@ -1,10 +1,10 @@
 import { Store } from 'vuex';
 import {
-  CGTeamWorkTaskResponse,
-  TagResponse,
+  ICGTeamWorkTaskResponse,
+  ITagResponse,
+  IVideoResponse,
   TaskStage,
   TaskStatus,
-  VideoResponse,
   VideoRole,
 } from '../interface';
 
@@ -12,7 +12,7 @@ export interface IDMap<T> {
   [id: string]: T | undefined;
 }
 
-export interface RootState {
+export interface IRootState {
   isEnablePreview: boolean;
   isFixedTitleDisplay: boolean;
   isFixedStatusDisplay: boolean;
@@ -31,41 +31,41 @@ export enum LoadStatus {
   failed,
 }
 
-export interface PositionData {
+export interface IPositionData {
   top: number;
   bottom: number;
 }
-export interface VideoState {
-  storage: IDMap<VideoResponse>;
+export interface IVideoState {
+  storage: IDMap<IVideoResponse>;
   blobURLMap: IDMap<string>;
   blobWhiteListMap: Map<string, string[] | undefined>;
   selectStateMap: IDMap<boolean>;
   visibleVideos: string[];
 }
 
-export interface CGTeamworkTaskState {
-  storage: IDMap<CGTeamWorkTaskResponse>;
+export interface ICGTeamworkTaskState {
+  storage: IDMap<ICGTeamWorkTaskResponse>;
 }
 
-export interface TagState {
-  storage: IDMap<TagResponse>;
+export interface ITagState {
+  storage: IDMap<ITagResponse>;
 }
 
-export interface CombinedRootState extends RootState {
-  videoStore: VideoState;
-  cgTeamworkTaskStore: CGTeamworkTaskState;
-  tagStore: TagState;
+export interface ICombinedIRootState extends IRootState {
+  videoStore: IVideoState;
+  cgTeamworkTaskStore: ICGTeamworkTaskState;
+  tagStore: ITagState;
 }
 
 export type mapGettersMixin<T> = { [K in keyof T]: () => T[K] };
-export interface CGTeamWorkTaskGetters {
+export interface ICGTeamWorkTaskGetters {
   getGeneralStatus: (id: string, stage?: TaskStage) => TaskStatus;
   artists: string[];
   getArtistTaskCount: (artist: string) => number;
 }
 
 export type ElementHub = Map<string, HTMLElement | undefined>;
-export interface VideoGetters {
+export interface IVideoGetters {
   scrollTo: (id: string) => void;
   getVideoURI: (
     id: string,
@@ -74,34 +74,34 @@ export interface VideoGetters {
   ) => string | null;
   getBlobURL: (id: string, role: VideoRole, isForce?: boolean) => string | null;
   videoElementHub: ElementHub;
-  filterByStatus: (video: VideoResponse) => boolean;
-  filterByLabel: (video: VideoResponse) => boolean;
-  filterByArtist: (video: VideoResponse) => boolean;
-  filterByTag: (video: VideoResponse) => boolean;
-  filter: (video: VideoResponse) => boolean;
+  filterByStatus: (video: IVideoResponse) => boolean;
+  filterByLabel: (video: IVideoResponse) => boolean;
+  filterByArtist: (video: IVideoResponse) => boolean;
+  filterByTag: (video: IVideoResponse) => boolean;
+  filter: (video: IVideoResponse) => boolean;
   videoVisibilityMap: IDMap<boolean>;
   videoPlayList: string[];
   imagePlayList: string[];
   selectedVideos: string[];
 }
 
-export interface TagStoreByText {
-  [id: string]: TagResponse[] | undefined;
+export interface ITagStoreByText {
+  [id: string]: ITagResponse[] | undefined;
 }
-export interface TagGetters {
-  tags: TagResponse[];
-  tagStoreByText: TagStoreByText;
-  getTagByTextArray: (textArray: string[]) => TagResponse[];
+export interface ITagGetters {
+  tags: ITagResponse[];
+  ITagStoreByText: ITagStoreByText;
+  getTagByTextArray: (textArray: string[]) => ITagResponse[];
 }
 
-export interface RootGetters {
-  tagFilter: TagResponse[];
+export interface IRootGetters {
+  tagFilter: ITagResponse[];
 }
-export interface CombinedGetters
-  extends RootGetters,
-    VideoGetters,
-    TagGetters,
-    CGTeamWorkTaskGetters {}
-export declare class DollarStore extends Store<CombinedRootState> {
-  readonly getters: CombinedGetters;
+export interface ICombinedGetters
+  extends IRootGetters,
+    IVideoGetters,
+    ITagGetters,
+    ICGTeamWorkTaskGetters {}
+export declare class DollarStore extends Store<ICombinedIRootState> {
+  public readonly getters: ICombinedGetters;
 }

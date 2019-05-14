@@ -15,7 +15,7 @@ import { default as TaskInfoStatusEdit } from '@/components/TaskInfoStatusEdit.v
 import { default as TaskInfoStatus } from '@/components/TaskInfoStatus.vue';
 import { default as TaskInfoPiplineBadgePoper } from '@/components/TaskInfoPiplineBadgePoper.vue';
 
-import { TaskStatus, CGTeamWorkTaskResponse } from '@/interface';
+import { TaskStatus, ICGTeamWorkTaskResponse } from '@/interface';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 
 export default Vue.extend({
@@ -30,7 +30,7 @@ export default Vue.extend({
   },
   computed: {
     ...CGTeamWorkTaskComputedMixin,
-    model(): CGTeamWorkTaskResponse | undefined {
+    model(): ICGTeamWorkTaskResponse | undefined {
       return this.cgTeamworkTaskStore.storage[this.taskId];
     },
     field(): string | undefined {

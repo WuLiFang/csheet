@@ -54,7 +54,9 @@ export default Vue.extend({
         return this.value;
       },
       set(value: string[]) {
-        const created = value.filter(i => this.tagStoreByText[i] === undefined);
+        const created = value.filter(
+          i => this.ITagStoreByText[i] === undefined
+        );
         const message = created.join(',');
         Promise.all(
           created.map(i => {

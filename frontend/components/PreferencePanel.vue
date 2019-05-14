@@ -81,7 +81,7 @@ import { default as StatusSelect } from '@/components/StatusSelect.vue';
 import { default as TagSelect } from '@/components/TagSelect.vue';
 import { default as ArtistSelect } from '@/components/ArtistSelect.vue';
 
-import { mapRootStateModelMixin, getDefaultStatusFilter } from '@/store';
+import { mapIRootStateModelMixin, getDefaultStatusFilter } from '@/store';
 
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import { TaskStage, TaskStatus } from '@/interface';
@@ -112,7 +112,7 @@ export default Vue.extend({
   },
   computed: {
     ...CGTeamWorkTaskComputedMixin,
-    ...mapRootStateModelMixin,
+    ...mapIRootStateModelMixin,
     ...videoComputedMixin,
     ...tagComputedMixin,
     hasTaskStorage(): boolean {

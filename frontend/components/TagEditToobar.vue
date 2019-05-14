@@ -21,8 +21,8 @@ import {
 
 import TagSelect from '@/components/TagSelect.vue';
 import { isFileProtocol } from '@/packtools';
-import { RootComputedMixin, mapRootStateModelMixin } from '@/store';
-import { TagResponse } from '@/interface';
+import { RootComputedMixin, mapIRootStateModelMixin } from '@/store';
+import { ITagResponse } from '@/interface';
 import { tagComputedMixin } from '@/store/tag';
 import { videoComputedMixin } from '@/store/video';
 
@@ -49,8 +49,8 @@ export default Vue.extend({
     ...RootComputedMixin,
     ...tagComputedMixin,
     ...videoComputedMixin,
-    ...mapRootStateModelMixin,
-    selectedTags(): TagResponse[] {
+    ...mapIRootStateModelMixin,
+    selectedTags(): ITagResponse[] {
       return this.getTagByTextArray(this.selectedTagsText);
     },
     isAllowAccept(): boolean {

@@ -1,8 +1,8 @@
-export interface StringMap<T> {
+export interface IStringMap<T> {
   [id: string]: T | undefined;
 }
 
-export interface CGTeamWorkTaskResponse {
+export interface ICGTeamWorkTaskResponse {
   uuid: string;
   database: string;
   module: string;
@@ -13,7 +13,7 @@ export interface CGTeamWorkTaskResponse {
   director_status: string;
   client_status: string;
   note_num: number;
-  permissions: StringMap<boolean> | undefined;
+  permissions: IStringMap<boolean> | undefined;
 }
 
 export enum TaskStatus {
@@ -34,7 +34,7 @@ export enum TaskStage {
 
 export type TaskStatusText = keyof typeof TaskStatus;
 
-export interface VideoResponse {
+export interface IVideoResponse {
   database: string | null;
   module: string | null;
   is_need_update: boolean | null;
@@ -64,19 +64,19 @@ export enum VideoRole {
   preview = 'preview',
 }
 
-export interface FieldResponse {
+export interface IFieldResponse {
   has_permission: boolean;
   value: TaskStatusText | null;
 }
 
-export interface TagResponse {
+export interface ITagResponse {
   id: number;
   text: string;
   videos: string[];
 }
 
-export interface PageResponse {
-  videos: VideoResponse[];
-  tags: TagResponse[];
-  tasks?: CGTeamWorkTaskResponse[];
+export interface IPageResponse {
+  videos: IVideoResponse[];
+  tags: ITagResponse[];
+  tasks?: ICGTeamWorkTaskResponse[];
 }

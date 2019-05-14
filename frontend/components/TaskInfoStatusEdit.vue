@@ -15,7 +15,7 @@ import Vue from 'vue';
 import { Button, ButtonGroup, MessageBox, Message } from 'element-ui';
 
 import { default as TaskInfoStatus } from '@/components/TaskInfoStatus.vue';
-import { TaskStatus, CGTeamWorkTaskResponse, StringMap } from '@/interface';
+import { TaskStatus, ICGTeamWorkTaskResponse, IStringMap } from '@/interface';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import {
   UPDATE_CGTEAMWORK_TASK_FIELD,
@@ -44,10 +44,10 @@ export default Vue.extend({
   },
   computed: {
     ...CGTeamWorkTaskComputedMixin,
-    model(): CGTeamWorkTaskResponse | undefined {
+    model(): ICGTeamWorkTaskResponse | undefined {
       return this.cgTeamworkTaskStore.storage[this.taskId];
     },
-    fieldsValue(): StringMap<TaskStatus | null> {
+    fieldsValue(): IStringMap<TaskStatus | null> {
       return {
         leader_status: this.model
           ? parseTaskStatus(this.model.leader_status)

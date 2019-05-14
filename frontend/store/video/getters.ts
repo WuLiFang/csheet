@@ -1,22 +1,22 @@
 import {
+  IVideoResponse,
   TaskStatus,
   TaskStatusText,
-  VideoResponse,
   VideoRole,
 } from '@/interface';
 import { isFileProtocol } from '@/packtools';
 import {
-  CombinedGetters,
-  CombinedRootState,
   ElementHub,
-  RootState,
-  VideoState,
+  ICombinedGetters,
+  ICombinedIRootState,
+  IRootState,
+  IVideoState,
 } from '@/store/types';
 import { getPath } from '@/store/video/core';
 import { GetterTree } from 'vuex';
 
 export const elementHub: ElementHub = new Map<string, HTMLElement>();
-export const getters: GetterTree<VideoState, RootState> = {
+export const getters: GetterTree<IVideoState, IRootState> = {
   getVideoURI(contextState) {
     return (id: string, role: VideoRole, isForce: boolean = false) => {
       const data = contextState.storage[id];
@@ -36,7 +36,7 @@ export const getters: GetterTree<VideoState, RootState> = {
   },
   getBlobURL(contextState, contextGetter) {
     return (id: string, role: VideoRole, isForce: boolean = false) => {
-      const url = (contextGetter as CombinedGetters).getVideoURI(
+      const url = (contextGetter as ICombinedGetters).getVideoURI(
         id,
         role,
         isForce
@@ -53,46 +53,46 @@ export const getters: GetterTree<VideoState, RootState> = {
   videoElementHub() {
     return elementHub;
   },
-  filterByStatus(contextState, contextGetter, rootState) {
-    const castRootState = rootState as CombinedRootState;
-    return (video: VideoResponse): boolean => {
+  filterByStatus(contextState, contextGetter, IRootState) {
+    const castIRootState = IRootState as ICombinedIRootState;
+    return (video: IVideoResponse): boolean => {
       const status: TaskStatus = contextGetter.getGeneralStatus(
         video.uuid,
-        castRootState.statusStage
+        castIRootState.statusStage
       );
-      return castRootState.statusFilter[TaskStatus[status] as TaskStatusText];
+      return castIRootState.statusFilter[TaskStatus[status] as TaskStatusText];
     };
   },
-  filterByLabel(contextState, contextGetter, rootState) {
-    return (video: VideoResponse): boolean => {
-      if (!rootState.labelFilter) {
+  filterByLabel(contextState, contextGetter, IRootState) {
+    return (video: IVideoResponse): boolean => {
+      if (!IRootState.labelFilter) {
         return true;
       }
-      return new RegExp(rootState.labelFilter, 'i').test(video.label);
+      return new RegExp(IRootState.labelFilter, 'i').test(video.label);
     };
   },
-  filterByArtist(contextState, contextGetter, rootState) {
-    return (video: VideoResponse): boolean => {
-      if (rootState.artistFilter.length === 0) {
+  filterByArtist(contextState, contextGetter, IRootState) {
+    return (video: IVideoResponse): boolean => {
+      if (IRootState.artistFilter.length === 0) {
         return true;
       }
       return video.related_tasks.some(i => {
-        const task = (rootState as CombinedRootState).cgTeamworkTaskStore
+        const task = (IRootState as ICombinedIRootState).cgTeamworkTaskStore
           .storage[i];
         if (!task) {
           return true;
         }
         return (
-          task && task.artists.some(j => rootState.artistFilter.includes(j))
+          task && task.artists.some(j => IRootState.artistFilter.includes(j))
         );
       });
     };
   },
-  filterByTag(contextState, contextGetter, rootState) {
-    const castGetters = contextGetter as CombinedGetters;
-    const castRootState = rootState as CombinedRootState;
-    return (video: VideoResponse): boolean => {
-      const tagFilter = castRootState.tagTextFilter;
+  filterByTag(contextState, contextGetter, IRootState) {
+    const castGetters = contextGetter as ICombinedGetters;
+    const castIRootState = IRootState as ICombinedIRootState;
+    return (video: IVideoResponse): boolean => {
+      const tagFilter = castIRootState.tagTextFilter;
       if (tagFilter.length === 0) {
         return true;
       }
@@ -102,8 +102,8 @@ export const getters: GetterTree<VideoState, RootState> = {
     };
   },
   filter(contextState, contextGetter) {
-    const castGetters = contextGetter as CombinedGetters;
-    return (video: VideoResponse) => {
+    const castGetters = contextGetter as ICombinedGetters;
+    return (video: IVideoResponse) => {
       return (
         castGetters.filterByArtist(video) &&
         castGetters.filterByTag(video) &&

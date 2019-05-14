@@ -26,7 +26,7 @@ import { default as TagSelect } from '@/components/TagSelect.vue';
 import { default as FadeTransition } from '@/components/FadeTransition.vue';
 
 import { videoComputedMixin } from '@/store/video';
-import { VideoResponse } from '@/interface';
+import { IVideoResponse } from '@/interface';
 import { FILTER_VIDEOS } from '@/mutation-types';
 import { RootComputedMixin } from '@/store';
 
@@ -49,14 +49,14 @@ export default Vue.extend({
   computed: {
     ...videoComputedMixin,
     ...RootComputedMixin,
-    videos(): VideoResponse[] {
+    videos(): IVideoResponse[] {
       return this.videoStore.visibleVideos
         .map(i => this.videoStore.storage[i]!)
         .filter(i => i);
     },
   },
   methods: {
-    onclick(video: VideoResponse) {
+    onclick(video: IVideoResponse) {
       this.current = video.uuid;
       this.isViewerVisible = true;
     },

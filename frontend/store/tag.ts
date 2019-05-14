@@ -1,5 +1,5 @@
 import { getDataFromAppElement } from '@/datatools';
-import { TagResponse } from '@/interface';
+import { ITagResponse } from '@/interface';
 import axios, { AxiosResponse } from 'axios';
 import * as _ from 'lodash';
 import Vue from 'vue';
@@ -27,34 +27,34 @@ import {
 } from '../mutation-types';
 import { skipIfIsFileProtocol } from '../packtools';
 import {
+  IRootState,
+  ITagGetters,
+  ITagState,
+  ITagStoreByText,
   mapGettersMixin,
-  RootState,
-  TagGetters,
-  TagState,
-  TagStoreByText,
 } from './types';
 
-export const getters: GetterTree<TagState, RootState> = {
-  tags(contextState): TagResponse[] {
+export const getters: GetterTree<ITagState, IRootState> = {
+  tags(contextState): ITagResponse[] {
     return _.sortBy(
-      _.values(contextState.storage) as TagResponse[],
+      _.values(contextState.storage) as ITagResponse[],
       i => i.text
     );
   },
-  tagStoreByText(contextState): TagStoreByText {
-    return _.groupBy(contextState.storage, i => i!.text) as TagStoreByText;
+  ITagStoreByText(contextState): ITagStoreByText {
+    return _.groupBy(contextState.storage, i => i!.text) as ITagStoreByText;
   },
   getTagByTextArray(contextState, contextGetters) {
-    return (textArray: string[]): TagResponse[] => {
-      return _.flatMap(textArray, i => contextGetters.tagStoreByText[i]);
+    return (textArray: string[]): ITagResponse[] => {
+      return _.flatMap(textArray, i => contextGetters.ITagStoreByText[i]);
     };
   },
 };
 
 interface TagComputedMixin
   extends DefaultComputed,
-    mapGettersMixin<TagGetters> {
-  tagStore: () => TagState;
+    mapGettersMixin<ITagGetters> {
+  tagStore: () => ITagState;
 }
 
 export const tagComputedMixin = {
@@ -62,24 +62,24 @@ export const tagComputedMixin = {
   ...mapGetters(Object.keys(getters)),
 } as TagComputedMixin;
 
-function parseDataFromPage(): TagState['storage'] {
+function parseDataFromPage(): ITagState['storage'] {
   const data = getDataFromAppElement('tag');
   if (!data) {
     return {};
   }
-  const parsed = JSON.parse(data) as TagResponse[];
-  const ret: TagState['storage'] = {};
+  const parsed = JSON.parse(data) as ITagResponse[];
+  const ret: ITagState['storage'] = {};
   parsed.forEach(value => {
     ret[value.id] = value;
   });
   return ret;
 }
 
-const state: TagState = {
+const state: ITagState = {
   storage: parseDataFromPage(),
 };
 
-const mutations: MutationTree<TagState> = {
+const mutations: MutationTree<ITagState> = {
   [TAG.UPDATE](contextState, payload: TagUpdateMutationPayload) {
     Vue.set(contextState.storage, String(payload.id), payload.data);
   },
@@ -88,11 +88,11 @@ const mutations: MutationTree<TagState> = {
   },
 };
 
-function HandleTagResponse(
+function handleTagResponse(
   response: AxiosResponse,
-  context: ActionContext<TagState, RootState>
+  context: ActionContext<ITagState, IRootState>
 ) {
-  const data: TagResponse = response.data;
+  const data: ITagResponse = response.data;
   const mutationPayload: TagUpdateMutationPayload = {
     id: data.id,
     data,
@@ -100,11 +100,11 @@ function HandleTagResponse(
   context.commit(TAG.UPDATE, mutationPayload);
 }
 
-const actions: ActionTree<TagState, RootState> = {
+const actions: ActionTree<ITagState, IRootState> = {
   [TAG.CREATE]: async (context, payload: TagCreateActionPayload) => {
     return skipIfIsFileProtocol(() => {
       return axios.post('/api/tag', payload.data).then(response => {
-        HandleTagResponse(response, context);
+        handleTagResponse(response, context);
         return response;
       });
     })();
@@ -112,7 +112,7 @@ const actions: ActionTree<TagState, RootState> = {
   async [TAG.READ](context, payload: TagReadActionPayload) {
     return skipIfIsFileProtocol(() => {
       return axios.get(`/api/tag/${payload.id}`).then(response => {
-        HandleTagResponse(response, context);
+        handleTagResponse(response, context);
         return response;
       });
     })();
@@ -122,7 +122,7 @@ const actions: ActionTree<TagState, RootState> = {
       return axios
         .put(`/api/tag/${payload.id}`, payload.data)
         .then(response => {
-          HandleTagResponse(response, context);
+          handleTagResponse(response, context);
           return response;
         });
     })();
@@ -137,7 +137,7 @@ const actions: ActionTree<TagState, RootState> = {
       return axios
         .post(`/api/tag/${payload.id}`, payload.data)
         .then(response => {
-          HandleTagResponse(response, context);
+          handleTagResponse(response, context);
           return response;
         })
         .then(() => {
@@ -151,7 +151,7 @@ const actions: ActionTree<TagState, RootState> = {
   },
 };
 
-const module: Module<TagState, RootState> = {
+const module: Module<ITagState, IRootState> = {
   state,
   getters,
   mutations,

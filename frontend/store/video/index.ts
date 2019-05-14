@@ -1,8 +1,8 @@
 import {
+  IRootState,
+  IVideoGetters,
+  IVideoState,
   mapGettersMixin,
-  RootState,
-  VideoGetters,
-  VideoState,
 } from '@/store/types';
 import actions from '@/store/video/actions';
 import { getters } from '@/store/video/getters';
@@ -13,8 +13,8 @@ import { mapGetters, mapState, Module } from 'vuex';
 
 interface VideoComputedMixin
   extends DefaultComputed,
-    mapGettersMixin<VideoGetters> {
-  videoStore: () => VideoState;
+    mapGettersMixin<IVideoGetters> {
+  videoStore: () => IVideoState;
 }
 
 export const videoComputedMixin = {
@@ -22,7 +22,7 @@ export const videoComputedMixin = {
   ...mapGetters(Object.keys(getters)),
 } as VideoComputedMixin;
 
-const module: Module<VideoState, RootState> = {
+const module: Module<IVideoState, IRootState> = {
   actions,
   getters,
   mutations,

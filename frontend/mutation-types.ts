@@ -1,10 +1,10 @@
 import {
-  CGTeamWorkTaskResponse,
-  TagResponse,
-  VideoResponse,
+  ICGTeamWorkTaskResponse,
+  ITagResponse,
+  IVideoResponse,
   VideoRole,
 } from '@/interface';
-import { IDMap, PositionData } from '@/store/types';
+import { IDMap, IPositionData } from '@/store/types';
 
 export enum VIDEO {
   // CREATE = 'create_video',
@@ -18,12 +18,12 @@ interface VideoIdPayload {
 }
 export interface VideoUpdateActionPayload extends VideoIdPayload {
   data: {
-    key: keyof VideoResponse;
+    key: keyof IVideoResponse;
     value: any;
   };
 }
 export interface VideoUpdateMutationPayload extends VideoIdPayload {
-  data: VideoResponse;
+  data: IVideoResponse;
 }
 
 export type VideoReadActionPayload = VideoIdPayload;
@@ -31,7 +31,7 @@ export type VideoReadActionPayload = VideoIdPayload;
 export const UPDATE_VIDEO_POSITION = 'update_video_position';
 export interface VideoUpdatePositionMutationPayload {
   id: string;
-  data: PositionData;
+  data: IPositionData;
 }
 
 export const SET_VIDEO_VISIBILITY = 'set_video_visibility';
@@ -93,7 +93,7 @@ export enum CGTEAMWORK_TASK {
 
 export interface CGTeamWorkTaskReadMutationPayload {
   id: string;
-  data: CGTeamWorkTaskResponse;
+  data: ICGTeamWorkTaskResponse;
 }
 
 export interface CGTeamWorkTaskReadActionPayload {
@@ -146,7 +146,7 @@ export interface TagUpdateActionPayload extends TagIdPayload {
   data: { text: string };
 }
 export interface TagUpdateMutationPayload extends TagIdPayload {
-  data: TagResponse;
+  data: ITagResponse;
 }
 
 export type TagDeleteActionPayload = TagIdPayload;
@@ -190,7 +190,7 @@ export const READ_VIDEO_TAGS_IF_FOUND_UNDEFINED =
   'read_video_tags_if_found_undefined';
 
 export interface VideoTagsReadIfFoundUndefinedActionPayload {
-  video: VideoResponse;
+  video: IVideoResponse;
 }
 export const UPDATE_ROOT_STATE = 'update_root_state';
 

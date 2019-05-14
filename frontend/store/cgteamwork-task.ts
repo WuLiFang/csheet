@@ -1,5 +1,21 @@
 import { parseTaskStatus } from '@/datatools';
+import { ICGTeamWorkTaskResponse, TaskStage, TaskStatus } from '@/interface';
+import {
+  CGTEAMWORK_TASK,
+  CGTeamWorkTaskCreateNoteActionPayload,
+  CGTeamWorkTaskReadActionPayload,
+  CGTeamWorkTaskReadMutationPayload,
+  CGTeamWorkTaskUpdateFieldActionPayload,
+  CREATE_CGTEAMWORK_TASK_NOTE,
+  UPDATE_CGTEAMWORK_TASK_FIELD,
+} from '@/mutation-types';
 import { isFileProtocol } from '@/packtools';
+import {
+  ICGTeamWorkTaskGetters,
+  ICGTeamworkTaskState,
+  IRootState,
+  mapGettersMixin,
+} from '@/store/types';
 import axios, { AxiosResponse } from 'axios';
 import * as _ from 'lodash';
 import Vue from 'vue';
@@ -13,31 +29,15 @@ import {
   Module,
   MutationTree,
 } from 'vuex';
-import { CGTeamWorkTaskResponse, TaskStage, TaskStatus } from '@/interface';
-import {
-  CGTeamWorkTaskCreateNoteActionPayload,
-  CGTeamWorkTaskReadActionPayload,
-  CGTeamWorkTaskReadMutationPayload,
-  CGTeamWorkTaskUpdateFieldActionPayload,
-  CGTEAMWORK_TASK,
-  CREATE_CGTEAMWORK_TASK_NOTE,
-  UPDATE_CGTEAMWORK_TASK_FIELD,
-} from '@/mutation-types';
-import {
-  CGTeamWorkTaskGetters,
-  CGTeamworkTaskState,
-  mapGettersMixin,
-  RootState,
-} from '@/store/types';
 
-export const getters: GetterTree<CGTeamworkTaskState, RootState> = {
+export const getters: GetterTree<ICGTeamworkTaskState, IRootState> = {
   getGeneralStatus(contextState) {
     return (id: string, stage: TaskStage = TaskStage.client): TaskStatus => {
       const task = contextState.storage[id];
       if (!task) {
         return TaskStatus.Unset;
       }
-      let data: TaskStatus[] = [];
+      const data: TaskStatus[] = [];
       type stageMapItem = [TaskStage, TaskStatus];
       const stageMap: stageMapItem[] = [
         [TaskStage.leader, parseTaskStatus(task.leader_status)],
@@ -64,16 +64,16 @@ export const getters: GetterTree<CGTeamworkTaskState, RootState> = {
 
 interface CGTeamWorkTaskComputedMixin
   extends DefaultComputed,
-    mapGettersMixin<CGTeamWorkTaskGetters> {
-  cgTeamworkTaskStore: () => CGTeamworkTaskState;
+    mapGettersMixin<ICGTeamWorkTaskGetters> {
+  cgTeamworkTaskStore: () => ICGTeamworkTaskState;
 }
 
-export const CGTeamWorkTaskComputedMixin = <CGTeamWorkTaskComputedMixin>{
+export const CGTeamWorkTaskComputedMixin = {
   ...mapState(['cgTeamworkTaskStore']),
   ...mapGetters(Object.keys(getters)),
-};
+} as CGTeamWorkTaskComputedMixin;
 
-function parseDataFromPage(): CGTeamworkTaskState['storage'] {
+function parseDataFromPage(): ICGTeamworkTaskState['storage'] {
   const app = document.getElementById('app');
   if (!app) {
     return {};
@@ -82,17 +82,17 @@ function parseDataFromPage(): CGTeamworkTaskState['storage'] {
   if (!data) {
     return {};
   }
-  const parsed = <CGTeamWorkTaskResponse[]>JSON.parse(data);
-  const ret: CGTeamworkTaskState['storage'] = {};
+  const parsed = JSON.parse(data) as ICGTeamWorkTaskResponse[];
+  const ret: ICGTeamworkTaskState['storage'] = {};
   parsed.forEach(i => {
     ret[i.uuid] = i;
   });
   return ret;
 }
 
-const state: CGTeamworkTaskState = { storage: parseDataFromPage() };
+const state: ICGTeamworkTaskState = { storage: parseDataFromPage() };
 
-const mutations: MutationTree<CGTeamworkTaskState> = {
+const mutations: MutationTree<ICGTeamworkTaskState> = {
   [CGTEAMWORK_TASK.READ](
     contextState,
     payload: CGTeamWorkTaskReadMutationPayload
@@ -108,8 +108,8 @@ const mutations: MutationTree<CGTeamworkTaskState> = {
 };
 
 function handleCGTeamWorkTaskResponse(
-  context: ActionContext<CGTeamworkTaskState, RootState>,
-  response: AxiosResponse<CGTeamWorkTaskResponse>
+  context: ActionContext<ICGTeamworkTaskState, IRootState>,
+  response: AxiosResponse<ICGTeamWorkTaskResponse>
 ) {
   if (response.status !== 200) {
     return;
@@ -122,7 +122,7 @@ function handleCGTeamWorkTaskResponse(
   context.commit(CGTEAMWORK_TASK.READ, mutationPayload);
 }
 
-const actions: ActionTree<CGTeamworkTaskState, RootState> = {
+const actions: ActionTree<ICGTeamworkTaskState, IRootState> = {
   async [CGTEAMWORK_TASK.READ](
     context,
     payload: CGTeamWorkTaskReadActionPayload
@@ -156,7 +156,7 @@ const actions: ActionTree<CGTeamworkTaskState, RootState> = {
   },
 };
 
-const module: Module<CGTeamworkTaskState, RootState> = {
+const module: Module<ICGTeamworkTaskState, IRootState> = {
   state,
   getters,
   mutations,

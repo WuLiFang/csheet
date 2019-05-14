@@ -1,5 +1,5 @@
 import { PAGE_ID } from '@/constants';
-import { VideoResponse, VideoRole } from '@/interface';
+import { IVideoResponse, VideoRole } from '@/interface';
 import {
   READ_VIDEO_TAGS_IF_FOUND_UNDEFINED,
   REFETCH_PAGE_DATA,
@@ -9,7 +9,7 @@ import {
   VideoUpdateMutationPayload,
 } from '@/mutation-types';
 import { isFileProtocol } from '@/packtools';
-import { CombinedRootState, RootState } from '@/store/types';
+import { ICombinedIRootState, IRootState } from '@/store/types';
 import * as _ from 'lodash';
 import Notify from 'notifyjs';
 import * as io from 'socket.io-client';
@@ -24,15 +24,15 @@ if (!isFileProtocol && isSupportNotify) {
 
 export class SocketIO {
   public socket: SocketIOClient.Socket;
-  public store: Store<CombinedRootState>;
+  public store: Store<ICombinedIRootState>;
   public updateAppeared = _.throttle(() => {
     this.store.dispatch(UPDATE_VIDEO_APPEARED);
     const appeared: string[] =
       this.store.state.videoStore.blobWhiteListMap.get('appeared') || [];
     this.requestUpdate(appeared);
   }, 5000);
-  constructor(store: Store<RootState>) {
-    this.store = store as Store<CombinedRootState>;
+  constructor(store: Store<IRootState>) {
+    this.store = store as Store<ICombinedIRootState>;
     this.socket = io(`/`, { path: '/api/socket.io' });
     this.socket.on('asset update', this.onAssetUpdate.bind(this));
     this.socket.on('connect', this.onConnect.bind(this));
@@ -53,7 +53,7 @@ export class SocketIO {
       new Notify(msg, { timeout: 2, tag: msg }).show();
     }
   }
-  public onAssetUpdate(message: VideoResponse[]) {
+  public onAssetUpdate(message: IVideoResponse[]) {
     if (!(message instanceof Array)) {
       throw new Error(`Wrong message type: ${JSON.stringify(message)}`);
     }

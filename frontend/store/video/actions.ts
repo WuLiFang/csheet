@@ -1,21 +1,21 @@
-import { TagResponse, VideoResponse } from '@/interface';
+import { ITagResponse, IVideoResponse } from '@/interface';
 import * as type from '@/mutation-types';
 import { skipIfIsFileProtocol } from '@/packtools';
 import {
-  CombinedGetters,
-  CombinedRootState,
-  RootState,
-  VideoState,
+  ICombinedGetters,
+  ICombinedIRootState,
+  IRootState,
+  IVideoState,
 } from '@/store/types';
 import { isElementAppeared } from '@/store/video/core';
 import axios, { AxiosResponse } from 'axios';
 import { ActionContext, ActionTree } from 'vuex';
 
-async function HandleVideoResponse(
+async function handleVideoResponse(
   response: AxiosResponse,
-  context: ActionContext<VideoState, RootState>
+  context: ActionContext<IVideoState, IRootState>
 ) {
-  const data: VideoResponse = response.data;
+  const data: IVideoResponse = response.data;
   const mutationPayload: type.VideoUpdateMutationPayload = {
     id: data.uuid,
     data,
@@ -31,11 +31,11 @@ async function HandleVideoResponse(
     });
 }
 
-function HandleTagsResponse(
+function handleTagsResponse(
   response: AxiosResponse,
-  context: ActionContext<VideoState, RootState>
+  context: ActionContext<IVideoState, IRootState>
 ) {
-  const dataArray: TagResponse[] = response.data;
+  const dataArray: ITagResponse[] = response.data;
   dataArray.map(data => {
     const mutationPayload: type.TagUpdateMutationPayload = {
       id: data.id,
@@ -45,19 +45,19 @@ function HandleTagsResponse(
   });
 }
 
-export const actions: ActionTree<VideoState, RootState> = {
+export const actions: ActionTree<IVideoState, IRootState> = {
   async [type.VIDEO.READ](context, payload: type.VideoReadActionPayload) {
     return skipIfIsFileProtocol(() => {
       return axios
         .get(`/api/video/${payload.id}`)
-        .then(response => HandleVideoResponse(response, context));
+        .then(response => handleVideoResponse(response, context));
     })();
   },
   async [type.VIDEO.UPDATE](context, payload: type.VideoUpdateActionPayload) {
     return skipIfIsFileProtocol(() => {
       return axios
         .put(`/api/video/${payload.id}`, payload.data)
-        .then(response => HandleVideoResponse(response, context));
+        .then(response => handleVideoResponse(response, context));
     })();
   },
   async [type.PRELOAD_VIDEO](context, payload: type.VideoPreloadActionPayload) {
@@ -97,7 +97,7 @@ export const actions: ActionTree<VideoState, RootState> = {
   },
   [type.UPDATE_VIDEO_APPEARED](context) {
     const ret = context.state.visibleVideos.filter(i => {
-      const element = (context.getters as CombinedGetters).videoElementHub.get(
+      const element = (context.getters as ICombinedGetters).videoElementHub.get(
         i
       );
       return element && isElementAppeared(element);
@@ -117,7 +117,7 @@ export const actions: ActionTree<VideoState, RootState> = {
     return skipIfIsFileProtocol(() => {
       return axios
         .post(`/api/video_tag/${payload.id}`, payload.data)
-        .then(response => HandleVideoResponse(response, context));
+        .then(response => handleVideoResponse(response, context));
     })();
   },
   async [type.VIDEO_TAGS.UPDATE](
@@ -130,7 +130,7 @@ export const actions: ActionTree<VideoState, RootState> = {
           action: 'update',
           ...payload.data,
         })
-        .then(response => HandleVideoResponse(response, context));
+        .then(response => handleVideoResponse(response, context));
     })();
   },
   async [type.VIDEO_TAGS.DELETE](
@@ -143,7 +143,7 @@ export const actions: ActionTree<VideoState, RootState> = {
           action: 'delete',
           ...payload.data,
         })
-        .then(response => HandleVideoResponse(response, context));
+        .then(response => handleVideoResponse(response, context));
     })();
   },
   async [type.VIDEO_TAGS.READ](
@@ -153,7 +153,7 @@ export const actions: ActionTree<VideoState, RootState> = {
     return skipIfIsFileProtocol(() => {
       return axios
         .get(`/api/video_tag/${payload.id}`)
-        .then(response => HandleTagsResponse(response, context));
+        .then(response => handleTagsResponse(response, context));
     })();
   },
   async [type.READ_VIDEO_TAGS_IF_FOUND_UNDEFINED](
@@ -166,7 +166,7 @@ export const actions: ActionTree<VideoState, RootState> = {
         if (
           video.tags.some(
             i =>
-              (context.rootState as CombinedRootState).tagStore.storage[i] ===
+              (context.rootState as ICombinedIRootState).tagStore.storage[i] ===
               undefined
           )
         ) {
@@ -187,7 +187,7 @@ export const actions: ActionTree<VideoState, RootState> = {
       type.FILTER_VIDEOS,
       Object.keys(context.state.storage).filter(i => {
         const video = context.state.storage[i];
-        return video && (context.getters as CombinedGetters).filter(video);
+        return video && (context.getters as ICombinedGetters).filter(video);
       })
     );
   },

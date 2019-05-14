@@ -1,19 +1,19 @@
 import { getDataFromAppElement } from '@/datatools';
-import { VideoResponse } from '@/interface';
-import { VideoState } from '@/store/types';
+import { IVideoResponse } from '@/interface';
+import { IVideoState } from '@/store/types';
 
-function parseDataFromPage(): VideoState['storage'] {
+function parseDataFromPage(): IVideoState['storage'] {
   const parsed = JSON.parse(
     getDataFromAppElement('video', '[]')
-  ) as VideoResponse[];
-  const ret: VideoState['storage'] = {};
+  ) as IVideoResponse[];
+  const ret: IVideoState['storage'] = {};
   parsed.forEach(value => {
     ret[value.uuid] = value;
   });
   return ret;
 }
 
-export const state: VideoState = {
+export const state: IVideoState = {
   storage: parseDataFromPage(),
   blobURLMap: {},
   blobWhiteListMap: new Map<string, string[]>(),

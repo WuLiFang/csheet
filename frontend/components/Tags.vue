@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { TagResponse, VideoResponse } from '@/interface';
+import { ITagResponse, IVideoResponse } from '@/interface';
 import { VideoTagsDeleteActionPayload, VIDEO_TAGS } from '@/mutation-types';
 import { isFileProtocol } from '@/packtools';
 import { default as TagEditDialog } from '@/components/TagEditDialog.vue';
@@ -23,13 +23,13 @@ export default class Tags extends Vue {
   isFileProtocol = isFileProtocol;
   isTagEditDialogVisible = false;
 
-  get video(): VideoResponse {
+  get video(): IVideoResponse {
     return this.$store.state.videoStore.storage[this.id];
   }
-  get tags(): TagResponse[] {
+  get tags(): ITagResponse[] {
     return this.video.tags.map(i => this.$store.state.tagStore.storage[i]);
   }
-  deleteVideoTag(tag: TagResponse) {
+  deleteVideoTag(tag: ITagResponse) {
     const payload: VideoTagsDeleteActionPayload = {
       id: this.video.uuid,
       data: {

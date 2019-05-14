@@ -38,7 +38,7 @@ import 'vue-awesome/icons/regular/file-image';
 
 import { default as RelativeTime } from '@/components/RelativeTime.vue';
 
-import { VideoResponse } from '@/interface';
+import { IVideoResponse } from '@/interface';
 import { videoComputedMixin } from '@/store/video';
 import { VIDEO, VideoUpdateActionPayload } from '@/mutation-types';
 import clipboard from 'clipboard';
@@ -57,7 +57,7 @@ export default Vue.extend({
   },
   computed: {
     ...videoComputedMixin,
-    videoData(): VideoResponse | undefined {
+    videoData(): IVideoResponse | undefined {
       return this.videoStore.storage[this.id];
     },
   },

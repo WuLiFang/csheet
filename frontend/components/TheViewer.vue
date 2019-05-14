@@ -84,7 +84,7 @@ import Tags from '@/components/Tags.vue';
 
 import { isFileProtocol } from '@/packtools';
 import { DollarStore } from '@/store/types';
-import { VideoResponse, VideoRole } from '@/interface';
+import { IVideoResponse, VideoRole } from '@/interface';
 import {
   VideoReadActionPayload,
   VIDEO,
@@ -181,13 +181,13 @@ export default class TheViewer extends Vue {
       ? this.$store.getters.getVideoURI(this.videoId, VideoRole.preview, true)
       : this.$store.getters.getBlobURL(this.videoId, VideoRole.preview);
   }
-  get video(): VideoResponse | null {
+  get video(): IVideoResponse | null {
     if (!this.videoId) {
       return null;
     }
     return this.$store.state.videoStore.storage[this.videoId] || null;
   }
-  set video(value: VideoResponse | null) {
+  set video(value: IVideoResponse | null) {
     this.id = value ? value.uuid : null;
   }
   get url(): string {
