@@ -1,8 +1,9 @@
 {
-  "extends": "tslint-microsoft-contrib/recommended",
+  "extends": ["tslint:recommended", "tslint-microsoft-contrib/recommended"],
   "rules": {
     "no-unused-variable": true,
     "export-name": false,
-    "no-backbone-get-set-outside-model": false
+    "no-backbone-get-set-outside-model": false,
+    "quotemark": [true, "single"]
   }
 }
