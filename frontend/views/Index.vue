@@ -10,16 +10,18 @@
     footer &copy; 北京吾立方数码科技有限公司 2018-2019
 </template>
 <script lang="ts">
+import { projects } from '@/index';
 import Vue from 'vue';
+
 import CGTeamWorkPageForm from '@/components/CGTeamWorkPageForm.vue';
 import LocalPageForm from '@/components/LocalPageForm.vue';
-import { projects } from '@/index';
-import { Tabs as ElTabs, TabPane as ElTabPane } from 'element-ui';
+import { TabPane as ElTabPane, Tabs as ElTabs } from 'element-ui';
+
 export default Vue.extend({
   components: {
-    ElTabs,
-    ElTabPane,
     CGTeamWorkPageForm,
+    ElTabPane,
+    ElTabs,
     LocalPageForm,
   },
   data() {

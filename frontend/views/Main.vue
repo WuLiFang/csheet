@@ -13,36 +13,35 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-
-import * as _ from 'lodash';
-
-import { default as Lightbox } from '@/components/Lightbox.vue';
-import { default as TagEditToobar } from '@/components/TagEditToobar.vue';
-import { default as PreferencePanel } from '@/components/PreferencePanel.vue';
-import { default as StatusSelect } from '@/components/StatusSelect.vue';
-import { default as TheViewer } from '@/components/TheViewer.vue';
-import { default as TagSelect } from '@/components/TagSelect.vue';
-import { default as FadeTransition } from '@/components/FadeTransition.vue';
-
-import { videoComputedMixin } from '@/store/video';
-import { IVideoResponse } from '@/interface';
 import { FILTER_VIDEOS } from '@/mutation-types';
 import { RootComputedMixin } from '@/store';
+import { videoComputedMixin } from '@/store/video';
+import * as _ from 'lodash';
+import Vue from 'vue';
+
+import { default as FadeTransition } from '@/components/FadeTransition.vue';
+import { default as Lightbox } from '@/components/Lightbox.vue';
+import { default as PreferencePanel } from '@/components/PreferencePanel.vue';
+import { default as StatusSelect } from '@/components/StatusSelect.vue';
+import { default as TagEditToobar } from '@/components/TagEditToobar.vue';
+import { default as TagSelect } from '@/components/TagSelect.vue';
+import { default as TheViewer } from '@/components/TheViewer.vue';
+
+import { IVideoResponse } from '@/interface';
 
 export default Vue.extend({
   components: {
-    Lightbox,
-    TheViewer,
-    StatusSelect,
-    TagSelect,
-    PreferencePanel,
-    TagEditToobar,
     FadeTransition,
+    Lightbox,
+    PreferencePanel,
+    StatusSelect,
+    TagEditToobar,
+    TagSelect,
+    TheViewer,
   },
   data() {
     return {
-      current: <string | null>null,
+      current: null as string | null,
       isViewerVisible: false,
     };
   },
