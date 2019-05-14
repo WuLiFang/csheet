@@ -2,7 +2,7 @@ export interface StringMap<T> {
   [id: string]: T | undefined;
 }
 
-export type CGTeamWorkTaskResponse = {
+export interface CGTeamWorkTaskResponse {
   uuid: string;
   database: string;
   module: string;
@@ -14,7 +14,7 @@ export type CGTeamWorkTaskResponse = {
   client_status: string;
   note_num: number;
   permissions: StringMap<boolean> | undefined;
-};
+}
 
 export enum TaskStatus {
   // First appeared status take priority.
@@ -54,7 +54,7 @@ export interface VideoResponse {
   thumb_mtime: number | null;
   uuid: string;
   related_tasks: string[];
-  tags: (string | number)[];
+  tags: Array<string | number>;
   src_broken_mtime: number | null;
 }
 

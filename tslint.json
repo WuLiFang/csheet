@@ -8,6 +8,7 @@
     "prefer-type-cast": false,
     "trailing-comma": [true, "es5"],
     "arrow-parens": [true, "ban-single-arg-parens"],
-    "import-name": false
+    "import-name": false,
+    "prefer-array-literal": false
   }
 }

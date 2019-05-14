@@ -1,5 +1,5 @@
-import Cookies from 'js-cookie';
 import { TaskStatus } from '@/interface';
+import Cookies from 'js-cookie';
 
 export function getDataFromAppElement(name: string, defaultValue?: any) {
   const app = document.getElementById('app');
