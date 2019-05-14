@@ -1,6 +1,6 @@
 import { TagResponse, VideoResponse } from '@/interface';
 import * as type from '@/mutation-types';
-import { SkipIfIsFileProtocol } from '@/packtools';
+import { skipIfIsFileProtocol } from '@/packtools';
 import {
   CombinedGetters,
   CombinedRootState,
@@ -47,21 +47,21 @@ function HandleTagsResponse(
 
 export const actions: ActionTree<VideoState, RootState> = {
   async [type.VIDEO.READ](context, payload: type.VideoReadActionPayload) {
-    return SkipIfIsFileProtocol(() => {
+    return skipIfIsFileProtocol(() => {
       return axios
         .get(`/api/video/${payload.id}`)
         .then(response => HandleVideoResponse(response, context));
     })();
   },
   async [type.VIDEO.UPDATE](context, payload: type.VideoUpdateActionPayload) {
-    return SkipIfIsFileProtocol(() => {
+    return skipIfIsFileProtocol(() => {
       return axios
         .put(`/api/video/${payload.id}`, payload.data)
         .then(response => HandleVideoResponse(response, context));
     })();
   },
   async [type.PRELOAD_VIDEO](context, payload: type.VideoPreloadActionPayload) {
-    return SkipIfIsFileProtocol(() => {
+    return skipIfIsFileProtocol(() => {
       const url = context.getters.getVideoURI(payload.id, payload.role);
       const config = { ...payload }; // Create new obejct to save config to avoid mutation in other place.
       if (!url || context.state.blobURLMap[url]) {
@@ -79,7 +79,7 @@ export const actions: ActionTree<VideoState, RootState> = {
     })();
   },
   async [type.PRELOAD_URL](context, payload: type.PreloadURLActionPayload) {
-    return SkipIfIsFileProtocol(() => {
+    return skipIfIsFileProtocol(() => {
       return axios
         .get(payload.url, {
           responseType: 'blob',
@@ -114,7 +114,7 @@ export const actions: ActionTree<VideoState, RootState> = {
     context,
     payload: type.VideoTagsCreateActionPayload
   ) {
-    return SkipIfIsFileProtocol(() => {
+    return skipIfIsFileProtocol(() => {
       return axios
         .post(`/api/video_tag/${payload.id}`, payload.data)
         .then(response => HandleVideoResponse(response, context));
@@ -124,7 +124,7 @@ export const actions: ActionTree<VideoState, RootState> = {
     context,
     payload: type.VideoTagsUpdateActionPayload
   ) {
-    return SkipIfIsFileProtocol(() => {
+    return skipIfIsFileProtocol(() => {
       return axios
         .put(`/api/video_tag/${payload.id}`, {
           action: 'update',
@@ -137,7 +137,7 @@ export const actions: ActionTree<VideoState, RootState> = {
     context,
     payload: type.VideoTagsDeleteActionPayload
   ) {
-    return SkipIfIsFileProtocol(() => {
+    return skipIfIsFileProtocol(() => {
       return axios
         .put(`/api/video_tag/${payload.id}`, {
           action: 'delete',
@@ -150,7 +150,7 @@ export const actions: ActionTree<VideoState, RootState> = {
     context,
     payload: type.VideoTagsReadActionPayload
   ) {
-    return SkipIfIsFileProtocol(() => {
+    return skipIfIsFileProtocol(() => {
       return axios
         .get(`/api/video_tag/${payload.id}`)
         .then(response => HandleTagsResponse(response, context));
@@ -160,7 +160,7 @@ export const actions: ActionTree<VideoState, RootState> = {
     context,
     payload: type.VideoTagsReadIfFoundUndefinedActionPayload
   ) {
-    return SkipIfIsFileProtocol(() => {
+    return skipIfIsFileProtocol(() => {
       const video = payload.video;
       return new Promise((resolve, reject) => {
         if (

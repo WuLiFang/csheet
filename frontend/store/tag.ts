@@ -25,7 +25,7 @@ import {
   VideosAddTagMutationsPayload,
   VIDEOS_ADD_TAG,
 } from '../mutation-types';
-import { SkipIfIsFileProtocol } from '../packtools';
+import { skipIfIsFileProtocol } from '../packtools';
 import {
   mapGettersMixin,
   RootState,
@@ -102,7 +102,7 @@ function HandleTagResponse(
 
 const actions: ActionTree<TagState, RootState> = {
   [TAG.CREATE]: async (context, payload: TagCreateActionPayload) => {
-    return SkipIfIsFileProtocol(() => {
+    return skipIfIsFileProtocol(() => {
       return axios.post('/api/tag', payload.data).then(response => {
         HandleTagResponse(response, context);
         return response;
@@ -110,7 +110,7 @@ const actions: ActionTree<TagState, RootState> = {
     })();
   },
   async [TAG.READ](context, payload: TagReadActionPayload) {
-    return SkipIfIsFileProtocol(() => {
+    return skipIfIsFileProtocol(() => {
       return axios.get(`/api/tag/${payload.id}`).then(response => {
         HandleTagResponse(response, context);
         return response;
@@ -118,7 +118,7 @@ const actions: ActionTree<TagState, RootState> = {
     })();
   },
   async [TAG.UPDATE](context, payload: TagUpdateActionPayload) {
-    return SkipIfIsFileProtocol(() => {
+    return skipIfIsFileProtocol(() => {
       return axios
         .put(`/api/tag/${payload.id}`, payload.data)
         .then(response => {
@@ -128,12 +128,12 @@ const actions: ActionTree<TagState, RootState> = {
     })();
   },
   async [TAG.DELETE](context, payload: TagDeleteActionPayload) {
-    return SkipIfIsFileProtocol(() => {
+    return skipIfIsFileProtocol(() => {
       return axios.delete(`/api/tag/${payload.id}`);
     })();
   },
   async [VIDEOS_ADD_TAG](context, payload: VideosAddTagActionPayload) {
-    return SkipIfIsFileProtocol(() => {
+    return skipIfIsFileProtocol(() => {
       return axios
         .post(`/api/tag/${payload.id}`, payload.data)
         .then(response => {
