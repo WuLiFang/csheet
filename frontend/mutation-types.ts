@@ -13,30 +13,30 @@ export enum VIDEO {
   // DELETE = 'delete_video'
 }
 
-interface VideoIdPayload {
+interface IVideoIdPayload {
   id: string;
 }
-export interface VideoUpdateActionPayload extends VideoIdPayload {
+export interface IVideoUpdateActionPayload extends IVideoIdPayload {
   data: {
     key: keyof IVideoResponse;
     value: any;
   };
 }
-export interface VideoUpdateMutationPayload extends VideoIdPayload {
+export interface IVideoUpdateMutationPayload extends IVideoIdPayload {
   data: IVideoResponse;
 }
 
-export type VideoReadActionPayload = VideoIdPayload;
+export type VideoReadActionPayload = IVideoIdPayload;
 
 export const UPDATE_VIDEO_POSITION = 'update_video_position';
-export interface VideoUpdatePositionMutationPayload {
+export interface IVideoUpdatePositionMutationPayload {
   id: string;
   data: IPositionData;
 }
 
 export const SET_VIDEO_VISIBILITY = 'set_video_visibility';
 
-export interface VideoSetVisibilityMutationPayload {
+export interface IVideoSetVisibilityMutationPayload {
   id: string;
   value: boolean;
 }
@@ -44,40 +44,40 @@ export interface VideoSetVisibilityMutationPayload {
 export const UPDATE_VIDEO_APPEARING = 'update_video_appearing';
 export const FILTER_VIDEOS = 'filter_videos';
 
-export interface VideoUpdateAppearingMutationPayload {
+export interface IVideoUpdateAppearingMutationPayload {
   id: string;
   value?: boolean;
 }
 export const PRELOAD_VIDEO = 'preload_video';
 export const UPDATE_VIDEO_SELECT_STATE = 'update_video_select_state';
 export type VideoUpdateSelectStateMutationPayload = IDMap<boolean>;
-export interface VideoPreloadActionPayload {
+export interface IVideoPreloadActionPayload {
   id: string;
   role: VideoRole;
   onprogress?: (
     event: ProgressEvent,
-    config: VideoPreloadActionPayload
+    config: IVideoPreloadActionPayload
   ) => void;
 }
 export const UPDATE_BLOB_HUB = 'update_blob_hub';
-export interface UpdateBlobHubMutationPayload {
+export interface IUpdateBlobHubMutationPayload {
   url: string;
   blob: Blob;
 }
 
 export const PRELOAD_URL = 'preload_url';
-export interface PreloadURLActionPayload {
+export interface IPreloadURLActionPayload {
   url: string;
   onprogress?: (event: ProgressEvent) => void;
 }
 
 export const CLEAR_VIDEO_BLOB = 'clear_video_blob';
-export interface VideoClearBlobMutationPayload {
+export interface IVideoClearBlobMutationPayload {
   id: string;
 }
 
 export const UPDATE_VIDEO_BLOB_WHITELIST = 'update_video_blob_whitelist';
-export interface VideoUpdateBlobWhiteListMapMutationPayload {
+export interface IVideoUpdateBlobWhiteListMapMutationPayload {
   key: string;
   value: string[];
 }
@@ -91,16 +91,16 @@ export enum CGTEAMWORK_TASK {
   // DELETE = 'delete_cgteamwork_task'
 }
 
-export interface CGTeamWorkTaskReadMutationPayload {
+export interface ICGTeamWorkTaskReadMutationPayload {
   id: string;
   data: ICGTeamWorkTaskResponse;
 }
 
-export interface CGTeamWorkTaskReadActionPayload {
+export interface ICGTeamWorkTaskReadActionPayload {
   id: string;
 }
 
-export interface CGTeamWorkTaskUpdateMutationPayload {
+export interface ICGTeamWorkTaskUpdateMutationPayload {
   id: string;
   key: string;
   value: string;
@@ -108,7 +108,7 @@ export interface CGTeamWorkTaskUpdateMutationPayload {
 
 export const UPDATE_CGTEAMWORK_TASK_FIELD = 'update_cgteamwork_task_field';
 
-export interface CGTeamWorkTaskUpdateFieldActionPayload {
+export interface ICGTeamWorkTaskUpdateFieldActionPayload {
   id: string;
   field: string;
   data: {
@@ -120,7 +120,7 @@ export interface CGTeamWorkTaskUpdateFieldActionPayload {
 
 export const CREATE_CGTEAMWORK_TASK_NOTE = 'create_cgteamwork_task_note';
 
-export interface CGTeamWorkTaskCreateNoteActionPayload {
+export interface ICGTeamWorkTaskCreateNoteActionPayload {
   id: string;
   text: string;
 }
@@ -133,31 +133,31 @@ export enum TAG {
 }
 
 type TagId = string | number;
-interface TagIdPayload {
+interface ITagIdPayload {
   id: TagId;
 }
-export interface TagCreateActionPayload {
+export interface ITagCreateActionPayload {
   data: { text: string };
 }
 
-export type TagReadActionPayload = TagIdPayload;
+export type TagReadActionPayload = ITagIdPayload;
 
-export interface TagUpdateActionPayload extends TagIdPayload {
+export interface ITagUpdateActionPayload extends ITagIdPayload {
   data: { text: string };
 }
-export interface TagUpdateMutationPayload extends TagIdPayload {
+export interface ITagUpdateMutationPayload extends ITagIdPayload {
   data: ITagResponse;
 }
 
-export type TagDeleteActionPayload = TagIdPayload;
-export type TagDeleteMutationPayload = TagIdPayload;
+export type TagDeleteActionPayload = ITagIdPayload;
+export type TagDeleteMutationPayload = ITagIdPayload;
 
 export const VIDEOS_ADD_TAG = 'videos_add_tag';
 
-export interface VideosAddTagActionPayload extends TagIdPayload {
+export interface IVideosAddTagActionPayload extends ITagIdPayload {
   data: { videos: string[] };
 }
-export interface VideosAddTagMutationsPayload extends TagIdPayload {
+export interface IVideosAddTagMutationsPayload extends ITagIdPayload {
   videos: string[];
 }
 
@@ -167,20 +167,20 @@ export enum VIDEO_TAGS {
   UPDATE = 'update_video_tags',
   DELETE = 'delete_video_tags',
 }
-export type VideoTagsReadActionPayload = VideoIdPayload;
+export type VideoTagsReadActionPayload = IVideoIdPayload;
 
-export interface VideoTagsCreateActionPayload extends VideoIdPayload {
+export interface IVideoTagsCreateActionPayload extends IVideoIdPayload {
   data: {
     tags: TagId[];
   };
 }
-export interface VideoTagsUpdateActionPayload extends VideoIdPayload {
+export interface IVideoTagsUpdateActionPayload extends IVideoIdPayload {
   data: {
     tags: TagId[];
   };
 }
 
-export interface VideoTagsDeleteActionPayload extends VideoIdPayload {
+export interface IVideoTagsDeleteActionPayload extends IVideoIdPayload {
   data: {
     tags: TagId[];
   };
@@ -189,12 +189,12 @@ export interface VideoTagsDeleteActionPayload extends VideoIdPayload {
 export const READ_VIDEO_TAGS_IF_FOUND_UNDEFINED =
   'read_video_tags_if_found_undefined';
 
-export interface VideoTagsReadIfFoundUndefinedActionPayload {
+export interface IVideoTagsReadIfFoundUndefinedActionPayload {
   video: IVideoResponse;
 }
 export const UPDATE_ROOT_STATE = 'update_root_state';
 
-export interface StateUpdateMutationPayload<T, K extends keyof T = keyof T> {
+export interface IStateUpdateMutationPayload<T, K extends keyof T = keyof T> {
   key: K;
   value: T[K];
 }

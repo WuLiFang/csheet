@@ -4,12 +4,12 @@ import { MutationTree } from 'vuex';
 import * as type from '../../mutation-types';
 
 export const mutations: MutationTree<IVideoState> = {
-  [type.VIDEO.UPDATE](contextState, payload: type.VideoUpdateMutationPayload) {
+  [type.VIDEO.UPDATE](contextState, payload: type.IVideoUpdateMutationPayload) {
     Vue.set(contextState.storage, payload.id, payload.data);
   },
   [type.UPDATE_BLOB_HUB](
     contextState,
-    payload: type.UpdateBlobHubMutationPayload
+    payload: type.IUpdateBlobHubMutationPayload
   ) {
     Vue.set(
       contextState.blobURLMap,
@@ -44,13 +44,13 @@ export const mutations: MutationTree<IVideoState> = {
   },
   [type.UPDATE_VIDEO_BLOB_WHITELIST](
     contextState,
-    payload: type.VideoUpdateBlobWhiteListMapMutationPayload
+    payload: type.IVideoUpdateBlobWhiteListMapMutationPayload
   ) {
     contextState.blobWhiteListMap.set(payload.key, payload.value);
   },
   [type.VIDEOS_ADD_TAG](
     contextState,
-    payload: type.VideosAddTagMutationsPayload
+    payload: type.IVideosAddTagMutationsPayload
   ) {
     payload.videos.map(i => {
       const video = contextState.storage[i];

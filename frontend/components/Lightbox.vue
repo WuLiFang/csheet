@@ -43,11 +43,15 @@ import { Input as ElInput, Popover as ElPopover } from 'element-ui';
 import Vue from 'vue';
 import { default as FaIcon } from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/regular/check-circle';
-import { ICGTeamWorkTaskResponse, IVideoResponse, VideoRole } from '@/interface';
+import {
+  ICGTeamWorkTaskResponse,
+  IVideoResponse,
+  VideoRole,
+} from '@/interface';
 import {
   PRELOAD_VIDEO,
   UPDATE_VIDEO_SELECT_STATE,
-  VideoPreloadActionPayload,
+  IVideoPreloadActionPayload,
   VideoUpdateSelectStateMutationPayload,
 } from '@/mutation-types';
 import { videoComputedMixin } from '@/store/video';
@@ -169,7 +173,7 @@ export default Vue.extend({
     onmouseenter() {
       this.isHover = true;
       this.loadSrc();
-      const payload: VideoPreloadActionPayload = {
+      const payload: IVideoPreloadActionPayload = {
         id: this.id,
         role: VideoRole.preview,
       };

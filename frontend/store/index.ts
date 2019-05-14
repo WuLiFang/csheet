@@ -43,7 +43,7 @@ export const store: Store = {
   mutations: {
     [mutations.UPDATE_ROOT_STATE](
       state,
-      payload: mutations.StateUpdateMutationPayload<IRootState>
+      payload: mutations.IStateUpdateMutationPayload<IRootState>
     ) {
       state[payload.key] = payload.value;
     },
@@ -53,14 +53,14 @@ export const store: Store = {
       Axios.get(`/api/page${PAGE_PATH}`).then(
         (value: AxiosResponse<IPageResponse>) => {
           value.data.videos.forEach(i => {
-            const payload: mutations.VideoUpdateMutationPayload = {
+            const payload: mutations.IVideoUpdateMutationPayload = {
               id: i.uuid,
               data: i,
             };
             contextState.commit(mutations.VIDEO.UPDATE, payload);
           });
           value.data.tags.forEach(i => {
-            const payload: mutations.TagUpdateMutationPayload = {
+            const payload: mutations.ITagUpdateMutationPayload = {
               id: i.id,
               data: i,
             };
@@ -68,7 +68,7 @@ export const store: Store = {
           });
           if (value.data.tasks) {
             value.data.tasks.forEach(i => {
-              const payload: mutations.CGTeamWorkTaskReadMutationPayload = {
+              const payload: mutations.ICGTeamWorkTaskReadMutationPayload = {
                 id: i.uuid,
                 data: i,
               };
@@ -109,7 +109,7 @@ export function stateSetter<T, P extends T[K], K extends keyof T = keyof T>(
   key: K
 ) {
   return function(this: Vue, value: P) {
-    const payload: mutations.StateUpdateMutationPayload<T> = {
+    const payload: mutations.IStateUpdateMutationPayload<T> = {
       key,
       value,
     };

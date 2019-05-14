@@ -14,16 +14,16 @@ import {
   MutationTree,
 } from 'vuex';
 import {
+  ITagCreateActionPayload,
+  ITagUpdateActionPayload,
+  ITagUpdateMutationPayload,
+  IVideosAddTagActionPayload,
+  IVideosAddTagMutationsPayload,
   TAG,
-  TagCreateActionPayload,
   TagDeleteActionPayload,
   TagDeleteMutationPayload,
   TagReadActionPayload,
-  TagUpdateActionPayload,
-  TagUpdateMutationPayload,
   VIDEOS_ADD_TAG,
-  VideosAddTagActionPayload,
-  VideosAddTagMutationsPayload,
 } from '../mutation-types';
 import { skipIfIsFileProtocol } from '../packtools';
 import {
@@ -80,7 +80,7 @@ const state: ITagState = {
 };
 
 const mutations: MutationTree<ITagState> = {
-  [TAG.UPDATE](contextState, payload: TagUpdateMutationPayload) {
+  [TAG.UPDATE](contextState, payload: ITagUpdateMutationPayload) {
     Vue.set(contextState.storage, String(payload.id), payload.data);
   },
   [TAG.DELETE](contextState, payload: TagDeleteMutationPayload) {
@@ -93,7 +93,7 @@ function handleTagResponse(
   context: ActionContext<ITagState, IRootState>
 ) {
   const data: ITagResponse = response.data;
-  const mutationPayload: TagUpdateMutationPayload = {
+  const mutationPayload: ITagUpdateMutationPayload = {
     id: data.id,
     data,
   };
@@ -101,7 +101,7 @@ function handleTagResponse(
 }
 
 const actions: ActionTree<ITagState, IRootState> = {
-  [TAG.CREATE]: async (context, payload: TagCreateActionPayload) => {
+  [TAG.CREATE]: async (context, payload: ITagCreateActionPayload) => {
     return skipIfIsFileProtocol(() => {
       return axios.post('/api/tag', payload.data).then(response => {
         handleTagResponse(response, context);
@@ -117,7 +117,7 @@ const actions: ActionTree<ITagState, IRootState> = {
       });
     })();
   },
-  async [TAG.UPDATE](context, payload: TagUpdateActionPayload) {
+  async [TAG.UPDATE](context, payload: ITagUpdateActionPayload) {
     return skipIfIsFileProtocol(() => {
       return axios
         .put(`/api/tag/${payload.id}`, payload.data)
@@ -132,7 +132,7 @@ const actions: ActionTree<ITagState, IRootState> = {
       return axios.delete(`/api/tag/${payload.id}`);
     })();
   },
-  async [VIDEOS_ADD_TAG](context, payload: VideosAddTagActionPayload) {
+  async [VIDEOS_ADD_TAG](context, payload: IVideosAddTagActionPayload) {
     return skipIfIsFileProtocol(() => {
       return axios
         .post(`/api/tag/${payload.id}`, payload.data)
@@ -141,7 +141,7 @@ const actions: ActionTree<ITagState, IRootState> = {
           return response;
         })
         .then(() => {
-          const mutationPayload: VideosAddTagMutationsPayload = {
+          const mutationPayload: IVideosAddTagMutationsPayload = {
             id: payload.id,
             videos: payload.data.videos,
           };

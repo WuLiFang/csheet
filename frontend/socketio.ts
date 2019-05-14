@@ -1,12 +1,12 @@
 import { PAGE_ID } from '@/constants';
 import { IVideoResponse, VideoRole } from '@/interface';
 import {
+  IVideoTagsReadIfFoundUndefinedActionPayload,
+  IVideoUpdateMutationPayload,
   READ_VIDEO_TAGS_IF_FOUND_UNDEFINED,
   REFETCH_PAGE_DATA,
   UPDATE_VIDEO_APPEARED,
   VIDEO,
-  VideoTagsReadIfFoundUndefinedActionPayload,
-  VideoUpdateMutationPayload,
 } from '@/mutation-types';
 import { isFileProtocol } from '@/packtools';
 import { ICombinedIRootState, IRootState } from '@/store/types';
@@ -61,13 +61,13 @@ export class SocketIO {
       if (!(value.uuid in this.store.state.videoStore.storage)) {
         return;
       }
-      const actionPayload: VideoTagsReadIfFoundUndefinedActionPayload = {
+      const actionPayload: IVideoTagsReadIfFoundUndefinedActionPayload = {
         video: value,
       };
       this.store
         .dispatch(READ_VIDEO_TAGS_IF_FOUND_UNDEFINED, actionPayload)
         .then(() => {
-          const mutationPayload: VideoUpdateMutationPayload = {
+          const mutationPayload: IVideoUpdateMutationPayload = {
             data: value,
             id: value.uuid,
           };

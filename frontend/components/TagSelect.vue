@@ -30,7 +30,7 @@ import { default as FaIcon } from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/tags';
 
 import { tagComputedMixin } from '@/store/tag';
-import { TagCreateActionPayload, TAG } from '@/mutation-types';
+import { ITagCreateActionPayload, TAG } from '@/mutation-types';
 
 export default Vue.extend({
   components: {
@@ -60,7 +60,7 @@ export default Vue.extend({
         const message = created.join(',');
         Promise.all(
           created.map(i => {
-            const payload: TagCreateActionPayload = { data: { text: i } };
+            const payload: ITagCreateActionPayload = { data: { text: i } };
             return this.$store.dispatch(TAG.CREATE, payload);
           })
         )

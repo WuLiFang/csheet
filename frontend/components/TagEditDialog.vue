@@ -27,7 +27,7 @@ import { default as TagSelect } from '@/components/TagSelect.vue';
 import { IVideoResponse, ITagResponse } from '@/interface';
 import { videoComputedMixin } from '@/store/video';
 import { tagComputedMixin } from '@/store/tag';
-import { VideoTagsUpdateActionPayload, VIDEO_TAGS } from '@/mutation-types';
+import { IVideoTagsUpdateActionPayload, VIDEO_TAGS } from '@/mutation-types';
 
 export default Vue.extend({
   components: {
@@ -79,7 +79,7 @@ export default Vue.extend({
       );
     },
     accept() {
-      const payload: VideoTagsUpdateActionPayload = {
+      const payload: IVideoTagsUpdateActionPayload = {
         id: this.id,
         data: {
           tags: this.selectedTags.map(i => i.id),

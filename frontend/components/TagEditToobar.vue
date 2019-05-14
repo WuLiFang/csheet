@@ -28,7 +28,7 @@ import { videoComputedMixin } from '@/store/video';
 
 import {
   UPDATE_VIDEO_SELECT_STATE,
-  VideosAddTagActionPayload,
+  IVideosAddTagActionPayload,
   VIDEOS_ADD_TAG,
   VideoUpdateSelectStateMutationPayload,
 } from '@/mutation-types';
@@ -83,7 +83,7 @@ export default Vue.extend({
     accept() {
       Promise.all(
         this.selectedTags.map(i => {
-          const payload: VideosAddTagActionPayload = {
+          const payload: IVideosAddTagActionPayload = {
             id: i.id,
             data: { videos: this.selectedVideos },
           };

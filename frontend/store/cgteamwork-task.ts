@@ -2,11 +2,11 @@ import { parseTaskStatus } from '@/datatools';
 import { ICGTeamWorkTaskResponse, TaskStage, TaskStatus } from '@/interface';
 import {
   CGTEAMWORK_TASK,
-  CGTeamWorkTaskCreateNoteActionPayload,
-  CGTeamWorkTaskReadActionPayload,
-  CGTeamWorkTaskReadMutationPayload,
-  CGTeamWorkTaskUpdateFieldActionPayload,
   CREATE_CGTEAMWORK_TASK_NOTE,
+  ICGTeamWorkTaskCreateNoteActionPayload,
+  ICGTeamWorkTaskReadActionPayload,
+  ICGTeamWorkTaskReadMutationPayload,
+  ICGTeamWorkTaskUpdateFieldActionPayload,
   UPDATE_CGTEAMWORK_TASK_FIELD,
 } from '@/mutation-types';
 import { isFileProtocol } from '@/packtools';
@@ -95,13 +95,13 @@ const state: ICGTeamworkTaskState = { storage: parseDataFromPage() };
 const mutations: MutationTree<ICGTeamworkTaskState> = {
   [CGTEAMWORK_TASK.READ](
     contextState,
-    payload: CGTeamWorkTaskReadMutationPayload
+    payload: ICGTeamWorkTaskReadMutationPayload
   ) {
     Vue.set(contextState.storage, payload.id, payload.data);
   },
   [CGTEAMWORK_TASK.UPDATE](
     contextState,
-    payload: CGTeamWorkTaskReadMutationPayload
+    payload: ICGTeamWorkTaskReadMutationPayload
   ) {
     Vue.set(contextState.storage, payload.id, payload.data);
   },
@@ -115,7 +115,7 @@ function handleCGTeamWorkTaskResponse(
     return;
   }
   const data = response.data;
-  const mutationPayload: CGTeamWorkTaskReadMutationPayload = {
+  const mutationPayload: ICGTeamWorkTaskReadMutationPayload = {
     id: data.uuid,
     data,
   };
@@ -125,7 +125,7 @@ function handleCGTeamWorkTaskResponse(
 const actions: ActionTree<ICGTeamworkTaskState, IRootState> = {
   async [CGTEAMWORK_TASK.READ](
     context,
-    payload: CGTeamWorkTaskReadActionPayload
+    payload: ICGTeamWorkTaskReadActionPayload
   ) {
     if (isFileProtocol) {
       return;
@@ -137,7 +137,7 @@ const actions: ActionTree<ICGTeamworkTaskState, IRootState> = {
   },
   async [UPDATE_CGTEAMWORK_TASK_FIELD](
     context,
-    payload: CGTeamWorkTaskUpdateFieldActionPayload
+    payload: ICGTeamWorkTaskUpdateFieldActionPayload
   ) {
     if (isFileProtocol) {
       return;
@@ -150,7 +150,7 @@ const actions: ActionTree<ICGTeamworkTaskState, IRootState> = {
   },
   async [CREATE_CGTEAMWORK_TASK_NOTE](
     context,
-    payload: CGTeamWorkTaskCreateNoteActionPayload
+    payload: ICGTeamWorkTaskCreateNoteActionPayload
   ) {
     return axios.post(`api/task_note/${payload.id}`, { text: payload.text });
   },

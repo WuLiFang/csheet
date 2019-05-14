@@ -16,11 +16,11 @@ async function handleVideoResponse(
   context: ActionContext<IVideoState, IRootState>
 ) {
   const data: IVideoResponse = response.data;
-  const mutationPayload: type.VideoUpdateMutationPayload = {
+  const mutationPayload: type.IVideoUpdateMutationPayload = {
     id: data.uuid,
     data,
   };
-  const actionPayload: type.VideoTagsReadIfFoundUndefinedActionPayload = {
+  const actionPayload: type.IVideoTagsReadIfFoundUndefinedActionPayload = {
     video: data,
   };
   return context
@@ -37,7 +37,7 @@ function handleTagsResponse(
 ) {
   const dataArray: ITagResponse[] = response.data;
   dataArray.map(data => {
-    const mutationPayload: type.TagUpdateMutationPayload = {
+    const mutationPayload: type.ITagUpdateMutationPayload = {
       id: data.id,
       data,
     };
@@ -53,21 +53,24 @@ export const actions: ActionTree<IVideoState, IRootState> = {
         .then(response => handleVideoResponse(response, context));
     })();
   },
-  async [type.VIDEO.UPDATE](context, payload: type.VideoUpdateActionPayload) {
+  async [type.VIDEO.UPDATE](context, payload: type.IVideoUpdateActionPayload) {
     return skipIfIsFileProtocol(() => {
       return axios
         .put(`/api/video/${payload.id}`, payload.data)
         .then(response => handleVideoResponse(response, context));
     })();
   },
-  async [type.PRELOAD_VIDEO](context, payload: type.VideoPreloadActionPayload) {
+  async [type.PRELOAD_VIDEO](
+    context,
+    payload: type.IVideoPreloadActionPayload
+  ) {
     return skipIfIsFileProtocol(() => {
       const url = context.getters.getVideoURI(payload.id, payload.role);
       const config = { ...payload }; // Create new obejct to save config to avoid mutation in other place.
       if (!url || context.state.blobURLMap[url]) {
         return;
       }
-      const actionPayload: type.PreloadURLActionPayload = {
+      const actionPayload: type.IPreloadURLActionPayload = {
         url,
         onprogress(event: ProgressEvent) {
           if (payload.onprogress) {
@@ -78,7 +81,7 @@ export const actions: ActionTree<IVideoState, IRootState> = {
       return context.dispatch(type.PRELOAD_URL, actionPayload);
     })();
   },
-  async [type.PRELOAD_URL](context, payload: type.PreloadURLActionPayload) {
+  async [type.PRELOAD_URL](context, payload: type.IPreloadURLActionPayload) {
     return skipIfIsFileProtocol(() => {
       return axios
         .get(payload.url, {
@@ -86,7 +89,7 @@ export const actions: ActionTree<IVideoState, IRootState> = {
           onDownloadProgress: payload.onprogress,
         })
         .then(response => {
-          const mutationPayload: type.UpdateBlobHubMutationPayload = {
+          const mutationPayload: type.IUpdateBlobHubMutationPayload = {
             url: payload.url,
             blob: response.data as Blob,
           };
@@ -102,7 +105,7 @@ export const actions: ActionTree<IVideoState, IRootState> = {
       );
       return element && isElementAppeared(element);
     });
-    const mutationPayload: type.VideoUpdateBlobWhiteListMapMutationPayload = {
+    const mutationPayload: type.IVideoUpdateBlobWhiteListMapMutationPayload = {
       key: 'appeared',
       value: ret,
     };
@@ -112,7 +115,7 @@ export const actions: ActionTree<IVideoState, IRootState> = {
   },
   async [type.VIDEO_TAGS.CREATE](
     context,
-    payload: type.VideoTagsCreateActionPayload
+    payload: type.IVideoTagsCreateActionPayload
   ) {
     return skipIfIsFileProtocol(() => {
       return axios
@@ -122,7 +125,7 @@ export const actions: ActionTree<IVideoState, IRootState> = {
   },
   async [type.VIDEO_TAGS.UPDATE](
     context,
-    payload: type.VideoTagsUpdateActionPayload
+    payload: type.IVideoTagsUpdateActionPayload
   ) {
     return skipIfIsFileProtocol(() => {
       return axios
@@ -135,7 +138,7 @@ export const actions: ActionTree<IVideoState, IRootState> = {
   },
   async [type.VIDEO_TAGS.DELETE](
     context,
-    payload: type.VideoTagsDeleteActionPayload
+    payload: type.IVideoTagsDeleteActionPayload
   ) {
     return skipIfIsFileProtocol(() => {
       return axios
@@ -158,7 +161,7 @@ export const actions: ActionTree<IVideoState, IRootState> = {
   },
   async [type.READ_VIDEO_TAGS_IF_FOUND_UNDEFINED](
     context,
-    payload: type.VideoTagsReadIfFoundUndefinedActionPayload
+    payload: type.IVideoTagsReadIfFoundUndefinedActionPayload
   ) {
     return skipIfIsFileProtocol(() => {
       const video = payload.video;

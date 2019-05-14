@@ -19,7 +19,7 @@ import { TaskStatus, ICGTeamWorkTaskResponse, IStringMap } from '@/interface';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import {
   UPDATE_CGTEAMWORK_TASK_FIELD,
-  CGTeamWorkTaskUpdateFieldActionPayload,
+  ICGTeamWorkTaskUpdateFieldActionPayload,
 } from '@/mutation-types';
 import { parseTaskStatus } from '@/datatools';
 
@@ -74,7 +74,7 @@ export default Vue.extend({
   },
   methods: {
     approve() {
-      const payload: CGTeamWorkTaskUpdateFieldActionPayload = {
+      const payload: ICGTeamWorkTaskUpdateFieldActionPayload = {
         id: this.taskId,
         field: this.field,
         data: { value: 'Approve', is_status: true },
@@ -89,7 +89,7 @@ export default Vue.extend({
     retake() {
       MessageBox.prompt('原因', '设为返修')
         .then((result: any) => {
-          const payload: CGTeamWorkTaskUpdateFieldActionPayload = {
+          const payload: ICGTeamWorkTaskUpdateFieldActionPayload = {
             id: this.taskId,
             field: this.field,
             data: {

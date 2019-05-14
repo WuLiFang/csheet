@@ -8,7 +8,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ITagResponse, IVideoResponse } from '@/interface';
-import { VideoTagsDeleteActionPayload, VIDEO_TAGS } from '@/mutation-types';
+import { IVideoTagsDeleteActionPayload, VIDEO_TAGS } from '@/mutation-types';
 import { isFileProtocol } from '@/packtools';
 import { default as TagEditDialog } from '@/components/TagEditDialog.vue';
 import { Tag, Button } from 'element-ui';
@@ -30,7 +30,7 @@ export default class Tags extends Vue {
     return this.video.tags.map(i => this.$store.state.tagStore.storage[i]);
   }
   deleteVideoTag(tag: ITagResponse) {
-    const payload: VideoTagsDeleteActionPayload = {
+    const payload: IVideoTagsDeleteActionPayload = {
       id: this.video.uuid,
       data: {
         tags: [tag.id],

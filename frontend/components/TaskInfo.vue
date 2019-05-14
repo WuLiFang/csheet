@@ -12,7 +12,7 @@ import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import { IVideoResponse } from '@/interface';
 import { videoComputedMixin } from '@/store/video';
 import {
-  CGTeamWorkTaskReadActionPayload,
+  ICGTeamWorkTaskReadActionPayload,
   CGTEAMWORK_TASK,
 } from '@/mutation-types';
 
@@ -60,7 +60,7 @@ export default Vue.extend({
         return;
       }
       this.video.related_tasks.forEach(i => {
-        const payload: CGTeamWorkTaskReadActionPayload = { id: i };
+        const payload: ICGTeamWorkTaskReadActionPayload = { id: i };
         this.$store.dispatch(CGTEAMWORK_TASK.READ, payload);
       });
     },

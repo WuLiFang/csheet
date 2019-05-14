@@ -40,7 +40,7 @@ import { default as RelativeTime } from '@/components/RelativeTime.vue';
 
 import { IVideoResponse } from '@/interface';
 import { videoComputedMixin } from '@/store/video';
-import { VIDEO, VideoUpdateActionPayload } from '@/mutation-types';
+import { VIDEO, IVideoUpdateActionPayload } from '@/mutation-types';
 import clipboard from 'clipboard';
 
 export default Vue.extend({
@@ -63,7 +63,7 @@ export default Vue.extend({
   },
   methods: {
     retryTranscode() {
-      const payload: VideoUpdateActionPayload = {
+      const payload: IVideoUpdateActionPayload = {
         id: this.id,
         data: {
           key: 'src_broken_mtime',

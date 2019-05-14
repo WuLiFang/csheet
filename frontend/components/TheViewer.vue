@@ -89,10 +89,10 @@ import {
   VideoReadActionPayload,
   VIDEO,
   PRELOAD_VIDEO,
-  VideoPreloadActionPayload,
-  VideoUpdateBlobWhiteListMapMutationPayload,
+  IVideoPreloadActionPayload,
+  IVideoUpdateBlobWhiteListMapMutationPayload,
   UPDATE_VIDEO_BLOB_WHITELIST,
-  StateUpdateMutationPayload,
+  IStateUpdateMutationPayload,
   UPDATE_ROOT_STATE,
 } from '@/mutation-types';
 import { preloadVideo, preloadImage } from '@/preload';
@@ -159,7 +159,7 @@ export default class TheViewer extends Vue {
     return this.$store.state.isEnablePreview;
   }
   set isEnablePreview(value: boolean) {
-    const payload: StateUpdateMutationPayload<DollarStore['state']> = {
+    const payload: IStateUpdateMutationPayload<DollarStore['state']> = {
       key: 'isEnablePreview',
       value,
     };
@@ -342,7 +342,7 @@ export default class TheViewer extends Vue {
     });
   }
   preload(id: string) {
-    const payload: VideoPreloadActionPayload = {
+    const payload: IVideoPreloadActionPayload = {
       id,
       role: VideoRole.poster,
       onprogress: this.onLoadProgress,
@@ -361,7 +361,7 @@ export default class TheViewer extends Vue {
       this.$refs.video.pause();
     }
   }
-  onLoadProgress(event: ProgressEvent, config: VideoPreloadActionPayload) {
+  onLoadProgress(event: ProgressEvent, config: IVideoPreloadActionPayload) {
     if (config.id !== this.videoId) {
       return;
     }
@@ -383,7 +383,7 @@ export default class TheViewer extends Vue {
     );
     blobWhitelist.map(this.preload);
 
-    const payload: VideoUpdateBlobWhiteListMapMutationPayload = {
+    const payload: IVideoUpdateBlobWhiteListMapMutationPayload = {
       key: 'viewer',
       value: blobWhitelist,
     };
