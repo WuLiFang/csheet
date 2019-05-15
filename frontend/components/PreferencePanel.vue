@@ -63,46 +63,41 @@
         ) 重置过滤
 </template>
 <script lang="ts">
+import { USERNAME } from '@/constants';
+import { TaskStage, TaskStatus } from '@/interface';
+import { isFileProtocol } from '@/packtools';
+import { getDefaultStatusFilter, mapIRootStateModelMixin } from '@/store';
+import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
+import { tagComputedMixin } from '@/store/tag';
+import { videoComputedMixin } from '@/store/video';
+import _ from 'lodash';
 import Vue from 'vue';
 
-import _ from 'lodash';
-
-import {
-  Input as ElInput,
-  Checkbox as ElCheckbox,
-  Button as ElButton,
-  Select as ElSelect,
-  Option as ElOption,
-  Autocomplete as ElAutocomplete,
-} from 'element-ui';
-
+import { default as ArtistSelect } from '@/components/ArtistSelect.vue';
 import { default as FileCount } from '@/components/FileCount.vue';
 import { default as StatusSelect } from '@/components/StatusSelect.vue';
 import { default as TagSelect } from '@/components/TagSelect.vue';
-import { default as ArtistSelect } from '@/components/ArtistSelect.vue';
+import {
+  Autocomplete as ElAutocomplete,
+  Button as ElButton,
+  Checkbox as ElCheckbox,
+  Input as ElInput,
+  Option as ElOption,
+  Select as ElSelect,
+} from 'element-ui';
 
-import { mapIRootStateModelMixin, getDefaultStatusFilter } from '@/store';
-
-import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
-import { TaskStage, TaskStatus } from '@/interface';
-import { isFileProtocol } from '@/packtools';
-import { videoComputedMixin } from '@/store/video';
-import { tagComputedMixin } from '@/store/tag';
-import { USERNAME } from '@/constants';
-
-// @ts-ignore
 export default Vue.extend({
   components: {
+    ArtistSelect,
+    ElAutocomplete,
+    ElButton,
+    ElCheckbox,
+    ElInput,
+    ElOption,
+    ElSelect,
+    FileCount,
     StatusSelect,
     TagSelect,
-    ElInput,
-    ElCheckbox,
-    ElButton,
-    ElSelect,
-    ElOption,
-    ElAutocomplete,
-    ArtistSelect,
-    FileCount,
   },
   data() {
     return {
@@ -153,7 +148,7 @@ export default Vue.extend({
         this.tagTextFilterModel.length > 0 ||
         // @ts-ignore
         Object.keys(this.statusFilterModel).some(i => {
-          const key = <keyof typeof TaskStatus>i;
+          const key = i as keyof typeof TaskStatus;
           // @ts-ignore
           return this.statusFilterModel[key] !== defaultStatusFilter[key];
         })

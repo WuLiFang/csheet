@@ -3,24 +3,25 @@
     | {{text}}
 </template>
 <script lang="ts">
-import Vue from 'vue';
-import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import {
   ICGTeamWorkTaskResponse,
-  TaskStatusText,
-  TaskStatus,
   TaskStage,
+  TaskStatus,
+  TaskStatusText,
 } from '@/interface';
 import { taskStatusTextL10n } from '@/statustools';
+import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
+import Vue from 'vue';
 
 export default Vue.extend({
   props: {
     id: { type: String },
     statusStage: {
-      type: <() => TaskStage>Number,
       default: TaskStage.director,
+      type: Number as () => TaskStage,
     },
   },
+
   computed: {
     ...CGTeamWorkTaskComputedMixin,
     task(): ICGTeamWorkTaskResponse | undefined {
@@ -30,7 +31,7 @@ export default Vue.extend({
       return taskStatusTextL10n(this.statusText);
     },
     statusText(): TaskStatusText {
-      return <TaskStatusText>TaskStatus[this.status];
+      return TaskStatus[this.status] as TaskStatusText;
     },
     status(): TaskStatus {
       return this.getGeneralStatus(this.id, this.statusStage);

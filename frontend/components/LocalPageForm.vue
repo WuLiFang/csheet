@@ -14,22 +14,22 @@
 
 </template>
 <script lang="ts">
+import { buildURL, getCookie } from '@/datatools';
+import { showFullScreenLoading } from '@/index';
 import Vue from 'vue';
 
 import {
-  Input as ElInput,
   Button as ElButton,
   Form as ElForm,
   FormItem as ElFormItem,
+  Input as ElInput,
 } from 'element-ui';
-import { showFullScreenLoading } from '@/index';
-import { getCookie, buildURL } from '@/datatools';
 
 export default Vue.extend({
   components: {
+    ElButton,
     ElForm,
     ElFormItem,
-    ElButton,
     ElInput,
   },
   data() {
@@ -41,6 +41,7 @@ export default Vue.extend({
         root: [
           { required: true, message: '请填写文件夹路径', trigger: 'blur' },
           {
+            trigger: 'blur',
             validator: (
               rule: any,
               value: string,
@@ -54,7 +55,6 @@ export default Vue.extend({
                 callback();
               }
             },
-            trigger: 'blur',
           },
         ],
       },
@@ -62,7 +62,7 @@ export default Vue.extend({
   },
   computed: {
     formComponent(): ElForm {
-      return <ElForm>this.$refs.form;
+      return this.$refs.form as ElForm;
     },
   },
   methods: {
