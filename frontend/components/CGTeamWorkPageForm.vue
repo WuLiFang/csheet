@@ -22,45 +22,47 @@
 
 </template>
 <script lang="ts">
+import { buildURL, getCookie } from '@/datatools';
+import { projects, showFullScreenLoading } from '@/index';
 import Vue from 'vue';
 
 import {
-  Input as ElInput,
   Button as ElButton,
-  Radio as ElRadio,
-  Select as ElSelect,
-  Option as ElOption,
   Form as ElForm,
   FormItem as ElFormItem,
+  Input as ElInput,
+  Option as ElOption,
+  Radio as ElRadio,
+  Select as ElSelect,
 } from 'element-ui';
-import { projects, showFullScreenLoading } from '@/index';
-import { getCookie, buildURL } from '@/datatools';
 
 export default Vue.extend({
   components: {
+    ElButton,
     ElForm,
     ElFormItem,
-    ElSelect,
-    ElOption,
-    ElButton,
-    ElRadio,
     ElInput,
+    ElOption,
+    ElRadio,
+    ElSelect,
   },
   data() {
     return {
       form: {
-        project: getCookie('project'),
         pipeline: getCookie('pipeline'),
         prefix: getCookie('prefix'),
+        project: getCookie('project'),
       },
+      is_opening: false,
+      projects,
       rules: {
-        project: [{ required: true, message: '请选择项目', trigger: 'blur' }],
         pipeline: [
           { required: true, message: '请选择流程', trigger: 'change' },
         ],
         prefix: [
           { required: true, message: '请输入前缀', trigger: 'blur' },
           {
+            trigger: 'blur',
             validator: (
               rule: any,
               value: string,
@@ -72,21 +74,20 @@ export default Vue.extend({
                 callback();
               }
             },
-            trigger: 'blur',
           },
         ],
+        project: [{ required: true, message: '请选择项目', trigger: 'blur' }],
       },
-      projects,
-      is_opening: false,
     };
   },
 
   methods: {
     inputPrefix(): HTMLInputElement {
-      return <HTMLInputElement>(<ElInput>this.$refs.inputPrefix).$refs.input;
+      return (this.$refs.inputPrefix as ElInput).$refs
+        .input as HTMLInputElement;
     },
     formComponent(): ElForm {
-      return <ElForm>this.$refs.form;
+      return this.$refs.form as ElForm;
     },
     open() {
       this.formComponent().validate((valid: boolean) => {
