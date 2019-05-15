@@ -4,30 +4,32 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
 import { TaskStatus, TaskStatusText } from '@/interface';
+import Vue from 'vue';
 
 export default Vue.extend({
   props: {
-    status: { type: <() => TaskStatus>Number },
+    status: { type: Number as () => TaskStatus },
   },
+
   computed: {
     statusText(): TaskStatusText {
-      return <TaskStatusText>TaskStatus[this.status];
+      return TaskStatus[this.status] as TaskStatusText;
     },
     text(): string {
       return this.l10n(this.statusText);
     },
   },
+
   methods: {
     l10n(text: TaskStatusText): string {
       return {
-        Close: '关闭',
-        Wait: '等待',
-        Check: '检查',
-        Retake: '返修',
         Approve: '通过',
+        Check: '检查',
+        Close: '关闭',
+        Retake: '返修',
         Unset: '未设置',
+        Wait: '等待',
       }[text];
     },
   },

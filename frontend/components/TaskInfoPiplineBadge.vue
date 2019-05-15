@@ -7,27 +7,26 @@
 </template>
 
 <script lang="ts">
+import { ICGTeamWorkTaskResponse, TaskStatus } from '@/interface';
+import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import Vue from 'vue';
 
+import { default as TaskInfoPiplineBadgePoper } from '@/components/TaskInfoPiplineBadgePoper.vue';
+import { default as TaskInfoStatus } from '@/components/TaskInfoStatus.vue';
+import { default as TaskInfoStatusEdit } from '@/components/TaskInfoStatusEdit.vue';
 import { Popover } from 'element-ui';
 
-import { default as TaskInfoStatusEdit } from '@/components/TaskInfoStatusEdit.vue';
-import { default as TaskInfoStatus } from '@/components/TaskInfoStatus.vue';
-import { default as TaskInfoPiplineBadgePoper } from '@/components/TaskInfoPiplineBadgePoper.vue';
-
-import { TaskStatus, ICGTeamWorkTaskResponse } from '@/interface';
-import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
-
 export default Vue.extend({
+  components: {
+    Popover,
+    TaskInfoPiplineBadgePoper,
+    TaskInfoStatus,
+    TaskInfoStatusEdit,
+  },
   props: {
     taskId: { type: String },
   },
-  components: {
-    Popover,
-    TaskInfoStatusEdit,
-    TaskInfoStatus,
-    TaskInfoPiplineBadgePoper,
-  },
+
   computed: {
     ...CGTeamWorkTaskComputedMixin,
     model(): ICGTeamWorkTaskResponse | undefined {

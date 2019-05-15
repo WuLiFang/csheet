@@ -4,25 +4,24 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { IVideoResponse } from '@/interface';
+import {
+  CGTEAMWORK_TASK,
+  ICGTeamWorkTaskReadActionPayload,
+} from '@/mutation-types';
+import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
+import { videoComputedMixin } from '@/store/video';
 import _ from 'lodash';
+import Vue from 'vue';
 
 import { default as TaskInfoPiplineBadge } from '@/components/TaskInfoPiplineBadge.vue';
-import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
-import { IVideoResponse } from '@/interface';
-import { videoComputedMixin } from '@/store/video';
-import {
-  ICGTeamWorkTaskReadActionPayload,
-  CGTEAMWORK_TASK,
-} from '@/mutation-types';
 
 export default Vue.extend({
-  props: {
-    id: { type: String },
-  },
   components: {
     TaskInfoPiplineBadge,
   },
+  props: { id: { type: String } },
+
   computed: {
     ...CGTeamWorkTaskComputedMixin,
     ...videoComputedMixin,
@@ -36,6 +35,7 @@ export default Vue.extend({
       return _.orderBy(this.video.related_tasks, this.badge_key);
     },
   },
+
   methods: {
     badge_key(id: string) {
       const task = this.cgTeamworkTaskStore.storage[id];
@@ -70,6 +70,7 @@ export default Vue.extend({
       this.readTaskData();
     },
   },
+
   mounted() {
     this.readTaskData();
   },
