@@ -9,12 +9,12 @@
 
 <script lang="ts">
 import moment from 'moment';
-import { Vue, Prop, Component } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
-@Component({})
+@Component<RelativeTime>({})
 export default class RelativeTime extends Vue {
   @Prop({ type: Number })
-  value!: number | string;
+  public value!: number | string;
 
   get moment() {
     if (typeof this.value === 'number') {
@@ -31,4 +31,3 @@ export default class RelativeTime extends Vue {
   margin: 0 1em;
 }
 </style>
-

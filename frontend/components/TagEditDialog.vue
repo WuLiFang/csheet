@@ -13,21 +13,20 @@
 </template>
 
 <script lang="ts">
+import { ITagResponse, IVideoResponse } from '@/interface';
+import { IVideoTagsUpdateActionPayload, VIDEO_TAGS } from '@/mutation-types';
+import { tagComputedMixin } from '@/store/tag';
+import { videoComputedMixin } from '@/store/video';
+import _ from 'lodash';
 import Vue from 'vue';
 
-import _ from 'lodash';
+import { default as TagSelect } from '@/components/TagSelect.vue';
 import {
   Button as ElButton,
   Dialog as ElDialog,
   Message,
   Notification,
 } from 'element-ui';
-
-import { default as TagSelect } from '@/components/TagSelect.vue';
-import { IVideoResponse, ITagResponse } from '@/interface';
-import { videoComputedMixin } from '@/store/video';
-import { tagComputedMixin } from '@/store/tag';
-import { IVideoTagsUpdateActionPayload, VIDEO_TAGS } from '@/mutation-types';
 
 export default Vue.extend({
   components: {
@@ -39,11 +38,13 @@ export default Vue.extend({
     id: { type: String },
     visible: { default: false },
   },
+
   data() {
     return {
-      tagSelectModel: <string[]>[],
+      tagSelectModel: [] as string[],
     };
   },
+
   computed: {
     ...videoComputedMixin,
     ...tagComputedMixin,
@@ -62,13 +63,6 @@ export default Vue.extend({
       return _.flatMap(this.tagSelectModel, i => this.ITagStoreByText[i] || []);
     },
   },
-  watch: {
-    visible(value: boolean) {
-      if (value) {
-        this.reset();
-      }
-    },
-  },
   methods: {
     reset() {
       if (!this.video) {
@@ -80,10 +74,10 @@ export default Vue.extend({
     },
     accept() {
       const payload: IVideoTagsUpdateActionPayload = {
-        id: this.id,
         data: {
           tags: this.selectedTags.map(i => i.id),
         },
+        id: this.id,
       };
       this.$store
         .dispatch(VIDEO_TAGS.UPDATE, payload)
@@ -92,8 +86,8 @@ export default Vue.extend({
         })
         .catch(reason => {
           Notification({
-            title: '编辑标签失败',
             message: String(reason),
+            title: '编辑标签失败',
             type: 'error',
           });
         });
@@ -101,6 +95,13 @@ export default Vue.extend({
     },
     reject() {
       this.isVisible = false;
+    },
+  },
+  watch: {
+    visible(value: boolean) {
+      if (value) {
+        this.reset();
+      }
     },
   },
 });

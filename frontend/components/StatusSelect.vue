@@ -10,33 +10,36 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import _ from 'lodash';
-import { Switch } from 'element-ui';
 import { TaskStatus, TaskStatusText } from '@/interface';
-import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import { taskStatusTextL10n } from '@/statustools';
+import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import { StatusSelectResult } from '@/store/types';
+import _ from 'lodash';
+import Vue from 'vue';
+
+import { Switch } from 'element-ui';
 
 export default Vue.extend({
-  props: { value: { type: <() => StatusSelectResult>Object } },
   components: {
     ElSwitch: Switch,
   },
+  props: { value: { type: Object as () => StatusSelectResult } },
+
   data() {
     return {
       TaskStatus,
     };
   },
+
   computed: {
     ...CGTeamWorkTaskComputedMixin,
     result(): StatusSelectResult {
       return this.value;
     },
     allStatus(): TaskStatusText[] {
-      return <TaskStatusText[]>(
-        Object.keys(TaskStatus).filter(i => isNaN(Number.parseInt(i, 10)))
-      );
+      return Object.keys(TaskStatus).filter(i =>
+        isNaN(Number.parseInt(i, 10))
+      ) as TaskStatusText[];
     },
   },
   methods: {
