@@ -11,27 +11,26 @@
 </template>
 
 <script lang="ts">
+import { ITagResponse } from '@/interface';
+import {
+  IVideosAddTagActionPayload,
+  UPDATE_VIDEO_SELECT_STATE,
+  VIDEOS_ADD_TAG,
+  VideoUpdateSelectStateMutationPayload,
+} from '@/mutation-types';
+import { isFileProtocol } from '@/packtools';
+import { mapIRootStateModelMixin, RootComputedMixin } from '@/store';
+import { tagComputedMixin } from '@/store/tag';
+import { videoComputedMixin } from '@/store/video';
 import Vue from 'vue';
+
+import TagSelect from '@/components/TagSelect.vue';
 import {
   Button as ElButton,
   ButtonGroup as ElButtonGroup,
   Message,
   Notification,
 } from 'element-ui';
-
-import TagSelect from '@/components/TagSelect.vue';
-import { isFileProtocol } from '@/packtools';
-import { RootComputedMixin, mapIRootStateModelMixin } from '@/store';
-import { ITagResponse } from '@/interface';
-import { tagComputedMixin } from '@/store/tag';
-import { videoComputedMixin } from '@/store/video';
-
-import {
-  UPDATE_VIDEO_SELECT_STATE,
-  IVideosAddTagActionPayload,
-  VIDEOS_ADD_TAG,
-  VideoUpdateSelectStateMutationPayload,
-} from '@/mutation-types';
 
 export default Vue.extend({
   components: {
@@ -42,7 +41,7 @@ export default Vue.extend({
   data() {
     return {
       isFileProtocol,
-      selectedTagsText: <string[]>[],
+      selectedTagsText: [] as string[],
     };
   },
   computed: {
@@ -84,8 +83,8 @@ export default Vue.extend({
       Promise.all(
         this.selectedTags.map(i => {
           const payload: IVideosAddTagActionPayload = {
-            id: i.id,
             data: { videos: this.selectedVideos },
+            id: i.id,
           };
           return this.$store.dispatch(VIDEOS_ADD_TAG, payload);
         })
@@ -96,8 +95,8 @@ export default Vue.extend({
         })
         .catch(reason => {
           Notification({
-            title: '添加标签失败',
             message: String(reason),
+            title: '添加标签失败',
             type: 'error',
           });
         });

@@ -18,35 +18,36 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { ITagCreateActionPayload, TAG } from '@/mutation-types';
+import { tagComputedMixin } from '@/store/tag';
 import _ from 'lodash';
+import Vue from 'vue';
 
 import {
-  Select as ElSelect,
-  Option as ElOption,
   Notification,
+  Option as ElOption,
+  Select as ElSelect,
 } from 'element-ui';
 import { default as FaIcon } from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/tags';
 
-import { tagComputedMixin } from '@/store/tag';
-import { ITagCreateActionPayload, TAG } from '@/mutation-types';
-
 export default Vue.extend({
   components: {
-    ElSelect,
     ElOption,
+    ElSelect,
     FaIcon,
   },
   props: {
-    value: { type: <() => string[]>Array },
-    size: { default: 'mini' },
     allowCreate: { default: false },
     placeholder: { default: '选择或创建标签' },
+    size: { default: 'mini' },
+    value: { type: Array as () => string[] },
   },
+
   data() {
     return {};
   },
+
   computed: {
     ...tagComputedMixin,
     result: {
@@ -68,8 +69,8 @@ export default Vue.extend({
             this.$emit('input', value);
             if (message) {
               Notification({
-                title: '成功创建了标签',
                 message,
+                title: '成功创建了标签',
                 type: 'success',
               });
             }

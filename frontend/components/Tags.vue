@@ -6,12 +6,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ITagResponse, IVideoResponse } from '@/interface';
 import { IVideoTagsDeleteActionPayload, VIDEO_TAGS } from '@/mutation-types';
 import { isFileProtocol } from '@/packtools';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+
 import { default as TagEditDialog } from '@/components/TagEditDialog.vue';
-import { Tag, Button } from 'element-ui';
+import { Button, Tag } from 'element-ui';
 
 @Component({
   components: { Tag, Button, TagEditDialog },
@@ -20,8 +21,8 @@ export default class Tags extends Vue {
   @Prop(String)
   public id!: string;
 
-  isFileProtocol = isFileProtocol;
-  isTagEditDialogVisible = false;
+  public isFileProtocol = isFileProtocol;
+  public isTagEditDialogVisible = false;
 
   get video(): IVideoResponse {
     return this.$store.state.videoStore.storage[this.id];
@@ -29,12 +30,13 @@ export default class Tags extends Vue {
   get tags(): ITagResponse[] {
     return this.video.tags.map(i => this.$store.state.tagStore.storage[i]);
   }
-  deleteVideoTag(tag: ITagResponse) {
+
+  public deleteVideoTag(tag: ITagResponse) {
     const payload: IVideoTagsDeleteActionPayload = {
-      id: this.video.uuid,
       data: {
         tags: [tag.id],
       },
+      id: this.video.uuid,
     };
     this.$store.dispatch(VIDEO_TAGS.DELETE, payload);
   }
