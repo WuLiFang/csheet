@@ -33,27 +33,21 @@ import Vue from 'vue';
 
 import { Button as ElButton, Message } from 'element-ui';
 import { default as FaIcon } from 'vue-awesome/components/Icon';
-import 'vue-awesome/icons/regular/file-video';
 import 'vue-awesome/icons/regular/file-image';
+import 'vue-awesome/icons/regular/file-video';
 
 import { default as RelativeTime } from '@/components/RelativeTime.vue';
 
 import { IVideoResponse } from '@/interface';
+import { IVideoUpdateActionPayload, VIDEO } from '@/mutation-types';
 import { videoComputedMixin } from '@/store/video';
-import { VIDEO, IVideoUpdateActionPayload } from '@/mutation-types';
 import clipboard from 'clipboard';
 
 export default Vue.extend({
-  props: { id: { type: String } },
   components: {
-    RelativeTime,
-    FaIcon,
     ElButton,
-  },
-  data(): { clipboard?: clipboard } {
-    return {
-      clipboard: undefined,
-    };
+    FaIcon,
+    RelativeTime,
   },
   computed: {
     ...videoComputedMixin,
@@ -61,17 +55,30 @@ export default Vue.extend({
       return this.videoStore.storage[this.id];
     },
   },
+  data(): { clipboard?: clipboard } {
+    return {
+      clipboard: undefined,
+    };
+  },
+  props: { id: { type: String } },
+
   methods: {
     retryTranscode() {
       const payload: IVideoUpdateActionPayload = {
-        id: this.id,
         data: {
           key: 'src_broken_mtime',
           value: null,
         },
+        id: this.id,
       };
       this.$store.dispatch(VIDEO.UPDATE, payload);
     },
+  },
+
+  destroyed() {
+    if (this.clipboard) {
+      this.clipboard.destroy();
+    }
   },
   mounted() {
     this.clipboard = new clipboard('.path', { container: this.$el });
@@ -81,11 +88,6 @@ export default Vue.extend({
     this.clipboard.on('error', () => {
       Message.error('使用 Ctrl + V 复制');
     });
-  },
-  destroyed() {
-    if (this.clipboard) {
-      this.clipboard.destroy();
-    }
   },
 });
 </script>

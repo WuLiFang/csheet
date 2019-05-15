@@ -35,49 +35,35 @@
 </template>
 
 <script lang='ts'>
-import { isFileProtocol } from '@/packtools';
-import { preloadImage, preloadVideo } from '@/preload';
-import { RootComputedMixin } from '@/store';
-import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
-import { Input as ElInput, Popover as ElPopover } from 'element-ui';
-import Vue from 'vue';
-import { default as FaIcon } from 'vue-awesome/components/Icon';
-import 'vue-awesome/icons/regular/check-circle';
 import {
   ICGTeamWorkTaskResponse,
   IVideoResponse,
   VideoRole,
 } from '@/interface';
 import {
+  IVideoPreloadActionPayload,
   PRELOAD_VIDEO,
   UPDATE_VIDEO_SELECT_STATE,
-  IVideoPreloadActionPayload,
   VideoUpdateSelectStateMutationPayload,
 } from '@/mutation-types';
+import { isFileProtocol } from '@/packtools';
+import { preloadImage, preloadVideo } from '@/preload';
+import { RootComputedMixin } from '@/store';
+import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import { videoComputedMixin } from '@/store/video';
+import Vue from 'vue';
+
 import { default as LightboxTaskStatus } from '@/components/LightboxTaskStatus.vue';
+import { Input as ElInput, Popover as ElPopover } from 'element-ui';
+import { default as FaIcon } from 'vue-awesome/components/Icon';
+import 'vue-awesome/icons/regular/check-circle';
 
 export default Vue.extend({
   components: {
-    LightboxTaskStatus,
-    FaIcon,
-    ElPopover,
     ElInput,
-  },
-  props: {
-    id: { type: String },
-  },
-  data() {
-    return {
-      isHover: false,
-      tagSelectModel: [],
-      isTagEditDialogVisible: false,
-      forceShrink: false,
-      src: <string | null>null,
-      poster: <string | null>null,
-      ratio: 0.5625,
-      isFileProtocol,
-    };
+    ElPopover,
+    FaIcon,
+    LightboxTaskStatus,
   },
   computed: {
     ...videoComputedMixin,
@@ -123,7 +109,7 @@ export default Vue.extend({
       return {};
     },
     videoElement(): HTMLVideoElement {
-      return <HTMLVideoElement>this.$refs.video;
+      return this.$refs.video as HTMLVideoElement;
     },
     taskId(): string | null {
       return this.task ? this.task.uuid : null;
@@ -135,6 +121,22 @@ export default Vue.extend({
       return this.$store.state.isEnablePreview;
     },
   },
+  data() {
+    return {
+      forceShrink: false,
+      isFileProtocol,
+      isHover: false,
+      isTagEditDialogVisible: false,
+      poster: null as string | null,
+      ratio: 0.5625,
+      src: null as string | null,
+      tagSelectModel: [],
+    };
+  },
+  props: {
+    id: { type: String },
+  },
+
   methods: {
     onclick() {
       if (this.isEditingTags) {
@@ -230,7 +232,7 @@ export default Vue.extend({
     this.poster = this.posterURL;
     this.loadPoster();
     this.$nextTick(() => {
-      this.videoElementHub.set(this.id, <HTMLElement | undefined>this.$el);
+      this.videoElementHub.set(this.id, this.$el as HTMLElement | undefined);
     });
   },
 });

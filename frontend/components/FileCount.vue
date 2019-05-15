@@ -15,11 +15,10 @@
 <script lang="ts">
 import Vue from 'vue';
 
-// @ts-ignore
 import FaIcon from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/regular/file';
-import 'vue-awesome/icons/regular/file-video';
 import 'vue-awesome/icons/regular/file-image';
+import 'vue-awesome/icons/regular/file-video';
 
 import { videoComputedMixin } from '@/store/video';
 
