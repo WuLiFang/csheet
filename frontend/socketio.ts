@@ -9,7 +9,7 @@ import {
   VIDEO,
 } from '@/mutation-types';
 import { isFileProtocol } from '@/packtools';
-import { ICombinedIRootState, IRootState } from '@/store/types';
+import { ICombinedRootState, IRootState } from '@/store/types';
 import * as _ from 'lodash';
 import Notify from 'notifyjs';
 import * as io from 'socket.io-client';
@@ -24,7 +24,7 @@ if (!isFileProtocol && isSupportNotify) {
 
 export class SocketIO {
   public socket: SocketIOClient.Socket;
-  public store: Store<ICombinedIRootState>;
+  public store: Store<ICombinedRootState>;
   public updateAppeared = _.throttle(() => {
     this.store.dispatch(UPDATE_VIDEO_APPEARED);
     const appeared: string[] =
@@ -32,7 +32,7 @@ export class SocketIO {
     this.requestUpdate(appeared);
   }, 5000);
   constructor(store: Store<IRootState>) {
-    this.store = store as Store<ICombinedIRootState>;
+    this.store = store as Store<ICombinedRootState>;
     this.socket = io(`/`, { path: '/api/socket.io' });
     this.socket.on('asset update', this.onAssetUpdate.bind(this));
     this.socket.on('connect', this.onConnect.bind(this));

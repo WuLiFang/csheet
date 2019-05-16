@@ -8,7 +8,7 @@ import { isFileProtocol } from '@/packtools';
 import {
   ElementHub,
   ICombinedGetters,
-  ICombinedIRootState,
+  ICombinedRootState,
   IRootState,
   IVideoState,
 } from '@/store/types';
@@ -53,46 +53,46 @@ export const getters: GetterTree<IVideoState, IRootState> = {
   videoElementHub() {
     return elementHub;
   },
-  filterByStatus(contextState, contextGetter, IRootState) {
-    const castIRootState = IRootState as ICombinedIRootState;
+  filterByStatus(contextState, contextGetter, rootState) {
+    const castRootState = rootState as ICombinedRootState;
     return (video: IVideoResponse): boolean => {
       const status: TaskStatus = contextGetter.getGeneralStatus(
         video.uuid,
-        castIRootState.statusStage
+        castRootState.statusStage
       );
-      return castIRootState.statusFilter[TaskStatus[status] as TaskStatusText];
+      return castRootState.statusFilter[TaskStatus[status] as TaskStatusText];
     };
   },
-  filterByLabel(contextState, contextGetter, IRootState) {
+  filterByLabel(contextState, contextGetter, rootState) {
     return (video: IVideoResponse): boolean => {
-      if (!IRootState.labelFilter) {
+      if (!rootState.labelFilter) {
         return true;
       }
-      return new RegExp(IRootState.labelFilter, 'i').test(video.label);
+      return new RegExp(rootState.labelFilter, 'i').test(video.label);
     };
   },
-  filterByArtist(contextState, contextGetter, IRootState) {
+  filterByArtist(contextState, contextGetter, rootState) {
     return (video: IVideoResponse): boolean => {
-      if (IRootState.artistFilter.length === 0) {
+      if (rootState.artistFilter.length === 0) {
         return true;
       }
       return video.related_tasks.some(i => {
-        const task = (IRootState as ICombinedIRootState).cgTeamworkTaskStore
+        const task = (rootState as ICombinedRootState).cgTeamworkTaskStore
           .storage[i];
         if (!task) {
           return true;
         }
         return (
-          task && task.artists.some(j => IRootState.artistFilter.includes(j))
+          task && task.artists.some(j => rootState.artistFilter.includes(j))
         );
       });
     };
   },
-  filterByTag(contextState, contextGetter, IRootState) {
+  filterByTag(contextState, contextGetter, rootState) {
     const castGetters = contextGetter as ICombinedGetters;
-    const castIRootState = IRootState as ICombinedIRootState;
+    const castRootState = rootState as ICombinedRootState;
     return (video: IVideoResponse): boolean => {
-      const tagFilter = castIRootState.tagTextFilter;
+      const tagFilter = castRootState.tagTextFilter;
       if (tagFilter.length === 0) {
         return true;
       }

@@ -3,7 +3,7 @@ import * as type from '@/mutation-types';
 import { skipIfIsFileProtocol } from '@/packtools';
 import {
   ICombinedGetters,
-  ICombinedIRootState,
+  ICombinedRootState,
   IRootState,
   IVideoState,
 } from '@/store/types';
@@ -17,8 +17,8 @@ async function handleVideoResponse(
 ) {
   const data: IVideoResponse = response.data;
   const mutationPayload: type.IVideoUpdateMutationPayload = {
-    id: data.uuid,
     data,
+    id: data.uuid,
   };
   const actionPayload: type.IVideoTagsReadIfFoundUndefinedActionPayload = {
     video: data,
@@ -38,8 +38,8 @@ function handleTagsResponse(
   const dataArray: ITagResponse[] = response.data;
   dataArray.map(data => {
     const mutationPayload: type.ITagUpdateMutationPayload = {
-      id: data.id,
       data,
+      id: data.id,
     };
     context.commit(type.TAG.UPDATE, mutationPayload);
   });
@@ -85,13 +85,13 @@ export const actions: ActionTree<IVideoState, IRootState> = {
     return skipIfIsFileProtocol(() => {
       return axios
         .get(payload.url, {
-          responseType: 'blob',
           onDownloadProgress: payload.onprogress,
+          responseType: 'blob',
         })
         .then(response => {
           const mutationPayload: type.IUpdateBlobHubMutationPayload = {
-            url: payload.url,
             blob: response.data as Blob,
+            url: payload.url,
           };
           context.commit(type.UPDATE_BLOB_HUB, mutationPayload);
           return response;
@@ -169,7 +169,7 @@ export const actions: ActionTree<IVideoState, IRootState> = {
         if (
           video.tags.some(
             i =>
-              (context.rootState as ICombinedIRootState).tagStore.storage[i] ===
+              (context.rootState as ICombinedRootState).tagStore.storage[i] ===
               undefined
           )
         ) {

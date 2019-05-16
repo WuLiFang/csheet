@@ -51,7 +51,7 @@ export interface ITagState {
   storage: IDMap<ITagResponse>;
 }
 
-export interface ICombinedIRootState extends IRootState {
+export interface ICombinedRootState extends IRootState {
   videoStore: IVideoState;
   cgTeamworkTaskStore: ICGTeamworkTaskState;
   tagStore: ITagState;
@@ -102,6 +102,6 @@ export interface ICombinedGetters
     IVideoGetters,
     ITagGetters,
     ICGTeamWorkTaskGetters {}
-export declare class DollarStore extends Store<ICombinedIRootState> {
+export declare class DollarStore extends Store<ICombinedRootState> {
   public readonly getters: ICombinedGetters;
 }

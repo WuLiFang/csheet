@@ -132,7 +132,7 @@ export function mapWritableState<
   };
 }
 
-export const mapIRootStateModelMixin = {
+export const mapRootStateModelMixin = {
   artistFilterModel: mapWritableState<IRootState, string[]>(
     'artistFilter',
     mutations.UPDATE_ROOT_STATE

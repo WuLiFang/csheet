@@ -19,7 +19,7 @@ import {
   VideoUpdateSelectStateMutationPayload,
 } from '@/mutation-types';
 import { isFileProtocol } from '@/packtools';
-import { mapIRootStateModelMixin, RootComputedMixin } from '@/store';
+import { mapRootStateModelMixin, RootComputedMixin } from '@/store';
 import { tagComputedMixin } from '@/store/tag';
 import { videoComputedMixin } from '@/store/video';
 import Vue from 'vue';
@@ -48,7 +48,7 @@ export default Vue.extend({
     ...RootComputedMixin,
     ...tagComputedMixin,
     ...videoComputedMixin,
-    ...mapIRootStateModelMixin,
+    ...mapRootStateModelMixin,
     selectedTags(): ITagResponse[] {
       return this.getTagByTextArray(this.selectedTagsText);
     },

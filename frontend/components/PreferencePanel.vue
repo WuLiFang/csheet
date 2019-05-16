@@ -66,7 +66,7 @@
 import { USERNAME } from '@/constants';
 import { TaskStage, TaskStatus } from '@/interface';
 import { isFileProtocol } from '@/packtools';
-import { getDefaultStatusFilter, mapIRootStateModelMixin } from '@/store';
+import { getDefaultStatusFilter, mapRootStateModelMixin } from '@/store';
 import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import { tagComputedMixin } from '@/store/tag';
 import { videoComputedMixin } from '@/store/video';
@@ -107,7 +107,7 @@ export default Vue.extend({
   },
   computed: {
     ...CGTeamWorkTaskComputedMixin,
-    ...mapIRootStateModelMixin,
+    ...mapRootStateModelMixin,
     ...videoComputedMixin,
     ...tagComputedMixin,
     hasTaskStorage(): boolean {
