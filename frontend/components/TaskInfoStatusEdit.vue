@@ -10,17 +10,17 @@
 </template>
 
 <script lang="ts">
+import { ICGTeamWorkTaskResponse, IStringMap, TaskStatus } from '@/interface';
+import {
+  ICGTeamWorkTaskUpdateFieldActionPayload,
+  UPDATE_CGTEAMWORK_TASK_FIELD,
+} from '@/mutation-types';
+import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import Vue from 'vue';
 
-import { Button, ButtonGroup, MessageBox, Message } from 'element-ui';
-
 import { default as TaskInfoStatus } from '@/components/TaskInfoStatus.vue';
-import { TaskStatus, ICGTeamWorkTaskResponse, IStringMap } from '@/interface';
-import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
-import {
-  UPDATE_CGTEAMWORK_TASK_FIELD,
-  ICGTeamWorkTaskUpdateFieldActionPayload,
-} from '@/mutation-types';
+import { Button, ButtonGroup, Message, MessageBox } from 'element-ui';
+
 import { parseTaskStatus } from '@/datatools';
 
 function errorMessage(error: any) {
@@ -28,20 +28,21 @@ function errorMessage(error: any) {
 }
 
 export default Vue.extend({
-  props: {
-    taskId: { type: String },
-    field: { type: <() => 'leader_status' | 'director_status'>String },
-  },
   components: {
-    TaskInfoStatus,
     Button,
     ButtonGroup,
+    TaskInfoStatus,
+  },
+  props: {
+    field: { type: String as () => 'leader_status' | 'director_status' },
+    taskId: { type: String },
   },
   data() {
     return {
       TaskStatus,
     };
   },
+
   computed: {
     ...CGTeamWorkTaskComputedMixin,
     model(): ICGTeamWorkTaskResponse | undefined {
@@ -49,14 +50,14 @@ export default Vue.extend({
     },
     fieldsValue(): IStringMap<TaskStatus | null> {
       return {
-        leader_status: this.model
-          ? parseTaskStatus(this.model.leader_status)
+        client_status: this.model
+          ? parseTaskStatus(this.model.client_status)
           : null,
         director_status: this.model
           ? parseTaskStatus(this.model.director_status)
           : null,
-        client_status: this.model
-          ? parseTaskStatus(this.model.client_status)
+        leader_status: this.model
+          ? parseTaskStatus(this.model.leader_status)
           : null,
       };
     },
@@ -75,9 +76,9 @@ export default Vue.extend({
   methods: {
     approve() {
       const payload: ICGTeamWorkTaskUpdateFieldActionPayload = {
-        id: this.taskId,
-        field: this.field,
         data: { value: 'Approve', is_status: true },
+        field: this.field,
+        id: this.taskId,
       };
       this.$store
         .dispatch(UPDATE_CGTEAMWORK_TASK_FIELD, payload)
@@ -90,13 +91,13 @@ export default Vue.extend({
       MessageBox.prompt('原因', '设为返修')
         .then((result: any) => {
           const payload: ICGTeamWorkTaskUpdateFieldActionPayload = {
-            id: this.taskId,
-            field: this.field,
             data: {
-              value: 'Retake',
               is_status: true,
               message: result.value,
+              value: 'Retake',
             },
+            field: this.field,
+            id: this.taskId,
           };
           this.$store
             .dispatch(UPDATE_CGTEAMWORK_TASK_FIELD, payload)

@@ -14,19 +14,20 @@
 
 
 <script lang="ts">
+import { ICGTeamWorkTaskResponse } from '@/interface';
+import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
 import Vue from 'vue';
 
 import { default as TaskInfoStatusEdit } from '@/components/TaskInfoStatusEdit.vue';
-import { CGTeamWorkTaskComputedMixin } from '@/store/cgteamwork-task';
-import { ICGTeamWorkTaskResponse } from '@/interface';
 
 export default Vue.extend({
-  props: {
-    taskId: { type: String },
-  },
   components: {
     TaskInfoStatusEdit,
   },
+  props: {
+    taskId: { type: String },
+  },
+
   computed: {
     ...CGTeamWorkTaskComputedMixin,
     model(): ICGTeamWorkTaskResponse | undefined {

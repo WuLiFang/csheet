@@ -68,36 +68,33 @@ transition(name='dropdown')
 </template>
 
 <script lang="ts">
+import { default as FadeTransition } from '@/components/FadeTransition.vue';
+import { IVideoResponse, VideoRole } from '@/interface';
+import {
+  IStateUpdateMutationPayload,
+  IVideoPreloadActionPayload,
+  IVideoUpdateBlobWhiteListMapMutationPayload,
+  PRELOAD_VIDEO,
+  UPDATE_ROOT_STATE,
+  UPDATE_VIDEO_BLOB_WHITELIST,
+  VIDEO,
+  VideoReadActionPayload,
+} from '@/mutation-types';
+import { isFileProtocol } from '@/packtools';
+import { preloadImage, preloadVideo } from '@/preload';
+import { DollarStore } from '@/store/types';
+import { compact, find, intersection, uniq } from 'lodash';
 import Vue from 'vue';
+import { Component, Prop, Watch } from 'vue-property-decorator';
 
-import _ from 'lodash';
-import Spinner from 'vue-simple-spinner';
+import FileInfo from '@/components/FileInfo.vue';
+import Tags from '@/components/Tags.vue';
+import TaskInfo from '@/components/TaskInfo.vue';
 import { Button as ElButton, Checkbox as ElCheckbox } from 'element-ui';
-
 import FaIcon from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/magic';
 import 'vue-awesome/icons/sort-alpha-down';
-
-import TaskInfo from '@/components/TaskInfo.vue';
-import FileInfo from '@/components/FileInfo.vue';
-import Tags from '@/components/Tags.vue';
-
-import { isFileProtocol } from '@/packtools';
-import { DollarStore } from '@/store/types';
-import { IVideoResponse, VideoRole } from '@/interface';
-import {
-  VideoReadActionPayload,
-  VIDEO,
-  PRELOAD_VIDEO,
-  IVideoPreloadActionPayload,
-  IVideoUpdateBlobWhiteListMapMutationPayload,
-  UPDATE_VIDEO_BLOB_WHITELIST,
-  IStateUpdateMutationPayload,
-  UPDATE_ROOT_STATE,
-} from '@/mutation-types';
-import { preloadVideo, preloadImage } from '@/preload';
-import { Prop, Component, Watch } from 'vue-property-decorator';
-import { default as FadeTransition } from '@/components/FadeTransition.vue';
+import Spinner from 'vue-simple-spinner';
 
 function formatBytes(bytes: number, decimals = 2) {
   if (bytes === 0) {
@@ -113,33 +110,33 @@ function formatBytes(bytes: number, decimals = 2) {
 
 @Component({
   components: {
-    Spinner,
-    TaskInfo,
-    FileInfo,
     ElButton,
     ElCheckbox,
     FaIcon,
-    Tags,
     FadeTransition,
+    FileInfo,
+    Spinner,
+    Tags,
+    TaskInfo,
   },
 })
 export default class TheViewer extends Vue {
   @Prop({ type: String, default: null })
-  videoId!: string | null;
+  public videoId!: string | null;
   @Prop(Boolean)
-  visible!: boolean;
+  public visible!: boolean;
 
-  isForce = false;
-  isAutoPlay = true;
-  isAutoNext = false;
-  isFileProtocol = isFileProtocol;
-  posterProgressEvent: ProgressEvent | null = null;
-  src: string | null = null;
-  poster: string | null = null;
-  duration = 0;
+  public isForce = false;
+  public isAutoPlay = true;
+  public isAutoNext = false;
+  public isFileProtocol = isFileProtocol;
+  public posterProgressEvent: ProgressEvent | null = null;
+  public src: string | null = null;
+  public poster: string | null = null;
+  public duration = 0;
 
-  $store!: DollarStore;
-  $refs!: Vue['$refs'] & {
+  public $store!: DollarStore;
+  public $refs!: Vue['$refs'] & {
     video?: HTMLVideoElement;
   };
 
@@ -203,7 +200,7 @@ export default class TheViewer extends Vue {
     return `${((loadded / total) * 100).toFixed(2)}%@${formatBytes(total)}`;
   }
 
-  refresh() {
+  public refresh() {
     if (!this.videoId) {
       return;
     }
@@ -211,7 +208,7 @@ export default class TheViewer extends Vue {
     this.isForce = true;
     this.$store.dispatch(VIDEO.READ, payload);
   }
-  ondragstart(event: DragEvent) {
+  public ondragstart(event: DragEvent) {
     if (!this.video) {
       return;
     }
@@ -233,16 +230,16 @@ export default class TheViewer extends Vue {
     }
     event.dataTransfer!.setData('text/plain', plainData);
   }
-  parseHash() {
-    const hash = window.location.hash.slice(1);
-    if (!hash) {
+  public parseHash() {
+    const locationHash = window.location.hash.slice(1);
+    if (!locationHash) {
       return;
     }
 
     // By label
-    const video = _.find(
+    const video = find(
       this.$store.state.videoStore.storage,
-      i => i!.label === hash
+      i => (i && i.label === locationHash) || false
     );
     if (video) {
       this.video = video;
@@ -251,12 +248,12 @@ export default class TheViewer extends Vue {
     }
 
     // By index.
-    const match = /^image(\d+)/.exec(hash);
+    const match = /^image(\d+)/.exec(locationHash);
     if (match) {
       this.id = this.$store.getters.imagePlayList[Number(match[1])];
     }
   }
-  setupShortcut() {
+  public setupShortcut() {
     window.addEventListener('keyup', (event: KeyboardEvent) => {
       switch (event.key) {
         case 'ArrowLeft': {
@@ -270,7 +267,7 @@ export default class TheViewer extends Vue {
       }
     });
   }
-  autoNext() {
+  public autoNext() {
     if (
       !(
         this.video &&
@@ -291,8 +288,8 @@ export default class TheViewer extends Vue {
       this.id = next;
     });
   }
-  findIndex(videoArray: string[], defaultIndex = 0) {
-    const array = _.intersection(
+  public findIndex(videoArray: string[], defaultIndex = 0) {
+    const array = intersection(
       videoArray,
       this.$store.state.videoStore.visibleVideos
     );
@@ -300,29 +297,29 @@ export default class TheViewer extends Vue {
       ? videoArray.indexOf(this.videoId)
       : defaultIndex;
     return {
-      index,
       array,
+      index,
     };
   }
-  jumpPrev() {
+  public jumpPrev() {
     const array = this.$store.state.videoStore.visibleVideos;
     const target = this.prev(array) || array[array.length - 1];
     this.id = target;
   }
-  jumpNext() {
+  public jumpNext() {
     const array = this.$store.state.videoStore.visibleVideos;
     const target = this.next(array) || array[0];
     this.id = target;
   }
-  prev(array: string[]): string | null {
+  public prev(array: string[]): string | null {
     const state = this.findIndex(array);
     return state.array[state.index - 1] || null;
   }
-  next(array: string[]): string | null {
+  public next(array: string[]): string | null {
     const state = this.findIndex(array);
     return state.array[state.index + 1] || null;
   }
-  loadPoster(url: string) {
+  public loadPoster(url: string) {
     const id = this.videoId;
     return preloadImage(url).then(image => {
       if (this.videoId !== id) {
@@ -331,7 +328,7 @@ export default class TheViewer extends Vue {
       this.poster = image.src;
     });
   }
-  loadSrc(url: string) {
+  public loadSrc(url: string) {
     const id = this.videoId;
     preloadVideo(url).then(video => {
       if (this.videoId !== id) {
@@ -341,27 +338,30 @@ export default class TheViewer extends Vue {
       this.duration = video.duration;
     });
   }
-  preload(id: string) {
+  public preload(id: string) {
     const payload: IVideoPreloadActionPayload = {
       id,
-      role: VideoRole.poster,
       onprogress: this.onLoadProgress,
+      role: VideoRole.poster,
     };
     this.$store.dispatch(PRELOAD_VIDEO, payload);
     payload.role = VideoRole.preview;
     this.$store.dispatch(PRELOAD_VIDEO, payload);
   }
-  play() {
+  public play() {
     if (this.$refs.video) {
       this.$refs.video.play();
     }
   }
-  pause() {
+  public pause() {
     if (this.$refs.video) {
       this.$refs.video.pause();
     }
   }
-  onLoadProgress(event: ProgressEvent, config: IVideoPreloadActionPayload) {
+  public onLoadProgress(
+    event: ProgressEvent,
+    config: IVideoPreloadActionPayload
+  ) {
     if (config.id !== this.videoId) {
       return;
     }
@@ -369,12 +369,12 @@ export default class TheViewer extends Vue {
       this.posterProgressEvent = event;
     }
   }
-  loadData() {
+  public loadData() {
     if (this.id) {
       this.$store.getters.scrollTo(this.id);
     }
-    const blobWhitelist = _.uniq(
-      _.compact([
+    const blobWhitelist = uniq(
+      compact([
         this.id,
         this.prev(this.$store.getters.imagePlayList),
         this.next(this.$store.getters.imagePlayList),
@@ -390,7 +390,7 @@ export default class TheViewer extends Vue {
     this.$store.commit(UPDATE_VIDEO_BLOB_WHITELIST, payload);
   }
   @Watch('visible')
-  onVisibleChange(value: TheViewer['visible']) {
+  public onVisibleChange(value: TheViewer['visible']) {
     this.loadData();
     if (this.visible) {
       if (this.isAutoPlay) {
@@ -401,7 +401,7 @@ export default class TheViewer extends Vue {
     }
   }
   @Watch('videoId')
-  onVideoIdChange(value: string | null) {
+  public onVideoIdChange(value: string | null) {
     this.duration = 0;
     this.posterProgressEvent = null;
     this.isForce = false;
@@ -413,7 +413,7 @@ export default class TheViewer extends Vue {
     }
   }
   @Watch('srcURL')
-  onSrcURLChange(value: TheViewer['srcURL']) {
+  public onSrcURLChange(value: TheViewer['srcURL']) {
     if (value) {
       this.loadSrc(value);
     } else {
@@ -425,7 +425,7 @@ export default class TheViewer extends Vue {
     }
   }
   @Watch('posterURL')
-  onPosterURLChange(value: TheViewer['posterURL']) {
+  public onPosterURLChange(value: TheViewer['posterURL']) {
     if (value) {
       this.loadPoster(value);
     } else {
@@ -435,7 +435,7 @@ export default class TheViewer extends Vue {
       }
     }
   }
-  mounted() {
+  public mounted() {
     this.setupShortcut();
     this.parseHash();
     this.loadData();
