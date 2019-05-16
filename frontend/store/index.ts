@@ -13,64 +13,39 @@ import { mapState, StoreOptions } from 'vuex';
 
 export function getDefaultStatusFilter(): StatusSelectResult {
   return {
+    Approve: true,
+    Check: true,
     Close: false,
     Retake: true,
-    Wait: true,
-    Check: true,
-    Approve: true,
     Unset: true,
+    Wait: true,
   };
 }
 
-export const store: Store = {
-  strict: process.env.NODE_ENV !== 'production',
-  state: {
-    isEnablePreview: true,
-    isFixedTitleDisplay: false,
-    isFixedStatusDisplay: false,
-    isEditingTags: false,
-    statusStage: isFileProtocol ? TaskStage.director : TaskStage.leader,
-    labelFilter: '',
-    artistFilter: [],
-    tagTextFilter: [],
-    statusFilter: getDefaultStatusFilter(),
-  },
-  modules: {
-    videoStore,
-    cgTeamworkTaskStore,
-    tagStore,
-  },
-  mutations: {
-    [mutations.UPDATE_ROOT_STATE](
-      state,
-      payload: mutations.IStateUpdateMutationPayload<IRootState>
-    ) {
-      state[payload.key] = payload.value;
-    },
-  },
+export const store: IStore = {
   actions: {
     [mutations.REFETCH_PAGE_DATA](contextState) {
       Axios.get(`/api/page${PAGE_PATH}`).then(
         (value: AxiosResponse<IPageResponse>) => {
           value.data.videos.forEach(i => {
             const payload: mutations.IVideoUpdateMutationPayload = {
-              id: i.uuid,
               data: i,
+              id: i.uuid,
             };
             contextState.commit(mutations.VIDEO.UPDATE, payload);
           });
           value.data.tags.forEach(i => {
             const payload: mutations.ITagUpdateMutationPayload = {
-              id: i.id,
               data: i,
+              id: i.id,
             };
             contextState.commit(mutations.TAG.UPDATE, payload);
           });
           if (value.data.tasks) {
             value.data.tasks.forEach(i => {
               const payload: mutations.ICGTeamWorkTaskReadMutationPayload = {
-                id: i.uuid,
                 data: i,
+                id: i.uuid,
               };
               contextState.commit(mutations.CGTEAMWORK_TASK.READ, payload);
             });
@@ -85,9 +60,34 @@ export const store: Store = {
       return contextGetters.getTagByTextArray(contextState.tagTextFilter);
     },
   },
+  modules: {
+    cgTeamworkTaskStore,
+    tagStore,
+    videoStore,
+  },
+  mutations: {
+    [mutations.UPDATE_ROOT_STATE](
+      state,
+      payload: mutations.IStateUpdateMutationPayload<IRootState>
+    ) {
+      state[payload.key] = payload.value;
+    },
+  },
+  state: {
+    artistFilter: [],
+    isEditingTags: false,
+    isEnablePreview: true,
+    isFixedStatusDisplay: false,
+    isFixedTitleDisplay: false,
+    labelFilter: '',
+    statusFilter: getDefaultStatusFilter(),
+    statusStage: isFileProtocol ? TaskStage.director : TaskStage.leader,
+    tagTextFilter: [],
+  },
+  strict: process.env.NODE_ENV !== 'production',
 };
 
-interface Store extends StoreOptions<IRootState> {
+interface IStore extends StoreOptions<IRootState> {
   state: IRootState;
   modules: {
     videoStore: typeof videoStore;
@@ -98,11 +98,11 @@ interface Store extends StoreOptions<IRootState> {
 
 type stateMap<T> = { [name in keyof T]: () => T[name] };
 
-interface RootComputedMixin extends DefaultComputed, stateMap<IRootState> {}
+interface IRootComputedMixin extends DefaultComputed, stateMap<IRootState> {}
 
 export const RootComputedMixin = {
   ...mapState(Object.keys(store.state)),
-} as RootComputedMixin;
+} as IRootComputedMixin;
 
 export function stateSetter<T, P extends T[K], K extends keyof T = keyof T>(
   type: string,
@@ -121,7 +121,7 @@ export function mapWritableState<
   T,
   P extends T[K],
   K extends keyof T = keyof T
->(key: K, type: string, module?: keyof Store['modules']) {
+>(key: K, type: string, module?: keyof IStore['modules']) {
   return {
     get(this: Vue): P {
       const stateStore: T =
@@ -133,40 +133,40 @@ export function mapWritableState<
 }
 
 export const mapIRootStateModelMixin = {
-  isEnablePreviewModel: mapWritableState<IRootState, boolean>(
-    'isEnablePreview',
-    mutations.UPDATE_ROOT_STATE
-  ),
-  isFixedTitleDisplayModel: mapWritableState<IRootState, boolean>(
-    'isFixedTitleDisplay',
-    mutations.UPDATE_ROOT_STATE
-  ),
-  isFixedStatusDisplayModel: mapWritableState<IRootState, boolean>(
-    'isFixedStatusDisplay',
+  artistFilterModel: mapWritableState<IRootState, string[]>(
+    'artistFilter',
     mutations.UPDATE_ROOT_STATE
   ),
   isEditingTagsModel: mapWritableState<IRootState, boolean>(
     'isEditingTags',
     mutations.UPDATE_ROOT_STATE
   ),
-  statusStageModel: mapWritableState<IRootState, TaskStage>(
-    'statusStage',
+  isEnablePreviewModel: mapWritableState<IRootState, boolean>(
+    'isEnablePreview',
+    mutations.UPDATE_ROOT_STATE
+  ),
+  isFixedStatusDisplayModel: mapWritableState<IRootState, boolean>(
+    'isFixedStatusDisplay',
+    mutations.UPDATE_ROOT_STATE
+  ),
+  isFixedTitleDisplayModel: mapWritableState<IRootState, boolean>(
+    'isFixedTitleDisplay',
     mutations.UPDATE_ROOT_STATE
   ),
   labelFilterModel: mapWritableState<IRootState, string>(
     'labelFilter',
     mutations.UPDATE_ROOT_STATE
   ),
-  artistFilterModel: mapWritableState<IRootState, string[]>(
-    'artistFilter',
+  statusFilterModel: mapWritableState<IRootState, StatusSelectResult>(
+    'statusFilter',
+    mutations.UPDATE_ROOT_STATE
+  ),
+  statusStageModel: mapWritableState<IRootState, TaskStage>(
+    'statusStage',
     mutations.UPDATE_ROOT_STATE
   ),
   tagTextFilterModel: mapWritableState<IRootState, string[]>(
     'tagTextFilter',
-    mutations.UPDATE_ROOT_STATE
-  ),
-  statusFilterModel: mapWritableState<IRootState, StatusSelectResult>(
-    'statusFilter',
     mutations.UPDATE_ROOT_STATE
   ),
 };

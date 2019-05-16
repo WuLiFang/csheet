@@ -60,7 +60,7 @@ export default Vue.extend({
       return this.videoStore.storage[this.id];
     },
     selectedTags(): ITagResponse[] {
-      return _.flatMap(this.tagSelectModel, i => this.ITagStoreByText[i] || []);
+      return _.flatMap(this.tagSelectModel, i => this.tagStoreByText[i] || []);
     },
   },
   methods: {

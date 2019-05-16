@@ -1,4 +1,3 @@
-import { Store } from 'vuex';
 import {
   ICGTeamWorkTaskResponse,
   ITagResponse,
@@ -6,7 +5,8 @@ import {
   TaskStage,
   TaskStatus,
   VideoRole,
-} from '../interface';
+} from '@/interface';
+import { Store } from 'vuex';
 
 export interface IDMap<T> {
   [id: string]: T | undefined;
@@ -90,7 +90,7 @@ export interface ITagStoreByText {
 }
 export interface ITagGetters {
   tags: ITagResponse[];
-  ITagStoreByText: ITagStoreByText;
+  tagStoreByText: ITagStoreByText;
   getTagByTextArray: (textArray: string[]) => ITagResponse[];
 }
 

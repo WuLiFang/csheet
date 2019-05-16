@@ -1,18 +1,5 @@
 import { getDataFromAppElement } from '@/datatools';
 import { ITagResponse } from '@/interface';
-import axios, { AxiosResponse } from 'axios';
-import * as _ from 'lodash';
-import Vue from 'vue';
-import { DefaultComputed } from 'vue/types/options';
-import {
-  ActionContext,
-  ActionTree,
-  GetterTree,
-  mapGetters,
-  mapState,
-  Module,
-  MutationTree,
-} from 'vuex';
 import {
   ITagCreateActionPayload,
   ITagUpdateActionPayload,
@@ -24,34 +11,44 @@ import {
   TagDeleteMutationPayload,
   TagReadActionPayload,
   VIDEOS_ADD_TAG,
-} from '../mutation-types';
-import { skipIfIsFileProtocol } from '../packtools';
+} from '@/mutation-types';
+import { skipIfIsFileProtocol } from '@/packtools';
 import {
   IRootState,
   ITagGetters,
   ITagState,
   ITagStoreByText,
   mapGettersMixin,
-} from './types';
+} from '@/store/types';
+import axios, { AxiosResponse } from 'axios';
+import { flatMap, groupBy, sortBy, values } from 'lodash';
+import Vue from 'vue';
+import { DefaultComputed } from 'vue/types/options';
+import {
+  ActionContext,
+  ActionTree,
+  GetterTree,
+  mapGetters,
+  mapState,
+  Module,
+  MutationTree,
+} from 'vuex';
 
 export const getters: GetterTree<ITagState, IRootState> = {
-  tags(contextState): ITagResponse[] {
-    return _.sortBy(
-      _.values(contextState.storage) as ITagResponse[],
-      i => i.text
-    );
+  tagStoreByText(contextState): ITagStoreByText {
+    return groupBy(contextState.storage, i => i!.text) as ITagStoreByText;
   },
-  ITagStoreByText(contextState): ITagStoreByText {
-    return _.groupBy(contextState.storage, i => i!.text) as ITagStoreByText;
+  tags(contextState): ITagResponse[] {
+    return sortBy(values(contextState.storage) as ITagResponse[], i => i.text);
   },
   getTagByTextArray(contextState, contextGetters) {
     return (textArray: string[]): ITagResponse[] => {
-      return _.flatMap(textArray, i => contextGetters.ITagStoreByText[i]);
+      return flatMap(textArray, i => contextGetters.tagStoreByText[i]);
     };
   },
 };
 
-interface TagComputedMixin
+interface ITagComputedMixin
   extends DefaultComputed,
     mapGettersMixin<ITagGetters> {
   tagStore: () => ITagState;
@@ -60,7 +57,7 @@ interface TagComputedMixin
 export const tagComputedMixin = {
   ...mapState(['tagStore']),
   ...mapGetters(Object.keys(getters)),
-} as TagComputedMixin;
+} as ITagComputedMixin;
 
 function parseDataFromPage(): ITagState['storage'] {
   const data = getDataFromAppElement('tag');
@@ -94,8 +91,8 @@ function handleTagResponse(
 ) {
   const data: ITagResponse = response.data;
   const mutationPayload: ITagUpdateMutationPayload = {
-    id: data.id,
     data,
+    id: data.id,
   };
   context.commit(TAG.UPDATE, mutationPayload);
 }
@@ -152,10 +149,10 @@ const actions: ActionTree<ITagState, IRootState> = {
 };
 
 const module: Module<ITagState, IRootState> = {
-  state,
+  actions,
   getters,
   mutations,
-  actions,
+  state,
 };
 
 export default module;

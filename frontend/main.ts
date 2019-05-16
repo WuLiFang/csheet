@@ -17,10 +17,11 @@ moment.locale(navigator.language);
 
 const store = new Vuex.Store(_store);
 new Vue({
-  store,
   render: h => h(MainVue),
+  store,
 }).$mount('#app');
 
 if (!isFileProtocol) {
+  // tslint:disable-next-line: no-unused-expression
   new SocketIO(store);
 }

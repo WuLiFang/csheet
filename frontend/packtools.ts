@@ -11,11 +11,11 @@ export function skipIfIsFileProtocol<T, K>(
   func: (...args: any[]) => T,
   defaultValue?: K
 ): (...args: any[]) => T | K | undefined {
-  function _func(...args: any[]) {
+  function wrappedFunc(...args: any[]) {
     if (isFileProtocol) {
       return defaultValue;
     }
     return func(...args);
   }
-  return _func;
+  return wrappedFunc;
 }

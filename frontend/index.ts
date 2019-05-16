@@ -9,20 +9,20 @@ Vue.use(Loading);
 const vue = new Vue({
   render: h => h(Index),
 });
-interface Project {
+interface IProject {
   code: string;
   name: string;
 }
 
-export const projects: Project[] = JSON.parse(
+export const projects: IProject[] = JSON.parse(
   getDataFromAppElement('projects')
 );
 
 export function showFullScreenLoading() {
   return Loading.service({
+    background: 'rgba(0, 0, 0, 0.8)',
     fullscreen: true,
     text: '正在生成',
-    background: 'rgba(0, 0, 0, 0.8)',
   });
 }
 vue.$mount('#app');
