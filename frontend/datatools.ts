@@ -60,7 +60,7 @@ export function parseTaskStatus(name: string): TaskStatus {
       break;
     default:
       if (name) {
-        console.error(`Unknown task status: ${name}`);
+        throw new Error(`Unknown task status: ${name}`);
       }
   }
   return ret;
