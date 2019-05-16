@@ -28,9 +28,9 @@ function getPathWithMtime(
   }
   const suffix =
     {
-      thumb: '.jpg',
       poster: '.jpg',
       preview: '.mp4',
+      thumb: '.jpg',
     }[role] || '';
   let ret = isFileProtocol
     ? `video/${role}/${videoData.label || videoData.uuid}${suffix}`

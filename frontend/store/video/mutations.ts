@@ -1,7 +1,7 @@
+import * as type from '@/mutation-types';
 import { IVideoState } from '@/store/types';
 import Vue from 'vue';
 import { MutationTree } from 'vuex';
-import * as type from '../../mutation-types';
 
 export const mutations: MutationTree<IVideoState> = {
   [type.VIDEO.UPDATE](contextState, payload: type.IVideoUpdateMutationPayload) {

@@ -11,7 +11,7 @@ import state from '@/store/video/state';
 import { DefaultComputed } from 'vue/types/options';
 import { mapGetters, mapState, Module } from 'vuex';
 
-interface VideoComputedMixin
+interface IVideoComputedMixin
   extends DefaultComputed,
     mapGettersMixin<IVideoGetters> {
   videoStore: () => IVideoState;
@@ -20,7 +20,7 @@ interface VideoComputedMixin
 export const videoComputedMixin = {
   ...mapState(['videoStore']),
   ...mapGetters(Object.keys(getters)),
-} as VideoComputedMixin;
+} as IVideoComputedMixin;
 
 const module: Module<IVideoState, IRootState> = {
   actions,

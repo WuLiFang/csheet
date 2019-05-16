@@ -17,7 +17,7 @@ import {
   mapGettersMixin,
 } from '@/store/types';
 import axios, { AxiosResponse } from 'axios';
-import * as _ from 'lodash';
+import { filter, flatMap, uniq } from 'lodash';
 import Vue from 'vue';
 import { DefaultComputed } from 'vue/types/options';
 import {
@@ -53,16 +53,15 @@ export const getters: GetterTree<ICGTeamworkTaskState, IRootState> = {
     };
   },
   artists(contextState): string[] {
-    return _.uniq(_.flatMap(contextState.storage, i => i!.artists)).sort();
+    return uniq(flatMap(contextState.storage, i => i!.artists)).sort();
   },
   getArtistTaskCount(contextState) {
     return (artist: string) =>
-      _.filter(contextState.storage, i => i!.artists.indexOf(artist) >= 0)
-        .length;
+      filter(contextState.storage, i => i!.artists.indexOf(artist) >= 0).length;
   },
 };
 
-interface CGTeamWorkTaskComputedMixin
+interface ICGTeamWorkTaskComputedMixin
   extends DefaultComputed,
     mapGettersMixin<ICGTeamWorkTaskGetters> {
   cgTeamworkTaskStore: () => ICGTeamworkTaskState;
@@ -71,7 +70,7 @@ interface CGTeamWorkTaskComputedMixin
 export const CGTeamWorkTaskComputedMixin = {
   ...mapState(['cgTeamworkTaskStore']),
   ...mapGetters(Object.keys(getters)),
-} as CGTeamWorkTaskComputedMixin;
+} as ICGTeamWorkTaskComputedMixin;
 
 function parseDataFromPage(): ICGTeamworkTaskState['storage'] {
   const app = document.getElementById('app');
@@ -116,8 +115,8 @@ function handleCGTeamWorkTaskResponse(
   }
   const data = response.data;
   const mutationPayload: ICGTeamWorkTaskReadMutationPayload = {
-    id: data.uuid,
     data,
+    id: data.uuid,
   };
   context.commit(CGTEAMWORK_TASK.READ, mutationPayload);
 }
@@ -157,10 +156,10 @@ const actions: ActionTree<ICGTeamworkTaskState, IRootState> = {
 };
 
 const module: Module<ICGTeamworkTaskState, IRootState> = {
-  state,
+  actions,
   getters,
   mutations,
-  actions,
+  state,
 };
 
 export default module;

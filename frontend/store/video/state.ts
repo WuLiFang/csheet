@@ -14,10 +14,10 @@ function parseDataFromPage(): IVideoState['storage'] {
 }
 
 export const state: IVideoState = {
-  storage: parseDataFromPage(),
   blobURLMap: {},
   blobWhiteListMap: new Map<string, string[]>(),
   selectStateMap: {},
+  storage: parseDataFromPage(),
   visibleVideos: [],
 };
 
