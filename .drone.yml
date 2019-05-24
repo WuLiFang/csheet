@@ -1,0 +1,48 @@
+kind: pipeline
+name: default
+
+steps:
+  - name: build
+    image: docker:dind
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - >-
+        docker build
+        --build-arg GIT_REVISION=${DRONE_COMMIT_SHA}
+        --tag registry.wlf.com/csheet:latest
+        --tag registry.wlf.com/csheet:${DRONE_TAG:-latest}
+        .
+      - 'docker push registry.wlf.com/csheet:latest'
+  - name: push
+    image: docker:dind
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - 'docker push registry.wlf.com/csheet:${DRONE_TAG}'
+    when:
+      event:
+        - tag
+  - name: notification-email
+    image: drillster/drone-email
+    settings:
+      from:
+        from_secret: EMAIL_FROM
+      host:
+        from_secret: EMAIL_HOST
+      port:
+        from_secret: EMAIL_PORT
+      username:
+        from_secret: EMAIL_USER
+      password:
+        from_secret: EMAIL_PASSWORD
+    when:
+      status:
+        - changed
+        - failure
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
