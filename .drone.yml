@@ -42,6 +42,25 @@ steps:
       status:
         - changed
         - failure
+  - name: deploy
+    image: appleboy/drone-ssh
+    settings:
+      host:
+        from_secret: SSH_HOST
+      port:
+        from_secret: SSH_PORT
+      username:
+        from_secret: SSH_USER
+      password:
+        from_secret: SSH_PASSWORD
+      script:
+        - cd /srv/csheet
+        - docker-compose pull
+        - docker-compose up -d
+      command_timeout: 3m
+    when:
+      branch:
+        - master
 volumes:
   - name: dockersock
     host:
