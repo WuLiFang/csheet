@@ -1,0 +1,22 @@
+{
+  "folders": [
+	{
+		"name": "web",
+		"path": "D:\\Users\\zhouxuan.WLF\\src\\git.wlf.com\\WuLiFang\\csheet\\web"
+	},
+	{
+		"name": "server",
+		"path": "D:\\Users\\zhouxuan.WLF\\src\\git.wlf.com\\WuLiFang\\csheet\\server"
+	},
+	{
+		"name": "csheet",
+		"path": "D:\\Users\\zhouxuan.WLF\\src\\git.wlf.com\\WuLiFang\\csheet"
+	}
+],
+  "settings": {
+    "terminal.integrated.env.windows": {
+      "PYTHONPATH": "server",
+      "CSHEET_DEBUG": "1"
+    }
+  }
+}

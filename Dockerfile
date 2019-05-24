@@ -1,11 +1,5 @@
 
-FROM scratch as web-files
-
-COPY web ./web/
-COPY public ./public/
-COPY *.js *.json ./
-
-FROM node:10 AS web-build
+FROM node:lts AS web-build
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8
@@ -14,54 +8,48 @@ RUN ping -c 1 google.com || \
     npm i mirror-config-china --registry=https://registry.npm.taobao.org &&\
     npm config list
 
-WORKDIR /app
-COPY ./package*.json ./
+WORKDIR /app/web
+COPY ./web/package*.json ./
 RUN npm i
-COPY --from=web-files / ./
+WORKDIR /app
+COPY ./web/ ./web/
+COPY ./server/csheet/templates/ ./server/csheet/templates/
 ENV NODE_ENV=production
-RUN npm run build
+RUN make -C web
 
-FROM scratch as server-files
-
-COPY server ./server/
-COPY *.py *.sh *.json ./
-
-FROM python:3.7 AS server-prepare
+FROM python:3.7 AS server-build
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8
 RUN set -e
 
-ARG DEBIAN_MIRROR=http://mirrors.aliyun.com/debian
+ARG DEBIAN_MIRROR
 RUN if [ ! -z $DEBIAN_MIRROR ]; then \
     sed -i "s@http://.\+\.debian\.org/debian@$DEBIAN_MIRROR@g" /etc/apt/sources.list \
     && cat /etc/apt/sources.list; \
     fi
-RUN apt-get update
-RUN apt-get -y install ffmpeg && ffmpeg -version
-RUN apt-get clean
+RUN apt-get update &&\
+    apt-get -y install ffmpeg &&\
+    ffmpeg -version &&\
+    apt-get clean
 
 ARG PIP_MIRROR=https://mirrors.aliyun.com/pypi/simple/
 ENV PIP_INDEX_URL=$PIP_MIRROR
 ENV PYTHONIOENCODING=utf-8
 RUN pip install gunicorn gevent-websocket
 
-WORKDIR /app
-COPY ./requirements.txt ./
-RUN pip install -r requirements.txt
+WORKDIR /app/
+COPY ./server/requirements.txt ./server/
+RUN pip install -r ./server/requirements.txt
+COPY ./server/ ./server/
+COPY --from=web-build /app/web/dist/ ./server/dist/
 ENV PYTHONPATH=server
 
-FROM server-prepare AS server-build
-
-COPY --from=server-files / ./
-COPY --from=web-build /app/dist/ /app/dist/
-
-FROM server-prepare AS server-test
+FROM server-build AS server-test
 
 RUN pip install pytest
 
-COPY --from=server-build /app/ /app/
-RUN python -m pytest ./server/tests
+RUN pytest server
 
 FROM server-build AS release
 

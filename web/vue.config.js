@@ -5,21 +5,21 @@ module.exports = {
   assetsDir: 'static',
   pages: {
     index: {
-      entry: 'web/index.ts',
+      entry: 'src/index.ts',
       template: 'public/templates/index.html',
       filename: 'templates/index.html',
     },
     main: {
-      entry: 'web/main.ts',
+      entry: 'src/main.ts',
       template: 'public/templates/main.html',
       filename: 'templates/main.html',
     },
   },
   chainWebpack: config => {
-    config.resolve.alias.set('@', path.resolve('web'));
+    config.resolve.alias.set('@', path.resolve('src'));
     config
       .entry('main_noscript')
-      .add(path.resolve('web/main.scss'))
+      .add(path.resolve('src/main.scss'))
       .end();
     config.plugin('define').tap(args => {
       args[0].VERSION = JSON.stringify(require('./package.json').version);

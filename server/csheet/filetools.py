@@ -31,7 +31,7 @@ def dist_path(*other):
         str -- Absolute path under root.
     """
 
-    return path('../../dist', *other)
+    return path('../dist', *other)
 
 
 def uuid_from_path(filepath):
