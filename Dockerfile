@@ -38,12 +38,12 @@ ENV PIP_INDEX_URL=$PIP_MIRROR
 ENV PYTHONIOENCODING=utf-8
 RUN pip install gunicorn gevent-websocket
 
-WORKDIR /app/server
+WORKDIR /app
 COPY ./server/requirements.txt ./
 RUN pip install -r requirements.txt
 COPY ./server/ ./
 COPY --from=web-build /app/web/dist/ ./dist/
-ENV PYTHONPATH=server
+ENV PYTHONPATH=/app
 
 FROM server-build AS server-test
 
