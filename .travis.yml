@@ -22,6 +22,7 @@ script:
   - docker build . --build-arg NPM_MIRROR= --build-arg DEBIAN_MIRROR= --build-arg PIP_MIRROR=
   - export NODE_ENV=production
   - export PYTHONPATH=server
+  - . ./server/.venv/bin/activate
   - coverage run -m pytest ./server/tests && coverage report
 after_script:
   - coverage xml
