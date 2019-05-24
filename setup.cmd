@@ -19,7 +19,7 @@ call .venv/Scripts/activate.bat
 pip install -r requirements.txt -r requirements-dev.txt
 cmd /c npm i
 
-REM Build frontend files
+REM Build web files
 cmd /c npm run build
 
 PAUSE

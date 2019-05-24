@@ -5,21 +5,21 @@ module.exports = {
   assetsDir: 'static',
   pages: {
     index: {
-      entry: 'frontend/index.ts',
+      entry: 'web/index.ts',
       template: 'public/templates/index.html',
       filename: 'templates/index.html',
     },
     main: {
-      entry: 'frontend/main.ts',
+      entry: 'web/main.ts',
       template: 'public/templates/main.html',
       filename: 'templates/main.html',
     },
   },
   chainWebpack: config => {
-    config.resolve.alias.set('@', path.resolve('frontend'));
+    config.resolve.alias.set('@', path.resolve('web'));
     config
       .entry('main_noscript')
-      .add(path.resolve('frontend/main.scss'))
+      .add(path.resolve('web/main.scss'))
       .end();
     config.plugin('define').tap(args => {
       args[0].VERSION = JSON.stringify(require('./package.json').version);
@@ -35,7 +35,7 @@ module.exports = {
   },
   lintOnSave: process.env.NODE_ENV !== 'production',
   devServer: {
-    contentBase: path.join(__dirname, 'backend/tests/pages'),
+    contentBase: path.join(__dirname, 'server/tests/pages'),
     proxy: 'http://localhost:5001',
   },
 };

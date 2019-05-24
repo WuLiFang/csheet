@@ -29,7 +29,7 @@ Linux 系统参考 [Dockerfile](./Dockerfile) 安装依赖
 
 ### 配置
 
-参照 [default_settings.py](./backend/csheet/default_settings.py) 写一个配置文件
+参照 [default_settings.py](./server/csheet/default_settings.py) 写一个配置文件
 
 然后设置环境变量`CSHEET_CONFIG`为配置文件的路径
 

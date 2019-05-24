@@ -1,11 +1,11 @@
 
-FROM scratch as frontend-files
+FROM scratch as web-files
 
-COPY frontend ./frontend/
+COPY web ./web/
 COPY public ./public/
 COPY *.js *.json ./
 
-FROM node:10 AS frontend-build
+FROM node:10 AS web-build
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8
@@ -17,16 +17,16 @@ RUN ping -c 1 google.com || \
 WORKDIR /app
 COPY ./package*.json ./
 RUN npm i
-COPY --from=frontend-files / ./
+COPY --from=web-files / ./
 ENV NODE_ENV=production
 RUN npm run build
 
-FROM scratch as backend-files
+FROM scratch as server-files
 
-COPY backend ./backend/
+COPY server ./server/
 COPY *.py *.sh *.json ./
 
-FROM python:3.7 AS backend-prepare
+FROM python:3.7 AS server-prepare
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8
@@ -49,21 +49,21 @@ RUN pip install gunicorn gevent-websocket
 WORKDIR /app
 COPY ./requirements.txt ./
 RUN pip install -r requirements.txt
-ENV PYTHONPATH=backend
+ENV PYTHONPATH=server
 
-FROM backend-prepare AS backend-build
+FROM server-prepare AS server-build
 
-COPY --from=backend-files / ./
-COPY --from=frontend-build /app/dist/ /app/dist/
+COPY --from=server-files / ./
+COPY --from=web-build /app/dist/ /app/dist/
 
-FROM backend-prepare AS backend-test
+FROM server-prepare AS server-test
 
 RUN pip install pytest
 
-COPY --from=backend-build /app/ /app/
-RUN python -m pytest ./backend/tests
+COPY --from=server-build /app/ /app/
+RUN python -m pytest ./server/tests
 
-FROM backend-build AS release
+FROM server-build AS release
 
 ENV CSHEET_SETTINGS=/etc/csheet/settings.py
 ENV WORKER_CONNECTIONS=1000

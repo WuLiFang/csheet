@@ -1,5 +1,5 @@
 [run]
-include = ./backend/csheet/*
+include = ./server/csheet/*
 omit = 
     */static/*
     */templates/*

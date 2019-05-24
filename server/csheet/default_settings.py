@@ -56,6 +56,6 @@ CELERY_CONFIG = {
     'enable_utc': True,
     'timezone': 'UTC',
     'broker_url': MESSAGE_QUEUE_URL,
-    'result_backend': RESULT_BACKEND_URL,
+    'result_server': RESULT_BACKEND_URL,
     'worker_hijack_root_logger': False,
 }

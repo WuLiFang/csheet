@@ -3,7 +3,7 @@ cd /d %~dp0
 IF NOT EXIST dist cmd /c setup.cmd
 ffmpeg -version || CALL :SUDO cinst -y ffmpeg && cmd /c %ProgramData%/chocolatey/bin/RefreshEnv.cmd
 CALL .venv/Scripts/activate.bat
-SET "PYTHONPATH=backend"
+SET "PYTHONPATH=server"
 SET "FLASK_APP=csheet:APP"
 python -m csheet runserver --host 0.0.0.0 --port 80
 
