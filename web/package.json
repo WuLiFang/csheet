@@ -17,7 +17,7 @@
     "lodash": "4.17.11",
     "moment": "2.24.0",
     "notifyjs": "3.0.0",
-    "raven-js": "3.27.1",
+    "raven-js": "3.27.2",
     "socket.io-client": "2.2.0",
     "vue": "2.6.10",
     "vue-awesome": "3.5.3",
