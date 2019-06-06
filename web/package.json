@@ -28,7 +28,7 @@
     "@types/chai": "4.1.7",
     "@types/clipboard": "2.0.1",
     "@types/js-cookie": "2.2.2",
-    "@types/lodash": "4.14.133",
+    "@types/lodash": "4.14.134",
     "@types/mocha": "5.2.7",
     "@types/socket.io-client": "1.4.32",
     "@vue/cli-plugin-babel": "3.8.0",
