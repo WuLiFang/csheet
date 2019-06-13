@@ -43,7 +43,7 @@
     "pug-plain-loader": "1.0.0",
     "sass-loader": "7.1.0",
     "tslint-microsoft-contrib": "6.2.0",
-    "typescript": "3.5.1",
+    "typescript": "3.5.2",
     "vue-class-component": "7.1.0",
     "vue-property-decorator": "8.1.1",
     "vue-template-compiler": "2.6.10"
