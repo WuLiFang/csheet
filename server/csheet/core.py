@@ -10,6 +10,7 @@ import os
 
 import celery
 import flask
+from flask import session
 from flask_socketio import SocketIO
 
 from . import database, filetools
@@ -66,8 +67,19 @@ def init():
         from sentry_sdk.integrations.flask import FlaskIntegration
         sentry_sdk.init(
             dsn=dsn,
+            environment=os.getenv('SENTRY_ENVIRONMENT', 'development'),
             release=__version__,
             integrations=[FlaskIntegration(), CeleryIntegration()])
+
+        with sentry_sdk.configure_scope() as scope:
+            scope.set_tag("commit_sha1", os.getenv("COMMIT_SHA1"))
+
+        @APP.before_request
+        def _setup_sentry():
+            with sentry_sdk.configure_scope() as scope:
+                scope.user = {
+                    "id": session.get('account_id'),
+                    "username": session.get('name')}
 
 
 init()
