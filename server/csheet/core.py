@@ -34,14 +34,17 @@ class ContextTask(celery.Task):
 
     def __call__(self, *args, **kwargs):
         with APP.app_context():
+            database.Session.remove()
             return self.run(*args, **kwargs)
 
     def run(self, *args, **kwargs):
         """The body of the task executed by workers."""
         raise NotImplementedError('Tasks must define the run method.')
 
-    def after_return(self, status, retval, task_id, args, kwargs, einfo):
-        database.Session.remove()
+
+@APP.teardown_appcontext
+def _teardown_session(_exc):
+    database.Session.remove()
 
 
 CELERY = celery.Celery(APP.import_name, task_cls=ContextTask)
