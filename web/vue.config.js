@@ -35,7 +35,7 @@ module.exports = {
   },
   lintOnSave: process.env.NODE_ENV !== 'production',
   devServer: {
-    contentBase: path.join(__dirname, 'server/tests/pages'),
+    contentBase: path.join(__dirname, '../server/tests/pages'),
     proxy: 'http://localhost:5001',
   },
 };
