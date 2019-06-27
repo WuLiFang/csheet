@@ -39,6 +39,10 @@ ENV PYTHONIOENCODING=utf-8
 RUN pip install gunicorn gevent-websocket
 
 WORKDIR /app
+COPY ./config ./config/
+RUN if [ -f ./config/ca-certificates.crt ]; then \
+    cp ./config/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt; \
+    fi
 COPY ./server/requirements.txt ./
 RUN pip install -r requirements.txt
 COPY ./server/ ./

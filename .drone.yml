@@ -8,6 +8,10 @@ steps:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
+      - cp /etc/ssl/certs/ca-certificates.crt ./config/
+      - >-
+        sed -i "s@https://github\.com/@https://git.wlf.com/@g" ./server/requirements.txt &&
+        cat ./server/requirements.txt;
       - >-
         docker build
         --build-arg GIT_REVISION=${DRONE_COMMIT_SHA}
