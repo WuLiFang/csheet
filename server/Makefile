@@ -1,4 +1,4 @@
-.PHONY: all
+.PHONY: all run test
 
 all: dist .venv/Lib/site-packages
 
@@ -16,3 +16,9 @@ dist: ../web/dist
 
 .venv:
 	virtualenv .venv
+
+run:
+	./scripts/run.sh
+
+test:
+	./scripts/test.sh

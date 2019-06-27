@@ -8,6 +8,7 @@ from flask import Response
 import util
 
 
+@util.skip_if_not_logged_in
 def test_json(client):
     url_list = [f"/?root={quote(util.path('storage', 'local'))}"]
     if util.IS_CGTEAMWORK_LOGGED_IN:

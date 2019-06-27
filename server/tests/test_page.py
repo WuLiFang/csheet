@@ -29,12 +29,12 @@ def test_cgteamwork():
 def test_cgteamwork_video():
     util.setup()
     cfg = page.CGTeamWorkPage(
-        '仙剑', '合成', 'XJ_EP01_01_sc042', cgtwq.DesktopClient().token())
+        '开发测试用项目', '合成', 'SDKTEST_EP01_01_sc001', cgtwq.DesktopClient().token())
     with database.session_scope(is_close=True) as sess:
         cfg.update_async()
         videos = cfg.videos(sess)
         tasks = cfg.tasks(sess)
-        assert videos[0].src
+        assert videos[0].thumb
     assert isinstance(videos, list)
     assert isinstance(tasks, list)
     assert len(videos) == 1
