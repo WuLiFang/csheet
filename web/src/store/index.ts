@@ -70,7 +70,7 @@ export const store: IStore = {
       state,
       payload: mutations.IStateUpdateMutationPayload<IRootState>
     ) {
-      state[payload.key] = payload.value;
+      (state as any)[payload.key] = payload.value as any;
     },
   },
   state: {

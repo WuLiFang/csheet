@@ -12,9 +12,9 @@
     "baseUrl": ".",
     "types": ["mocha", "chai"],
     "paths": {
-      "@/*": ["web/*"]
+      "@/*": ["src/*"]
     }
   },
-  "include": ["web/**/*.ts", "web/**/*.tsx", "web/**/*.vue"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
   "exclude": ["node_modules"]
 }

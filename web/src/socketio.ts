@@ -32,7 +32,7 @@ export class SocketIO {
     this.requestUpdate(appeared);
   }, 5000);
   constructor(store: Store<IRootState>) {
-    this.store = store as Store<ICombinedRootState>;
+    this.store = store as any;
     this.socket = io(`/`, { path: '/api/socket.io' });
     this.socket.on('asset update', this.onAssetUpdate.bind(this));
     this.socket.on('connect', this.onConnect.bind(this));
