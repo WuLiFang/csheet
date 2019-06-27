@@ -25,8 +25,8 @@ RUN set -e
 
 ARG DEBIAN_MIRROR
 RUN if [ ! -z $DEBIAN_MIRROR ]; then \
-    sed -i "s@http://.\+\.debian\.org/debian@$DEBIAN_MIRROR@g" /etc/apt/sources.list \
-    && cat /etc/apt/sources.list; \
+    sed -i "s@http://.\+\.debian\.org/debian@$DEBIAN_MIRROR@g" /etc/apt/sources.list && \
+    cat /etc/apt/sources.list; \
     fi
 RUN apt-get update &&\
     apt-get -y install ffmpeg &&\

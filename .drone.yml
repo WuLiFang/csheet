@@ -11,6 +11,7 @@ steps:
       - >-
         docker build
         --build-arg GIT_REVISION=${DRONE_COMMIT_SHA}
+        --build-arg DEBIAN_MIRROR=http://mirrors.huaweicloud.com/debian
         --tag registry.wlf.com/csheet:latest
         --tag registry.wlf.com/csheet:${DRONE_TAG:-latest}
         .
