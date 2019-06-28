@@ -6,9 +6,11 @@ from __future__ import (absolute_import, division, print_function,
 
 import logging
 
-from . import core
+import cgtwq
+
 from .. import database
 from ..core import CELERY, SOCKETIO
+from . import core
 
 LOGGER = logging.getLogger(__name__)
 
@@ -24,7 +26,10 @@ def update_base_page(id_):
 def update_cgteamwork_page(id_, token):
     """Update cgteamwork page data.  """
 
-    _update_page(lambda: core.page_from_id(id_, token=token))
+    try:
+        _update_page(lambda: core.page_from_id(id_, token=token))
+    except cgtwq.EmptySelection:
+        pass
 
 
 def _update_page(page_getter):
