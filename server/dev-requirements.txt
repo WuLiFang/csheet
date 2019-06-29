@@ -1,4 +1,4 @@
 autopep8==1.4.4
 pylint==2.3.1
-pytest==4.6.3
+pytest==4.6.4
 rope==0.14.0
