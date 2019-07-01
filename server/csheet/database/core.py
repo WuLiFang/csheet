@@ -123,7 +123,7 @@ class SerializableMixin(object):
 def bind(url, is_echo=False):
     """Bind model to database.  """
 
-    LOGGER.info('Bind to engine: %s', url)
+    LOGGER.debug('Bind to engine: %s', url)
     engine = create_engine(url, echo=is_echo)
     session_factory.configure(binds={Base: engine})
     Base.metadata.create_all(engine)
