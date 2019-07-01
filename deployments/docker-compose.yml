@@ -1,11 +1,11 @@
 version: '2.4'
 services:
   rabbitmq:
-    image: rabbitmq
-    restart: on-failure
+    image: rabbitmq:3
+    restart: unless-stopped
   db:
     image: 'postgres:11'
-    restart: on-failure
+    restart: unless-stopped
     environment:
       POSTGRES_USER: csheet
       POSTGRES_PASSWORD: csheet
@@ -24,7 +24,7 @@ services:
       - ./csheet.env
   socketio:
     image: 'csheet'
-    restart: on-failure
+    restart: unless-stopped
     command: 'run socketio'
     volumes:
       - ./settings.py:/etc/csheet/settings.py:ro
@@ -34,7 +34,7 @@ services:
       - ./csheet.env
   beat:
     image: 'csheet'
-    restart: on-failure
+    restart: unless-stopped
     command: 'run beat'
     volumes:
       - ./settings.py:/etc/csheet/settings.py:ro
@@ -45,7 +45,7 @@ services:
       - ./csheet.env
   worker:
     image: 'csheet'
-    restart: on-failure
+    restart: unless-stopped
     command: 'run worker'
     volumes:
       - ./settings.py:/etc/csheet/settings.py:ro
@@ -54,11 +54,15 @@ services:
       - beat
     env_file:
       - ./csheet.env
+  docs:
+    image: csheet-docs
+    restart: unless-stopped
   nginx:
     image: 'nginx'
-    restart: on-failure
+    restart: unless-stopped
     depends_on:
       - web
+      - docs
       - socketio
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro

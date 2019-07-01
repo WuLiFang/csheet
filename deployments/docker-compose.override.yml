@@ -1,7 +1,7 @@
 version: '2.4'
 services:
   web:
-    build: '.'
+    build: '..'
     volumes:
       - '/mnt/y:/y:ro'
       - '/mnt/z:/z:ro'
