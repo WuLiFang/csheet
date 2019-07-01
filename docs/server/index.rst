@@ -10,5 +10,6 @@
   :maxdepth: 2
   :caption: 内容:
 
+  cgteamwork
   deployment
 
