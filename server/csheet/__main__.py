@@ -7,16 +7,14 @@ from __future__ import (absolute_import, division, print_function,
 import logging
 import os
 import socket
-import sys
 import webbrowser
 
 import fire
 
 from wlf import mp_logging
-from wlf.path import get_encoded as e
 from wlf.singleton import SingleInstance
 
-from . import database, filetools, page
+from . import database
 from .__about__ import __version__
 from .core import APP, SOCKETIO, init
 
@@ -57,11 +55,13 @@ def clear_lock():
             {'generation_started': None},
             synchronize_session=False
         )
-        
+
+
 def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(('8.8.8.8', 1))  # connect() for UDP doesn't send packets
     return s.getsockname()[0]
+
 
 def get_avaliable_port(host, port=0, family=socket.AF_INET, type_=socket.SOCK_STREAM):
     sock = socket.socket(family, type_)
@@ -72,6 +72,7 @@ def get_avaliable_port(host, port=0, family=socket.AF_INET, type_=socket.SOCK_ST
     ret = sock.getsockname()[1]
     sock.close()
     return ret
+
 
 def runserver(host='0.0.0.0', port=80):
     """Run csheet server forever.
@@ -93,30 +94,13 @@ def runserver(host='0.0.0.0', port=80):
 
     port = get_avaliable_port(host, port)
 
-    address = 'http://{}:{}'.format(get_local_ip() if host == '0.0.0.0' else host, port)
+    address = 'http://{}:{}'.format(get_local_ip()
+                                    if host == '0.0.0.0' else host, port)
     print(address)
     LOGGER.info('服务器运行于: %s', address)
     webbrowser.open(address)
 
     SOCKETIO.run(APP, host, port, debug=False)
-
-def _render(root):
-    """Render page for a folder """
-
-    # TODO: Implement static page.
-    page_ = page.LocalPage(root)
-    page_.static_folder = filetools.path('static')
-    with database.session_scope() as sess:
-        page_.update(sess)
-        html = page_.render(page_.videos(sess))
-
-    target = os.path.join(os.path.abspath(
-        os.path.dirname(root)), '{}.html'.format(page_.title))
-    with open(e(target), 'w') as f:
-        f.write(html.encode('utf-8'))
-    LOGGER.info('生成色板: %s', target)
-    print(target)
-    webbrowser.open(e(target))
 
 
 if __name__ == '__main__':
