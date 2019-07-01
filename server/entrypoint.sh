@@ -4,12 +4,6 @@ if [ "$1" = "run" ]; then
     case $2 in
     "" )
         gunicorn -w 1 \
-            --worker-connections $WORKER_CONNECTIONS \
-            -k gevent \
-            -b 0.0.0.0:80 csheet:APP
-        ;;
-    "socketio" )
-        gunicorn -w 1 \
             -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker \
             -b 0.0.0.0:80 csheet:APP
         ;;
