@@ -34,8 +34,8 @@ class ContextTask(celery.Task):
     """Task with flask app context.  """
 
     def __call__(self, *args, **kwargs):
+        database.core.bind(APP.config['DATABASE_URL'])
         with APP.app_context():
-            database.Session.remove()
             return self.run(*args, **kwargs)
 
     def run(self, *args, **kwargs):
