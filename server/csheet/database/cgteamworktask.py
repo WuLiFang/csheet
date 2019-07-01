@@ -56,9 +56,13 @@ class CGTeamWorkTask(core.Base, core.SerializableMixin):
         LOGGER.debug('Update task: %s', self.uuid)
         entry = self.to_entry(token)
 
-        instance = (TaskDataRow(*entry.get_fields(*TaskDataRow.fields))
-                    .parse(self.database, self.module))
-        session.merge(instance)
+        try:
+            instance = (TaskDataRow(*entry.get_fields(*TaskDataRow.fields))
+                        .parse(self.database, self.module))
+            session.merge(instance)
+        except cgtwq.EmptySelection:
+            session.delete(instance)
+            raise
         return entry
 
 

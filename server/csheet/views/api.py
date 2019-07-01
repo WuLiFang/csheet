@@ -9,9 +9,11 @@ import six
 from flask import abort, make_response, session
 from flask_restful import Api, Resource, reqparse
 
-from . import core
+import cgtwq
+
 from .. import database
 from ..core import APP
+from . import core
 from .login import require_login
 
 API = Api(APP, '/api')
@@ -46,7 +48,11 @@ class Task(Resource):
 
         sess = database.Session()
         task = core.get_task(id_, sess)
-        entry = task.update(session['token'], sess)
+        try:
+            entry = task.update(session['token'], sess)
+        except cgtwq.EmptySelection:
+            abort(404, f'No such task: {id_}')
+
         sess.commit()
         ret = task.serialize()
         ret['permissions'] = {i: entry.flow.has_field_permission(i)
