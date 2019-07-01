@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>色板服务端文档 &#8212; csheet 5.0.0 文档</title>
+    <title>数据库迁移 &#8212; csheet 5.0.0 文档</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -17,8 +17,7 @@
     <script type="text/javascript" src="../_static/translations.js"></script>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
-    <link rel="next" title="CGTeamWork" href="cgteamwork.html" />
-    <link rel="prev" title="色板服务端文档" href="../web/index.html" />
+    <link rel="prev" title="开发" href="development.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -36,23 +35,12 @@
           <div class="body" role="main">
             
   <div class="section" id="id1">
-<h1>色板服务端文档<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">内容:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="cgteamwork.html">CGTeamWork</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="cgteamwork.html#id1">数据结构</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="deployment.html">部署</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="deployment.html#id2">环境变量</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="development.html">开发</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="database-migration.html">数据库迁移</a></li>
-</ul>
-</li>
-</ul>
+<h1>数据库迁移<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>使用 <a class="reference external" href="https://alembic.sqlalchemy.org/">alembic</a> 进行迁移。</p>
+<p>在服务器启动时会自动把数据库迁移到最新状态。</p>
+<p>创建迁移:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>alembic revision -m <span class="s2">&quot;迁移名称&quot;</span>
+</pre></div>
 </div>
 </div>
 
@@ -97,10 +85,10 @@
 <p class="caption"><span class="caption-text">内容:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../web/index.html">网页端文档</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">服务端文档</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">服务端文档</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="cgteamwork.html">CGTeamWork</a></li>
 <li class="toctree-l2"><a class="reference internal" href="deployment.html">部署</a></li>
-<li class="toctree-l2"><a class="reference internal" href="development.html">开发</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="development.html">开发</a></li>
 </ul>
 </li>
 </ul>
@@ -109,8 +97,11 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="../web/index.html" title="上一章">色板服务端文档</a></li>
-      <li>Next: <a href="cgteamwork.html" title="下一章">CGTeamWork</a></li>
+  <li><a href="index.html">色板服务端文档</a><ul>
+  <li><a href="development.html">开发</a><ul>
+      <li>Previous: <a href="development.html" title="上一章">开发</a></li>
+  </ul></li>
+  </ul></li>
   </ul></li>
 </ul>
 </div>
@@ -146,7 +137,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../_sources/server/index.rst.txt"
+      <a href="../_sources/server/database-migration.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 
