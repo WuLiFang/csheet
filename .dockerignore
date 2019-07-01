@@ -9,6 +9,7 @@
 /server/tests/storage
 /server/tests/images/
 /server/tests/pages/
-/server/docs/
+docs
+deployments
 Dockerfile
 .travis.yml
