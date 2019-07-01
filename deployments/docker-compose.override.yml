@@ -1,18 +1,25 @@
 version: '2.4'
 services:
   web:
-    build: '..'
+    image: 'registry.wlf.com/csheet'
     volumes:
       - '/mnt/y:/y:ro'
       - '/mnt/z:/z:ro'
+  beat:
+    image: 'registry.wlf.com/csheet'
   worker:
+    image: 'registry.wlf.com/csheet'
     volumes:
       - '/mnt/y:/y:ro'
       - '/mnt/z:/z:ro'
     cpu_shares: 128
-    cpus: 4
+    cpus: 2
     mem_limit: 1G
+  socketio:
+    image: 'registry.wlf.com/csheet'
+  docs:
+    image: 'registry.wlf.com/csheet-docs'
   nginx:
     command: [nginx-debug, '-g', 'daemon off;']
     ports:
-      - 80:80
+      - 60000:80

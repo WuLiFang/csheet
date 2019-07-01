@@ -1,11 +1,8 @@
-.PHONY: all docker docs deploy-docs
+.PHONY: all docs deploy-docs
 
 all:
 	$(MAKE) -C web
 	$(MAKE) -C server
-
-docker: 
-	./scripts/build.py
 
 docs: docs/* docs/_build/html/.git
 	$(MAKE) -C docs html

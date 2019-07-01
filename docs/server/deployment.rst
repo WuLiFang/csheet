@@ -6,6 +6,12 @@
 环境变量
 ---------------
 
+SECRET_KEY
+
+  Session 会话加密私钥，生产环境*必须*设置。
+
+  可用 ``openssl rand --hex 32`` 生成。
+
 MESSAGE_QUEUE_URL
 
   消息队列 URL。

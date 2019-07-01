@@ -77,6 +77,7 @@ def update_one_chunk(size=50, is_strict=True):
                 LOGGER.debug('No video need update.')
                 if is_strict:
                     raise WorkerIdle
+                sess.rollback()
 
             for i in chunk:
                 update_mtime(i, 'src', 'src_mtime')
