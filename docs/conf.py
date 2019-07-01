@@ -27,7 +27,7 @@ author = 'NateScarlet <NateScarlet@Gmail.com>'
 # The short X.Y version
 version = '5.0.0'
 # The full version, including alpha/beta/rc tags
-release = '5.0.0-rc.4'
+release = '5.0.0'
 
 
 # -- General configuration ---------------------------------------------------
