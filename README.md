@@ -1,6 +1,12 @@
 # 色板服务器
 
+[![Build Status](https://travis-ci.org/WuLiFang/csheet.svg?branch=master)](https://travis-ci.org/WuLiFang/csheet)
+[![Maintainability](https://api.codeclimate.com/v1/badges/49c1acebb3d8cbce8ea5/maintainability)](https://codeclimate.com/github/WuLiFang/csheet/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/49c1acebb3d8cbce8ea5/test_coverage)](https://codeclimate.com/github/WuLiFang/csheet/test_coverage)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+
 [项目主页](https://github.com/WuLiFang/csheet)
+[文档](https://wulifang.github.io/csheet/)
 
 ## 功能
 
