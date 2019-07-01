@@ -7,6 +7,9 @@ import logging
 from contextlib import contextmanager
 from functools import wraps
 
+import gevent
+from alembic import command as abcCommand
+from alembic import config as abcConfig
 from flask import json
 from sqlalchemy import (Column, ForeignKey, Integer, String, Table,
                         create_engine, orm)
@@ -15,6 +18,8 @@ from sqlalchemy.types import VARCHAR, TypeDecorator, Unicode
 
 from wlf.path import PurePath
 from wlf.path import get_unicode as u
+
+from .. import filetools
 
 # pylint: disable=invalid-name
 Base = declarative_base()
@@ -118,7 +123,15 @@ class SerializableMixin(object):
 def bind(url, is_echo=False):
     """Bind model to database.  """
 
-    LOGGER.debug('Bind to engine: %s', url)
+    LOGGER.info('Bind to engine: %s', url)
     engine = create_engine(url, echo=is_echo)
     session_factory.configure(binds={Base: engine})
     Base.metadata.create_all(engine)
+
+
+def upgrade(url):
+    LOGGER.info(f"Upgrade database: {url}")
+    cfg = abcConfig.Config()
+    cfg.set_main_option('sqlalchemy.url', url)
+    cfg.set_main_option('script_location', filetools.path('../alembic'))
+    abcCommand.upgrade(cfg, 'head')

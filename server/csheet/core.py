@@ -54,11 +54,12 @@ CELERY = celery.Celery(APP.import_name, task_cls=ContextTask)
 def init():
     """Initiate application.  """
 
-    logging.config.dictConfig(APP.config['LOGGING_CONFIG'])
-    CELERY.config_from_object(APP.config['CELERY_CONFIG'])
     database.core.bind(
         url=APP.config['DATABASE_URL'],
         is_echo=APP.config['DEBUG_SQL'])
+
+    CELERY.config_from_object(APP.config['CELERY_CONFIG'])
+    logging.config.dictConfig(APP.config['LOGGING_CONFIG'])
 
     dsn = APP.config['BACKEND_SENTRY_DSN']
     if dsn:
@@ -80,6 +81,11 @@ def init():
                 scope.user = {
                     "id": session.get('account_id'),
                     "username": session.get('name')}
+
+
+@APP.before_first_request
+def migrate():
+    database.core.upgrade(APP.config['DATABASE_URL'])
 
 
 init()
