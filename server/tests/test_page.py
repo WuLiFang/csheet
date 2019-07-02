@@ -14,7 +14,7 @@ def test_cgteamwork():
     util.setup()
     cfg = page.CGTeamWorkPage(
         '梦塔', '合成', 'MT_EP07_05', cgtwq.DesktopClient().token())
-    with database.session_scope(is_close=True) as sess:
+    with database.session_scope() as sess:
         cfg.update_async()
         videos = cfg.videos(sess)
         tasks = cfg.tasks(sess)
@@ -30,7 +30,7 @@ def test_cgteamwork_video():
     util.setup()
     cfg = page.CGTeamWorkPage(
         '开发测试用项目', '合成', 'SDKTEST_EP01_01_sc001', cgtwq.DesktopClient().token())
-    with database.session_scope(is_close=True) as sess:
+    with database.session_scope() as sess:
         cfg.update_async()
         videos = cfg.videos(sess)
         tasks = cfg.tasks(sess)
@@ -44,7 +44,7 @@ def test_cgteamwork_video():
 def test_local():
     util.setup()
     cfg = page.LocalPage('D:/Users/34357/Pictures/Collection')
-    with database.session_scope(is_close=True) as sess:
+    with database.session_scope() as sess:
         cfg.update_async()
         videos = cfg.videos(sess)
     assert isinstance(videos, list)
@@ -58,7 +58,7 @@ def test_pack():
     util.setup()
     cfg = page.CGTeamWorkPage(
         '梦塔', '合成', 'MT_EP06_03', cgtwq.DesktopClient().token())
-    with database.session_scope(is_close=True) as sess,\
+    with database.session_scope() as sess,\
             APP.app_context(),\
             APP.test_request_context():
         cfg.update_async()

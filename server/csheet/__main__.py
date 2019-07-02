@@ -42,7 +42,7 @@ def _fix_broken_mtime(target, sess):
 def health_check():
     """Do database health check.  """
 
-    with database.session_scope(is_close=True) as sess:
+    with database.session_scope() as sess:
         _fix_broken_mtime('thumb', sess)
         _fix_broken_mtime('poster', sess)
         _fix_broken_mtime('preview', sess)
@@ -50,7 +50,7 @@ def health_check():
 
 
 def clear_lock():
-    with database.session_scope(is_close=True) as sess:
+    with database.session_scope() as sess:
         sess.query(database.Video).update(
             {'generation_started': None},
             synchronize_session=False

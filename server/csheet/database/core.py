@@ -38,10 +38,10 @@ VIDEO_TAG = Table('Video-Tag', Base.metadata,
 
 
 @contextmanager
-def session_scope(session=None, is_close=False):
+def session_scope():
     """Session scope context.  """
 
-    sess = session or Session()
+    sess = Session()
 
     try:
         yield sess
@@ -50,8 +50,7 @@ def session_scope(session=None, is_close=False):
         sess.rollback()
         raise
     finally:
-        if is_close:
-            sess.close()
+        sess.close()
 
 
 def _skip_process_if_is_none(process):
