@@ -34,7 +34,7 @@ class ContextTask(celery.Task):
     """Task with flask app context.  """
 
     def __call__(self, *args, **kwargs):
-        database.core.bind(APP.config['DATABASE_URL'])
+        database.core.get_engine().dispose()
         with APP.app_context():
             return self.run(*args, **kwargs)
 

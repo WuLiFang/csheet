@@ -8,6 +8,7 @@ from contextlib import contextmanager
 from functools import wraps
 
 import gevent
+import sqlalchemy as sa
 from alembic import command as abcCommand
 from alembic import config as abcConfig
 from flask import json
@@ -119,13 +120,21 @@ class SerializableMixin(object):
         return {i.name: self._encode(getattr(self, i.name)) for i in self.__table__.columns}
 
 
+__ENGINE = {}
+
+
 def bind(url, is_echo=False):
     """Bind model to database.  """
 
     LOGGER.debug('Bind to engine: %s', url)
     engine = create_engine(url, echo=is_echo)
+    __ENGINE[get_engine] = engine
     session_factory.configure(binds={Base: engine})
     Base.metadata.create_all(engine)
+
+
+def get_engine() -> sa.engine.Engine:
+    return __ENGINE[get_engine]
 
 
 def upgrade(url):
