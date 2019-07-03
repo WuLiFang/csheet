@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.1](https://github.com/WuLiFang/csheet/compare/v5.0.0...v5.0.1) (2019-07-03)
+
+
+### Bug Fixes
+
+* always close `session_scope` ([0ed42cd](https://github.com/WuLiFang/csheet/commit/0ed42cd))
+* **deps:** update dependency element-ui to v2.10.1 ([7f501b9](https://github.com/WuLiFang/csheet/commit/7f501b9))
+* dispose engine at worker init, not at task start ([e5eddec](https://github.com/WuLiFang/csheet/commit/e5eddec))
+
+
+
 ## 5.0.0 (2019-07-01)
 
 
