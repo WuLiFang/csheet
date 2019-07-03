@@ -10,6 +10,7 @@ import os
 
 import celery
 import flask
+from celery import signals as c_signals
 from flask import session
 from flask_socketio import SocketIO
 
@@ -34,7 +35,6 @@ class ContextTask(celery.Task):
     """Task with flask app context.  """
 
     def __call__(self, *args, **kwargs):
-        database.core.get_engine().dispose()
         with APP.app_context():
             return self.run(*args, **kwargs)
 
@@ -46,6 +46,11 @@ class ContextTask(celery.Task):
 @APP.teardown_appcontext
 def _teardown_session(_exc):
     database.Session.remove()
+
+
+@c_signals.worker_init.connect
+def _dispose_db_connection(**_kwargs):
+    database.core.get_engine().dispose()
 
 
 CELERY = celery.Celery(APP.import_name, task_cls=ContextTask)
