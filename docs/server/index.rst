@@ -13,4 +13,5 @@
   cgteamwork
   deployment
   development
+  video
 
