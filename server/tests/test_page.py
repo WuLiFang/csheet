@@ -3,8 +3,9 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+from tests import util
+
 import cgtwq
-import util
 from csheet import APP, database, page, video
 from wlf.path import get_encoded as e
 
@@ -34,7 +35,7 @@ def test_cgteamwork_video():
         cfg.update_async()
         videos = cfg.videos(sess)
         tasks = cfg.tasks(sess)
-        assert videos[0].thumb
+        assert videos[0].poster
     assert isinstance(videos, list)
     assert isinstance(tasks, list)
     assert len(videos) == 1

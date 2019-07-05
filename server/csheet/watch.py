@@ -27,7 +27,7 @@ def getmtime(path):
 
     if not path:
         return None
-    path = filter_filename(path)
+    path = os.path.join(APP.config['STORAGE'], filter_filename(path))
     path_e = e(path)
     if not os.path.exists(path_e):
         LOGGER.warning('File removed: %s', path)

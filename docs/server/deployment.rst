@@ -3,8 +3,14 @@
 
 参考 ``deployments`` 文件夹下的示例文件。
 
+.. _`环境变量`:
+
 环境变量
 ---------------
+
+CSHEET_SETTINGS
+
+  配置文件文件名，其中设置的值将覆盖环境变量的配置。
 
 SECRET_KEY
 
@@ -98,3 +104,9 @@ DEBUG_SQL
   默认值: False
 
   是否启用 SQL 日志，设为 True 启用。 
+
+CACHE_LIFE
+
+  默认值: 30
+
+  缓存保留天数。

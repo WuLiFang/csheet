@@ -21,4 +21,5 @@ run:
 	./scripts/run.sh
 
 test:
+	. $(activate) && . ./.env && export PYTHONPATH && python ./tests/generate_test_page.py
 	./scripts/test.sh

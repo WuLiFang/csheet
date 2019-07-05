@@ -3,6 +3,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import hashlib
 import os
 import uuid
 
@@ -49,3 +50,19 @@ def uuid_from_path(filepath):
     else:
         filepath = e(filepath)
     return uuid.uuid5(uuid.NAMESPACE_URL, filepath).hex
+
+
+def sha256sum(file_path: str) -> str:
+    """Get sha256 hex digest from file path.
+
+    Args:
+        path (str): File path
+
+    Returns:
+        str: Hex digest
+    """
+    hasher = hashlib.sha256()
+    with open(file_path, 'rb') as f:
+        for chunk in iter(lambda: f.read(2 << 20), b''):
+            hasher.update(chunk)
+    return hasher.hexdigest()

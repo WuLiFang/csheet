@@ -2,10 +2,11 @@
 """Contactsheet test.  """
 
 
+from tests import util
+
 import csheet
 import csheet.__main__
 import generate_test_page
-import util
 
 PORT = 5001
 

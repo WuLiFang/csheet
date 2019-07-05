@@ -19,8 +19,7 @@ function getMtime(videoData: IVideoResponse, role: VideoRole): number | null {
 
 function getPathWithMtime(
   videoData: IVideoResponse,
-  role: VideoRole,
-  isForce = false
+  role: VideoRole
 ): string | null {
   const mtime = getMtime(videoData, role);
   if (!mtime) {
@@ -32,13 +31,10 @@ function getPathWithMtime(
       preview: '.mp4',
       thumb: '.jpg',
     }[role] || '';
-  let ret = isFileProtocol
+
+  return isFileProtocol
     ? `video/${role}/${videoData.label || videoData.uuid}${suffix}`
     : `/video/${role}/${videoData.uuid}${suffix}?timestamp=${mtime}`;
-  if (isForce) {
-    ret += `?forceUpdateAt=${new Date().getTime()}`;
-  }
-  return ret;
 }
 
 export function getPath(
@@ -46,7 +42,28 @@ export function getPath(
   role: VideoRole,
   isForce = false
 ): string | null {
-  return getPathWithMtime(videoData, role, isForce);
+  const path: string | null = getRolePath(videoData, role);
+  if (path && path.startsWith('cache')) {
+    return `/${path}`;
+  }
+  let ret: string | null = getPathWithMtime(videoData, role);
+  if (isForce && ret) {
+    ret += `?forceUpdateAt=${new Date().getTime()}`;
+  }
+  return ret;
+}
+
+function getRolePath(
+  videoData: IVideoResponse,
+  role: VideoRole
+): string | null {
+  return (
+    {
+      poster: videoData.poster,
+      preview: videoData.preview,
+      thumb: videoData.thumb,
+    }[role] || null
+  );
 }
 
 export function isElementAppeared(element: HTMLElement, expand = 10): boolean {

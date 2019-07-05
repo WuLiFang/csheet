@@ -1,8 +1,7 @@
 
 """Test `csheet.views.api` module.  """
 from flask import Response
-
-import util
+from tests import util
 
 
 @util.skip_if_not_logged_in

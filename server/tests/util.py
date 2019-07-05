@@ -21,8 +21,10 @@ ROOT = os.path.abspath(os.path.dirname(__file__))
 def setup():
     """Setup test env.  """
 
-    csheet.core.APP.config.from_object('settings')
+    csheet.core.APP.config.from_object('tests.settings')
     csheet.core.init()
+
+    csheet.core.APP.route('/_login', methods=('POST',))(_login)
 
 
 def path(*other):
@@ -35,7 +37,6 @@ def path(*other):
     return os.path.abspath(os.path.join(ROOT, *other))
 
 
-@csheet.core.APP.route('/_login', methods=('POST',))
 def _login():
     """For test client login.  """
 

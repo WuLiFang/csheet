@@ -20,7 +20,7 @@ from sqlalchemy import orm
 from wlf.codectools import get_unicode as u
 from wlf.path import PurePath
 
-from .. import __about__, database, filetools
+from .. import __about__, core, database, filetools
 from ..__about__ import __version__
 from ..filename import filter_filename
 from ..video import HTMLVideo
@@ -183,6 +183,7 @@ class BasePage(object):
             assert isinstance(filename, PurePath), type(filename)
 
             filename = filter_filename(filename)
+            filename = os.path.join(core.APP.config['STORAGE'], filename)
             arcname = video.get(role, is_pack=True)
             zipfile.write(filename, arcname)
 

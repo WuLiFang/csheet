@@ -2,9 +2,9 @@
 
 import flask
 import pytest
+from tests import util
 
 import cgtwq
-import util
 from csheet import APP
 
 

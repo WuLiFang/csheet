@@ -5,6 +5,8 @@ from __future__ import (absolute_import, division, print_function,
 
 import logging
 import os
+import shutil
+import tempfile
 import time
 
 import psutil
@@ -15,6 +17,7 @@ from gevent import spawn
 
 from wlf import ffmpeg
 
+from . import filecache
 from .core import APP, CELERY, SOCKETIO
 from .database import Session, Video, session_scope
 from .encoder import normalize
@@ -63,19 +66,24 @@ class GenaratableVideo(Video):
 
         LOGGER.info('Generate %s for: %s', target, self)
         src = filter_filename(src)
-        dst = output_path(target, self.uuid)
-        result = method(src, dst)
-        sess.add(self)  # XXX: May lose sess after generation
-        mediainfo = ffmpeg.probe(result)
-        if mediainfo.error:
-            raise ffmpeg.GenerateError(mediainfo.error)
-        setattr(self, target, result)
-        setattr(self, '{}_mtime'.format(target),
-                getattr(self, '{}_mtime'.format(source)))
-        setattr(self, '{}_atime'.format(target), time.time())
-        LOGGER.info('Generation success: %s -> %s',
-                    src, result)
-        SOCKETIO.emit('asset update', normalize([self]))
+        tmp = tempfile.mkdtemp('csheet-generation')
+        try:
+            dst = os.path.join(tmp, os.path.basename(src))
+            result = method(src, dst)
+            sess.add(self)  # XXX: May lose sess after generation
+            mediainfo = ffmpeg.probe(result)
+            if mediainfo.error:
+                raise ffmpeg.GenerateError(mediainfo.error)
+            result = filecache.save(result, is_move=True)
+            setattr(self, target, result)
+            setattr(self, '{}_mtime'.format(target),
+                    getattr(self, '{}_mtime'.format(source)))
+            setattr(self, '{}_atime'.format(target), time.time())
+            LOGGER.info('Generation success: %s -> %s',
+                        src, result)
+            SOCKETIO.emit('asset update', normalize([self]))
+        finally:
+            shutil.rmtree(tmp)
 
 
 def _interval():

@@ -7,14 +7,15 @@ import errno
 import logging
 import os
 
+import flask
 from flask import send_file
 
 import cgtwq
 
-from . import core
 from .. import database
 from ..core import APP
 from ..filename import filter_filename
+from . import core
 
 LOGGER = logging.getLogger(__name__)
 
@@ -72,6 +73,22 @@ def response_video_file(role, filename):
 
     uuid, _ = os.path.splitext(filename)
     return response_video(uuid, role)
+
+
+@APP.route('/cache/<path:path>')
+def serve_cache(path: str) -> flask.Response:
+    """Serve cache folder, should be replaced with reverse proxy
+    in production.
+
+    Args:
+        path (str): cache path
+
+    Returns:
+        flask.Response
+    """
+
+    return flask.send_from_directory(os.path.join(
+        APP.config['STORAGE'], 'cache'), path)
 
 
 def _get_note_url_template(select):

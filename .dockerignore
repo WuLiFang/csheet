@@ -7,7 +7,6 @@
 **/.git/
 
 /server/tests/storage
-/server/tests/images/
 /server/tests/pages/
 docs
 deployments
