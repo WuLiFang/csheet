@@ -6,6 +6,7 @@ from __future__ import (absolute_import, division, print_function,
 import hashlib
 import os
 import uuid
+from datetime import datetime
 
 from six import PY3
 
@@ -66,3 +67,10 @@ def sha256sum(file_path: str) -> str:
         for chunk in iter(lambda: f.read(2 << 20), b''):
             hasher.update(chunk)
     return hasher.hexdigest()
+
+
+def touch(file_path: str):
+    """Update file atime.  """
+
+    os.utime(file_path,
+             (datetime.now().timestamp(), os.path.getmtime(file_path)))

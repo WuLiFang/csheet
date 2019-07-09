@@ -20,9 +20,8 @@ from sqlalchemy import orm
 from wlf.codectools import get_unicode as u
 from wlf.path import PurePath
 
-from .. import __about__, core, database, filetools
+from .. import __about__, core, database, filepath, filetools
 from ..__about__ import __version__
-from ..filename import filter_filename
 from ..video import HTMLVideo
 
 LOGGER = logging.getLogger(__name__)
@@ -133,6 +132,9 @@ class BasePage(object):
         if database_session:
             context.setdefault('videos', self.videos(database_session))
             context.setdefault('tags', self.tags(database_session))
+        if context['videos']:
+            for i in context['videos']:
+                i.touch()
         return context
 
     def data(self, database_session):
@@ -182,8 +184,7 @@ class BasePage(object):
 
             assert isinstance(filename, PurePath), type(filename)
 
-            filename = filter_filename(filename)
-            filename = os.path.join(core.APP.config['STORAGE'], filename)
+            filename = filepath.normalize(filename)
             arcname = video.get(role, is_pack=True)
             zipfile.write(filename, arcname)
 

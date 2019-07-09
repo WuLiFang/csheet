@@ -7,6 +7,7 @@ from sqlalchemy import Boolean, Column, Float, ForeignKey, String, orm
 
 from wlf.path import PurePath
 
+from .. import filepath, filetools
 from . import core
 
 
@@ -59,3 +60,14 @@ class Video(core.Base, core.SerializableMixin):
         ret['related_tasks'] = [i.uuid for i in self.related_tasks]
         ret['tags'] = [i.id for i in self.tags]
         return ret
+
+    def touch(self):
+        """Update atime on related files.  """
+
+        for i in [self.thumb, self.poster, self.preview, self.src]:
+            if not i:
+                continue
+            try:
+                filetools.touch(filepath.normalize(i))
+            except OSError:
+                pass

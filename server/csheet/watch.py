@@ -13,10 +13,10 @@ from gevent import spawn
 
 from wlf.path import get_encoded as e
 
+from . import filepath
 from .core import APP, CELERY
 from .database import Video, session_scope
 from .exceptions import WorkerIdle
-from .filename import filter_filename
 from .workertools import work_forever
 
 LOGGER = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ def getmtime(path):
 
     if not path:
         return None
-    path = os.path.join(APP.config['STORAGE'], filter_filename(path))
+    path = filepath.normalize(path)
     path_e = e(path)
     if not os.path.exists(path_e):
         LOGGER.warning('File removed: %s', path)

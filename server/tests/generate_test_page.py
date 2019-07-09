@@ -7,9 +7,10 @@ from __future__ import (absolute_import, division, print_function,
 import typing
 from urllib.parse import quote
 
+from tests import util
+
 import cgtwq
 import csheet
-import util
 
 if typing.TYPE_CHECKING:
     import werkzeug
@@ -30,7 +31,7 @@ def main():
     csheet.APP.root_path = util.path('../../web/public')
     client = csheet.APP.test_client()
     if cgtwq.DesktopClient().is_logged_in():
-        tasks.append((quote('/?pipeline=合成&project=梦塔&prefix=MT_EP06_',
+        tasks.append((quote('/?pipeline=合成&prefix=XHG_EP00&project=小火锅',
                             safe=b'/?=&'), 'main.html', _inject_text('/main.js')))
         client.post('/_login')
     else:

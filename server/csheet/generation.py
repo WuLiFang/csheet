@@ -17,12 +17,11 @@ from gevent import spawn
 
 from wlf import ffmpeg
 
-from . import filecache
+from . import filecache, filepath
 from .core import APP, CELERY, SOCKETIO
 from .database import Session, Video, session_scope
 from .encoder import normalize
 from .exceptions import WorkerIdle
-from .filename import filter_filename
 from .workertools import Locked, work_forever, worker_concurrency
 
 LOGGER = logging.getLogger(__name__)
@@ -65,7 +64,7 @@ class GenaratableVideo(Video):
         assert src, f'Source file path invalid, {self}'
 
         LOGGER.info('Generate %s for: %s', target, self)
-        src = filter_filename(src)
+        src = filepath.normalize(src)
         tmp = tempfile.mkdtemp('csheet-generation')
         try:
             dst = os.path.join(tmp, os.path.basename(src))

@@ -15,10 +15,10 @@ from wlf.path import PurePath
 from wlf.path import get_encoded as e
 from wlf.path import get_unicode as u
 
-from . import core
-from ..filename import filter_filename
+from .. import filepath
 from ..filetools import uuid_from_path
 from ..video import HTMLVideo
+from . import core
 
 LOGGER = logging.getLogger(__name__)
 
@@ -51,7 +51,7 @@ class LocalPage(core.BasePage):
         # Scan root.
         videos = {}
         images = {}
-        for dirpath, _, filenames in os.walk(e(filter_filename(self.root))):
+        for dirpath, _, filenames in os.walk(e(filepath.normalize(self.root))):
             for filename in filenames:
                 fullpath = os.path.normcase(u(os.path.join(dirpath, filename)))
                 _sort_file(fullpath, images, videos)
@@ -76,7 +76,7 @@ class LocalPage(core.BasePage):
         ).order_by(HTMLVideo.label)
 
     def _video_criterion(self):
-        root = filter_filename(self.root)
+        root = filepath.normalize(self.root)
         return sqlalchemy.or_(
             HTMLVideo.src.startswith(root),
             HTMLVideo.poster.startswith(root)

@@ -12,9 +12,8 @@ from flask import send_file
 
 import cgtwq
 
-from .. import database
+from .. import database, filepath
 from ..core import APP
-from ..filename import filter_filename
 from . import core
 
 LOGGER = logging.getLogger(__name__)
@@ -49,7 +48,7 @@ def response_video(uuid, role):
             sess.commit()
         return 'No path data for this video role', 404
     try:
-        return send_file(filter_filename(path), conditional=True)
+        return send_file(filepath.normalize(path), conditional=True)
     except IOError as ex:
         if (ex.errno == errno.ENOENT
                 and role in ('thumb', 'preview')):

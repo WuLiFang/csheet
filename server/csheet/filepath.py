@@ -8,17 +8,19 @@ import sys
 
 from wlf.path import get_unicode as u
 
+from . import core
 
-def filter_filename(path, platform=None):
-    """Filter path for unix/windows path convertion.
+
+def translate(path: str, platform: str = 'linux') -> str:
+    """Translate path to given platform.
 
     Args:
         path (str): Path to replace.
         platform(str): Platform in `sys.platform` manner.
+        Defaults to `linux`
     Returns:
         str: Converted path.
     """
-
     path = u(path)
 
     try:
@@ -39,7 +41,22 @@ def filter_filename(path, platform=None):
         path = path.replace('/', '\\')
     else:
         path = path.replace('\\', '/')
+
     return path
+
+
+def normalize(path: str) -> str:
+    """Convert database path to
+    corresponding absolute path on current system.
+
+    Args:
+        path (str): Path
+
+    Returns:
+        str: Converted path.
+    """
+    return os.path.join(translate(core.APP.config['STORAGE'], platform=sys.platform),
+                        translate(path, platform=sys.platform))
 
 
 def get_filename_filters(platform=None):
@@ -52,6 +69,7 @@ def get_filename_filters(platform=None):
         text_type: Filters.
     """
 
+    platform = platform or sys.platform
     filters = u(os.getenv('FILENAME_FILTER', ''))
     if not filters:
         if (platform or sys.platform) == 'win32':

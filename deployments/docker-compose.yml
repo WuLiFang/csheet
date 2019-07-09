@@ -16,7 +16,7 @@ services:
     restart: on-failure
     volumes:
       - ./settings.py:/etc/csheet/settings.py:ro
-      - ./srv:/srv/csheet:ro
+      - ./srv:/srv/csheet
     depends_on:
       - rabbitmq
       - db
