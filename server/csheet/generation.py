@@ -5,9 +5,11 @@ from __future__ import (absolute_import, division, print_function,
 
 import logging
 import os
+import pathlib
 import shutil
 import tempfile
 import time
+from typing import Optional
 
 import psutil
 import six
@@ -16,6 +18,7 @@ import sqlalchemy.exc
 from gevent import spawn
 
 from wlf import ffmpeg
+from wlf.path import PurePath
 
 from . import filecache, filepath
 from .core import APP, CELERY, SOCKETIO
@@ -74,6 +77,12 @@ class GenaratableVideo(Video):
             if mediainfo.error:
                 raise ffmpeg.GenerateError(mediainfo.error)
             result = filecache.save(result, is_move=True)
+            oldfile: Optional[PurePath] = getattr(self, target)
+            if oldfile and not oldfile.is_absolute():
+                try:
+                    os.remove(oldfile)
+                except OSError:
+                    pass
             setattr(self, target, result)
             setattr(self, '{}_mtime'.format(target),
                     getattr(self, '{}_mtime'.format(source)))
