@@ -41,7 +41,7 @@ def save(path: str, is_move: bool = False) -> str:
     pathname = get_pathname(src)
     dst = os.path.join(store, pathname)
 
-    os.makedirs(os.path.dirname(dst), 0o644, exist_ok=True)
+    os.makedirs(os.path.dirname(dst), 0o755, exist_ok=True)
 
     (shutil.move if is_move else shutil.copy2)(src, os.path.join(store, dst))
 
