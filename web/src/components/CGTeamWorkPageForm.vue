@@ -59,23 +59,7 @@ export default Vue.extend({
         pipeline: [
           { required: true, message: '请选择流程', trigger: 'change' },
         ],
-        prefix: [
-          { required: true, message: '请输入前缀', trigger: 'blur' },
-          {
-            trigger: 'blur',
-            validator: (
-              rule: any,
-              value: string,
-              callback: (error?: Error) => void
-            ) => {
-              if (!value.includes('_')) {
-                callback(new Error('至少包含一个下划线`_`'));
-              } else {
-                callback();
-              }
-            },
-          },
-        ],
+        prefix: [{ required: true, message: '请输入前缀', trigger: 'blur' }],
         project: [{ required: true, message: '请选择项目', trigger: 'blur' }],
       },
     };
