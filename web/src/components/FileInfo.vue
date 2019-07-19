@@ -86,7 +86,7 @@ export default Vue.extend({
       Message.success('已复制');
     });
     this.clipboard.on('error', () => {
-      Message.error('使用 Ctrl + V 复制');
+      Message.error('使用 Ctrl + C 复制');
     });
   },
 });
