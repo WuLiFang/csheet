@@ -2,7 +2,7 @@ git+https://github.com/WuLiFang/cgtwq@434455adcc057c6e0a75a71cab6479e14220b303#e
 git+https://github.com/WuLiFang/wlf@9a70cdde520f4d4e25c810e2cdacec1263f953b9#egg=wlf
 gevent==1.4.0
 flask-restful==0.3.7
-flask-socketio==4.1.1
+flask-socketio==4.2.0
 flask==1.1.1
 fire==0.2.0
 environs==5.2.0
