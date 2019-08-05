@@ -22,7 +22,8 @@
 
 </template>
 <script lang="ts">
-import { buildURL, getCookie } from '@/datatools';
+import * as accessHistory from '@/access-history';
+import { buildURL } from '@/datatools';
 import { projects, showFullScreenLoading } from '@/index';
 import Vue from 'vue';
 
@@ -49,9 +50,9 @@ export default Vue.extend({
   data() {
     return {
       form: {
-        pipeline: getCookie('pipeline'),
-        prefix: getCookie('prefix'),
-        project: getCookie('project'),
+        pipeline: '',
+        prefix: '',
+        project: '',
       },
       is_opening: false,
       projects,
@@ -74,10 +75,15 @@ export default Vue.extend({
       return this.$refs.form as ElForm;
     },
     open() {
-      this.formComponent().validate((valid: boolean) => {
+      this.formComponent().validate(async (valid: boolean) => {
         if (valid) {
           showFullScreenLoading();
-          location.href = buildURL('', this.form);
+          const href = buildURL('/', this.form);
+          await accessHistory.push({
+            href,
+            type: 'cgteamwork',
+          });
+          location.href = href;
         }
       });
     },

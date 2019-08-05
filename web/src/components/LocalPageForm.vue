@@ -14,7 +14,8 @@
 
 </template>
 <script lang="ts">
-import { buildURL, getCookie } from '@/datatools';
+import * as accessHistory from '@/access-history';
+import { buildURL } from '@/datatools';
 import { showFullScreenLoading } from '@/index';
 import Vue from 'vue';
 
@@ -35,7 +36,7 @@ export default Vue.extend({
   data() {
     return {
       form: {
-        root: getCookie('root', 'Y:\\资源\\动态素材\\灰、尘、土'),
+        root: 'Y:\\资源\\动态素材\\灰、尘、土',
       },
       rules: {
         root: [
@@ -67,10 +68,15 @@ export default Vue.extend({
   },
   methods: {
     open() {
-      this.formComponent.validate((valid: boolean) => {
+      this.formComponent.validate(async (valid: boolean) => {
         if (valid) {
           showFullScreenLoading();
-          location.href = buildURL('', this.form);
+          const href = buildURL('/', this.form);
+          await accessHistory.push({
+            href,
+            type: 'local',
+          });
+          location.href = href;
         }
       });
     },

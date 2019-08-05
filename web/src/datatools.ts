@@ -1,5 +1,4 @@
 import { TaskStatus } from '@/interface';
-import Cookies from 'js-cookie';
 
 export function getDataFromAppElement(name: string, defaultValue?: any) {
   const app = document.getElementById('app');
@@ -11,22 +10,6 @@ export function getDataFromAppElement(name: string, defaultValue?: any) {
     return defaultValue;
   }
   return data;
-}
-
-export function getCookie(name: string, defaultValue = '') {
-  const value = Cookies.get(name);
-  if (value === undefined) {
-    return defaultValue;
-  }
-  return decodeURIComponent(
-    value
-      .replace(/%/g, '%25')
-      .replace(/\\\\/g, '%5C')
-      .replace(
-        /\\(\d{3})/g,
-        (match, str) => `%${parseInt(str, 8).toString(16)}`
-      )
-  );
 }
 
 export function buildURL(
