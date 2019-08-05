@@ -3,7 +3,11 @@ import '@/sentry';
 import Index from '@/views/Index.vue';
 import { Loading } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import moment from 'moment';
+import 'moment/locale/zh-cn';
 import Vue from 'vue';
+
+moment.locale(navigator.language);
 
 Vue.use(Loading);
 const vue = new Vue({

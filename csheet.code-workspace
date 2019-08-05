@@ -21,6 +21,9 @@
     "terminal.integrated.env.windows": {
       "PYTHONPATH": "server",
       "CSHEET_DEBUG": "1"
-    }
+    },
+    "cSpell.words": [
+        "cgteamwork"
+    ]
   }
 }

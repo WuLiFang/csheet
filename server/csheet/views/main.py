@@ -52,11 +52,6 @@ def _render_page(page: BasePage, database_session):
         database_session=database_session)
 
     resp = make_response(rendered)
-    for k, v in request.args.items():
-        if k not in ('root', 'project', 'pipeline', 'prefix'):
-            continue
-        resp.set_cookie(k, v, max_age=APP.config['COOKIE_LIFE'])
-
     return resp
 
 
