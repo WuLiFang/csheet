@@ -16,7 +16,19 @@
       min-width='200'
     )
       template(#default='{ row }')
-        a(@click='location.assign(row.page.href)') {{ getDescription(row) }}
+        a(:href='row.page.href') {{ getDescription(row) }}
+    ElTableColumn(
+      label='条目'
+      prop='page.counts.item'
+    )
+    ElTableColumn(
+      label='图片'
+      prop='page.counts.image'
+    )
+    ElTableColumn(
+      label='视频'
+      prop='page.counts.video'
+    )
     ElTableColumn(
       min-width='80'
     )
@@ -44,7 +56,7 @@ import { Button, Table, TableColumn } from 'element-ui';
 })
 export default class AccessHistoryTable extends Vue {
   public tableData: accessHistory.IPageHistory[] = [];
-  public location = location;
+
   public async mounted() {
     await this.updateData();
   }
@@ -57,7 +69,12 @@ export default class AccessHistoryTable extends Vue {
     await this.updateData();
   }
   public getDescription({ page }: accessHistory.IPageHistory): string {
-    const params = new URL(location.origin + page.href).searchParams;
+    let params: URLSearchParams;
+    try {
+      params = new URL(page.href).searchParams;
+    } catch {
+      return page.href;
+    }
     switch (page.type) {
       case 'cgteamwork':
         return `${params.get('project')}-${params.get('pipeline')}-${params.get(

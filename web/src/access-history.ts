@@ -2,16 +2,23 @@ import * as localForage from 'localforage';
 import { sortBy, uniqBy } from 'lodash';
 const storage = localForage.createInstance({
   name: 'access-history',
-  version: 1,
+  version: 2,
 });
 
-interface ILocalPage {
-  type: 'local';
+interface IPage {
   href: string;
+  counts: {
+    item: number;
+    image: number;
+    video: number;
+  };
 }
-interface ICGTeamWorkPage {
+
+interface ILocalPage extends IPage {
+  type: 'local';
+}
+interface ICGTeamWorkPage extends IPage {
   type: 'cgteamwork';
-  href: string;
 }
 export type Page = ILocalPage | ICGTeamWorkPage;
 

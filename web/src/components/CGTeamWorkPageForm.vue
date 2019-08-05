@@ -22,7 +22,6 @@
 
 </template>
 <script lang="ts">
-import * as accessHistory from '@/access-history';
 import { buildURL } from '@/datatools';
 import { projects, showFullScreenLoading } from '@/index';
 import Vue from 'vue';
@@ -79,11 +78,7 @@ export default Vue.extend({
         if (valid) {
           showFullScreenLoading();
           const href = buildURL('/', this.form);
-          await accessHistory.push({
-            href,
-            type: 'cgteamwork',
-          });
-          location.href = href;
+          location.assign(href);
         }
       });
     },

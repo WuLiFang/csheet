@@ -6,6 +6,7 @@ import { default as cgTeamworkTaskStore } from '@/store/cgteamwork-task';
 import { default as tagStore } from '@/store/tag';
 import { IRootState, StatusSelectResult } from '@/store/types';
 import { default as videoStore } from '@/store/video';
+import { updateAccessHistory } from '@/utils/updateAccessHistory';
 import Axios, { AxiosResponse } from 'axios';
 import Vue from 'vue';
 import { DefaultComputed } from 'vue/types/options';
@@ -53,6 +54,7 @@ export const store: IStore = {
           contextState.dispatch(mutations.FILTER_VIDEOS);
         }
       );
+      updateAccessHistory();
     },
   },
   getters: {
@@ -171,3 +173,5 @@ export const mapRootStateModelMixin = {
   ),
 };
 export default store;
+
+updateAccessHistory();

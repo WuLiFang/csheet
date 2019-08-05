@@ -14,7 +14,6 @@
 
 </template>
 <script lang="ts">
-import * as accessHistory from '@/access-history';
 import { buildURL } from '@/datatools';
 import { showFullScreenLoading } from '@/index';
 import Vue from 'vue';
@@ -71,12 +70,7 @@ export default Vue.extend({
       this.formComponent.validate(async (valid: boolean) => {
         if (valid) {
           showFullScreenLoading();
-          const href = buildURL('/', this.form);
-          await accessHistory.push({
-            href,
-            type: 'local',
-          });
-          location.href = href;
+          location.assign(buildURL('/', this.form));
         }
       });
     },
@@ -84,7 +78,7 @@ export default Vue.extend({
       this.formComponent.validate((valid: boolean) => {
         if (valid) {
           showFullScreenLoading();
-          location.href = buildURL('', { ...this.form, pack: '1' });
+          location.assign(buildURL('/', { ...this.form, pack: '1' }));
         }
       });
     },
