@@ -1,6 +1,6 @@
 <template lang="pug">
   ElTable.access-history-table(
-    v-if='tableData.length > 0'
+    v-show='tableData.length > 0'
     :data='tableData'
   )
     ElTableColumn(
@@ -57,7 +57,7 @@ export default class AccessHistoryTable extends Vue {
     await this.updateData();
   }
   public getDescription({ page }: accessHistory.IPageHistory): string {
-    const params = new URL(location.host + page.href).searchParams;
+    const params = new URL(location.origin + page.href).searchParams;
     switch (page.type) {
       case 'cgteamwork':
         return `${params.get('project')}-${params.get('pipeline')}-${params.get(
