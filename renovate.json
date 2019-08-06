@@ -1,3 +1,4 @@
 {
-  "extends": ["config:js-app", ":automergeMinor", ":pinSkipCi"]
+  "extends": ["config:js-app", ":automergeMinor", ":pinSkipCi"],
+  "packageRules": [{ "packageNames": ["flask-socketio"], "automerge": false }]
 }
