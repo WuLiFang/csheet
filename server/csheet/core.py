@@ -28,7 +28,8 @@ APP.config.from_envvar('CSHEET_SETTINGS', silent=True)
 
 SOCKETIO = SocketIO(app=APP,
                     path='/api/socket.io',
-                    message_queue=APP.config['MESSAGE_QUEUE_URL'])
+                    message_queue=APP.config['MESSAGE_QUEUE_URL'],
+                    cors_allowed_origins='*')
 
 
 class ContextTask(celery.Task):
