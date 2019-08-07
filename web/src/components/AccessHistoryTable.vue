@@ -34,7 +34,7 @@
     )
       template(#default='{row}')
         i.el-icon-close.remove(
-          @click='remove(row.page.href)'
+          @click='remove(row)'
           size='mini'
         )
 </template>
@@ -66,8 +66,8 @@ export default class AccessHistoryTable extends Vue {
     await accessHistory.prune();
     this.tableData = await accessHistory.getAll();
   }
-  public async remove(href: string) {
-    await accessHistory.remove(href);
+  public async remove(v: accessHistory.IPageHistory) {
+    await accessHistory.remove(v);
     await this.updateData();
   }
   public getDescription({ page }: accessHistory.IPageHistory): string {

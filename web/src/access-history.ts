@@ -23,13 +23,20 @@ interface ICGTeamWorkPage extends IPage {
 export type Page = ILocalPage | ICGTeamWorkPage;
 
 export interface IPageHistory {
+  id: string;
   atime: Date;
   page: Page;
 }
 
+function getId(href: string): string {
+  const u = new URL(href);
+  return u.pathname + u.search;
+}
+
 export async function push(page: Page): Promise<void> {
-  const i: IPageHistory = { page, atime: new Date() };
-  await storage.setItem(page.href, i);
+  const i: IPageHistory = { id: getId(page.href), page, atime: new Date() };
+
+  await storage.setItem(i.id, i);
 }
 
 export async function getAll(): Promise<IPageHistory[]> {
@@ -55,6 +62,11 @@ export async function prune(max: number = 10): Promise<void> {
   }
 }
 
-export async function remove(href: string): Promise<void> {
-  await storage.removeItem(href);
+export async function remove(v: IPageHistory): Promise<void> {
+  if (!v.id) {
+    // Old key is using page href, should remove this after 2019-10-01
+    await storage.removeItem(v.page.href);
+    return;
+  }
+  await storage.removeItem(v.id);
 }
