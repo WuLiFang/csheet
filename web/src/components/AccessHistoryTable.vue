@@ -16,7 +16,7 @@
       min-width='200'
     )
       template(#default='{ row }')
-        a(:href='row.page.href') {{ getDescription(row) }}
+        a(@click='showFullScreenLoading' :href='row.page.href') {{ getDescription(row) }}
     ElTableColumn(
       label='条目'
       prop='page.counts.item'
@@ -41,6 +41,7 @@
 
 <script lang="ts">
 import * as accessHistory from '@/access-history';
+import { showFullScreenLoading } from '@/index';
 import { Component, Vue } from 'vue-property-decorator';
 
 import TimeWidget from '@/components/TimeWidget.vue';
@@ -56,6 +57,7 @@ import { Button, Table, TableColumn } from 'element-ui';
 })
 export default class AccessHistoryTable extends Vue {
   public tableData: accessHistory.IPageHistory[] = [];
+  public showFullScreenLoading = showFullScreenLoading;
 
   public async mounted() {
     await this.updateData();
