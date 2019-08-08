@@ -5,7 +5,7 @@ flask-restful==0.3.7
 flask-socketio==4.2.1
 flask==1.1.1
 fire==0.2.1
-environs==5.2.0
+environs==5.2.1
 psycopg2==2.8.3
 celery==4.3.0
 sentry-sdk[flask]==0.10.2
