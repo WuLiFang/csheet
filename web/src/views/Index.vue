@@ -38,7 +38,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      VERSION,
+      VERSION: VERSION,
       projects,
     };
   },

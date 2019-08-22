@@ -1,5 +1,6 @@
+---
 kind: pipeline
-name: default
+name: main
 
 steps:
   - name: build
@@ -42,23 +43,17 @@ steps:
     when:
       event:
         - tag
-  - name: notification-email
-    image: drillster/drone-email
-    settings:
-      from:
-        from_secret: EMAIL_FROM
-      host:
-        from_secret: EMAIL_HOST
-      port:
-        from_secret: EMAIL_PORT
-      username:
-        from_secret: EMAIL_USER
-      password:
-        from_secret: EMAIL_PASSWORD
-    when:
-      status:
-        - changed
-        - failure
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+---
+kind: pipeline
+name: deploy
+
+clone:
+  disable: true
+steps:
   - name: deploy
     image: appleboy/drone-ssh
     settings:
@@ -75,10 +70,40 @@ steps:
         - docker-compose pull
         - docker-compose up -d
       command_timeout: 3m
-    when:
-      branch:
-        - master
-volumes:
-  - name: dockersock
-    host:
-      path: /var/run/docker.sock
+depends_on:
+  - main
+trigger:
+  status:
+    - success
+  branch:
+    - master
+---
+kind: pipeline
+name: notification
+
+clone:
+  disable: true
+steps:
+  - name: rocket-chat
+    image: mike1pol/drone-rocket
+    settings:
+      url:
+        from_secret: ROCKETCHAT_URL
+      user_id:
+        from_secret: ROCKETCHAT_USER_ID
+      token:
+        from_secret: ROCKETCHAT_TOKEN
+      channel:
+        from_secret: ROCKETCHAT_CHANNEL
+      message:
+        '**{{ build.status }}** {{ repo.fullName }}[#{{ build.number }}]({{ build.link }}) ({{ build.event }})
+
+        [{{ truncate build.commit 8 }}](${DRONE_COMMIT_LINK}) on `{{ build.branch }}` by _{{ build.author }}_
+
+        {{build.message}}'
+depends_on:
+  - main
+trigger:
+  status:
+    - success
+    - failure
