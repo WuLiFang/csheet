@@ -15,7 +15,7 @@ def main():
     util.setup()
 
     generate_test_page.main()
-    csheet.generation.GENERATION_TASKS.pop()
+    # csheet.generation.GENERATION_TASKS.pop()
     csheet.__main__.clear_lock()
 
     csheet.SOCKETIO.run(csheet.APP,
