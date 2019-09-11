@@ -73,7 +73,7 @@ export interface IPreloadURLActionPayload {
 
 export const CLEAR_VIDEO_BLOB = 'clear_video_blob';
 export interface IVideoClearBlobMutationPayload {
-  id: string;
+  excludes: string[];
 }
 
 export const UPDATE_VIDEO_BLOB_WHITELIST = 'update_video_blob_whitelist';

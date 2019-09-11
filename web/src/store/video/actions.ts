@@ -1,4 +1,4 @@
-import { ITagResponse, IVideoResponse } from '@/interface';
+import { ITagResponse, IVideoResponse, VideoRole } from '@/interface';
 import * as type from '@/mutation-types';
 import { skipIfIsFileProtocol } from '@/packtools';
 import {
@@ -9,6 +9,7 @@ import {
 } from '@/store/types';
 import { isElementAppeared } from '@/store/video/core';
 import axios, { AxiosResponse } from 'axios';
+import { compact } from 'lodash';
 import { ActionContext, ActionTree } from 'vuex';
 
 async function handleVideoResponse(
@@ -98,6 +99,24 @@ export const actions: ActionTree<IVideoState, IRootState> = {
         });
     })();
   },
+  [type.CLEAR_VIDEO_BLOB](context) {
+    const payload: type.IVideoClearBlobMutationPayload = { excludes: [] };
+    const whiteList: string[] = [];
+    for (const value of context.state.blobWhiteListMap.values()) {
+      if (value) {
+        whiteList.push(...value);
+      }
+    }
+    for (const id of whiteList) {
+      payload.excludes.push(
+        ...compact([
+          context.getters.getVideoURI(id, VideoRole.poster),
+          context.getters.getVideoURI(id, VideoRole.preview),
+        ])
+      );
+    }
+    context.commit(type.CLEAR_VIDEO_BLOB, payload);
+  },
   [type.UPDATE_VIDEO_APPEARED](context) {
     const ret = context.state.visibleVideos.filter(i => {
       const element = (context.getters as ICombinedGetters).videoElementHub.get(
@@ -110,7 +129,7 @@ export const actions: ActionTree<IVideoState, IRootState> = {
       value: ret,
     };
     context.commit(type.UPDATE_VIDEO_BLOB_WHITELIST, mutationPayload);
-    context.commit(type.CLEAR_VIDEO_BLOB);
+    context.dispatch(type.CLEAR_VIDEO_BLOB);
     return ret;
   },
   async [type.VIDEO_TAGS.CREATE](

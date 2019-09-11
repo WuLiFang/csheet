@@ -17,30 +17,17 @@ export const mutations: MutationTree<IVideoState> = {
       URL.createObjectURL(payload.blob)
     );
   },
-  [type.CLEAR_VIDEO_BLOB](contextState) {
-    const whiteList: string[] = [];
-    for (const value of contextState.blobWhiteListMap.values()) {
-      if (value) {
-        whiteList.push(...value);
+  [type.CLEAR_VIDEO_BLOB](
+    contextState,
+    payload: type.IVideoClearBlobMutationPayload
+  ) {
+    for (const [key, value] of Object.entries(contextState.blobURLMap)) {
+      if (payload.excludes.includes(key) || !value) {
+        continue;
       }
+      URL.revokeObjectURL(value);
+      Vue.delete(contextState.blobURLMap, key);
     }
-    const exp = new RegExp('/video/.+/([^.?]+)');
-    Object.keys(contextState.blobURLMap)
-      .filter(i => {
-        const match = i.match(exp);
-        if (!match) {
-          return true;
-        }
-        return !whiteList.includes(match[1]);
-      })
-      .forEach(i => {
-        const url = contextState.blobURLMap[i];
-        if (!url) {
-          return;
-        }
-        URL.revokeObjectURL(url);
-        Vue.delete(contextState.blobURLMap, i);
-      });
   },
   [type.UPDATE_VIDEO_BLOB_WHITELIST](
     contextState,
