@@ -17,7 +17,7 @@ COPY ./server/csheet/templates/ ./server/csheet/templates/
 ENV NODE_ENV=production
 RUN make -C web
 
-FROM python:3.7 AS server-build
+FROM python:3.8 AS server-build
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8
