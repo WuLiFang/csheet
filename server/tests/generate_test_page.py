@@ -31,7 +31,7 @@ def main():
     csheet.APP.root_path = util.path('../../web/public')
     client = csheet.APP.test_client()
     if cgtwq.DesktopClient().is_logged_in():
-        tasks.append((quote('/?pipeline=合成&prefix=BHCG_EP&project=崩坏',
+        tasks.append((quote('/?pipeline=合成&prefix=MT2_EP00&project=梦塔第二季',
                             safe=b'/?=&'), 'main.html', _inject_text('/main.js')))
         client.post('/_login')
     else:

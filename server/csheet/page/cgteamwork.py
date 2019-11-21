@@ -83,7 +83,8 @@ class CGTeamWorkPage(core.BasePage):
             set(i for i in select['shot.shot'] if i and i.startswith(self.prefix)))
 
         # Select from shots.
-        select = module.filter(cgtwq.Field('shot.shot').in_(shots))
+        select = module.filter(cgtwq.Field('pipeline').in_([self.pipeline, self.render_pipeline]) &
+                               cgtwq.Field('shot.shot').in_(shots))
         return select
 
     def _module(self):
@@ -132,7 +133,9 @@ class CGTeamWorkPage(core.BasePage):
         data = select.get_fields(*TaskDataRow.fields)
         data = [TaskDataRow(*i) for i in data]
 
-        shots = sorted(set(i.shot for i in data))
+        shots = sorted(
+            set(i.shot for i in data
+                if i.pipeline == self.pipeline))
         LOGGER.info('Received page data from cgteamwork server: '
                     '%s, shot_count=%s, task_count=%s',
                     self, len(shots), len(data))
