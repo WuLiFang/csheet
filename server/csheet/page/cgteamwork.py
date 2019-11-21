@@ -83,8 +83,7 @@ class CGTeamWorkPage(core.BasePage):
             set(i for i in select['shot.shot'] if i and i.startswith(self.prefix)))
 
         # Select from shots.
-        select = module.filter(cgtwq.Field('pipeline').in_([self.pipeline, self.render_pipeline]) &
-                               cgtwq.Field('shot.shot').in_(shots))
+        select = module.filter(cgtwq.Field('shot.shot').in_(shots))
         return select
 
     def _module(self):
