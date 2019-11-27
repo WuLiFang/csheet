@@ -19,10 +19,8 @@ def test_get_path():
     assert video1.get('preview')
 
 
-def test_touch():
+def test_get_files():
     poster = util.path('images', 'gray.png')
-    now = datetime.now().timestamp()
-    assert os.path.getatime(poster) < now
     video1 = video.HTMLVideo(poster=poster, src='/some/not/exist/file')
-    video1.touch()
-    assert os.path.getatime(poster) > now
+    assert sorted(video1.get_files()) == sorted(
+        [poster, '/some/not/exist/file'])

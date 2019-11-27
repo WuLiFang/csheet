@@ -7,8 +7,9 @@ from sqlalchemy import Boolean, Column, Float, ForeignKey, String, orm
 
 from wlf.path import PurePath
 
-from .. import filepath, filetools
 from . import core
+
+import typing
 
 
 class Video(core.Base, core.SerializableMixin):
@@ -61,13 +62,10 @@ class Video(core.Base, core.SerializableMixin):
         ret['tags'] = [i.id for i in self.tags]
         return ret
 
-    def touch(self):
-        """Update atime on related files.  """
+    def get_files(self) -> typing.Set[str]:
+        """Get video related files.
 
-        for i in [self.thumb, self.poster, self.preview, self.src]:
-            if not i:
-                continue
-            try:
-                filetools.touch(filepath.normalize(i))
-            except OSError:
-                pass
+        Returns:
+            typing.Set[str]: File path list.
+        """
+        return set(str(i) for i in (self.thumb, self.poster, self.preview, self.src) if i)

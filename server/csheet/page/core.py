@@ -23,6 +23,7 @@ from wlf.path import PurePath
 from .. import __about__, core, database, filepath, filetools
 from ..__about__ import __version__
 from ..video import HTMLVideo
+from . import tasks
 
 LOGGER = logging.getLogger(__name__)
 ID_DETERMINER = '\n'
@@ -132,9 +133,11 @@ class BasePage(object):
         if database_session:
             context.setdefault('videos', self.videos(database_session))
             context.setdefault('tags', self.tags(database_session))
+        files = set()
         if context['videos']:
             for i in context['videos']:
-                i.touch()
+                files.update(i.get_files())
+        tasks.touch_files.delay(files)
         return context
 
     def data(self, database_session):

@@ -5,10 +5,12 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import logging
+import typing
+from concurrent import futures
 
 import cgtwq
 
-from .. import database
+from .. import database, filetools
 from ..core import CELERY, SOCKETIO
 from . import core
 
@@ -30,6 +32,19 @@ def update_cgteamwork_page(id_, token):
         _update_page(lambda: core.page_from_id(id_, token=token))
     except cgtwq.EmptySelection:
         pass
+
+
+@CELERY.task(ignore_result=True)
+def touch_files(path_list: typing.Iterable[str]) -> None:
+    """Touch used files for storage prune
+
+    Args:
+        path_list (typing.Iterable[str]): [description]
+    """
+    path_list = list(path_list)
+    with futures.ThreadPoolExecutor() as executor:
+        executor.map(filetools.touch, path_list)
+    LOGGER.info('Touched files updated: %s', len(path_list))
 
 
 def _update_page(page_getter):
