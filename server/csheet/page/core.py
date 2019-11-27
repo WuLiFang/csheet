@@ -137,7 +137,7 @@ class BasePage(object):
         if context['videos']:
             for i in context['videos']:
                 files.update(i.get_files())
-        tasks.touch_files.delay(files)
+        tasks.touch_files.delay(list(files))
         return context
 
     def data(self, database_session):
