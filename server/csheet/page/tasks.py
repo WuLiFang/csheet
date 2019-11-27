@@ -35,16 +35,16 @@ def update_cgteamwork_page(id_, token):
 
 
 @CELERY.task(ignore_result=True)
-def touch_files(path_list: typing.Iterable[str]) -> None:
+def touch_files(path_list: typing.List[str]) -> None:
     """Touch used files for storage prune
 
     Args:
-        path_list (typing.Iterable[str]): [description]
+        path_list (typing.List[str]): [description]
     """
     path_list = list(path_list)
     with futures.ThreadPoolExecutor() as executor:
         executor.map(filetools.touch, path_list)
-    LOGGER.info('Touched files updated: %s', len(path_list))
+    LOGGER.info('Touched files: count=%s', len(path_list))
 
 
 def _update_page(page_getter):
