@@ -82,6 +82,8 @@ def update_one_chunk(size=50, is_strict=True):
             for i in chunk:
                 update_mtime(i, 'src', 'src_mtime')
                 update_mtime(i, 'poster', 'poster_mtime')
+                update_mtime(i, 'thumb', 'thumb_mtime')
+                update_mtime(i, 'preview', 'preview_mtime')
                 i.is_need_update = False
                 i.last_update_time = time.time()
 
