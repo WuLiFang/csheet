@@ -8,7 +8,6 @@ import typing
 from urllib.parse import quote
 
 from tests import util
-
 import cgtwq
 import csheet
 

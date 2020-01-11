@@ -10,12 +10,7 @@ node_js:
   - "node"
 install:
   - sudo apt-get install ffmpeg && ffmpeg -version
-  - pip install coverage poetry
-  - make
-  - ls -al ./server/.venv
-  - . ./server/.venv/bin/activate
-  - export NODE_ENV=production
-  - export PYTHONPATH=server
+  - pip install poetry
 cache:
   - pip
 before_script:
@@ -23,10 +18,10 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
+  - make test
   - docker build . --build-arg NPM_MIRROR= --build-arg DEBIAN_MIRROR= --build-arg PIP_MIRROR=
-  - coverage run -m pytest server && coverage report
 after_script:
-  - coverage xml
+  - poetry run coverage xml
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 addons:
   apt:

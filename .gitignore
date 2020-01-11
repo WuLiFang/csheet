@@ -1,6 +1,6 @@
 .DS_Store
 node_modules
-/dist
+dist
 
 # local env files
 .env.local
@@ -22,10 +22,12 @@ yarn-error.log*
 
 .venv
 .vscode
+
+# python
 .pytest_cache
 *.pyc
-node_modules
-dist/
+.coverage
+coverage.xml
 SENTRY_DSN
 
 # Local config

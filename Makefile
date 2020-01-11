@@ -1,4 +1,4 @@
-.PHONY: all docs deploy-docs
+.PHONY: all docs deploy-docs test
 
 all:
 	$(MAKE) -C web
@@ -12,3 +12,6 @@ deploy-docs:
 
 docs/_build/html/.git:
 	git worktree add -f --checkout docs/_build/html gh-pages
+
+test: all
+	$(MAKE) -C server test
