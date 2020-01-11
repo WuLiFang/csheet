@@ -36,15 +36,20 @@ RUN apt-get update &&\
 ARG PIP_MIRROR=https://mirrors.aliyun.com/pypi/simple/
 ENV PIP_INDEX_URL=$PIP_MIRROR
 ENV PYTHONIOENCODING=utf-8
-RUN pip install gunicorn gevent-websocket
 
-WORKDIR /app
 COPY ./config ./config/
 RUN if [ -f ./config/ca-certificates.crt ]; then \
     cp ./config/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt; \
     fi
-COPY ./server/requirements.txt ./
-RUN pip install -r requirements.txt
+
+WORKDIR /app
+RUN pip install -U pip
+RUN pip install gunicorn gevent-websocket poetry
+ENV POETRY_VIRTUALENVS_CREATE=false
+COPY ./vendor/ ./vendor/
+COPY ./server/pyproject.toml ./
+COPY ./server/poetry.lock ./
+RUN poetry install
 COPY ./server/ ./
 COPY --from=web-build /app/web/dist/ ./dist/
 ENV PYTHONPATH=/app

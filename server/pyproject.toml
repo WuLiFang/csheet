@@ -1,0 +1,37 @@
+[tool.poetry]
+name="csheet-server"
+version="5.0.1"
+authors=[ "NateScarlet <NateScarlet@Gmail.com>" ]
+repository="https://git.wlf.com/WuLiFang/csheet"
+documentation="https://wulifang.github.io/csheet/"
+description=""
+readme = "../README.md"
+classifiers = [
+    "Private :: Do Not Upload",
+]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+wlf = {path = "./vendor/wlf-0.6.0-py2.py3-none-any.whl"}
+cgtwq = {path = "./vendor/cgtwq-3.0.0b0-py2.py3-none-any.whl"}
+flask-restful= "^0.3.7"
+flask-socketio= "^4.2.1"
+flask= "^1.1.1"
+fire= "^0.2.1"
+psycopg2= "^2.8.4"
+celery= "^4.3.0"
+sqlalchemy= "^1.3.10"
+alembic= "^1.2.1"
+environs= "^4.2.0"
+sentry-sdk = {version = "^0.13.1", extras = ["flask"]}
+
+[tool.poetry.dev-dependencies]
+autopep8="^1.4.4"
+pylint="^2.4.3"
+pytest="^5.2.2"
+rope="^0.14.0"
+pysnooper="^0.2.8"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
