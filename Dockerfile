@@ -46,7 +46,7 @@ WORKDIR /app
 RUN pip install -U pip
 RUN pip install gunicorn gevent-websocket poetry
 ENV POETRY_VIRTUALENVS_CREATE=false
-COPY ./vendor/ ./vendor/
+COPY ./server/vendor/ ./vendor/
 COPY ./server/pyproject.toml ./
 COPY ./server/poetry.lock ./
 RUN poetry install
