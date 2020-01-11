@@ -575,7 +575,7 @@ description = "A poor man's debugger for Python."
 name = "pysnooper"
 optional = false
 python-versions = "*"
-version = "0.2.8"
+version = "0.3.0"
 
 [package.extras]
 tests = ["pytest"]
@@ -898,7 +898,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pathlib2", "contextlib2", "unittest2"]
 
 [metadata]
-content-hash = "9d2139c3b8da0cde3360a2c1a483c1a8a2230877efe013217a24a99ff4265856"
+content-hash = "f53b7471f4b7c1011da35afc40df19fd4adcd9dc9541dfe4553ab5fe60e148bb"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1256,8 +1256,8 @@ pyparsing = [
     {file = "pyparsing-2.4.6.tar.gz", hash = "sha256:4c830582a84fb022400b85429791bc551f1f4871c33f23e44f353119e92f969f"},
 ]
 pysnooper = [
-    {file = "PySnooper-0.2.8-py2.py3-none-any.whl", hash = "sha256:9db476d6d92284e5f1fef557c193dc378327dbe6aeb6eea6b044013a006f221b"},
-    {file = "PySnooper-0.2.8.tar.gz", hash = "sha256:845cc1c160d5f4b6f9ba62d6fadc2f7f51daa8759a34c93dee286a94dd77c3a9"},
+    {file = "PySnooper-0.3.0-py2.py3-none-any.whl", hash = "sha256:85892ef6f4009af7d729e73c7b9e4071a16d5063b1ac9340741c5f192501441b"},
+    {file = "PySnooper-0.3.0.tar.gz", hash = "sha256:7d7684d9d5cf1d026bba6a52e87009eab9458d3265b13059ab1abaea7eee6c93"},
 ]
 pytest = [
     {file = "pytest-5.3.2-py3-none-any.whl", hash = "sha256:e41d489ff43948babd0fad7ad5e49b8735d5d55e26628a58673c39ff61d95de4"},
