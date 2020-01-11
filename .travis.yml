@@ -4,12 +4,13 @@ dist: xenial
 services:
   - docker
 python:
-  - '3.6'
-  - '3.7-dev'
+  - "3.6"
+  - "3.7-dev"
 node_js:
-  - 'node'
+  - "node"
 install:
   - sudo apt-get install ffmpeg && ffmpeg -version
+  - pip install poetry && poetry --version
   - make
   - . ./server/.venv/bin/activate
   - export NODE_ENV=production
