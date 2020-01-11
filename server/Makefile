@@ -20,7 +20,7 @@ dev: build
 
 test: build
 	poetry run python -m tests.generate_test_page
-	poetry run python -m pytest --cov csheet
+	poetry run python -m pytest --cov --cov-report term --cov-report xml csheet
 
 serve: CSHEET_HOST?=0.0.0.0
 serve: CSHEET_PORT?=80
