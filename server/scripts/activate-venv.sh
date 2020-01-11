@@ -6,7 +6,7 @@ export FLASK_APP
 
 
 if [[ ${OS} == Windows_NT ]]; then
-. .venv/Scripts/activate
+. .venv/Scripts/activate;
 else
 . .venv/bin/activate;
 fi

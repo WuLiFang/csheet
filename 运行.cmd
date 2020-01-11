@@ -1,1 +1,2 @@
-%~dp0/start.cmd
+%~dp0/scripts/serve.cmd
+PAUSE
