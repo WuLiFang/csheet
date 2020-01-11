@@ -12,6 +12,7 @@ install:
   - sudo apt-get install ffmpeg && ffmpeg -version
   - pip install coverage poetry
   - make
+  - ls -al ./server/.venv
   - . ./server/.venv/bin/activate
   - export NODE_ENV=production
   - export PYTHONPATH=server
