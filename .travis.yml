@@ -11,9 +11,8 @@ node_js:
 install:
   - sudo apt-get install ffmpeg && ffmpeg -version
   - pip install coverage poetry
-  - poetry config virtualenvs.in-project true
   - make
-  - . ./.venv/bin/activate
+  - . ./server/.venv/bin/activate
   - export NODE_ENV=production
   - export PYTHONPATH=server
 cache:
