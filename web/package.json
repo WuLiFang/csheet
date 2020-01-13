@@ -39,7 +39,7 @@
     "node-sass": "4.13.0",
     "pug": "2.0.4",
     "pug-plain-loader": "1.0.0",
-    "sass-loader": "7.3.1",
+    "sass-loader": "8.0.2",
     "tslint-microsoft-contrib": "6.2.0",
     "typescript": "3.6.4",
     "vue-class-component": "7.1.0",
