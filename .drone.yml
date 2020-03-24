@@ -17,10 +17,8 @@ steps:
         docker build
         --build-arg COMMIT_SHA1=${DRONE_COMMIT_SHA}
         --build-arg DEBIAN_MIRROR=http://mirrors.huaweicloud.com/debian
-        --tag registry.wlf.com/csheet:latest
-        --tag registry.wlf.com/csheet:${DRONE_TAG:-latest}
+        --tag registry.wlf.com/csheet:${DRONE_COMMIT_SHA}
         .
-      - "docker push registry.wlf.com/csheet:latest"
   - name: build-docs
     image: docker:dind
     volumes:
@@ -29,20 +27,54 @@ steps:
     commands:
       - >-
         docker build
-        --tag registry.wlf.com/csheet-docs:latest
-        --tag registry.wlf.com/csheet-docs:${DRONE_TAG:-latest}
+        --tag registry.wlf.com/csheet-docs:${DRONE_COMMIT_SHA}
         ./docs
-      - "docker push registry.wlf.com/csheet-docs:latest"
-  - name: push
+  - name: push(master)
     image: docker:dind
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
+      - >-
+        docker tag
+        registry.wlf.com/csheet:${DRONE_COMMIT_SHA}
+        registry.wlf.com/csheet:latest
+      - "docker push registry.wlf.com/csheet:latest"
+      - >-
+        docker tag 
+        registry.wlf.com/csheet-docs:${DRONE_COMMIT_SHA}
+        registry.wlf.com/csheet-docs:latest
+      - "docker push registry.wlf.com/csheet-docs:latest"
+    when:
+      branch:
+        - master
+  - name: push(tag)
+    image: docker:dind
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - >-
+        docker tag
+        registry.wlf.com/csheet:${DRONE_COMMIT_SHA}
+        registry.wlf.com/csheet:${DRONE_TAG}
       - "docker push registry.wlf.com/csheet:${DRONE_TAG}"
+      - >-
+        docker tag
+        registry.wlf.com/csheet-docs:${DRONE_COMMIT_SHA}
+        registry.wlf.com/csheet-docs:${DRONE_TAG}
+      - "docker push registry.wlf.com/csheet-docs:${DRONE_TAG}"
     when:
       event:
         - tag
+  - name: clean
+    image: docker:dind
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - "docker image rm registry.wlf.com/csheet:${DRONE_COMMIT_SHA}"
+      - "docker image rm registry.wlf.com/csheet-docs:${DRONE_COMMIT_SHA}"
 volumes:
   - name: dockersock
     host:
