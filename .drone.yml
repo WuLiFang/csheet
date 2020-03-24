@@ -20,7 +20,7 @@ steps:
         --tag registry.wlf.com/csheet:latest
         --tag registry.wlf.com/csheet:${DRONE_TAG:-latest}
         .
-      - 'docker push registry.wlf.com/csheet:latest'
+      - "docker push registry.wlf.com/csheet:latest"
   - name: build-docs
     image: docker:dind
     volumes:
@@ -32,14 +32,14 @@ steps:
         --tag registry.wlf.com/csheet-docs:latest
         --tag registry.wlf.com/csheet-docs:${DRONE_TAG:-latest}
         ./docs
-      - 'docker push registry.wlf.com/csheet-docs:latest'
+      - "docker push registry.wlf.com/csheet-docs:latest"
   - name: push
     image: docker:dind
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
-      - 'docker push registry.wlf.com/csheet:${DRONE_TAG}'
+      - "docker push registry.wlf.com/csheet:${DRONE_TAG}"
     when:
       event:
         - tag
@@ -85,7 +85,8 @@ clone:
   disable: true
 steps:
   - name: rocket-chat
-    image: mike1pol/drone-rocket
+    image: mike1pol/drone-rocket@sha256:6148c807bc3986509fcb8d63736ab33c7355d9d65ba640e00f09d63c8febfa94
+    detach: true
     settings:
       url:
         from_secret: ROCKETCHAT_URL
@@ -96,11 +97,11 @@ steps:
       channel:
         from_secret: ROCKETCHAT_CHANNEL
       message:
-        '**{{ build.status }}** {{ repo.fullName }}[#{{ build.number }}]({{ build.link }}) ({{ build.event }})
+        "**{{ build.status }}** {{ repo.fullName }}[#{{ build.number }}]({{ build.link }}) ({{ build.event }})
 
         [{{ truncate build.commit 8 }}](${DRONE_COMMIT_LINK}) on `{{ build.branch }}` by _{{ build.author }}_
 
-        {{build.message}}'
+        {{build.message}}"
 depends_on:
   - main
 trigger:
