@@ -246,7 +246,7 @@ description = "A library for automatically generating command line interfaces."
 name = "fire"
 optional = false
 python-versions = "*"
-version = "0.2.1"
+version = "0.3.0"
 
 [package.dependencies]
 six = "*"
@@ -901,7 +901,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pathlib2", "contextlib2", "unittest2"]
 
 [metadata]
-content-hash = "5c114b6c08ef21dbab9d9fef45f2c9160317dab7079dc8d2da7e3da0ba3c44dc"
+content-hash = "f9ae7e173421bf24c162964eea81d03f5226236bb8e5d5036ecc4b7a680925c0"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1034,7 +1034,7 @@ environs = [
     {file = "environs-4.2.0.tar.gz", hash = "sha256:9d83321a32e29c963f199bf118d9dae199b42ab22b247b11d909b0d203e068bf"},
 ]
 fire = [
-    {file = "fire-0.2.1.tar.gz", hash = "sha256:6865fefc6981a713d2ce56a2a2c92c56c729269f74a6cddd6f4b94d16ae084c9"},
+    {file = "fire-0.3.0.tar.gz", hash = "sha256:96c372096afcf33ddbadac8a7ca5b7e829e8d7157d0030bd964bf959afde5c2c"},
 ]
 flask = [
     {file = "Flask-1.1.1-py2.py3-none-any.whl", hash = "sha256:45eb5a6fd193d6cf7e0cf5d8a5b31f83d5faae0293695626f539a823e93b13f6"},
