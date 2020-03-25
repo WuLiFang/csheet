@@ -31,7 +31,7 @@ gevent = "^1.4.0"
 autopep8="^1.4.4"
 pylint="^2.4.3"
 pytest="^5.2.2"
-rope="^0.14.0"
+rope="0.16.0"
 pysnooper="^0.2.8"
 pytest-cov = "^2.8.1"
 
