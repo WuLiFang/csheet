@@ -81,7 +81,7 @@ steps:
     commands:
       - "docker image rm registry.wlf.com/csheet:${DRONE_COMMIT_SHA}"
       - "docker image rm registry.wlf.com/csheet-docs:${DRONE_COMMIT_SHA}"
-      - 'docker rmi -f --filter "label=repo=${DRONE_REPO}"'
+      - 'docker image prune -f --filter "label=repo=${DRONE_REPO}"'
 volumes:
   - name: dockersock
     host:
