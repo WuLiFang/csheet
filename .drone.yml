@@ -108,6 +108,7 @@ steps:
         - cd /srv/csheet
         - docker-compose pull
         - docker-compose up -d
+        - docker-compose restart nginx
       command_timeout: 3m
 depends_on:
   - main
