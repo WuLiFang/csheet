@@ -117,6 +117,10 @@ trigger:
     - success
   branch:
     - master
+  event:
+    - cron
+  cron:
+    - nightly
 ---
 kind: pipeline
 name: notification
