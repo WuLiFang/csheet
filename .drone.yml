@@ -108,7 +108,7 @@ steps:
         - cd /srv/csheet
         - docker-compose pull
         - docker-compose up -d
-        - docker-compose restart nginx
+        - docker-compose kill -s HUP nginx
       command_timeout: 3m
 depends_on:
   - main
@@ -117,10 +117,6 @@ trigger:
     - success
   branch:
     - master
-  event:
-    - cron
-  cron:
-    - nightly
 ---
 kind: pipeline
 name: notification
