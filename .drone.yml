@@ -17,6 +17,9 @@ steps:
         docker build
         --build-arg COMMIT_SHA1=${DRONE_COMMIT_SHA}
         --build-arg DEBIAN_MIRROR=http://mirrors.huaweicloud.com/debian
+        --label "repo=${DRONE_REPO}"
+        --label "commit-sha=${DRONE_COMMIT_SHA}"
+        --label "drone-build=${DRONE_BUILD_NUMBER}"
         --tag registry.wlf.com/csheet:${DRONE_COMMIT_SHA}
         .
   - name: build-docs
@@ -27,6 +30,9 @@ steps:
     commands:
       - >-
         docker build
+        --label "repo=${DRONE_REPO}"
+        --label "commit-sha=${DRONE_COMMIT_SHA}"
+        --label "drone-build=${DRONE_BUILD_NUMBER}"
         --tag registry.wlf.com/csheet-docs:${DRONE_COMMIT_SHA}
         ./docs
   - name: push(master)
@@ -75,6 +81,7 @@ steps:
     commands:
       - "docker image rm registry.wlf.com/csheet:${DRONE_COMMIT_SHA}"
       - "docker image rm registry.wlf.com/csheet-docs:${DRONE_COMMIT_SHA}"
+      - 'docker rmi -f --filter "label=repo=${DRONE_REPO}"'
 volumes:
   - name: dockersock
     host:
