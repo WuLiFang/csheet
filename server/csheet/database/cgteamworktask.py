@@ -61,7 +61,7 @@ class CGTeamWorkTask(core.Base, core.SerializableMixin):
                         .parse(self.database, self.module))
             session.merge(instance)
         except cgtwq.EmptySelection:
-            session.delete(instance)
+            session.delete(self)
             raise
         return entry
 
