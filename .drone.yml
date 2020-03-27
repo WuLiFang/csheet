@@ -104,9 +104,11 @@ steps:
         from_secret: SSH_PASSWORD
       script:
         - cd /srv/csheet
-        - docker-compose pull
-        - docker-compose up -d
-        - docker-compose kill -s HUP nginx
+        - docker-compose pull -q
+        - >-
+          docker-compose up
+          --detach
+          --always-recreate-deps
       command_timeout: 3m
 depends_on:
   - main
