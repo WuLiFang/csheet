@@ -2,8 +2,7 @@
     Popover.task-info-pipeline-badge(trigger="hover" placement='bottom-end' effect='dark' v-if='model')
       TaskInfoPiplineBadgePoper(:model='model' :taskId='taskId')
       span.status(slot='reference')
-        TaskInfoStatusEdit( v-if='field' :taskId='model.uuid' :field='field') {{model.pipeline}}
-        TaskInfoStatus( v-else :status='generalStatus') {{model.pipeline}}
+        TaskInfoStatus( :status='generalStatus') {{model.pipeline}}
 </template>
 
 <script lang="ts">
