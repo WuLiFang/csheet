@@ -1,6 +1,10 @@
 #!/bin/sh
 
+
+if [[ -f ./.env ]];then
 . ./.env
+fi
+
 export PYTHONPATH
 export FLASK_APP
 
