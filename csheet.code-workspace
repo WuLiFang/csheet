@@ -19,11 +19,9 @@
   ],
   "settings": {
     "terminal.integrated.env.windows": {
-      "PYTHONPATH": "server",
+      "PYTHONPATH": "${workspaceFolder}/server",
       "CSHEET_DEBUG": "1"
     },
-    "cSpell.words": [
-        "cgteamwork"
-    ]
+    "cSpell.words": ["cgteamwork"]
   }
 }
