@@ -127,7 +127,7 @@ def bind(url, is_echo=False):
     """Bind model to database.  """
 
     LOGGER.debug('Bind to engine: %s', url)
-    engine = create_engine(url, echo=is_echo)
+    engine = create_engine(url, echo=is_echo, pool_size=10, max_overflow=20)
     __ENGINE[get_engine] = engine
     session_factory.configure(binds={Base: engine})
     Base.metadata.create_all(engine)
