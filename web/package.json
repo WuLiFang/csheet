@@ -32,7 +32,7 @@
     "@vue/cli-plugin-babel": "3.12.1",
     "@vue/cli-plugin-typescript": "3.12.1",
     "@vue/cli-service": "3.12.1",
-    "@vue/test-utils": "1.0.0-beta.32",
+    "@vue/test-utils": "1.0.0-beta.33",
     "assets-webpack-plugin": "3.9.12",
     "chai": "4.2.0",
     "mini-css-extract-plugin": "0.9.0",
