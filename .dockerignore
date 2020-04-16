@@ -6,9 +6,8 @@
 **/__pycache__/
 **/.git/
 
-/server/tests/storage
-/server/tests/pages/
 docs
 deployments
 Dockerfile
 .travis.yml
+/storage

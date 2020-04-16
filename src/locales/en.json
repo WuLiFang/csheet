@@ -1,0 +1,15 @@
+{
+  "cgteamwork-stage": {
+    "leader": "leader",
+    "director": "director",
+    "client": "client"
+  },
+  "cgteamwork-status": {
+    "Approve": "Approve",
+    "Check": "Check",
+    "Close": "Close",
+    "Retake": "Retake",
+    "Unset": "Unset",
+    "Wait": "Wait"
+  }
+}

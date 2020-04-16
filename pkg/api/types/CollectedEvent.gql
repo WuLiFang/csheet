@@ -1,0 +1,6 @@
+type CollectedEvent implements Node {
+  id: ID!
+  time: Time!
+  originPrefix: String!
+  updatedCount: Int!
+}

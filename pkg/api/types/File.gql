@@ -1,0 +1,5 @@
+type File {
+  path(format: String): String!
+  modTime: Time
+  size: Int!
+}

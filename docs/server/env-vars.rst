@@ -1,107 +1,53 @@
-.. _`环境变量`:
 
 环境变量
 ================
 
-CSHEET_SETTINGS
+CSHEET_ENV
 
-  配置文件文件名，其中设置的值将覆盖环境变量的配置。
+  运行环境, "development" 或者 "production"。
 
-SECRET_KEY
+CSHEET_STORAGE
 
-  会话加密私钥，在生产环境中\ **必须**\ 设置。
+  :doc:`filestore` 文件夹路径。
 
-  可用 ``openssl rand --hex 32`` 生成。
+CSHEET_ADDRESS
 
-MESSAGE_QUEUE_URL
+  服务运行地址。默认：localhost:80
 
-  消息队列 URL。
+CSHEET_CGTEAMWORK_PIPELINE_OVERWRITE
 
-RESULT_BACKEND_URL
+  覆盖流程收集时使用的流程名称，JSON 编码的字典。
 
-  Celery 任务结果后端 URL。
+CSHEET_FOLDER_INCLUDE
 
-BACKEND_SENTRY_DSN
+  从文件夹收集允许的路径，使用 ``*`` 代表允许任何路径。
+ 
+  多个路径用逗号分隔。
 
-  服务端 Sentry DSN。
+CSHEET_FOLDER_EXCLUDE
 
-FRONTEND_SENTRY_DSN
+  扫描文件夹时的 glob 排除模式，用逗号分隔。
 
-  网页端 Sentry DSN。
+CSHEET_FILE_LIFE
 
-STORAGE
+  生成的文件保留时间, 默认为 240 小时。
 
-  默认值: ``/srv/csheet``
+  使用 go 时间格式，例如：1d2m3s。
 
-  文件存放路径。
+CSHEET_TEMP_LIFE
 
-DATABASE_URL
+  残留的临时文件保留时间, 默认为 1 小时。
 
-  默认值: ``sqlite:///:memory:``
-
-  数据库路径。
+  使用 go 时间格式，例如：1d2m3s。
 
 CGTEAMWORK_URL
 
-  CGTeamWork 服务器 URL。 如未配置将不启用 CGTeamWork 色板。
+  CGTeamwork 服务器地址。例：http://192.168.50.11
 
-WATCH_INTERVAL
+CGTEAMWORK_USERNAME
 
-  默认值: 1
+  CGTeamwork 用户名
 
-  文件变更检查间隔。
+CGTEAMWORK_PASSWORD
 
-WATCH_CHUNK_SIZE
-
-  默认值: 50
-
-  每次检查文件数量。
-
-
-BROADCAST_INTERVAL
-
-  默认值: 5
-
-  文件最低更新间隔秒数。
-
-PREVIEW_SIZE_LIMIT
-
-  默认值: 10MB
-
-  视频预览大小限制， 设置为 0 为不限制大小。
-
-DAEMON_TASK_EXPIRES
-
-  默认值: 3
-
-  后台任务过期秒数。
-
-MAX_TASK_TIME
-
-  默认值: 3600
-
-  最长任务执行时间分钟数。
-
-COOKIE_LIFE
-
-  默认值: 7776000 (3个月)
-
-  Cookie 有效分钟数。
-
-STANDALONE
-
-  默认值: False
-
-  是否为单进程模式，设为 True 启用。
-
-DEBUG_SQL
-
-  默认值: False
-
-  是否启用 SQL 日志，设为 True 启用。
-
-CACHE_LIFE
-
-  默认值: 30
-
-  缓存保留天数。
+  CGTeamwork 密码

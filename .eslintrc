@@ -1,0 +1,53 @@
+{
+  "root": true,
+  "env": {
+    "browser": true
+  },
+  "globals": {
+    "gantt": "readonly",
+    "GIT_REVISION": "readonly",
+    "BUILD_DATE": "readonly",
+    "VERSION": "readonly"
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:vue/essential",
+    "plugin:vue/recommended",
+    "@vue/standard",
+    "@vue/typescript",
+    "prettier",
+    "prettier/@typescript-eslint"
+  ],
+  "rules": {
+    "@typescript-eslint/member-ordering": "warn",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/camelcase": ["error", { "allow": ["^\\$_"] }],
+    "graphql/template-strings": ["error", { "env": "literal" }],
+    "no-console": "error",
+    "no-alert": "error",
+    "require-atomic-updates": "off",
+    "standard/no-callback-literal": "off",
+    // https://github.com/eslint/eslint/issues/12822
+    "no-unused-expressions": "off"
+  },
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser"
+  },
+  "plugins": ["graphql", "vue", "@typescript-eslint"],
+  "overrides": [
+    {
+      "files": ["*.js"],
+      "rules": { "@typescript-eslint/no-var-requires": "off" }
+    },
+    {
+      "files": ["*.ts", "*.vue"],
+      "rules": { "camelcase": "off" }
+    },
+    {
+      "files": ["*.spec.ts"],
+      "rules": { "@typescript-eslint/explicit-function-return-type": "off" }
+    }
+  ]
+}

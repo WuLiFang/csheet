@@ -1,0 +1,3 @@
+extend type Subscription {
+  presentationUpdated(id: [ID!]!): Presentation!
+}

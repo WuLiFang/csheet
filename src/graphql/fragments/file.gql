@@ -1,0 +1,5 @@
+fragment file on File {
+  path(format: $filePathFormat)
+  modTime
+  size
+}

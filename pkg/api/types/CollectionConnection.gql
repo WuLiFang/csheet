@@ -1,0 +1,10 @@
+type CollectionEdge {
+  cursor: String!
+  node: Collection
+}
+
+type CollectionConnection {
+  edges: [CollectionEdge]
+  nodes: [Collection]
+  pageInfo: PageInfo!
+}

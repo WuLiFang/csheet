@@ -1,0 +1,9 @@
+#import "@/graphql/fragments/collection.gql"
+
+query collectionNode($id: ID!, $filePathFormat: String) {
+  node(id: $id) {
+    ... on Collection {
+      ...collection
+    }
+  }
+}

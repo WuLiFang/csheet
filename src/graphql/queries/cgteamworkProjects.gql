@@ -1,0 +1,7 @@
+query cgteamworkProjects {
+  cgteamworkProjects {
+    database
+    name
+    codename
+  }
+}

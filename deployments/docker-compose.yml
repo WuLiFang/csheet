@@ -1,60 +1,20 @@
 version: '2.4'
 services:
-  rabbitmq:
-    image: rabbitmq:3
-    restart: unless-stopped
-  db:
-    image: 'postgres:11'
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: csheet
-      POSTGRES_PASSWORD: csheet
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-  web:
-    image: 'csheet'
-    restart: on-failure
-    volumes:
-      - ./settings.py:/etc/csheet/settings.py:ro
-      - ./srv:/srv/csheet
-    depends_on:
-      - rabbitmq
-      - db
-    env_file:
-      - ./.env
-  beat:
+  csheet:
+    container_name: csheet
+    build:
+      context: '..'
+    ports:
+      - '60000:80'
     image: 'csheet'
     restart: unless-stopped
-    command: 'run beat'
+    cpus: 2
+    mem_limit: 2G
     volumes:
-      - ./settings.py:/etc/csheet/settings.py:ro
-    depends_on:
-      - rabbitmq
-      - db
+      - csheet_data:/app/storage/db
+      - ./files:/app/storage/files
+      - /mnt/z:/z:ro
     env_file:
       - ./.env
-  worker:
-    image: 'csheet'
-    restart: unless-stopped
-    command: 'run worker'
-    volumes:
-      - ./settings.py:/etc/csheet/settings.py:ro
-      - ./srv:/srv/csheet
-    depends_on:
-      - beat
-    env_file:
-      - ./.env
-  docs:
-    image: csheet-docs
-    restart: unless-stopped
-  nginx:
-    image: 'nginx'
-    restart: unless-stopped
-    depends_on:
-      - web
-      - docs
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./srv:/srv/csheet:ro
 volumes:
-  pgdata:
+  csheet_data:

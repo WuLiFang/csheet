@@ -1,0 +1,7 @@
+extend type Mutation {
+  collectFromCGTeamwork(
+    database: String!
+    prefix: String!
+    pipeline: String!
+  ): CollectedEvent!
+}

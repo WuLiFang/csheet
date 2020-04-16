@@ -1,0 +1,16 @@
+#import "./file.gql"
+
+fragment presentation on Presentation {
+  id
+  type
+  raw {
+    ...file
+  }
+  thumb {
+    ...file
+  }
+  regular {
+    ...file
+  }
+  isRegularOutdated
+}

@@ -1,0 +1,3 @@
+query folderOriginPrefix($root: String!) {
+  folderOriginPrefix(root: $root)
+}

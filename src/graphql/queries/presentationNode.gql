@@ -1,0 +1,9 @@
+#import "@/graphql/fragments/presentation.gql"
+
+query presentationNode($id: ID!, $filePathFormat: String) {
+  node(id: $id) {
+    ... on Presentation {
+      ...presentation
+    }
+  }
+}

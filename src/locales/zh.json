@@ -1,0 +1,15 @@
+{
+  "cgteamwork-stage": {
+    "leader": "组长",
+    "director": "导演",
+    "client": "客户"
+  },
+  "cgteamwork-status": {
+    "Approve": "通过",
+    "Check": "检查",
+    "Close": "关闭",
+    "Retake": "返修",
+    "Unset": "默认",
+    "Wait": "等待"
+  }
+}

@@ -20,8 +20,9 @@
 
 # -- Project information -----------------------------------------------------
 
+import socket
 project = 'csheet'
-copyright = '2018-2019, 北京吾立方数码科技有限公司'
+copyright = '2018-2020, 北京吾立方数码科技有限公司'
 author = 'NateScarlet <NateScarlet@Gmail.com>'
 
 # The short X.Y version
@@ -40,7 +41,8 @@ release = '5.0.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.githubpages'
+    'sphinx.ext.githubpages',
+    'plantweb.directive',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -65,7 +67,7 @@ language = 'zh_CN'
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '.venv']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
@@ -186,3 +188,24 @@ epub_exclude_files = ['search.html']
 rst_epilog = f"""
 .. |project_name| replace:: {project}
 """
+
+# -- Options for plantweb extension ----------------------------------------------
+
+
+def plantweb_patch_render(inject_text):
+    import plantweb.directive
+    _original = plantweb.directive.render
+
+    def _patched_render(content, *args, **kwargs):
+        return _original('\n'.join([inject_text, content]), *args, **kwargs)
+    plantweb.directive.render = _patched_render
+
+
+if socket.gethostbyname('wlf.com').startswith('192.'):
+    plantweb_defaults = {
+        'server': 'https://plantuml.cg.wlf.com/'
+    }
+
+    plantweb_patch_render(
+        '!includeurl https://git.wlf.com/WuLiFang/plantuml-style/raw/branch/master/core.puml'
+    )

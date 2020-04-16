@@ -1,29 +1,28 @@
 
-FROM node:lts AS web-build
+FROM node:lts AS web
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8
 RUN set -e
 RUN ping -c 1 google.com || \
-    npm i mirror-config-china --registry=https://registry.npm.taobao.org &&\
+    npm_config_registry=http://registry.npm.taobao.org npx npm-mirror-set -g taobao &&\
     npm config list
+ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
+ARG NODEJS_ORG_MIRROR=http://npm.taobao.org/mirrors/node
 
-WORKDIR /app/web
-COPY ./web/package*.json ./
-RUN npm i
-WORKDIR /app
-COPY ./web/ ./web/
-COPY ./server/csheet/templates/ ./server/csheet/templates/
-ENV NODE_ENV=production
-RUN make -C web
+WORKDIR /app/
+COPY ./package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
 
-FROM python:3.8 AS server-build
+FROM golang:1 AS build
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8
 RUN set -e
 
-ARG DEBIAN_MIRROR
+ARG DEBIAN_MIRROR=http://mirrors.huaweicloud.com/debian
 RUN if [ ! -z $DEBIAN_MIRROR ]; then \
     sed -i "s@http://.\+\.debian\.org/debian@$DEBIAN_MIRROR@g" /etc/apt/sources.list && \
     cat /etc/apt/sources.list; \
@@ -32,43 +31,27 @@ RUN apt-get update &&\
     apt-get -y install ffmpeg &&\
     ffmpeg -version &&\
     apt-get clean
-
-ARG PIP_MIRROR=https://mirrors.aliyun.com/pypi/simple/
-ENV PIP_INDEX_URL=$PIP_MIRROR
-ENV PYTHONIOENCODING=utf-8
-
-COPY ./config ./config/
-RUN if [ -f ./config/ca-certificates.crt ]; then \
-    cp ./config/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt; \
-    fi
+ENV TZ=Asia/Shanghai
 
 WORKDIR /app
-RUN pip install -U pip
-RUN pip install gunicorn gevent-websocket poetry
-ENV POETRY_VIRTUALENVS_CREATE=false
-COPY ./server/vendor/ ./vendor/
-COPY ./server/pyproject.toml ./
-COPY ./server/poetry.lock ./
-RUN poetry install
-COPY ./server/ ./
-COPY --from=web-build /app/web/dist/ ./dist/
-ENV PYTHONPATH=/app
+ENV GOPROXY=https://goproxy.cn,direct
+ENV GO111MODULES=on
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+COPY . .
+COPY --from=web /app/dist dist
+RUN go get -v ./cmd/...
 
-FROM server-build AS server-test
+FROM build as test
 
-RUN pip install pytest && pytest
+ARG CI=true
+RUN go test ./...
 
-FROM server-build AS release
+FROM build as release
 
-ENV CSHEET_SETTINGS=/etc/csheet/settings.py
-ENV WORKER_CONNECTIONS=1000
-ENV SENTRY_ENVIRONMENT=production
-ARG COMMIT_SHA1
-ENV COMMIT_SHA1=${COMMIT_SHA1}
-
-
+ENV CSHET_ENV=production
 RUN set +e
+LABEL author=NateScarlet@Gmail.com
 EXPOSE 80
-LABEL author="NateScarlet@Gmail.com"
-ENTRYPOINT [ "./entrypoint.sh" ]
-CMD ["run"]
+CMD ["csheet"]

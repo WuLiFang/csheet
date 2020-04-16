@@ -10,10 +10,11 @@
   :maxdepth: 2
   :caption: 内容:
 
+  collection
   cgteamwork
+  folder
   deployment
+  filestore
   env-vars
   development
-  filecache
-  video
 

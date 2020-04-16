@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" id="h">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+    <title>色板</title>
+  </head>
+  <body>
+    <noscript>
+      <strong>
+        非常抱歉, 本页面基于javascript。 启用javascript以继续。
+      </strong>
+    </noscript>
+    <div id="app">
+      <h1 hidden id="initial-loading"></h1>
+      <script>
+        (function() {
+          function updateLoading() {
+            var el = document.getElementById('initial-loading');
+            if (!el) {
+              return;
+            }
+            el.hidden = false;
+            el.innerText =
+              '应用载入中，请稍候' +
+              '.'.repeat(Math.ceil((Date.now() / 1e3) % 3));
+            setTimeout(updateLoading, 1e3);
+          }
+          updateLoading();
+        })();
+      </script>
+    </div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

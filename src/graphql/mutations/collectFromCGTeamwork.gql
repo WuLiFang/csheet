@@ -1,0 +1,16 @@
+mutation collectFromCGTeamwork(
+  $database: String!
+  $prefix: String!
+  $pipeline: String!
+) {
+  collectFromCGTeamwork(
+    database: $database
+    prefix: $prefix
+    pipeline: $pipeline
+  ) {
+    id
+    originPrefix
+    time
+    updatedCount
+  }
+}

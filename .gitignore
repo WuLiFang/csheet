@@ -1,10 +1,10 @@
 .DS_Store
 node_modules
 dist
+build
 
 # local env files
-.env.local
-.env.*.local
+.env
 
 # Log files
 npm-debug.log*
@@ -13,7 +13,6 @@ yarn-error.log*
 
 # Editor directories and files
 .idea
-.vscode
 *.suo
 *.ntvs*
 *.njsproj
@@ -21,7 +20,7 @@ yarn-error.log*
 *.sw*
 
 .venv
-.vscode
+__debug_bin
 
 # python
 .pytest_cache
@@ -32,3 +31,6 @@ SENTRY_DSN
 
 # Local config
 /*.local
+
+# csheet files
+/storage

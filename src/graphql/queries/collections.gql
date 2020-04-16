@@ -1,0 +1,26 @@
+#import "@/graphql/fragments/collection.gql"
+#import "@/graphql/fragments/pageInfo.gql"
+
+query collections(
+  $after: String
+  $before: String
+  $first: Int
+  $last: Int
+  $originPrefix: String
+  $filePathFormat: String
+) {
+  collections(
+    after: $after
+    before: $before
+    first: $first
+    last: $last
+    originPrefix: $originPrefix
+  ) {
+    nodes {
+      ...collection
+    }
+    pageInfo {
+      ...pageInfo
+    }
+  }
+}

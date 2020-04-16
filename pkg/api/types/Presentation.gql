@@ -1,0 +1,9 @@
+type Presentation implements Node {
+  id: ID!
+  type: String!
+  raw: File!
+  thumb: File
+  isThumbOutdated: Boolean
+  regular: File
+  isRegularOutdated: Boolean
+}

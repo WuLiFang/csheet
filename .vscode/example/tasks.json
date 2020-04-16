@@ -1,0 +1,43 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "serve:web",
+      "type": "npm",
+      "script": "start",
+      "isBackground": true,
+      "problemMatcher": [
+        {
+          "pattern": {
+            "regexp": ""
+          },
+          "background": {
+            "beginsPattern": ".+Building for",
+            "endsPattern": ".+Build complete\\. Watching for changes\\.\\.\\.",
+            "activeOnStart": true
+          }
+        }
+      ]
+    },
+    {
+      "label": "build",
+      "type": "process",
+      "command": "make",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "options": {
+        "env": {}
+      }
+    },
+    {
+      "label": "build:docs",
+      "type": "process",
+      "command": "make",
+      "args": ["docs"]
+    }
+  ]
+}

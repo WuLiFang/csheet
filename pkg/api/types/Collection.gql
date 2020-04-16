@@ -1,0 +1,8 @@
+type Collection implements Node {
+  id: ID!
+  origin: String!
+  title: String!
+  presentations: [Presentation!]!
+  metadata: [StringEntry!]!
+  collectTime: Time!
+}

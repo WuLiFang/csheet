@@ -1,0 +1,53 @@
+/* purgecss start ignore */
+
+@tailwind base;
+
+.fa-icon {
+  width: auto;
+  height: 1em;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+// Custom scrollbar for webkit browser
+
+::-webkit-scrollbar {
+  @apply w-1;
+  @apply h-1;
+}
+::-webkit-scrollbar-track {
+  @apply rounded-sm;
+  @apply bg-gray-800;
+}
+::-webkit-scrollbar-thumb {
+  @apply rounded-sm;
+  @apply bg-gray-600;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400;
+}
+::-webkit-scrollbar-thumb:active {
+  @apply bg-gray-600;
+}
+
+@tailwind components;
+
+/* purgecss end ignore */
+
+@tailwind utilities;
+
+#h {
+  .keep-all {
+    word-break: keep-all;
+  }
+
+  .rtl {
+    direction: rtl;
+  }
+
+  @variants responsive {
+    .clear-none {
+      clear: none;
+    }
+  }
+}

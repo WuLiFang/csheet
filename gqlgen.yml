@@ -1,0 +1,74 @@
+# Where are all the schema files located? globs are supported eg  src/**/*.graphqls
+schema:
+  - pkg/api/**/*.gql
+
+# Where should the generated server code go?
+exec:
+  filename: pkg/api/generated/generated.go
+  package: generated
+
+# Uncomment to enable federation
+# federation:
+#   filename: graph/generated/federation.go
+#   package: generated
+
+# Where should any generated models go?
+model:
+  filename: pkg/api/generated/model/model.go
+  package: model
+
+# Where should the resolver implementations go?
+resolver:
+  layout: follow-schema
+  dir: pkg/api/resolvers
+  package: resolvers
+
+# Optional: turn on use `gqlgen:"fieldName"` tags in your models
+# struct_tag: json
+
+# Optional: turn on to use []Thing instead of []*Thing
+omit_slice_element_pointers: true
+
+# Optional: set to speed up generation time by not performing a final validation pass.
+skip_validation: true
+
+# gqlgen will search for any type names in the schema in these go packages
+# if they match it will use them, otherwise it will generate them.
+# autobind:
+#   - 'github.com/WuLiFang/csheet/model'
+
+# This section declares type mapping between the GraphQL and go type systems
+#
+# The first line in each type will be used as defaults for resolver arguments and
+# modelgen, the others will be allowed when binding to fields. Configure them to
+# your liking
+models:
+  ID:
+    model:
+      - github.com/99designs/gqlgen/graphql.ID
+      - github.com/99designs/gqlgen/graphql.Int
+      - github.com/99designs/gqlgen/graphql.Int64
+      - github.com/99designs/gqlgen/graphql.Int32
+  Int:
+    model:
+      - github.com/99designs/gqlgen/graphql.Int
+      - github.com/99designs/gqlgen/graphql.Int64
+      - github.com/99designs/gqlgen/graphql.Int32
+  CollectedEvent:
+    model:
+      - github.com/WuLiFang/csheet/pkg/model/event/collected.Event
+  Collection:
+    model:
+      - github.com/WuLiFang/csheet/pkg/model/collection.Collection
+  Presentation:
+    model:
+      - github.com/WuLiFang/csheet/pkg/model/presentation.Presentation
+  File:
+    model:
+      - github.com/WuLiFang/csheet/pkg/model/file.File
+    fields:
+      path:
+        fieldName: 'PathGQLField'
+  CGTeamworkProject:
+    model:
+      - github.com/WuLiFang/csheet/pkg/cgteamwork.Project

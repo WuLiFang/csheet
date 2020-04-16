@@ -9,10 +9,6 @@ steps:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
-      - cp /etc/ssl/certs/ca-certificates.crt ./config/
-      - >-
-        sed -i "s@https://github\.com/@https://git.wlf.com/@g" ./server/requirements.txt &&
-        cat ./server/requirements.txt;
       - >-
         docker build
         --build-arg COMMIT_SHA1=${DRONE_COMMIT_SHA}
@@ -43,12 +39,12 @@ steps:
         docker tag
         registry.wlf.com/csheet:${DRONE_COMMIT_SHA}
         registry.wlf.com/csheet:latest
-      - "docker push registry.wlf.com/csheet:latest"
+      - 'docker push registry.wlf.com/csheet:latest'
       - >-
         docker tag 
         registry.wlf.com/csheet-docs:${DRONE_COMMIT_SHA}
         registry.wlf.com/csheet-docs:latest
-      - "docker push registry.wlf.com/csheet-docs:latest"
+      - 'docker push registry.wlf.com/csheet-docs:latest'
     when:
       branch:
         - master
@@ -62,12 +58,12 @@ steps:
         docker tag
         registry.wlf.com/csheet:${DRONE_COMMIT_SHA}
         registry.wlf.com/csheet:${DRONE_TAG}
-      - "docker push registry.wlf.com/csheet:${DRONE_TAG}"
+      - 'docker push registry.wlf.com/csheet:${DRONE_TAG}'
       - >-
         docker tag
         registry.wlf.com/csheet-docs:${DRONE_COMMIT_SHA}
         registry.wlf.com/csheet-docs:${DRONE_TAG}
-      - "docker push registry.wlf.com/csheet-docs:${DRONE_TAG}"
+      - 'docker push registry.wlf.com/csheet-docs:${DRONE_TAG}'
     when:
       event:
         - tag
@@ -77,8 +73,8 @@ steps:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
-      - "docker image rm registry.wlf.com/csheet:${DRONE_COMMIT_SHA}"
-      - "docker image rm registry.wlf.com/csheet-docs:${DRONE_COMMIT_SHA}"
+      - 'docker image rm registry.wlf.com/csheet:${DRONE_COMMIT_SHA}'
+      - 'docker image rm registry.wlf.com/csheet-docs:${DRONE_COMMIT_SHA}'
       - 'docker image prune -f --filter "label=repo=${DRONE_REPO}"'
 volumes:
   - name: dockersock
@@ -141,11 +137,11 @@ steps:
       channel:
         from_secret: ROCKETCHAT_CHANNEL
       message:
-        "**{{ build.status }}** {{ repo.fullName }}[#{{ build.number }}]({{ build.link }}) ({{ build.event }})
+        '**{{ build.status }}** {{ repo.fullName }}[#{{ build.number }}]({{ build.link }}) ({{ build.event }})
 
         [{{ truncate build.commit 8 }}](${DRONE_COMMIT_LINK}) on `{{ build.branch }}` by _{{ build.author }}_
 
-        {{build.message}}"
+        {{build.message}}'
 depends_on:
   - main
 trigger:

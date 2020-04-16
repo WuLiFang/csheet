@@ -1,0 +1,15 @@
+#import "./presentation.gql"
+
+fragment collection on Collection {
+  id
+  title
+  origin
+  metadata {
+    k
+    v
+  }
+  presentations {
+    ...presentation
+  }
+  collectTime
+}

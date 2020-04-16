@@ -1,0 +1,9 @@
+extend type Query {
+  collections(
+    originPrefix: String
+    first: Int
+    last: Int
+    before: String
+    after: String
+  ): CollectionConnection!
+}

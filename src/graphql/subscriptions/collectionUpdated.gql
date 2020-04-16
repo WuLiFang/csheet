@@ -1,0 +1,7 @@
+subscription collectionUpdated($id: [ID!]!) {
+  collectionUpdated(id: $id) {
+    id
+    title
+    origin
+  }
+}
