@@ -8,7 +8,7 @@ services:
       - '60000:80'
     image: 'csheet'
     restart: unless-stopped
-    cpus: 2
+    cpu_shares: 128
     mem_limit: 2G
     volumes:
       - csheet_data:/app/storage/db
