@@ -263,12 +263,11 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
   transform: translateX(-20%);
 }
 
-.left,
-.right {
-  &-enter-active,
-  &-leave-active {
-    @apply ease-out;
-    @apply duration-100;
-  }
+.left-enter-active,
+.left-leave-active,
+.right-enter-active,
+.right-leave-active {
+  @apply ease-out;
+  @apply duration-100;
 }
 </style>
