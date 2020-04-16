@@ -17,18 +17,6 @@ steps:
         --label "commit-sha=${DRONE_COMMIT_SHA}"
         --tag registry.wlf.com/csheet:${DRONE_COMMIT_SHA}
         .
-  - name: build-docs
-    image: docker:dind
-    volumes:
-      - name: dockersock
-        path: /var/run/docker.sock
-    commands:
-      - >-
-        docker build
-        --label "repo=${DRONE_REPO}"
-        --label "commit-sha=${DRONE_COMMIT_SHA}"
-        --tag registry.wlf.com/csheet-docs:${DRONE_COMMIT_SHA}
-        ./docs
   - name: push(master)
     image: docker:dind
     volumes:
@@ -40,11 +28,6 @@ steps:
         registry.wlf.com/csheet:${DRONE_COMMIT_SHA}
         registry.wlf.com/csheet:latest
       - 'docker push registry.wlf.com/csheet:latest'
-      - >-
-        docker tag 
-        registry.wlf.com/csheet-docs:${DRONE_COMMIT_SHA}
-        registry.wlf.com/csheet-docs:latest
-      - 'docker push registry.wlf.com/csheet-docs:latest'
     when:
       branch:
         - master
@@ -59,11 +42,6 @@ steps:
         registry.wlf.com/csheet:${DRONE_COMMIT_SHA}
         registry.wlf.com/csheet:${DRONE_TAG}
       - 'docker push registry.wlf.com/csheet:${DRONE_TAG}'
-      - >-
-        docker tag
-        registry.wlf.com/csheet-docs:${DRONE_COMMIT_SHA}
-        registry.wlf.com/csheet-docs:${DRONE_TAG}
-      - 'docker push registry.wlf.com/csheet-docs:${DRONE_TAG}'
     when:
       event:
         - tag
@@ -74,7 +52,6 @@ steps:
         path: /var/run/docker.sock
     commands:
       - 'docker image rm registry.wlf.com/csheet:${DRONE_COMMIT_SHA}'
-      - 'docker image rm registry.wlf.com/csheet-docs:${DRONE_COMMIT_SHA}'
       - 'docker image prune -f --filter "label=repo=${DRONE_REPO}"'
 volumes:
   - name: dockersock
