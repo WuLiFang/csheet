@@ -118,6 +118,7 @@ import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
   },
   mounted() {
     this.loadState();
+    this.update(this.originPrefix);
   },
 })
 export default class TheNavbar extends Vue {
