@@ -123,12 +123,24 @@ func CollectWithClient(ctx context.Context, c *client.Client, o Options) (ret *c
 
 	colM := map[string]collection.Collection{}
 	for _, v := range tasks {
+		select {
+		case <-ctx.Done():
+			err = context.Canceled
+			return
+		default:
+		}
 		err = collectionFromTask(colM, v, o)
 		if err != nil {
 			return
 		}
 	}
 	for _, col := range colM {
+		select {
+		case <-ctx.Done():
+			err = context.Canceled
+			return
+		default:
+		}
 		err = col.Save()
 		if err != nil {
 			return
