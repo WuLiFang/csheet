@@ -16,7 +16,7 @@ func (c *Client) RefreshToken(ctx context.Context) error {
 			"method":      "login",
 			"account":     c.Username,
 			"password":    c.Password,
-			"client_type": "web",
+			"client_type": "py", // web type token seems invalid previous one.
 		},
 	)
 	if err != nil {
