@@ -27,6 +27,7 @@ func transcodeImageThumb(p presentation.Presentation) error {
 		})
 		err = runCommand(cmd)
 		if err != nil {
+			p.Load()
 			p.ThumbErrorTag = raw.Tag()
 			return p.Save()
 		}
@@ -42,6 +43,7 @@ func transcodeImageThumb(p presentation.Presentation) error {
 		if p.Thumb != f.Path {
 			removeStoreFile(p.Thumb)
 		}
+		p.Load()
 		p.Thumb = f.Path
 		p.ThumbSuccessTag = raw.Tag()
 		err = p.Save()

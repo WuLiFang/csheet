@@ -27,6 +27,7 @@ func transcodeImageRegular(p presentation.Presentation) error {
 
 		err = runCommand(cmd)
 		if err != nil {
+			p.Load()
 			p.RegularErrorTag = raw.Tag()
 			return p.Save()
 		}
@@ -42,6 +43,7 @@ func transcodeImageRegular(p presentation.Presentation) error {
 		if p.Regular != f.Path {
 			removeStoreFile(p.Regular)
 		}
+		p.Load()
 		p.Regular = f.Path
 		p.RegularSuccessTag = raw.Tag()
 		err = p.Save()
