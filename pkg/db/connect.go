@@ -22,6 +22,7 @@ func Open(path string) (err error) {
 	return err
 }
 
+// OpenInMemory open database in memory
 func OpenInMemory() (err error) {
 	db, err = badger.Open(
 		badger.

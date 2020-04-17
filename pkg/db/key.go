@@ -57,6 +57,7 @@ func (index Index) Key(parts ...string) []byte {
 	return append(index.Bytes(), data...)
 }
 
+// Prefix key for index scan.
 func (index Index) Prefix(parts ...string) (ret []byte) {
 	ret = index.Key(parts...)
 	return ret[:len(ret)-1]
