@@ -59,8 +59,8 @@ export default class CollectionOverviewCell extends Vue {
 
   get cgteamworkTaskStatus(): string {
     const statusPriority: Record<string, number | undefined> = {
-      Wait: 1,
-      Approve: 2,
+      Approve: 1,
+      Wait: 2,
       Check: 3,
       Retake: 4,
     };
