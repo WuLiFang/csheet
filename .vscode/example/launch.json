@@ -14,9 +14,7 @@
       "cwd": "${workspaceFolder}",
       "preLaunchTask": "serve:web",
       "env": {
-        "CGO_ENABLED": "0",
-        "CSHEET_ADDRESS": "localhost:8000",
-        "CSHEET_ENV": "development"
+        "CSHEET_ADDRESS": "localhost:8000"
       }
     }
   ]
