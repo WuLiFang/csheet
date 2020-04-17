@@ -32,6 +32,39 @@ func newManager() *manager {
 	return ret
 }
 
+func (m *manager) discoverJobByTag(
+	p presentation.Presentation,
+	rawTag, errorTag, successTag, outputFile string,
+	jt jobType,
+) (err error) {
+	if errorTag != rawTag &&
+		(successTag != rawTag || !isExists(outputFile)) {
+		select {
+		case m.jobs[jt] <- p:
+			logger.Debugw("scheduled transcode", "presentation", p)
+		default:
+		}
+	} else {
+		err = filestore.SetAccessTime(path.Join(filestore.Dir, p.Regular), time.Now())
+	}
+	return err
+}
+
+func (m *manager) discoverJob(p presentation.Presentation, rawTag string) (err error) {
+	err = m.discoverJobByTag(
+		p,
+		rawTag, p.RegularErrorTag, p.RegularSuccessTag,
+		p.Regular, regularJobType(p.Type))
+	if err != nil {
+		return
+	}
+	err = m.discoverJobByTag(
+		p,
+		rawTag, p.ThumbErrorTag, p.ThumbSuccessTag,
+		p.Thumb, thumbJobType(p.Type))
+	return
+}
+
 func (m *manager) Start() {
 	m.startMu.Do(func() {
 		m.stop = make(chan struct{})
@@ -54,31 +87,11 @@ func (m *manager) Start() {
 							return true
 						}
 						rawTag := raw.Tag()
-						if v.RegularErrorTag != rawTag &&
-							(v.RegularSuccessTag != rawTag || !isExists(v.Regular)) {
-							select {
-							case m.jobs[regularJobType(v.Type)] <- v:
-
-								logger.Debugw("scheduled regular transcode", "presentation", v)
-							default:
-							}
-						} else {
-							filestore.SetAccessTime(path.Join(filestore.Dir, v.Regular), time.Now())
-						}
-						if v.ThumbErrorTag != rawTag &&
-							(v.ThumbSuccessTag != rawTag || !isExists(v.Thumb)) {
-							select {
-							case m.jobs[thumbJobType(v.Type)] <- v:
-								logger.Debugw("scheduled thumb transcode", "presentation", v)
-							default:
-							}
-						} else {
-							filestore.SetAccessTime(path.Join(filestore.Dir, v.Thumb), time.Now())
-						}
+						m.discoverJob(v, rawTag)
 						return true
 					}
 				})
-				logger.Infow("transcode discover loop completed",
+				logger.Infow("presentation scan completed",
 					"count", jobCount,
 					"elapsed", time.Since(startTime),
 				)
