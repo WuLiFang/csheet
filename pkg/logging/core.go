@@ -6,23 +6,8 @@ import (
 	"go.uber.org/zap"
 )
 
-var rootLogger *zap.Logger
-
-func init() {
-	if os.Getenv("GIN_MODE") != "release" {
-		rootLogger, _ = zap.NewDevelopment()
-	} else {
-		rootLogger, _ = zap.NewProduction()
-	}
-}
-
-// Root returns root logger
-func Root() *zap.Logger {
-	return rootLogger
-}
-
 func getConfig() zap.Config {
-	if os.Getenv("GIN_MODE") == "release" {
+	if os.Getenv("CSHEET_ENV") == "production" {
 		return zap.NewProductionConfig()
 	}
 	return zap.NewDevelopmentConfig()

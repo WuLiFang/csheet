@@ -16,11 +16,8 @@ import (
 	"github.com/WuLiFang/csheet/pkg/filestore"
 	"github.com/WuLiFang/csheet/pkg/job/filewatch"
 	"github.com/WuLiFang/csheet/pkg/job/transcode"
-	"github.com/WuLiFang/csheet/pkg/logging"
 	_ "github.com/WuLiFang/csheet/pkg/mime"
 )
-
-var logger = logging.Root().Sugar()
 
 func getenv(key string, d string) string {
 	ret := os.Getenv(key)
@@ -57,7 +54,7 @@ func setupFolderCollector() (err error) {
 	return
 }
 func main() {
-	defer logging.Root().Sync()
+	defer logger.Sync()
 
 	address := flag.String("address", getenv("CSHEET_ADDRESS", "0.0.0.0:80"), "Bind address")
 	storage := flag.String("storage", getenv("CSHEET_STORAGE", "storage"), "Data storage path")
