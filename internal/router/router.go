@@ -1,6 +1,7 @@
 package router
 
 import (
+	"io"
 	"net/http"
 	"net/http/pprof"
 	"os"
@@ -51,6 +52,8 @@ func New() *gin.Engine {
 	r.StaticFile("favicon.ico", "dist/favicon.ico")
 	r.Group("files").Use(func(c *gin.Context) {
 		c.Next()
+		status := c.Writer.Status()
+
 		go func(status int, filepath string) {
 			if filepath[0] == '/' {
 				filepath = filepath[1:]
@@ -70,8 +73,16 @@ func New() *gin.Engine {
 				}
 				f.Delete()
 			}
-		}(c.Writer.Status(), c.Param("filepath"))
-
+		}(status, c.Param("filepath"))
+		if status == http.StatusNotFound {
+			c.Header("Content-Type", "image/svg+xml")
+			d, err := os.Open("dist/static/default.svg")
+			if err != nil {
+				return
+			}
+			defer d.Close()
+			io.Copy(c.Writer, d)
+		}
 	}).Static("", filestore.Dir)
 	if os.Getenv("CSHEET_ENV") == "development" {
 		r.Any("debug/pprof/profile", gin.WrapH(pprof.Handler("profile")))
