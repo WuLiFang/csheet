@@ -83,7 +83,7 @@ func main() {
 	}
 	config.LoadEnv()
 	go func() {
-		var ticker = time.NewTicker(time.Hour)
+		var ticker = time.NewTicker(24 * time.Hour)
 		for {
 			filestore.Prune(filestore.Dir, time.Now().Add(-fileLife))
 			filestore.Prune(filestore.TempDir, time.Now().Add(-tempLife))
