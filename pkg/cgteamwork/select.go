@@ -18,6 +18,26 @@ type Selection struct {
 	Limit      int
 }
 
+// Count retrieves entries count from server.
+func (s Selection) Count(ctx context.Context) (int, error) {
+	err := s.c.RefreshTokenOndemand(ctx)
+	if err != nil {
+		return 0, err
+	}
+	data, err := s.c.callAPI(
+		ctx,
+		map[string]interface{}{
+			"controller":        "c_orm",
+			"method":            "get_count_with_filter",
+			"db":                s.Database,
+			"module":            s.Module,
+			"module_type":       s.ModuleType,
+			"sign_filter_array": s.Filter,
+		},
+	)
+	return int(data.Int()), err
+}
+
 // Values retrieves value from server.
 func (s Selection) Values(ctx context.Context, names ...string) (ResultSet, error) {
 	err := s.c.RefreshTokenOndemand(ctx)
