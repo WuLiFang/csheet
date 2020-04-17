@@ -56,6 +56,7 @@ import { filePathFormat } from '@/const';
   apollo: {
     collections() {
       return {
+        fetchPolicy: 'cache-and-network',
         query: require('@/graphql/queries/collections.gql'),
         skip: (): boolean => {
           return !this.variables.originPrefix;
