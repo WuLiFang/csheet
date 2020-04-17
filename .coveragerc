@@ -1,6 +1,0 @@
-[run]
-include = ./server/csheet/*
-omit = 
-    */static/*
-    */templates/*
-    */.venv/*
