@@ -48,7 +48,7 @@
           class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden"
         )
           .viewport(
-            class="flex-auto lg:flex-auto lg:flex lg:flex-col text-center lg:items-center bg-black "
+            class="flex-auto lg:w-2/3 lg:flex-auto lg:flex lg:flex-col text-center lg:items-center bg-black "
           )
             template(v-for="i in prefetchURLs")
               link(rel="prefetch" :href="i")
