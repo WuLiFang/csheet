@@ -42,7 +42,7 @@ func (m *manager) discoverJobByTag(
 		(successTag != rawTag || !isExists(outputFile)) {
 		select {
 		case m.jobs[jt] <- p:
-			logger.Debugw("scheduled transcode", "presentation", p)
+			logger.Infow("scheduled transcode", "jobType", jt, "raw", p.Raw)
 		default:
 		}
 	} else {
