@@ -50,7 +50,7 @@ RUN go test ./...
 
 FROM build as release
 
-ENV CSHET_ENV=production
+ENV CSHEET_ENV=production
 RUN set +e
 LABEL author=NateScarlet@Gmail.com
 EXPOSE 80
