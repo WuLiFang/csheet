@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/WuLiFang/csheet/pkg/db"
 	"github.com/WuLiFang/csheet/pkg/filestore"
 	"github.com/WuLiFang/csheet/pkg/model/file"
 	"github.com/WuLiFang/csheet/pkg/model/presentation"
@@ -74,27 +75,68 @@ func (m *manager) Start() {
 				jobCount := 0
 				startTime := time.Now()
 				m.rate.Wait(context.Background())
-				presentation.Scan(func(v presentation.Presentation) bool {
-					m.rate.Wait(context.Background())
-					select {
-					case <-m.stop:
-						isCanceld = true
-						return false
-					default:
-						jobCount++
-						raw, err := file.FindByPath(v.Raw)
-						if err != nil {
-							return true
+				err := db.View(func(txn *db.Txn) (err error) {
+					opts := db.DefaultIteratorOptions
+					opts.PrefetchValues = false
+					it := txn.NewIterator(opts)
+					defer it.Close()
+					prefix := db.IndexPresentation.Bytes()
+					for it.Seek(prefix); it.ValidForPrefix(prefix); it.Next() {
+						select {
+						case <-m.stop:
+							isCanceld = true
+							return
+						default:
+							err = m.rate.Wait(context.Background())
+							if err != nil {
+								logger.DPanic("wait rate limit fail", "error", err)
+								return
+							}
+							jobCount++
+							var v presentation.Presentation
+							err = db.Get(it.Item().Key(), &v)
+							if err != nil {
+								return
+							}
+							var raw file.File
+							raw, err = file.FindByPath(v.Raw)
+							if err != nil {
+								return
+							}
+							rawTag := raw.Tag()
+							m.discoverJob(v, rawTag)
 						}
-						rawTag := raw.Tag()
-						m.discoverJob(v, rawTag)
-						return true
 					}
+					return
 				})
-				logger.Infow("presentation scan completed",
-					"count", jobCount,
-					"elapsed", time.Since(startTime),
-				)
+				if err != nil {
+					logger.Errorw("presentation scan failed", "error", err)
+				} else {
+					logger.Infow("presentation scan completed",
+						"count", jobCount,
+						"elapsed", time.Since(startTime),
+					)
+				}
+			}
+		}()
+		go func() {
+			c := make(chan file.File)
+			file.SignalChanged.Notify(c)
+			defer file.SignalChanged.Stop(c)
+			for {
+				select {
+				case <-m.stop:
+					return
+				case f := <-c:
+					ps, err := presentation.FindByRaw(f.Path)
+					if err != nil {
+						logger.Error("db find error", "error", err)
+						continue
+					}
+					for _, p := range ps {
+						m.discoverJob(p, f.Tag())
+					}
+				}
 			}
 		}()
 	})

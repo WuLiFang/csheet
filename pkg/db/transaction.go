@@ -55,6 +55,15 @@ func Delete(key []byte) error {
 	)
 }
 
+// Get single key value pair.
+func Get(key []byte, value interface{}) (err error) {
+	return View(
+		func(txn *Txn) error {
+			return txn.Get(key, value)
+		},
+	)
+}
+
 // Set single key value pair.
 func Set(key []byte, value interface{}) (err error) {
 	return Update(

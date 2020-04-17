@@ -1,5 +1,7 @@
 package transcode
 
+import "strconv"
+
 type worker struct {
 	manager *manager
 	jobType jobType
@@ -16,7 +18,7 @@ func (w worker) Start() {
 		case <-w.stop:
 			return
 		case j := <-w.manager.jobs[w.jobType]:
-			w.manager.flight.Do(string(w.jobType)+":"+j.Raw, func() {
+			w.manager.flight.Do(strconv.Itoa(int(w.jobType))+":"+j.Raw, func() {
 				err := w.jobType.Run(j)
 				if err != nil {
 					logger.Errorw(

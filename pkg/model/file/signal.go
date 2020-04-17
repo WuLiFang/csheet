@@ -18,6 +18,9 @@ func (s *signal) emit(f File) {
 
 func (s *signal) Notify(c chan<- File) {
 	s.Lock()
+	if s.m == nil {
+		s.m = make(map[chan<- File]struct{})
+	}
 	s.m[c] = struct{}{}
 	s.Unlock()
 }

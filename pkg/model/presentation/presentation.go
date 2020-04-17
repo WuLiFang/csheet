@@ -97,29 +97,6 @@ func FindByID(id string) (ret Presentation, err error) {
 	return
 }
 
-// Scan all saved presentation.
-func Scan(fn func(v Presentation) bool) error {
-	return db.View(func(txn *db.Txn) error {
-		cur := txn.NewIterator(db.DefaultIteratorOptions)
-		defer cur.Close()
-		prefix := db.IndexPresentation.Bytes()
-		for cur.Seek(prefix); cur.ValidForPrefix(prefix); cur.Next() {
-			var v Presentation
-			err := cur.Item().Value(func(data []byte) error {
-				return db.UnmarshalValue(data, &v)
-			})
-
-			if err != nil {
-				return err
-			}
-			if !fn(v) {
-				break
-			}
-		}
-		return nil
-	})
-}
-
 // FindOrCreate a matched presentation
 func FindOrCreate(t Type, path string) (ret Presentation, err error) {
 	ret = Presentation{
