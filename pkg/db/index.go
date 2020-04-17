@@ -29,6 +29,4 @@ const (
 	IndexPresentationHash
 	// IndexFile used as key prefix.
 	IndexFile
-	// IndexFileHash used as key prefix.
-	IndexFileHash
 )
