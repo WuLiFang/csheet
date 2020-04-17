@@ -52,7 +52,6 @@
         ) 前缀
         input(
           v-model="formData.cgteamwork.prefix"
-          required
           class="form-input"
           @keydown.enter="collectFromCGTeamwork()"
         )

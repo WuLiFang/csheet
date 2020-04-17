@@ -2,6 +2,7 @@ package cgteamwork
 
 import (
 	"context"
+	"fmt"
 	"mime"
 	"path"
 	"time"
@@ -14,6 +15,7 @@ import (
 	"github.com/WuLiFang/csheet/pkg/unipath"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
+	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 
 // Options for collect collections.
@@ -110,8 +112,24 @@ func CollectWithClient(ctx context.Context, c *client.Client, o Options) (ret *c
 		WithFilter(
 			c.F("task.pipeline", "in", pipelines(o.Pipeline)).
 				And(c.F("shot.shot", "has", o.Prefix+"%")),
-		).
-		WithLimit(1000)
+		)
+
+	n, err := s.Count(ctx)
+	if err != nil {
+		return
+	}
+	if n > CollectTaskLimit {
+		err = &gqlerror.Error{
+			Message: fmt.Sprintf("select match %d tasks, max allowed value is %d", n, CollectTaskLimit),
+			Extensions: map[string]interface{}{
+				"code": "CGTEAMWORK_COLLECT_OVER_TASK_LIMIT",
+				"locales": map[string]string{
+					"zh": fmt.Sprintf("所选条件匹配 %d 任务, 允许的最大值为 %d", n, CollectTaskLimit),
+				},
+			},
+		}
+		return
+	}
 	rs, err := s.Values(
 		ctx,
 		"shot.shot", "task.artist", "task.pipeline",

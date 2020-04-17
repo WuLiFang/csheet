@@ -14,6 +14,10 @@ CSHEET_ADDRESS
 
   服务运行地址。默认：localhost:80
 
+CSHEET_CGTEAMWORK_COLLECT_TASK_LIMIT
+
+  每次从 CGTeamwork 收集时的最大任务数量。默认：1000。
+
 CSHEET_CGTEAMWORK_PIPELINE_OVERWRITE
 
   覆盖流程收集时使用的流程名称，JSON 编码的字典。

@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/WuLiFang/csheet/internal/config"
 	"github.com/WuLiFang/csheet/internal/router"
 	"github.com/WuLiFang/csheet/pkg/collector/folder"
 	"github.com/WuLiFang/csheet/pkg/db"
@@ -83,6 +84,7 @@ func main() {
 	if tempLife < 0 {
 		err = errors.New("temp life can not be negative")
 	}
+	config.LoadEnv()
 	go func() {
 		var ticker = time.NewTicker(time.Hour)
 		for {
