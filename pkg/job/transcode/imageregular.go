@@ -28,8 +28,7 @@ func transcodeImageRegular(p presentation.Presentation) error {
 		err = runCommand(cmd)
 		if err != nil {
 			p.RegularErrorTag = raw.Tag()
-			p.Save()
-			return
+			return p.Save()
 		}
 
 		filename, err := filestore.Put(dst)
