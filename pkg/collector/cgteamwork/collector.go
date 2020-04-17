@@ -118,13 +118,13 @@ func CollectWithClient(ctx context.Context, c *client.Client, o Options) (ret *c
 	if err != nil {
 		return
 	}
-	if n > CollectTaskLimit {
+	if n > MaxTaskPerCollect {
 		err = &gqlerror.Error{
-			Message: fmt.Sprintf("select match %d tasks, max allowed value is %d", n, CollectTaskLimit),
+			Message: fmt.Sprintf("select match %d tasks, max allowed value is %d", n, MaxTaskPerCollect),
 			Extensions: map[string]interface{}{
 				"code": "CGTEAMWORK_COLLECT_OVER_TASK_LIMIT",
 				"locales": map[string]string{
-					"zh": fmt.Sprintf("所选条件匹配 %d 任务, 允许的最大值为 %d", n, CollectTaskLimit),
+					"zh": fmt.Sprintf("所选条件匹配 %d 任务, 允许的最大值为 %d", n, MaxTaskPerCollect),
 				},
 			},
 		}

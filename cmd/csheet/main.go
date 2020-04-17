@@ -61,7 +61,7 @@ func main() {
 	folder.WalkInclude = folder.ParseWalkRule(config.FolderInclude)
 	folder.WalkExclude = folder.ParseWalkRule(config.FolderExclude)
 
-	cgteamwork.CollectTaskLimit = config.CGTeamworkTaskLimit
+	cgteamwork.MaxTaskPerCollect = config.CGTeamworkMaxTaskPerCollect
 	if gjson.Valid(config.CGTeamworkPipelineOverwrite) {
 		cgteamwork.PipelineOverwrite = gjson.Parse(config.CGTeamworkPipelineOverwrite)
 	} else {
