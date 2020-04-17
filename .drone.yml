@@ -11,8 +11,6 @@ steps:
     commands:
       - >-
         docker build
-        --build-arg COMMIT_SHA1=${DRONE_COMMIT_SHA}
-        --build-arg DEBIAN_MIRROR=http://mirrors.huaweicloud.com/debian
         --label "repo=${DRONE_REPO}"
         --label "commit-sha=${DRONE_COMMIT_SHA}"
         --tag registry.wlf.com/csheet:${DRONE_COMMIT_SHA}
