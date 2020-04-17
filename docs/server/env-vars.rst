@@ -20,25 +20,29 @@ CSHEET_CGTEAMWORK_PIPELINE_OVERWRITE
 
 CSHEET_FOLDER_INCLUDE
 
-  从文件夹收集允许的路径，使用 ``*`` 代表允许任何路径。
+  从文件夹收集允许的文件夹，使用 ``*`` 代表允许任何文件夹。
  
   多个路径用逗号分隔。
 
+CSHEET_WATCH_RATE
+
+  限制每秒钟最多检查多少文件的更新，默认值：50。
+
 CSHEET_FOLDER_EXCLUDE
 
-  扫描文件夹时的 glob 排除模式，用逗号分隔。
+  扫描文件夹时的前缀排除模式，用逗号分隔。
 
 CSHEET_FILE_LIFE
 
   生成的文件保留时间, 默认为 240 小时。
 
-  使用 go 时间格式，例如：1d2m3s。
+  使用 go 时间格式，例如：1h2m3s。
 
 CSHEET_TEMP_LIFE
 
   残留的临时文件保留时间, 默认为 1 小时。
 
-  使用 go 时间格式，例如：1d2m3s。
+  使用 go 时间格式，例如：1h2m3s。
 
 CGTEAMWORK_URL
 
