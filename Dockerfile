@@ -41,7 +41,6 @@ COPY go.sum .
 RUN go mod download
 COPY . .
 COPY --from=web /app/dist dist
-ARG CGO_ENABLED=0
 RUN go get -v ./cmd/...
 
 FROM build as test
