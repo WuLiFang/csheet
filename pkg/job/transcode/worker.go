@@ -16,7 +16,7 @@ func (w worker) Start() {
 		case <-w.stop:
 			return
 		case j := <-w.manager.jobs[w.jobType]:
-			w.manager.flight.Do(string(w.jobType)+":"+j.ID(), func() {
+			w.manager.flight.Do(string(w.jobType)+":"+j.Raw, func() {
 				err := w.jobType.Run(j)
 				if err != nil {
 					logger.Errorw(
