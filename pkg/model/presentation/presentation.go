@@ -37,6 +37,10 @@ func (p Presentation) key() (ret []byte, err error) {
 	return db.IndexPresentation.Key(id), err
 }
 
+func keyToID(key []byte) string {
+	return base64.RawURLEncoding.EncodeToString(key)
+}
+
 // ID of object.
 func (p Presentation) ID() string {
 	key, err := p.key()
@@ -57,6 +61,10 @@ func (p Presentation) Save() error {
 		return err
 	}
 	err = db.Update(func(txn *db.Txn) error {
+		err = txn.Set(db.IndexPresentationRaw.Key(p.Raw, keyToID(key)), nil)
+		if err != nil {
+			return err
+		}
 		return txn.Set(key, p)
 	})
 	if err != nil {

@@ -29,4 +29,9 @@ const (
 	IndexPresentationHash
 	// IndexFile used as key prefix.
 	IndexFile
+	// IndexPresentationRaw is a secondary index
+	// to search presentation by raw path
+	// key format: raw path, presentation id
+	// value: empty
+	IndexPresentationRaw
 )

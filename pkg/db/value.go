@@ -14,6 +14,9 @@ type ValueMarshaler interface {
 
 // MarshalValue encode struct to bytes.
 func MarshalValue(v interface{}) (ret []byte, err error) {
+	if v == nil {
+		return
+	}
 	if v, ok := v.(ValueMarshaler); ok {
 		return v.MarshalDBValue()
 	}

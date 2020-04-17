@@ -45,3 +45,21 @@ func Update(fn func(txn *Txn) error) error {
 		},
 	)
 }
+
+// Delete single key value pair from db.
+func Delete(key []byte) error {
+	return Update(
+		func(txn *Txn) error {
+			return txn.Delete(key)
+		},
+	)
+}
+
+// Set single key value pair.
+func Set(key []byte, value interface{}) (err error) {
+	return Update(
+		func(txn *Txn) error {
+			return txn.Set(key, value)
+		},
+	)
+}

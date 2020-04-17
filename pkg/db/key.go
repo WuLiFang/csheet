@@ -38,7 +38,9 @@ func unmarshalKeyParts(data []byte, parts ...*string) error {
 		if err != nil {
 			return err
 		}
-		*i = string(d[:len(d)-1])
+		if i != nil {
+			*i = string(d[:len(d)-1])
+		}
 	}
 	return nil
 }
