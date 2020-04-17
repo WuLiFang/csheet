@@ -17,6 +17,10 @@ func setupConnectionContext(
 		err = errors.New("use first and last at same time is not supported")
 		return
 	}
+	if last == nil && first == nil {
+		err = errors.New("must specify one of (first, last)")
+		return
+	}
 	if before != nil {
 		ret.before = *before
 	}
