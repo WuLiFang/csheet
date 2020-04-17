@@ -12,7 +12,8 @@ import (
 )
 
 func (r *mutationResolver) CollectFromFolder(ctx context.Context, root string) (*collected.Event, error) {
-	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 60*time.Second)
 	defer cancel()
-	return folder.Collect(ctx, root)
+	v, err := folder.Collect(ctx, root)
+	return v, formatError(err)
 }

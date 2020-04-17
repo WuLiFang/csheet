@@ -37,7 +37,7 @@ func Collect(ctx context.Context, root string) (ret *collected.Event, err error)
 	err = walk(root, func(i string, info os.FileInfo, err error) error {
 		select {
 		case <-ctx.Done():
-			return context.Canceled
+			return ctx.Err()
 		default:
 		}
 		if err != nil {
