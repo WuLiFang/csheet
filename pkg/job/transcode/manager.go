@@ -14,21 +14,18 @@ import (
 )
 
 type manager struct {
-	workers         map[jobType][]worker
-	jobs            map[jobType]chan presentation.Presentation
-	changeListeners []chan presentation.Presentation
-	changed         chan presentation.Presentation
-	startMu         sync.Once
-	stop            chan struct{}
-	rate            *rate.Limiter
-	flight          *onceflight.Group
+	workers map[jobType][]worker
+	jobs    map[jobType]chan presentation.Presentation
+	startMu sync.Once
+	stop    chan struct{}
+	rate    *rate.Limiter
+	flight  *onceflight.Group
 }
 
 func newManager() *manager {
 	ret := &manager{
 		jobs:    map[jobType]chan presentation.Presentation{},
 		workers: map[jobType][]worker{},
-		changed: make(chan presentation.Presentation),
 		rate:    rate.NewLimiter(100, 1),
 		flight:  &onceflight.Group{},
 	}
@@ -85,14 +82,6 @@ func (m *manager) Start() {
 					"count", jobCount,
 					"elapsed", time.Since(startTime),
 				)
-			}
-		}()
-		go func() {
-			for i := range m.changed {
-				logger.Infow("presentation changed", "file", i)
-				for _, l := range m.changeListeners {
-					l <- i
-				}
 			}
 		}()
 	})
