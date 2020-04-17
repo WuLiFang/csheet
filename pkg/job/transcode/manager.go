@@ -92,14 +92,17 @@ func (m *manager) Start() {
 								logger.DPanic("wait rate limit fail", "error", err)
 								return
 							}
-							jobCount++
 							var v presentation.Presentation
 							err = db.Get(it.Item().Key(), &v)
 							if err != nil {
 								return
 							}
+							jobCount++
 							var raw file.File
 							raw, err = file.FindByPath(v.Raw)
+							if err == db.ErrKeyNotFound {
+								continue
+							}
 							if err != nil {
 								return
 							}
