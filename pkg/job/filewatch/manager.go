@@ -56,20 +56,18 @@ func (m *manager) Start() {
 					if err != nil {
 						logger.DPanicw("error during watch rate limit", "error", err)
 					}
-					for _, i := range []string{p.Raw, p.Regular, p.Thumb} {
-						if i == "" {
-							continue
-						}
-						f, err := file.FindByPath(i)
-						if err != nil {
-							if err != db.ErrKeyNotFound {
-								logger.Error("error during find file by path", "error", err)
-							}
-							continue
-						}
-						j <- f
-						jobCount++
+					if p.Raw == "" {
+						continue
 					}
+					f, err := file.FindByPath(p.Raw)
+					if err != nil {
+						if err != db.ErrKeyNotFound {
+							logger.Error("error during find file by path", "error", err)
+						}
+						continue
+					}
+					j <- f
+					jobCount++
 				}
 				logger.Infow("file watch loop completed",
 					"count", jobCount,

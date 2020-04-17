@@ -1,6 +1,7 @@
 package router
 
 import (
+	"net/http"
 	"net/http/pprof"
 	"os"
 	"path"
@@ -9,7 +10,9 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/WuLiFang/csheet/pkg/api"
+	"github.com/WuLiFang/csheet/pkg/db"
 	"github.com/WuLiFang/csheet/pkg/filestore"
+	"github.com/WuLiFang/csheet/pkg/model/file"
 	"github.com/gin-gonic/gin"
 )
 
@@ -48,8 +51,27 @@ func New() *gin.Engine {
 	r.StaticFile("favicon.ico", "dist/favicon.ico")
 	r.Group("files").Use(func(c *gin.Context) {
 		c.Next()
-		p := path.Join(filestore.Dir, c.Param("filepath"))
-		go filestore.SetAccessTime(p, time.Now())
+		go func(status int, filepath string) {
+			if filepath[0] == '/' {
+				filepath = filepath[1:]
+			}
+			switch status {
+			case http.StatusOK:
+				fallthrough
+			case http.StatusNotModified:
+				filestore.SetAccessTime(path.Join(filestore.Dir, filepath), time.Now())
+			case http.StatusNotFound:
+				f, err := file.FindByPath(filepath)
+				if err == db.ErrKeyNotFound {
+					return
+				}
+				if err != nil {
+					return
+				}
+				f.Delete()
+			}
+		}(c.Writer.Status(), c.Param("filepath"))
+
 	}).Static("", filestore.Dir)
 	if os.Getenv("CSHEET_ENV") == "development" {
 		r.Any("debug/pprof/profile", gin.WrapH(pprof.Handler("profile")))
