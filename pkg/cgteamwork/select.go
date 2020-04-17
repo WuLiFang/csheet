@@ -1,6 +1,9 @@
 package cgteamwork
 
-import "context"
+import (
+	"context"
+	"strconv"
+)
 
 // Selection is a set of entry that match given criteria.
 // No request send until `Values` called.
@@ -12,6 +15,7 @@ type Selection struct {
 	IDField    string
 	Filter     Filter
 	c          *Client
+	Limit      int
 }
 
 // Values retrieves value from server.
@@ -23,6 +27,10 @@ func (s Selection) Values(ctx context.Context, names ...string) (ResultSet, erro
 	if s.IDField != "" {
 		names = append(names, s.IDField)
 	}
+	var limit = "5000"
+	if s.Limit != 0 {
+		limit = strconv.Itoa(s.Limit)
+	}
 	data, err := s.c.callAPI(
 		ctx,
 		map[string]interface{}{
@@ -33,6 +41,7 @@ func (s Selection) Values(ctx context.Context, names ...string) (ResultSet, erro
 			"module_type":       s.ModuleType,
 			"sign_array":        names,
 			"sign_filter_array": s.Filter,
+			"limit":             limit,
 		},
 	)
 	return ResultSet{
@@ -78,5 +87,12 @@ func (s Selection) WithModuleType(v string) Selection {
 // Set to empty string to disable this behavior.
 func (s Selection) WithIDField(v string) Selection {
 	s.IDField = v
+	return s
+}
+
+// WithLimit set value limit for selection, server side limit is 5000.
+// if limit is greater than 0, it will sent to server.
+func (s Selection) WithLimit(v int) Selection {
+	s.Limit = v
 	return s
 }

@@ -110,7 +110,8 @@ func CollectWithClient(ctx context.Context, c *client.Client, o Options) (ret *c
 		WithFilter(
 			c.F("task.pipeline", "in", pipelines(o.Pipeline)).
 				And(c.F("shot.shot", "has", o.Prefix+"%")),
-		)
+		).
+		WithLimit(1000)
 	rs, err := s.Values(
 		ctx,
 		"shot.shot", "task.artist", "task.pipeline",
@@ -123,24 +124,12 @@ func CollectWithClient(ctx context.Context, c *client.Client, o Options) (ret *c
 
 	colM := map[string]collection.Collection{}
 	for _, v := range tasks {
-		select {
-		case <-ctx.Done():
-			err = context.Canceled
-			return
-		default:
-		}
 		err = collectionFromTask(colM, v, o)
 		if err != nil {
 			return
 		}
 	}
 	for _, col := range colM {
-		select {
-		case <-ctx.Done():
-			err = context.Canceled
-			return
-		default:
-		}
 		err = col.Save()
 		if err != nil {
 			return
