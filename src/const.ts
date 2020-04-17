@@ -1,3 +1,3 @@
 export const filePathFormat = navigator?.platform.startsWith('Win')
-  ? 'unix'
+  ? 'windows'
   : undefined;
