@@ -1,6 +1,9 @@
 // https://www.purgecss.com/configuration
 const purgecss = require('@fullhuman/postcss-purgecss')({
-  content: ['src/**/*.vue', 'node_modules/vue-awesome/components/Icon.vue'],
+  content: [
+    'src/**/*.{vue,ts}',
+    'node_modules/vue-awesome/components/Icon.vue',
+  ],
   defaultExtractor: content => content.match(/[\w-/:]+/g) || [],
 });
 const cssnano = require('cssnano')({
