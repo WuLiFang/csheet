@@ -15,9 +15,9 @@ var WalkInclude = []string{}
 var WalkExclude = []string{}
 
 // ParseWalkRule from string.
-func ParseWalkRule(v string) (ret []string, err error) {
+func ParseWalkRule(v string) (ret []string) {
 	if v == "*" {
-		return []string{"*"}, nil
+		return []string{"*"}
 	}
 	for _, i := range strings.Split(v, ",") {
 		if i == "" {

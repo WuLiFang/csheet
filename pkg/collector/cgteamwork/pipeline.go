@@ -1,17 +1,11 @@
 package cgteamwork
 
 import (
-	"os"
-
 	"github.com/tidwall/gjson"
 )
 
 func pipelines(pipeline string) []string {
-	v := os.Getenv("CSHEET_CGTEAMWORK_PIPELINE_OVERWRITE")
-	if v == "" {
-		return []string{pipeline}
-	}
-	data := gjson.Parse(v).Get(pipeline)
+	data := PipelineOverwrite.Get(pipeline)
 	if !data.Exists() {
 		return []string{pipeline}
 	}

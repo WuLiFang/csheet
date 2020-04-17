@@ -3,11 +3,12 @@ package logging
 import (
 	"os"
 
+	"github.com/WuLiFang/csheet/internal/config"
 	"go.uber.org/zap"
 )
 
 func getConfig() zap.Config {
-	if os.Getenv("CSHEET_ENV") == "production" {
+	if config.Env == "production" {
 		return zap.NewProductionConfig()
 	}
 	return zap.NewDevelopmentConfig()

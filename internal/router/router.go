@@ -10,6 +10,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/WuLiFang/csheet/internal/config"
 	"github.com/WuLiFang/csheet/pkg/api"
 	"github.com/WuLiFang/csheet/pkg/db"
 	"github.com/WuLiFang/csheet/pkg/filestore"
@@ -36,7 +37,7 @@ func apiHandler() gin.HandlerFunc {
 
 // New router
 func New() *gin.Engine {
-	if os.Getenv("CSHEET_ENV") == "development" {
+	if config.Env == "development" {
 		gin.SetMode(gin.DebugMode)
 
 	} else {
@@ -84,7 +85,7 @@ func New() *gin.Engine {
 			io.Copy(c.Writer, d)
 		}
 	}).Static("", filestore.Dir)
-	if os.Getenv("CSHEET_ENV") == "development" {
+	if config.Env == "development" {
 		r.Any("debug/pprof/profile", gin.WrapH(pprof.Handler("profile")))
 		r.Any("debug/pprof/heap", gin.WrapH(pprof.Handler("heap")))
 	}
