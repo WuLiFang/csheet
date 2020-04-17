@@ -2,8 +2,7 @@ import * as localForage from 'localforage';
 import Vue from 'vue';
 
 const preference = Vue.observable({
-  thumbPreferredPresentation: 'image',
-  regularPreferredPresentation: 'video',
+  presentationType: 'video',
   cgteamworkStage: 'leader',
 });
 

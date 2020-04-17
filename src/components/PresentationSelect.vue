@@ -52,7 +52,7 @@ export default class PresentationSelect extends Vue {
     const match = this.options.find(i => i.id === v);
     this.$emit('input', v);
     if (match) {
-      preference.set('regularPreferredPresentation', match.type);
+      preference.set('presentationType', match.type);
     }
   }
 
@@ -69,11 +69,9 @@ export default class PresentationSelect extends Vue {
       'input',
       sortBy(this.options, [
         i =>
-          [
-            preference.get('regularPreferredPresentation'),
-            'video',
-            'image',
-          ].findIndex(j => j === i.type),
+          [preference.get('presentationType'), 'video', 'image'].findIndex(
+            j => j === i.type
+          ),
         i => i.id,
       ])[0]?.id
     );
