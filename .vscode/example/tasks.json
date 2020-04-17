@@ -15,7 +15,7 @@
           },
           "background": {
             "beginsPattern": ".+Building for",
-            "endsPattern": ".+Build complete\\. Watching for changes\\.\\.\\.",
+            "endsPattern": ".+App running at:",
             "activeOnStart": true
           }
         }
@@ -38,6 +38,11 @@
       "type": "process",
       "command": "make",
       "args": ["docs"]
+    },
+    {
+      "type": "npm",
+      "script": "codegen:graphql",
+      "problemMatcher": []
     }
   ]
 }
