@@ -11,7 +11,7 @@
         class="flex-initial bg-gray-800 pointer-events-auto p-1 overflow-hidden"
       )
         .inline-block(
-          class="float-right h-12"
+          class="float-right h-16"
         )
           button(
             class="h-full text-gray-400 hover:text-gray-200"
@@ -37,7 +37,7 @@
           class="text-2xl text-gray-400 break-words"
         ) {{value.title}}
         p(
-          class="h-6 text-sm text-gray-500 select-all truncate rtl text-left"
+          class="text-sm text-gray-500 select-all break-words"
         ) {{presentation && presentation.raw.path}}
       transition(
         :name="mainTransitionName"
