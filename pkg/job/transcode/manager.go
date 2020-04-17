@@ -41,6 +41,8 @@ func (m *manager) Start() {
 		go func() {
 			var isCanceld bool
 			for !isCanceld {
+				jobCount := 0
+				startTime := time.Now()
 				m.rate.Wait(context.Background())
 				presentation.Scan(func(v presentation.Presentation) bool {
 					m.rate.Wait(context.Background())
@@ -49,6 +51,7 @@ func (m *manager) Start() {
 						isCanceld = true
 						return false
 					default:
+						jobCount++
 						raw, err := file.FindByPath(v.Raw)
 						if err != nil {
 							return true
@@ -58,6 +61,7 @@ func (m *manager) Start() {
 							(v.RegularSuccessTag != rawTag || !isExists(v.Regular)) {
 							select {
 							case m.jobs[regularJobType(v.Type)] <- v:
+
 								logger.Debugw("scheduled regular transcode", "presentation", v)
 							default:
 							}
@@ -77,7 +81,10 @@ func (m *manager) Start() {
 						return true
 					}
 				})
-
+				logger.Infow("transcode discover loop completed",
+					"count", jobCount,
+					"elapsed", time.Since(startTime),
+				)
 			}
 		}()
 		go func() {
