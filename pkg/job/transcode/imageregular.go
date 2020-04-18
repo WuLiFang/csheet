@@ -50,7 +50,11 @@ func transcodeImageRegular(p presentation.Presentation) error {
 		if err != nil {
 			return
 		}
-		logger.Infow("transcoded", "type", p.Type, "target", "regular", "raw", p.Raw)
+		logger.Infow("transcoded",
+			"type", p.Type,
+			"target", "regular",
+			"raw", p.Raw,
+			"dst", p.Regular)
 		return
 	})
 }

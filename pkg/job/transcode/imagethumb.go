@@ -50,7 +50,11 @@ func transcodeImageThumb(p presentation.Presentation) error {
 		if err != nil {
 			return
 		}
-		logger.Infow("transcoded", "type", p.Type, "target", "thumb", "raw", p.Raw)
+		logger.Infow("transcoded",
+			"type", p.Type,
+			"target", "thumb",
+			"raw", p.Raw,
+			"dst", p.Thumb)
 		return
 	})
 }
