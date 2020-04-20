@@ -11,13 +11,24 @@ import (
 	"github.com/WuLiFang/csheet/pkg/model/collection"
 )
 
-func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, first *int, last *int, before *string, after *string) (*model.CollectionConnection, error) {
+func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, presentationCountGt *int, first *int, last *int, before *string, after *string) (*model.CollectionConnection, error) {
 	cCtx, err := setupConnectionContext(first, last, before, after)
 	if err != nil {
 		return nil, err
 	}
 	ret := model.CollectionConnection{PageInfo: &model.PageInfo{}}
 	nodes := []*collection.Collection{}
+
+	filter := func(v *collection.Collection) bool {
+		if v == nil {
+			return false
+		}
+		if presentationCountGt != nil && len(v.PresentationIDs) <= *presentationCountGt {
+			return false
+		}
+
+		return true
+	}
 	err = db.View(func(txn *db.Txn) (err error) {
 		opt := db.DefaultIteratorOptions
 		opt.Reverse = cCtx.reverse
@@ -44,18 +55,18 @@ func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, f
 				ret.PageInfo.HasNextPage = cursor.ValidForPrefix(prefix)
 				break
 			}
-			var node collection.Collection
+			node := new(collection.Collection)
 			if useSecondaryIndex {
 				var pk string
 				err = cursor.Item().Value(func(v []byte) error {
 					return db.UnmarshalValue(v, &pk)
 				})
 				if err == nil {
-					err = txn.Get(db.IndexCollection.Key(pk), &node)
+					err = txn.Get(db.IndexCollection.Key(pk), node)
 				}
 			} else {
 				err = cursor.Item().Value(func(v []byte) error {
-					return db.UnmarshalValue(v, &node)
+					return db.UnmarshalValue(v, node)
 				})
 			}
 			if err != nil {
@@ -70,8 +81,8 @@ func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, f
 				ret.PageInfo.HasNextPage = true
 				break
 			}
-			if isAfter {
-				nodes = append(nodes, &node)
+			if isAfter && filter(node) {
+				nodes = append(nodes, node)
 			} else {
 				ret.PageInfo.HasPreviousPage = true
 			}

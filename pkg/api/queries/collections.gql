@@ -1,6 +1,7 @@
 extend type Query {
   collections(
     originPrefix: String
+    presentationCountGt: Int
     first: Int
     last: Int
     before: String

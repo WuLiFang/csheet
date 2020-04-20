@@ -69,7 +69,7 @@
           @keydown.enter="collectFromFolder()"
         )
     button(
-      class="bg-gray-700 hover:bg-gray-600 p-2 w-16 rounded-sm"
+      class="bg-gray-700 hover:bg-gray-600 mr-1 p-2 w-16 rounded-sm"
       type="button"
       :disabled="loadingCount > 0"
       @click="collect()"
@@ -78,6 +78,13 @@
         FaIcon(name='spinner' spin)
       template(v-else)
         | 收集
+    label
+      input(
+        type="checkbox" 
+        v-model="formData.skipEmptyPresentation"
+        class="form-checkbox text-gray-900"
+      )
+      span.mx-1 跳过空收集
 </template>
 
 <script lang="ts">
@@ -96,6 +103,7 @@ import {
   folderOriginPrefix,
 } from '../graphql/types/folderOriginPrefix';
 import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
+import { collectionsVariables } from '../graphql/types/collections';
 
 @Component<TheNavbar>({
   components: {
@@ -117,7 +125,6 @@ import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
   },
   mounted() {
     this.loadState();
-    this.update(this.originPrefix);
   },
 })
 export default class TheNavbar extends Vue {
@@ -125,6 +132,7 @@ export default class TheNavbar extends Vue {
     mode: 'cgteamwork' | 'folder';
     folder: collectFromFolderVariables;
     cgteamwork: collectFromCGTeamworkVariables;
+    skipEmptyPresentation: boolean;
   } = {
     mode: 'cgteamwork',
     folder: {
@@ -135,6 +143,7 @@ export default class TheNavbar extends Vue {
       pipeline: '',
       prefix: '',
     },
+    skipEmptyPresentation: false,
   };
 
   loadingCount = 0;
@@ -209,6 +218,9 @@ export default class TheNavbar extends Vue {
     const u = new URL(location.href);
     u.search = '';
     u.searchParams.set('mode', this.formData.mode);
+    if (this.formData.skipEmptyPresentation) {
+      u.searchParams.set('skip_empty', '1');
+    }
     switch (this.formData.mode) {
       case 'cgteamwork':
         u.searchParams.set('db', this.formData.cgteamwork.database);
@@ -236,11 +248,20 @@ export default class TheNavbar extends Vue {
         this.formData.folder.root = q.get('root') ?? '';
         break;
     }
+    if (q.get('skip_empty')) {
+      this.formData.skipEmptyPresentation = true;
+    }
   }
 
-  @Watch('originPrefix')
-  update(v: string) {
-    return this.$emit('update:originPrefix', v);
+  get variables(): collectionsVariables {
+    return {
+      originPrefix: this.originPrefix,
+      presentationCountGt: this.formData.skipEmptyPresentation ? 0 : undefined,
+    };
+  }
+  @Watch('variables')
+  setVariables(v: collectionsVariables) {
+    this.$emit('update:variables', v);
   }
 
   showMessage() {

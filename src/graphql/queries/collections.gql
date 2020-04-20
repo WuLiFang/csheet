@@ -8,6 +8,7 @@ query collections(
   $last: Int
   $originPrefix: String
   $filePathFormat: String
+  $presentationCountGt: Int
 ) {
   collections(
     after: $after
@@ -15,6 +16,7 @@ query collections(
     first: $first
     last: $last
     originPrefix: $originPrefix
+    presentationCountGt: $presentationCountGt
   ) {
     nodes {
       ...collection

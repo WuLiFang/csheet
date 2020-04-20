@@ -85,4 +85,5 @@ export interface collectionsVariables {
   last?: number | null;
   originPrefix?: string | null;
   filePathFormat?: string | null;
+  presentationCountGt?: number | null;
 }

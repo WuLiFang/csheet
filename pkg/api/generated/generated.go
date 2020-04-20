@@ -120,7 +120,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		CgteamworkProjects func(childComplexity int) int
-		Collections        func(childComplexity int, originPrefix *string, first *int, last *int, before *string, after *string) int
+		Collections        func(childComplexity int, originPrefix *string, presentationCountGt *int, first *int, last *int, before *string, after *string) int
 		FolderOriginPrefix func(childComplexity int, root string) int
 		Node               func(childComplexity int, id string) int
 	}
@@ -160,7 +160,7 @@ type PresentationResolver interface {
 }
 type QueryResolver interface {
 	CgteamworkProjects(ctx context.Context) ([]cgteamwork.Project, error)
-	Collections(ctx context.Context, originPrefix *string, first *int, last *int, before *string, after *string) (*model.CollectionConnection, error)
+	Collections(ctx context.Context, originPrefix *string, presentationCountGt *int, first *int, last *int, before *string, after *string) (*model.CollectionConnection, error)
 	FolderOriginPrefix(ctx context.Context, root string) (string, error)
 	Node(ctx context.Context, id string) (model.Node, error)
 }
@@ -462,7 +462,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Collections(childComplexity, args["originPrefix"].(*string), args["first"].(*int), args["last"].(*int), args["before"].(*string), args["after"].(*string)), true
+		return e.complexity.Query.Collections(childComplexity, args["originPrefix"].(*string), args["presentationCountGt"].(*int), args["first"].(*int), args["last"].(*int), args["before"].(*string), args["after"].(*string)), true
 
 	case "Query.folderOriginPrefix":
 		if e.complexity.Query.FolderOriginPrefix == nil {
@@ -638,6 +638,7 @@ var sources = []*ast.Source{
 	&ast.Source{Name: "pkg/api/queries/collections.gql", Input: `extend type Query {
   collections(
     originPrefix: String
+    presentationCountGt: Int
     first: Int
     last: Int
     before: String
@@ -827,37 +828,45 @@ func (ec *executionContext) field_Query_collections_args(ctx context.Context, ra
 	}
 	args["originPrefix"] = arg0
 	var arg1 *int
-	if tmp, ok := rawArgs["first"]; ok {
+	if tmp, ok := rawArgs["presentationCountGt"]; ok {
 		arg1, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["first"] = arg1
+	args["presentationCountGt"] = arg1
 	var arg2 *int
-	if tmp, ok := rawArgs["last"]; ok {
+	if tmp, ok := rawArgs["first"]; ok {
 		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["last"] = arg2
-	var arg3 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		arg3, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["before"] = arg3
+	args["last"] = arg3
 	var arg4 *string
-	if tmp, ok := rawArgs["after"]; ok {
+	if tmp, ok := rawArgs["before"]; ok {
 		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["after"] = arg4
+	args["before"] = arg4
+	var arg5 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		arg5, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg5
 	return args, nil
 }
 
@@ -2203,7 +2212,7 @@ func (ec *executionContext) _Query_collections(ctx context.Context, field graphq
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Collections(rctx, args["originPrefix"].(*string), args["first"].(*int), args["last"].(*int), args["before"].(*string), args["after"].(*string))
+		return ec.resolvers.Query().Collections(rctx, args["originPrefix"].(*string), args["presentationCountGt"].(*int), args["first"].(*int), args["last"].(*int), args["before"].(*string), args["after"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
