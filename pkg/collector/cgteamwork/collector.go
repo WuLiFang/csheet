@@ -75,6 +75,7 @@ func collectionFromTask(m map[string]collection.Collection, task client.Task, o 
 		presentationIDSet[i] = struct{}{}
 	}
 	if task.ImageFile != "" {
+		logger.Debugw("collect task image file", "task", task.Shot, "path", task.ImageFile)
 		p, err := presentation.Put(
 			presentation.TypeImage,
 			unipath.Auto(task.ImageFile),
@@ -82,15 +83,20 @@ func collectionFromTask(m map[string]collection.Collection, task client.Task, o 
 
 		if err == nil {
 			presentationIDSet[p.ID()] = struct{}{}
+		} else {
+			logger.Errorw("put presentation failed", "error", err)
 		}
 	}
 	for _, i := range task.SubmitFile {
+		logger.Debugw("collect task submit file", "task", task.Shot, "path", i)
 		mt := mime.TypeByExtension(path.Ext(i))
 		t, err := presentation.TypeByMimeType(mt)
 		if err == nil {
 			p, err := presentation.Put(t, unipath.Auto(i))
 			if err == nil {
 				presentationIDSet[p.ID()] = struct{}{}
+			} else {
+				logger.Errorw("put presentation failed", "error", err)
 			}
 		}
 	}
@@ -105,6 +111,7 @@ func collectionFromTask(m map[string]collection.Collection, task client.Task, o 
 
 // CollectWithClient gallery with given client.
 func CollectWithClient(ctx context.Context, c *client.Client, o Options) (ret *collected.Event, err error) {
+	logger.Infow("collect", "options", o)
 	ret = new(collected.Event)
 	ret.OriginPrefix = collection.Origin("cgteamwork", o.Database, o.Pipeline, o.Prefix)
 	s := c.Select(o.Database, "shot").

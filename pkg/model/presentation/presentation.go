@@ -108,6 +108,7 @@ func FindByID(id string) (ret Presentation, err error) {
 
 // Put a presentation to db, will validate raw file stat and unset error state.
 func Put(t Type, path string) (ret Presentation, err error) {
+	logger.Debugw("put", "type", t, "path", path)
 	f, err := file.FindOrCreateByPath(path)
 	if err != nil {
 		return
