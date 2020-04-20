@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"os"
 	"runtime"
@@ -20,6 +21,7 @@ import (
 
 func main() {
 	defer logger.Sync()
+	flag.Parse()
 
 	var err error
 

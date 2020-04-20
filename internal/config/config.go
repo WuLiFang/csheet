@@ -24,7 +24,7 @@ var (
 	FolderInclude string
 	// FolderExclude config
 	FolderExclude string
-	// CGTeamworkTaskLimit config
+	// CGTeamworkMaxTaskPerCollect config
 	CGTeamworkMaxTaskPerCollect int
 	// CGTeamworkPipelineOverwrite config
 	CGTeamworkPipelineOverwrite string
@@ -81,5 +81,4 @@ func init() {
 		"cgteamwork-pipeline-overwrite",
 		getenv.String("CSHEET_CGTEAMWORK_PIPELINE_OVERWRITE", "{}"),
 		"replace cgteamwork collect with other pipelines. json `Record<string, []string>` format")
-	flag.Parse()
 }
