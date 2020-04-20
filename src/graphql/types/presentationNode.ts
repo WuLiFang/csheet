@@ -40,6 +40,7 @@ export interface presentationNode_node_Presentation {
   thumb: presentationNode_node_Presentation_thumb | null;
   regular: presentationNode_node_Presentation_regular | null;
   isRegularOutdated: boolean | null;
+  isRegularTranscodeFailed: boolean | null;
 }
 
 export type presentationNode_node = presentationNode_node_Collection | presentationNode_node_Presentation;

@@ -36,4 +36,5 @@ export interface presentation {
   thumb: presentation_thumb | null;
   regular: presentation_regular | null;
   isRegularOutdated: boolean | null;
+  isRegularTranscodeFailed: boolean | null;
 }

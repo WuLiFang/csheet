@@ -53,7 +53,11 @@
             template(v-for="i in prefetchURLs")
               link(rel="prefetch" :href="i")
             p(
-              v-if="presentation && presentation.isRegularOutdated"
+              v-if="presentation && presentation.isRegularTranscodeFailed"
+              class="bg-red-500 w-full"
+            ) 预览转码失败，重新收集以重试
+            p(
+              v-else-if="presentation && presentation.isRegularOutdated"
               class="bg-orange-500 w-full"
             ) 预览已过期
             Presentation(

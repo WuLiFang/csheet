@@ -4,6 +4,8 @@ type Presentation implements Node {
   raw: File!
   thumb: File
   isThumbOutdated: Boolean
+  isThumbTranscodeFailed: Boolean
   regular: File
   isRegularOutdated: Boolean
+  isRegularTranscodeFailed: Boolean
 }

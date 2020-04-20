@@ -52,6 +52,7 @@ export interface collectionNode_node_Collection_presentations {
   thumb: collectionNode_node_Collection_presentations_thumb | null;
   regular: collectionNode_node_Collection_presentations_regular | null;
   isRegularOutdated: boolean | null;
+  isRegularTranscodeFailed: boolean | null;
 }
 
 export interface collectionNode_node_Collection {

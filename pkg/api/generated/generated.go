@@ -109,13 +109,15 @@ type ComplexityRoot struct {
 	}
 
 	Presentation struct {
-		ID                func(childComplexity int) int
-		IsRegularOutdated func(childComplexity int) int
-		IsThumbOutdated   func(childComplexity int) int
-		Raw               func(childComplexity int) int
-		Regular           func(childComplexity int) int
-		Thumb             func(childComplexity int) int
-		Type              func(childComplexity int) int
+		ID                       func(childComplexity int) int
+		IsRegularOutdated        func(childComplexity int) int
+		IsRegularTranscodeFailed func(childComplexity int) int
+		IsThumbOutdated          func(childComplexity int) int
+		IsThumbTranscodeFailed   func(childComplexity int) int
+		Raw                      func(childComplexity int) int
+		Regular                  func(childComplexity int) int
+		Thumb                    func(childComplexity int) int
+		Type                     func(childComplexity int) int
 	}
 
 	Query struct {
@@ -155,8 +157,10 @@ type PresentationResolver interface {
 	Raw(ctx context.Context, obj *presentation.Presentation) (*file.File, error)
 	Thumb(ctx context.Context, obj *presentation.Presentation) (*file.File, error)
 	IsThumbOutdated(ctx context.Context, obj *presentation.Presentation) (*bool, error)
+	IsThumbTranscodeFailed(ctx context.Context, obj *presentation.Presentation) (*bool, error)
 	Regular(ctx context.Context, obj *presentation.Presentation) (*file.File, error)
 	IsRegularOutdated(ctx context.Context, obj *presentation.Presentation) (*bool, error)
+	IsRegularTranscodeFailed(ctx context.Context, obj *presentation.Presentation) (*bool, error)
 }
 type QueryResolver interface {
 	CgteamworkProjects(ctx context.Context) ([]cgteamwork.Project, error)
@@ -410,12 +414,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Presentation.IsRegularOutdated(childComplexity), true
 
+	case "Presentation.isRegularTranscodeFailed":
+		if e.complexity.Presentation.IsRegularTranscodeFailed == nil {
+			break
+		}
+
+		return e.complexity.Presentation.IsRegularTranscodeFailed(childComplexity), true
+
 	case "Presentation.isThumbOutdated":
 		if e.complexity.Presentation.IsThumbOutdated == nil {
 			break
 		}
 
 		return e.complexity.Presentation.IsThumbOutdated(childComplexity), true
+
+	case "Presentation.isThumbTranscodeFailed":
+		if e.complexity.Presentation.IsThumbTranscodeFailed == nil {
+			break
+		}
+
+		return e.complexity.Presentation.IsThumbTranscodeFailed(childComplexity), true
 
 	case "Presentation.raw":
 		if e.complexity.Presentation.Raw == nil {
@@ -723,8 +741,10 @@ type CollectionConnection {
   raw: File!
   thumb: File
   isThumbOutdated: Boolean
+  isThumbTranscodeFailed: Boolean
   regular: File
   isRegularOutdated: Boolean
+  isRegularTranscodeFailed: Boolean
 }
 `, BuiltIn: false},
 	&ast.Source{Name: "pkg/api/types/StringEntry.gql", Input: `type StringEntry {
@@ -2092,6 +2112,37 @@ func (ec *executionContext) _Presentation_isThumbOutdated(ctx context.Context, f
 	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Presentation_isThumbTranscodeFailed(ctx context.Context, field graphql.CollectedField, obj *presentation.Presentation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Presentation",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Presentation().IsThumbTranscodeFailed(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Presentation_regular(ctx context.Context, field graphql.CollectedField, obj *presentation.Presentation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2141,6 +2192,37 @@ func (ec *executionContext) _Presentation_isRegularOutdated(ctx context.Context,
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Presentation().IsRegularOutdated(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Presentation_isRegularTranscodeFailed(ctx context.Context, field graphql.CollectedField, obj *presentation.Presentation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Presentation",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Presentation().IsRegularTranscodeFailed(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4080,6 +4162,17 @@ func (ec *executionContext) _Presentation(ctx context.Context, sel ast.Selection
 				res = ec._Presentation_isThumbOutdated(ctx, field, obj)
 				return res
 			})
+		case "isThumbTranscodeFailed":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Presentation_isThumbTranscodeFailed(ctx, field, obj)
+				return res
+			})
 		case "regular":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -4100,6 +4193,17 @@ func (ec *executionContext) _Presentation(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._Presentation_isRegularOutdated(ctx, field, obj)
+				return res
+			})
+		case "isRegularTranscodeFailed":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Presentation_isRegularTranscodeFailed(ctx, field, obj)
 				return res
 			})
 		default:

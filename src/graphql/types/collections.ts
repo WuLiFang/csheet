@@ -48,6 +48,7 @@ export interface collections_collections_nodes_presentations {
   thumb: collections_collections_nodes_presentations_thumb | null;
   regular: collections_collections_nodes_presentations_regular | null;
   isRegularOutdated: boolean | null;
+  isRegularTranscodeFailed: boolean | null;
 }
 
 export interface collections_collections_nodes {

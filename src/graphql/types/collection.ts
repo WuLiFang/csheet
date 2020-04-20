@@ -48,6 +48,7 @@ export interface collection_presentations {
   thumb: collection_presentations_thumb | null;
   regular: collection_presentations_regular | null;
   isRegularOutdated: boolean | null;
+  isRegularTranscodeFailed: boolean | null;
 }
 
 export interface collection {

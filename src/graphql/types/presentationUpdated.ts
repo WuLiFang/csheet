@@ -36,6 +36,7 @@ export interface presentationUpdated_presentationUpdated {
   thumb: presentationUpdated_presentationUpdated_thumb | null;
   regular: presentationUpdated_presentationUpdated_regular | null;
   isRegularOutdated: boolean | null;
+  isRegularTranscodeFailed: boolean | null;
 }
 
 export interface presentationUpdated {

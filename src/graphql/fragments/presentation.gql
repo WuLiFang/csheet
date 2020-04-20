@@ -13,4 +13,5 @@ fragment presentation on Presentation {
     ...file
   }
   isRegularOutdated
+  isRegularTranscodeFailed
 }
