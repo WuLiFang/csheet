@@ -39,7 +39,7 @@ func (m *manager) discoverJobByTag(
 	jt jobType,
 ) (err error) {
 	if errorTag != rawTag &&
-		(successTag != rawTag || !isExists(outputFile)) {
+		successTag != rawTag {
 		select {
 		case m.jobs[jt] <- p:
 			logger.Infow("scheduled transcode", "jobType", jt, "raw", p.Raw)
@@ -52,6 +52,7 @@ func (m *manager) discoverJobByTag(
 }
 
 func (m *manager) discoverJob(p presentation.Presentation, rawTag string) (err error) {
+
 	err = m.discoverJobByTag(
 		p,
 		rawTag, p.RegularErrorTag, p.RegularSuccessTag,
