@@ -43,10 +43,6 @@ func (r *presentationResolver) IsThumbOutdated(ctx context.Context, obj *present
 }
 
 func (r *presentationResolver) IsThumbTranscodeFailed(ctx context.Context, obj *presentation.Presentation) (*bool, error) {
-	if obj.Thumb == "" {
-		v := false
-		return &v, nil
-	}
 	raw, _ := file.FindByPath(obj.Raw)
 	v := raw.Tag() == obj.ThumbErrorTag
 	return &v, nil
@@ -69,10 +65,6 @@ func (r *presentationResolver) IsRegularOutdated(ctx context.Context, obj *prese
 }
 
 func (r *presentationResolver) IsRegularTranscodeFailed(ctx context.Context, obj *presentation.Presentation) (*bool, error) {
-	if obj.Regular == "" {
-		v := false
-		return &v, nil
-	}
 	raw, _ := file.FindByPath(obj.Raw)
 	v := raw.Tag() == obj.RegularErrorTag
 	return &v, nil
