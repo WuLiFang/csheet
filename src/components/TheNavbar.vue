@@ -125,6 +125,7 @@ import { collectionsVariables } from '../graphql/types/collections';
   },
   mounted() {
     this.loadState();
+    this.setVariables(this.variables);
   },
 })
 export default class TheNavbar extends Vue {
