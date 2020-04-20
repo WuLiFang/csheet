@@ -36,15 +36,11 @@ func transcodeImageThumb(p presentation.Presentation) error {
 		if err != nil {
 			return
 		}
-		f, err := file.FindOrCreateByPath(filename)
-		if err != nil {
-			return
-		}
-		if p.Thumb != f.Path {
+		if p.Thumb != filename {
 			removeStoreFile(p.Thumb)
 		}
 		p.Load()
-		p.Thumb = f.Path
+		p.Thumb = filename
 		p.ThumbSuccessTag = raw.Tag()
 		err = p.Save()
 		if err != nil {

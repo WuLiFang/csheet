@@ -35,15 +35,11 @@ func transcodeVideoRegular(p presentation.Presentation) error {
 		if err != nil {
 			return
 		}
-		f, err := file.FindOrCreateByPath(filename)
-		if err != nil {
-			return
-		}
-		if p.Regular != f.Path {
+		if p.Regular != filename {
 			removeStoreFile(p.Regular)
 		}
 		p.Load()
-		p.Regular = f.Path
+		p.Regular = filename
 		p.RegularSuccessTag = raw.Tag()
 		err = p.Save()
 		if err != nil {
