@@ -38,6 +38,9 @@ export function fileSrc(v: string | undefined): string {
           src,
           alt: this.node?.raw?.path,
         },
+        class: {
+          'opacity-25': !this.id,
+        },
       });
     };
     const renderVideo = () => {
