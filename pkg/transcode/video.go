@@ -60,5 +60,6 @@ func MP4(src string, dst string, o *VideoOptions) *exec.Cmd {
 	)
 
 	c := exec.Command(ffmpeg, args...)
+	niceCommand(c, 19)
 	return c
 }

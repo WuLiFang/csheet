@@ -38,6 +38,7 @@ func Probe(filename string) (ret MediaInfo, err error) {
 		"-loglevel", "error",
 		filename,
 	)
+	niceCommand(c, 19)
 	stdout := new(bytes.Buffer)
 	stderr := new(bytes.Buffer)
 	c.Stderr = stderr

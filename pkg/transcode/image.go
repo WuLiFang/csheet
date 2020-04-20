@@ -57,6 +57,7 @@ func JPG(src string, dst string, o *ImageOptions) *exec.Cmd {
 	)
 
 	c := exec.Command(ffmpeg, args...)
+	niceCommand(c, 19)
 	return c
 }
 
@@ -77,5 +78,6 @@ func PNG(src string, dst string, o *ImageOptions) *exec.Cmd {
 	)
 
 	c := exec.Command(ffmpeg, args...)
+	niceCommand(c, 19)
 	return c
 }
