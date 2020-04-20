@@ -13,13 +13,13 @@ import {
   cgteamworkProjects,
   cgteamworkProjects_cgteamworkProjects as Project,
 } from '../../graphql/types/cgteamworkProjects';
-
+import { sortBy } from 'lodash';
 @Component<CGTeamworkProjectSelect>({
   apollo: {
     projects: {
       query: require('@/graphql/queries/cgteamworkProjects.gql'),
       update(v: cgteamworkProjects): Project[] {
-        return v.cgteamworkProjects ?? [];
+        return sortBy(v.cgteamworkProjects ?? [], [i => i.name]);
       },
     },
   },
