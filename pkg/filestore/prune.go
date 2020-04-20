@@ -41,7 +41,7 @@ func removeEmptyFolder(p string) (err error) {
 	f.Close()
 	if err == io.EOF {
 		os.Remove(p)
-		logger.Infow("remove empty folder", "path", p)
+		logger.Debugw("remove empty folder", "path", p)
 		return removeEmptyFolder(filepath.Dir(p))
 	}
 	return err
