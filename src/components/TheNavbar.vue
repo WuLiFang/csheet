@@ -84,7 +84,7 @@
         v-model="formData.skipEmptyPresentation"
         class="form-checkbox text-gray-900"
       )
-      span.mx-1 跳过空收集
+      span.mx-1 跳过无内容
 </template>
 
 <script lang="ts">
