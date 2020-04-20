@@ -36,7 +36,7 @@ func (o VideoOptions) outputOptions() (ret []string) {
 			h = strconv.Itoa(o.Height - o.Height%2)
 		}
 		ret = append(ret, "-vf")
-		ret = append(ret, fmt.Sprintf("scale=%s:%s:flags=lanczos", w, h))
+		ret = append(ret, fmt.Sprintf("scale=%s:min(trunc(ih/2)*2\\,%s):flags=lanczos", w, h))
 	}
 	return
 }

@@ -61,7 +61,7 @@
               class="bg-orange-500 w-full"
             ) 预览已过期
             Presentation(
-              class="m-auto object-contain max-h-full"
+              class="m-auto object-contain w-full h-full"
               :id="presentationID"
               size="regular"
             )

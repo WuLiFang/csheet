@@ -21,12 +21,16 @@ func transcodeImageRegular(p presentation.Presentation) error {
 			return
 		}
 		cmd := transcode.JPG(p.Raw, dst, &transcode.ImageOptions{
-			Height:     1080,
+			Height:     2160,
 			TimeOffset: offset,
 		})
 
 		err = runCommand(cmd)
 		if err != nil {
+			logger.Errorw("transcode failed",
+				"error", err,
+				"src", p.Raw,
+				"jobType", JobTypeImageRegular)
 			p.Load()
 			p.RegularErrorTag = raw.Tag()
 			return p.Save()

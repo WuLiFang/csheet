@@ -33,7 +33,7 @@ func (o ImageOptions) outputOptions() (ret []string) {
 			h = strconv.Itoa(o.Height - o.Height%2)
 		}
 		ret = append(ret, "-vf")
-		ret = append(ret, fmt.Sprintf("scale=%s:%s:flags=lanczos", w, h))
+		ret = append(ret, fmt.Sprintf("scale=%s:min(ih\\,%s):flags=lanczos", w, h))
 	}
 	ret = append(ret, "-q:v", "1")
 	ret = append(ret, "-frames:v", "1")
