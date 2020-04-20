@@ -8,7 +8,7 @@ import {
 import { filePathFormat } from '../const';
 
 export function fileSrc(v: string | undefined): string {
-  const d = '/static/default.svg';
+  const d = '/static/transcoding.svg';
   if (!v) {
     return d;
   }
@@ -31,7 +31,7 @@ export function fileSrc(v: string | undefined): string {
     },
   },
   render(h) {
-    const src = fileSrc(this.path);
+    const src = this.path;
     const renderImage = () => {
       return h('img', {
         domProps: {
@@ -78,14 +78,14 @@ export default class Presentation extends Vue {
 
   get path(): string | undefined {
     if (!this.id) {
-      return;
+      return '/static/default.svg';
     }
     switch (this.size) {
       case 'regular':
-        return this.node?.regular?.path;
+        return fileSrc(this.node?.regular?.path);
       case 'thumb':
       default:
-        return this.node?.thumb?.path;
+        return fileSrc(this.node?.thumb?.path);
     }
   }
 }
