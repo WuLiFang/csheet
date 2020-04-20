@@ -6,7 +6,7 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 
-func formatError(err error) *gqlerror.Error {
+func formatError(err error) error {
 	if err, ok := err.(*gqlerror.Error); ok {
 		return err
 	}
@@ -21,7 +21,5 @@ func formatError(err error) *gqlerror.Error {
 			},
 		}
 	}
-	return &gqlerror.Error{
-		Message: err.Error(),
-	}
+	return err
 }
