@@ -54,7 +54,7 @@ func Collect(ctx context.Context, root string) (ret *collected.Event, err error)
 			return nil
 
 		}
-		p, err := presentation.FindOrCreate(t, i)
+		p, err := presentation.Put(t, i)
 		if err != nil {
 			return err
 		}

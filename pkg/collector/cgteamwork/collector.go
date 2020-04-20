@@ -75,7 +75,7 @@ func collectionFromTask(m map[string]collection.Collection, task client.Task, o 
 		presentationIDSet[i] = struct{}{}
 	}
 	if task.ImageFile != "" {
-		p, err := presentation.FindOrCreate(
+		p, err := presentation.Put(
 			presentation.TypeImage,
 			unipath.Auto(task.ImageFile),
 		)
@@ -88,7 +88,7 @@ func collectionFromTask(m map[string]collection.Collection, task client.Task, o 
 		mt := mime.TypeByExtension(path.Ext(i))
 		t, err := presentation.TypeByMimeType(mt)
 		if err == nil {
-			p, err := presentation.FindOrCreate(t, unipath.Auto(i))
+			p, err := presentation.Put(t, unipath.Auto(i))
 			if err == nil {
 				presentationIDSet[p.ID()] = struct{}{}
 			}

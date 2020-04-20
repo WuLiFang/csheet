@@ -18,7 +18,7 @@ func TestFindByRaw(t *testing.T) {
 		Raw:  "test",
 	}.Save()
 	require.NoError(t, err)
-	result, err := FindByRaw("test")
+	result, err := FindByPath("test")
 	require.NoError(t, err)
 	assert.Len(t, result, 1)
 }

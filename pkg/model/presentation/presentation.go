@@ -106,15 +106,19 @@ func FindByID(id string) (ret Presentation, err error) {
 	return
 }
 
-// FindOrCreate a matched presentation
-func FindOrCreate(t Type, path string) (ret Presentation, err error) {
+// Put a presentation to db, will validate raw file stat.
+func Put(t Type, path string) (ret Presentation, err error) {
+	f, err := file.FindOrCreateByPath(path)
+	if err != nil {
+		return
+	}
+	err = f.Stat()
+	if err != nil {
+		return
+	}
 	ret = Presentation{
 		Type: t,
 		Raw:  path,
-	}
-	_, err = file.FindOrCreateByPath(ret.Raw)
-	if err != nil {
-		return
 	}
 	err = ret.Load()
 	if err == db.ErrKeyNotFound {
