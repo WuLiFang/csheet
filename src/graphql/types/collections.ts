@@ -23,21 +23,21 @@ export interface collections_collections_nodes_presentations_raw {
   __typename: "File";
   path: string;
   modTime: any | null;
-  size: number;
+  size: number | null;
 }
 
 export interface collections_collections_nodes_presentations_thumb {
   __typename: "File";
   path: string;
   modTime: any | null;
-  size: number;
+  size: number | null;
 }
 
 export interface collections_collections_nodes_presentations_regular {
   __typename: "File";
   path: string;
   modTime: any | null;
-  size: number;
+  size: number | null;
 }
 
 export interface collections_collections_nodes_presentations {

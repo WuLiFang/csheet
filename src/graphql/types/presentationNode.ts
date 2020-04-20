@@ -15,21 +15,21 @@ export interface presentationNode_node_Presentation_raw {
   __typename: "File";
   path: string;
   modTime: any | null;
-  size: number;
+  size: number | null;
 }
 
 export interface presentationNode_node_Presentation_thumb {
   __typename: "File";
   path: string;
   modTime: any | null;
-  size: number;
+  size: number | null;
 }
 
 export interface presentationNode_node_Presentation_regular {
   __typename: "File";
   path: string;
   modTime: any | null;
-  size: number;
+  size: number | null;
 }
 
 export interface presentationNode_node_Presentation {

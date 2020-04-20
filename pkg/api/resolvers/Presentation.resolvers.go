@@ -27,11 +27,9 @@ func (r *presentationResolver) Raw(ctx context.Context, obj *presentation.Presen
 }
 
 func (r *presentationResolver) Thumb(ctx context.Context, obj *presentation.Presentation) (*file.File, error) {
-	v, err := file.FindByPath(obj.Thumb)
-	if err == db.ErrKeyNotFound {
-		return nil, nil
-	}
-	return &v, err
+	return &file.File{
+		Path: obj.Thumb,
+	}, nil
 }
 
 func (r *presentationResolver) IsThumbOutdated(ctx context.Context, obj *presentation.Presentation) (*bool, error) {
@@ -45,11 +43,9 @@ func (r *presentationResolver) IsThumbOutdated(ctx context.Context, obj *present
 }
 
 func (r *presentationResolver) Regular(ctx context.Context, obj *presentation.Presentation) (*file.File, error) {
-	v, err := file.FindByPath(obj.Regular)
-	if err == db.ErrKeyNotFound {
-		return nil, nil
-	}
-	return &v, err
+	return &file.File{
+		Path: obj.Regular,
+	}, nil
 }
 
 func (r *presentationResolver) IsRegularOutdated(ctx context.Context, obj *presentation.Presentation) (*bool, error) {

@@ -11,5 +11,5 @@ export interface file {
   __typename: "File";
   path: string;
   modTime: any | null;
-  size: number;
+  size: number | null;
 }

@@ -11,21 +11,21 @@ export interface presentation_raw {
   __typename: "File";
   path: string;
   modTime: any | null;
-  size: number;
+  size: number | null;
 }
 
 export interface presentation_thumb {
   __typename: "File";
   path: string;
   modTime: any | null;
-  size: number;
+  size: number | null;
 }
 
 export interface presentation_regular {
   __typename: "File";
   path: string;
   modTime: any | null;
-  size: number;
+  size: number | null;
 }
 
 export interface presentation {
