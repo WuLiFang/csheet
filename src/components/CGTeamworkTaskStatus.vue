@@ -1,5 +1,5 @@
 <template lang="pug">
-  span(:class="staticClass") {{$t('cgteamwork-status.'+value)}}
+  span(:class="staticClass") {{value && $t('cgteamwork-status.'+value)}}
 </template>
 
 <script lang="ts">
