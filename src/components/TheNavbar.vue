@@ -85,6 +85,13 @@
         class="form-checkbox text-gray-900"
       )
       span.mx-1 跳过无内容
+    label
+      input(
+        type="checkbox" 
+        v-model="cellOverlayVisible"
+        class="form-checkbox text-gray-900"
+      )
+      span.mx-1 信息显示
 </template>
 
 <script lang="ts">
@@ -104,7 +111,7 @@ import {
 } from '../graphql/types/folderOriginPrefix';
 import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
 import { collectionsVariables } from '../graphql/types/collections';
-
+import * as preference from '@/preference';
 @Component<TheNavbar>({
   components: {
     CGTeamworkProjectSelect,
@@ -150,6 +157,13 @@ export default class TheNavbar extends Vue {
   loadingCount = 0;
   $el!: HTMLFormElement;
   folderOriginPrefix = 'folder:';
+
+  get cellOverlayVisible(): boolean {
+    return preference.get('cellOverlayVisible');
+  }
+  set cellOverlayVisible(v: boolean) {
+    preference.set('cellOverlayVisible', v);
+  }
 
   async collectFromCGTeamwork() {
     if (!this.$el.reportValidity()) {

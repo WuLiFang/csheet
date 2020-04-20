@@ -4,6 +4,7 @@ import Vue from 'vue';
 const preference = Vue.observable({
   presentationType: 'video',
   cgteamworkStage: 'leader',
+  cellOverlayVisible: true,
 });
 
 export type Preference = typeof preference;

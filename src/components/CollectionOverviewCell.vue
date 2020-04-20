@@ -3,19 +3,28 @@
     class="cursor-pointer flex items-center"
     @click="$emit('click', $event)"
   )
-    .overlay(class="absolute inset-0 p-1")
-      header(
-        class="flex justify-between opacity-75"
+    transition(
+      enter-class="opacity-0"
+      leave-to-class="opacity-0"
+      enter-active-class="transition-all duration-500 ease-in-out"
+      leave-active-class="transition-all duration-500 ease-in-out"
+    )
+      .overlay(
+        class="absolute inset-0 p-1"
+        v-show="overlayVisible"
       )
-        span {{topLeftText}}
-        CGTeamworkTaskStatus(
-          class="rounded-sm px-2"
-          v-if="cgteamworkTaskStatus"
-          :value="cgteamworkTaskStatus"
+        header(
+          class="flex justify-between opacity-75"
         )
-      caption(
-        class="absolute text-center w-full bottom-0 text-gray-400 text-sm"
-      ) {{value.title}}
+          span {{topLeftText}}
+          CGTeamworkTaskStatus(
+            class="rounded-sm px-2"
+            v-if="cgteamworkTaskStatus"
+            :value="cgteamworkTaskStatus"
+          )
+        caption(
+          class="absolute text-center w-full bottom-0 text-gray-400 text-sm"
+        ) {{value.title}}
     Presentation.w-full(:id="presentation")
 </template>
 
@@ -37,6 +46,9 @@ export default class CollectionOverviewCell extends Vue {
   @Prop({ type: Object, required: true })
   value!: Collection;
 
+  get overlayVisible(): boolean {
+    return preference.get('cellOverlayVisible');
+  }
   get topLeftText(): string {
     let ret = '';
     for (const { k, v } of this.value.metadata) {
