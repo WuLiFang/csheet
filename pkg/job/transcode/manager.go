@@ -1,6 +1,7 @@
 package transcode
 
 import (
+	"context"
 	"path"
 	"sync"
 	"time"
@@ -68,6 +69,55 @@ func (m *manager) discoverJob(p presentation.Presentation, rawTag string) (err e
 func (m *manager) Start() {
 	m.startMu.Do(func() {
 		m.stop = make(chan struct{})
+		go func() {
+			jobCount := 0
+			startTime := time.Now()
+			m.rate.Wait(context.Background())
+			err := db.View(func(txn *db.Txn) (err error) {
+				opts := db.DefaultIteratorOptions
+				opts.PrefetchValues = false
+				it := txn.NewIterator(opts)
+				defer it.Close()
+				prefix := db.IndexPresentation.Bytes()
+				for it.Seek(prefix); it.ValidForPrefix(prefix); it.Next() {
+					select {
+					case <-m.stop:
+						return
+					default:
+						err = m.rate.Wait(context.Background())
+						if err != nil {
+							logger.DPanic("wait rate limit fail", "error", err)
+							return
+						}
+						var v presentation.Presentation
+						err = db.Get(it.Item().Key(), &v)
+						if err != nil {
+							return
+						}
+						jobCount++
+						var raw file.File
+						raw, err = file.FindByPath(v.Raw)
+						if err == db.ErrKeyNotFound {
+							continue
+						}
+						if err != nil {
+							return
+						}
+						rawTag := raw.Tag()
+						m.discoverJob(v, rawTag)
+					}
+				}
+				return
+			})
+			if err != nil {
+				logger.Errorw("presentation scan failed", "error", err)
+			} else {
+				logger.Infow("presentation scan completed",
+					"count", jobCount,
+					"elapsed", time.Since(startTime),
+				)
+			}
+		}()
 		go func() {
 			c := make(chan presentation.Presentation)
 			presentation.SignalUpdated.Notify(c)
