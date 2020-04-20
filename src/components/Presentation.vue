@@ -31,7 +31,7 @@ export function fileSrc(v: string | undefined): string {
     },
   },
   render(h) {
-    const src = this.path;
+    const src: string | undefined = this.path;
     const renderImage = () => {
       return h('img', {
         domProps: {
@@ -54,7 +54,7 @@ export function fileSrc(v: string | undefined): string {
         },
       });
     };
-    if (this.path === undefined) {
+    if (src?.endsWith('.svg')) {
       return renderImage();
     }
     switch (this.node?.type) {
