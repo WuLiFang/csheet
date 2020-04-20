@@ -1,6 +1,10 @@
 package presentation
 
-import "sync"
+import (
+	"sync"
+
+	"github.com/WuLiFang/csheet/pkg/model/file"
+)
 
 type signal struct {
 	sync.Mutex
@@ -33,3 +37,21 @@ func (s *signal) Stop(c chan Presentation) {
 
 // SignalUpdated emit when Presentation updated.
 var SignalUpdated = &signal{}
+
+func init() {
+	go func() {
+		var c = make(chan file.File)
+		file.SignalChanged.Notify(c)
+		defer file.SignalChanged.Stop(c)
+		for f := range c {
+			ps, err := FindByPath(f.Path)
+			if err != nil {
+				logger.Error("db find presentation failed", "error", err)
+				continue
+			}
+			for _, p := range ps {
+				SignalUpdated.Emit(p)
+			}
+		}
+	}()
+}
