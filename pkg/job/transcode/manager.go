@@ -2,12 +2,10 @@ package transcode
 
 import (
 	"context"
-	"path"
 	"sync"
 	"time"
 
 	"github.com/WuLiFang/csheet/pkg/db"
-	"github.com/WuLiFang/csheet/pkg/filestore"
 	"github.com/WuLiFang/csheet/pkg/model/file"
 	"github.com/WuLiFang/csheet/pkg/model/presentation"
 	"github.com/WuLiFang/csheet/pkg/onceflight"
@@ -37,7 +35,7 @@ func (m *manager) discoverJobByTag(
 	p presentation.Presentation,
 	rawTag, errorTag, successTag, outputFile string,
 	jt jobType,
-) (err error) {
+) {
 	if errorTag != rawTag &&
 		successTag != rawTag {
 		select {
@@ -46,25 +44,18 @@ func (m *manager) discoverJobByTag(
 		default:
 		}
 	} else {
-		err = filestore.SetAccessTime(path.Join(filestore.Dir, p.Regular), time.Now())
 	}
-	return err
 }
 
-func (m *manager) discoverJob(p presentation.Presentation, rawTag string) (err error) {
-
-	err = m.discoverJobByTag(
+func (m *manager) discoverJob(p presentation.Presentation, rawTag string) {
+	m.discoverJobByTag(
 		p,
 		rawTag, p.RegularErrorTag, p.RegularSuccessTag,
 		p.Regular, regularJobType(p.Type))
-	if err != nil {
-		return
-	}
-	err = m.discoverJobByTag(
+	m.discoverJobByTag(
 		p,
 		rawTag, p.ThumbErrorTag, p.ThumbSuccessTag,
 		p.Thumb, thumbJobType(p.Type))
-	return
 }
 
 func (m *manager) Start() {
