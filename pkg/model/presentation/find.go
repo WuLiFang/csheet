@@ -4,14 +4,14 @@ import (
 	"github.com/WuLiFang/csheet/pkg/db"
 )
 
-// FindByRaw returns presentation used this file as raw.
-func FindByRaw(raw string) (ret []Presentation, err error) {
+// FindByPath returns presentation used this file.
+func FindByPath(path string) (ret []Presentation, err error) {
 	err = db.View(func(txn *db.Txn) error {
 		opts := db.DefaultIteratorOptions
 		opts.PrefetchValues = false
 		it := txn.NewIterator(opts)
 		defer it.Close()
-		var prefix = db.IndexPresentationRaw.Key(raw)
+		var prefix = db.IndexPresentationFile.Key(path)
 		for it.Seek(prefix); it.ValidForPrefix(prefix); it.Next() {
 			key := it.Item().Key()
 			var id string
@@ -26,7 +26,9 @@ func FindByRaw(raw string) (ret []Presentation, err error) {
 			if err != nil {
 				return err
 			}
-			if p.Raw != raw {
+			if !(p.Raw == path ||
+				p.Thumb == path ||
+				p.Regular == path) {
 				// Outdated index
 				db.Delete(key)
 				continue

@@ -61,7 +61,16 @@ func (p Presentation) Save() error {
 		return err
 	}
 	err = db.Update(func(txn *db.Txn) error {
-		err = txn.Set(db.IndexPresentationRaw.Key(p.Raw, keyToID(key)), nil)
+		id := keyToID(key)
+		err = txn.Set(db.IndexPresentationFile.Key(p.Raw, id), nil)
+		if err != nil {
+			return err
+		}
+		err = txn.Set(db.IndexPresentationFile.Key(p.Thumb, id), nil)
+		if err != nil {
+			return err
+		}
+		err = txn.Set(db.IndexPresentationFile.Key(p.Regular, id), nil)
 		if err != nil {
 			return err
 		}

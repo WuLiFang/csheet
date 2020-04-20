@@ -131,7 +131,7 @@ func (m *manager) Start() {
 				case <-m.stop:
 					return
 				case f := <-c:
-					ps, err := presentation.FindByRaw(f.Path)
+					ps, err := presentation.FindByPath(f.Path)
 					if err != nil {
 						logger.Error("db find error", "error", err)
 						continue
