@@ -1,6 +1,6 @@
 {
   "name": "csheet",
-  "version": "5.0.1",
+  "version": "6.0.0-rc.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -9,6 +9,9 @@
     "codegen:graphql": "rm -rf src/graphql/types && apollo client:codegen --target typescript --globalTypesFile src/graphql/types/global.ts --outputFlat src/graphql/types",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
     "start": "vue-cli-service serve"
+  },
+  "repository": {
+    "url": "https://github.com/WuLiFang/csheet.git"
   },
   "dependencies": {
     "@sentry/browser": "5.15.4",

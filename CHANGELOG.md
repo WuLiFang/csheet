@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-rc.0](https://github.com/WuLiFang/csheet/compare/v5.0.1...v6.0.0-rc.0) (2020-04-20)
+
+### ⚠ BREAKING CHANGES
+
+- rewrite with golang
+
+### Features
+
+- rewrite with golang ([5cc09c7](https://github.com/WuLiFang/csheet/commit/5cc09c75ebc03486d715abdd8796728dea97511d))
+
 ### [5.0.1](https://github.com/WuLiFang/csheet/compare/v5.0.0...v5.0.1) (2019-07-03)
 
 ### Bug Fixes
