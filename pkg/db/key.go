@@ -6,8 +6,6 @@ import (
 	"errors"
 	"strconv"
 	"strings"
-
-	"github.com/dgraph-io/badger/v2"
 )
 
 // KeyPartsDelimiter used to join key parts.
@@ -76,30 +74,28 @@ func UnmarshalKey(v []byte, parts ...*string) (index Index, err error) {
 	return
 }
 
-// Sequence get integer sequence for a index.
-func (index Index) Sequence(bandwidth uint64) (*badger.Sequence, error) {
-	return db.GetSequence(IndexSequence.Key(string(index.Bytes())), bandwidth)
+// NewValueID get interger id for value from sequence.
+func (index Index) NewValueID(value string) (id string, err error) {
+	key := index.Key(value)
+	seq, err := index.Sequence()
+	if err != nil {
+		return
+	}
+	seqV, err := seq.Next()
+	if err != nil {
+		return
+	}
+	id = strconv.FormatUint(seqV, 10)
+	err = Set(key, id)
+	return
 }
 
 // ValueID find or create id for value on given index.
 func (index Index) ValueID(value string) (id string, err error) {
-	err = Update(func(txn *Txn) error {
-		key := index.Key(value)
-		err := txn.Get(key, &id)
-		if err == ErrKeyNotFound {
-			seq, err := index.Sequence(1)
-			defer seq.Release()
-			if err != nil {
-				return err
-			}
-			seqV, err := seq.Next()
-			if err != nil {
-				return err
-			}
-			id = strconv.FormatUint(seqV, 10)
-			return txn.Set(key, id)
-		}
-		return err
-	})
+	key := index.Key(value)
+	err = Get(key, &id)
+	if err == ErrKeyNotFound {
+		return index.NewValueID(value)
+	}
 	return
 }

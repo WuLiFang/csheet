@@ -54,5 +54,9 @@ func EnableGC(interval time.Duration) {
 
 // Close database
 func Close() error {
+	err := ReleaseSequences()
+	if err != nil {
+		logger.Errorw("release sequence failed", "error", err)
+	}
 	return db.Close()
 }

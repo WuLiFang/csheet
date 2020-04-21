@@ -23,7 +23,7 @@ type Presentation struct {
 	RegularErrorTag   string `bson:",omitempty"`
 }
 
-func (p Presentation) key() (ret []byte, err error) {
+func (p Presentation) hash() (ret string, err error) {
 	if p.Type == "" {
 		err = errors.New("missing presentation type")
 		return
@@ -33,7 +33,16 @@ func (p Presentation) key() (ret []byte, err error) {
 		return
 	}
 	h := sha256.Sum256([]byte(strings.Join([]string{string(p.Type), p.Raw}, "\t")))
-	id, err := db.IndexPresentationHash.ValueID(hex.EncodeToString(h[:]))
+	ret = hex.EncodeToString(h[:])
+	return
+}
+
+func (p Presentation) key() (ret []byte, err error) {
+	h, err := p.hash()
+	if err != nil {
+		return
+	}
+	id, err := db.IndexPresentationHash.ValueID(h)
 	return db.IndexPresentation.Key(id), err
 }
 
@@ -89,9 +98,11 @@ func (p *Presentation) Load() error {
 	if err != nil {
 		return err
 	}
-	return db.View(func(txn *db.Txn) error {
-		return txn.Get(key, p)
-	})
+	err = db.Get(key, p)
+	if err != nil {
+		return err
+	}
+	return err
 }
 
 // FindByID find id matched presentation.
@@ -129,6 +140,22 @@ func Put(t Type, path string) (ret Presentation, err error) {
 	}
 	if err != nil {
 		return
+	}
+	if ret.Raw != path || ret.Type != t {
+		logger.Warnw("duplicated id detected, auto fix start", "id", ret.ID())
+		ret = Presentation{
+			Type: t,
+			Raw:  path,
+		}
+		var h string
+		h, err = ret.hash()
+		if err != nil {
+			return
+		}
+		_, err = db.IndexPresentationHash.NewValueID(h)
+		if err != nil {
+			return
+		}
 	}
 	ret.ThumbErrorTag = ""
 	ret.RegularErrorTag = ""
