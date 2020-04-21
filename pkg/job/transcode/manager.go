@@ -135,26 +135,6 @@ func (m *manager) Start() {
 				}
 			}
 		}()
-		go func() {
-			c := make(chan file.File)
-			file.SignalChanged.Notify(c)
-			defer file.SignalChanged.Stop(c)
-			for {
-				select {
-				case <-m.stop:
-					return
-				case f := <-c:
-					ps, err := presentation.FindByPath(f.Path)
-					if err != nil {
-						logger.Error("db find error", "error", err)
-						continue
-					}
-					for _, p := range ps {
-						m.discoverJob(p, f.Tag())
-					}
-				}
-			}
-		}()
 	})
 }
 
