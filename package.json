@@ -25,7 +25,7 @@
     "vue": "2.6.11",
     "vue-apollo": "3.0.3",
     "vue-awesome": "4.0.2",
-    "vue-i18n": "8.17.0"
+    "vue-i18n": "8.17.3"
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "2.1.2",
