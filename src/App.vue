@@ -1,6 +1,6 @@
 <template lang="pug">
   #app(
-    class="bg-black text-gray-200 h-screen overflow-y-auto relative"
+    class="bg-black text-gray-200 h-screen overflow-x-hidden overflow-y-auto relative"
     @scroll.passive="handleScroll"
   )
     TheNavbar(
