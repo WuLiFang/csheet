@@ -7,8 +7,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/WuLiFang/csheet/pkg/api/generated"
-	"github.com/WuLiFang/csheet/pkg/cgteamwork"
+	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
+	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 )
 
 func (r *cGTeamworkProjectResolver) Status(ctx context.Context, obj *cgteamwork.Project) (bool, error) {

@@ -1,4 +1,4 @@
-module github.com/WuLiFang/csheet
+module github.com/WuLiFang/csheet/v6
 
 go 1.14
 

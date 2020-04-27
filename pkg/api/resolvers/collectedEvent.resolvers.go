@@ -7,8 +7,8 @@ import (
 	"context"
 	"strings"
 
-	"github.com/WuLiFang/csheet/pkg/api/generated"
-	"github.com/WuLiFang/csheet/pkg/model/event/collected"
+	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
+	"github.com/WuLiFang/csheet/v6/pkg/model/event/collected"
 )
 
 func (r *subscriptionResolver) CollectedEvent(ctx context.Context, originPrefix string) (<-chan *collected.Event, error) {

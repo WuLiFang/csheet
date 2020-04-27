@@ -3,7 +3,7 @@ package collected
 import (
 	"testing"
 
-	"github.com/WuLiFang/csheet/pkg/db"
+	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

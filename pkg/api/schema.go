@@ -4,8 +4,8 @@ package api
 
 import (
 	"github.com/99designs/gqlgen/graphql"
-	"github.com/WuLiFang/csheet/pkg/api/generated"
-	"github.com/WuLiFang/csheet/pkg/api/resolvers"
+	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
+	"github.com/WuLiFang/csheet/v6/pkg/api/resolvers"
 )
 
 // NewExecutableSchema create new graphql schema

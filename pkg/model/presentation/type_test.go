@@ -4,9 +4,9 @@ import (
 	"mime"
 	"testing"
 
-	_ "github.com/WuLiFang/csheet/pkg/mime"
-	"github.com/stretchr/testify/require"
+	_ "github.com/WuLiFang/csheet/v6/pkg/mime"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestTypeByMimeType(t *testing.T) {

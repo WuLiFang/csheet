@@ -6,10 +6,10 @@ package resolvers
 import (
 	"context"
 
-	"github.com/WuLiFang/csheet/pkg/api/generated"
-	"github.com/WuLiFang/csheet/pkg/db"
-	"github.com/WuLiFang/csheet/pkg/model/file"
-	"github.com/WuLiFang/csheet/pkg/model/presentation"
+	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
+	"github.com/WuLiFang/csheet/v6/pkg/db"
+	"github.com/WuLiFang/csheet/v6/pkg/model/file"
+	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
 )
 
 func (r *presentationResolver) Type(ctx context.Context, obj *presentation.Presentation) (string, error) {

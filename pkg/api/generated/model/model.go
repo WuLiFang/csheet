@@ -3,7 +3,7 @@
 package model
 
 import (
-	"github.com/WuLiFang/csheet/pkg/model/collection"
+	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
 )
 
 type Node interface {

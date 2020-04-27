@@ -9,11 +9,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/WuLiFang/csheet/pkg/filestore"
-	"github.com/WuLiFang/csheet/pkg/model/collection"
-	"github.com/WuLiFang/csheet/pkg/model/event/collected"
-	"github.com/WuLiFang/csheet/pkg/model/presentation"
-	"github.com/WuLiFang/csheet/pkg/unipath"
+	"github.com/WuLiFang/csheet/v6/pkg/filestore"
+	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
+	"github.com/WuLiFang/csheet/v6/pkg/model/event/collected"
+	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
+	"github.com/WuLiFang/csheet/v6/pkg/unipath"
 )
 
 func validRoot(p string) error {

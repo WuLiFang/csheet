@@ -6,8 +6,8 @@ package resolvers
 import (
 	"context"
 
-	"github.com/WuLiFang/csheet/pkg/api/generated"
-	"github.com/WuLiFang/csheet/pkg/cgteamwork"
+	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
+	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 )
 
 func (r *queryResolver) CgteamworkProjects(ctx context.Context) ([]cgteamwork.Project, error) {

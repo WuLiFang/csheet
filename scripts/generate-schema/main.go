@@ -8,7 +8,7 @@ import (
 	"os"
 
 	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/WuLiFang/csheet/pkg/api"
+	"github.com/WuLiFang/csheet/v6/pkg/api"
 )
 
 var introspection = `

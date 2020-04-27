@@ -5,8 +5,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/WuLiFang/csheet/pkg/db"
-	"github.com/WuLiFang/csheet/pkg/model/presentation"
+	"github.com/WuLiFang/csheet/v6/pkg/db"
+	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
 )
 
 // Collection belongs to a gallery.

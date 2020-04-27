@@ -1,7 +1,7 @@
 package presentation
 
 import (
-	"github.com/WuLiFang/csheet/pkg/db"
+	"github.com/WuLiFang/csheet/v6/pkg/db"
 )
 
 // FindByPath returns presentation used this file.

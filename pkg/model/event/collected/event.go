@@ -4,7 +4,7 @@ import (
 	"encoding/base64"
 	"time"
 
-	"github.com/WuLiFang/csheet/pkg/db"
+	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/dgraph-io/badger/v2"
 )
 

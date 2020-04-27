@@ -3,10 +3,10 @@ package transcode
 import (
 	"path/filepath"
 
-	"github.com/WuLiFang/csheet/pkg/filestore"
-	"github.com/WuLiFang/csheet/pkg/model/file"
-	"github.com/WuLiFang/csheet/pkg/model/presentation"
-	"github.com/WuLiFang/csheet/pkg/transcode"
+	"github.com/WuLiFang/csheet/v6/pkg/filestore"
+	"github.com/WuLiFang/csheet/v6/pkg/model/file"
+	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
+	"github.com/WuLiFang/csheet/v6/pkg/transcode"
 )
 
 func transcodeImageThumb(p presentation.Presentation) error {

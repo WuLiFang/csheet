@@ -5,10 +5,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/WuLiFang/csheet/pkg/db"
-	"github.com/WuLiFang/csheet/pkg/model/file"
-	"github.com/WuLiFang/csheet/pkg/model/presentation"
-	"github.com/WuLiFang/csheet/pkg/onceflight"
+	"github.com/WuLiFang/csheet/v6/pkg/db"
+	"github.com/WuLiFang/csheet/v6/pkg/model/file"
+	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
+	"github.com/WuLiFang/csheet/v6/pkg/onceflight"
 	"golang.org/x/time/rate"
 )
 

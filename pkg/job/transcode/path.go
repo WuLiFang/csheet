@@ -5,7 +5,7 @@ import (
 	"path"
 	"path/filepath"
 
-	"github.com/WuLiFang/csheet/pkg/filestore"
+	"github.com/WuLiFang/csheet/v6/pkg/filestore"
 )
 
 func replaceExt(v string, ext string) string {

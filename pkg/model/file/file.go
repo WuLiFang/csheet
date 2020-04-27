@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/WuLiFang/csheet/pkg/db"
-	"github.com/WuLiFang/csheet/pkg/filestore"
+	"github.com/WuLiFang/csheet/v6/pkg/db"
+	"github.com/WuLiFang/csheet/v6/pkg/filestore"
 	"github.com/dgraph-io/badger/v2"
 )
 

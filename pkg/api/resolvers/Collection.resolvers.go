@@ -7,9 +7,9 @@ import (
 	"context"
 	"sort"
 
-	"github.com/WuLiFang/csheet/pkg/api/generated"
-	"github.com/WuLiFang/csheet/pkg/api/generated/model"
-	"github.com/WuLiFang/csheet/pkg/model/collection"
+	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
+	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
 )
 
 func (r *collectionResolver) Metadata(ctx context.Context, obj *collection.Collection) ([]model.StringEntry, error) {

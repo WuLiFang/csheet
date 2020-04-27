@@ -6,9 +6,9 @@ package resolvers
 import (
 	"context"
 
-	"github.com/WuLiFang/csheet/pkg/api/generated"
-	"github.com/WuLiFang/csheet/pkg/model/file"
-	"github.com/WuLiFang/csheet/pkg/unipath"
+	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
+	"github.com/WuLiFang/csheet/v6/pkg/model/file"
+	"github.com/WuLiFang/csheet/v6/pkg/unipath"
 )
 
 func (r *fileResolver) PathGQLField(ctx context.Context, obj *file.File, format *string) (string, error) {

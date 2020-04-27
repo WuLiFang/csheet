@@ -10,11 +10,11 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/WuLiFang/csheet/internal/config"
-	"github.com/WuLiFang/csheet/pkg/api"
-	"github.com/WuLiFang/csheet/pkg/filestore"
-	"github.com/WuLiFang/csheet/pkg/model/file"
-	"github.com/WuLiFang/csheet/pkg/model/presentation"
+	"github.com/WuLiFang/csheet/v6/internal/config"
+	"github.com/WuLiFang/csheet/v6/pkg/api"
+	"github.com/WuLiFang/csheet/v6/pkg/filestore"
+	"github.com/WuLiFang/csheet/v6/pkg/model/file"
+	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
 	"github.com/gin-gonic/gin"
 )
 

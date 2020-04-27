@@ -3,7 +3,7 @@ package filewatch
 import (
 	"os"
 
-	"github.com/WuLiFang/csheet/pkg/model/file"
+	"github.com/WuLiFang/csheet/v6/pkg/model/file"
 )
 
 type worker struct {

@@ -4,7 +4,7 @@ import (
 	"flag"
 	"time"
 
-	"github.com/WuLiFang/csheet/pkg/getenv"
+	"github.com/WuLiFang/csheet/v6/pkg/getenv"
 )
 
 var (

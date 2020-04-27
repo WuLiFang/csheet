@@ -7,9 +7,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/WuLiFang/csheet/pkg/api/generated"
-	"github.com/WuLiFang/csheet/pkg/collector/cgteamwork"
-	"github.com/WuLiFang/csheet/pkg/model/event/collected"
+	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
+	"github.com/WuLiFang/csheet/v6/pkg/collector/cgteamwork"
+	"github.com/WuLiFang/csheet/v6/pkg/model/event/collected"
 )
 
 func (r *mutationResolver) CollectFromCGTeamwork(ctx context.Context, database string, prefix string, pipeline string) (*collected.Event, error) {

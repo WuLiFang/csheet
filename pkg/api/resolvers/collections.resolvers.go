@@ -6,9 +6,9 @@ package resolvers
 import (
 	"context"
 
-	"github.com/WuLiFang/csheet/pkg/api/generated/model"
-	"github.com/WuLiFang/csheet/pkg/db"
-	"github.com/WuLiFang/csheet/pkg/model/collection"
+	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/db"
+	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
 )
 
 func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, presentationCountGt *int, first *int, last *int, before *string, after *string) (*model.CollectionConnection, error) {

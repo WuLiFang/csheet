@@ -3,7 +3,7 @@ package logging
 import (
 	"os"
 
-	"github.com/WuLiFang/csheet/internal/config"
+	"github.com/WuLiFang/csheet/v6/internal/config"
 	"go.uber.org/zap"
 )
 

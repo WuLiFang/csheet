@@ -6,7 +6,7 @@ package resolvers
 import (
 	"context"
 
-	"github.com/WuLiFang/csheet/pkg/model/presentation"
+	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
 )
 
 func (r *subscriptionResolver) PresentationUpdated(ctx context.Context, id []string) (<-chan *presentation.Presentation, error) {

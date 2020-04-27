@@ -8,11 +8,11 @@ import (
 	"encoding/base64"
 	"errors"
 
-	"github.com/WuLiFang/csheet/pkg/api/generated/model"
-	"github.com/WuLiFang/csheet/pkg/db"
-	"github.com/WuLiFang/csheet/pkg/model/collection"
-	"github.com/WuLiFang/csheet/pkg/model/event/collected"
-	"github.com/WuLiFang/csheet/pkg/model/presentation"
+	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/db"
+	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
+	"github.com/WuLiFang/csheet/v6/pkg/model/event/collected"
+	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
 )
 
 func (r *queryResolver) Node(ctx context.Context, id string) (model.Node, error) {

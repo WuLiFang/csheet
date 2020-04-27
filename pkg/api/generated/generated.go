@@ -15,12 +15,12 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/WuLiFang/csheet/pkg/api/generated/model"
-	"github.com/WuLiFang/csheet/pkg/cgteamwork"
-	"github.com/WuLiFang/csheet/pkg/model/collection"
-	"github.com/WuLiFang/csheet/pkg/model/event/collected"
-	"github.com/WuLiFang/csheet/pkg/model/file"
-	"github.com/WuLiFang/csheet/pkg/model/presentation"
+	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
+	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
+	"github.com/WuLiFang/csheet/v6/pkg/model/event/collected"
+	"github.com/WuLiFang/csheet/v6/pkg/model/file"
+	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )

@@ -6,8 +6,8 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/WuLiFang/csheet/pkg/model/presentation"
-	"github.com/WuLiFang/csheet/pkg/transcode"
+	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
+	"github.com/WuLiFang/csheet/v6/pkg/transcode"
 )
 
 func getMiddleFrameTimeOffset(p presentation.Presentation) (time.Duration, error) {

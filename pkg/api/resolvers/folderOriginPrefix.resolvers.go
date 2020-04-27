@@ -6,8 +6,8 @@ package resolvers
 import (
 	"context"
 
-	"github.com/WuLiFang/csheet/pkg/model/collection"
-	"github.com/WuLiFang/csheet/pkg/unipath"
+	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
+	"github.com/WuLiFang/csheet/v6/pkg/unipath"
 )
 
 func (r *queryResolver) FolderOriginPrefix(ctx context.Context, root string) (string, error) {

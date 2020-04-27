@@ -7,8 +7,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/WuLiFang/csheet/pkg/collector/folder"
-	"github.com/WuLiFang/csheet/pkg/model/event/collected"
+	"github.com/WuLiFang/csheet/v6/pkg/collector/folder"
+	"github.com/WuLiFang/csheet/v6/pkg/model/event/collected"
 )
 
 func (r *mutationResolver) CollectFromFolder(ctx context.Context, root string) (*collected.Event, error) {

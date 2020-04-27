@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/WuLiFang/csheet/pkg/unipath"
+	"github.com/WuLiFang/csheet/v6/pkg/unipath"
 )
 
 // WalkInclude rules.

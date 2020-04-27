@@ -3,7 +3,7 @@ package presentation
 import (
 	"sync"
 
-	"github.com/WuLiFang/csheet/pkg/model/file"
+	"github.com/WuLiFang/csheet/v6/pkg/model/file"
 )
 
 type signal struct {

@@ -7,8 +7,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/WuLiFang/csheet/pkg/db"
-	"github.com/WuLiFang/csheet/pkg/model/file"
+	"github.com/WuLiFang/csheet/v6/pkg/db"
+	"github.com/WuLiFang/csheet/v6/pkg/model/file"
 )
 
 // Presentation defines how to render collection
