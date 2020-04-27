@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-rc.1](https://github.com/WuLiFang/csheet/compare/v6.0.0-rc.0...v6.0.0-rc.1) (2020-04-27)
+
+
+### Features
+
+* allow hide cell overlay ([b34838c](https://github.com/WuLiFang/csheet/commit/b34838c12b78a1f66a43d6d82b3b859d5080d5ec))
+* set transcode command priority with `nice` ([11af2c5](https://github.com/WuLiFang/csheet/commit/11af2c59d640f4d75009f55e3372cdac73a50148))
+
+
+### Bug Fixes
+
+* follow go module import compatibility rule ([4b41624](https://github.com/WuLiFang/csheet/commit/4b41624ad1a53ec57fae4e9ffda0d3c8a564f980))
+* **deps:** update dependency vue-i18n to v8.17.4 ([36e7a34](https://github.com/WuLiFang/csheet/commit/36e7a3443b0c8e20b76bd508a3c29077279f603c))
+* duplicated presentation id ([ced5e61](https://github.com/WuLiFang/csheet/commit/ced5e613f3729e0e38f2c1b07a5ab24d7936ff43))
+* should hide app horizontal scroll bar ([27be0ab](https://github.com/WuLiFang/csheet/commit/27be0ab9d0cd2a4614d2a0505d371e006bcdb67d))
+* **deps:** update dependency vue-i18n to v8.17.3 ([8eab7f1](https://github.com/WuLiFang/csheet/commit/8eab7f19cdca3859f2968ae4b19156525c25a84c))
+* **deps:** update sentry monorepo to v5.15.5 ([faece69](https://github.com/WuLiFang/csheet/commit/faece69dc091d3be7b2b28b5707dbde43d80851c))
+
 ## [6.0.0-rc.0](https://github.com/WuLiFang/csheet/compare/v5.0.1...v6.0.0-rc.0) (2020-04-20)
 
 ### ⚠ BREAKING CHANGES
