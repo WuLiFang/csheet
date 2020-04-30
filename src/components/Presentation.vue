@@ -50,7 +50,7 @@ export function fileSrc(v: string | undefined): string {
           alt: this.node?.raw?.path,
           controls: true,
           loop: true,
-          autoplay: true,
+          autoplay: this.autoplay,
         },
       });
     };
@@ -76,6 +76,9 @@ export default class Presentation extends Vue {
   id?: string;
   @Prop({ type: String, default: 'thumb' })
   size!: string;
+
+  @Prop({ type: Boolean, default: false })
+  autoplay!: boolean;
 
   node?: presentation;
 

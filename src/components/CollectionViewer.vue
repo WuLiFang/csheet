@@ -64,15 +64,16 @@
           )
             Presentation(
               :key="value.id"
-              class="m-auto absolute inset-0"
+              class="object-contain m-auto w-full h-full absolute inset-0"
               :id="presentationID"
               size="regular"
+              autoplay
             )
           //- placeholder for small screen
           Presentation(
-            class="object-contain invisible"
+            class="object-contain m-auto w-full h-full invisible"
             :id="presentationID"
-            size="regular"
+            size="thumb"
           )
         aside(
           class="flex-auto bg-gray-900 lg:flex-initial lg:w-1/3 lg:overflow-auto"
