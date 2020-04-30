@@ -63,7 +63,10 @@ func New() *gin.Engine {
 			case http.StatusOK:
 				fallthrough
 			case http.StatusNotModified:
-				filestore.SetAccessTime(path.Join(filestore.Dir, filepath), time.Now())
+				err := filestore.SetAccessTime(path.Join(filestore.Dir, filepath), time.Now())
+				if err != nil {
+					logger.Errorw("update file atime failed", "error", err)
+				}
 			case http.StatusNotFound:
 				logger.Infow("not found requested file", "filepath", filepath, "clientIP", c.ClientIP())
 				f, err := file.FindByPath(filepath)
