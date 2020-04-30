@@ -39,57 +39,67 @@
         p(
           class="text-sm text-gray-500 select-all break-words"
         ) {{presentation && presentation.raw.path}}
-      transition(
-        :name="mainTransitionName"
-        mode="out-in"
+      main(
+        
+        class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden"
       )
-        main(
-          :key="value.id"
-          class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden"
+        .viewport(
+          class="relative lg:w-2/3 lg:flex-auto lg:flex lg:flex-col text-center lg:items-center bg-black "
         )
-          .viewport(
-            class="flex-auto lg:w-2/3 lg:flex-auto lg:flex lg:flex-col text-center lg:items-center bg-black "
+          template(v-for="i in prefetchURLs")
+            link(rel="prefetch" :href="i")
+          p(
+            v-if="presentation && presentation.isRegularTranscodeFailed"
+            class="bg-red-500 w-full"
+          ) 预览转码失败，重新收集以重试
+          p(
+            v-else-if="presentation && presentation.isRegularOutdated"
+            class="bg-orange-500 w-full"
+          ) 预览已过期
+          transition(
+            enter-class="opacity-0"
+            leave-to-class="opacity-0"
+            enter-active-class="transition-all duration-500 ease-in"
+            leave-active-class="transition-all duration-500 ease-out"
+            mode="in-out"
           )
-            template(v-for="i in prefetchURLs")
-              link(rel="prefetch" :href="i")
-            p(
-              v-if="presentation && presentation.isRegularTranscodeFailed"
-              class="bg-red-500 w-full"
-            ) 预览转码失败，重新收集以重试
-            p(
-              v-else-if="presentation && presentation.isRegularOutdated"
-              class="bg-orange-500 w-full"
-            ) 预览已过期
             Presentation(
-              class="m-auto object-contain w-full h-full"
+              :key="value.id"
+              class="m-auto absolute inset-0"
               :id="presentationID"
               size="regular"
             )
-          aside(
-            class="flex-auto bg-gray-900 lg:flex-initial lg:w-1/3 lg:overflow-auto"
-            :style="{ filter: `blur(${loadingCount * 5}px)` }"
+          //- placeholder for small screen
+          Presentation(
+            class="object-contain invisible"
+            :id="presentationID"
+            size="regular"
           )
-            PresentationSelect(
-              v-show="value.presentations.length > 0"
-              v-model="presentationID"
-              :options="value.presentations"
-              class="min-h-16"
-            )
-            CollectionMetadata(
-              class="flex-auto"
-              :value="value"
-            )
-              template(#recollect-button)
-                button(
-                  type="button"
-                  :disabled="recollectingCount > 0"
-                  @click="recollect()"
-                  class="h-8 bg-gray-700 hover:bg-gray-600 py-1 px-2 rounded-sm ml-1"
-                ) 
-                  template(v-if="recollectingCount > 0 ")
-                    FaIcon.h-full(name="spinner" spin)
-                  template(v-else)
-                    | 收集
+        aside(
+          class="flex-auto bg-gray-900 lg:flex-initial lg:w-1/3 lg:overflow-auto"
+          :style="{ filter: `blur(${loadingCount * 5}px)` }"
+        )
+          PresentationSelect(
+            v-show="value.presentations.length > 0"
+            v-model="presentationID"
+            :options="value.presentations"
+            class="min-h-16"
+          )
+          CollectionMetadata(
+            class="flex-auto"
+            :value="value"
+          )
+            template(#recollect-button)
+              button(
+                type="button"
+                :disabled="recollectingCount > 0"
+                @click="recollect()"
+                class="h-8 bg-gray-700 hover:bg-gray-600 py-1 px-2 rounded-sm ml-1"
+              ) 
+                template(v-if="recollectingCount > 0 ")
+                  FaIcon.h-full(name="spinner" spin)
+                template(v-else)
+                  | 收集
 </template>
 
 <script lang="ts">
@@ -167,20 +177,17 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
   @Prop({ type: Object })
   next?: Collection;
 
-  mainTransitionName = '';
   presentationID = '';
   loadingCount = 0;
 
   jumpPrev() {
     if (this.prev) {
-      this.mainTransitionName = 'right';
       this.$emit('update:value', this.prev);
     }
   }
 
   jumpNext() {
     if (this.next) {
-      this.mainTransitionName = 'left';
       this.$emit('update:value', this.next);
     }
   }
@@ -242,36 +249,3 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.viewer-enter,
-.viewer-leave-to {
-  transform: translateY(-100%);
-}
-
-.viewer-enter-active,
-.viewer-leave-active {
-  @apply transition-transform;
-  @apply ease-in-out;
-  @apply duration-300;
-}
-
-.left-enter,
-.right-leave-to {
-  @apply opacity-0;
-  transform: translateX(20%);
-}
-.right-enter,
-.left-leave-to {
-  @apply opacity-0;
-  transform: translateX(-20%);
-}
-
-.left-enter-active,
-.left-leave-active,
-.right-enter-active,
-.right-leave-active {
-  @apply ease-out;
-  @apply duration-100;
-}
-</style>
