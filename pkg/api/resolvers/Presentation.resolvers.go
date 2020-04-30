@@ -28,6 +28,9 @@ func (r *presentationResolver) Raw(ctx context.Context, obj *presentation.Presen
 }
 
 func (r *presentationResolver) Thumb(ctx context.Context, obj *presentation.Presentation) (*model.WebFile, error) {
+	if obj.Thumb == "" {
+		return nil, nil
+	}
 	return &model.WebFile{
 		Path: obj.Thumb,
 		URL:  "/files/" + obj.Thumb,
@@ -51,6 +54,9 @@ func (r *presentationResolver) IsThumbTranscodeFailed(ctx context.Context, obj *
 }
 
 func (r *presentationResolver) Regular(ctx context.Context, obj *presentation.Presentation) (*model.WebFile, error) {
+	if obj.Regular == "" {
+		return nil, nil
+	}
 	return &model.WebFile{
 		Path: obj.Regular,
 		URL:  "/files/" + obj.Regular,
