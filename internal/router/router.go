@@ -70,7 +70,10 @@ func New() *gin.Engine {
 				if err == nil {
 					f.Delete()
 				}
-				if err != db.ErrKeyNotFound {
+				if err == db.ErrKeyNotFound {
+					err = nil
+				}
+				if err != nil {
 					logger.Errorw("find file failed", "error", err)
 				}
 
