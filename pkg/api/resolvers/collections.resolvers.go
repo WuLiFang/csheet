@@ -12,7 +12,7 @@ import (
 )
 
 func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, presentationCountGt *int, first *int, last *int, before *string, after *string) (*model.CollectionConnection, error) {
-	cCtx, err := setupConnectionContext(first, last, before, after)
+	pag, err := paginate(first, last, before, after)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +31,7 @@ func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, p
 	}
 	err = db.View(func(txn *db.Txn) (err error) {
 		opt := db.DefaultIteratorOptions
-		opt.Reverse = cCtx.reverse
+		opt.Reverse = pag.reverse
 		cursor := txn.NewIterator(opt)
 		defer cursor.Close()
 		var prefix []byte
@@ -43,14 +43,14 @@ func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, p
 			prefix = db.IndexCollection.Bytes()
 		}
 		start := prefix
-		if cCtx.reverse {
+		if pag.reverse {
 			start = append(prefix[:], '\xff')
 		}
 
-		var isAfter = cCtx.after == ""
+		var isAfter = pag.after == ""
 		for cursor.Seek(start); cursor.ValidForPrefix(prefix); cursor.Next() {
 
-			if cCtx.limit != 0 && len(nodes) >= cCtx.limit {
+			if pag.limit != 0 && len(nodes) >= pag.limit {
 				cursor.Next()
 				ret.PageInfo.HasNextPage = cursor.ValidForPrefix(prefix)
 				break
@@ -73,11 +73,11 @@ func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, p
 				return
 			}
 			nid := node.ID()
-			if nid == cCtx.after {
+			if nid == pag.after {
 				isAfter = true
 				continue
 			}
-			if nid == cCtx.before {
+			if nid == pag.before {
 				ret.PageInfo.HasNextPage = true
 				break
 			}
@@ -104,7 +104,7 @@ func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, p
 		ret.PageInfo.StartCursor = &startCursor
 		ret.PageInfo.EndCursor = &endCursor
 	}
-	if cCtx.reverse {
+	if pag.reverse {
 		for i := 0; i < len(ret.Nodes)/2; i++ {
 			j := len(ret.Nodes) - 1 - i
 			ret.Nodes[i], ret.Nodes[j] = ret.Nodes[j], ret.Nodes[i]

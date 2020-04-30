@@ -2,17 +2,17 @@ package resolvers
 
 import "errors"
 
-type connectionContext struct {
+type pagination struct {
 	limit   int
 	reverse bool
 	before  string
 	after   string
 }
 
-func setupConnectionContext(
+func paginate(
 	first, last *int,
 	before, after *string,
-) (ret connectionContext, err error) {
+) (ret pagination, err error) {
 	if last != nil && first != nil {
 		err = errors.New("use first and last at same time is not supported")
 		return
