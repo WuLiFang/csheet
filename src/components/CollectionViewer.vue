@@ -1,6 +1,9 @@
 <template lang="pug">
   transition(
-    name="viewer"
+    enter-class="transform -translate-y-full"
+    leave-to-class="transform -translate-y-full"
+    enter-active-class="transition-all duration-300 ease-in-out"
+    leave-active-class="transition-all duration-300 ease-in-out"
     @after-leave="$emit('close')"
   )
     .collection-viewer(
@@ -263,18 +266,6 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
 </script>
 
 <style lang="scss" scoped>
-.viewer-enter,
-.viewer-leave-to {
-  transform: translateY(-100%);
-}
-
-.viewer-enter-active,
-.viewer-leave-active {
-  @apply transition-transform;
-  @apply ease-in-out;
-  @apply duration-300;
-}
-
 .button-click-anim {
   animation: button-click 500ms ease-in-out;
 }
