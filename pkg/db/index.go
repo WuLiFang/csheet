@@ -34,4 +34,9 @@ const (
 	// key format: path, presentation id
 	// value: empty
 	IndexPresentationFile
+	// IndexPresentationOutdated is a secondary index
+	// to search presentation that any file is outdated
+	// key format: presentation id
+	// value: empty
+	IndexPresentationOutdated
 )

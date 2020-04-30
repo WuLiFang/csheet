@@ -57,6 +57,21 @@ func (index Index) Key(parts ...string) []byte {
 	return append(index.Bytes(), data...)
 }
 
+// Exists check if any related data exists.
+func (index Index) Exists() (ret bool, err error) {
+	err = View(func(txn *Txn) error {
+		opt := DefaultIteratorOptions
+		opt.PrefetchValues = false
+		it := txn.NewIterator(opt)
+		defer it.Close()
+		prefix := index.Bytes()
+		it.Seek(prefix)
+		ret = it.ValidForPrefix(prefix)
+		return nil
+	})
+	return
+}
+
 // Prefix key for index scan.
 func (index Index) Prefix(parts ...string) (ret []byte) {
 	ret = index.Key(parts...)

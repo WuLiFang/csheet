@@ -83,6 +83,10 @@ func (p Presentation) Save() error {
 		if err != nil {
 			return err
 		}
+		err = txn.Set(db.IndexPresentationOutdated.Key(id), nil)
+		if err != nil {
+			return err
+		}
 		return txn.Set(key, p)
 	})
 	if err != nil {
