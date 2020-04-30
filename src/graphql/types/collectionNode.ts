@@ -33,15 +33,11 @@ export interface collectionNode_node_Collection_presentations_raw {
 export interface collectionNode_node_Collection_presentations_thumb {
   __typename: "File";
   path: string;
-  modTime: any | null;
-  size: number | null;
 }
 
 export interface collectionNode_node_Collection_presentations_regular {
   __typename: "File";
   path: string;
-  modTime: any | null;
-  size: number | null;
 }
 
 export interface collectionNode_node_Collection_presentations {

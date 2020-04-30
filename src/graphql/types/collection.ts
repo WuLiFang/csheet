@@ -29,15 +29,11 @@ export interface collection_presentations_raw {
 export interface collection_presentations_thumb {
   __typename: "File";
   path: string;
-  modTime: any | null;
-  size: number | null;
 }
 
 export interface collection_presentations_regular {
   __typename: "File";
   path: string;
-  modTime: any | null;
-  size: number | null;
 }
 
 export interface collection_presentations {

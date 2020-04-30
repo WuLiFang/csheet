@@ -17,15 +17,11 @@ export interface presentationUpdated_presentationUpdated_raw {
 export interface presentationUpdated_presentationUpdated_thumb {
   __typename: "File";
   path: string;
-  modTime: any | null;
-  size: number | null;
 }
 
 export interface presentationUpdated_presentationUpdated_regular {
   __typename: "File";
   path: string;
-  modTime: any | null;
-  size: number | null;
 }
 
 export interface presentationUpdated_presentationUpdated {
