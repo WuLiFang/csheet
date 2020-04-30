@@ -38,9 +38,11 @@
           option 灯光
           option 动画
           option 特效
+          option 场景细化
         input(
           v-model="formData.cgteamwork.pipeline"
           class="form-input"
+          placeholder="选择或输入"
           required
           list="navbar-cgteamwork-pipeline"
         )
