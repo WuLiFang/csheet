@@ -1,6 +1,7 @@
 package transcode
 
 import (
+	"bytes"
 	"context"
 	"sync"
 	"time"
@@ -42,7 +43,6 @@ func (m *manager) discoverJobByTag(
 			logger.Infow("scheduled transcode", "jobType", jt, "raw", p.Raw)
 		default:
 		}
-	} else {
 	}
 	return outdated
 }
@@ -88,10 +88,25 @@ func iterateAllPresentation(fn func(p presentation.Presentation) error) error {
 		for it.Seek(prefix); it.ValidForPrefix(prefix); it.Next() {
 			var v presentation.Presentation
 			var k = it.Item().Key()
-			err = db.Get(k, &v)
+			err = txn.Get(k, &v)
 			if err != nil {
 				return
 			}
+
+			var k2 []byte
+			k2, err = v.Key()
+			if err != nil {
+				return
+			}
+			if bytes.Compare(k, k2) != 0 {
+				logger.Warnw("detected danling key, removing", "presentation", v)
+				err = db.Delete(k)
+				if err != nil {
+					return
+				}
+				continue
+			}
+
 			err = fn(v)
 			if err != nil {
 				return

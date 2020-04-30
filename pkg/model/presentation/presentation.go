@@ -37,7 +37,8 @@ func (p Presentation) hash() (ret string, err error) {
 	return
 }
 
-func (p Presentation) key() (ret []byte, err error) {
+// Key in db.
+func (p Presentation) Key() (ret []byte, err error) {
 	h, err := p.hash()
 	if err != nil {
 		return
@@ -52,7 +53,7 @@ func keyToID(key []byte) string {
 
 // ID of object.
 func (p Presentation) ID() string {
-	key, err := p.key()
+	key, err := p.Key()
 	if err != nil {
 		logger.Errorw("invalid id", "error", err)
 		return ""
@@ -65,7 +66,7 @@ func (Presentation) IsNode() {}
 
 // Save to db.
 func (p Presentation) Save() error {
-	key, err := p.key()
+	key, err := p.Key()
 	if err != nil {
 		return err
 	}
@@ -98,7 +99,7 @@ func (p Presentation) Save() error {
 
 // Load from db.
 func (p *Presentation) Load() error {
-	key, err := p.key()
+	key, err := p.Key()
 	if err != nil {
 		return err
 	}
