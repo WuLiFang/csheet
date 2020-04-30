@@ -198,7 +198,7 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
 
   get prefetchURLs(): string[] {
     const ret: string[] = [];
-    for (const i of [this.next, this.prev]) {
+    for (const i of [this.next, this.value, this.prev]) {
       if (!i) {
         continue;
       }
