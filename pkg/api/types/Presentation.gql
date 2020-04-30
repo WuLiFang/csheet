@@ -1,11 +1,11 @@
 type Presentation implements Node {
   id: ID!
   type: String!
-  raw: File!
-  thumb: File
+  raw: DiskFile!
+  thumb: WebFile
   isThumbOutdated: Boolean
   isThumbTranscodeFailed: Boolean
-  regular: File
+  regular: WebFile
   isRegularOutdated: Boolean
   isRegularTranscodeFailed: Boolean
 }

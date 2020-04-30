@@ -7,10 +7,10 @@ fragment presentation on Presentation {
     size
   }
   thumb {
-    path
+    url
   }
   regular {
-    path
+    url
   }
   isRegularOutdated
   isRegularTranscodeFailed

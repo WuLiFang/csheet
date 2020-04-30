@@ -12,7 +12,7 @@ export function fileSrc(v: string | undefined): string {
   if (!v) {
     return d;
   }
-  return `/files/${v}`;
+  return v;
 }
 
 @Component<Presentation>({
@@ -31,7 +31,7 @@ export function fileSrc(v: string | undefined): string {
     },
   },
   render(h) {
-    const src: string | undefined = this.path;
+    const src = this.path;
     const renderImage = () => {
       return h('img', {
         domProps: {
@@ -79,16 +79,16 @@ export default class Presentation extends Vue {
 
   node?: presentation;
 
-  get path(): string | undefined {
+  get path(): string {
     if (!this.id) {
       return '/static/default.svg';
     }
     switch (this.size) {
       case 'regular':
-        return fileSrc(this.node?.regular?.path);
+        return fileSrc(this.node?.regular?.url);
       case 'thumb':
       default:
-        return fileSrc(this.node?.thumb?.path);
+        return fileSrc(this.node?.thumb?.url);
     }
   }
 }

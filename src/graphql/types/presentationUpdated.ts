@@ -8,20 +8,20 @@
 // ====================================================
 
 export interface presentationUpdated_presentationUpdated_raw {
-  __typename: "File";
+  __typename: "DiskFile";
   path: string;
   modTime: any | null;
   size: number | null;
 }
 
 export interface presentationUpdated_presentationUpdated_thumb {
-  __typename: "File";
-  path: string;
+  __typename: "WebFile";
+  url: string;
 }
 
 export interface presentationUpdated_presentationUpdated_regular {
-  __typename: "File";
-  path: string;
+  __typename: "WebFile";
+  url: string;
 }
 
 export interface presentationUpdated_presentationUpdated {

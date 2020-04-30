@@ -8,24 +8,24 @@
 // ====================================================
 
 export interface presentation_raw {
-  __typename: "File";
+  __typename: 'DiskFile';
   path: string;
   modTime: any | null;
   size: number | null;
 }
 
 export interface presentation_thumb {
-  __typename: "File";
-  path: string;
+  __typename: 'WebFile';
+  url: string;
 }
 
 export interface presentation_regular {
-  __typename: "File";
-  path: string;
+  __typename: 'WebFile';
+  url: string;
 }
 
 export interface presentation {
-  __typename: "Presentation";
+  __typename: 'Presentation';
   id: string;
   type: string;
   raw: presentation_raw;

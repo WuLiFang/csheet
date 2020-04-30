@@ -45,7 +45,7 @@ type Config struct {
 type ResolverRoot interface {
 	CGTeamworkProject() CGTeamworkProjectResolver
 	Collection() CollectionResolver
-	File() FileResolver
+	DiskFile() DiskFileResolver
 	Mutation() MutationResolver
 	Presentation() PresentationResolver
 	Query() QueryResolver
@@ -90,10 +90,10 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
-	File struct {
-		ModTime      func(childComplexity int) int
-		PathGQLField func(childComplexity int, format *string) int
-		Size         func(childComplexity int) int
+	DiskFile struct {
+		ModTime func(childComplexity int) int
+		Path    func(childComplexity int, format *string) int
+		Size    func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -137,6 +137,13 @@ type ComplexityRoot struct {
 		CollectionUpdated   func(childComplexity int, id []string) int
 		PresentationUpdated func(childComplexity int, id []string) int
 	}
+
+	WebFile struct {
+		ModTime func(childComplexity int) int
+		Path    func(childComplexity int, format *string) int
+		Size    func(childComplexity int) int
+		URL     func(childComplexity int) int
+	}
 }
 
 type CGTeamworkProjectResolver interface {
@@ -145,8 +152,8 @@ type CGTeamworkProjectResolver interface {
 type CollectionResolver interface {
 	Metadata(ctx context.Context, obj *collection.Collection) ([]model.StringEntry, error)
 }
-type FileResolver interface {
-	PathGQLField(ctx context.Context, obj *file.File, format *string) (string, error)
+type DiskFileResolver interface {
+	Path(ctx context.Context, obj *file.File, format *string) (string, error)
 }
 type MutationResolver interface {
 	CollectFromCGTeamwork(ctx context.Context, database string, prefix string, pipeline string) (*collected.Event, error)
@@ -155,10 +162,10 @@ type MutationResolver interface {
 type PresentationResolver interface {
 	Type(ctx context.Context, obj *presentation.Presentation) (string, error)
 	Raw(ctx context.Context, obj *presentation.Presentation) (*file.File, error)
-	Thumb(ctx context.Context, obj *presentation.Presentation) (*file.File, error)
+	Thumb(ctx context.Context, obj *presentation.Presentation) (*model.WebFile, error)
 	IsThumbOutdated(ctx context.Context, obj *presentation.Presentation) (*bool, error)
 	IsThumbTranscodeFailed(ctx context.Context, obj *presentation.Presentation) (*bool, error)
-	Regular(ctx context.Context, obj *presentation.Presentation) (*file.File, error)
+	Regular(ctx context.Context, obj *presentation.Presentation) (*model.WebFile, error)
 	IsRegularOutdated(ctx context.Context, obj *presentation.Presentation) (*bool, error)
 	IsRegularTranscodeFailed(ctx context.Context, obj *presentation.Presentation) (*bool, error)
 }
@@ -322,31 +329,31 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CollectionEdge.Node(childComplexity), true
 
-	case "File.modTime":
-		if e.complexity.File.ModTime == nil {
+	case "DiskFile.modTime":
+		if e.complexity.DiskFile.ModTime == nil {
 			break
 		}
 
-		return e.complexity.File.ModTime(childComplexity), true
+		return e.complexity.DiskFile.ModTime(childComplexity), true
 
-	case "File.path":
-		if e.complexity.File.PathGQLField == nil {
+	case "DiskFile.path":
+		if e.complexity.DiskFile.Path == nil {
 			break
 		}
 
-		args, err := ec.field_File_path_args(context.TODO(), rawArgs)
+		args, err := ec.field_DiskFile_path_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.File.PathGQLField(childComplexity, args["format"].(*string)), true
+		return e.complexity.DiskFile.Path(childComplexity, args["format"].(*string)), true
 
-	case "File.size":
-		if e.complexity.File.Size == nil {
+	case "DiskFile.size":
+		if e.complexity.DiskFile.Size == nil {
 			break
 		}
 
-		return e.complexity.File.Size(childComplexity), true
+		return e.complexity.DiskFile.Size(childComplexity), true
 
 	case "Mutation.collectFromCGTeamwork":
 		if e.complexity.Mutation.CollectFromCGTeamwork == nil {
@@ -556,6 +563,39 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Subscription.PresentationUpdated(childComplexity, args["id"].([]string)), true
 
+	case "WebFile.modTime":
+		if e.complexity.WebFile.ModTime == nil {
+			break
+		}
+
+		return e.complexity.WebFile.ModTime(childComplexity), true
+
+	case "WebFile.path":
+		if e.complexity.WebFile.Path == nil {
+			break
+		}
+
+		args, err := ec.field_WebFile_path_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.WebFile.Path(childComplexity, args["format"].(*string)), true
+
+	case "WebFile.size":
+		if e.complexity.WebFile.Size == nil {
+			break
+		}
+
+		return e.complexity.WebFile.Size(childComplexity), true
+
+	case "WebFile.url":
+		if e.complexity.WebFile.URL == nil {
+			break
+		}
+
+		return e.complexity.WebFile.URL(childComplexity), true
+
 	}
 	return 0, false
 }
@@ -718,7 +758,17 @@ type CollectionConnection {
   pageInfo: PageInfo!
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/types/File.gql", Input: `type File {
+	&ast.Source{Name: "pkg/api/types/DiskFile.gql", Input: `type DiskFile implements File {
+  path(format: String): String!
+  modTime: Time
+  size: Int
+}
+`, BuiltIn: false},
+	&ast.Source{Name: "pkg/api/types/File.gql", Input: `"""
+DEPRECATED: will be remove after 2020-05-30.
+Temperary interface for backward compability.
+"""
+interface File {
   path(format: String): String!
   modTime: Time
   size: Int
@@ -738,11 +788,11 @@ type CollectionConnection {
 	&ast.Source{Name: "pkg/api/types/Presentation.gql", Input: `type Presentation implements Node {
   id: ID!
   type: String!
-  raw: File!
-  thumb: File
+  raw: DiskFile!
+  thumb: WebFile
   isThumbOutdated: Boolean
   isThumbTranscodeFailed: Boolean
-  regular: File
+  regular: WebFile
   isRegularOutdated: Boolean
   isRegularTranscodeFailed: Boolean
 }
@@ -757,6 +807,13 @@ type CollectionConnection {
 `, BuiltIn: false},
 	&ast.Source{Name: "pkg/api/types/Time.gql", Input: `scalar Time
 `, BuiltIn: false},
+	&ast.Source{Name: "pkg/api/types/WebFile.gql", Input: `type WebFile implements File {
+  url: String!
+  path(format: String): String! @deprecated(reason: "use url instead")
+  modTime: Time @deprecated(reason: "remove after 2020-05-30")
+  size: Int @deprecated(reason: "remove after 2020-05-30")
+}
+`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
@@ -764,7 +821,7 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
-func (ec *executionContext) field_File_path_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_DiskFile_path_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 *string
@@ -957,6 +1014,20 @@ func (ec *executionContext) field_Subscription_presentationUpdated_args(ctx cont
 		}
 	}
 	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_WebFile_path_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["format"]; ok {
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["format"] = arg0
 	return args, nil
 }
 
@@ -1401,7 +1472,7 @@ func (ec *executionContext) _Collection_presentations(ctx context.Context, field
 	}
 	res := resTmp.([]presentation.Presentation)
 	fc.Result = res
-	return ec.marshalNPresentation2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋpresentationᚐPresentationᚄ(ctx, field.Selections, res)
+	return ec.marshalNPresentation2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋpresentationᚐPresentationᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Collection_metadata(ctx context.Context, field graphql.CollectedField, obj *collection.Collection) (ret graphql.Marshaler) {
@@ -1435,7 +1506,7 @@ func (ec *executionContext) _Collection_metadata(ctx context.Context, field grap
 	}
 	res := resTmp.([]model.StringEntry)
 	fc.Result = res
-	return ec.marshalNStringEntry2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEntryᚄ(ctx, field.Selections, res)
+	return ec.marshalNStringEntry2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEntryᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Collection_collectTime(ctx context.Context, field graphql.CollectedField, obj *collection.Collection) (ret graphql.Marshaler) {
@@ -1500,7 +1571,7 @@ func (ec *executionContext) _CollectionConnection_edges(ctx context.Context, fie
 	}
 	res := resTmp.([]*model.CollectionEdge)
 	fc.Result = res
-	return ec.marshalOCollectionEdge2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionEdge(ctx, field.Selections, res)
+	return ec.marshalOCollectionEdge2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionEdge(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CollectionConnection_nodes(ctx context.Context, field graphql.CollectedField, obj *model.CollectionConnection) (ret graphql.Marshaler) {
@@ -1531,7 +1602,7 @@ func (ec *executionContext) _CollectionConnection_nodes(ctx context.Context, fie
 	}
 	res := resTmp.([]*collection.Collection)
 	fc.Result = res
-	return ec.marshalOCollection2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋcollectionᚐCollection(ctx, field.Selections, res)
+	return ec.marshalOCollection2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CollectionConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *model.CollectionConnection) (ret graphql.Marshaler) {
@@ -1565,7 +1636,7 @@ func (ec *executionContext) _CollectionConnection_pageInfo(ctx context.Context, 
 	}
 	res := resTmp.(*model.PageInfo)
 	fc.Result = res
-	return ec.marshalNPageInfo2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋapiᚋgeneratedᚋmodelᚐPageInfo(ctx, field.Selections, res)
+	return ec.marshalNPageInfo2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐPageInfo(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CollectionEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *model.CollectionEdge) (ret graphql.Marshaler) {
@@ -1630,10 +1701,10 @@ func (ec *executionContext) _CollectionEdge_node(ctx context.Context, field grap
 	}
 	res := resTmp.(*collection.Collection)
 	fc.Result = res
-	return ec.marshalOCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋcollectionᚐCollection(ctx, field.Selections, res)
+	return ec.marshalOCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _File_path(ctx context.Context, field graphql.CollectedField, obj *file.File) (ret graphql.Marshaler) {
+func (ec *executionContext) _DiskFile_path(ctx context.Context, field graphql.CollectedField, obj *file.File) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1641,7 +1712,7 @@ func (ec *executionContext) _File_path(ctx context.Context, field graphql.Collec
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:   "File",
+		Object:   "DiskFile",
 		Field:    field,
 		Args:     nil,
 		IsMethod: true,
@@ -1649,7 +1720,7 @@ func (ec *executionContext) _File_path(ctx context.Context, field graphql.Collec
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_File_path_args(ctx, rawArgs)
+	args, err := ec.field_DiskFile_path_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -1657,7 +1728,7 @@ func (ec *executionContext) _File_path(ctx context.Context, field graphql.Collec
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.File().PathGQLField(rctx, obj, args["format"].(*string))
+		return ec.resolvers.DiskFile().Path(rctx, obj, args["format"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1674,7 +1745,7 @@ func (ec *executionContext) _File_path(ctx context.Context, field graphql.Collec
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _File_modTime(ctx context.Context, field graphql.CollectedField, obj *file.File) (ret graphql.Marshaler) {
+func (ec *executionContext) _DiskFile_modTime(ctx context.Context, field graphql.CollectedField, obj *file.File) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1682,7 +1753,7 @@ func (ec *executionContext) _File_modTime(ctx context.Context, field graphql.Col
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:   "File",
+		Object:   "DiskFile",
 		Field:    field,
 		Args:     nil,
 		IsMethod: false,
@@ -1705,7 +1776,7 @@ func (ec *executionContext) _File_modTime(ctx context.Context, field graphql.Col
 	return ec.marshalOTime2timeᚐTime(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _File_size(ctx context.Context, field graphql.CollectedField, obj *file.File) (ret graphql.Marshaler) {
+func (ec *executionContext) _DiskFile_size(ctx context.Context, field graphql.CollectedField, obj *file.File) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1713,7 +1784,7 @@ func (ec *executionContext) _File_size(ctx context.Context, field graphql.Collec
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:   "File",
+		Object:   "DiskFile",
 		Field:    field,
 		Args:     nil,
 		IsMethod: false,
@@ -1774,7 +1845,7 @@ func (ec *executionContext) _Mutation_collectFromCGTeamwork(ctx context.Context,
 	}
 	res := resTmp.(*collected.Event)
 	fc.Result = res
-	return ec.marshalNCollectedEvent2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋeventᚋcollectedᚐEvent(ctx, field.Selections, res)
+	return ec.marshalNCollectedEvent2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋeventᚋcollectedᚐEvent(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_collectFromFolder(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1815,7 +1886,7 @@ func (ec *executionContext) _Mutation_collectFromFolder(ctx context.Context, fie
 	}
 	res := resTmp.(*collected.Event)
 	fc.Result = res
-	return ec.marshalNCollectedEvent2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋeventᚋcollectedᚐEvent(ctx, field.Selections, res)
+	return ec.marshalNCollectedEvent2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋeventᚋcollectedᚐEvent(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PageInfo_startCursor(ctx context.Context, field graphql.CollectedField, obj *model.PageInfo) (ret graphql.Marshaler) {
@@ -2047,7 +2118,7 @@ func (ec *executionContext) _Presentation_raw(ctx context.Context, field graphql
 	}
 	res := resTmp.(*file.File)
 	fc.Result = res
-	return ec.marshalNFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋfileᚐFile(ctx, field.Selections, res)
+	return ec.marshalNDiskFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋfileᚐFile(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Presentation_thumb(ctx context.Context, field graphql.CollectedField, obj *presentation.Presentation) (ret graphql.Marshaler) {
@@ -2076,9 +2147,9 @@ func (ec *executionContext) _Presentation_thumb(ctx context.Context, field graph
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*file.File)
+	res := resTmp.(*model.WebFile)
 	fc.Result = res
-	return ec.marshalOFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋfileᚐFile(ctx, field.Selections, res)
+	return ec.marshalOWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Presentation_isThumbOutdated(ctx context.Context, field graphql.CollectedField, obj *presentation.Presentation) (ret graphql.Marshaler) {
@@ -2169,9 +2240,9 @@ func (ec *executionContext) _Presentation_regular(ctx context.Context, field gra
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*file.File)
+	res := resTmp.(*model.WebFile)
 	fc.Result = res
-	return ec.marshalOFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋfileᚐFile(ctx, field.Selections, res)
+	return ec.marshalOWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Presentation_isRegularOutdated(ctx context.Context, field graphql.CollectedField, obj *presentation.Presentation) (ret graphql.Marshaler) {
@@ -2264,7 +2335,7 @@ func (ec *executionContext) _Query_cgteamworkProjects(ctx context.Context, field
 	}
 	res := resTmp.([]cgteamwork.Project)
 	fc.Result = res
-	return ec.marshalOCGTeamworkProject2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋcgteamworkᚐProjectᚄ(ctx, field.Selections, res)
+	return ec.marshalOCGTeamworkProject2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcgteamworkᚐProjectᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_collections(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2305,7 +2376,7 @@ func (ec *executionContext) _Query_collections(ctx context.Context, field graphq
 	}
 	res := resTmp.(*model.CollectionConnection)
 	fc.Result = res
-	return ec.marshalNCollectionConnection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionConnection(ctx, field.Selections, res)
+	return ec.marshalNCollectionConnection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_folderOriginPrefix(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2384,7 +2455,7 @@ func (ec *executionContext) _Query_node(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(model.Node)
 	fc.Result = res
-	return ec.marshalONode2githubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋapiᚋgeneratedᚋmodelᚐNode(ctx, field.Selections, res)
+	return ec.marshalONode2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐNode(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2569,7 +2640,7 @@ func (ec *executionContext) _Subscription_collectedEvent(ctx context.Context, fi
 			w.Write([]byte{'{'})
 			graphql.MarshalString(field.Alias).MarshalGQL(w)
 			w.Write([]byte{':'})
-			ec.marshalNCollectedEvent2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋeventᚋcollectedᚐEvent(ctx, field.Selections, res).MarshalGQL(w)
+			ec.marshalNCollectedEvent2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋeventᚋcollectedᚐEvent(ctx, field.Selections, res).MarshalGQL(w)
 			w.Write([]byte{'}'})
 		})
 	}
@@ -2620,7 +2691,7 @@ func (ec *executionContext) _Subscription_collectionUpdated(ctx context.Context,
 			w.Write([]byte{'{'})
 			graphql.MarshalString(field.Alias).MarshalGQL(w)
 			w.Write([]byte{':'})
-			ec.marshalNCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋcollectionᚐCollection(ctx, field.Selections, res).MarshalGQL(w)
+			ec.marshalNCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx, field.Selections, res).MarshalGQL(w)
 			w.Write([]byte{'}'})
 		})
 	}
@@ -2671,10 +2742,147 @@ func (ec *executionContext) _Subscription_presentationUpdated(ctx context.Contex
 			w.Write([]byte{'{'})
 			graphql.MarshalString(field.Alias).MarshalGQL(w)
 			w.Write([]byte{':'})
-			ec.marshalNPresentation2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋpresentationᚐPresentation(ctx, field.Selections, res).MarshalGQL(w)
+			ec.marshalNPresentation2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋpresentationᚐPresentation(ctx, field.Selections, res).MarshalGQL(w)
 			w.Write([]byte{'}'})
 		})
 	}
+}
+
+func (ec *executionContext) _WebFile_url(ctx context.Context, field graphql.CollectedField, obj *model.WebFile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "WebFile",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.URL, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _WebFile_path(ctx context.Context, field graphql.CollectedField, obj *model.WebFile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "WebFile",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_WebFile_path_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Path, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _WebFile_modTime(ctx context.Context, field graphql.CollectedField, obj *model.WebFile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "WebFile",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ModTime, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _WebFile_size(ctx context.Context, field graphql.CollectedField, obj *model.WebFile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "WebFile",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Size, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -3736,6 +3944,29 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    ************************** interface.gotpl ***************************
 
+func (ec *executionContext) _File(ctx context.Context, sel ast.SelectionSet, obj model.File) graphql.Marshaler {
+	switch obj := (obj).(type) {
+	case nil:
+		return graphql.Null
+	case file.File:
+		return ec._DiskFile(ctx, sel, &obj)
+	case *file.File:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._DiskFile(ctx, sel, obj)
+	case model.WebFile:
+		return ec._WebFile(ctx, sel, &obj)
+	case *model.WebFile:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._WebFile(ctx, sel, obj)
+	default:
+		panic(fmt.Errorf("unexpected type %T", obj))
+	}
+}
+
 func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj model.Node) graphql.Marshaler {
 	switch obj := (obj).(type) {
 	case nil:
@@ -3984,17 +4215,17 @@ func (ec *executionContext) _CollectionEdge(ctx context.Context, sel ast.Selecti
 	return out
 }
 
-var fileImplementors = []string{"File"}
+var diskFileImplementors = []string{"DiskFile", "File"}
 
-func (ec *executionContext) _File(ctx context.Context, sel ast.SelectionSet, obj *file.File) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, fileImplementors)
+func (ec *executionContext) _DiskFile(ctx context.Context, sel ast.SelectionSet, obj *file.File) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, diskFileImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("File")
+			out.Values[i] = graphql.MarshalString("DiskFile")
 		case "path":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -4003,16 +4234,16 @@ func (ec *executionContext) _File(ctx context.Context, sel ast.SelectionSet, obj
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._File_path(ctx, field, obj)
+				res = ec._DiskFile_path(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
 			})
 		case "modTime":
-			out.Values[i] = ec._File_modTime(ctx, field, obj)
+			out.Values[i] = ec._DiskFile_modTime(ctx, field, obj)
 		case "size":
-			out.Values[i] = ec._File_size(ctx, field, obj)
+			out.Values[i] = ec._DiskFile_size(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4353,6 +4584,42 @@ func (ec *executionContext) _Subscription(ctx context.Context, sel ast.Selection
 	}
 }
 
+var webFileImplementors = []string{"WebFile", "File"}
+
+func (ec *executionContext) _WebFile(ctx context.Context, sel ast.SelectionSet, obj *model.WebFile) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, webFileImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("WebFile")
+		case "url":
+			out.Values[i] = ec._WebFile_url(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "path":
+			out.Values[i] = ec._WebFile_path(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "modTime":
+			out.Values[i] = ec._WebFile_modTime(ctx, field, obj)
+		case "size":
+			out.Values[i] = ec._WebFile_size(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var __DirectiveImplementors = []string{"__Directive"}
 
 func (ec *executionContext) ___Directive(ctx context.Context, sel ast.SelectionSet, obj *introspection.Directive) graphql.Marshaler {
@@ -4612,15 +4879,15 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) marshalNCGTeamworkProject2githubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋcgteamworkᚐProject(ctx context.Context, sel ast.SelectionSet, v cgteamwork.Project) graphql.Marshaler {
+func (ec *executionContext) marshalNCGTeamworkProject2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcgteamworkᚐProject(ctx context.Context, sel ast.SelectionSet, v cgteamwork.Project) graphql.Marshaler {
 	return ec._CGTeamworkProject(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNCollectedEvent2githubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋeventᚋcollectedᚐEvent(ctx context.Context, sel ast.SelectionSet, v collected.Event) graphql.Marshaler {
+func (ec *executionContext) marshalNCollectedEvent2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋeventᚋcollectedᚐEvent(ctx context.Context, sel ast.SelectionSet, v collected.Event) graphql.Marshaler {
 	return ec._CollectedEvent(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNCollectedEvent2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋeventᚋcollectedᚐEvent(ctx context.Context, sel ast.SelectionSet, v *collected.Event) graphql.Marshaler {
+func (ec *executionContext) marshalNCollectedEvent2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋeventᚋcollectedᚐEvent(ctx context.Context, sel ast.SelectionSet, v *collected.Event) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -4630,11 +4897,11 @@ func (ec *executionContext) marshalNCollectedEvent2ᚖgithubᚗcomᚋWuLiFangᚋ
 	return ec._CollectedEvent(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNCollection2githubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v collection.Collection) graphql.Marshaler {
+func (ec *executionContext) marshalNCollection2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v collection.Collection) graphql.Marshaler {
 	return ec._Collection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v *collection.Collection) graphql.Marshaler {
+func (ec *executionContext) marshalNCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v *collection.Collection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -4644,11 +4911,11 @@ func (ec *executionContext) marshalNCollection2ᚖgithubᚗcomᚋWuLiFangᚋcshe
 	return ec._Collection(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNCollectionConnection2githubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionConnection(ctx context.Context, sel ast.SelectionSet, v model.CollectionConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNCollectionConnection2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionConnection(ctx context.Context, sel ast.SelectionSet, v model.CollectionConnection) graphql.Marshaler {
 	return ec._CollectionConnection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNCollectionConnection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionConnection(ctx context.Context, sel ast.SelectionSet, v *model.CollectionConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNCollectionConnection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionConnection(ctx context.Context, sel ast.SelectionSet, v *model.CollectionConnection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -4658,18 +4925,18 @@ func (ec *executionContext) marshalNCollectionConnection2ᚖgithubᚗcomᚋWuLiF
 	return ec._CollectionConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNFile2githubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋfileᚐFile(ctx context.Context, sel ast.SelectionSet, v file.File) graphql.Marshaler {
-	return ec._File(ctx, sel, &v)
+func (ec *executionContext) marshalNDiskFile2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋfileᚐFile(ctx context.Context, sel ast.SelectionSet, v file.File) graphql.Marshaler {
+	return ec._DiskFile(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋfileᚐFile(ctx context.Context, sel ast.SelectionSet, v *file.File) graphql.Marshaler {
+func (ec *executionContext) marshalNDiskFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋfileᚐFile(ctx context.Context, sel ast.SelectionSet, v *file.File) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._File(ctx, sel, v)
+	return ec._DiskFile(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNID2string(ctx context.Context, v interface{}) (string, error) {
@@ -4729,11 +4996,11 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) marshalNPageInfo2githubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋapiᚋgeneratedᚋmodelᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v model.PageInfo) graphql.Marshaler {
+func (ec *executionContext) marshalNPageInfo2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v model.PageInfo) graphql.Marshaler {
 	return ec._PageInfo(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNPageInfo2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋapiᚋgeneratedᚋmodelᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v *model.PageInfo) graphql.Marshaler {
+func (ec *executionContext) marshalNPageInfo2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v *model.PageInfo) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -4743,11 +5010,11 @@ func (ec *executionContext) marshalNPageInfo2ᚖgithubᚗcomᚋWuLiFangᚋcsheet
 	return ec._PageInfo(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNPresentation2githubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋpresentationᚐPresentation(ctx context.Context, sel ast.SelectionSet, v presentation.Presentation) graphql.Marshaler {
+func (ec *executionContext) marshalNPresentation2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋpresentationᚐPresentation(ctx context.Context, sel ast.SelectionSet, v presentation.Presentation) graphql.Marshaler {
 	return ec._Presentation(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNPresentation2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋpresentationᚐPresentationᚄ(ctx context.Context, sel ast.SelectionSet, v []presentation.Presentation) graphql.Marshaler {
+func (ec *executionContext) marshalNPresentation2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋpresentationᚐPresentationᚄ(ctx context.Context, sel ast.SelectionSet, v []presentation.Presentation) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -4771,7 +5038,7 @@ func (ec *executionContext) marshalNPresentation2ᚕgithubᚗcomᚋWuLiFangᚋcs
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNPresentation2githubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋpresentationᚐPresentation(ctx, sel, v[i])
+			ret[i] = ec.marshalNPresentation2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋpresentationᚐPresentation(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -4784,7 +5051,7 @@ func (ec *executionContext) marshalNPresentation2ᚕgithubᚗcomᚋWuLiFangᚋcs
 	return ret
 }
 
-func (ec *executionContext) marshalNPresentation2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋpresentationᚐPresentation(ctx context.Context, sel ast.SelectionSet, v *presentation.Presentation) graphql.Marshaler {
+func (ec *executionContext) marshalNPresentation2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋpresentationᚐPresentation(ctx context.Context, sel ast.SelectionSet, v *presentation.Presentation) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -4808,11 +5075,11 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) marshalNStringEntry2githubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEntry(ctx context.Context, sel ast.SelectionSet, v model.StringEntry) graphql.Marshaler {
+func (ec *executionContext) marshalNStringEntry2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEntry(ctx context.Context, sel ast.SelectionSet, v model.StringEntry) graphql.Marshaler {
 	return ec._StringEntry(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNStringEntry2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEntryᚄ(ctx context.Context, sel ast.SelectionSet, v []model.StringEntry) graphql.Marshaler {
+func (ec *executionContext) marshalNStringEntry2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEntryᚄ(ctx context.Context, sel ast.SelectionSet, v []model.StringEntry) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -4836,7 +5103,7 @@ func (ec *executionContext) marshalNStringEntry2ᚕgithubᚗcomᚋWuLiFangᚋcsh
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNStringEntry2githubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEntry(ctx, sel, v[i])
+			ret[i] = ec.marshalNStringEntry2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEntry(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5112,7 +5379,7 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return ec.marshalOBoolean2bool(ctx, sel, *v)
 }
 
-func (ec *executionContext) marshalOCGTeamworkProject2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋcgteamworkᚐProjectᚄ(ctx context.Context, sel ast.SelectionSet, v []cgteamwork.Project) graphql.Marshaler {
+func (ec *executionContext) marshalOCGTeamworkProject2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcgteamworkᚐProjectᚄ(ctx context.Context, sel ast.SelectionSet, v []cgteamwork.Project) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -5139,7 +5406,7 @@ func (ec *executionContext) marshalOCGTeamworkProject2ᚕgithubᚗcomᚋWuLiFang
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNCGTeamworkProject2githubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋcgteamworkᚐProject(ctx, sel, v[i])
+			ret[i] = ec.marshalNCGTeamworkProject2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcgteamworkᚐProject(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5152,11 +5419,11 @@ func (ec *executionContext) marshalOCGTeamworkProject2ᚕgithubᚗcomᚋWuLiFang
 	return ret
 }
 
-func (ec *executionContext) marshalOCollection2githubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v collection.Collection) graphql.Marshaler {
+func (ec *executionContext) marshalOCollection2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v collection.Collection) graphql.Marshaler {
 	return ec._Collection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalOCollection2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v []*collection.Collection) graphql.Marshaler {
+func (ec *executionContext) marshalOCollection2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v []*collection.Collection) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -5183,7 +5450,7 @@ func (ec *executionContext) marshalOCollection2ᚕᚖgithubᚗcomᚋWuLiFangᚋc
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋcollectionᚐCollection(ctx, sel, v[i])
+			ret[i] = ec.marshalOCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5196,18 +5463,18 @@ func (ec *executionContext) marshalOCollection2ᚕᚖgithubᚗcomᚋWuLiFangᚋc
 	return ret
 }
 
-func (ec *executionContext) marshalOCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v *collection.Collection) graphql.Marshaler {
+func (ec *executionContext) marshalOCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v *collection.Collection) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Collection(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOCollectionEdge2githubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionEdge(ctx context.Context, sel ast.SelectionSet, v model.CollectionEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOCollectionEdge2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionEdge(ctx context.Context, sel ast.SelectionSet, v model.CollectionEdge) graphql.Marshaler {
 	return ec._CollectionEdge(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalOCollectionEdge2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionEdge(ctx context.Context, sel ast.SelectionSet, v []*model.CollectionEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOCollectionEdge2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionEdge(ctx context.Context, sel ast.SelectionSet, v []*model.CollectionEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -5234,7 +5501,7 @@ func (ec *executionContext) marshalOCollectionEdge2ᚕᚖgithubᚗcomᚋWuLiFang
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOCollectionEdge2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionEdge(ctx, sel, v[i])
+			ret[i] = ec.marshalOCollectionEdge2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5247,22 +5514,11 @@ func (ec *executionContext) marshalOCollectionEdge2ᚕᚖgithubᚗcomᚋWuLiFang
 	return ret
 }
 
-func (ec *executionContext) marshalOCollectionEdge2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionEdge(ctx context.Context, sel ast.SelectionSet, v *model.CollectionEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOCollectionEdge2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionEdge(ctx context.Context, sel ast.SelectionSet, v *model.CollectionEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._CollectionEdge(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOFile2githubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋfileᚐFile(ctx context.Context, sel ast.SelectionSet, v file.File) graphql.Marshaler {
-	return ec._File(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalOFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋmodelᚋfileᚐFile(ctx context.Context, sel ast.SelectionSet, v *file.File) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._File(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOInt2int(ctx context.Context, v interface{}) (int, error) {
@@ -5296,7 +5552,7 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	return ec.marshalOInt2int(ctx, sel, *v)
 }
 
-func (ec *executionContext) marshalONode2githubᚗcomᚋWuLiFangᚋcsheetᚋpkgᚋapiᚋgeneratedᚋmodelᚐNode(ctx context.Context, sel ast.SelectionSet, v model.Node) graphql.Marshaler {
+func (ec *executionContext) marshalONode2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐNode(ctx context.Context, sel ast.SelectionSet, v model.Node) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -5332,6 +5588,32 @@ func (ec *executionContext) unmarshalOTime2timeᚐTime(ctx context.Context, v in
 
 func (ec *executionContext) marshalOTime2timeᚐTime(ctx context.Context, sel ast.SelectionSet, v time.Time) graphql.Marshaler {
 	return graphql.MarshalTime(v)
+}
+
+func (ec *executionContext) unmarshalOTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalOTime2timeᚐTime(ctx, v)
+	return &res, err
+}
+
+func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel ast.SelectionSet, v *time.Time) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec.marshalOTime2timeᚐTime(ctx, sel, *v)
+}
+
+func (ec *executionContext) marshalOWebFile2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx context.Context, sel ast.SelectionSet, v model.WebFile) graphql.Marshaler {
+	return ec._WebFile(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalOWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx context.Context, sel ast.SelectionSet, v *model.WebFile) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._WebFile(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

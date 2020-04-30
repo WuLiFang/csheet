@@ -115,3 +115,6 @@ func Scan(fn func(v File) bool) error {
 		return nil
 	})
 }
+
+// IsFile implements graphql File interface.
+func (File) IsFile() {}

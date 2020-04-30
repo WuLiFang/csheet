@@ -11,7 +11,7 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/unipath"
 )
 
-func (r *fileResolver) PathGQLField(ctx context.Context, obj *file.File, format *string) (string, error) {
+func (r *diskFileResolver) Path(ctx context.Context, obj *file.File, format *string) (string, error) {
 	var f string
 	if format != nil {
 		f = *format
@@ -26,7 +26,7 @@ func (r *fileResolver) PathGQLField(ctx context.Context, obj *file.File, format 
 	}
 }
 
-// File returns generated.FileResolver implementation.
-func (r *Resolver) File() generated.FileResolver { return &fileResolver{r} }
+// DiskFile returns generated.DiskFileResolver implementation.
+func (r *Resolver) DiskFile() generated.DiskFileResolver { return &diskFileResolver{r} }
 
-type fileResolver struct{ *Resolver }
+type diskFileResolver struct{ *Resolver }

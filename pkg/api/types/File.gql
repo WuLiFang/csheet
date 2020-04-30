@@ -1,4 +1,8 @@
-type File {
+"""
+DEPRECATED: will be remove after 2020-05-30.
+Temperary interface for backward compability.
+"""
+interface File {
   path(format: String): String!
   modTime: Time
   size: Int

@@ -7,6 +7,7 @@ import (
 	"context"
 
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
+	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/model/file"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
@@ -26,9 +27,10 @@ func (r *presentationResolver) Raw(ctx context.Context, obj *presentation.Presen
 	return &v, err
 }
 
-func (r *presentationResolver) Thumb(ctx context.Context, obj *presentation.Presentation) (*file.File, error) {
-	return &file.File{
+func (r *presentationResolver) Thumb(ctx context.Context, obj *presentation.Presentation) (*model.WebFile, error) {
+	return &model.WebFile{
 		Path: obj.Thumb,
+		URL:  "/files/" + obj.Thumb,
 	}, nil
 }
 
@@ -48,9 +50,10 @@ func (r *presentationResolver) IsThumbTranscodeFailed(ctx context.Context, obj *
 	return &v, nil
 }
 
-func (r *presentationResolver) Regular(ctx context.Context, obj *presentation.Presentation) (*file.File, error) {
-	return &file.File{
+func (r *presentationResolver) Regular(ctx context.Context, obj *presentation.Presentation) (*model.WebFile, error) {
+	return &model.WebFile{
 		Path: obj.Regular,
+		URL:  "/files/" + obj.Regular,
 	}, nil
 }
 

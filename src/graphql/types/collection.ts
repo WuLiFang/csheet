@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface collection_metadata {
-  __typename: "StringEntry";
+  __typename: 'StringEntry';
   /**
    * key
    */
@@ -20,24 +20,24 @@ export interface collection_metadata {
 }
 
 export interface collection_presentations_raw {
-  __typename: "File";
+  __typename: 'DiskFile';
   path: string;
   modTime: any | null;
   size: number | null;
 }
 
 export interface collection_presentations_thumb {
-  __typename: "File";
-  path: string;
+  __typename: 'WebFile';
+  url: string;
 }
 
 export interface collection_presentations_regular {
-  __typename: "File";
-  path: string;
+  __typename: 'WebFile';
+  url: string;
 }
 
 export interface collection_presentations {
-  __typename: "Presentation";
+  __typename: 'Presentation';
   id: string;
   type: string;
   raw: collection_presentations_raw;
@@ -48,7 +48,7 @@ export interface collection_presentations {
 }
 
 export interface collection {
-  __typename: "Collection";
+  __typename: 'Collection';
   id: string;
   title: string;
   origin: string;

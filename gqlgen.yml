@@ -35,7 +35,7 @@ skip_validation: true
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
 # autobind:
-#   - 'github.com/WuLiFang/csheet/model'
+#   - './model'
 
 # This section declares type mapping between the GraphQL and go type systems
 #
@@ -56,19 +56,19 @@ models:
       - github.com/99designs/gqlgen/graphql.Int32
   CollectedEvent:
     model:
-      - github.com/WuLiFang/csheet/pkg/model/event/collected.Event
+      - ./pkg/model/event/collected.Event
   Collection:
     model:
-      - github.com/WuLiFang/csheet/pkg/model/collection.Collection
+      - ./pkg/model/collection.Collection
   Presentation:
     model:
-      - github.com/WuLiFang/csheet/pkg/model/presentation.Presentation
-  File:
+      - ./pkg/model/presentation.Presentation
+  DiskFile:
     model:
-      - github.com/WuLiFang/csheet/pkg/model/file.File
+      - ./pkg/model/file.File
     fields:
       path:
-        fieldName: 'PathGQLField'
+        resolver: true
   CGTeamworkProject:
     model:
-      - github.com/WuLiFang/csheet/pkg/cgteamwork.Project
+      - ./pkg/cgteamwork.Project

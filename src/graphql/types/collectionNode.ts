@@ -24,20 +24,20 @@ export interface collectionNode_node_Collection_metadata {
 }
 
 export interface collectionNode_node_Collection_presentations_raw {
-  __typename: "File";
+  __typename: "DiskFile";
   path: string;
   modTime: any | null;
   size: number | null;
 }
 
 export interface collectionNode_node_Collection_presentations_thumb {
-  __typename: "File";
-  path: string;
+  __typename: "WebFile";
+  url: string;
 }
 
 export interface collectionNode_node_Collection_presentations_regular {
-  __typename: "File";
-  path: string;
+  __typename: "WebFile";
+  url: string;
 }
 
 export interface collectionNode_node_Collection_presentations {

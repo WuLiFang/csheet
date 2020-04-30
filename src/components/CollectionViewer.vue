@@ -202,7 +202,7 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
         continue;
       }
       i.presentations.forEach(j => {
-        ret.push(fileSrc(j.regular?.path));
+        ret.push(fileSrc(j.regular?.url));
       });
     }
     return ret;
