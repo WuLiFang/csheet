@@ -46,11 +46,10 @@
           class="text-sm text-gray-500 select-all break-words"
         ) {{presentation && presentation.raw.path}}
       main(
-        
         class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden"
       )
         .viewport(
-          class="relative lg:w-2/3 lg:flex-auto lg:flex lg:flex-col text-center lg:items-center bg-black "
+          class="relative text-center lg:w-2/3 bg-black"
         )
           template(v-for="i in prefetchURLs")
             link(rel="prefetch" :href="i")
@@ -70,14 +69,14 @@
           )
             Presentation(
               :key="value.id"
-              class="object-contain m-auto w-full h-full absolute inset-0"
+              class="object-contain w-full h-full absolute inset-0"
               :id="presentationID"
               size="regular"
               autoplay
             )
           //- placeholder for small screen
           Presentation(
-            class="object-contain m-auto w-full h-full invisible"
+            class="object-contain w-full h-full invisible"
             :id="presentationID"
             size="thumb"
           )
