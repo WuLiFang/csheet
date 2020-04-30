@@ -11,6 +11,8 @@ steps:
     commands:
       - >-
         docker build
+        --build-arg HTTP_PROXY=$${HTTP_PROXY}
+        --build-arg HTTPS_PROXY=$${HTTPS_PROXY}
         --label "repo=${DRONE_REPO}"
         --label "commit-sha=${DRONE_COMMIT_SHA}"
         --tag registry.wlf.com/csheet:${DRONE_COMMIT_SHA}
