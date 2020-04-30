@@ -14,23 +14,29 @@
           class="float-right h-16"
         )
           button(
-            class="h-full text-gray-400 hover:text-gray-200"
+            class="h-full text-gray-400 hover:text-gray-200 outline-none"
             title="关闭（快捷键：Esc）"
             @click="close()"
           )
             FaIcon.h-full(name="window-close")
           button(
+            ref="prev"
             class="h-full text-gray-400 ml-1 hover:text-gray-200 disabled:text-gray-600"
+            class="outline-none"
             :disabled="!prev"
             @click="jumpPrev()"
+            @animationend="$event.target.classList.remove('button-click-anim')"
             title="上一个（快捷键：←）"
           )
             FaIcon.h-full(name="caret-square-left")
           button(
+            ref="next"
             class="h-full text-gray-400 ml-1 hover:text-gray-200 disabled:text-gray-600"
+            class="outline-none"
             :disabled="!next"
             title="下一个（快捷键：→）"
             @click="jumpNext()"
+            @animationend="$event.target.classList.remove('button-click-anim')"
           )  
             FaIcon.h-full(name="caret-square-right")
         h1(
@@ -177,17 +183,24 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
   @Prop({ type: Object })
   next?: Collection;
 
+  $refs!: {
+    prev: HTMLButtonElement;
+    next: HTMLButtonElement;
+  };
+
   presentationID = '';
   loadingCount = 0;
 
   jumpPrev() {
     if (this.prev) {
+      this.$refs.prev.classList.add('button-click-anim');
       this.$emit('update:value', this.prev);
     }
   }
 
   jumpNext() {
     if (this.next) {
+      this.$refs.next.classList.add('button-click-anim');
       this.$emit('update:value', this.next);
     }
   }
@@ -261,5 +274,15 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
   @apply transition-transform;
   @apply ease-in-out;
   @apply duration-300;
+}
+
+.button-click-anim {
+  animation: button-click 500ms ease-in-out;
+}
+
+@keyframes button-click {
+  30% {
+    @apply opacity-25;
+  }
 }
 </style>
