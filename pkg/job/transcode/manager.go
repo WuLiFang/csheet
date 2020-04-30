@@ -60,7 +60,7 @@ func min(a, b float64) float64 {
 	return b
 }
 
-func (m *manager) discoverJob(p presentation.Presentation, rawTag string) {
+func (m *manager) discoverJob(p presentation.Presentation, rawTag string) (err error) {
 	var outdated = false
 	outdated = m.discoverJobByTag(
 		p,
@@ -71,10 +71,11 @@ func (m *manager) discoverJob(p presentation.Presentation, rawTag string) {
 		rawTag, p.ThumbErrorTag, p.ThumbSuccessTag,
 		p.Thumb, thumbJobType(p.Type)) || outdated
 	if outdated {
-		db.Set(db.IndexPresentationOutdated.Key(p.ID()), nil)
+		err = db.Set(db.IndexPresentationOutdated.Key(p.ID()), nil)
 	} else {
-		db.Delete(db.IndexPresentationOutdated.Key(p.ID()))
+		err = db.Delete(db.IndexPresentationOutdated.Key(p.ID()))
 	}
+	return
 }
 
 func iterateAllPresentation(fn func(p presentation.Presentation) error) error {
@@ -158,24 +159,23 @@ func (m *manager) Start() {
 						isCanceled = true
 						return context.Canceled
 					default:
-						err = rl.Wait(context.Background())
-						if err != nil {
-							logger.DPanic("wait rate limit fail", "error", err)
-							return
-						}
-						jobCount++
-						var raw file.File
-						raw, err = file.FindByPath(v.Raw)
-						if err == db.ErrKeyNotFound {
-							return nil
-						}
-						if err != nil {
-							return
-						}
-						rawTag := raw.Tag()
-						m.discoverJob(v, rawTag)
 					}
-					return
+					err = rl.Wait(context.Background())
+					if err != nil {
+						logger.DPanic("wait rate limit fail", "error", err)
+						return
+					}
+					jobCount++
+					var raw file.File
+					raw, err = file.FindByPath(v.Raw)
+					if err == db.ErrKeyNotFound {
+						return nil
+					}
+					if err != nil {
+						return
+					}
+					rawTag := raw.Tag()
+					return m.discoverJob(v, rawTag)
 				}, allowFullScan)
 				if err != nil {
 					logger.Errorw("presentation scan failed", "error", err)
