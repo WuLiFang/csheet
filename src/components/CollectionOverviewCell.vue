@@ -75,6 +75,7 @@ export default class CollectionOverviewCell extends Vue {
       Wait: 2,
       Check: 3,
       Retake: 4,
+      Close: 5,
     };
     const data = this.value.metadata.find(i => i.k === 'cgteamwork.tasks')?.v;
     const pipeline = this.value.metadata.find(
