@@ -61,7 +61,6 @@
             leave-to-class="opacity-0"
             enter-active-class="transition-all duration-500 ease-in"
             leave-active-class="transition-all duration-500 ease-out"
-            mode="in-out"
           )
             Presentation(
               :key="value.id"
