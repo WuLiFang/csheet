@@ -63,6 +63,10 @@ type ComplexityRoot struct {
 		Status   func(childComplexity int) int
 	}
 
+	ClientConfig struct {
+		SentryDsn func(childComplexity int) int
+	}
+
 	CollectedEvent struct {
 		ID           func(childComplexity int) int
 		OriginPrefix func(childComplexity int) int
@@ -122,6 +126,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		CgteamworkProjects func(childComplexity int) int
+		ClientConfig       func(childComplexity int, name string) int
 		Collections        func(childComplexity int, originPrefix *string, presentationCountGt *int, first *int, last *int, before *string, after *string) int
 		FolderOriginPrefix func(childComplexity int, root string) int
 		Node               func(childComplexity int, id string) int
@@ -171,6 +176,7 @@ type PresentationResolver interface {
 }
 type QueryResolver interface {
 	CgteamworkProjects(ctx context.Context) ([]cgteamwork.Project, error)
+	ClientConfig(ctx context.Context, name string) (*model.ClientConfig, error)
 	Collections(ctx context.Context, originPrefix *string, presentationCountGt *int, first *int, last *int, before *string, after *string) (*model.CollectionConnection, error)
 	FolderOriginPrefix(ctx context.Context, root string) (string, error)
 	Node(ctx context.Context, id string) (model.Node, error)
@@ -223,6 +229,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CGTeamworkProject.Status(childComplexity), true
+
+	case "ClientConfig.sentryDSN":
+		if e.complexity.ClientConfig.SentryDsn == nil {
+			break
+		}
+
+		return e.complexity.ClientConfig.SentryDsn(childComplexity), true
 
 	case "CollectedEvent.id":
 		if e.complexity.CollectedEvent.ID == nil {
@@ -477,6 +490,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.CgteamworkProjects(childComplexity), true
 
+	case "Query.clientConfig":
+		if e.complexity.Query.ClientConfig == nil {
+			break
+		}
+
+		args, err := ec.field_Query_clientConfig_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.ClientConfig(childComplexity, args["name"].(string)), true
+
 	case "Query.collections":
 		if e.complexity.Query.Collections == nil {
 			break
@@ -693,6 +718,14 @@ var sources = []*ast.Source{
   cgteamworkProjects: [CGTeamworkProject!]
 }
 `, BuiltIn: false},
+	&ast.Source{Name: "pkg/api/queries/clientConfig.gql", Input: `type ClientConfig {
+  sentryDSN: String
+}
+
+extend type Query {
+  clientConfig(name: String!): ClientConfig
+}
+`, BuiltIn: false},
 	&ast.Source{Name: "pkg/api/queries/collections.gql", Input: `extend type Query {
   collections(
     originPrefix: String
@@ -880,6 +913,20 @@ func (ec *executionContext) field_Mutation_collectFromFolder_args(ctx context.Co
 }
 
 func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["name"]; ok {
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_clientConfig_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
@@ -1201,6 +1248,37 @@ func (ec *executionContext) _CGTeamworkProject_status(ctx context.Context, field
 	res := resTmp.(bool)
 	fc.Result = res
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClientConfig_sentryDSN(ctx context.Context, field graphql.CollectedField, obj *model.ClientConfig) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "ClientConfig",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SentryDsn, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CollectedEvent_id(ctx context.Context, field graphql.CollectedField, obj *collected.Event) (ret graphql.Marshaler) {
@@ -2336,6 +2414,44 @@ func (ec *executionContext) _Query_cgteamworkProjects(ctx context.Context, field
 	res := resTmp.([]cgteamwork.Project)
 	fc.Result = res
 	return ec.marshalOCGTeamworkProject2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcgteamworkᚐProjectᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_clientConfig(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Query",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_clientConfig_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().ClientConfig(rctx, args["name"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.ClientConfig)
+	fc.Result = res
+	return ec.marshalOClientConfig2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐClientConfig(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_collections(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4052,6 +4168,30 @@ func (ec *executionContext) _CGTeamworkProject(ctx context.Context, sel ast.Sele
 	return out
 }
 
+var clientConfigImplementors = []string{"ClientConfig"}
+
+func (ec *executionContext) _ClientConfig(ctx context.Context, sel ast.SelectionSet, obj *model.ClientConfig) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, clientConfigImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ClientConfig")
+		case "sentryDSN":
+			out.Values[i] = ec._ClientConfig_sentryDSN(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var collectedEventImplementors = []string{"CollectedEvent", "Node"}
 
 func (ec *executionContext) _CollectedEvent(ctx context.Context, sel ast.SelectionSet, obj *collected.Event) graphql.Marshaler {
@@ -4472,6 +4612,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_cgteamworkProjects(ctx, field)
+				return res
+			})
+		case "clientConfig":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_clientConfig(ctx, field)
 				return res
 			})
 		case "collections":
@@ -5417,6 +5568,17 @@ func (ec *executionContext) marshalOCGTeamworkProject2ᚕgithubᚗcomᚋWuLiFang
 	}
 	wg.Wait()
 	return ret
+}
+
+func (ec *executionContext) marshalOClientConfig2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐClientConfig(ctx context.Context, sel ast.SelectionSet, v model.ClientConfig) graphql.Marshaler {
+	return ec._ClientConfig(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalOClientConfig2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐClientConfig(ctx context.Context, sel ast.SelectionSet, v *model.ClientConfig) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._ClientConfig(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOCollection2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v collection.Collection) graphql.Marshaler {

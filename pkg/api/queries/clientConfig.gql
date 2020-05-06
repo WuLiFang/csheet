@@ -1,0 +1,7 @@
+type ClientConfig {
+  sentryDSN: String
+}
+
+extend type Query {
+  clientConfig(name: String!): ClientConfig
+}

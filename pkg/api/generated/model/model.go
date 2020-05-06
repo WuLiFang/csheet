@@ -18,6 +18,10 @@ type Node interface {
 	IsNode()
 }
 
+type ClientConfig struct {
+	SentryDsn *string `json:"sentryDSN"`
+}
+
 type CollectionConnection struct {
 	Edges    []*CollectionEdge        `json:"edges"`
 	Nodes    []*collection.Collection `json:"nodes"`

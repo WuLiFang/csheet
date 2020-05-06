@@ -48,6 +48,14 @@ CSHEET_TEMP_LIFE
 
   使用 go 时间格式，例如：1h2m3s。
 
+CSHEET_WEB_SENTRY_DSN
+
+  网页端 Sentry DSN。
+
+CSHEET_SERVER_SENTRY_DSN
+
+  服务端 Sentry DSN。
+
 CGTEAMWORK_URL
 
   CGTeamwork 服务器地址。例：http://192.168.50.11
