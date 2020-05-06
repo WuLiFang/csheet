@@ -17,7 +17,10 @@
           FaIcon.w-full(name="video")
         template(v-else)
           span {{i.type}}
-        TimeWidget(:value="i.raw.modTime")
+        TimeWidget(
+          v-if="i.raw.modTime"
+          :value="i.raw.modTime"
+        )
 </template>
 
 <script lang="ts">
