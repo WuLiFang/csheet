@@ -8,40 +8,39 @@
 // ====================================================
 
 export interface presentationNode_node_Collection {
-  __typename: 'Collection' | 'CollectedEvent';
+  __typename: "Collection" | "CollectedEvent";
 }
 
 export interface presentationNode_node_Presentation_raw {
-  __typename: 'DiskFile';
+  __typename: "DiskFile";
   path: string;
   modTime: any | null;
   size: number | null;
 }
 
 export interface presentationNode_node_Presentation_thumb {
-  __typename: 'WebFile';
+  __typename: "WebFile";
   url: string;
 }
 
 export interface presentationNode_node_Presentation_regular {
-  __typename: 'WebFile';
+  __typename: "WebFile";
   url: string;
 }
 
 export interface presentationNode_node_Presentation {
-  __typename: 'Presentation';
+  __typename: "Presentation";
   id: string;
   type: string;
   raw: presentationNode_node_Presentation_raw;
   thumb: presentationNode_node_Presentation_thumb | null;
+  isThumbTranscodeFailed: boolean | null;
   regular: presentationNode_node_Presentation_regular | null;
   isRegularOutdated: boolean | null;
   isRegularTranscodeFailed: boolean | null;
 }
 
-export type presentationNode_node =
-  | presentationNode_node_Collection
-  | presentationNode_node_Presentation;
+export type presentationNode_node = presentationNode_node_Collection | presentationNode_node_Presentation;
 
 export interface presentationNode {
   node: presentationNode_node | null;

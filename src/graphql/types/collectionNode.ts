@@ -46,6 +46,7 @@ export interface collectionNode_node_Collection_presentations {
   type: string;
   raw: collectionNode_node_Collection_presentations_raw;
   thumb: collectionNode_node_Collection_presentations_thumb | null;
+  isThumbTranscodeFailed: boolean | null;
   regular: collectionNode_node_Collection_presentations_regular | null;
   isRegularOutdated: boolean | null;
   isRegularTranscodeFailed: boolean | null;

@@ -26,6 +26,7 @@ export function fileSrc(v: string | undefined): string {
         return !this.id;
       },
       update(v: presentationNode): presentation | undefined {
+        this.isLoadFailed = false;
         return v.node?.__typename === 'Presentation' ? v.node : undefined;
       },
     },
@@ -38,6 +39,14 @@ export function fileSrc(v: string | undefined): string {
           src,
           alt: this.node?.raw?.path,
         },
+        style: {
+          filter: this.imageFilter,
+        },
+        on: {
+          error: () => {
+            this.isLoadFailed = true;
+          },
+        },
       });
     };
     const renderVideo = () => {
@@ -48,6 +57,11 @@ export function fileSrc(v: string | undefined): string {
           controls: true,
           loop: true,
           autoplay: this.autoplay,
+        },
+        on: {
+          error: () => {
+            this.isLoadFailed = true;
+          },
         },
       });
     };
@@ -79,8 +93,16 @@ export default class Presentation extends Vue {
 
   node?: presentation;
 
+  isLoadFailed = false;
+
   get path(): string {
-    if (!this.id) {
+    if (this.isTranscodeFailed) {
+      return require('@/assets/img/transcode_failed.svg');
+    }
+    if (this.isLoadFailed) {
+      return require('@/assets/img/load_failed.svg');
+    }
+    if (!this.id || this.isLoadFailed) {
       return require('@/assets/img/default.svg');
     }
     switch (this.size) {
@@ -90,6 +112,29 @@ export default class Presentation extends Vue {
       default:
         return fileSrc(this.node?.thumb?.url);
     }
+  }
+
+  get isTranscodeFailed(): boolean {
+    switch (this.size) {
+      case 'regular':
+        return this.node?.isRegularTranscodeFailed ?? false;
+      case 'thumb':
+      default:
+        return this.node?.isThumbTranscodeFailed ?? false;
+    }
+  }
+
+  get imageFilter(): string {
+    if (this.isLoadFailed || this.isTranscodeFailed || !this.id) {
+      switch (this.size) {
+        case 'regular':
+          return '';
+        case 'thumb':
+        default:
+          return 'brightness(0.3)';
+      }
+    }
+    return '';
   }
 }
 </script>

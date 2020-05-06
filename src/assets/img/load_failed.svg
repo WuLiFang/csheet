@@ -15,7 +15,7 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
-   sodipodi:docname="default.svg">
+   sodipodi:docname="error.svg">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -26,8 +26,8 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.10141716"
-     inkscape:cx="960"
-     inkscape:cy="539.99612"
+     inkscape:cx="590.24009"
+     inkscape:cy="-606.80823"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -46,7 +46,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -57,9 +57,9 @@
      transform="translate(0,345303)">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:325.39074707px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#b3b3b3;fill-opacity:1;stroke:none;stroke-width:8.13476753"
-       x="469.05402"
+       style="font-style:normal;font-weight:normal;font-size:325.39074707px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ff5555;fill-opacity:1;stroke:none;stroke-width:8.13476753;"
+       x="307.62967"
        y="-344650.03"
-       id="text3715">无内容</text>
+       id="text3715">载入失败</text>
   </g>
 </svg>

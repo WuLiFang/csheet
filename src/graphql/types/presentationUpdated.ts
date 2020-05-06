@@ -30,6 +30,7 @@ export interface presentationUpdated_presentationUpdated {
   type: string;
   raw: presentationUpdated_presentationUpdated_raw;
   thumb: presentationUpdated_presentationUpdated_thumb | null;
+  isThumbTranscodeFailed: boolean | null;
   regular: presentationUpdated_presentationUpdated_regular | null;
   isRegularOutdated: boolean | null;
   isRegularTranscodeFailed: boolean | null;

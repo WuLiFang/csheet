@@ -9,6 +9,7 @@ fragment presentation on Presentation {
   thumb {
     url
   }
+  isThumbTranscodeFailed
   regular {
     url
   }

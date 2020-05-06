@@ -8,28 +8,29 @@
 // ====================================================
 
 export interface presentation_raw {
-  __typename: 'DiskFile';
+  __typename: "DiskFile";
   path: string;
   modTime: any | null;
   size: number | null;
 }
 
 export interface presentation_thumb {
-  __typename: 'WebFile';
+  __typename: "WebFile";
   url: string;
 }
 
 export interface presentation_regular {
-  __typename: 'WebFile';
+  __typename: "WebFile";
   url: string;
 }
 
 export interface presentation {
-  __typename: 'Presentation';
+  __typename: "Presentation";
   id: string;
   type: string;
   raw: presentation_raw;
   thumb: presentation_thumb | null;
+  isThumbTranscodeFailed: boolean | null;
   regular: presentation_regular | null;
   isRegularOutdated: boolean | null;
   isRegularTranscodeFailed: boolean | null;

@@ -1,10 +1,8 @@
 package router
 
 import (
-	"io"
 	"net/http"
 	"net/http/pprof"
-	"os"
 	"path"
 	"time"
 
@@ -100,15 +98,7 @@ func New() *gin.Engine {
 			}
 		}(status, c.Param("filepath"))
 		if status == http.StatusNotFound {
-
-			c.Header("Content-Type", "image/svg+xml")
 			c.Header("Cache-Control", "no-store")
-			d, err := os.Open("dist/static/default.svg")
-			if err != nil {
-				return
-			}
-			defer d.Close()
-			io.Copy(c.Writer, d)
 		}
 	}).Static("", filestore.Dir)
 	if config.Env == "development" {
