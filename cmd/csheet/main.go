@@ -16,6 +16,7 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/job/filewatch"
 	"github.com/WuLiFang/csheet/v6/pkg/job/transcode"
 	_ "github.com/WuLiFang/csheet/v6/pkg/mime"
+	"github.com/getsentry/sentry-go"
 	"github.com/tidwall/gjson"
 )
 
@@ -70,6 +71,17 @@ func main() {
 		logger.Warn("ignore invalid CSHEET_CGTEAMWORK_OVERWRITE")
 	}
 
+	if config.SentryDSN != "" {
+		err := sentry.Init(sentry.ClientOptions{
+			Dsn:         config.SentryDSN,
+			Environment: config.Env,
+		})
+		if err != nil {
+			logger.Error("sentry initialization failed", "error", err)
+		}
+	}
+
+	sentry.CaptureMessage("server started")
 	r := router.New()
 	err = r.Run(config.Address)
 	if err != nil {

@@ -28,6 +28,8 @@ var (
 	CGTeamworkMaxTaskPerCollect int
 	// CGTeamworkPipelineOverwrite config
 	CGTeamworkPipelineOverwrite string
+	// SentryDSN config
+	SentryDSN string
 )
 
 func init() {
@@ -81,4 +83,9 @@ func init() {
 		"cgteamwork-pipeline-overwrite",
 		getenv.String("CSHEET_CGTEAMWORK_PIPELINE_OVERWRITE", "{}"),
 		"replace cgteamwork collect with other pipelines. json `Record<string, []string>` format")
+	flag.StringVar(
+		&SentryDSN,
+		"sentry-dsn",
+		getenv.String("CSHEET_SERVER_SENTRY_DSN", ""),
+		"server sentry dsn")
 }

@@ -5,6 +5,7 @@ import (
 
 	"github.com/WuLiFang/csheet/v6/internal/config"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 func getConfig() zap.Config {
@@ -18,11 +19,17 @@ func getConfig() zap.Config {
 func GetLogger(n string) *zap.SugaredLogger {
 	config := getConfig()
 	if os.Getenv("DEBUG") == n {
-		config.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
+		config.Level.SetLevel(zap.DebugLevel)
 	} else {
-		config.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
+		config.Level.SetLevel(zap.InfoLevel)
 	}
-	logger, err := config.Build()
+	logger, err := config.Build(
+		zap.WrapCore(func(core zapcore.Core) zapcore.Core {
+			return zapcore.NewTee(
+				core,
+				&SentryCore{LevelEnabler: zap.NewAtomicLevelAt(zapcore.WarnLevel)},
+			)
+		}))
 	if err != nil {
 		panic(err)
 	}

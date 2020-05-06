@@ -6,33 +6,15 @@ import (
 	"path"
 	"time"
 
-	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/WuLiFang/csheet/v6/internal/config"
-	"github.com/WuLiFang/csheet/v6/pkg/api"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/filestore"
+	"github.com/WuLiFang/csheet/v6/pkg/middleware/gincontext"
+	"github.com/WuLiFang/csheet/v6/pkg/middleware/ginsentry"
 	"github.com/WuLiFang/csheet/v6/pkg/model/file"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
 	"github.com/gin-gonic/gin"
 )
-
-func apiHandler() gin.HandlerFunc {
-	apiH := handler.NewDefaultServer(api.NewExecutableSchema())
-	guiH := playground.Handler("GraphQL", "/api")
-
-	return func(c *gin.Context) {
-		if c.Request.Method == "GET" {
-			f := c.NegotiateFormat("application/json", "text/html")
-			if f == "text/html" {
-				guiH.ServeHTTP(c.Writer, c.Request)
-				return
-			}
-		}
-		apiH.ServeHTTP(c.Writer, c.Request)
-
-	}
-}
 
 // New router
 func New() *gin.Engine {
@@ -43,7 +25,8 @@ func New() *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.New()
-	r.Any("api", apiHandler())
+	r.Use(ginsentry.Middleware())
+	r.Any("api", gincontext.Middleware(), apiHandler())
 	r.Static("static", "dist/static")
 	r.Group("").Use(func(c *gin.Context) {
 		c.Next()
