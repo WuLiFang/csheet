@@ -52,7 +52,8 @@
         class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden"
       )
         .viewport(
-          class="relative text-center lg:w-2/3 bg-black"
+          class="relative text-center lg:w-2/3"
+          :class=`{[backgroundClass]: true}`
         )
           template(v-for="i in prefetchURLs")
             link(rel="prefetch" :href="i")
@@ -93,8 +94,18 @@
             :options="value.presentations"
             class="min-h-16"
           )
+          label(
+            class="block mt-2 lg:mx-1"
+          )
+            span 查看器背景
+            select(
+              v-model="preferredBackground"
+              class="form-select py-1 ml-1"
+            )
+              option(value="checkboard") 棋盘格
+              option(value="black") 纯黑
           CollectionMetadata(
-            class="flex-auto"
+            class="flex-auto lg:mx-1"
             :value="value"
           )
             template(#recollect-button)
@@ -128,7 +139,7 @@ import {
 } from '../graphql/types/collectionNode';
 import CollectionMetadata from './CollectionMetadata.vue';
 import { filePathFormat } from '../const';
-
+import * as preference from '@/preference';
 @Component<CollectionViewer>({
   components: {
     Presentation,
@@ -231,6 +242,21 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
     await this.$apollo.queries.node.refetch();
   }
 
+  get preferredBackground(): string {
+    return preference.get('viewerBackground');
+  }
+  set preferredBackground(v: string) {
+    preference.set('viewerBackground', v);
+  }
+  get backgroundClass(): string {
+    switch (this.preferredBackground) {
+      case 'checkboard':
+        return 'bg-checkboard';
+      default:
+        return 'bg-black';
+    }
+  }
+
   recollectingCount = 0;
   async recollect() {
     this.recollectingCount += 1;
@@ -274,5 +300,9 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
   30% {
     @apply opacity-25;
   }
+}
+
+.bg-checkboard {
+  background-image: url('../assets/img/checkboard.svg');
 }
 </style>

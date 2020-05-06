@@ -5,6 +5,7 @@ const preference = Vue.observable({
   presentationType: 'video',
   cgteamworkStage: 'leader',
   cellOverlayVisible: true,
+  viewerBackground: 'checkboard',
 });
 
 export type Preference = typeof preference;
