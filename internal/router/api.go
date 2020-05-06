@@ -17,7 +17,7 @@ func apiHandler() gin.HandlerFunc {
 	server.AroundResponses(func(ctx context.Context, next graphql.ResponseHandler) (ret *graphql.Response) {
 		ret = next(ctx)
 		if ret != nil && len(ret.Errors) > 0 {
-			if hub, err := ginsentry.Hub(ctx); err == nil {
+			if hub := ginsentry.Hub(ctx); hub != nil {
 				hub.WithScope(func(scope *sentry.Scope) {
 					scope.SetTag("mechanism", "graphql")
 					oc := graphql.GetOperationContext(ctx)

@@ -2,7 +2,6 @@ package ginsentry
 
 import (
 	"context"
-	"errors"
 
 	"github.com/WuLiFang/csheet/v6/pkg/middleware/gincontext"
 	"github.com/getsentry/sentry-go"
@@ -16,14 +15,10 @@ func Middleware() gin.HandlerFunc {
 }
 
 // Hub from context.Context
-func Hub(ctx context.Context) (*sentry.Hub, error) {
-	ginContext, err := gincontext.FromContext(ctx)
-	if err != nil {
-		return nil, err
+func Hub(ctx context.Context) *sentry.Hub {
+	ginContext := gincontext.FromContext(ctx)
+	if ginContext == nil {
+		return nil
 	}
-	hub := sentrygin.GetHubFromContext(ginContext)
-	if hub == nil {
-		return nil, errors.New("no sentry hub for this context")
-	}
-	return hub, nil
+	return sentrygin.GetHubFromContext(ginContext)
 }
