@@ -61,7 +61,7 @@ func Prune(root string, atimeBefore time.Time) (count int, err error) {
 			return err
 		}
 		if !atime.IsZero() && atime.Before(atimeBefore) {
-			logger.Infow("Remove file", "path", p)
+			logger.Infow("remove old file", "path", p)
 			os.Remove(p)
 			count++
 		}

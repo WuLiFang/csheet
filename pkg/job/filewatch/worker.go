@@ -31,7 +31,7 @@ func (w worker) Start() {
 			w.manager.flight.Do(j.Path, func() {
 				err := w.Run(j)
 				if os.IsNotExist(err) {
-					logger.Infow("file removed", "path", j.Path)
+					logger.Infow("detected file remove", "path", j.Path)
 					err = j.Delete()
 				}
 				if err != nil {
