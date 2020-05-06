@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-rc.2](https://github.com/WuLiFang/csheet/compare/v6.0.0-rc.1...v6.0.0-rc.2) (2020-05-06)
+
+
+### Features
+
+* support checkboard background ([fa18693](https://github.com/WuLiFang/csheet/commit/fa186938a77a6fba021ef0829bc4415ca8160add))
+* support sentry for server ([0caf2aa](https://github.com/WuLiFang/csheet/commit/0caf2aac5a64bbc5862daed31dc6b130134d46e2))
+* support sentry for web ([36475fd](https://github.com/WuLiFang/csheet/commit/36475fd50348b16e4c1f114690e7cbf7e723f6de))
+* **style:** add viewer button click animation ([51ed51d](https://github.com/WuLiFang/csheet/commit/51ed51d8bd4eff3fdd81f0a3cfcd19a8c6808eaa))
+* **style:** improve viewer transition ([3f4e69e](https://github.com/WuLiFang/csheet/commit/3f4e69e8dab6fc9248993ac475d02ab6849b48d3))
+* **style:** improve viewer transition for identical image ([3abb205](https://github.com/WuLiFang/csheet/commit/3abb2054279f6372e4686c7427982c3fd732fd07))
+
+
+### Bug Fixes
+
+* time widget recieve null value ([5237b93](https://github.com/WuLiFang/csheet/commit/5237b930622b9095be2ec9c79d38f3d603898643))
+* **api:** should return null when no webfile ([de132e5](https://github.com/WuLiFang/csheet/commit/de132e5fa016af086ffa2656aa50ce4b62b1ea65))
+* **style:** avoid video element resize in viewer ([9a7450a](https://github.com/WuLiFang/csheet/commit/9a7450a36d963ea7a8705cec1354c41a426708dc))
+* remove danling presentation key ([6050264](https://github.com/WuLiFang/csheet/commit/6050264c1f915cbee01c1653ccfbbd3b26cfef7a))
+* should not convert generated path ([ab6e4f7](https://github.com/WuLiFang/csheet/commit/ab6e4f775aac9eb62af98ed22bc9e2a4a9304f86))
+* **style:** missing viewer drop down transition ([a599d35](https://github.com/WuLiFang/csheet/commit/a599d35363abdef0ec7f99c5bafa31676da10ce4))
+* set cgtw close status priority ([08359a9](https://github.com/WuLiFang/csheet/commit/08359a9688b2fb246e5264d5c8b078e778ba4f31))
+* viewer should also prefetch for current item ([92cbf9d](https://github.com/WuLiFang/csheet/commit/92cbf9d8c63ce8c015944444baa408d2efd377b8))
+
 ## [6.0.0-rc.1](https://github.com/WuLiFang/csheet/compare/v6.0.0-rc.0...v6.0.0-rc.1) (2020-04-27)
 
 
