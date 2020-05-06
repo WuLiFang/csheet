@@ -8,7 +8,7 @@ import {
 import { filePathFormat } from '../const';
 
 export function fileSrc(v: string | undefined): string {
-  const d = '/static/transcoding.svg';
+  const d = require('@/assets/img/transcoding.svg');
   if (!v) {
     return d;
   }
@@ -81,7 +81,7 @@ export default class Presentation extends Vue {
 
   get path(): string {
     if (!this.id) {
-      return '/static/default.svg';
+      return require('@/assets/img/default.svg');
     }
     switch (this.size) {
       case 'regular':
