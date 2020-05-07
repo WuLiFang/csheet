@@ -6,7 +6,7 @@ require (
 	github.com/99designs/gqlgen v0.11.3
 	github.com/dgraph-io/badger/v2 v2.0.3
 	github.com/getsentry/sentry-go v0.6.0
-	github.com/gin-gonic/gin v1.6.2
+	github.com/gin-gonic/gin v1.6.3
 	github.com/stretchr/testify v1.5.1
 	github.com/tidwall/gjson v1.6.0
 	github.com/tidwall/sjson v1.1.1
