@@ -14,11 +14,14 @@ func Middleware() gin.HandlerFunc {
 	return sentrygin.New(sentrygin.Options{})
 }
 
-// Hub from context.Context
-func Hub(ctx context.Context) *sentry.Hub {
+// GinContextHub from gin.Context
+var GinContextHub = sentrygin.GetHubFromContext
+
+// ContextHub from context.Context
+func ContextHub(ctx context.Context) *sentry.Hub {
 	ginContext := gincontext.FromContext(ctx)
 	if ginContext == nil {
 		return nil
 	}
-	return sentrygin.GetHubFromContext(ginContext)
+	return GinContextHub(ginContext)
 }

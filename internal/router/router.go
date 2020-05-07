@@ -13,6 +13,7 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/middleware/ginsentry"
 	"github.com/WuLiFang/csheet/v6/pkg/model/file"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
+	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,7 +26,13 @@ func New() *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.New()
-	r.Use(ginsentry.Middleware())
+	r.Use(ginsentry.Middleware(), func(ctx *gin.Context) {
+		var hub = ginsentry.GinContextHub(ctx)
+		hub.Scope().SetUser(sentry.User{
+			IPAddress: ctx.ClientIP(),
+		})
+		ctx.Next()
+	})
 	r.Any("api", gincontext.Middleware(), apiHandler())
 	r.Static("static", "dist/static")
 	r.Group("").Use(func(c *gin.Context) {
