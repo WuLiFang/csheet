@@ -2,6 +2,7 @@ package logging
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/getsentry/sentry-go"
@@ -45,6 +46,33 @@ func (c *SentryCore) Check(ent zapcore.Entry, ce *zapcore.CheckedEntry) *zapcore
 	return ce
 }
 
+var nonAppModule = []string{
+	"go.uber.org/zap",
+	"github.com/WuLiFang/csheet/v6/pkg/logging",
+}
+
+func inApp(module string) bool {
+	for _, i := range nonAppModule {
+		if i == module ||
+			strings.HasPrefix(module, i+"/") {
+			return false
+		}
+	}
+	return true
+}
+
+func newStackTrace() *sentry.Stacktrace {
+	var ret = sentry.NewStacktrace()
+	for index, i := range ret.Frames {
+		if !i.InApp {
+			continue
+		}
+		i.InApp = inApp(i.Module)
+		ret.Frames[index] = i
+	}
+	return ret
+}
+
 func (c *SentryCore) Write(entry zapcore.Entry, fields []zapcore.Field) error {
 	event := sentry.NewEvent()
 	event.Message = entry.Message
@@ -56,8 +84,7 @@ func (c *SentryCore) Write(entry zapcore.Entry, fields []zapcore.Field) error {
 	}
 	event.Extra = enc.Fields
 
-	trace := sentry.NewStacktrace()
-	if trace != nil {
+	if trace := newStackTrace(); trace != nil {
 		event.Exception = []sentry.Exception{{
 			Type:       entry.Message,
 			Value:      entry.Caller.TrimmedPath(),
