@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>文件缓存 &#8212; csheet 5.0.1 文档</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="视频" href="video.html" />
+    <link rel="prev" title="数据库迁移" href="database-migration.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>文件缓存<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>文件缓存用于保存自动生成的视频相关文件。</p>
+<p>文件缓存路径格式为
+<code class="docutils literal notranslate"><span class="pre">/cache/</span>
+<span class="pre">&lt;文件</span> <span class="pre">sha256</span> <span class="pre">1-2位&gt;/</span>
+<span class="pre">&lt;文件</span> <span class="pre">sha256</span> <span class="pre">3-4位&gt;/</span>
+<span class="pre">&lt;文件</span> <span class="pre">sha256</span> <span class="pre">5-64位&gt;/</span>
+<span class="pre">&lt;文件名&gt;</span></code>。</p>
+<p>文件缓存将每 24 小时自动删除老文件，文件保留时间由 <code class="docutils literal notranslate"><span class="pre">CACHE_LIFE</span></code> <a class="reference internal" href="env-vars.html#id1"><span class="std std-ref">环境变量</span></a> 决定。</p>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">csheet</a></h1>
+
+
+
+<p class="blurb">色板服务</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=WuLiFang&repo=csheet&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://travis-ci.org/WuLiFang/csheet">
+    <img
+        alt="https://secure.travis-ci.org/WuLiFang/csheet.svg?branch=master"
+        src="https://secure.travis-ci.org/WuLiFang/csheet.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>导航</h3>
+<p class="caption"><span class="caption-text">内容:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../web/index.html">网页端文档</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">服务端文档</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cgteamwork.html">CGTeamWork</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deployment.html">部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="env-vars.html">环境变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development.html">开发</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">文件缓存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="video.html">视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collection.html">收集</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">色板服务端文档</a><ul>
+      <li>Previous: <a href="database-migration.html" title="上一章">数据库迁移</a></li>
+      <li>Next: <a href="video.html" title="下一章">视频</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018-2020, 北京吾立方数码科技有限公司.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/server/filecache.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,81 @@
+展馆
+==========================
+
+展馆为用于管理同一页中的色板内容。
+
+.. uml::
+
+  left to right direction
+  :用户: --> (查看展馆)
+  :用户: --> (为展品添加标签)
+  [系统] --> (为展馆更新展品)
+  [系统] --> (转码文件)
+  [系统] --> (记录展馆当前人数)
+  (查看展馆) ..> (为展馆更新展品)
+  (查看展馆) ..> (转码文件)
+  (转码文件) .> (为展馆更新展品)
+  (为展馆更新展品) .> (记录展馆当前人数): 跳过无人展馆
+
+.. uml::
+
+  abstract class "Curator\n策展者" as Curator {
+    Curate(gallery Gallery)
+  }
+
+  class "Gallery\n展馆" as Gallery {
+    OriginPrefix string
+    Title string
+    Pack()
+  }
+  Curator x..> Gallery
+
+  class "Collection\n展品" as Collection {
+    Origin string
+    Title string
+    Metadata map[string]string
+    Tags []string
+  }
+  Gallery "*" x--> "*" Collection
+
+  class "File\n文件" as File {
+    Path string
+    ModTime Time
+    Size Int64
+    Stat() error
+  }
+  enum "PresentationType\n展示类型" as PresentationType {
+    IMAGE
+    VIDEO
+  }
+  class "Presentation\n展示" as Presentation {
+    Type PresentationType
+    Raw File
+    Thumb File
+    Regular File
+    Transcode()
+  }
+  Presentation "1" *--> "*" File
+  Collection "1" o--> "*" Presentation
+  Presentation "*" x-> "1" PresentationType
+
+
+展品元数据
+-----------------------
+
+记录展品的额外数据。
+
+cgteamwork.tasks
+
+  CGTeamWork 相关任务的 JSON 数据。
+
+  .. code:: typescript
+
+    interface Tasks {
+      pipeline: string;
+      artists: []string;
+      status: Record<string, string>;
+    }[]
+
+cgteamwork.pipeline
+
+  CGTeamwork 对应流程名称。

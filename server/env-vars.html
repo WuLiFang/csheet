@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>环境变量 &#8212; csheet 5.0.1 文档</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="开发" href="development.html" />
+    <link rel="prev" title="文件存储" href="filestore.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>环境变量<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>CSHEET_ENV</p>
+<blockquote>
+<div><p>运行环境, “development” 或者 “production”。</p>
+</div></blockquote>
+<p>CSHEET_STORAGE</p>
+<blockquote>
+<div><p><a class="reference internal" href="filestore.html"><span class="doc">文件存储</span></a> 文件夹路径。</p>
+</div></blockquote>
+<p>CSHEET_ADDRESS</p>
+<blockquote>
+<div><p>服务运行地址。默认：localhost:80</p>
+</div></blockquote>
+<p>CSHEET_CGTEAMWORK_MAX_TASK_PER_COLLECT</p>
+<blockquote>
+<div><p>每次从 CGTeamwork 收集时的最大任务数量。默认：1000。</p>
+</div></blockquote>
+<p>CSHEET_CGTEAMWORK_PIPELINE_OVERWRITE</p>
+<blockquote>
+<div><p>覆盖流程收集时使用的流程名称，JSON 编码的字典。</p>
+</div></blockquote>
+<p>CSHEET_FOLDER_INCLUDE</p>
+<blockquote>
+<div><p>从文件夹收集允许的文件夹，使用 <code class="docutils literal notranslate"><span class="pre">*</span></code> 代表允许任何文件夹。</p>
+<p>多个路径用逗号分隔。</p>
+</div></blockquote>
+<p>CSHEET_WATCH_RATE</p>
+<blockquote>
+<div><p>限制每秒钟最多检查多少文件的更新，默认值：50。</p>
+</div></blockquote>
+<p>CSHEET_FOLDER_EXCLUDE</p>
+<blockquote>
+<div><p>扫描文件夹时的前缀排除模式，用逗号分隔。</p>
+</div></blockquote>
+<p>CSHEET_FILE_LIFE</p>
+<blockquote>
+<div><p>生成的文件保留时间, 默认为 240 小时。</p>
+<p>使用 go 时间格式，例如：1h2m3s。</p>
+</div></blockquote>
+<p>CSHEET_TEMP_LIFE</p>
+<blockquote>
+<div><p>残留的临时文件保留时间, 默认为 1 小时。</p>
+<p>使用 go 时间格式，例如：1h2m3s。</p>
+</div></blockquote>
+<p>CSHEET_WEB_SENTRY_DSN</p>
+<blockquote>
+<div><p>网页端 Sentry DSN。</p>
+</div></blockquote>
+<p>CSHEET_SERVER_SENTRY_DSN</p>
+<blockquote>
+<div><p>服务端 Sentry DSN。</p>
+</div></blockquote>
+<p>CGTEAMWORK_URL</p>
+<blockquote>
+<div><p>CGTeamwork 服务器地址。例：<a class="reference external" href="http://192.168.50.11">http://192.168.50.11</a></p>
+</div></blockquote>
+<p>CGTEAMWORK_USERNAME</p>
+<blockquote>
+<div><p>CGTeamwork 用户名</p>
+</div></blockquote>
+<p>CGTEAMWORK_PASSWORD</p>
+<blockquote>
+<div><p>CGTeamwork 密码</p>
+</div></blockquote>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">csheet</a></h1>
+
+
+
+<p class="blurb">色板服务</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=WuLiFang&repo=csheet&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://travis-ci.org/WuLiFang/csheet">
+    <img
+        alt="https://secure.travis-ci.org/WuLiFang/csheet.svg?branch=master"
+        src="https://secure.travis-ci.org/WuLiFang/csheet.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>导航</h3>
+<p class="caption"><span class="caption-text">内容:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../web/index.html">网页端文档</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">服务端文档</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="collection.html">收集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cgteamwork.html">CGTeamwork</a></li>
+<li class="toctree-l2"><a class="reference internal" href="folder.html">文件夹</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deployment.html">部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filestore.html">文件存储</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">环境变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development.html">开发</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">色板服务端文档</a><ul>
+      <li>Previous: <a href="filestore.html" title="上一章">文件存储</a></li>
+      <li>Next: <a href="development.html" title="下一章">开发</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018-2020, 北京吾立方数码科技有限公司.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/server/env-vars.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

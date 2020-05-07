@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="410px" preserveAspectRatio="none" style="width:764px;height:410px;" version="1.1" viewBox="0 0 764 410" width="764px" zoomAndPan="magnify"><defs/><g><!--MD5=[f0c302470752fa6bdd772c5a57c47464]
+entity 用户--><ellipse cx="20.5" cy="178.5" fill="#1565C0" rx="8" ry="8" style="stroke: #1565C0; stroke-width: 1.5;"/><path d="M20.5,186.5 L20.5,213.5 M7.5,194.5 L33.5,194.5 M20.5,213.5 L7.5,228.5 M20.5,213.5 L33.5,228.5 " fill="none" style="stroke: #1565C0; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="6.5" y="243.9951">用户</text><ellipse cx="355.598" cy="23.0236" fill="#64B5F6" rx="42.598" ry="14.5236" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="327.598" y="27.6721">查看收集</text><ellipse cx="670.098" cy="172.0236" fill="#64B5F6" rx="42.598" ry="14.5236" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="642.098" y="176.6721">导入收集</text><ellipse cx="174.098" cy="98.0236" fill="#64B5F6" rx="42.598" ry="14.5236" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="146.098" y="102.6721">打包收集</text><ellipse cx="174.2254" cy="312.2451" fill="#64B5F6" rx="66.7254" ry="15.7451" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="98" x="125.2254" y="316.8935">为收集添加标签</text><ellipse cx="174.0262" cy="381.0052" fill="#64B5F6" rx="78.0262" ry="18.0052" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="126" x="111.0262" y="385.6537">查看最近的收集事件</text><ellipse cx="669.9934" cy="241.1987" fill="#64B5F6" rx="83.9934" ry="19.1987" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="140" x="599.9934" y="245.8471">查看收集当前查看人数</text><!--MD5=[9fae836c6a53a1f542eea58019cc5af0]
+entity 系统--><rect fill="#E3F2FD" height="46.2969" style="stroke: #424242; stroke-width: 1.5;" width="68" x="321.5" y="73"/><rect fill="#E3F2FD" height="10" style="stroke: #424242; stroke-width: 1.5;" width="15" x="369.5" y="78"/><rect fill="#E3F2FD" height="2" style="stroke: #424242; stroke-width: 1.5;" width="4" x="367.5" y="80"/><rect fill="#E3F2FD" height="2" style="stroke: #424242; stroke-width: 1.5;" width="4" x="367.5" y="84"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="336.5" y="105.9951">系统</text><ellipse cx="670.098" cy="44.0236" fill="#64B5F6" rx="42.598" ry="14.5236" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="642.098" y="48.6721">转码文件</text><ellipse cx="670.0143" cy="108.2029" fill="#64B5F6" rx="61.5143" ry="14.7029" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="84" x="628.0143" y="112.8513">监控文件变更</text><!--MD5=[d0f2d125bdff8a17e1bd5b8f94a78568]
+link 用户 to 查看收集--><path d="M30.4975,168.7193 C41.0597,135.7275 61.1401,90.2055 96,66 C159.7735,21.7178 253.2951,17.2877 308.9241,19.3074 " fill="none" id="用户-&gt;查看收集" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="314.187,19.5219,305.3574,15.1585,309.1912,19.3182,305.0315,23.1519,314.187,19.5219" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[97b190f1dd5c267447d0edd64f926096]
+link 用户 to 导入收集--><path d="M35.0878,202.3198 C43.6587,199.2597 54.7837,195.7597 65,194 C270.2463,158.6465 520.2345,164.8421 622.7288,169.447 " fill="none" id="用户-&gt;导入收集" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="627.7927,169.6787,618.985,165.2715,622.7979,169.4501,618.6193,173.2631,627.7927,169.6787" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[f0f31c0793d7e1e73676cc771a52519a]
+link 用户 to 打包收集--><path d="M35.1606,181.3407 C42.8083,169.3202 53.0641,155.6825 65,146 C85.9005,129.0453 113.7243,116.9232 136.0287,109.1024 " fill="none" id="用户-&gt;打包收集" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="140.9893,107.4015,131.1785,106.5368,136.2596,109.0232,133.7732,114.1043,140.9893,107.4015" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[72c19da3228d05a96d91896914c9686e]
+link 用户 to 为收集添加标签--><path d="M35.0762,234.4316 C42.7053,246.3025 52.97,259.6991 65,269 C82.2845,282.3633 104.2506,292.0822 123.9281,298.8625 " fill="none" id="用户-&gt;为收集添加标签" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="128.8773,300.5235,121.6177,293.8678,124.1371,298.9326,119.0723,301.4521,128.8773,300.5235" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[fd8731286e6ae78a9208162ff3d193ac]
+link 用户 to 查看最近的收集事件--><path d="M34.2668,247.1799 C46.506,277.2197 66.9822,317.9801 96,345 C104.235,352.668 114.3906,358.943 124.6197,363.9802 " fill="none" id="用户-&gt;查看最近的收集事件" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="129.318,366.208,122.8997,358.7377,124.8002,364.0657,119.4721,365.9662,129.318,366.208" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[df767dbbb705dfda4239e61b9badbe05]
+link 用户 to 查看收集当前查看人数--><path d="M35.286,208.7513 C107.5295,212.4218 426.2238,228.6141 582.7045,236.5647 " fill="none" id="用户-&gt;查看收集当前查看人数" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="587.7442,236.8207,578.9589,232.3689,582.7506,236.5668,578.5527,240.3586,587.7442,236.8207" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[122eb40e9c84d7877308959022ff5a9e]
+link 系统 to 转码文件--><path d="M389.7557,90.3361 C447.2821,80.8246 563.1937,61.6595 626.4277,51.2043 " fill="none" id="系统-&gt;转码文件" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="631.6334,50.3436,622.1014,47.8655,626.7004,51.1593,623.4066,55.7583,631.6334,50.3436" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[135b67a74de3648c8efe0d834b144e03]
+link 系统 to 监控文件变更--><path d="M389.7557,97.3071 C441.0361,99.2637 538.7113,102.9906 604.1096,105.4859 " fill="none" id="系统-&gt;监控文件变更" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="609.1538,105.6784,600.313,101.3378,604.1574,105.4875,600.0077,109.3319,609.1538,105.6784" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[818439e3c77400105580b9f66ccc0fde]
+link 查看收集 to 转码文件--><path d="M397.2632,25.7886 C455.7708,29.6953 561.8157,36.7762 623.0114,40.8624 " fill="none" id="查看收集-&gt;转码文件" style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#1565C0" points="628.0641,41.1998,619.3506,36.609,623.0752,40.8667,618.8176,44.5913,628.0641,41.1998" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[79d1544c05270afc820b733ee975397e]
+link 打包收集 to 查看收集--><path d="M201.3277,86.7251 C223.3752,77.627 255.1869,64.4956 283,53 C296.2252,47.5338 310.8053,41.5018 323.4009,36.2889 " fill="none" id="打包收集-&gt;查看收集" style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#1565C0" points="328.3042,34.2595,318.4586,34.0054,323.6843,36.1716,321.518,41.3973,328.3042,34.2595" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[043a6cfea46a36a764723698c1f05a9f]
+link 转码文件 to 导入收集--><path d="M628.3126,47.2316 C564.5831,53.8075 454.095,72.6157 492,122.5 C522.0232,162.0116 580.7683,171.8451 622.5544,173.4411 " fill="none" id="转码文件-&gt;导入收集" style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#1565C0" points="627.5632,173.5963,618.6915,169.3192,622.5656,173.4413,618.4435,177.3154,627.5632,173.5963" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[1f5e6f2bea902540ee1cfc5f04ae024c]
+link 转码文件 to 监控文件变更--><path d="M670,58.5469 C670,68.3265 670,78.1062 670,87.8859 " fill="none" id="转码文件-&gt;监控文件变更" style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#1565C0" points="670,93,674,84,670,88,666,84,670,93" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[fa53364d6910ca2ffcb700244ecf8e7e]
+link 监控文件变更 to 查看收集当前查看人数--><path d="M626.1554,97.7252 C576.9633,89.1019 498.6211,84.6427 457,131 C410.3394,182.9703 516.3836,214.0735 594.9786,229.335 " fill="none" id="监控文件变更-&gt;查看收集当前查看人数" style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#1565C0" points="600.1139,230.3174,592.0259,224.6974,595.203,229.3778,590.5226,232.5549,600.1139,230.3174" style="stroke: #1565C0; stroke-width: 1.0;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="126" x="429" y="144.9951">跳过无人使用的文件</text><!--MD5=[c94e73fdf631ecee5803b4bcfd835cdc]
+@startuml
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam maxMessageSize 150
+skinparam ComponentStyle uml2
+skinparam Shadowing false
+
+skinparam Default {
+    FontName "Arial","Microsoft YaHei","黑体","宋体",sans-serif
+    FontColor #222222
+    FontSize  14
+    FontStyle plain
+    Shadowing false
+    TextAlignment center
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Title {
+    FontSize 20
+    FontStyle bold
+}
+
+skinparam Note {
+    BackgroundColor #90A4AE
+    BorderColor #90A4AE
+    BorderThickness 1
+    FontColor White
+    Shadowing false
+    TextAlignment left
+}
+
+skinparam Note<<quit>> {
+
+    BackgroundColor #F9A825
+    BorderColor #F9A825
+}
+
+skinparam Sequence {
+    ActorBorderThickness 1
+    LifeLineBorderColor GREEN
+    ParticipantBorderThickness 0
+    Shadowing false
+
+
+    GroupBorderThickness 1
+    GroupBorderColor #1565C0
+    GroupBackgroundColor #BBDEFB
+}
+
+skinparam Activity {
+
+    StartColor #37A77C
+    EndColor #F6363F
+    AttributeFontColor white
+    AttributeFontSize  15
+    AttributeFontname  Droid Sans Mono
+
+    BackgroundColor #BBDEFB
+    BorderColor #90CAF9
+    BorderThickness 1
+
+    ArrowThickness 1
+
+
+    BarColor   #0D47A1
+
+
+    DiamondBackgroundColor   #FFE0B2
+    DiamondBorderColor    #FFCC80
+
+
+}
+
+skinparam Class {
+    BackgroundColor #E3F2FD
+    BorderColor #64B5F6
+    BorderThickness 1
+
+
+    StereotypeFontColor #589DF6
+    StereotypeFontSize 14
+}
+
+
+
+skinparam Interface {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+    FontSize 14
+
+
+    StereotypeFontColor #589DF6
+    StereotypeFontSize 1
+}
+
+
+
+skinparam Participant {
+    BackgroundColor #1565C0
+    BorderColor #1565C0
+    FontColor White
+    Shadowing false
+}
+
+skinparam Actor {
+    BackgroundColor #1565C0
+    BorderColor #1565C0
+    Shadowing false
+}
+
+skinparam UseCase {
+    BackgroundColor #64B5F6
+    BorderColor #64B5F6
+    Shadowing false
+    ArrowThickness 1
+    ArrowColor #1565C0
+
+    ActorBackgroundColor #1565C0
+    ActorBorderColor #0D47A1
+    ActorShadowing false
+ 
+}
+
+
+skinparam State {
+    FontSize           17
+
+    AttributeFontSize  14
+    
+    BackgroundColor    #BBDEFB
+    BorderColor        #90CAF9
+    StartColor #37A77C
+    EndColor #F6363F
+}
+
+skinparam Partition {
+    BorderColor #424242
+    BorderStyle dashed
+
+    BorderThickness 1
+}
+
+skinparam rectangle {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam database {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam Queue {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Agent {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Artifact {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Boundary {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Card {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Cloud {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Component {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Control {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Database {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Entity {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam File {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Folder {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+   
+}
+skinparam Frame {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Node {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+
+skinparam Package {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Stack {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Rectangle {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Storage {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam rectangle<<usercase>> {
+    Shadowing false
+    StereotypeFontSize 0
+    FontColor #424242
+    BorderColor #424242
+    BorderStyle dashed
+    BackgroundColor White
+}
+
+
+
+
+
+
+
+
+
+
+
+
+left to right direction
+:用户: - -> (查看收集)
+:用户: - -> (导入收集)
+:用户: - -> (打包收集)
+:用户: - -> (为收集添加标签)
+:用户: - -> (查看最近的收集事件)
+:用户: - -> (查看收集当前查看人数)
+[系统] - -> (转码文件)
+[系统] - -> (监控文件变更)
+(查看收集) ..> (转码文件)
+(打包收集) ..> (查看收集)
+(转码文件) .> (导入收集)
+(转码文件) .> (监控文件变更)
+(监控文件变更) .> (查看收集当前查看人数): 跳过无人使用的文件
+@enduml
+
+PlantUML version 1.2020.02(Sun Mar 01 10:22:07 UTC 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 1.8.0_242-b08
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>

@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>视频 &#8212; csheet 5.0.1 文档</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>视频<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>视频是色板的基本内容单位。</p>
+<p>每个视频会对应多个文件和多个任务。</p>
+<p>视频文件分为几个类型(role):</p>
+<ul class="simple">
+<li><p>thumb: 缩略图，由大图自动生成。</p></li>
+<li><p>poster: 大图，在有原始视频并且未设置时会从原始视频转换自动生成。</p></li>
+<li><p>preview: 预览，用于在网页上展示，由原始视频转码为 mp4。</p></li>
+<li><p>src: 原始视频。</p></li>
+</ul>
+<p>src -&gt; preview
+src -&gt; poster -&gt; thumb</p>
+<p>自动生成的文件路径为
+<code class="docutils literal notranslate"><span class="pre">&lt;文件存放路径&gt;/cache/</span>
+<span class="pre">&lt;文件</span> <span class="pre">sha256</span> <span class="pre">1-2位&gt;/</span>
+<span class="pre">&lt;文件</span> <span class="pre">sha256</span> <span class="pre">3-4位&gt;/</span>
+<span class="pre">&lt;文件</span> <span class="pre">sha256</span> <span class="pre">5-64位&gt;/</span>
+<span class="pre">&lt;文件名&gt;</span></code>。</p>
+<p>通过对比硬盘上的文件修改日期和数据库中的文件修改日期，
+色板服务器自动检查视频相关的文件修改。
+按顺序检查前端标记为需要更新的视频，
+上次检查时间越近的排在越后面。</p>
+<p>所有相对路径都是相对于 <code class="docutils literal notranslate"><span class="pre">STORAGE</span></code> <a class="reference internal" href="../env-vars.html#id1"><span class="std std-ref">环境变量</span></a> 设置的路径</p>
+<div class="section" id="id2">
+<h2>数据结构<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<div class="section" id="video">
+<h3>视频(Video)<a class="headerlink" href="#video" title="永久链接至标题">¶</a></h3>
+<p>uuid</p>
+<blockquote>
+<div><p>类型: String</p>
+<p>视频全局ID。</p>
+</div></blockquote>
+<p>label</p>
+<blockquote>
+<div><p>类型: String</p>
+<p>视频名称。</p>
+</div></blockquote>
+<p>src</p>
+<blockquote>
+<div><p>类型: Path</p>
+<p>原始视频文件路径。</p>
+</div></blockquote>
+<p>src_mtime</p>
+<blockquote>
+<div><p>类型: Float</p>
+<p>原始视频文件在硬盘上修改时间。</p>
+</div></blockquote>
+<p>src_atime</p>
+<blockquote>
+<div><p>类型: Float</p>
+<p>原始视频文件来自色板的最近一次访问时间。</p>
+</div></blockquote>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">csheet</a></h1>
+
+
+
+<p class="blurb">色板服务</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=WuLiFang&repo=csheet&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://travis-ci.org/WuLiFang/csheet">
+    <img
+        alt="https://secure.travis-ci.org/WuLiFang/csheet.svg?branch=master"
+        src="https://secure.travis-ci.org/WuLiFang/csheet.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>导航</h3>
+<p class="caption"><span class="caption-text">内容:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../web/index.html">网页端文档</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">服务端文档</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018-2019, 北京吾立方数码科技有限公司.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/server/db/content.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

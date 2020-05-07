@@ -1,24 +1,22 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>CGTeamWork &#8212; csheet 5.0.0 文档</title>
+    <meta charset="utf-8" />
+    <title>CGTeamwork &#8212; csheet 5.0.1 文档</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
-    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
-    <link rel="next" title="部署" href="deployment.html" />
-    <link rel="prev" title="色板服务端文档" href="index.html" />
+    <link rel="next" title="文件夹" href="folder.html" />
+    <link rel="prev" title="收集" href="collection.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -36,69 +34,11 @@
           <div class="body" role="main">
             
   <div class="section" id="cgteamwork">
-<h1>CGTeamWork<a class="headerlink" href="#cgteamwork" title="永久链接至标题">¶</a></h1>
-<p>在 CGTeamWork 色板页面更新时向 CGTeamWork 抓取任务数据</p>
-<p>如果发现任务在 CGTeamWork 上删除则本地任务也会随之删除。</p>
+<h1>CGTeamwork<a class="headerlink" href="#cgteamwork" title="永久链接至标题">¶</a></h1>
+<p>从 CGTeamwork 进行收集。</p>
 <div class="section" id="id1">
-<h2>数据结构<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
-<div class="section" id="cgteamwork-cgteamworktask">
-<h3>CGTeamWork 任务(CGTeamWorkTask)<a class="headerlink" href="#cgteamwork-cgteamworktask" title="永久链接至标题">¶</a></h3>
-<p>uuid</p>
-<blockquote>
-<div><p>类型: String</p>
-<p>和 CGTeamWork 上相同的任务 ID。</p>
-</div></blockquote>
-<p>database</p>
-<blockquote>
-<div><p>类型: String</p>
-<p>CGTeamWork 数据库名称。</p>
-</div></blockquote>
-<p>module</p>
-<blockquote>
-<div><p>类型: String</p>
-<p>CGTeamWork 模块名称。</p>
-</div></blockquote>
-<p>videos</p>
-<blockquote>
-<div><p>类型: relationship(m2m) -&gt; Video</p>
-<p>和此任务相关的视频。</p>
-</div></blockquote>
-<p>pipeline</p>
-<blockquote>
-<div><p>类型: String</p>
-<p>流程名称。</p>
-</div></blockquote>
-<p>shot</p>
-<blockquote>
-<div><p>类型: String</p>
-<p>镜头名称。</p>
-</div></blockquote>
-<p>artists</p>
-<blockquote>
-<div><p>类型: JSONData, 字符串数组。</p>
-<p>制作者。</p>
-</div></blockquote>
-<p>leader_status</p>
-<blockquote>
-<div><p>类型: String</p>
-<p>组长状态。</p>
-</div></blockquote>
-<p>director_status</p>
-<blockquote>
-<div><p>类型: String</p>
-<p>导演状态。</p>
-</div></blockquote>
-<p>client_status</p>
-<blockquote>
-<div><p>类型: String</p>
-<p>客户状态。</p>
-</div></blockquote>
-<p>note_num</p>
-<blockquote>
-<div><p>类型: Integer</p>
-<p>备注数量。</p>
-</div></blockquote>
-</div>
+<h2>附加流程<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>可设置附加流程，在收集对应流程时会把同镜头附加流程的提交文件也一并收集。</p>
 </div>
 </div>
 
@@ -144,8 +84,12 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../web/index.html">网页端文档</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">服务端文档</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">CGTeamWork</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collection.html">收集</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">CGTeamwork</a></li>
+<li class="toctree-l2"><a class="reference internal" href="folder.html">文件夹</a></li>
 <li class="toctree-l2"><a class="reference internal" href="deployment.html">部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filestore.html">文件存储</a></li>
+<li class="toctree-l2"><a class="reference internal" href="env-vars.html">环境变量</a></li>
 <li class="toctree-l2"><a class="reference internal" href="development.html">开发</a></li>
 </ul>
 </li>
@@ -156,24 +100,22 @@
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
   <li><a href="index.html">色板服务端文档</a><ul>
-      <li>Previous: <a href="index.html" title="上一章">色板服务端文档</a></li>
-      <li>Next: <a href="deployment.html" title="下一章">部署</a></li>
+      <li>Previous: <a href="collection.html" title="上一章">收集</a></li>
+      <li>Next: <a href="folder.html" title="下一章">文件夹</a></li>
   </ul></li>
   </ul></li>
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>快速搜索</h3>
+  <h3 id="searchlabel">快速搜索</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="转向" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
 
 
 
@@ -187,10 +129,10 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2018-2019, 北京吾立方数码科技有限公司.
+      &copy;2018-2020, 北京吾立方数码科技有限公司.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

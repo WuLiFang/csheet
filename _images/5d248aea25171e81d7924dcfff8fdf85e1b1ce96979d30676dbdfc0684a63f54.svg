@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="231px" preserveAspectRatio="none" style="width:445px;height:231px;" version="1.1" viewBox="0 0 445 231" width="445px" zoomAndPan="magnify"><defs/><g><!--MD5=[f0c302470752fa6bdd772c5a57c47464]
+entity 用户--><ellipse cx="20.5" cy="152.5" fill="#1565C0" rx="8" ry="8" style="stroke: #1565C0; stroke-width: 1.5;"/><path d="M20.5,160.5 L20.5,187.5 M7.5,168.5 L33.5,168.5 M20.5,187.5 L7.5,202.5 M20.5,187.5 L33.5,202.5 " fill="none" style="stroke: #1565C0; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="6.5" y="217.9951">用户</text><ellipse cx="162.598" cy="50.0236" fill="#64B5F6" rx="42.598" ry="14.5236" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="134.598" y="54.6721">查看展馆</text><ellipse cx="162.7254" cy="202.2451" fill="#64B5F6" rx="66.7254" ry="15.7451" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="98" x="113.7254" y="206.8935">为展品添加标签</text><!--MD5=[9fae836c6a53a1f542eea58019cc5af0]
+entity 系统--><rect fill="#E3F2FD" height="46.2969" style="stroke: #424242; stroke-width: 1.5;" width="68" x="128.5" y="105"/><rect fill="#E3F2FD" height="10" style="stroke: #424242; stroke-width: 1.5;" width="15" x="176.5" y="110"/><rect fill="#E3F2FD" height="2" style="stroke: #424242; stroke-width: 1.5;" width="4" x="174.5" y="112"/><rect fill="#E3F2FD" height="2" style="stroke: #424242; stroke-width: 1.5;" width="4" x="174.5" y="116"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="143.5" y="137.9951">系统</text><ellipse cx="362.7254" cy="88.2451" fill="#64B5F6" rx="66.7254" ry="15.7451" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="98" x="313.7254" y="92.8935">为展馆更新展品</text><ellipse cx="362.598" cy="23.0236" fill="#64B5F6" rx="42.598" ry="14.5236" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="334.598" y="27.6721">转码文件</text><ellipse cx="362.2526" cy="172.8505" fill="#64B5F6" rx="72.2526" ry="16.8505" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="112" x="306.2526" y="177.499">记录展馆当前人数</text><!--MD5=[382b0c676c4d5c29cb08250cbf18e02a]
+link 用户 to 查看展馆--><path d="M35.1232,158.7691 C48.9629,138.1029 71.2591,107.9876 96,87 C106.6733,77.9459 119.9008,70.0492 131.7408,63.9025 " fill="none" id="用户-&gt;查看展馆" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="136.3733,61.5486,126.5377,62.0595,131.9157,63.8136,130.1617,69.1916,136.3733,61.5486" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[f25e459aa208e034a352b0aa321d1812]
+link 用户 to 为展品添加标签--><path d="M35.1617,184.065 C50.642,186.2453 76.0948,189.8303 100.1917,193.2242 " fill="none" id="用户-&gt;为展品添加标签" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="105.3091,193.9449,96.955,188.7286,100.358,193.2475,95.8391,196.6504,105.3091,193.9449" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[b1526fc845a26f9023f957a4b563230d]
+link 系统 to 为展馆更新展品--><path d="M196.8393,121.9103 C215.5391,118.5312 239.0685,114.1775 260,110 C275.8753,106.8316 293.0925,103.2091 308.8028,99.8305 " fill="none" id="系统-&gt;为展馆更新展品" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="314.0687,98.6951,304.4278,96.6819,309.181,99.749,306.114,104.5022,314.0687,98.6951" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[122eb40e9c84d7877308959022ff5a9e]
+link 系统 to 转码文件--><path d="M196.6006,107.1812 C221.979,92.0072 257.6721,71.3332 290,55 C303.1243,48.3692 317.9263,41.6976 330.7178,36.1749 " fill="none" id="系统-&gt;转码文件" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="335.3327,34.1944,325.4847,34.0681,330.738,36.1663,328.6398,41.4197,335.3327,34.1944" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[b435136b908df1f5f4210bfe3e77ae51]
+link 系统 to 记录展馆当前人数--><path d="M196.8812,135.7358 C226.5808,142.4182 270.1061,152.2114 305.084,160.0814 " fill="none" id="系统-&gt;记录展馆当前人数" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="310.1799,161.228,302.2776,155.3497,305.3019,160.1303,300.5213,163.1546,310.1799,161.228" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[1bddfb99b9875dbf6887468913618463]
+link 查看展馆 to 为展馆更新展品--><path d="M199.6497,57.0585 C229.4745,62.7252 271.8426,70.7751 305.8876,77.2436 " fill="none" id="查看展馆-&gt;为展馆更新展品" style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#1565C0" points="310.8478,78.1861,302.7528,72.5763,305.9357,77.2527,301.2593,80.4356,310.8478,78.1861" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[8df8373ff47851c15488cfba42234309]
+link 查看展馆 to 转码文件--><path d="M198.0786,41.9588 C216.226,38.1216 238.6984,33.7735 259,31 C277.2052,28.5129 297.3256,26.738 314.9483,25.5024 " fill="none" id="查看展馆-&gt;转码文件" style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#1565C0" points="320.3323,25.1361,311.0815,21.7563,315.3438,25.4755,311.6246,29.7378,320.3323,25.1361" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[5cdb7c0e37a89e6eabde6bb66786709a]
+link 转码文件 to 为展馆更新展品--><path d="M362.5,37.6234 C362.5,47.4545 362.5,57.2857 362.5,67.1168 " fill="none" id="转码文件-&gt;为展馆更新展品" style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#1565C0" points="362.5,72.2578,366.5,63.2578,362.5,67.2578,358.5,63.2578,362.5,72.2578" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[14027c6df7b22c9872bdd21fc69b1bc1]
+link 为展馆更新展品 to 记录展馆当前人数--><path d="M362.5,103.7421 C362.5,116.9016 362.5,135.8305 362.5,150.5747 " fill="none" id="为展馆更新展品-&gt;记录展馆当前人数" style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#1565C0" points="362.5,155.799,366.5,146.799,362.5,150.799,358.5,146.799,362.5,155.799" style="stroke: #1565C0; stroke-width: 1.0;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="84" x="308.5" y="134.7451">跳过无人展馆</text><!--MD5=[564f111d1411f53b925bb0e08a7daf8a]
+@startuml
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam maxMessageSize 150
+skinparam ComponentStyle uml2
+skinparam Shadowing false
+
+skinparam Default {
+    FontName "Arial","Microsoft YaHei","黑体","宋体",sans-serif
+    FontColor #222222
+    FontSize  14
+    FontStyle plain
+    Shadowing false
+    TextAlignment center
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Title {
+    FontSize 20
+    FontStyle bold
+}
+
+skinparam Note {
+    BackgroundColor #90A4AE
+    BorderColor #90A4AE
+    BorderThickness 1
+    FontColor White
+    Shadowing false
+    TextAlignment left
+}
+
+skinparam Note<<quit>> {
+
+    BackgroundColor #F9A825
+    BorderColor #F9A825
+}
+
+skinparam Sequence {
+    ActorBorderThickness 1
+    LifeLineBorderColor GREEN
+    ParticipantBorderThickness 0
+    Shadowing false
+
+
+    GroupBorderThickness 1
+    GroupBorderColor #1565C0
+    GroupBackgroundColor #BBDEFB
+}
+
+skinparam Activity {
+
+    StartColor #37A77C
+    EndColor #F6363F
+    AttributeFontColor white
+    AttributeFontSize  15
+    AttributeFontname  Droid Sans Mono
+
+    BackgroundColor #BBDEFB
+    BorderColor #90CAF9
+    BorderThickness 1
+
+    ArrowThickness 1
+
+
+    BarColor   #0D47A1
+
+
+    DiamondBackgroundColor   #FFE0B2
+    DiamondBorderColor    #FFCC80
+
+
+}
+
+skinparam Class {
+    BackgroundColor #E3F2FD
+    BorderColor #64B5F6
+    BorderThickness 1
+
+
+    StereotypeFontColor #589DF6
+    StereotypeFontSize 14
+}
+
+
+
+skinparam Interface {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+    FontSize 14
+
+
+    StereotypeFontColor #589DF6
+    StereotypeFontSize 1
+}
+
+
+
+skinparam Participant {
+    BackgroundColor #1565C0
+    BorderColor #1565C0
+    FontColor White
+    Shadowing false
+}
+
+skinparam Actor {
+    BackgroundColor #1565C0
+    BorderColor #1565C0
+    Shadowing false
+}
+
+skinparam UseCase {
+    BackgroundColor #64B5F6
+    BorderColor #64B5F6
+    Shadowing false
+    ArrowThickness 1
+    ArrowColor #1565C0
+
+    ActorBackgroundColor #1565C0
+    ActorBorderColor #0D47A1
+    ActorShadowing false
+ 
+}
+
+
+skinparam State {
+    FontSize           17
+
+    AttributeFontSize  14
+    
+    BackgroundColor    #BBDEFB
+    BorderColor        #90CAF9
+    StartColor #37A77C
+    EndColor #F6363F
+}
+
+skinparam Partition {
+    BorderColor #424242
+    BorderStyle dashed
+
+    BorderThickness 1
+}
+
+skinparam rectangle {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam database {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam Queue {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Agent {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Artifact {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Boundary {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Card {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Cloud {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Component {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Control {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Database {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Entity {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam File {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Folder {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+   
+}
+skinparam Frame {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Node {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+
+skinparam Package {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Stack {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Rectangle {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Storage {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam rectangle<<usercase>> {
+    Shadowing false
+    StereotypeFontSize 0
+    FontColor #424242
+    BorderColor #424242
+    BorderStyle dashed
+    BackgroundColor White
+}
+
+
+
+
+
+
+
+
+
+
+
+
+left to right direction
+:用户: - -> (查看展馆)
+:用户: - -> (为展品添加标签)
+[系统] - -> (为展馆更新展品)
+[系统] - -> (转码文件)
+[系统] - -> (记录展馆当前人数)
+(查看展馆) ..> (为展馆更新展品)
+(查看展馆) ..> (转码文件)
+(转码文件) .> (为展馆更新展品)
+(为展馆更新展品) .> (记录展馆当前人数): 跳过无人展馆
+@enduml
+
+PlantUML version 1.2020.02(Sun Mar 01 10:22:07 UTC 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 1.8.0_242-b08
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>

@@ -1,0 +1,18 @@
+展馆
+==========================
+
+色板页面用于在同一页中展示相关的内容。
+
+.. uml::
+
+  class "Gallery\n展馆" as Gallery {
+    id string
+    title string
+
+  }
+
+  class "GalleryCollection\n展馆藏品" as GalleryCollection {
+    poster string
+    movie string
+  }
+  Gallery "*" x--> "*" GalleryCollection

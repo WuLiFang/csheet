@@ -1,0 +1,17 @@
+页面
+==========================
+
+色板页面用于在同一页中展示相关的内容。
+
+.. uml::
+
+  class "Page\n页面" as Page {
+    id string
+    title string
+
+  }
+
+  class "PageItem\n页面条目" as PageItem {
+
+  }
+  PageCell "*" x--> "*" PageItem

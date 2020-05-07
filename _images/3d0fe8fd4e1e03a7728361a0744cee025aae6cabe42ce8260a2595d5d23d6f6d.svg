@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="677px" preserveAspectRatio="none" style="width:728px;height:677px;" version="1.1" viewBox="0 0 728 677" width="728px" zoomAndPan="magnify"><defs/><g><!--MD5=[5ba4ae2a53c8e8fd94271e0f901ca827]
+class CuratorType--><rect fill="#E3F2FD" height="91.1875" id="CuratorType" style="stroke: #64B5F6; stroke-width: 1.0;" width="115" x="198.5" y="200"/><ellipse cx="212.5" cy="221.2969" fill="#EB937F" rx="10" ry="10" style="stroke: #64B5F6; stroke-width: 1.0;"/><path d="M209.3438,216.0938 L215.4063,216.0938 L215.4063,217.25 L210.7344,217.25 L210.7344,220.2813 L215.2031,220.2813 L215.2031,221.4375 L210.7344,221.4375 L210.7344,225.1406 L215.5313,225.1406 L215.5313,226.2969 L209.3438,226.2969 L209.3438,216.0938 Z "/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="85" x="225.5" y="217.9951">CuratorType</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="70" x="233" y="234.292">策展者类型</text><line style="stroke: #64B5F6; stroke-width: 1.0;" x1="199.5" x2="312.5" y1="242.5938" y2="242.5938"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="103" x="204.5" y="259.5889">CGTEAMWORK</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="204.5" y="275.8857">FOLDER</text><line style="stroke: #64B5F6; stroke-width: 1.0;" x1="199.5" x2="312.5" y1="283.1875" y2="283.1875"/><!--MD5=[5f339640b3181e341527f51383873741]
+class Curator--><rect fill="#E3F2FD" height="91.1875" id="Curator" style="stroke: #64B5F6; stroke-width: 1.0;" width="158" x="6" y="200"/><ellipse cx="55.5" cy="221.2969" fill="#A9DCDF" rx="10" ry="10" style="stroke: #64B5F6; stroke-width: 1.0;"/><path d="M55.2188,216.8125 L53.75,222.0313 L56.6719,222.0313 L55.2188,216.8125 Z M54.375,215.5938 L56.0469,215.5938 L59.1719,225.7969 L57.75,225.7969 L57,223.1406 L53.4219,223.1406 L52.6875,225.7969 L51.25,225.7969 L54.375,215.5938 Z "/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="51" x="74.5" y="217.9951">Curator</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="42" x="79" y="234.292">策展者</text><line style="stroke: #64B5F6; stroke-width: 1.0;" x1="7" x2="163" y1="242.5938" y2="242.5938"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="119" x="12" y="259.5889">Type CuratorType</text><line style="stroke: #64B5F6; stroke-width: 1.0;" x1="7" x2="163" y1="266.8906" y2="266.8906"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="146" x="12" y="283.8857">Curate(gallery Gallery)</text><!--MD5=[161c3bb403169157d9ea11ed46eaa789]
+class Gallery--><rect fill="#E3F2FD" height="123.7813" id="Gallery" style="stroke: #64B5F6; stroke-width: 1.0;" width="97" x="207.5" y="8"/><ellipse cx="230.95" cy="29.2969" fill="#ADD1B2" rx="10" ry="10" style="stroke: #64B5F6; stroke-width: 1.0;"/><path d="M233.2781,33.9375 Q232.7625,34.2188 232.2,34.3594 Q231.6531,34.5 231.0281,34.5 Q229.075,34.5 227.9813,33.1094 Q226.9031,31.7188 226.9031,29.2031 Q226.9031,26.7031 227.9813,25.3125 Q229.075,23.9063 231.0281,23.9063 Q231.6531,23.9063 232.2,24.0469 Q232.7625,24.1875 233.2781,24.4688 L233.2781,25.875 Q232.7781,25.4688 232.2,25.25 Q231.6219,25.0313 231.0281,25.0313 Q229.6844,25.0313 229.0125,26.0781 Q228.3406,27.1094 228.3406,29.2031 Q228.3406,31.2969 229.0125,32.3438 Q229.6844,33.375 231.0281,33.375 Q231.6375,33.375 232.2156,33.1563 Q232.7938,32.9375 233.2781,32.5156 L233.2781,33.9375 Z "/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="46" x="246.05" y="25.9951">Gallery</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="255.05" y="42.292">展馆</text><line style="stroke: #64B5F6; stroke-width: 1.0;" x1="208.5" x2="303.5" y1="50.5938" y2="50.5938"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="53" x="213.5" y="67.5889">ID string</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="68" x="213.5" y="83.8857">Title string</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="85" x="213.5" y="100.1826">CuratorType</text><line style="stroke: #64B5F6; stroke-width: 1.0;" x1="208.5" x2="303.5" y1="107.4844" y2="107.4844"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="43" x="213.5" y="124.4795">Pack()</text><!--MD5=[c160724f8e3bb89ca8141a12554ac2e3]
+class Collection--><rect fill="#E3F2FD" height="107.4844" id="Collection" style="stroke: #64B5F6; stroke-width: 1.0;" width="194" x="349" y="192"/><ellipse cx="408" cy="213.2969" fill="#ADD1B2" rx="10" ry="10" style="stroke: #64B5F6; stroke-width: 1.0;"/><path d="M410.3281,217.9375 Q409.8125,218.2188 409.25,218.3594 Q408.7031,218.5 408.0781,218.5 Q406.125,218.5 405.0313,217.1094 Q403.9531,215.7188 403.9531,213.2031 Q403.9531,210.7031 405.0313,209.3125 Q406.125,207.9063 408.0781,207.9063 Q408.7031,207.9063 409.25,208.0469 Q409.8125,208.1875 410.3281,208.4688 L410.3281,209.875 Q409.8281,209.4688 409.25,209.25 Q408.6719,209.0313 408.0781,209.0313 Q406.7344,209.0313 406.0625,210.0781 Q405.3906,211.1094 405.3906,213.2031 Q405.3906,215.2969 406.0625,216.3438 Q406.7344,217.375 408.0781,217.375 Q408.6875,217.375 409.2656,217.1563 Q409.8438,216.9375 410.3281,216.5156 L410.3281,217.9375 Z "/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="68" x="427" y="209.9951">Collection</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="447" y="226.292">展品</text><line style="stroke: #64B5F6; stroke-width: 1.0;" x1="350" x2="542" y1="234.5938" y2="234.5938"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="68" x="355" y="251.5889">Title string</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="182" x="355" y="267.8857">Metadata map[string]string</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="83" x="355" y="284.1826">Tags []string</text><line style="stroke: #64B5F6; stroke-width: 1.0;" x1="350" x2="542" y1="291.4844" y2="291.4844"/><!--MD5=[63dd87716ef75a5caca5dce59428e94a]
+class File--><rect fill="#E3F2FD" height="107.4844" id="File" style="stroke: #64B5F6; stroke-width: 1.0;" width="162" x="365" y="559"/><ellipse cx="428" cy="580.2969" fill="#ADD1B2" rx="10" ry="10" style="stroke: #64B5F6; stroke-width: 1.0;"/><path d="M430.3281,584.9375 Q429.8125,585.2188 429.25,585.3594 Q428.7031,585.5 428.0781,585.5 Q426.125,585.5 425.0313,584.1094 Q423.9531,582.7188 423.9531,580.2031 Q423.9531,577.7031 425.0313,576.3125 Q426.125,574.9063 428.0781,574.9063 Q428.7031,574.9063 429.25,575.0469 Q429.8125,575.1875 430.3281,575.4688 L430.3281,576.875 Q429.8281,576.4688 429.25,576.25 Q428.6719,576.0313 428.0781,576.0313 Q426.7344,576.0313 426.0625,577.0781 Q425.3906,578.1094 425.3906,580.2031 Q425.3906,582.2969 426.0625,583.3438 Q426.7344,584.375 428.0781,584.375 Q428.6875,584.375 429.2656,584.1563 Q429.8438,583.9375 430.3281,583.5156 L430.3281,584.9375 Z "/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="23" x="449.5" y="576.9951">File</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="447" y="593.292">文件</text><line style="stroke: #64B5F6; stroke-width: 1.0;" x1="366" x2="526" y1="601.5938" y2="601.5938"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="70" x="371" y="618.5889">Path string</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="150" x="371" y="634.8857">ModificationTime Time</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="64" x="371" y="651.1826">Size Int64</text><line style="stroke: #64B5F6; stroke-width: 1.0;" x1="366" x2="526" y1="658.4844" y2="658.4844"/><!--MD5=[084b903b0d76a744f5259c1ddd97ac75]
+class PresentationType--><rect fill="#E3F2FD" height="91.1875" id="PresentationType" style="stroke: #64B5F6; stroke-width: 1.0;" width="152" x="565" y="383.5"/><ellipse cx="579" cy="404.7969" fill="#EB937F" rx="10" ry="10" style="stroke: #64B5F6; stroke-width: 1.0;"/><path d="M575.8438,399.5938 L581.9063,399.5938 L581.9063,400.75 L577.2344,400.75 L577.2344,403.7813 L581.7031,403.7813 L581.7031,404.9375 L577.2344,404.9375 L577.2344,408.6406 L582.0313,408.6406 L582.0313,409.7969 L575.8438,409.7969 L575.8438,399.5938 Z "/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="122" x="592" y="401.4951">PresentationType</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="625" y="417.792">展示类型</text><line style="stroke: #64B5F6; stroke-width: 1.0;" x1="566" x2="716" y1="426.0938" y2="426.0938"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="44" x="571" y="443.0889">IMAGE</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="43" x="571" y="459.3857">VIDEO</text><line style="stroke: #64B5F6; stroke-width: 1.0;" x1="566" x2="716" y1="466.6875" y2="466.6875"/><!--MD5=[dbb7ba3d0d21354681a0e7a6e103d486]
+class Presentation--><rect fill="#E3F2FD" height="140.0781" id="Presentation" style="stroke: #64B5F6; stroke-width: 1.0;" width="168" x="362" y="359"/><ellipse cx="398.5" cy="380.2969" fill="#ADD1B2" rx="10" ry="10" style="stroke: #64B5F6; stroke-width: 1.0;"/><path d="M400.8281,384.9375 Q400.3125,385.2188 399.75,385.3594 Q399.2031,385.5 398.5781,385.5 Q396.625,385.5 395.5313,384.1094 Q394.4531,382.7188 394.4531,380.2031 Q394.4531,377.7031 395.5313,376.3125 Q396.625,374.9063 398.5781,374.9063 Q399.2031,374.9063 399.75,375.0469 Q400.3125,375.1875 400.8281,375.4688 L400.8281,376.875 Q400.3281,376.4688 399.75,376.25 Q399.1719,376.0313 398.5781,376.0313 Q397.2344,376.0313 396.5625,377.0781 Q395.8906,378.1094 395.8906,380.2031 Q395.8906,382.2969 396.5625,383.3438 Q397.2344,384.375 398.5781,384.375 Q399.1875,384.375 399.7656,384.1563 Q400.3438,383.9375 400.8281,383.5156 L400.8281,384.9375 Z "/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="88" x="416.5" y="376.9951">Presentation</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="446.5" y="393.292">展示</text><line style="stroke: #64B5F6; stroke-width: 1.0;" x1="363" x2="529" y1="401.5938" y2="401.5938"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="156" x="368" y="418.5889">Type PresentationType</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="52" x="368" y="434.8857">Raw File</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="72" x="368" y="451.1826">Thumb File</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="76" x="368" y="467.4795">Regular File</text><line style="stroke: #64B5F6; stroke-width: 1.0;" x1="363" x2="529" y1="474.7813" y2="474.7813"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="84" x="368" y="491.7764">Transcode()</text><!--MD5=[3e79b2cd247469a1369a50865233db30]
+link Curator to CuratorType--><path d="M169.2135,245.5 C177.0742,245.5 184.9349,245.5 192.7956,245.5 " fill="none" id="Curator-CuratorType" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="198.2377,245.5,189.2377,241.5,193.2377,245.5,189.2377,249.5,198.2377,245.5" style="stroke: #1565C0; stroke-width: 1.0;"/><path d="M169.1543,249.5 L177.1543,241.5 M169.1543,241.5 L177.1543,249.5 " fill="none" style="stroke: #1565C0; stroke-width: 1.0;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="9" x="181.6495" y="241.5268">1</text><!--MD5=[b25bb748d8037a664dc1b7c3be65205c]
+link Gallery to CuratorType--><path d="M256,137.6281 C256,156.5089 256,176.7034 256,194.4537 " fill="none" id="Gallery-CuratorType" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="256,199.8797,260,190.8797,256,194.8797,252,190.8797,256,199.8797" style="stroke: #1565C0; stroke-width: 1.0;"/><path d="M252,137.3689 L260,145.3689 M260,137.3689 L252,145.3689 " fill="none" style="stroke: #1565C0; stroke-width: 1.0;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="9" x="246.3109" y="188.6726">1</text><!--MD5=[607be59495d026913a8e71367fb28f49]
+link Gallery to Curator--><path d="M203.6878,123.6889 C181.1904,146.7783 155.0641,173.5921 133.0603,196.1749 " fill="none" id="Gallery-Curator" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="129.5654,199.7618,138.7112,196.1073,133.0548,196.1807,132.9814,190.5243,129.5654,199.7618" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="207.4557,119.8218,198.3099,123.4763,203.9663,123.4029,204.0397,129.0593,207.4557,119.8218" style="stroke: #1565C0; stroke-width: 1.0;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="7" x="192.4864" y="123.2604">*</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="9" x="126.7004" y="188.5366">1</text><!--MD5=[1cafcf12718409938a7a70148295cef8]
+link Gallery to Collection--><path d="M308.8255,118.794 C332.1134,140.3047 359.6436,165.734 383.9065,188.1452 " fill="none" id="Gallery-Collection" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="387.7713,191.7151,383.8744,182.67,384.0985,188.3224,378.4461,188.5465,387.7713,191.7151" style="stroke: #1565C0; stroke-width: 1.0;"/><path d="M305.8885,121.5265 L317.1933,121.0781 M311.3167,115.6499 L311.7651,126.9547 " fill="none" style="stroke: #1565C0; stroke-width: 1.0;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="7" x="312.6303" y="117.6917">*</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="7" x="372.8623" y="180.782">*</text><!--MD5=[0244812863e11e3ea041cd8e5569dbc2]
+link Presentation to File--><path d="M446,511.1589 C446,511.1589 446,535.0157 446,545.926 " fill="none" id="Presentation-File" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="446,558.9328,450,549.9328,446,553.9328,442,549.9328,446,558.9328" style="stroke: #1565C0; stroke-width: 1.0;"/><line style="stroke: #1565C0; stroke-width: 1.0;" x1="446" x2="446.0001" y1="553.9328" y2="545.9329"/><polygon fill="#1565C0" points="446,499.1589,442,505.1589,446,511.1589,450,505.1589,446,499.1589" style="stroke: #1565C0; stroke-width: 1.0;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="9" x="436.5359" y="520.2254">1</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="7" x="438.5297" y="547.6422">*</text><!--MD5=[c0e3cc722b5643a7167c7f6891219d47]
+link Collection to Presentation--><path d="M446,311.0691 C446,311.0691 446,334.5519 446,345.8379 " fill="none" id="Collection-Presentation" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="446,358.9649,450,349.9649,446,353.9649,442,349.9649,446,358.9649" style="stroke: #1565C0; stroke-width: 1.0;"/><line style="stroke: #1565C0; stroke-width: 1.0;" x1="446" x2="446.0001" y1="353.9649" y2="345.9649"/><polygon fill="#FFFFFF" points="446,299.0691,442,305.0691,446,311.0691,450,305.0691,446,299.0691" style="stroke: #1565C0; stroke-width: 1.0;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="9" x="436.3953" y="320.325">1</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="7" x="438.6391" y="347.9239">*</text><!--MD5=[ad46c2edc0e3442f89c0c7eb20c7d367]
+link Presentation to PresentationType--><path d="M535.311,429 C543.4524,429 551.5938,429 559.7352,429 " fill="none" id="Presentation-PresentationType" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="564.8043,429,555.8043,425,559.8043,429,555.8043,433,564.8043,429" style="stroke: #1565C0; stroke-width: 1.0;"/><path d="M535.1699,433 L543.1699,425 M535.1699,425 L543.1699,433 " fill="none" style="stroke: #1565C0; stroke-width: 1.0;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="7" x="537.978" y="425.2924">*</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="9" x="548.113" y="425.2378">1</text><!--MD5=[b536e9a619464af4d279e07be1f0ffef]
+@startuml
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam maxMessageSize 150
+skinparam ComponentStyle uml2
+skinparam Shadowing false
+
+skinparam Default {
+    FontName "Arial","Microsoft YaHei","黑体","宋体",sans-serif
+    FontColor #222222
+    FontSize  14
+    FontStyle plain
+    Shadowing false
+    TextAlignment center
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Title {
+    FontSize 20
+    FontStyle bold
+}
+
+skinparam Note {
+    BackgroundColor #90A4AE
+    BorderColor #90A4AE
+    BorderThickness 1
+    FontColor White
+    Shadowing false
+    TextAlignment left
+}
+
+skinparam Note<<quit>> {
+
+    BackgroundColor #F9A825
+    BorderColor #F9A825
+}
+
+skinparam Sequence {
+    ActorBorderThickness 1
+    LifeLineBorderColor GREEN
+    ParticipantBorderThickness 0
+    Shadowing false
+
+
+    GroupBorderThickness 1
+    GroupBorderColor #1565C0
+    GroupBackgroundColor #BBDEFB
+}
+
+skinparam Activity {
+
+    StartColor #37A77C
+    EndColor #F6363F
+    AttributeFontColor white
+    AttributeFontSize  15
+    AttributeFontname  Droid Sans Mono
+
+    BackgroundColor #BBDEFB
+    BorderColor #90CAF9
+    BorderThickness 1
+
+    ArrowThickness 1
+
+
+    BarColor   #0D47A1
+
+
+    DiamondBackgroundColor   #FFE0B2
+    DiamondBorderColor    #FFCC80
+
+
+}
+
+skinparam Class {
+    BackgroundColor #E3F2FD
+    BorderColor #64B5F6
+    BorderThickness 1
+
+
+    StereotypeFontColor #589DF6
+    StereotypeFontSize 14
+}
+
+
+
+skinparam Interface {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+    FontSize 14
+
+
+    StereotypeFontColor #589DF6
+    StereotypeFontSize 1
+}
+
+
+
+skinparam Participant {
+    BackgroundColor #1565C0
+    BorderColor #1565C0
+    FontColor White
+    Shadowing false
+}
+
+skinparam Actor {
+    BackgroundColor #1565C0
+    BorderColor #1565C0
+    Shadowing false
+}
+
+skinparam UseCase {
+    BackgroundColor #64B5F6
+    BorderColor #64B5F6
+    Shadowing false
+    ArrowThickness 1
+    ArrowColor #1565C0
+
+    ActorBackgroundColor #1565C0
+    ActorBorderColor #0D47A1
+    ActorShadowing false
+ 
+}
+
+
+skinparam State {
+    FontSize           17
+
+    AttributeFontSize  14
+    
+    BackgroundColor    #BBDEFB
+    BorderColor        #90CAF9
+    StartColor #37A77C
+    EndColor #F6363F
+}
+
+skinparam Partition {
+    BorderColor #424242
+    BorderStyle dashed
+
+    BorderThickness 1
+}
+
+skinparam rectangle {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam database {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam Queue {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Agent {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Artifact {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Boundary {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Card {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Cloud {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Component {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Control {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Database {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Entity {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam File {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Folder {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+   
+}
+skinparam Frame {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Node {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+
+skinparam Package {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Stack {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Rectangle {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Storage {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam rectangle<<usercase>> {
+    Shadowing false
+    StereotypeFontSize 0
+    FontColor #424242
+    BorderColor #424242
+    BorderStyle dashed
+    BackgroundColor White
+}
+
+
+
+
+
+
+
+
+
+
+
+
+enum "CuratorType\n策展者类型" as CuratorType {
+  CGTEAMWORK
+  FOLDER
+}
+abstract class "Curator\n策展者" as Curator {
+  Type CuratorType
+  Curate(gallery Gallery)
+}
+Curator x-> "1" CuratorType
+class "Gallery\n展馆" as Gallery {
+  ID string
+  Title string
+  CuratorType
+  Pack()
+}
+Gallery x-> "1" CuratorType
+Gallery "*" <- -> "1" Curator
+
+class "Collection\n展品" as Collection {
+  Title string
+  Metadata map[string]string
+  Tags []string
+}
+Gallery "*" x- -> "*" Collection
+
+class "File\n文件" as File {
+  Path string
+  ModificationTime Time
+  Size Int64
+}
+enum "PresentationType\n展示类型" as PresentationType {
+  IMAGE
+  VIDEO
+}
+class "Presentation\n展示" as Presentation {
+  Type PresentationType
+  Raw File
+  Thumb File
+  Regular File
+  Transcode()
+}
+Presentation "1" *- -> "*" File
+Collection "1" o- -> "*" Presentation
+Presentation "*" x-> "1" PresentationType
+@enduml
+
+PlantUML version 1.2020.02(Sun Mar 01 10:22:07 UTC 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 1.8.0_242-b08
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>
