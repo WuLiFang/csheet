@@ -61,12 +61,28 @@ func inApp(module string) bool {
 	return true
 }
 
+// fix https://github.com/getsentry/sentry-go/issues/180
+func fixSentryIssue180(f *sentry.Frame) {
+	if f.Module == "" {
+		pathend := strings.LastIndex(f.Function, "/")
+		if pathend < 0 {
+			pathend = 0
+		}
+
+		if i := strings.Index(f.Function[pathend:], "."); i != -1 {
+			f.Module = f.Function[:pathend+i]
+			f.Function = strings.TrimPrefix(f.Function, f.Module+".")
+		}
+	}
+}
+
 func newStackTrace() *sentry.Stacktrace {
 	var ret = sentry.NewStacktrace()
 	for index, i := range ret.Frames {
 		if !i.InApp {
 			continue
 		}
+		fixSentryIssue180(&i)
 		i.InApp = inApp(i.Module)
 		ret.Frames[index] = i
 	}
