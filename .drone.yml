@@ -103,7 +103,7 @@ clone:
 steps:
   - name: rocket-chat
     image: mike1pol/drone-rocket@sha256:6148c807bc3986509fcb8d63736ab33c7355d9d65ba640e00f09d63c8febfa94
-    detach: true
+    failure: ignore
     settings:
       url:
         from_secret: ROCKETCHAT_URL
