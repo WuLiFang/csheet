@@ -10,7 +10,6 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/model/file"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
 	"github.com/WuLiFang/csheet/v6/pkg/onceflight"
-	"golang.org/x/time/rate"
 )
 
 type manager struct {
@@ -163,22 +162,17 @@ func (m *manager) Start() {
 			defer m.stopSignal.Stop(cancel)
 			var isCanceled bool
 			var allowFullScan = true
-			var rl = rate.NewLimiter(rate.Inf, 1)
+			var ticker = time.NewTicker(5 * time.Second)
+			defer ticker.Stop()
 			for !isCanceled {
 				jobCount := 0
-				startTime := time.Now()
-				rl.Wait(context.Background())
+				startTime := <-ticker.C
 				err := iteratePresentation(func(v presentation.Presentation) (err error) {
 					select {
 					case <-cancel:
 						isCanceled = true
 						return context.Canceled
 					default:
-					}
-					err = rl.Wait(context.Background())
-					if err != nil {
-						logger.DPanic("wait rate limit fail", "error", err)
-						return
 					}
 					jobCount++
 					var raw file.File
@@ -196,7 +190,6 @@ func (m *manager) Start() {
 					logger.Errorw("presentation scan failed", "error", err)
 				} else {
 					allowFullScan = false
-					rl.SetLimit(rate.Limit(min(max(float64(jobCount/5), 0.2), 100)))
 					logger.Infow("presentation scan completed",
 						"count", jobCount,
 						"elapsed", time.Since(startTime))
