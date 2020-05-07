@@ -9,7 +9,7 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-// SentryCore wrap other core with sentry event sending.
+// SentryCore send event to sentry.
 type SentryCore struct {
 	zapcore.LevelEnabler
 	fields []zapcore.Field
