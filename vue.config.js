@@ -28,6 +28,7 @@ module.exports = {
         })
     );
   },
+  transpileDependencies: ['strip-ansi', 'ansi-regex'],
 
   lintOnSave: process.env.NODE_ENV !== 'production',
 

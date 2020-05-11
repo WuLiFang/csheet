@@ -1,4 +1,4 @@
+// https://babeljs.io/docs/en/configuration
 module.exports = {
-  presets: [['@vue/app']],
-  include: ['web.url-search-params'],
+  presets: [['@vue/cli-plugin-babel/preset']],
 };
