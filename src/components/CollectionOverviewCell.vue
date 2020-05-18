@@ -2,6 +2,7 @@
   figure.collection-overview-cell.inline-block.relative(
     class="cursor-pointer flex items-center"
     @click="$emit('click', $event)"
+    :title="value.title"
   )
     transition(
       enter-class="opacity-0"

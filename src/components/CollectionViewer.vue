@@ -140,6 +140,8 @@ import {
 import CollectionMetadata from './CollectionMetadata.vue';
 import { filePathFormat } from '../const';
 import * as preference from '@/preference';
+import * as sentry from '@sentry/browser';
+
 @Component<CollectionViewer>({
   components: {
     Presentation,
@@ -147,6 +149,12 @@ import * as preference from '@/preference';
     CollectionMetadata,
   },
   mounted() {
+    sentry.addBreadcrumb({
+      category: 'collection-viewer',
+      message: 'open',
+      level: sentry.Severity.Info,
+      data: { value: this.value },
+    });
     const keyupListener = (e: KeyboardEvent) => {
       if (e.shiftKey || e.ctrlKey || e.altKey) {
         return;
@@ -206,6 +214,12 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
 
   jumpPrev() {
     if (this.prev) {
+      sentry.addBreadcrumb({
+        category: 'collection-viewer',
+        message: 'jumpPrev',
+        level: sentry.Severity.Info,
+        data: { from: this.value, to: this.prev },
+      });
       this.$refs.prev.classList.add('button-click-anim');
       this.$emit('update:value', this.prev);
     }
@@ -213,12 +227,24 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
 
   jumpNext() {
     if (this.next) {
+      sentry.addBreadcrumb({
+        category: 'collection-viewer',
+        message: 'jumpNext',
+        level: sentry.Severity.Info,
+        data: { from: this.value, to: this.next },
+      });
       this.$refs.next.classList.add('button-click-anim');
       this.$emit('update:value', this.next);
     }
   }
 
   close() {
+    sentry.addBreadcrumb({
+      category: 'collection-viewer',
+      message: 'close',
+      level: sentry.Severity.Info,
+      data: { value: this.value },
+    });
     this.$_visible = false;
   }
 
@@ -259,6 +285,12 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
 
   recollectingCount = 0;
   async recollect() {
+    sentry.addBreadcrumb({
+      category: 'collection-viewer',
+      message: 'recollect',
+      level: sentry.Severity.Info,
+      data: { value: this.value },
+    });
     this.recollectingCount += 1;
     try {
       const parts = this.value.origin.split(':');

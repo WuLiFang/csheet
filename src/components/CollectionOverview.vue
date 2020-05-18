@@ -21,6 +21,7 @@
       button(
         class="sm:col-span-2 md:col-span-3 lg:col-span-4 xl:col-span-5 2xl:col-span-6"
         class="bg-gray-900 text-gray-600 h-32 min-h-full"
+        title="加载更多"
         @click="fetchMore()"
         :disabled="loadingCount > 0"
       )
@@ -124,9 +125,9 @@ export default class CollectionOverview extends Vue {
         if (!fetchMoreResult) {
           return ret;
         }
-        ret.collections.nodes = (ret.collections.nodes ?? []).concat(
-          fetchMoreResult.collections.nodes
-        );
+        ret.collections.nodes = (ret.collections.nodes ?? [])
+          .concat(fetchMoreResult.collections.nodes)
+          .filter(i => !!i);
         ret.collections.pageInfo.hasNextPage =
           fetchMoreResult.collections.pageInfo.hasNextPage;
         ret.collections.pageInfo.endCursor =
