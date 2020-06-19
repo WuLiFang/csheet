@@ -3,13 +3,15 @@ package logging
 import (
 	"os"
 
-	"github.com/WuLiFang/csheet/v6/internal/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
 
+// Env config
+var Env string
+
 func getConfig() zap.Config {
-	if config.Env == "production" {
+	if Env == "production" {
 		return zap.NewProductionConfig()
 	}
 	return zap.NewDevelopmentConfig()

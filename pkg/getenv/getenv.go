@@ -4,6 +4,7 @@ package getenv
 import (
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -40,4 +41,22 @@ func Int(key string, d int) int {
 		return d
 	}
 	return ret
+}
+
+// Bool from env var, case insensitive match
+// "true" and "1" to true,
+// "false" and "0" to false,
+// default value is used if value empty or not match.
+func Bool(key string, d bool) bool {
+	v := os.Getenv(key)
+	v = strings.ToLower(v)
+	if v == "1" ||
+		(v) == "true" {
+		return true
+	}
+	if v == "0" ||
+		(v) == "false" {
+		return false
+	}
+	return d
 }
