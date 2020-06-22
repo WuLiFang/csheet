@@ -1,6 +1,10 @@
 import { app } from '@/main';
 import { locale } from '@/plugins/i18n';
-import { IdGetterObj, InMemoryCache } from 'apollo-cache-inmemory';
+import {
+  IdGetterObj,
+  InMemoryCache,
+  IntrospectionFragmentMatcher,
+} from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { ApolloLink, split } from 'apollo-link';
 import { ErrorResponse, onError } from 'apollo-link-error';
@@ -63,6 +67,14 @@ const linkErrorAfterWare: ApolloLink = onError(
     }
   }
 );
+
+// https://www.apollographql.com/docs/react/data/fragments/
+const fragmentMatcher: IntrospectionFragmentMatcher = new IntrospectionFragmentMatcher(
+  {
+    introspectionQueryResultData: require('@/../fragment-types.json'),
+  }
+);
+
 const cache: InMemoryCache = new InMemoryCache({
   cacheRedirects: {
     Query: {
@@ -71,13 +83,15 @@ const cache: InMemoryCache = new InMemoryCache({
         args: {
           [argName: string]: string | undefined;
         },
-        { getCacheKey }: { getCacheKey(options: Record<string, unknown>): string }
+        {
+          getCacheKey,
+        }: { getCacheKey(options: Record<string, unknown>): string }
       ): string => {
         return getCacheKey({ id: args.id });
       },
     },
   },
-  // fragmentMatcher:
+  fragmentMatcher,
   dataIdFromObject: (i: IdGetterObj): string | undefined => i.id,
 });
 
