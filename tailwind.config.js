@@ -33,4 +33,5 @@ module.exports = {
     textColor: ['responsive', 'hover', 'focus', 'disabled'],
   },
   plugins: [require('@tailwindcss/custom-forms')],
+  purge: false, // we do purge in postcss.config.js
 };
