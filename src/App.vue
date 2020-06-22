@@ -3,6 +3,10 @@
     class="bg-black text-gray-200 h-screen overflow-x-hidden overflow-y-auto relative"
     @scroll.passive="handleScroll"
   )
+    header(
+      class="bg-gray-800 text-right"
+    )
+      span.m-1.text-gray-600 {{ RELEASE }}
     TheNavbar(
       class="sticky top-0 bg-gray-800 p-2 w-full text-center z-20 transition duration-500 ease-in-out"
       :style="{ 'transform': collapseNav ? 'translateY(-100%)' : null }"
@@ -32,7 +36,6 @@
 import { Component, Vue } from 'vue-property-decorator';
 import TheNavbar from './components/TheNavbar.vue';
 import CollectionOverview from './components/CollectionOverview.vue';
-import { collectionsVariables } from './graphql/types/collections';
 import * as cast from 'cast-unknown';
 import * as preference from '@/preference';
 
@@ -44,7 +47,7 @@ import * as preference from '@/preference';
   mounted() {
     preference.load();
     const listener = (v: unknown) => {
-      let msg: App['messages'][0] = {
+      const msg: App['messages'][0] = {
         text: '',
         key: new Date().getTime().toString(),
       };
@@ -77,6 +80,7 @@ export default class App extends Vue {
   $refs!: {
     overview: CollectionOverview;
   };
+
   messages: {
     key: string;
     class?: string;
@@ -85,7 +89,9 @@ export default class App extends Vue {
 
   collapseNav = false;
   lastScrollTop = 0;
-  handleScroll(e: Event) {
+  RELEASE = RELEASE;
+
+  handleScroll(e: Event):void {
     if (!(e.target instanceof HTMLElement)) {
       return;
     }

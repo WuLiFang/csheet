@@ -4,21 +4,23 @@ name: main
 
 steps:
   - name: build
-    image: docker:dind
+    image: docker:stable-git
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
+      - RELEASE=$(git describe --always --match 'v*.*.*')
       - >-
         docker build
-        --build-arg HTTP_PROXY=$${HTTP_PROXY}
-        --build-arg HTTPS_PROXY=$${HTTPS_PROXY}
+        --build-arg "HTTP_PROXY=$${HTTP_PROXY}"
+        --build-arg "HTTPS_PROXY=$${HTTPS_PROXY}"
+        --build-arg "RELEASE=$${RELEASE}"
         --label "repo=${DRONE_REPO}"
         --label "commit-sha=${DRONE_COMMIT_SHA}"
         --tag registry.wlf.com/csheet:${DRONE_COMMIT_SHA}
         .
   - name: push(master)
-    image: docker:dind
+    image: docker:stable-git
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
@@ -32,7 +34,7 @@ steps:
       branch:
         - master
   - name: push(tag)
-    image: docker:dind
+    image: docker:stable-git
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
@@ -46,7 +48,7 @@ steps:
       event:
         - tag
   - name: clean
-    image: docker:dind
+    image: docker:stable-git
     volumes:
       - name: dockersock
         path: /var/run/docker.sock

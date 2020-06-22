@@ -56,6 +56,10 @@ CSHEET_SERVER_SENTRY_DSN
 
   服务端 Sentry DSN。
 
+CSHEET_RELEASE
+
+  发布版本，在 Sentry 事件中记录。
+
 CGTEAMWORK_URL
 
   CGTeamwork 服务器地址。例：http://192.168.50.11

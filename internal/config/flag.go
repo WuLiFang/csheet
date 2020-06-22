@@ -63,5 +63,10 @@ func ParseFlag() {
 		"sentry-dsn",
 		SentryDSN,
 		"server sentry dsn")
+	fs.StringVar(
+		&Release,
+		"release",
+		SentryDSN,
+		"release version for sentry")
 	fs.Parse(os.Args[1:])
 }

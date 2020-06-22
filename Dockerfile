@@ -14,6 +14,8 @@ WORKDIR /app/
 COPY ./package*.json ./
 RUN npm ci
 COPY . .
+ARG RELEASE
+ENV CSHEET_RELEASE=${RELEASE}
 RUN npm run build
 
 FROM golang:1 AS build
@@ -55,3 +57,8 @@ RUN set +e
 LABEL author=NateScarlet@Gmail.com
 EXPOSE 80
 CMD ["csheet"]
+
+ARG RELEASE
+ENV CSHEET_RELEASE=${RELEASE}
+LABEL release=${RELEASE}
+

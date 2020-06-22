@@ -4,10 +4,7 @@
     "browser": true
   },
   "globals": {
-    "gantt": "readonly",
-    "GIT_REVISION": "readonly",
-    "BUILD_DATE": "readonly",
-    "VERSION": "readonly"
+    "RELEASE": "readonly"
   },
   "extends": [
     "eslint:recommended",

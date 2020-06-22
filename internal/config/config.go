@@ -19,4 +19,5 @@ var (
 	CGTeamworkMaxTaskPerCollect = getenv.Int("CSHEET_CGTEAMWORK_MAX_TASK_PER_COLLECT", 1000)
 	CGTeamworkPipelineOverwrite = getenv.String("CSHEET_CGTEAMWORK_PIPELINE_OVERWRITE", "{}")
 	SentryDSN                   = getenv.String("CSHEET_SERVER_SENTRY_DSN", "")
+	Release                     = getenv.String("CSHEET_RELEASE", "")
 )

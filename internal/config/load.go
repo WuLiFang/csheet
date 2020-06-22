@@ -34,6 +34,7 @@ func Load() {
 		err := sentry.Init(sentry.ClientOptions{
 			Dsn:         SentryDSN,
 			Environment: Env,
+			Release:     Release,
 		})
 		if err != nil {
 			logger.Error("sentry initialization failed", "error", err)

@@ -11,6 +11,7 @@ import Vue from 'vue';
   sentry.init({
     environment: process.env.NODE_ENV,
     dsn: config.sentryDSN,
+    release: RELEASE,
     integrations: [new SentryVue({ Vue, attachProps: true })],
   });
 })();
