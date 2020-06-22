@@ -9,6 +9,7 @@ steps:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
+      - git fetch origin 'refs/tags/*:refs/tags/*'
       - RELEASE=$(git describe --always --match 'v*.*.*')
       - >-
         docker build
