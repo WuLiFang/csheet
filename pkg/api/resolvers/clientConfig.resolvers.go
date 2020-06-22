@@ -7,14 +7,17 @@ import (
 	"context"
 	"os"
 
+	"github.com/WuLiFang/csheet/v6/internal/config"
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
 )
 
 func (r *queryResolver) ClientConfig(ctx context.Context, name string) (*model.ClientConfig, error) {
-	var ret *model.ClientConfig
+	var ret = new(model.ClientConfig)
+	if config.IssueTrackerURL != "" {
+		ret.IssueTrackerURL = &config.IssueTrackerURL
+	}
 	switch name {
 	case "web":
-		ret = new(model.ClientConfig)
 		if sentryDSN, ok := os.LookupEnv("CSHEET_WEB_SENTRY_DSN"); ok {
 			ret.SentryDsn = &sentryDSN
 		}

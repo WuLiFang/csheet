@@ -64,7 +64,8 @@ type ComplexityRoot struct {
 	}
 
 	ClientConfig struct {
-		SentryDsn func(childComplexity int) int
+		IssueTrackerURL func(childComplexity int) int
+		SentryDsn       func(childComplexity int) int
 	}
 
 	CollectedEvent struct {
@@ -229,6 +230,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CGTeamworkProject.Status(childComplexity), true
+
+	case "ClientConfig.issueTrackerURL":
+		if e.complexity.ClientConfig.IssueTrackerURL == nil {
+			break
+		}
+
+		return e.complexity.ClientConfig.IssueTrackerURL(childComplexity), true
 
 	case "ClientConfig.sentryDSN":
 		if e.complexity.ClientConfig.SentryDsn == nil {
@@ -720,6 +728,7 @@ var sources = []*ast.Source{
 `, BuiltIn: false},
 	&ast.Source{Name: "pkg/api/queries/clientConfig.gql", Input: `type ClientConfig {
   sentryDSN: String
+  issueTrackerURL: String
 }
 
 extend type Query {
@@ -1268,6 +1277,37 @@ func (ec *executionContext) _ClientConfig_sentryDSN(ctx context.Context, field g
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.SentryDsn, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClientConfig_issueTrackerURL(ctx context.Context, field graphql.CollectedField, obj *model.ClientConfig) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "ClientConfig",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IssueTrackerURL, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4181,6 +4221,8 @@ func (ec *executionContext) _ClientConfig(ctx context.Context, sel ast.Selection
 			out.Values[i] = graphql.MarshalString("ClientConfig")
 		case "sentryDSN":
 			out.Values[i] = ec._ClientConfig_sentryDSN(ctx, field, obj)
+		case "issueTrackerURL":
+			out.Values[i] = ec._ClientConfig_issueTrackerURL(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

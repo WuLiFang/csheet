@@ -19,7 +19,8 @@ type Node interface {
 }
 
 type ClientConfig struct {
-	SentryDsn *string `json:"sentryDSN"`
+	SentryDsn       *string `json:"sentryDSN"`
+	IssueTrackerURL *string `json:"issueTrackerURL"`
 }
 
 type CollectionConnection struct {

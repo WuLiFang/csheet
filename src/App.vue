@@ -3,10 +3,16 @@
     class="bg-black text-gray-200 h-screen overflow-x-hidden overflow-y-auto relative"
     @scroll.passive="handleScroll"
   )
-    header(
-      class="bg-gray-800 text-right"
+    header.pt-1(
+      class="bg-gray-800 text-right text-gray-400 text-sm"
     )
-      span.m-1.text-gray-600 {{ RELEASE }}
+      span.mx-1.text-gray-600 {{ RELEASE }}
+      span.mx-1.text-gray-600 &copy; 2018 北京吾立方数码科技有限公司 
+      a.mx-1(
+        v-if="config && config.issueTrackerURL"
+        :href="config.issueTrackerURL"
+        target="__blank"
+      ) 问题反馈
     TheNavbar(
       class="sticky top-0 bg-gray-800 p-2 w-full text-center z-20 transition duration-500 ease-in-out"
       :style="{ 'transform': collapseNav ? 'translateY(-100%)' : null }"
@@ -38,11 +44,23 @@ import TheNavbar from './components/TheNavbar.vue';
 import CollectionOverview from './components/CollectionOverview.vue';
 import * as cast from 'cast-unknown';
 import * as preference from '@/preference';
+import {
+  clientConfig,
+  clientConfig_clientConfig as Config,
+} from './graphql/types/clientConfig';
 
 @Component<App>({
   components: {
     TheNavbar,
     CollectionOverview,
+  },
+  apollo: {
+    config: {
+      query: require('@/graphql/queries/clientConfig.gql'),
+      update(v: clientConfig): Config | undefined {
+        return v.clientConfig ?? undefined;
+      },
+    },
   },
   mounted() {
     preference.load();
@@ -73,6 +91,8 @@ import * as preference from '@/preference';
   },
 })
 export default class App extends Vue {
+  config?: Config;
+
   variables: CollectionOverview['variables'] = {
     originPrefix: '',
   };
@@ -91,7 +111,7 @@ export default class App extends Vue {
   lastScrollTop = 0;
   RELEASE = RELEASE;
 
-  handleScroll(e: Event):void {
+  handleScroll(e: Event): void {
     if (!(e.target instanceof HTMLElement)) {
       return;
     }

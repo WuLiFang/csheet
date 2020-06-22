@@ -1,5 +1,6 @@
 type ClientConfig {
   sentryDSN: String
+  issueTrackerURL: String
 }
 
 extend type Query {

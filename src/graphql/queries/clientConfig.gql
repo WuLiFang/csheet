@@ -1,5 +1,6 @@
 query clientConfig {
   clientConfig(name: "web") {
     sentryDSN
+    issueTrackerURL
   }
 }

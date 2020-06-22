@@ -20,4 +20,5 @@ var (
 	CGTeamworkPipelineOverwrite = getenv.String("CSHEET_CGTEAMWORK_PIPELINE_OVERWRITE", "{}")
 	SentryDSN                   = getenv.String("CSHEET_SERVER_SENTRY_DSN", "")
 	Release                     = getenv.String("CSHEET_RELEASE", "")
+	IssueTrackerURL             = getenv.String("CSHEET_ISSUE_TRACKER_URL", "https://github.com/WuLiFang/csheet/issues")
 )

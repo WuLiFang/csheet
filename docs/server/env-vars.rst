@@ -60,6 +60,10 @@ CSHEET_RELEASE
 
   发布版本，在 Sentry 事件中记录。
 
+CSHEET_ISSUE_TRACKER_URL
+
+  问题反馈网址，显示在客户端界面上。
+
 CGTEAMWORK_URL
 
   CGTeamwork 服务器地址。例：http://192.168.50.11

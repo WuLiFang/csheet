@@ -56,19 +56,19 @@ models:
       - github.com/99designs/gqlgen/graphql.Int32
   CollectedEvent:
     model:
-      - github.com/WuLiFang/csheet/pkg/model/event/collected.Event
+      - github.com/WuLiFang/csheet/v6/pkg/model/event/collected.Event
   Collection:
     model:
-      - github.com/WuLiFang/csheet/pkg/model/collection.Collection
+      - github.com/WuLiFang/csheet/v6/pkg/model/collection.Collection
   Presentation:
     model:
-      - github.com/WuLiFang/csheet/pkg/model/presentation.Presentation
+      - github.com/WuLiFang/csheet/v6/pkg/model/presentation.Presentation
   DiskFile:
     model:
-      - github.com/WuLiFang/csheet/pkg/model/file.File
+      - github.com/WuLiFang/csheet/v6/pkg/model/file.File
     fields:
       path:
         resolver: true
   CGTeamworkProject:
     model:
-      - github.com/WuLiFang/csheet/pkg/cgteamwork.Project
+      - github.com/WuLiFang/csheet/v6/pkg/cgteamwork.Project

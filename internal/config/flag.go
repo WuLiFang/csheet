@@ -66,7 +66,12 @@ func ParseFlag() {
 	fs.StringVar(
 		&Release,
 		"release",
-		SentryDSN,
+		Release,
 		"release version for sentry")
+	fs.StringVar(
+		&IssueTrackerURL,
+		"issue-tracker-url",
+		IssueTrackerURL,
+		"")
 	fs.Parse(os.Args[1:])
 }

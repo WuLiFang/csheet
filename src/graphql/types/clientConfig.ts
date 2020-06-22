@@ -8,8 +8,9 @@
 // ====================================================
 
 export interface clientConfig_clientConfig {
-  __typename: "ClientConfig";
+  __typename: 'ClientConfig';
   sentryDSN: string | null;
+  issueTrackerURL: string | null;
 }
 
 export interface clientConfig {
