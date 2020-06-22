@@ -7,6 +7,7 @@ import (
 	"path"
 	"time"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	client "github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
@@ -25,7 +26,9 @@ type Options struct {
 	Pipeline string
 }
 
-func collectionFromTask(m map[string]collection.Collection, task client.Task, o Options) (err error) {
+func collectionFromTask(ctx context.Context, m map[string]collection.Collection, task client.Task, o Options) (err error) {
+	var logger = logging.For(ctx).Logger("collector.cgteamwork").Sugar()
+
 	ret, ok := m[task.Shot.Title]
 	if !ok {
 		ret, err = collection.FindByID(task.ID)
@@ -111,6 +114,8 @@ func collectionFromTask(m map[string]collection.Collection, task client.Task, o 
 
 // CollectWithClient gallery with given client.
 func CollectWithClient(ctx context.Context, c *client.Client, o Options) (ret *collected.Event, err error) {
+	var logger = logging.For(ctx).Logger("collector.cgteamwork").Sugar()
+
 	logger.Infow("collect", "options", o)
 	ret = new(collected.Event)
 	ret.OriginPrefix = collection.Origin("cgteamwork", o.Database, o.Pipeline, o.Prefix)
@@ -149,7 +154,7 @@ func CollectWithClient(ctx context.Context, c *client.Client, o Options) (ret *c
 
 	colM := map[string]collection.Collection{}
 	for _, v := range tasks {
-		err = collectionFromTask(colM, v, o)
+		err = collectionFromTask(ctx, colM, v, o)
 		if err != nil {
 			return
 		}

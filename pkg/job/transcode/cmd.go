@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	"time"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
 	"github.com/WuLiFang/csheet/v6/pkg/transcode"
 )
@@ -20,13 +21,15 @@ func getMiddleFrameTimeOffset(p presentation.Presentation) (time.Duration, error
 		}
 		return info.Duration() / 2, nil
 	default:
-		logger.DPanic("unsupported type", "p", p)
+		logging.Logger("job.transcode.cmd").Sugar().
+			DPanic("unsupported type", "p", p)
 	}
 	return 0, nil
 }
 
 func runCommand(cmd *exec.Cmd) (err error) {
-	logger.Debugw("run command", "args", cmd.Args)
+	var logger = logging.Logger("job.transcode.cmd").Sugar()
+	logger.Debugw("run", "args", cmd.Args)
 	stderr := bytes.NewBuffer(nil)
 	cmd.Stderr = stderr
 	err = cmd.Run()

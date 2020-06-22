@@ -3,19 +3,22 @@ package config
 import (
 	"os"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/collector/cgteamwork"
 	"github.com/WuLiFang/csheet/v6/pkg/collector/folder"
 	"github.com/WuLiFang/csheet/v6/pkg/filestore"
 	"github.com/WuLiFang/csheet/v6/pkg/job/filewatch"
-	"github.com/WuLiFang/csheet/v6/pkg/logging"
 	"github.com/getsentry/sentry-go"
 	"github.com/tidwall/gjson"
+	"go.uber.org/zap"
 )
 
 // Load config, panic on error.
 func Load() {
-	logging.Env = Env
-	var logger = logging.GetLogger("config")
+	if Env == "production" {
+		logging.SetConfig(zap.NewProductionConfig())
+	}
+	var logger = logging.Logger("config").Sugar()
 	if Env == "production" && FolderInclude == "*" {
 		logger.Warn("allowing user scan any folder on host," +
 			"use CSHEET_FOLDER_INCLUDE to limit allowed folder.")

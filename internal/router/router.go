@@ -6,6 +6,7 @@ import (
 	"path"
 	"time"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/internal/config"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/filestore"
@@ -19,6 +20,7 @@ import (
 
 // New router
 func New() *gin.Engine {
+
 	if config.Env == "development" {
 		gin.SetMode(gin.DebugMode)
 
@@ -27,7 +29,7 @@ func New() *gin.Engine {
 	}
 	r := gin.New()
 	r.Use(ginsentry.Middleware(), func(ctx *gin.Context) {
-		var hub = ginsentry.GinContextHub(ctx)
+		var hub = logging.For(ctx)
 		hub.Scope().SetUser(sentry.User{
 			IPAddress: ctx.ClientIP(),
 		})
@@ -41,6 +43,8 @@ func New() *gin.Engine {
 	}).StaticFile("", "dist/index.html")
 	r.StaticFile("favicon.ico", "dist/favicon.ico")
 	r.Group("files").Use(func(c *gin.Context) {
+		var logger = logging.For(c.Request.Context()).Logger("router").Sugar()
+
 		c.Next()
 		status := c.Writer.Status()
 		go func(status int, filepath string) {

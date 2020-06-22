@@ -6,6 +6,8 @@ import (
 	"errors"
 	"strconv"
 	"strings"
+
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 )
 
 // KeyPartsDelimiter used to join key parts.
@@ -49,10 +51,11 @@ func unmarshalKeyParts(data []byte, parts ...*string) error {
 func (index Index) Key(parts ...string) []byte {
 	data, err := marshalKeyParts(parts...)
 	if err != nil {
-		logger.Panicw("key encoding error",
-			"error", err,
-			"index", index,
-			"parts", parts)
+		logging.Logger("db").Sugar().
+			Panicw("key encoding error",
+				"error", err,
+				"index", index,
+				"parts", parts)
 	}
 	return append(index.Bytes(), data...)
 }

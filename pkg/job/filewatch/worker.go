@@ -3,6 +3,7 @@ package filewatch
 import (
 	"os"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/model/file"
 )
 
@@ -29,13 +30,13 @@ func (w worker) Start() {
 			return
 		case j := <-w.manager.job:
 			w.manager.flight.Do(j.Path, func() {
+				var logger = logging.Logger("job.filewatch").Sugar()
 				err := w.Run(j)
 				if os.IsNotExist(err) {
 					logger.Infow("detected file remove", "path", j.Path)
 					err = j.Delete()
 				}
 				if err != nil {
-
 					logger.Errorw("worker error", "error", err, "file", j)
 				}
 			})

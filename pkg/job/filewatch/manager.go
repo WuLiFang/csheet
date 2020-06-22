@@ -5,10 +5,12 @@ import (
 	"sync"
 	"time"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/model/file"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
 	"github.com/WuLiFang/csheet/v6/pkg/onceflight"
+	"go.uber.org/zap"
 	"golang.org/x/time/rate"
 )
 
@@ -34,6 +36,7 @@ func (m *manager) SetRateLimit(r int) {
 }
 
 func (m *manager) Start() {
+	var logger = logging.Logger("job.filewatch")
 	m.startMu.Do(func() {
 		m.stop = make(chan bool)
 		go func(j chan<- file.File, cancel <-chan bool) {
@@ -49,12 +52,12 @@ func (m *manager) Start() {
 					}
 					p, err := presentation.FindByID(k)
 					if err != nil {
-						logger.Error("error during find presentation by id", "error", err)
+						logger.Error("find presentation by id failed", zap.Error(err))
 						continue
 					}
 					err = m.rate.Wait(context.Background())
 					if err != nil {
-						logger.DPanicw("error during watch rate limit", "error", err)
+						logger.DPanic("watch rate limit failed", zap.Error(err))
 					}
 					if p.Raw == "" {
 						continue
@@ -62,16 +65,16 @@ func (m *manager) Start() {
 					f, err := file.FindByPath(p.Raw)
 					if err != nil {
 						if err != db.ErrKeyNotFound {
-							logger.Error("error during find file by path", "error", err)
+							logger.Error("find file by path failed", zap.Error(err))
 						}
 						continue
 					}
 					j <- f
 					jobCount++
 				}
-				logger.Infow("file watch loop completed",
-					"count", jobCount,
-					"elapsed", time.Since(startTime),
+				logger.Info("file watch loop completed",
+					zap.Int("count", jobCount),
+					zap.Duration("elapsed", time.Since(startTime)),
 				)
 			}
 		}(m.job, m.stop)

@@ -3,6 +3,7 @@ package transcode
 import (
 	"path/filepath"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/filestore"
 	"github.com/WuLiFang/csheet/v6/pkg/model/file"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
@@ -11,6 +12,7 @@ import (
 
 func transcodeImageThumb(p presentation.Presentation) error {
 	return filestore.WithTempDir("image-thumb-", func(dir string) (err error) {
+		var logger = logging.Logger("job.transcode").Sugar()
 		raw, err := file.FindByPath(p.Raw)
 		if err != nil {
 			return

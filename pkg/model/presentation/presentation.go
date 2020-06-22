@@ -7,8 +7,10 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/model/file"
+	"go.uber.org/zap"
 )
 
 // Presentation defines how to render collection
@@ -55,7 +57,7 @@ func keyToID(key []byte) string {
 func (p Presentation) ID() string {
 	key, err := p.Key()
 	if err != nil {
-		logger.Errorw("invalid id", "error", err)
+		logging.Logger("model.presentation").Error("invalid id", zap.Error(err))
 		return ""
 	}
 	return base64.RawURLEncoding.EncodeToString(key)
@@ -124,6 +126,7 @@ func FindByID(id string) (ret Presentation, err error) {
 
 // Put a presentation to db, will validate raw file stat and unset error state.
 func Put(t Type, path string) (ret Presentation, err error) {
+	var logger = logging.Logger("model.presentation").Sugar()
 	defer func() {
 		logger.Debugw("put", "type", t, "path", path, "ret", ret, "error", err)
 	}()

@@ -5,8 +5,10 @@ import (
 	"errors"
 	"time"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
+	"go.uber.org/zap"
 )
 
 // Collection belongs to a gallery.
@@ -53,7 +55,7 @@ func (Collection) IsNode() {}
 func (c Collection) ID() string {
 	key, err := c.key()
 	if err != nil {
-		logger.Errorw("invalid id", "error", err)
+		logging.Logger("model.collection").Error("invalid id", zap.Error(err))
 		return ""
 	}
 	return base64.RawStdEncoding.EncodeToString(key)
@@ -61,12 +63,13 @@ func (c Collection) ID() string {
 
 // Presentations related to this collection
 func (c Collection) Presentations() ([]presentation.Presentation, error) {
+	var logger = logging.Logger("model.collection")
 	if c.presentations == nil {
 		ret := make([]presentation.Presentation, 0, len(c.PresentationIDs))
 		for _, i := range c.PresentationIDs {
 			v, err := presentation.FindByID(i)
 			if err == db.ErrKeyNotFound {
-				logger.Warnw("presentation not found", "id", i)
+				logger.Warn("presentation not found", zap.String("id", i))
 				continue
 			}
 			if err != nil {

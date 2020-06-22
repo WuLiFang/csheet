@@ -5,6 +5,7 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/internal/config"
 	"github.com/WuLiFang/csheet/v6/internal/router"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
@@ -16,7 +17,8 @@ import (
 )
 
 func main() {
-	defer logger.Sync()
+	defer logging.Sync()
+
 	config.ParseFlag()
 	config.Load()
 

@@ -1,27 +1,44 @@
 package ginsentry
 
 import (
-	"context"
+	"net"
+	"os"
+	"strings"
 
-	"github.com/WuLiFang/csheet/v6/pkg/middleware/gincontext"
-	"github.com/getsentry/sentry-go"
-	sentrygin "github.com/getsentry/sentry-go/gin"
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/gin-gonic/gin"
 )
 
-// Middleware send error during request handing to sentry.
+// Middleware for gin
 func Middleware() gin.HandlerFunc {
-	return sentrygin.New(sentrygin.Options{})
+	return func(c *gin.Context) {
+		var ctx = c.Request.Context()
+		ctx, hub := logging.With(ctx)
+		var scope = hub.PushScope()
+		defer hub.PopScope()
+		c.Request = c.Request.WithContext(ctx)
+		scope.SetRequest(c.Request)
+		c.Next()
+
+		defer func() {
+			err := recover()
+			if err != nil && !isBrokenPipeError(err) {
+				hub.RecoverWithContext(ctx, err)
+				panic(err)
+			}
+		}()
+	}
 }
 
-// GinContextHub from gin.Context
-var GinContextHub = sentrygin.GetHubFromContext
-
-// ContextHub from context.Context
-func ContextHub(ctx context.Context) *sentry.Hub {
-	ginContext := gincontext.FromContext(ctx)
-	if ginContext == nil {
-		return nil
+// Check for a broken connection, as this is what Gin does already
+func isBrokenPipeError(err interface{}) bool {
+	if netErr, ok := err.(*net.OpError); ok {
+		if sysErr, ok := netErr.Err.(*os.SyscallError); ok {
+			if strings.Contains(strings.ToLower(sysErr.Error()), "broken pipe") ||
+				strings.Contains(strings.ToLower(sysErr.Error()), "connection reset by peer") {
+				return true
+			}
+		}
 	}
-	return GinContextHub(ginContext)
+	return false
 }

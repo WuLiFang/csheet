@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/model/file"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
@@ -34,12 +35,13 @@ func (m *manager) discoverJobByTag(
 	rawTag, errorTag, successTag, outputFile string,
 	jt jobType,
 ) bool {
+	var logger = logging.Logger("job.transcode").Sugar()
 	var outdated = errorTag != rawTag &&
 		successTag != rawTag
 	if outdated {
 		select {
 		case m.jobs[jt] <- p:
-			logger.Infow("scheduled transcode", "jobType", jt, "raw", p.Raw)
+			logger.Infow("scheduled", "jobType", jt, "raw", p.Raw)
 		default:
 		}
 	}
@@ -78,6 +80,7 @@ func (m *manager) discoverJob(p presentation.Presentation, rawTag string) (err e
 }
 
 func iterateAllPresentation(fn func(p presentation.Presentation) error) error {
+	var logger = logging.Logger("job.transcode").Sugar()
 	return db.View(func(txn *db.Txn) (err error) {
 		opts := db.DefaultIteratorOptions
 		opts.PrefetchValues = false
@@ -154,8 +157,9 @@ func iteratePresentation(fn func(p presentation.Presentation) error, allowFullSc
 }
 
 func (m *manager) Start() {
-	m.startMu.Do(func() {
+	var logger = logging.Logger("job.transcode").Sugar()
 
+	m.startMu.Do(func() {
 		go func() {
 			cancel := make(chan struct{}, 1)
 			m.stopSignal.Notify(cancel)

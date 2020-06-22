@@ -6,8 +6,8 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/api"
-	"github.com/WuLiFang/csheet/v6/pkg/middleware/ginsentry"
 	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 )
@@ -17,25 +17,27 @@ func apiHandler() gin.HandlerFunc {
 	server.AroundResponses(func(ctx context.Context, next graphql.ResponseHandler) (ret *graphql.Response) {
 		ret = next(ctx)
 		if ret != nil && len(ret.Errors) > 0 {
-			if hub := ginsentry.ContextHub(ctx); hub != nil {
-				hub.WithScope(func(scope *sentry.Scope) {
-					scope.SetTag("mechanism", "graphql")
-					oc := graphql.GetOperationContext(ctx)
-					scope.SetExtra("query", oc.RawQuery)
-					scope.SetExtra("variables", oc.Variables)
-					for _, err := range ret.Errors {
-						hub.CaptureEvent(&sentry.Event{
-							Level:   sentry.LevelError,
-							Message: err.Message,
-							Extra: map[string]interface{}{
-								"path":       err.Path,
-								"extensions": err.Extensions,
-								"locations":  err.Locations,
-							},
-						})
-					}
+			oc := graphql.GetOperationContext(ctx)
+
+			var hub = logging.For(ctx)
+			var scope = hub.PushScope()
+			defer hub.PopScope()
+			scope.SetTag("mechanism", "graphql")
+			scope.SetExtra("query", oc.RawQuery)
+			scope.SetExtra("variables", oc.Variables)
+
+			for _, err := range ret.Errors {
+				hub.CaptureEvent(&sentry.Event{
+					Level:   sentry.LevelError,
+					Message: err.Message,
+					Extra: map[string]interface{}{
+						"path":       err.Path,
+						"extensions": err.Extensions,
+						"locations":  err.Locations,
+					},
 				})
 			}
+
 		}
 		return
 	})

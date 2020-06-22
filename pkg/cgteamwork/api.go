@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/tidwall/gjson"
 )
 
@@ -40,8 +41,9 @@ func parseAPIResult(v []byte) (data gjson.Result, err error) {
 }
 
 func (c *Client) callAPI(ctx context.Context, param interface{}) (data gjson.Result, err error) {
+	var logger = logging.For(ctx).Logger("cgteamwork.api").Sugar()
 	logger.Debugw(
-		"api send",
+		"send",
 		"param", param,
 	)
 	payload, err := encodeAPIPayload(param)
@@ -71,7 +73,7 @@ func (c *Client) callAPI(ctx context.Context, param interface{}) (data gjson.Res
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
-	logger.Debugw("api recv",
+	logger.Debugw("recv",
 		"body", string(body),
 	)
 	data, err = parseAPIResult(body)

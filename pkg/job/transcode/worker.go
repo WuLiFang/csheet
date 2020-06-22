@@ -1,6 +1,10 @@
 package transcode
 
-import "strconv"
+import (
+	"strconv"
+
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
+)
 
 type worker struct {
 	manager *manager
@@ -13,6 +17,7 @@ func (w worker) Stop() {
 }
 
 func (w worker) Start() {
+	var logger = logging.Logger("job.transcode").Sugar()
 	for {
 		select {
 		case <-w.stop:

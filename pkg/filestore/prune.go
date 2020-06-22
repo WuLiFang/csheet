@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"gopkg.in/djherbis/times.v1"
 )
 
@@ -32,6 +33,7 @@ func removeEmptyFolder(p string) (err error) {
 	if p == "." {
 		return
 	}
+	var logger = logging.Logger("filestore.prune").Sugar()
 	logger.Debugw("check empty folder", "path", p, "parent", filepath.Dir(p))
 	f, err := os.Open(p)
 	if err != nil {
@@ -49,6 +51,7 @@ func removeEmptyFolder(p string) (err error) {
 
 // Prune remove files that atime before given time
 func Prune(root string, atimeBefore time.Time) (count int, err error) {
+	var logger = logging.Logger("filestore.prune").Sugar()
 	err = filepath.Walk(root, func(p string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err

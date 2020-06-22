@@ -1,6 +1,7 @@
 package transcode
 
 import (
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
 )
 
@@ -24,7 +25,8 @@ func (j jobType) Run(p presentation.Presentation) error {
 	case JobTypeVideoRegular:
 		transcodeVideoRegular(p)
 	default:
-		logger.DPanicw("unknown job type", "type", j)
+		logging.Logger("job.transcode").Sugar().
+			DPanicw("unknown job type", "type", j)
 	}
 	return nil
 }

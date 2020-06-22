@@ -4,8 +4,10 @@ import (
 	"encoding/base64"
 	"time"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/dgraph-io/badger/v2"
+	"go.uber.org/zap"
 )
 
 // Event record a finished collect action.
@@ -23,7 +25,7 @@ func (e Event) key() ([]byte, error) {
 func (e Event) ID() string {
 	key, err := e.key()
 	if err != nil {
-		logger.Errorw("invalid id", "error", err)
+		logging.Logger("model.collected").Error("invalid id", zap.Error(err))
 		return ""
 	}
 	return base64.RawURLEncoding.EncodeToString(key)

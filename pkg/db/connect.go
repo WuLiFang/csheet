@@ -3,11 +3,33 @@ package db
 import (
 	"time"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/dgraph-io/badger/v2"
 	"github.com/dgraph-io/badger/v2/options"
+	"go.uber.org/zap"
 )
 
 var db *badger.DB
+
+type zapLoggerAdapter struct {
+	l *zap.SugaredLogger
+}
+
+func (a zapLoggerAdapter) Errorf(template string, args ...interface{}) {
+	a.l.Errorf(template, args...)
+}
+
+func (a zapLoggerAdapter) Warningf(template string, args ...interface{}) {
+	a.l.Warnf(template, args...)
+}
+
+func (a zapLoggerAdapter) Infof(template string, args ...interface{}) {
+	a.l.Infof(template, args...)
+}
+
+func (a zapLoggerAdapter) Debugf(template string, args ...interface{}) {
+	a.l.Debugf(template, args)
+}
 
 // Open database at given path
 func Open(path string) (err error) {
@@ -16,7 +38,8 @@ func Open(path string) (err error) {
 			DefaultOptions(path).
 			WithValueLogLoadingMode(options.FileIO).
 			WithTableLoadingMode(options.FileIO).
-			WithTruncate(true),
+			WithTruncate(true).
+			WithLogger(zapLoggerAdapter{logging.Logger("db").Sugar()}),
 	)
 
 	return err
@@ -56,7 +79,10 @@ func EnableGC(interval time.Duration) {
 func Close() error {
 	err := ReleaseSequences()
 	if err != nil {
-		logger.Errorw("release sequence failed", "error", err)
+		logging.Logger("db").
+			Error("release sequence failed",
+				zap.Error(err),
+			)
 	}
 	return db.Close()
 }
