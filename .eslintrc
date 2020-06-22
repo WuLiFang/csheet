@@ -8,14 +8,14 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:vue/essential",
-    "plugin:vue/recommended",
     "@vue/standard",
     "@vue/typescript",
+    "plugin:vue/recommended",
+    "plugin:@typescript-eslint/recommended",
     "prettier",
-    "prettier/@typescript-eslint"
+    "prettier/vue",
+    "prettier/@typescript-eslint",
+    "plugin:vue/base"
   ],
   "rules": {
     "@typescript-eslint/member-ordering": "warn",
@@ -28,18 +28,15 @@
     // https://github.com/eslint/eslint/issues/12822
     "no-unused-expressions": "off"
   },
+
   "parserOptions": {
     "parser": "@typescript-eslint/parser"
   },
-  "plugins": ["graphql", "vue", "@typescript-eslint"],
+  "plugins": ["graphql"],
   "overrides": [
     {
       "files": ["*.js"],
       "rules": { "@typescript-eslint/no-var-requires": "off" }
-    },
-    {
-      "files": ["*.ts", "*.vue"],
-      "rules": { "camelcase": "off" }
     },
     {
       "files": ["*.spec.ts"],
