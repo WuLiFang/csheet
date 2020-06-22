@@ -10,7 +10,7 @@ import { getMainDefinition } from 'apollo-utilities';
 import { GraphQLError } from 'graphql';
 
 function getErrorMessage(e: GraphQLError): string {
-  let msg = e.extensions?.locales?.[locale] ?? e.message;
+  const msg = e.extensions?.locales?.[locale] ?? e.message;
   return msg;
 }
 
@@ -67,11 +67,11 @@ const cache: InMemoryCache = new InMemoryCache({
   cacheRedirects: {
     Query: {
       node: (
-        _: object,
+        _: Record<string, unknown>,
         args: {
           [argName: string]: string | undefined;
         },
-        { getCacheKey }: { getCacheKey(options: object): string }
+        { getCacheKey }: { getCacheKey(options: Record<string, unknown>): string }
       ): string => {
         return getCacheKey({ id: args.id });
       },
@@ -81,7 +81,7 @@ const cache: InMemoryCache = new InMemoryCache({
   dataIdFromObject: (i: IdGetterObj): string | undefined => i.id,
 });
 
-export const apolloClient: ApolloClient<{}> = new ApolloClient({
+export const apolloClient: ApolloClient<unknown> = new ApolloClient({
   cache,
   link: linkErrorAfterWare.concat(link),
 });

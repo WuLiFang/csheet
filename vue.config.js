@@ -26,10 +26,10 @@ module.exports = {
         })
     );
 
-    config.plugin("define").tap((args) => {
-      args[0].RELEASE = JSON.stringify(process.env.CSHEET_RELEASE)
-      return args
-    })
+    config.plugin('define').tap(args => {
+      args[0].RELEASE = JSON.stringify(process.env.CSHEET_RELEASE);
+      return args;
+    });
   },
   transpileDependencies: ['strip-ansi', 'ansi-regex'],
 
@@ -54,6 +54,9 @@ module.exports = {
       fallbackLocale: 'zh',
       localeDir: 'locales',
       enableInSFC: false,
+    },
+    apollo: {
+      lintGQL: true,
     },
   },
 };

@@ -15,18 +15,19 @@ const storage = localForage.createInstance({
   version: 1,
 });
 
-export async function save() {
+export async function save(): Promise<void> {
   await storage.setItem('root', preference);
 }
 
-export async function load() {
+export async function load(): Promise<void> {
   Object.assign(preference, await storage.getItem('root'));
 }
 
 export function get<K extends keyof Preference>(k: K): Preference[K] {
   return preference[k];
 }
-export function set<K extends keyof Preference>(k: K, v: Preference[K]) {
+
+export function set<K extends keyof Preference>(k: K, v: Preference[K]): void {
   preference[k] = v;
   save();
 }

@@ -111,9 +111,9 @@ import {
   folderOriginPrefixVariables,
   folderOriginPrefix,
 } from '../graphql/types/folderOriginPrefix';
-import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
 import { collectionsVariables } from '../graphql/types/collections';
 import * as preference from '@/preference';
+
 @Component<TheNavbar>({
   components: {
     CGTeamworkProjectSelect,
@@ -128,7 +128,7 @@ import * as preference from '@/preference';
         return v.folderOriginPrefix;
       },
       skip(): boolean {
-        return this.formData.mode != 'folder';
+        return this.formData.mode !== 'folder';
       },
     },
   },
@@ -163,11 +163,64 @@ export default class TheNavbar extends Vue {
   get cellOverlayVisible(): boolean {
     return preference.get('cellOverlayVisible');
   }
+
   set cellOverlayVisible(v: boolean) {
     preference.set('cellOverlayVisible', v);
   }
 
-  async collectFromCGTeamwork() {
+  get variables(): collectionsVariables {
+    return {
+      originPrefix: this.originPrefix,
+      presentationCountGt: this.formData.skipEmptyPresentation ? 0 : undefined,
+    };
+  }
+
+  @Watch('variables')
+  setVariables(v: collectionsVariables): void {
+    this.$emit('update:variables', v);
+  }
+
+  @Watch('formData', { deep: true })
+  saveState(): void {
+    const u = new URL(location.href);
+    u.search = '';
+    u.searchParams.set('mode', this.formData.mode);
+    if (this.formData.skipEmptyPresentation) {
+      u.searchParams.set('skip_empty', '1');
+    }
+    switch (this.formData.mode) {
+      case 'cgteamwork':
+        u.searchParams.set('db', this.formData.cgteamwork.database);
+        u.searchParams.set('pipeline', this.formData.cgteamwork.pipeline);
+        u.searchParams.set('prefix', this.formData.cgteamwork.prefix);
+        break;
+      case 'folder':
+        u.searchParams.set('root', this.formData.folder.root);
+        break;
+    }
+    history.replaceState(null, document.title, u.toString());
+  }
+
+  loadState(): void {
+    const q = new URLSearchParams(location.search);
+    switch (q.get('mode')) {
+      case 'cgteamwork':
+        this.formData.mode = 'cgteamwork';
+        this.formData.cgteamwork.database = q.get('db') ?? '';
+        this.formData.cgteamwork.pipeline = q.get('pipeline') ?? '';
+        this.formData.cgteamwork.prefix = q.get('prefix') ?? '';
+        break;
+      case 'folder':
+        this.formData.mode = 'folder';
+        this.formData.folder.root = q.get('root') ?? '';
+        break;
+    }
+    if (q.get('skip_empty')) {
+      this.formData.skipEmptyPresentation = true;
+    }
+  }
+
+  async collectFromCGTeamwork(): Promise<void> {
     if (!this.$el.reportValidity()) {
       return;
     }
@@ -186,7 +239,8 @@ export default class TheNavbar extends Vue {
       this.loadingCount -= 1;
     }
   }
-  async collectFromFolder() {
+
+  async collectFromFolder(): Promise<void> {
     if (!this.$el.reportValidity()) {
       return;
     }
@@ -205,7 +259,8 @@ export default class TheNavbar extends Vue {
       this.loadingCount -= 1;
     }
   }
-  async collect() {
+
+  async collect(): Promise<void> {
     switch (this.formData.mode) {
       case 'cgteamwork':
         await this.collectFromCGTeamwork();
@@ -228,61 +283,6 @@ export default class TheNavbar extends Vue {
         break;
     }
     return ret;
-  }
-
-  @Watch('formData', { deep: true })
-  saveState() {
-    const u = new URL(location.href);
-    u.search = '';
-    u.searchParams.set('mode', this.formData.mode);
-    if (this.formData.skipEmptyPresentation) {
-      u.searchParams.set('skip_empty', '1');
-    }
-    switch (this.formData.mode) {
-      case 'cgteamwork':
-        u.searchParams.set('db', this.formData.cgteamwork.database);
-        u.searchParams.set('pipeline', this.formData.cgteamwork.pipeline);
-        u.searchParams.set('prefix', this.formData.cgteamwork.prefix);
-        break;
-      case 'folder':
-        u.searchParams.set('root', this.formData.folder.root);
-        break;
-    }
-    history.replaceState(null, document.title, u.toString());
-  }
-
-  loadState() {
-    const q = new URLSearchParams(location.search);
-    switch (q.get('mode')) {
-      case 'cgteamwork':
-        this.formData.mode = 'cgteamwork';
-        this.formData.cgteamwork.database = q.get('db') ?? '';
-        this.formData.cgteamwork.pipeline = q.get('pipeline') ?? '';
-        this.formData.cgteamwork.prefix = q.get('prefix') ?? '';
-        break;
-      case 'folder':
-        this.formData.mode = 'folder';
-        this.formData.folder.root = q.get('root') ?? '';
-        break;
-    }
-    if (q.get('skip_empty')) {
-      this.formData.skipEmptyPresentation = true;
-    }
-  }
-
-  get variables(): collectionsVariables {
-    return {
-      originPrefix: this.originPrefix,
-      presentationCountGt: this.formData.skipEmptyPresentation ? 0 : undefined,
-    };
-  }
-  @Watch('variables')
-  setVariables(v: collectionsVariables) {
-    this.$emit('update:variables', v);
-  }
-
-  showMessage() {
-    this.$el.append(document.createElement('div'));
   }
 }
 </script>

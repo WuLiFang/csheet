@@ -7,13 +7,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Mixins } from 'vue-property-decorator';
+import { Component, Mixins } from 'vue-property-decorator';
 import { VModelMixin } from '../../mixins/VModelMixin';
 import {
   cgteamworkProjects,
   cgteamworkProjects_cgteamworkProjects as Project,
 } from '../../graphql/types/cgteamworkProjects';
 import { sortBy } from 'lodash';
+
 @Component<CGTeamworkProjectSelect>({
   apollo: {
     projects: {

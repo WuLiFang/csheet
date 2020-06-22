@@ -59,13 +59,16 @@ export default class CollectionMetadataCGTeamworkTasks extends Vue {
   }[] {
     return sortBy(JSON.parse(this.value), 'pipeline');
   }
-  get preferredStage() {
+
+  get preferredStage(): string {
     return preference.get('cgteamworkStage');
   }
+
   set preferredStage(v: string) {
     preference.set('cgteamworkStage', v);
   }
-  get stages() {
+
+  get stages(): string[] {
     return sortBy(uniq(this.tasks.flatMap(i => Object.keys(i.status))), [
       i => -['client', 'director', 'leader'].indexOf(i),
     ]);

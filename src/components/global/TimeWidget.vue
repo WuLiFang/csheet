@@ -12,6 +12,14 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
 @Component<TimeWidget>({
   components: {},
+  mounted() {
+    if (!this.format) {
+      this.startTick();
+    }
+  },
+  destroyed() {
+    this.stopTick();
+  },
 })
 export default class TimeWidget extends Vue {
   @Prop({ required: true })
@@ -23,7 +31,7 @@ export default class TimeWidget extends Vue {
   public text = '';
   public tickInterval: number | null = null;
 
-  get momentValue() {
+  get momentValue(): moment.Moment {
     const ret = moment(this.value);
     if (!ret.isValid()) {
       throw new Error(`Invalid date value: ${this.value}`);
@@ -31,7 +39,14 @@ export default class TimeWidget extends Vue {
     return ret;
   }
 
-  public startTick() {
+  @Watch('value', { immediate: true })
+  public updateText(): void {
+    this.text = this.format
+      ? this.momentValue.format(this.format)
+      : this.momentValue.fromNow();
+  }
+
+  public startTick(): void {
     if (this.tickInterval) {
       return;
     }
@@ -39,27 +54,12 @@ export default class TimeWidget extends Vue {
       this.updateText();
     }, 10e3);
   }
-  public stopTick() {
+
+  public stopTick(): void {
     if (!this.tickInterval) {
       return;
     }
     window.clearInterval(this.tickInterval);
-  }
-
-  @Watch('value', { immediate: true })
-  public updateText() {
-    this.text = this.format
-      ? this.momentValue.format(this.format)
-      : this.momentValue.fromNow();
-  }
-
-  public mounted() {
-    if (!this.format) {
-      this.startTick();
-    }
-  }
-  public destroyed() {
-    this.stopTick();
   }
 }
 </script>

@@ -85,6 +85,7 @@ export function fileSrc(v: string | undefined): string {
 export default class Presentation extends Vue {
   @Prop()
   id?: string;
+
   @Prop({ type: String, default: 'thumb' })
   size!: string;
 

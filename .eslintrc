@@ -26,7 +26,8 @@
     "require-atomic-updates": "off",
     "standard/no-callback-literal": "off",
     // https://github.com/eslint/eslint/issues/12822
-    "no-unused-expressions": "off"
+    "no-unused-expressions": "off",
+    "camelcase": ["error", { "allow": ["^\\$_"] }]
   },
 
   "parserOptions": {
@@ -36,6 +37,10 @@
   "overrides": [
     {
       "files": ["*.js"],
+      "rules": { "@typescript-eslint/no-var-requires": "off" }
+    },
+    {
+      "files": ["*.vue"],
       "rules": { "@typescript-eslint/no-var-requires": "off" }
     },
     {

@@ -122,12 +122,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Mixins, Prop } from 'vue-property-decorator';
+import { Component,  Mixins, Prop } from 'vue-property-decorator';
 import { ModalMixin } from '../mixins/ModalMixin';
 import Presentation, { fileSrc } from './Presentation.vue';
-import App from '../App.vue';
-import { show } from '../modal';
-import { collections_collections as Collections } from '../graphql/types/collections';
 import { collection as Collection } from '../graphql/types/collection';
 import 'vue-awesome/icons/window-close';
 import 'vue-awesome/icons/caret-square-left';
@@ -141,6 +138,7 @@ import CollectionMetadata from './CollectionMetadata.vue';
 import { filePathFormat } from '../const';
 import * as preference from '@/preference';
 import * as sentry from '@sentry/browser';
+import { presentation } from '../graphql/types/presentation';
 
 @Component<CollectionViewer>({
   components: {
@@ -211,8 +209,9 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
 
   presentationID = '';
   loadingCount = 0;
+  recollectingCount = 0;
 
-  jumpPrev() {
+  jumpPrev():void {
     if (this.prev) {
       sentry.addBreadcrumb({
         category: 'collection-viewer',
@@ -225,7 +224,7 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
     }
   }
 
-  jumpNext() {
+  jumpNext() :void{
     if (this.next) {
       sentry.addBreadcrumb({
         category: 'collection-viewer',
@@ -238,7 +237,7 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
     }
   }
 
-  close() {
+  close():void {
     sentry.addBreadcrumb({
       category: 'collection-viewer',
       message: 'close',
@@ -261,19 +260,22 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
     return ret;
   }
 
-  get presentation() {
-    return this.value.presentations.find(i => i.id == this.presentationID);
+  get presentation(): presentation | undefined {
+    return this.value.presentations.find(i => i.id === this.presentationID);
   }
-  async refetch() {
+
+  async refetch(): Promise<void> {
     await this.$apollo.queries.node.refetch();
   }
 
   get preferredBackground(): string {
     return preference.get('viewerBackground');
   }
+
   set preferredBackground(v: string) {
     preference.set('viewerBackground', v);
   }
+
   get backgroundClass(): string {
     switch (this.preferredBackground) {
       case 'checkboard':
@@ -283,8 +285,7 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
     }
   }
 
-  recollectingCount = 0;
-  async recollect() {
+  async recollect(): Promise<void> {
     sentry.addBreadcrumb({
       category: 'collection-viewer',
       message: 'recollect',

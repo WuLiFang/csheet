@@ -30,10 +30,7 @@ import 'vue-awesome/icons/image';
 import 'vue-awesome/icons/video';
 import { sortBy } from 'lodash';
 import * as preference from '@/preference';
-import {
-  presentationNode,
-  presentationNodeVariables,
-} from '@/graphql/types/presentationNode';
+
 @Component<PresentationSelect>({})
 export default class PresentationSelect extends Vue {
   @Prop({ type: String })
@@ -42,26 +39,16 @@ export default class PresentationSelect extends Vue {
   @Prop({ type: Array, required: true })
   options!: Presentation[];
 
-  get sortedOptions() {
+  get sortedOptions(): Presentation[] {
     return sortBy(this.options, [
       i => ['video', 'image'].findIndex(j => j === i.type),
       i => i.id,
     ]);
   }
-  select(v: string) {
-    if (this.value === v) {
-      return;
-    }
-    const match = this.options.find(i => i.id === v);
-    this.$emit('input', v);
-    if (match) {
-      preference.set('presentationType', match.type);
-    }
-  }
 
   @Watch('options', { immediate: true })
-  autoSelect() {
-    if (this.options.length == 0) {
+  autoSelect(): void {
+    if (this.options.length === 0) {
       this.$emit('input', undefined);
       return;
     }
@@ -79,5 +66,17 @@ export default class PresentationSelect extends Vue {
       ])[0]?.id
     );
   }
+
+  select(v: string):void {
+    if (this.value === v) {
+      return;
+    }
+    const match = this.options.find(i => i.id === v);
+    this.$emit('input', v);
+    if (match) {
+      preference.set('presentationType', match.type);
+    }
+  }
+
 }
 </script>

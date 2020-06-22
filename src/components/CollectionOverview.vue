@@ -32,8 +32,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
-import { collection as Collection } from '../graphql/types/collection';
+import { Component, Vue, Prop } from 'vue-property-decorator';
+import { collection as Collection, collection } from '../graphql/types/collection';
 import { pageInfo as PageInfo } from '../graphql/types/pageInfo';
 
 import {
@@ -87,6 +87,7 @@ import { filePathFormat } from '@/const';
 export default class CollectionOverview extends Vue {
   @Prop({ required: true })
   variables!: collectionsVariables;
+
   @Prop({ default: 50, type: Number })
   size!: number;
 
@@ -99,15 +100,15 @@ export default class CollectionOverview extends Vue {
 
   loadingCount = 0;
 
-  get nodes() {
+  get nodes(): collection[] {
     return extractNodes(this.collections);
   }
 
-  get pageInfo() {
+  get pageInfo(): Relay.PageInfo {
     return extractPageInfo(this.collections);
   }
 
-  async fetchMore() {
+  async fetchMore(): Promise<void> {
     if (!this.pageInfo.hasNextPage) {
       return;
     }
@@ -138,7 +139,7 @@ export default class CollectionOverview extends Vue {
     });
   }
 
-  async showViewer(value: Collection) {
+  async showViewer(value: Collection): Promise<void> {
     const props: {
       value: Collection;
       prev?: Collection;
@@ -149,8 +150,8 @@ export default class CollectionOverview extends Vue {
       next: undefined,
     });
     const setValue = async (v: Collection) => {
-      let index = this.nodes.findIndex(i => i.id === v.id);
-      if (index == this.nodes.length - 1 && this.pageInfo.hasNextPage) {
+      const index = this.nodes.findIndex(i => i.id === v.id);
+      if (index === this.nodes.length - 1 && this.pageInfo.hasNextPage) {
         await this.fetchMore();
       }
       props.value = this.nodes[index];
@@ -159,14 +160,15 @@ export default class CollectionOverview extends Vue {
         index >= this.nodes.length - 1 ? undefined : this.nodes[index + 1];
     };
     await setValue(value);
-    const vm = show(CollectionViewer, {
+    show(CollectionViewer, {
       props,
       on: {
         'update:value': setValue,
       },
     });
   }
-  async refetch() {
+
+  async refetch() : Promise<void>{
     await this.$apollo.queries.collections.refetch();
   }
 }

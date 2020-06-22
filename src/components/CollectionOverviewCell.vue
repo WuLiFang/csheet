@@ -33,13 +33,11 @@
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { collection as Collection } from '../graphql/types/collection';
 import Presentation from './Presentation.vue';
-import { show } from '../modal';
-import CollectionViewer from './CollectionViewer.vue';
 import * as cast from 'cast-unknown';
-import PresentationSelect from './PresentationSelect.vue';
 import { sortBy } from 'lodash';
 import CGTeamworkTaskStatus from './CGTeamworkTaskStatus.vue';
 import * as preference from '@/preference';
+
 @Component<CollectionOverviewCell>({
   components: { Presentation, CGTeamworkTaskStatus },
 })
@@ -50,14 +48,15 @@ export default class CollectionOverviewCell extends Vue {
   get overlayVisible(): boolean {
     return preference.get('cellOverlayVisible');
   }
+  
   get topLeftText(): string {
     let ret = '';
+    const pipeline = this.value.metadata.find(
+      i => i.k === 'cgteamwork.pipeline'
+    )?.v;
     for (const { k, v } of this.value.metadata) {
       switch (k) {
         case 'cgteamwork.tasks':
-          const pipeline = this.value.metadata.find(
-            i => i.k === 'cgteamwork.pipeline'
-          )?.v;
           ret += cast
             .array(JSON.parse(v))
             .map(cast.object)
@@ -94,7 +93,8 @@ export default class CollectionOverviewCell extends Vue {
     }
     return ret;
   }
-  get presentation() {
+
+  get presentation(): string {
     return sortBy(this.value.presentations, [
       i => !i.thumb,
       i => -new Date(i.raw.modTime).getTime(),
