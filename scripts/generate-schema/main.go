@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http/httptest"
-	"os"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/WuLiFang/csheet/v6/pkg/api"
@@ -130,8 +129,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	os.Remove("schema.json")
-	err = ioutil.WriteFile("schema.json", data, 0x644)
+	err = ioutil.WriteFile("schema.json", data, 0644)
 	if err != nil {
 		panic(err)
 	}
