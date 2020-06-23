@@ -62,43 +62,6 @@ volumes:
       path: /var/run/docker.sock
 ---
 kind: pipeline
-name: deploy
-
-clone:
-  disable: true
-steps:
-  - name: deploy
-    image: appleboy/drone-ssh
-    settings:
-      host:
-        from_secret: SSH_HOST
-      port:
-        from_secret: SSH_PORT
-      username:
-        from_secret: SSH_USER
-      password:
-        from_secret: SSH_PASSWORD
-      script:
-        - cd /srv/csheet
-        - docker-compose pull -q
-        - >-
-          docker-compose up
-          --detach
-          --always-recreate-deps
-      command_timeout: 3m
-depends_on:
-  - main
-trigger:
-  status:
-    - success
-  branch:
-    - master
-  event:
-    - cron
-  cron:
-    - nightly
----
-kind: pipeline
 name: notification
 
 clone:
