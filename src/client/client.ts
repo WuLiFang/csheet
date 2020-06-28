@@ -52,7 +52,7 @@ const linkErrorAfterWare: ApolloLink = onError(
       for (const i of graphQLErrors) {
         app.$emit('app-message', {
           text: getErrorMessage(i),
-          class: 'text-red-700',
+          class: 'bg-red-700',
         });
         if (i.extensions?.traceback && process.env.NODE_ENV === 'development') {
           // eslint-disable-next-line no-console
@@ -98,4 +98,9 @@ const cache: InMemoryCache = new InMemoryCache({
 export const apolloClient: ApolloClient<unknown> = new ApolloClient({
   cache,
   link: linkErrorAfterWare.concat(link),
+  defaultOptions: {
+    mutate: {
+      errorPolicy: 'all',
+    },
+  },
 });

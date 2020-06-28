@@ -53,9 +53,11 @@
           class="lg:mr-1"
         ) 前缀
         input(
+          ref="cgteamworkPrefixInput"
           v-model="formData.cgteamwork.prefix"
           class="form-input"
           @keydown.enter="collectFromCGTeamwork()"
+          @input="$event.target.setCustomValidity('')"
         )
     template(v-else-if="formData.mode == 'folder'")
       label(
@@ -71,6 +73,7 @@
           @keydown.enter="collectFromFolder()"
         )
     button(
+      ref="collectButton"
       class="bg-gray-700 hover:bg-gray-600 mr-1 p-2 w-16 rounded-sm"
       type="button"
       :disabled="loadingCount > 0"
@@ -158,6 +161,11 @@ export default class TheNavbar extends Vue {
 
   loadingCount = 0;
   $el!: HTMLFormElement;
+  $refs!: {
+    cgteamworkPrefixInput: HTMLInputElement;
+    collectButton: HTMLButtonElement;
+  };
+
   folderOriginPrefix = 'folder:';
 
   get cellOverlayVisible(): boolean {
@@ -226,10 +234,26 @@ export default class TheNavbar extends Vue {
     }
     this.loadingCount += 1;
     try {
-      const { data } = await this.$apollo.mutate<collectFromCGTeamwork>({
-        mutation: require('@/graphql/mutations/collectFromCGTeamwork.gql'),
-        variables: this.formData.cgteamwork,
-      });
+      const { data, errors } = await this.$apollo.mutate<collectFromCGTeamwork>(
+        {
+          mutation: require('@/graphql/mutations/collectFromCGTeamwork.gql'),
+          variables: this.formData.cgteamwork,
+          errorPolicy: 'all',
+        }
+      );
+      for (const err of errors ?? []) {
+        switch (err.extensions?.code) {
+          case 'CGTEAMWORK_COLLECT_OVER_TASK_LIMIT':
+            this.$refs.cgteamworkPrefixInput?.setCustomValidity(
+              '请使用更精确的前缀匹配来匹配更少的任务，如一集或一场。'
+            );
+            break;
+          default:
+            throw err;
+        }
+        this.$el.reportValidity();
+        return;
+      }
       this.$emit('collect');
       this.$root.$emit(
         'app-message',

@@ -27,7 +27,7 @@
     )
       li(
         v-for="i in messages"
-        class="p-3 rounded mx-2 my-1 bg-gray-400 text-black break-all"
+        class="p-3 roundeds-sm w-64 mx-2 my-1 bg-gray-900 text-white break-all"
         :key="i.key"
         :class="i.class"
       ) {{ i.text }}
@@ -79,7 +79,7 @@ import {
       this.messages.splice(0, 0, msg);
       setTimeout(() => {
         this.messages.splice(this.messages.indexOf(msg), 1);
-      }, 3e3 + 0.1e3 * msg.text.length);
+      }, 3e3 + 0.2e3 * msg.text.length);
     };
     this.$root.$on('app-message', listener);
     this.$once('destroyed', () => {
