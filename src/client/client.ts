@@ -98,9 +98,4 @@ const cache: InMemoryCache = new InMemoryCache({
 export const apolloClient: ApolloClient<unknown> = new ApolloClient({
   cache,
   link: linkErrorAfterWare.concat(link),
-  defaultOptions: {
-    mutate: {
-      errorPolicy: 'all',
-    },
-  },
 });
