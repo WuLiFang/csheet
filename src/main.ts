@@ -17,7 +17,7 @@ try {
   el.innerHTML = '';
 
   const h1 = document.createElement('h1');
-  h1.innerText = '浏览器版本过低';
+  h1.innerText = '请使用更新的浏览器';
   el.appendChild(h1);
 
   let p = document.createElement('p');
