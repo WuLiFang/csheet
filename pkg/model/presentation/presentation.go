@@ -1,6 +1,7 @@
 package presentation
 
 import (
+	"context"
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/hex"
@@ -10,8 +11,10 @@ import (
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/model/file"
-	"go.uber.org/zap"
 )
+
+//go:generate gotmpl -o presentation_gen.go ../model.go.gotmpl
+//go:generate gotmpl -o signal_gen.go  Type=*Presentation ../signal.go.gotmpl ../model_signals.gotmpl
 
 // Presentation defines how to render collection
 type Presentation struct {
@@ -53,63 +56,33 @@ func keyToID(key []byte) string {
 	return base64.RawURLEncoding.EncodeToString(key)
 }
 
-// ID of object.
-func (p Presentation) ID() string {
-	key, err := p.Key()
-	if err != nil {
-		logging.Logger("model.presentation").Error("invalid id", zap.Error(err))
-		return ""
-	}
-	return base64.RawURLEncoding.EncodeToString(key)
-}
-
-// IsNode implements graphql Node interface.
-func (Presentation) IsNode() {}
-
-// Save to db.
-func (p Presentation) Save() error {
-	key, err := p.Key()
-	if err != nil {
-		return err
-	}
-	err = db.Update(func(txn *db.Txn) error {
-		id := keyToID(key)
-		err = txn.Set(db.IndexPresentationFile.Key(p.Raw, id), nil)
+func init() {
+	SignalSaved.Connect(func(ctx context.Context, p *Presentation) error {
+		key, err := p.Key()
 		if err != nil {
 			return err
 		}
-		err = txn.Set(db.IndexPresentationFile.Key(p.Thumb, id), nil)
-		if err != nil {
-			return err
-		}
-		err = txn.Set(db.IndexPresentationFile.Key(p.Regular, id), nil)
-		if err != nil {
-			return err
-		}
-		err = txn.Set(db.IndexPresentationOutdated.Key(id), nil)
-		if err != nil {
-			return err
-		}
-		return txn.Set(key, p)
+		return db.Update(func(txn *db.Txn) error {
+			id := keyToID(key)
+			err = txn.Set(db.IndexPresentationFile.Key(p.Raw, id), nil)
+			if err != nil {
+				return err
+			}
+			err = txn.Set(db.IndexPresentationFile.Key(p.Thumb, id), nil)
+			if err != nil {
+				return err
+			}
+			err = txn.Set(db.IndexPresentationFile.Key(p.Regular, id), nil)
+			if err != nil {
+				return err
+			}
+			err = txn.Set(db.IndexPresentationOutdated.Key(id), nil)
+			if err != nil {
+				return err
+			}
+			return nil
+		})
 	})
-	if err != nil {
-		return err
-	}
-	SignalUpdated.Emit(p)
-	return nil
-}
-
-// Load from db.
-func (p *Presentation) Load() error {
-	key, err := p.Key()
-	if err != nil {
-		return err
-	}
-	err = db.Get(key, p)
-	if err != nil {
-		return err
-	}
-	return err
 }
 
 // FindByID find id matched presentation.

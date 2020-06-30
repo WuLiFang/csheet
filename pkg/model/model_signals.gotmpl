@@ -1,0 +1,32 @@
+{{- /*
+Common signals for model.
+
+Accept data:
+    Type: value type name.
+*/ -}}
+{{ define "modelSignals" }}
+// Model signals
+var (
+	// SignalWillSave emit when {{.Type}} about to save.
+	SignalWillSave = new(Signal)
+
+	// SignalSaved emit when {{.Type}} saved.
+	SignalSaved = new(Signal)
+
+	// SignalWillLoad emit when {{.Type}} about to load.
+	SignalWillLoad = new(Signal)
+
+	// SignalLoaded emit when {{.Type}} loaded.
+	SignalLoaded = new(Signal)
+
+	// SignalWillUpdate emit when existing {{.Type}} about to updated.
+	SignalWillDelete = new(Signal)
+
+	// SignalDeleted emit when existing {{.Type}} deleted.
+	SignalDeleted = new(Signal)
+)
+{{- end }}
+
+{{define "signals"}}
+{{ template "modelSignals" . -}}
+{{- end }}

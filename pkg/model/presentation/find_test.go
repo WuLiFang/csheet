@@ -13,10 +13,10 @@ func TestFindByRaw(t *testing.T) {
 	require.NoError(t, err)
 	defer db.Close()
 
-	err = Presentation{
+	err = (&Presentation{
 		Type: "image",
 		Raw:  "test",
-	}.Save()
+	}).Save()
 	require.NoError(t, err)
 	result, err := FindByPath("test")
 	require.NoError(t, err)

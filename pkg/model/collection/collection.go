@@ -11,6 +11,9 @@ import (
 	"go.uber.org/zap"
 )
 
+//go:generate gotmpl -o collection_gen.go ../model.go.gotmpl
+//go:generate gotmpl -o signal_gen.go  Type=*Collection ../signal.go.gotmpl ../model_signals.gotmpl
+
 // Collection belongs to a gallery.
 type Collection struct {
 	Origin          string
@@ -22,43 +25,13 @@ type Collection struct {
 	presentations   []presentation.Presentation
 }
 
-func (c Collection) key() ([]byte, error) {
+// Key for db
+func (c Collection) Key() ([]byte, error) {
 	if c.Origin == "" {
 		return nil, errors.New("missing collection origin")
-
 	}
 	var id, err = db.IndexCollectionOrigin.ValueID(c.Origin)
 	return db.IndexCollection.Key(id), err
-}
-
-// Save to db.
-func (c Collection) Save() error {
-	key, err := c.key()
-	if err != nil {
-		return err
-	}
-
-	err = db.Update(func(txn *db.Txn) error {
-		return txn.Set(key, c)
-	})
-	if err != nil {
-		return err
-	}
-	SignalUpdated.Emit(c)
-	return nil
-}
-
-// IsNode implements graphql Node interface.
-func (Collection) IsNode() {}
-
-// ID string for collection
-func (c Collection) ID() string {
-	key, err := c.key()
-	if err != nil {
-		logging.Logger("model.collection").Error("invalid id", zap.Error(err))
-		return ""
-	}
-	return base64.RawStdEncoding.EncodeToString(key)
 }
 
 // Presentations related to this collection

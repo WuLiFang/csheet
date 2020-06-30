@@ -1,0 +1,102 @@
+{{- /*
+Common model methods.
+
+Accept data:
+    Type(Optional): value type name.
+    Package(Optional): package name.
+*/ -}}
+
+{{- $_ := set . "Name" (regexReplaceAll "_gen$" .Name "") -}}
+{{- $_ := set . "Type" (.Type | default (camelcase .Name)) -}}
+
+// Code generated from {{templateFiles}}, DO NOT EDIT.
+
+package {{.Package}}
+
+import (
+	"context"
+	"encoding/base64"
+
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
+	"github.com/WuLiFang/csheet/v6/pkg/db"
+	"go.uber.org/zap"
+	{{- block "import" .}}{{end}}
+)
+
+// IsNode implements graphql Node interface.
+func ({{.Type}}) IsNode() {}
+
+
+// ID string for {{.Type}}, empty string when error.
+func (o {{.Type}}) ID() string {
+	key, err := o.Key()
+	if err != nil {
+		logging.Logger("model").Error("invalid id", zap.Error(err))
+		return ""
+	}
+	return base64.RawURLEncoding.EncodeToString(key)
+}
+
+
+// Save {{.Type}} to db.
+func (o *{{.Type}}) Save() (err error) {
+	var ctx = context.TODO()
+	err = SignalWillSave.Emit(ctx, o)
+	if err != nil {
+		return
+	}
+	var key []byte
+	key, err = o.Key()
+	if err != nil {
+		return
+	}
+	return db.Update(func(txn *db.Txn) (err error) {
+		err = txn.Set(key, o)
+		if err != nil {
+			return
+		}
+		err = SignalSaved.Emit(ctx, o)
+		return
+	})
+}
+
+// Load {{.Type}} from db.
+func (o *{{.Type}}) Load() (err error) {
+	var ctx = context.TODO()
+	err = SignalWillLoad.Emit(ctx, o)
+	if err != nil {
+		return
+	}
+	key, err := o.Key()
+	if err != nil {
+		return
+	}
+	err = db.Get(key, o)
+	if err != nil {
+		return
+	}
+	err = SignalLoaded.Emit(ctx, o)
+	return
+}
+
+// Delete {{.Type}} from db.
+func (o *{{.Type}}) Delete() (err error) {
+	var ctx = context.TODO()
+	err = SignalWillDelete.Emit(ctx, o)
+	if err != nil {
+		return
+	}
+	var key []byte
+	key, err = o.Key()
+	if err != nil {
+		return
+	}
+	return db.Update(func(txn *db.Txn) (err error) {
+		err = txn.Delete(key)
+		if err != nil {
+			return
+		}
+		err = SignalDeleted.Emit(ctx, o)
+		return
+	})
+}

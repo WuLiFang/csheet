@@ -10,26 +10,22 @@ import (
 )
 
 func (r *subscriptionResolver) CollectionUpdated(ctx context.Context, id []string) (<-chan *collection.Collection, error) {
-	c := make(chan collection.Collection)
 	ret := make(chan *collection.Collection)
-	collection.SignalUpdated.Notify(c)
 	wantedIDs := map[string]struct{}{}
 	for _, i := range id {
 		wantedIDs[i] = struct{}{}
 	}
-	go func() {
-		defer collection.SignalUpdated.Stop(c)
-		defer close(ret)
+	go collection.SignalSaved.Subscribe(func(c <-chan *collection.Collection) {
 		for {
 			select {
 			case <-ctx.Done():
 				return
 			case i := <-c:
 				if _, ok := wantedIDs[i.ID()]; ok {
-					ret <- &i
+					ret <- i
 				}
 			}
 		}
-	}()
+	}, 8)
 	return ret, nil
 }

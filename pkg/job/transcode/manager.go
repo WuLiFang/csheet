@@ -202,9 +202,9 @@ func (m *manager) Start() {
 			}
 		}()
 		go func() {
-			c := make(chan presentation.Presentation)
-			presentation.SignalUpdated.Notify(c)
-			defer presentation.SignalUpdated.Stop(c)
+			c := make(chan *presentation.Presentation)
+			presentation.SignalSaved.Notify(c)
+			defer presentation.SignalSaved.Stop(c)
 			cancel := make(chan struct{}, 1)
 			m.stopSignal.Notify(cancel)
 			defer m.stopSignal.Stop(cancel)
@@ -221,7 +221,7 @@ func (m *manager) Start() {
 						logger.Error("db find error", "error", err)
 						continue
 					}
-					m.discoverJob(p, f.Tag())
+					m.discoverJob(*p, f.Tag())
 				}
 			}
 		}()

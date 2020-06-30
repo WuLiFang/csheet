@@ -10,15 +10,21 @@ import (
 	"github.com/dgraph-io/badger/v2"
 )
 
+//go:generate gotmpl -o file_gen.go ../model.go.gotmpl
+//go:generate gotmpl -o signal_gen.go  Type=*File ../signal.go.gotmpl ../model_signals.gotmpl
+
 // File data
+// change data not affect file on dist.
+// should only delete record after file deleted.
 type File struct {
 	Path    string
 	ModTime time.Time
 	Size    int64
 }
 
-func (f File) key() []byte {
-	return db.IndexFile.Key(f.Path)
+// Key for db.
+func (f File) Key() ([]byte, error) {
+	return db.IndexFile.Key(f.Path), nil
 }
 
 // Tag is a weak file content id.
@@ -28,22 +34,6 @@ func (f File) Tag() string {
 		return ""
 	}
 	return fmt.Sprintf("%x-%x", f.ModTime.UnixNano(), f.Size)
-}
-
-// Save file to db.
-func (f File) Save() (err error) {
-	return db.Update(func(txn *db.Txn) error {
-		return txn.Set(f.key(), f)
-	})
-}
-
-// Delete from db, not affect file on dist.
-// should only delete record after file deleted.
-func (f File) Delete() error {
-	return db.Update(func(txn *db.Txn) error {
-		SignalDeleted.emit(f)
-		return txn.Delete(f.key())
-	})
 }
 
 // Stat update file stat data.
@@ -70,7 +60,6 @@ func (f *File) Stat() error {
 	}
 	if changed {
 		f.Save()
-		SignalChanged.emit(*f)
 	}
 	return nil
 }

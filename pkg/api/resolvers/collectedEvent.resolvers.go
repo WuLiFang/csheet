@@ -12,24 +12,19 @@ import (
 )
 
 func (r *subscriptionResolver) CollectedEvent(ctx context.Context, originPrefix string) (<-chan *collected.Event, error) {
-	c := make(chan collected.Event)
 	ret := make(chan *collected.Event)
-	collected.SignalUpdated.Notify(c)
-	go func() {
-		defer collected.SignalUpdated.Stop(c)
-		defer close(ret)
+	go collected.SignalSaved.Subscribe(func(c <-chan *collected.Event) {
 		for {
 			select {
 			case <-ctx.Done():
 				return
 			case i := <-c:
 				if strings.HasPrefix(i.OriginPrefix, originPrefix) {
-					ret <- &i
+					ret <- i
 				}
 			}
 		}
-
-	}()
+	}, 8)
 	return ret, nil
 }
 

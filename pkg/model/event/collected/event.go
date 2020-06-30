@@ -1,14 +1,16 @@
 package collected
 
 import (
+	"context"
 	"encoding/base64"
 	"time"
 
-	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/dgraph-io/badger/v2"
-	"go.uber.org/zap"
 )
+
+//go:generate gotmpl -o event_gen.go ../../model.go.gotmpl
+//go:generate gotmpl -o signal_gen.go Type=*Event ../../signal.go.gotmpl ../../model_signals.gotmpl
 
 // Event record a finished collect action.
 type Event struct {
@@ -17,40 +19,18 @@ type Event struct {
 	UpdatedCount int
 }
 
-func (e Event) key() ([]byte, error) {
+// Key for db.
+func (e Event) Key() ([]byte, error) {
 	return db.IndexCollectedEvent.Key(db.TimeStamp(e.Time)), nil
 }
 
-// ID string for gallery
-func (e Event) ID() string {
-	key, err := e.key()
-	if err != nil {
-		logging.Logger("model.collected").Error("invalid id", zap.Error(err))
-		return ""
-	}
-	return base64.RawURLEncoding.EncodeToString(key)
-}
-
-// IsNode implements graphql Node interface.
-func (Event) IsNode() {}
-
-// Save to db.
-func (e *Event) Save() error {
-	if e.Time.IsZero() {
-		e.Time = time.Now()
-	}
-	k, err := e.key()
-	if err != nil {
-		return err
-	}
-	err = db.Update(func(txn *db.Txn) (err error) {
-		return txn.Set(k, e)
+func init() {
+	SignalWillSave.Connect(func(ctx context.Context, e *Event) error {
+		if e.Time.IsZero() {
+			e.Time = time.Now()
+		}
+		return nil
 	})
-	if err != nil {
-		return err
-	}
-	SignalUpdated.Emit(*e)
-	return nil
 }
 
 // Scan all saved event.
