@@ -33,7 +33,10 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { collection as Collection, collection } from '../graphql/types/collection';
+import {
+  collection as Collection,
+  collection,
+} from '../graphql/types/collection';
 import { pageInfo as PageInfo } from '../graphql/types/pageInfo';
 
 import {
@@ -50,6 +53,8 @@ import { DollarApollo } from 'vue-apollo/types/vue-apollo';
 import 'vue-awesome/icons/spinner';
 import { presentationUpdatedVariables } from '../graphql/types/presentationUpdated';
 import { filePathFormat } from '@/const';
+import { collectionUpdatedVariables } from '../graphql/types/collectionUpdated';
+
 @Component<CollectionOverview>({
   components: {
     CollectionOverviewCell,
@@ -70,6 +75,13 @@ import { filePathFormat } from '@/const';
           };
         },
         subscribeToMore: [
+          {
+            document: require('@/graphql/subscriptions/collectionUpdated.gql'),
+            variables: (): collectionUpdatedVariables => {
+              const id = this.nodes.map(i => i.id);
+              return { id, filePathFormat };
+            },
+          },
           {
             document: require('@/graphql/subscriptions/presentationUpdated.gql'),
             variables: (): presentationUpdatedVariables => {
@@ -168,7 +180,7 @@ export default class CollectionOverview extends Vue {
     });
   }
 
-  async refetch() : Promise<void>{
+  async refetch(): Promise<void> {
     await this.$apollo.queries.collections.refetch();
   }
 }

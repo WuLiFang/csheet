@@ -1,7 +1,7 @@
-subscription collectionUpdated($id: [ID!]!) {
+#import "@/graphql/fragments/collection.gql"
+
+subscription collectionUpdated($id: [ID!]!, $filePathFormat: String) {
   collectionUpdated(id: $id) {
-    id
-    title
-    origin
+    ...collection
   }
 }
