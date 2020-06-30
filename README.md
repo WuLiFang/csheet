@@ -14,6 +14,10 @@
 - [x] 自动生成缩略图
 - [x] 与 CGTeamwork5.2 集成
 
+## 开发
+
+使用 [gotmpl](github.com/NateScarlet/gotmpl) 进行代码生成。
+
 ## NO LICENSE 版权保留
 
 吾立方内部使用, 其他人使用需先联系获取授权
