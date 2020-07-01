@@ -2,7 +2,8 @@ package router
 
 import (
 	"net/http"
-	"net/http/pprof"
+	// register pprof routes
+	_ "net/http/pprof"
 	"path"
 	"time"
 
@@ -96,8 +97,7 @@ func New() *gin.Engine {
 		}
 	}).Static("", filestore.Dir)
 	if config.Env == "development" {
-		r.Any("debug/pprof/profile", gin.WrapH(pprof.Handler("profile")))
-		r.Any("debug/pprof/heap", gin.WrapH(pprof.Handler("heap")))
+		r.GET("debug/pprof/*_", gin.WrapF(http.DefaultServeMux.ServeHTTP))
 	}
 	return r
 }
