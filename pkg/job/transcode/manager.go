@@ -182,7 +182,7 @@ func (m *manager) Start() {
 					var raw file.File
 					raw, err = file.FindByPath(v.Raw)
 					if err == db.ErrKeyNotFound {
-						return nil
+						return db.Delete(db.IndexPresentationOutdated.Key(v.ID()))
 					}
 					if err != nil {
 						return
@@ -202,7 +202,7 @@ func (m *manager) Start() {
 			}
 		}()
 		go func() {
-			c := make(chan *presentation.Presentation)
+			c := make(chan presentation.Presentation)
 			presentation.SignalSaved.Notify(c)
 			defer presentation.SignalSaved.Stop(c)
 			cancel := make(chan struct{}, 1)
@@ -221,7 +221,7 @@ func (m *manager) Start() {
 						logger.Error("db find error", "error", err)
 						continue
 					}
-					m.discoverJob(*p, f.Tag())
+					m.discoverJob(p, f.Tag())
 				}
 			}
 		}()
