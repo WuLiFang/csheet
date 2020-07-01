@@ -1,7 +1,16 @@
 #import "@/graphql/fragments/collection.gql"
 
-subscription collectionUpdated($id: [ID!]!, $filePathFormat: String) {
-  collectionUpdated(id: $id) {
+subscription collectionUpdated(
+  $id: [ID!]
+  $originPrefix: String
+  $presentationCountGt: Int
+  $filePathFormat: String
+) {
+  collectionUpdated(
+    id: $id
+    originPrefix: $originPrefix
+    presentationCountGt: $presentationCountGt
+  ) {
     ...collection
   }
 }

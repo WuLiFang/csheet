@@ -1,3 +1,7 @@
 extend type Subscription {
-  collectionUpdated(id: [ID!]!): Collection!
+  collectionUpdated(
+    id: [ID!]
+    originPrefix: String
+    presentationCountGt: Int
+  ): Collection!
 }

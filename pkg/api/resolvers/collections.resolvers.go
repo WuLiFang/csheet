@@ -6,9 +6,11 @@ package resolvers
 import (
 	"context"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
+	"go.uber.org/zap"
 )
 
 func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, presentationCountGt *int, first *int, last *int, before *string, after *string) (*model.CollectionConnection, error) {
@@ -61,8 +63,28 @@ func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, p
 				err = cursor.Item().Value(func(v []byte) error {
 					return db.UnmarshalValue(v, &pk)
 				})
-				if err == nil {
-					err = txn.Get(db.IndexCollection.Key(pk), node)
+				if err != nil {
+					return
+				}
+				err = txn.Get(db.IndexCollection.Key(pk), node)
+				if err == db.ErrKeyNotFound {
+					var logger = logging.For(ctx).Logger("api")
+					var key = cursor.Item().KeyCopy(nil)
+					logger.Warn(
+						"delete entry from secondary index that key not found in primary index",
+						zap.Binary("key", key),
+						zap.Binary("prefix", prefix),
+					)
+					err = db.Delete(key)
+					if err != nil {
+						logger.Error(
+							"key deletion failed",
+							zap.Binary("key", key),
+							zap.Error(err),
+						)
+						err = nil
+					}
+					continue
 				}
 			} else {
 				err = cursor.Item().Value(func(v []byte) error {

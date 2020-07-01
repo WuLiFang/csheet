@@ -33,6 +33,7 @@ dist: node_modules src/* src/*/*
 
 node_modules: package.json package-lock.json
 	npm install
+	touch node_modules
 
 run:
 	go run ./cmd/csheet --address localhost:8000

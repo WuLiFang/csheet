@@ -53,46 +53,70 @@ import { DollarApollo } from 'vue-apollo/types/vue-apollo';
 import 'vue-awesome/icons/spinner';
 import { presentationUpdatedVariables } from '../graphql/types/presentationUpdated';
 import { filePathFormat } from '@/const';
-import { collectionUpdatedVariables } from '../graphql/types/collectionUpdated';
+import {
+  collectionUpdatedVariables,
+  collectionUpdated,
+} from '../graphql/types/collectionUpdated';
 
 @Component<CollectionOverview>({
   components: {
     CollectionOverviewCell,
   },
   apollo: {
-    collections() {
-      return {
-        fetchPolicy: 'cache-and-network',
-        query: require('@/graphql/queries/collections.gql'),
-        skip: (): boolean => {
-          return !this.variables.originPrefix;
-        },
-        variables: (): collectionsVariables => {
+    collections: {
+      fetchPolicy: 'cache-and-network',
+      query: require('@/graphql/queries/collections.gql'),
+      skip(): boolean {
+        return !this.variables.originPrefix;
+      },
+      variables(): collectionsVariables {
+        return {
+          ...this.variables,
+          first: this.size,
+          filePathFormat,
+        };
+      },
+      subscribeToMore: {
+        document: require('@/graphql/subscriptions/collectionUpdated.gql'),
+        variables(): collectionUpdatedVariables {
           return {
-            ...this.variables,
-            first: this.size,
+            originPrefix: this.variables.originPrefix,
+            presentationCountGt: this.variables.presentationCountGt,
             filePathFormat,
           };
         },
-        subscribeToMore: [
-          {
-            document: require('@/graphql/subscriptions/collectionUpdated.gql'),
-            variables: (): collectionUpdatedVariables => {
-              const id = this.nodes.map(i => i.id);
-              return { id, filePathFormat };
-            },
-          },
-          {
-            document: require('@/graphql/subscriptions/presentationUpdated.gql'),
-            variables: (): presentationUpdatedVariables => {
-              const id = this.nodes.flatMap(i =>
-                i.presentations.map(j => j.id)
-              );
-              return { id, filePathFormat };
-            },
-          },
-        ],
-      };
+        updateQuery(prev: collections, o) {
+          const nodes = prev.collections.nodes ?? [];
+          const {
+            collectionUpdated,
+          }: collectionUpdated = o.subscriptionData.data;
+
+          if (nodes.some(i => i?.id === collectionUpdated.id)) {
+            return;
+          }
+          let index = nodes.findIndex(
+            i => i && collectionUpdated.origin < i.origin
+          );
+
+          if (index < 0) {
+            if (prev.collections.pageInfo.hasNextPage) {
+              return;
+            }
+            index = nodes.length;
+          }
+          nodes.splice(index, 0, collectionUpdated);
+          return prev;
+        },
+      },
+    },
+    $subscribe: {
+      presentaionUpdated: {
+        query: require('@/graphql/subscriptions/presentationUpdated.gql'),
+        variables(): presentationUpdatedVariables {
+          const id = this.nodes.flatMap(i => i.presentations.map(j => j.id));
+          return { id, filePathFormat };
+        },
+      },
     },
   },
 })

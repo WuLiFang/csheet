@@ -140,7 +140,7 @@ type ComplexityRoot struct {
 
 	Subscription struct {
 		CollectedEvent      func(childComplexity int, originPrefix string) int
-		CollectionUpdated   func(childComplexity int, id []string) int
+		CollectionUpdated   func(childComplexity int, id []string, originPrefix *string, presentationCountGt *int) int
 		PresentationUpdated func(childComplexity int, id []string) int
 	}
 
@@ -184,7 +184,7 @@ type QueryResolver interface {
 }
 type SubscriptionResolver interface {
 	CollectedEvent(ctx context.Context, originPrefix string) (<-chan *collected.Event, error)
-	CollectionUpdated(ctx context.Context, id []string) (<-chan *collection.Collection, error)
+	CollectionUpdated(ctx context.Context, id []string, originPrefix *string, presentationCountGt *int) (<-chan *collection.Collection, error)
 	PresentationUpdated(ctx context.Context, id []string) (<-chan *presentation.Presentation, error)
 }
 
@@ -582,7 +582,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Subscription.CollectionUpdated(childComplexity, args["id"].([]string)), true
+		return e.complexity.Subscription.CollectionUpdated(childComplexity, args["id"].([]string), args["originPrefix"].(*string), args["presentationCountGt"].(*int)), true
 
 	case "Subscription.presentationUpdated":
 		if e.complexity.Subscription.PresentationUpdated == nil {
@@ -710,7 +710,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	&ast.Source{Name: "pkg/api/mutations/collectionFromCGTeamwork.gql", Input: `extend type Mutation {
+	{Name: "pkg/api/mutations/collectionFromCGTeamwork.gql", Input: `extend type Mutation {
   collectFromCGTeamwork(
     database: String!
     prefix: String!
@@ -718,15 +718,15 @@ var sources = []*ast.Source{
   ): CollectedEvent!
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/mutations/collectionFromFolder.gql", Input: `extend type Mutation {
+	{Name: "pkg/api/mutations/collectionFromFolder.gql", Input: `extend type Mutation {
   collectFromFolder(root: String!): CollectedEvent!
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/queries/cgteamworkProjects.gql", Input: `extend type Query {
+	{Name: "pkg/api/queries/cgteamworkProjects.gql", Input: `extend type Query {
   cgteamworkProjects: [CGTeamworkProject!]
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/queries/clientConfig.gql", Input: `type ClientConfig {
+	{Name: "pkg/api/queries/clientConfig.gql", Input: `type ClientConfig {
   sentryDSN: String
   issueTrackerURL: String
 }
@@ -735,7 +735,7 @@ extend type Query {
   clientConfig(name: String!): ClientConfig
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/queries/collections.gql", Input: `extend type Query {
+	{Name: "pkg/api/queries/collections.gql", Input: `extend type Query {
   collections(
     originPrefix: String
     presentationCountGt: Int
@@ -746,41 +746,45 @@ extend type Query {
   ): CollectionConnection!
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/queries/folderOriginPrefix.gql", Input: `extend type Query {
+	{Name: "pkg/api/queries/folderOriginPrefix.gql", Input: `extend type Query {
   folderOriginPrefix(root: String!): String!
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/queries/node.gql", Input: `extend type Query {
+	{Name: "pkg/api/queries/node.gql", Input: `extend type Query {
   node(id: ID!): Node
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/subscriptions/collectedEvent.gql", Input: `extend type Subscription {
+	{Name: "pkg/api/subscriptions/collectedEvent.gql", Input: `extend type Subscription {
   collectedEvent(originPrefix: String!): CollectedEvent!
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/subscriptions/collectionUpdated.gql", Input: `extend type Subscription {
-  collectionUpdated(id: [ID!]!): Collection!
+	{Name: "pkg/api/subscriptions/collectionUpdated.gql", Input: `extend type Subscription {
+  collectionUpdated(
+    id: [ID!]
+    originPrefix: String
+    presentationCountGt: Int
+  ): Collection!
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/subscriptions/presentationUpdated.gql", Input: `extend type Subscription {
+	{Name: "pkg/api/subscriptions/presentationUpdated.gql", Input: `extend type Subscription {
   presentationUpdated(id: [ID!]!): Presentation!
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/types/CGTeamworkProject.gql", Input: `type CGTeamworkProject {
+	{Name: "pkg/api/types/CGTeamworkProject.gql", Input: `type CGTeamworkProject {
   database: String!
   name: String!
   codename: String!
   status: Boolean!
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/types/CollectedEvent.gql", Input: `type CollectedEvent implements Node {
+	{Name: "pkg/api/types/CollectedEvent.gql", Input: `type CollectedEvent implements Node {
   id: ID!
   time: Time!
   originPrefix: String!
   updatedCount: Int!
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/types/Collection.gql", Input: `type Collection implements Node {
+	{Name: "pkg/api/types/Collection.gql", Input: `type Collection implements Node {
   id: ID!
   origin: String!
   title: String!
@@ -789,7 +793,7 @@ extend type Query {
   collectTime: Time!
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/types/CollectionConnection.gql", Input: `type CollectionEdge {
+	{Name: "pkg/api/types/CollectionConnection.gql", Input: `type CollectionEdge {
   cursor: String!
   node: Collection
 }
@@ -800,13 +804,13 @@ type CollectionConnection {
   pageInfo: PageInfo!
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/types/DiskFile.gql", Input: `type DiskFile implements File {
+	{Name: "pkg/api/types/DiskFile.gql", Input: `type DiskFile implements File {
   path(format: String): String!
   modTime: Time
   size: Int
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/types/File.gql", Input: `"""
+	{Name: "pkg/api/types/File.gql", Input: `"""
 DEPRECATED: will be remove after 2020-05-30.
 Temperary interface for backward compability.
 """
@@ -816,18 +820,18 @@ interface File {
   size: Int
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/types/Node.gql", Input: `interface Node {
+	{Name: "pkg/api/types/Node.gql", Input: `interface Node {
   id: ID!
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/types/PageInfo.gql", Input: `type PageInfo {
+	{Name: "pkg/api/types/PageInfo.gql", Input: `type PageInfo {
   startCursor: String
   endCursor: String
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/types/Presentation.gql", Input: `type Presentation implements Node {
+	{Name: "pkg/api/types/Presentation.gql", Input: `type Presentation implements Node {
   id: ID!
   type: String!
   raw: DiskFile!
@@ -839,7 +843,7 @@ interface File {
   isRegularTranscodeFailed: Boolean
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/types/StringEntry.gql", Input: `type StringEntry {
+	{Name: "pkg/api/types/StringEntry.gql", Input: `type StringEntry {
   "key"
   k: String!
 
@@ -847,9 +851,9 @@ interface File {
   v: String!
 }
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/types/Time.gql", Input: `scalar Time
+	{Name: "pkg/api/types/Time.gql", Input: `scalar Time
 `, BuiltIn: false},
-	&ast.Source{Name: "pkg/api/types/WebFile.gql", Input: `type WebFile implements File {
+	{Name: "pkg/api/types/WebFile.gql", Input: `type WebFile implements File {
   url: String!
   path(format: String): String! @deprecated(reason: "use url instead")
   modTime: Time @deprecated(reason: "remove after 2020-05-30")
@@ -1050,12 +1054,28 @@ func (ec *executionContext) field_Subscription_collectionUpdated_args(ctx contex
 	args := map[string]interface{}{}
 	var arg0 []string
 	if tmp, ok := rawArgs["id"]; ok {
-		arg0, err = ec.unmarshalNID2ᚕstringᚄ(ctx, tmp)
+		arg0, err = ec.unmarshalOID2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
 	args["id"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["originPrefix"]; ok {
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["originPrefix"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["presentationCountGt"]; ok {
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["presentationCountGt"] = arg2
 	return args, nil
 }
 
@@ -2826,7 +2846,7 @@ func (ec *executionContext) _Subscription_collectionUpdated(ctx context.Context,
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Subscription().CollectionUpdated(rctx, args["id"].([]string))
+		return ec.resolvers.Subscription().CollectionUpdated(rctx, args["id"].([]string), args["originPrefix"].(*string), args["presentationCountGt"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5147,6 +5167,9 @@ func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.Selec
 }
 
 func (ec *executionContext) unmarshalNID2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
+	if v == nil {
+		return nil, nil
+	}
 	var vSlice []interface{}
 	if v != nil {
 		if tmp1, ok := v.([]interface{}); ok {
@@ -5379,6 +5402,9 @@ func (ec *executionContext) marshalN__DirectiveLocation2string(ctx context.Conte
 }
 
 func (ec *executionContext) unmarshalN__DirectiveLocation2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
+	if v == nil {
+		return nil, nil
+	}
 	var vSlice []interface{}
 	if v != nil {
 		if tmp1, ok := v.([]interface{}); ok {
@@ -5723,6 +5749,41 @@ func (ec *executionContext) marshalOCollectionEdge2ᚖgithubᚗcomᚋWuLiFangᚋ
 		return graphql.Null
 	}
 	return ec._CollectionEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOID2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]string, len(vSlice))
+	for i := range vSlice {
+		res[i], err = ec.unmarshalNID2string(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalOID2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalNID2string(ctx, sel, v[i])
+	}
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalOInt2int(ctx context.Context, v interface{}) (int, error) {

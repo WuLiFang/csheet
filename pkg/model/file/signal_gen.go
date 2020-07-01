@@ -10,7 +10,7 @@ import (
 // Signal that emit *File to receivers.
 type Signal struct {
 	mu sync.RWMutex
-	m map[chan<- *File]bool
+	m map[chan<- File]bool
 	sideEffects []func(context.Context, *File) error
 }
 
@@ -29,13 +29,13 @@ func (s *Signal) Emit(ctx context.Context, o *File) error {
 	for c, block := range s.m {
 		if block {
 			select {
-			case c <- o:
+			case c <- *o:
 			case <- ctx.Done():
 				return ctx.Err()
 			}
 		} else {
 			select {
-			case c <- o:
+			case c <- *o:
 			case <- ctx.Done():
 				return ctx.Err()
 			default:
@@ -46,30 +46,30 @@ func (s *Signal) Emit(ctx context.Context, o *File) error {
 	return nil
 }
 
-func (s *Signal) addReceiver(c chan<- *File, block bool) {
+func (s *Signal) addReceiver(c chan<- File, block bool) {
 	s.mu.Lock()
     defer s.mu.Unlock()
 
 	if s.m == nil {
-		s.m = make(map[chan<- *File]bool)
+		s.m = make(map[chan<- File]bool)
 	}
 	s.m[c] = block
 }
 
 // Notify add channel to receivers. Emit will wait when channel is blocked.
 // It is the caller's responsibility to Stop notify before channel close.
-func (s *Signal) Notify(c chan<- *File) {
+func (s *Signal) Notify(c chan<- File) {
 	s.addReceiver(c, true)
 }
 
 // TryNotify add channel to receivers. Emit will skip when channel is blocked.
 // It is the caller's responsibility to Stop notify before channel close.
-func (s *Signal) TryNotify(c chan<- *File) {
+func (s *Signal) TryNotify(c chan<- File) {
 	s.addReceiver(c, false)
 }
 
 // Stop remove channel from receivers.
-func (s *Signal) Stop(c chan<- *File) {
+func (s *Signal) Stop(c chan<- File) {
 	s.mu.Lock()
     defer s.mu.Unlock()
 
@@ -88,8 +88,8 @@ func (s *Signal) Connect(fn func(context.Context, *File) error) {
 // Subscribe signal with a function. 
 // channel only available before function return.
 // Emit will skip when channel is blocked.
-func (s *Signal) Subscribe(fn func (<-chan*File), cap int) {
-	var c = make(chan *File, cap)
+func (s *Signal) Subscribe(fn func (<-chan File), cap int) {
+	var c = make(chan File, cap)
 	s.addReceiver(c, false)
 	fn(c)
 	s.Stop(c)

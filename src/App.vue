@@ -17,7 +17,6 @@
       class="sticky top-0 bg-gray-800 p-2 w-full text-center z-20 transition duration-500 ease-in-out"
       :style="{ 'transform': collapseNav ? 'translateY(-100%)' : null }"
       :variables.sync="variables"
-      @collect="() => $refs.overview.refetch()"
     )
     transition-group.messages(
       tag="ul"

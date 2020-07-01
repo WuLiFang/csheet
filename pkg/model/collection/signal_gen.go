@@ -10,7 +10,7 @@ import (
 // Signal that emit *Collection to receivers.
 type Signal struct {
 	mu sync.RWMutex
-	m map[chan<- *Collection]bool
+	m map[chan<- Collection]bool
 	sideEffects []func(context.Context, *Collection) error
 }
 
@@ -29,13 +29,13 @@ func (s *Signal) Emit(ctx context.Context, o *Collection) error {
 	for c, block := range s.m {
 		if block {
 			select {
-			case c <- o:
+			case c <- *o:
 			case <- ctx.Done():
 				return ctx.Err()
 			}
 		} else {
 			select {
-			case c <- o:
+			case c <- *o:
 			case <- ctx.Done():
 				return ctx.Err()
 			default:
@@ -46,30 +46,30 @@ func (s *Signal) Emit(ctx context.Context, o *Collection) error {
 	return nil
 }
 
-func (s *Signal) addReceiver(c chan<- *Collection, block bool) {
+func (s *Signal) addReceiver(c chan<- Collection, block bool) {
 	s.mu.Lock()
     defer s.mu.Unlock()
 
 	if s.m == nil {
-		s.m = make(map[chan<- *Collection]bool)
+		s.m = make(map[chan<- Collection]bool)
 	}
 	s.m[c] = block
 }
 
 // Notify add channel to receivers. Emit will wait when channel is blocked.
 // It is the caller's responsibility to Stop notify before channel close.
-func (s *Signal) Notify(c chan<- *Collection) {
+func (s *Signal) Notify(c chan<- Collection) {
 	s.addReceiver(c, true)
 }
 
 // TryNotify add channel to receivers. Emit will skip when channel is blocked.
 // It is the caller's responsibility to Stop notify before channel close.
-func (s *Signal) TryNotify(c chan<- *Collection) {
+func (s *Signal) TryNotify(c chan<- Collection) {
 	s.addReceiver(c, false)
 }
 
 // Stop remove channel from receivers.
-func (s *Signal) Stop(c chan<- *Collection) {
+func (s *Signal) Stop(c chan<- Collection) {
 	s.mu.Lock()
     defer s.mu.Unlock()
 
@@ -88,8 +88,8 @@ func (s *Signal) Connect(fn func(context.Context, *Collection) error) {
 // Subscribe signal with a function. 
 // channel only available before function return.
 // Emit will skip when channel is blocked.
-func (s *Signal) Subscribe(fn func (<-chan*Collection), cap int) {
-	var c = make(chan *Collection, cap)
+func (s *Signal) Subscribe(fn func (<-chan Collection), cap int) {
+	var c = make(chan Collection, cap)
 	s.addReceiver(c, false)
 	fn(c)
 	s.Stop(c)

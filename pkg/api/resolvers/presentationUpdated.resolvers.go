@@ -16,14 +16,14 @@ func (r *subscriptionResolver) PresentationUpdated(ctx context.Context, id []str
 		wantedIDs[i] = struct{}{}
 		presentation.ViewerCounter.Add(i, 1)
 	}
-	go presentation.SignalSaved.Subscribe(func(c <-chan *presentation.Presentation) {
+	go presentation.SignalSaved.Subscribe(func(c <-chan presentation.Presentation) {
 		for {
 			select {
 			case <-ctx.Done():
 				return
 			case i := <-c:
 				if _, ok := wantedIDs[i.ID()]; ok {
-					ret <- i
+					ret <- &i
 				}
 			}
 		}

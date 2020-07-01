@@ -17,6 +17,7 @@ Accept data:
 {{- if .TypeImport }}
 {{- $type = printf "pkg1.%s" $type }}
 {{- end }}
+{{- $valueType := $type }}
 {{- if $isPointer }}
 {{- $type = printf "*%s" $type }}
 {{- end}}
@@ -40,7 +41,7 @@ import (
 // Signal that emit {{ $type }} to receivers.
 type Signal struct {
 	mu sync.RWMutex
-	m map[chan<- {{ $type }}]bool
+	m map[chan<- {{ $valueType }}]bool
 	sideEffects []func(context.Context, {{ $type }}) error
 }
 
@@ -59,13 +60,13 @@ func (s *Signal) Emit(ctx context.Context, o {{ $type }}) error {
 	for c, block := range s.m {
 		if block {
 			select {
-			case c <- o:
+			case c <- *o:
 			case <- ctx.Done():
 				return ctx.Err()
 			}
 		} else {
 			select {
-			case c <- o:
+			case c <- *o:
 			case <- ctx.Done():
 				return ctx.Err()
 			default:
@@ -76,30 +77,30 @@ func (s *Signal) Emit(ctx context.Context, o {{ $type }}) error {
 	return nil
 }
 
-func (s *Signal) addReceiver(c chan<- {{ $type }}, block bool) {
+func (s *Signal) addReceiver(c chan<- {{ $valueType }}, block bool) {
 	s.mu.Lock()
     defer s.mu.Unlock()
 
 	if s.m == nil {
-		s.m = make(map[chan<- {{ $type }}]bool)
+		s.m = make(map[chan<- {{ $valueType }}]bool)
 	}
 	s.m[c] = block
 }
 
 // Notify add channel to receivers. Emit will wait when channel is blocked.
 // It is the caller's responsibility to Stop notify before channel close.
-func (s *Signal) Notify(c chan<- {{ $type }}) {
+func (s *Signal) Notify(c chan<- {{ $valueType }}) {
 	s.addReceiver(c, true)
 }
 
 // TryNotify add channel to receivers. Emit will skip when channel is blocked.
 // It is the caller's responsibility to Stop notify before channel close.
-func (s *Signal) TryNotify(c chan<- {{ $type }}) {
+func (s *Signal) TryNotify(c chan<- {{ $valueType }}) {
 	s.addReceiver(c, false)
 }
 
 // Stop remove channel from receivers.
-func (s *Signal) Stop(c chan<- {{ $type }}) {
+func (s *Signal) Stop(c chan<- {{ $valueType }}) {
 	s.mu.Lock()
     defer s.mu.Unlock()
 
@@ -118,8 +119,8 @@ func (s *Signal) Connect(fn func(context.Context, {{ $type }}) error) {
 // Subscribe signal with a function. 
 // channel only available before function return.
 // Emit will skip when channel is blocked.
-func (s *Signal) Subscribe(fn func (<-chan{{ $type }}), cap int) {
-	var c = make(chan {{ $type }}, cap)
+func (s *Signal) Subscribe(fn func (<-chan {{ $valueType }}), cap int) {
+	var c = make(chan {{ $valueType }}, cap)
 	s.addReceiver(c, false)
 	fn(c)
 	s.Stop(c)

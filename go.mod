@@ -18,3 +18,5 @@ require (
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0
 	gopkg.in/djherbis/times.v1 v1.2.0
 )
+
+replace github.com/99designs/gqlgen v0.11.3 => github.com/NateScarlet/gqlgen v0.11.3-issue1203

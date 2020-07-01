@@ -59,10 +59,12 @@ func (o *Event) Load() (err error) {
 	if err != nil {
 		return
 	}
-	err = db.Get(key, o)
+	var v = new(Event)
+	err = db.Get(key, v)
 	if err != nil {
 		return
 	}
+	*o = *v
 	err = SignalLoaded.Emit(ctx, o)
 	return
 }

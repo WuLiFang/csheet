@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface collectionUpdated_collectionUpdated_metadata {
-  __typename: 'StringEntry';
+  __typename: "StringEntry";
   /**
    * key
    */
@@ -20,24 +20,24 @@ export interface collectionUpdated_collectionUpdated_metadata {
 }
 
 export interface collectionUpdated_collectionUpdated_presentations_raw {
-  __typename: 'DiskFile';
+  __typename: "DiskFile";
   path: string;
   modTime: any | null;
   size: number | null;
 }
 
 export interface collectionUpdated_collectionUpdated_presentations_thumb {
-  __typename: 'WebFile';
+  __typename: "WebFile";
   url: string;
 }
 
 export interface collectionUpdated_collectionUpdated_presentations_regular {
-  __typename: 'WebFile';
+  __typename: "WebFile";
   url: string;
 }
 
 export interface collectionUpdated_collectionUpdated_presentations {
-  __typename: 'Presentation';
+  __typename: "Presentation";
   id: string;
   type: string;
   raw: collectionUpdated_collectionUpdated_presentations_raw;
@@ -49,7 +49,7 @@ export interface collectionUpdated_collectionUpdated_presentations {
 }
 
 export interface collectionUpdated_collectionUpdated {
-  __typename: 'Collection';
+  __typename: "Collection";
   id: string;
   title: string;
   origin: string;
@@ -63,6 +63,8 @@ export interface collectionUpdated {
 }
 
 export interface collectionUpdatedVariables {
-  id: string[];
+  id?: string[] | null;
+  originPrefix?: string | null;
+  presentationCountGt?: number | null;
   filePathFormat?: string | null;
 }
