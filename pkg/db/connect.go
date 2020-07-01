@@ -38,6 +38,11 @@ func Open(path string) (err error) {
 			DefaultOptions(path).
 			WithValueLogLoadingMode(options.FileIO).
 			WithTableLoadingMode(options.FileIO).
+			WithNumCompactors(1).
+			WithNumLevelZeroTables(1).
+			WithNumMemtables(1).
+			WithSyncWrites(false).
+			WithKeepL0InMemory(false).
 			WithTruncate(true).
 			WithLogger(zapLoggerAdapter{logging.Logger("db").Sugar()}),
 	)
