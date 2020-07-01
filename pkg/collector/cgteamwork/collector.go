@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"mime"
 	"path"
+	"strconv"
 	"time"
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
@@ -31,20 +32,19 @@ func collectionFromTask(ctx context.Context, m map[string]collection.Collection,
 
 	ret, ok := m[task.Shot.Title]
 	if !ok {
-		ret, err = collection.FindByID(task.ID)
+		ret.Origin = collection.Origin("cgteamwork", o.Database, o.Pipeline, task.Shot.Title)
+		err = ret.Load()
 		if err == db.ErrKeyNotFound {
 			err = nil
 		}
 		if err != nil {
 			return
 		}
-		ret.Origin = collection.Origin("cgteamwork", o.Database, o.Pipeline, task.Shot.Title)
 		ret.Title = task.Shot.Title
 		if ret.Metadata == nil {
 			ret.Metadata = map[string]string{}
 		}
 		ret.Metadata["cgteamwork.pipeline"] = o.Pipeline
-
 	}
 	taskData := ret.Metadata["cgteamwork.tasks"]
 	if taskData == "" || !gjson.Valid(taskData) {
@@ -54,15 +54,15 @@ func collectionFromTask(ctx context.Context, m map[string]collection.Collection,
 	for _, i := range task.Artists {
 		artists = append(artists, i.DisplayName)
 	}
-	taskDataKey := "-1"
+	var taskDataIndex = 0
 	gjson.Parse(taskData).ForEach(func(k, v gjson.Result) bool {
 		if v.Get("id").String() == task.ID {
-			taskDataKey = k.String()
 			return false
 		}
+		taskDataIndex++
 		return true
 	})
-	taskData, err = sjson.Set(taskData, taskDataKey, map[string]interface{}{
+	taskData, err = sjson.Set(taskData, strconv.Itoa(taskDataIndex), map[string]interface{}{
 		"id":       task.ID,
 		"pipeline": task.Pipeline.Name,
 		"artists":  artists,
