@@ -25,5 +25,5 @@ var (
 	FileWatchWorkers             = getenv.Int("CSHEET_FILE_WATCH_WORKERS", 8)
 	ImageThumbTranscodeWorkers   = getenv.Int("CSHEET_IMAGE_THUMB_TRANSCODE_WORKERS", runtime.NumCPU()/2+1)
 	ImageRegularTranscodeWorkers = getenv.Int("CSHEET_IMAGE_REGULAR_TRANSCODE_WORKERS", runtime.NumCPU()/2+1)
-	VideoRegularTranscodeWorkers = getenv.Int("CSHEET_VIDEO_REGULAR_TRANSCODE_WORKERS", runtime.NumCPU()/8+1)
+	VideoRegularTranscodeWorkers = getenv.Int("CSHEET_VIDEO_REGULAR_TRANSCODE_WORKERS", 1)
 )
