@@ -64,6 +64,22 @@ CSHEET_ISSUE_TRACKER_URL
 
   问题反馈网址，显示在客户端界面上。
 
+CSHEET_FILE_WATCH_WORKERS
+
+  文件监控工作者数量，默认为 8。
+
+CSHEET_IMAGE_THUMB_TRANSCODE_WORKERS
+
+  缩略尺寸图片转码工作者数量，默认为 CPU 核数 / 2 + 1。
+
+CSHEET_IMAGE_REGULAR_TRANSCODE_WORKERS
+
+  标准尺寸图片转码工作者数量，默认为 CPU 核数 / 2 + 1。
+
+CSHEET_VIDEO_REGULAR_TRANSCODE_WORKERS
+
+  标准尺寸视频转码工作者数量，默认为 CPU 核数 / 8 + 1。
+
 CGTEAMWORK_URL
 
   CGTeamwork 服务器地址。例：http://192.168.50.11

@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"runtime"
 	"time"
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
@@ -44,11 +43,11 @@ func main() {
 	defer db.Close()
 	db.EnableGC(5 * time.Minute)
 
-	filewatch.Manager.Scale(8)
+	filewatch.Manager.Scale(config.FileWatchWorkers)
 
-	transcode.Manager.Scale(transcode.JobTypeImageThumb, runtime.NumCPU())
-	transcode.Manager.Scale(transcode.JobTypeImageRegular, 1)
-	transcode.Manager.Scale(transcode.JobTypeVideoRegular, 1)
+	transcode.Manager.Scale(transcode.JobTypeImageThumb, config.ImageThumbTranscodeWorkers)
+	transcode.Manager.Scale(transcode.JobTypeImageRegular, config.ImageRegularTranscodeWorkers)
+	transcode.Manager.Scale(transcode.JobTypeVideoRegular, config.VideoRegularTranscodeWorkers)
 
 	sentry.CaptureMessage("server started")
 	r := router.New()
