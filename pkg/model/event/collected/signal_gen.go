@@ -90,7 +90,7 @@ func (s *Signal) Connect(fn func(context.Context, *Event) error) {
 // Emit will skip when channel is blocked.
 func (s *Signal) Subscribe(fn func (<-chan Event), cap int) {
 	var c = make(chan Event, cap)
-	s.addReceiver(c, false)
+	s.addReceiver(c, true)
 	fn(c)
 	s.Stop(c)
 	close(c)
