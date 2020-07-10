@@ -51,8 +51,13 @@ func (m *manager) Start() {
 						continue
 					}
 					p, err := presentation.FindByID(k)
+					if err == db.ErrKeyNotFound {
+						// is ok to have non existed key
+						err = nil
+						continue
+					}
 					if err != nil {
-						logger.Error("find presentation by id failed", zap.Error(err))
+						logger.Error("find presentation by id failed", zap.Error(err), zap.String("id", k))
 						continue
 					}
 					err = m.rate.Wait(context.Background())
