@@ -10,7 +10,7 @@ import (
 // Signal that emit *Event to receivers.
 type Signal struct {
 	mu sync.RWMutex
-	m map[chan<- Event]bool
+	m map[chan<- Event]struct{}
 	sideEffects []func(context.Context, *Event) error
 }
 
@@ -26,46 +26,32 @@ func (s *Signal) Emit(ctx context.Context, o *Event) error {
 		}
 	}
 
-	for c, block := range s.m {
-		if block {
-			select {
-			case c <- *o:
-			case <- ctx.Done():
-				return ctx.Err()
-			}
-		} else {
-			select {
+	for c := range s.m {
+		select {
 			case c <- *o:
 			case <- ctx.Done():
 				return ctx.Err()
 			default:
-			}
 		}
 	}
 
 	return nil
 }
 
-func (s *Signal) addReceiver(c chan<- Event, block bool) {
+func (s *Signal) addReceiver(c chan<- Event) {
 	s.mu.Lock()
     defer s.mu.Unlock()
 
 	if s.m == nil {
-		s.m = make(map[chan<- Event]bool)
+		s.m = make(map[chan<- Event]struct{})
 	}
-	s.m[c] = block
+	s.m[c] = struct{}{}
 }
 
 // Notify add channel to receivers. Emit will wait when channel is blocked.
 // It is the caller's responsibility to Stop notify before channel close.
 func (s *Signal) Notify(c chan<- Event) {
-	s.addReceiver(c, true)
-}
-
-// TryNotify add channel to receivers. Emit will skip when channel is blocked.
-// It is the caller's responsibility to Stop notify before channel close.
-func (s *Signal) TryNotify(c chan<- Event) {
-	s.addReceiver(c, false)
+	s.addReceiver(c)
 }
 
 // Stop remove channel from receivers.
@@ -87,10 +73,10 @@ func (s *Signal) Connect(fn func(context.Context, *Event) error) {
 
 // Subscribe signal with a function. 
 // channel only available before function return.
-// Emit will skip when channel is blocked.
+// Emit will wait when channel is blocked.
 func (s *Signal) Subscribe(fn func (<-chan Event), cap int) {
 	var c = make(chan Event, cap)
-	s.addReceiver(c, true)
+	s.addReceiver(c)
 	fn(c)
 	s.Stop(c)
 	close(c)

@@ -10,7 +10,7 @@ import (
 // Signal that emit *Collection to receivers.
 type Signal struct {
 	mu sync.RWMutex
-	m map[chan<- Collection]bool
+	m map[chan<- Collection]struct{}
 	sideEffects []func(context.Context, *Collection) error
 }
 
@@ -26,46 +26,32 @@ func (s *Signal) Emit(ctx context.Context, o *Collection) error {
 		}
 	}
 
-	for c, block := range s.m {
-		if block {
-			select {
-			case c <- *o:
-			case <- ctx.Done():
-				return ctx.Err()
-			}
-		} else {
-			select {
+	for c := range s.m {
+		select {
 			case c <- *o:
 			case <- ctx.Done():
 				return ctx.Err()
 			default:
-			}
 		}
 	}
 
 	return nil
 }
 
-func (s *Signal) addReceiver(c chan<- Collection, block bool) {
+func (s *Signal) addReceiver(c chan<- Collection) {
 	s.mu.Lock()
     defer s.mu.Unlock()
 
 	if s.m == nil {
-		s.m = make(map[chan<- Collection]bool)
+		s.m = make(map[chan<- Collection]struct{})
 	}
-	s.m[c] = block
+	s.m[c] = struct{}{}
 }
 
 // Notify add channel to receivers. Emit will wait when channel is blocked.
 // It is the caller's responsibility to Stop notify before channel close.
 func (s *Signal) Notify(c chan<- Collection) {
-	s.addReceiver(c, true)
-}
-
-// TryNotify add channel to receivers. Emit will skip when channel is blocked.
-// It is the caller's responsibility to Stop notify before channel close.
-func (s *Signal) TryNotify(c chan<- Collection) {
-	s.addReceiver(c, false)
+	s.addReceiver(c)
 }
 
 // Stop remove channel from receivers.
@@ -87,10 +73,10 @@ func (s *Signal) Connect(fn func(context.Context, *Collection) error) {
 
 // Subscribe signal with a function. 
 // channel only available before function return.
-// Emit will skip when channel is blocked.
+// Emit will wait when channel is blocked.
 func (s *Signal) Subscribe(fn func (<-chan Collection), cap int) {
 	var c = make(chan Collection, cap)
-	s.addReceiver(c, true)
+	s.addReceiver(c)
 	fn(c)
 	s.Stop(c)
 	close(c)
