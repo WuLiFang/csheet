@@ -39,16 +39,15 @@ type scheduler struct {
 	weight *semaphore.Weighted
 	cancel context.CancelFunc
 	flight onceflight.Group
-	queue  chan presentation.Presentation
 }
 
-func (s *scheduler) scheduleByTag(
+func (s *scheduler) transcodeOnDemand(
 	ctx context.Context,
 	p presentation.Presentation,
 	rawTag, errorTag, successTag, outputFile string,
 	jt jobType,
 ) (err error) {
-	var logger = logging.Logger("job.transcode").Sugar()
+	var logger = logging.Logger("job.transcode")
 	var outdated = errorTag != rawTag &&
 		successTag != rawTag
 	if !outdated {
@@ -60,25 +59,23 @@ func (s *scheduler) scheduleByTag(
 		if err != nil {
 			return
 		}
-		go func() {
-			defer s.weight.Release(w)
-			var err = jt.Run(p)
-			if err != nil {
-				logger.Error(
-					"transcode error",
-					zap.Error(err),
-					zap.Any("presentation", p),
-					zap.Any("type", jt),
-				)
-			}
-		}()
-		logger.Infow("scheduled", "jobType", jt, "raw", p.Raw)
+		defer s.weight.Release(w)
+		var err = jt.Run(p)
+		if err != nil {
+			logger.Error(
+				"transcode error",
+				zap.Error(err),
+				zap.Any("presentation", p),
+				zap.Any("type", jt),
+			)
+		}
 	})
 	return
 }
 
-// Schedule job async, but block if weight not enough (too many job running).
-func (s *scheduler) Schedule(ctx context.Context, p presentation.Presentation) (err error) {
+// transcode create job for given presentation if needed,
+// block if weight not enough (too many job running).
+func (s *scheduler) transcode(ctx context.Context, p presentation.Presentation) (err error) {
 	var raw file.File
 	raw, err = file.FindByPath(p.Raw)
 	if err == db.ErrKeyNotFound {
@@ -89,7 +86,7 @@ func (s *scheduler) Schedule(ctx context.Context, p presentation.Presentation) (
 	}
 	rawTag := raw.Tag()
 	_ = rawTag
-	err = s.scheduleByTag(
+	err = s.transcodeOnDemand(
 		ctx,
 		p,
 		rawTag, p.ThumbErrorTag, p.ThumbSuccessTag,
@@ -97,7 +94,7 @@ func (s *scheduler) Schedule(ctx context.Context, p presentation.Presentation) (
 	if err != nil {
 		return
 	}
-	err = s.scheduleByTag(
+	err = s.transcodeOnDemand(
 		ctx,
 		p,
 		rawTag, p.RegularErrorTag, p.RegularSuccessTag,
@@ -155,7 +152,7 @@ func (s *scheduler) Start() {
 		for i := 0; i < 8; i++ {
 			go func() {
 				for p := range c {
-					var err = s.Schedule(ctx, p)
+					var err = s.transcode(ctx, p)
 					if err == context.Canceled {
 						return
 					}
