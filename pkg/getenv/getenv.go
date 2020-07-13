@@ -43,6 +43,19 @@ func Int(key string, d int) int {
 	return ret
 }
 
+// Int64 from env var, default value used when env var is empty or invalid.
+func Int64(key string, d int64) int64 {
+	v := os.Getenv(key)
+	if v == "" {
+		return d
+	}
+	ret, err := strconv.Atoi(v)
+	if err != nil {
+		return d
+	}
+	return int64(ret)
+}
+
 // Bool from env var, case insensitive match
 // "true" and "1" to true,
 // "false" and "0" to false,

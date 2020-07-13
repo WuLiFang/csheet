@@ -9,7 +9,7 @@ type Group struct {
 }
 
 // Do skip duplicated call for same key.
-func (g *Group) Do(key string, fn func()) {
+func (g *Group) Do(key string, fn func()) (called bool) {
 	g.mu.Lock()
 	if g.m == nil {
 		g.m = make(map[string]struct{})
@@ -23,8 +23,10 @@ func (g *Group) Do(key string, fn func()) {
 	g.mu.Unlock()
 
 	fn()
+	called = true
 
 	g.mu.Lock()
 	delete(g.m, key)
 	g.mu.Unlock()
+	return
 }

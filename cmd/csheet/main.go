@@ -45,9 +45,7 @@ func main() {
 
 	filewatch.Manager.Scale(config.FileWatchWorkers)
 
-	transcode.Manager.Scale(transcode.JobTypeImageThumb, config.ImageThumbTranscodeWorkers)
-	transcode.Manager.Scale(transcode.JobTypeImageRegular, config.ImageRegularTranscodeWorkers)
-	transcode.Manager.Scale(transcode.JobTypeVideoRegular, config.VideoRegularTranscodeWorkers)
+	transcode.Scheduler.Start()
 
 	sentry.CaptureMessage("server started")
 	r := router.New()
@@ -55,5 +53,4 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 }

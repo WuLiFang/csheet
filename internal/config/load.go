@@ -8,6 +8,7 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/collector/folder"
 	"github.com/WuLiFang/csheet/v6/pkg/filestore"
 	"github.com/WuLiFang/csheet/v6/pkg/job/filewatch"
+	"github.com/WuLiFang/csheet/v6/pkg/job/transcode"
 	"github.com/getsentry/sentry-go"
 	"github.com/tidwall/gjson"
 	"go.uber.org/zap"
@@ -50,4 +51,9 @@ func Load() {
 	} else {
 		logger.Warn("ignore invalid CSHEET_CGTEAMWORK_PIPELINE_OVERWRITE")
 	}
+
+	transcode.MaxWeight = TranscodeMaxWeight
+	transcode.ImageThumbWeight = TranscodeImageThumbWeight
+	transcode.ImageRegularWeight = TranscodeImageRegularWeight
+	transcode.VideoRegularWeight = TranscodeVideoRegularWeight
 }

@@ -68,17 +68,21 @@ CSHEET_FILE_WATCH_WORKERS
 
   文件监控工作者数量，默认为 8。
 
-CSHEET_IMAGE_THUMB_TRANSCODE_WORKERS
+CSHEET_TRANSCODE_MAX_WEIGHT
 
-  缩略尺寸图片转码工作者数量，默认为 CPU 核数 / 2 + 1。
+  最大的转码工作权重，同时进行的工作权重和不会超过此值。
 
-CSHEET_IMAGE_REGULAR_TRANSCODE_WORKERS
+CSHEET_TRANSCODE_IMAGE_THUMB_WEIGHT
 
-  标准尺寸图片转码工作者数量，默认为 CPU 核数 / 2 + 1。
+  缩略尺寸图片转码工作权重，默认为 1024 / (CPU 核数 / 2 + 1)。
 
-CSHEET_VIDEO_REGULAR_TRANSCODE_WORKERS
+CSHEET_TRANSCODE_IMAGE_REGULAR_WEIGHT
 
-  标准尺寸视频转码工作者数量，默认为 1。
+  标准尺寸图片转码工作权重，默认为 1024 / (CPU 核数 / 2 + 1)。
+
+CSHEET_TRANSCODE_VIDEO_REGULAR_WEIGHT
+
+  标准尺寸视频转码工作权重，默认为 1024。
 
 CGTEAMWORK_URL
 
