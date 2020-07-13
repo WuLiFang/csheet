@@ -40,6 +40,7 @@ type scheduler struct {
 	weight *semaphore.Weighted
 	cancel context.CancelFunc
 	flight onceflight.Group
+	queue  chan presentation.Presentation
 }
 
 func (s *scheduler) scheduleByTag(
@@ -200,13 +201,30 @@ func (s *scheduler) Start() {
 		var allowFullScan = true
 		var ticker = time.NewTicker(5 * time.Second) // limit min interval between scan.
 		defer ticker.Stop()
+		var c = make(chan presentation.Presentation)
+		defer close(c)
+
+		for i := 0; i < 8; i++ {
+			go func() {
+				for p := range c {
+					var err = s.Schedule(ctx, p)
+					if err == context.Canceled {
+						return
+					}
+					if err != nil {
+						logger.Error("schedule task failed", zap.Error(err))
+					}
+				}
+			}()
+		}
 		for {
 			<-ticker.C
 			jobCount := 0
 			startTime := time.Now()
 			err := iteratePresentation(func(v presentation.Presentation) (err error) {
 				jobCount++
-				return s.Schedule(ctx, v)
+				c <- v
+				return
 			}, allowFullScan)
 			if err == context.Canceled {
 				return
