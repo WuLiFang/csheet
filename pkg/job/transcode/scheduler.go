@@ -1,7 +1,6 @@
 package transcode
 
 import (
-	"bytes"
 	"context"
 	"runtime"
 	"strconv"
@@ -110,45 +109,6 @@ func (s *scheduler) Schedule(ctx context.Context, p presentation.Presentation) (
 	return
 }
 
-func iterateAllPresentation(fn func(p presentation.Presentation) error) error {
-	var logger = logging.Logger("job.transcode").Sugar()
-	return db.View(func(txn *db.Txn) (err error) {
-		opts := db.DefaultIteratorOptions
-		opts.PrefetchValues = false
-		it := txn.NewIterator(opts)
-		defer it.Close()
-		prefix := db.IndexPresentation.Bytes()
-		for it.Seek(prefix); it.ValidForPrefix(prefix); it.Next() {
-			var v presentation.Presentation
-			var k = it.Item().Key()
-			err = txn.Get(k, &v)
-			if err != nil {
-				return
-			}
-
-			var k2 []byte
-			k2, err = v.Key()
-			if err != nil {
-				return
-			}
-			if bytes.Compare(k, k2) != 0 {
-				logger.Warnw("detected danling key, removing", "presentation", v)
-				err = db.Delete(k)
-				if err != nil {
-					return
-				}
-				continue
-			}
-
-			err = fn(v)
-			if err != nil {
-				return
-			}
-		}
-		return
-	})
-}
-
 func iterateOutdatedPresentation(fn func(p presentation.Presentation) error) error {
 	return db.View(func(txn *db.Txn) (err error) {
 		opts := db.DefaultIteratorOptions
@@ -176,17 +136,6 @@ func iterateOutdatedPresentation(fn func(p presentation.Presentation) error) err
 	})
 }
 
-func iteratePresentation(fn func(p presentation.Presentation) error, allowFullScan bool) error {
-	ok, err := db.IndexPresentationOutdated.Exists()
-	if err != nil {
-		return err
-	}
-	if ok || !allowFullScan {
-		return iterateOutdatedPresentation(fn)
-	}
-	return iterateAllPresentation(fn)
-}
-
 // Start schedule jobs, restart if already started.
 func (s *scheduler) Start() {
 	if s.cancel != nil {
@@ -198,7 +147,6 @@ func (s *scheduler) Start() {
 	ctx, s.cancel = context.WithCancel(ctx)
 
 	go func() {
-		var allowFullScan = true
 		var ticker = time.NewTicker(5 * time.Second) // limit min interval between scan.
 		defer ticker.Stop()
 		var c = make(chan presentation.Presentation)
@@ -221,17 +169,16 @@ func (s *scheduler) Start() {
 			<-ticker.C
 			jobCount := 0
 			startTime := time.Now()
-			err := iteratePresentation(func(v presentation.Presentation) (err error) {
+			err := iterateOutdatedPresentation(func(v presentation.Presentation) (err error) {
 				jobCount++
 				c <- v
 				return
-			}, allowFullScan)
+			})
 			if err == context.Canceled {
 				return
 			} else if err != nil {
 				logger.Error("presentation scan failed", zap.Error(err))
 			} else {
-				allowFullScan = false
 				logger.Info("presentation scan completed",
 					zap.Int("count", jobCount),
 					zap.Duration("elapsed", time.Since(startTime)),
