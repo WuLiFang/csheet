@@ -21,7 +21,7 @@ var (
 	MaxWeight          int64 = 1024
 	ImageThumbWeight   int64 = MaxWeight / int64(runtime.NumCPU()/2+1)
 	ImageRegularWeight int64 = MaxWeight / int64(runtime.NumCPU()/2+1)
-	VideoRegularWeight int64 = MaxWeight
+	VideoRegularWeight int64 = MaxWeight/2 + 1
 )
 
 func weightByJobType(t jobType) int64 {
