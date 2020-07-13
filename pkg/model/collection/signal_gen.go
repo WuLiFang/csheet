@@ -31,7 +31,6 @@ func (s *Signal) Emit(ctx context.Context, o *Collection) error {
 			case c <- *o:
 			case <- ctx.Done():
 				return ctx.Err()
-			default:
 		}
 	}
 
