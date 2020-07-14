@@ -38,7 +38,7 @@ func weightByJobType(t jobType) int64 {
 type scheduler struct {
 	weight *semaphore.Weighted
 	cancel context.CancelFunc
-	flight onceflight.Group
+	flight *onceflight.Group
 }
 
 func (s *scheduler) transcodeOnDemand(
@@ -139,6 +139,7 @@ func (s *scheduler) Start() {
 		s.Stop()
 	}
 	s.weight = semaphore.NewWeighted(MaxWeight)
+	s.flight = new(onceflight.Group)
 	logger := logging.Logger("transcode.scheduler")
 	var ctx = context.Background()
 	ctx, s.cancel = context.WithCancel(ctx)
