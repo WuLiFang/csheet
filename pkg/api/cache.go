@@ -17,7 +17,7 @@ type QueryCache struct {
 
 // Get looks up a key's value from the cache.
 func (c QueryCache) Get(ctx context.Context, key string) (value interface{}, ok bool) {
-	err := db.Get(db.IndexGraphQLQueryCache.Key(key), value)
+	err := db.Get(db.IndexGraphQLPersistedQuery.Key(key), value)
 	if err == db.ErrKeyNotFound {
 		ok = false
 		return
@@ -39,7 +39,7 @@ func (c QueryCache) Add(ctx context.Context, key string, value interface{}) {
 			return err
 		}
 		var entry = badger.NewEntry(
-			db.IndexGraphQLQueryCache.Key(key),
+			db.IndexGraphQLPersistedQuery.Key(key),
 			v,
 		).WithTTL(c.TTL)
 		return txn.SetEntry(entry)

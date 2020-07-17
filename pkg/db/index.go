@@ -40,5 +40,10 @@ const (
 	// key format: presentation id
 	// value: empty
 	IndexPresentationOutdated
-	IndexGraphQLQueryCache
+	// IndexGraphQLPersistedQuery is a primary index
+	// to store persisted query
+	// https://gqlgen.com/reference/apq/
+	// key: query sha256 hash
+	// value: query
+	IndexGraphQLPersistedQuery
 )
