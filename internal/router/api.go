@@ -2,9 +2,11 @@ package router
 
 import (
 	"context"
+	"time"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/api"
@@ -14,6 +16,11 @@ import (
 
 func apiHandler() gin.HandlerFunc {
 	server := handler.NewDefaultServer(api.NewExecutableSchema())
+	server.Use(
+		extension.AutomaticPersistedQuery{
+			Cache: api.QueryCache{TTL: 24 * time.Hour},
+		},
+	)
 	server.AroundResponses(func(ctx context.Context, next graphql.ResponseHandler) (ret *graphql.Response) {
 		ret = next(ctx)
 		if ret != nil && len(ret.Errors) > 0 {

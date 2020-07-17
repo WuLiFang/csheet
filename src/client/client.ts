@@ -9,10 +9,11 @@ import { ApolloClient } from 'apollo-client';
 import { ApolloLink, split } from 'apollo-link';
 import { ErrorResponse, onError } from 'apollo-link-error';
 import { HttpLink } from 'apollo-link-http';
+import { createPersistedQueryLink } from 'apollo-link-persisted-queries';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import { GraphQLError } from 'graphql';
-
+import { SubscriptionClient } from 'subscriptions-transport-ws';
 function getErrorMessage(e: GraphQLError): string {
   const msg = e.extensions?.locales?.[locale] ?? e.message;
   return msg;
@@ -23,14 +24,57 @@ const httpLink: HttpLink = new HttpLink({
 });
 
 // Create the subscription websocket link
-const wsLink = new WebSocketLink({
-  uri: `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${
-    location.host
-  }/api`,
-  options: {
+const wsClient = new SubscriptionClient(
+  `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/api`,
+  {
     reconnect: true,
-  },
-});
+  }
+);
+
+/**
+ * workaround to use persisted query with subscription
+ * https://github.com/apollographql/apollo-link-persisted-queries/issues/18
+ */
+function patchSubscriptionClient(client: SubscriptionClient) {
+  // make client to respect
+  // `operation.getContext().http.includeQuery`
+  // so apq link can work
+  client.use([
+    {
+      applyMiddleware: (operation, next) => {
+        if (operation.query) {
+          operation.setContext({ query: operation.query });
+        }
+        const ctx = operation.getContext();
+        const includeQuery: boolean | undefined = ctx?.http?.includeQuery;
+        if (includeQuery) {
+          operation.query = ctx.query;
+        } else {
+          delete operation.query;
+        }
+        next();
+      },
+    },
+  ]);
+
+  // allow empty query
+  const c = (client as unknown) as Record<string, unknown>;
+  const raw = c.checkOperationOptions as (...args: unknown[]) => unknown;
+  c.checkOperationOptions = (...args: unknown[]) => {
+    try {
+      return raw(...args);
+    } catch (err) {
+      if (err instanceof Error && err.message === 'Must provide a query.') {
+        return;
+      }
+      throw err;
+    }
+  };
+}
+patchSubscriptionClient(wsClient);
+
+const wsLink = new WebSocketLink(wsClient);
+const apqLink = createPersistedQueryLink();
 
 // using the ability to split links, you can send data to each link
 // depending on what kind of operation is being sent
@@ -43,8 +87,8 @@ const link = split(
       definition.operation === 'subscription'
     );
   },
-  wsLink,
-  httpLink
+  apqLink.concat(wsLink),
+  apqLink.concat(httpLink)
 );
 const linkErrorAfterWare: ApolloLink = onError(
   ({ graphQLErrors }: ErrorResponse): void => {

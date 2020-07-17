@@ -12,6 +12,7 @@ func (i Index) Bytes() []byte {
 	return ret
 }
 
+// indexes used asa key prefix
 const (
 	// IndexMigrations used as key prefix.
 	IndexMigrations Index = iota
@@ -39,4 +40,5 @@ const (
 	// key format: presentation id
 	// value: empty
 	IndexPresentationOutdated
+	IndexGraphQLQueryCache
 )
