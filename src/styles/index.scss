@@ -9,6 +9,12 @@
   max-height: 100%;
 }
 
+// Reset focus outline
+button:focus,
+:focus {
+  outline: initial;
+}
+
 // Custom scrollbar for webkit browser
 
 ::-webkit-scrollbar {
