@@ -233,6 +233,18 @@ export default class TheNavbar extends Vue {
         this.formData.mode = 'folder';
         this.formData.folder.root = q.get('root') ?? '';
         break;
+      default: {
+        const latest = db.recentOriginPrefix.get()[0];
+        if (latest instanceof CGTeamworkOriginPrefix) {
+          this.formData.mode = 'cgteamwork';
+          this.formData.cgteamwork.database = latest.database;
+          this.formData.cgteamwork.pipeline = latest.pipeline;
+          this.formData.cgteamwork.prefix = latest.prefix;
+        } else if (latest instanceof FolderOriginPrefix) {
+          this.formData.mode = 'folder';
+          this.formData.folder.root = latest.root;
+        }
+      }
     }
     if (q.get('skip_empty')) {
       this.formData.skipEmptyPresentation = true;
