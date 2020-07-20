@@ -6,6 +6,16 @@ export class RecentOriginPrefix extends State<OriginPrefix[]> {
   private static key = 'recent-origin-prefix';
   private static capacity = 128;
 
+  constructor(initialStage: OriginPrefix[]) {
+    super(initialStage);
+    window.addEventListener('storage', e => {
+      if (e.key !== RecentOriginPrefix.key) {
+        return;
+      }
+      this.load();
+    });
+  }
+
   save(state: OriginPrefix[]): void {
     localStorage.setItem(
       RecentOriginPrefix.key,
