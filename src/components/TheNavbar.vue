@@ -25,6 +25,7 @@
         CGTeamworkProjectSelect(
           v-model="formData.cgteamwork.database"
           class="form-select"
+          @change="formData.cgteamwork.prefix = ''"
           required
         )
       label(

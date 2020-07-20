@@ -1,6 +1,7 @@
 <template lang="pug">
   select(
     v-model="$_value"
+    v-on="$listeners"
   )
     template(v-for="i in projects")
       option(:value="i.database") {{i.name}}
