@@ -48,7 +48,7 @@ import { extractNodes, extractPageInfo } from '../client/relay';
 import CollectionOverviewCell from './CollectionOverviewCell.vue';
 import { show } from '../modal';
 import CollectionViewer from './CollectionViewer.vue';
-import { ObservableQuery } from 'apollo-client';
+import { ObservableQuery, ApolloQueryResult } from 'apollo-client';
 import { DollarApollo } from 'vue-apollo/types/vue-apollo';
 import 'vue-awesome/icons/spinner';
 import { presentationUpdatedVariables } from '../graphql/types/presentationUpdated';
@@ -57,6 +57,9 @@ import {
   collectionUpdatedVariables,
   collectionUpdated,
 } from '../graphql/types/collectionUpdated';
+import { OriginPrefix } from '../client';
+import { db } from '../db';
+import { getCommonPrefix } from '../utils/getCommonPrefix';
 
 @Component<CollectionOverview>({
   components: {
@@ -75,6 +78,17 @@ import {
           first: this.size,
           filePathFormat,
         };
+      },
+      result({ data }: ApolloQueryResult<collections>) {
+        const commonPrefix = getCommonPrefix(
+          data?.collections?.nodes
+            ?.map(i => i?.origin)
+            .filter((i): i is string => typeof i === 'string') || []
+        );
+        const prefix = OriginPrefix.parse(commonPrefix);
+        if (prefix) {
+          db.recentOriginPrefix.push(prefix);
+        }
       },
       subscribeToMore: {
         document: require('@/graphql/subscriptions/collectionUpdated.gql'),

@@ -34,11 +34,9 @@
           class="lg:mr-1"
         ) 流程
         datalist#navbar-cgteamwork-pipeline
-          option 合成
-          option 灯光
-          option 动画
-          option 特效
-          option 场景细化
+          option(
+            v-for="i in recentCGTeamworkPipeline"
+          ) {{i}}
         input(
           v-model="formData.cgteamwork.pipeline"
           class="form-input"
@@ -52,12 +50,17 @@
         span(
           class="lg:mr-1"
         ) 前缀
+        datalist#navbar-cgteamwork-prefix
+          option(
+            v-for="i in recentCGTeamworkPrefix"
+          ) {{i}}
         input(
           ref="cgteamworkPrefixInput"
           v-model="formData.cgteamwork.prefix"
           class="form-input"
           @keydown.enter="collectFromCGTeamwork()"
           @input="$event.target.setCustomValidity('')"
+          list="navbar-cgteamwork-prefix"
         )
     template(v-else-if="formData.mode == 'folder'")
       label(
@@ -66,11 +69,16 @@
         span(
           class="lg:mr-1"
         ) 路径
+        datalist#navbar-folder-root
+          option(
+            v-for="i in recentFolderRoot"
+          ) {{i}}
         input(
           v-model="formData.folder.root"
           class="form-input"
           required
           @keydown.enter="collectFromFolder()"
+          list="navbar-folder-root"
         )
     button(
       ref="collectButton"
@@ -116,6 +124,9 @@ import {
 } from '../graphql/types/folderOriginPrefix';
 import { collectionsVariables } from '../graphql/types/collections';
 import * as preference from '@/preference';
+import { db } from '../db';
+import { CGTeamworkOriginPrefix, FolderOriginPrefix } from '../client';
+import { uniq } from 'lodash';
 
 @Component<TheNavbar>({
   components: {
@@ -307,6 +318,48 @@ export default class TheNavbar extends Vue {
         break;
     }
     return ret;
+  }
+
+  get recentFolderRoot(): string[] {
+    return uniq(
+      db.recentOriginPrefix
+        .get()
+        .filter((i): i is FolderOriginPrefix => i instanceof FolderOriginPrefix)
+        .filter(i => i.root !== this.formData.folder.root)
+        .map(i => i.root)
+    );
+  }
+
+  get recentCGTeamworkPrefix(): string[] {
+    return uniq(
+      db.recentOriginPrefix
+        .get()
+        .filter(
+          (i): i is CGTeamworkOriginPrefix =>
+            i instanceof CGTeamworkOriginPrefix
+        )
+        .filter(
+          i =>
+            i.database === this.formData.cgteamwork.database &&
+            i.prefix !== this.formData.cgteamwork.prefix
+        )
+        .map(i => i.prefix)
+    );
+  }
+
+  get recentCGTeamworkPipeline(): string[] {
+    return uniq(
+      ['合成', '灯光', '动画', '特效', '场景细化'].concat(
+        ...db.recentOriginPrefix
+          .get()
+          .filter(
+            (i): i is CGTeamworkOriginPrefix =>
+              i instanceof CGTeamworkOriginPrefix
+          )
+          .filter(i => i.pipeline !== this.formData.cgteamwork.pipeline)
+          .map(i => i.pipeline)
+      )
+    );
   }
 }
 </script>
