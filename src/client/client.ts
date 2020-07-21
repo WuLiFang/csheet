@@ -91,7 +91,7 @@ const link = split(
   apqLink.concat(httpLink)
 );
 const linkErrorAfterWare: ApolloLink = onError(
-  ({ graphQLErrors }: ErrorResponse): void => {
+  ({ graphQLErrors, networkError, operation }: ErrorResponse): void => {
     if (graphQLErrors) {
       for (const i of graphQLErrors) {
         app.$emit('app-message', {
@@ -108,6 +108,16 @@ const linkErrorAfterWare: ApolloLink = onError(
           );
         }
       }
+    }
+    if (networkError) {
+      const msg =
+        'response' in networkError
+          ? `${operation.operationName}: ${networkError.response.status} ${networkError.response.statusText}`
+          : `${operation.operationName}: ${networkError.message}`;
+      app.$emit('app-message', {
+        text: msg,
+        class: 'bg-red-700',
+      });
     }
   }
 );
