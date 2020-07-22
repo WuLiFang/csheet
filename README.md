@@ -16,7 +16,7 @@
 
 ## 开发
 
-使用 [gotmpl](github.com/NateScarlet/gotmpl) 进行代码生成。
+使用 [gotmpl](https://github.com/NateScarlet/gotmpl) 进行代码生成。
 
 ## NO LICENSE 版权保留
 
