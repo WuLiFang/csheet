@@ -32,6 +32,7 @@ func apiHandler() gin.HandlerFunc {
 			scope.SetTag("mechanism", "graphql")
 			scope.SetExtra("query", oc.RawQuery)
 			scope.SetExtra("variables", oc.Variables)
+			scope.SetExtra("operationName", oc.OperationName)
 
 			for _, err := range ret.Errors {
 				hub.CaptureEvent(&sentry.Event{
