@@ -11,7 +11,7 @@
       leave-active-class="transition-all duration-500 ease-in-out"
     )
       .overlay(
-        class="absolute inset-0 p-1"
+        class="absolute inset-0 p-1 pointer-events-none"
         v-show="overlayVisible"
       )
         header(
@@ -48,7 +48,7 @@ export default class CollectionOverviewCell extends Vue {
   get overlayVisible(): boolean {
     return preference.get('cellOverlayVisible');
   }
-  
+
   get topLeftText(): string {
     let ret = '';
     const pipeline = this.value.metadata.find(

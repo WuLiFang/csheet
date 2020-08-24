@@ -38,6 +38,7 @@ export function fileSrc(v: string | undefined): string {
         domProps: {
           src,
           alt: this.node?.raw?.path,
+          draggable: true,
         },
         style: {
           filter: this.imageFilter,
@@ -46,6 +47,7 @@ export function fileSrc(v: string | undefined): string {
           error: () => {
             this.isLoadFailed = true;
           },
+          dragstart: this.handleDrag.bind(this),
         },
       });
     };
@@ -57,11 +59,13 @@ export function fileSrc(v: string | undefined): string {
           controls: true,
           loop: true,
           autoplay: this.autoplay,
+          draggable: true,
         },
         on: {
           error: () => {
             this.isLoadFailed = true;
           },
+          dragstart: this.handleDrag.bind(this),
         },
       });
     };
@@ -136,6 +140,13 @@ export default class Presentation extends Vue {
       }
     }
     return '';
+  }
+
+  handleDrag(e: DragEvent): void {
+    if (!this.node) {
+      return;
+    }
+    e.dataTransfer?.setData('text/plain', this.node.raw.path);
   }
 }
 </script>
