@@ -39,8 +39,8 @@ func New() *gin.Engine {
 	r.Any("api", gincontext.Middleware(), apiHandler())
 	r.Static("static", "dist/static")
 	r.Group("").Use(func(c *gin.Context) {
-		c.Next()
 		c.Header("Cache-Control", "no-cache")
+		c.Next()
 	}).StaticFile("", "dist/index.html")
 	r.StaticFile("favicon.ico", "dist/favicon.ico")
 	r.Group("files").Use(func(c *gin.Context) {
