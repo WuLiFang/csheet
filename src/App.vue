@@ -15,13 +15,17 @@
       ) 问题反馈
     TheNavbar(
       class="sticky top-0 bg-gray-800 p-2 w-full text-center z-20 transition duration-500 ease-in-out"
-      :style="{ 'transform': collapseNav ? 'translateY(-100%)' : null }"
+      :class="{'transform -translate-y-full': collapseNav }"
       @update:variables="variables = $event"
     )
     transition-group.messages(
       tag="ul"
-      name="message"
       class="fixed bottom-0 right-0 z-30 flex flex-col-reverse items-end"
+      move-class="transition ease-in-out duration-200"
+      enter-active-class="transition ease-in-out duration-300"
+      enter-class="opacity-0 transform translate-x-full"
+      leave-active-class="transition ease-in-out duration-1000"
+      leave-to-class="opacity-0"
     )
       li(
         v-for="i in messages"
@@ -123,18 +127,3 @@ export default class App extends Vue {
   }
 }
 </script>
-<style lang="scss" scoped>
-.message-enter,
-.message-leave-to {
-  @apply opacity-0;
-  transform: translateX(100%);
-}
-
-.message-leave-active,
-.message-enter-active,
-.message-move {
-  @apply transition-all;
-  @apply ease-in-out;
-  @apply duration-500;
-}
-</style>
