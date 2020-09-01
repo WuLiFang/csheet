@@ -149,7 +149,6 @@ import { uniq } from 'lodash';
   },
   mounted() {
     this.loadState();
-    this.setVariables(this.variables);
   },
 })
 export default class TheNavbar extends Vue {
