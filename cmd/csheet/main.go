@@ -43,7 +43,7 @@ func main() {
 	defer db.Close()
 	db.EnableGC(5 * time.Minute)
 
-	filewatch.Manager.Scale(config.FileWatchWorkers)
+	filewatch.Manager.Scale(config.WatchWorkers)
 
 	transcode.Scheduler.Start()
 

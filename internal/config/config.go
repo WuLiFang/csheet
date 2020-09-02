@@ -22,7 +22,7 @@ var (
 	SentryDSN                   = getenv.String("CSHEET_SERVER_SENTRY_DSN", "")
 	Release                     = getenv.String("CSHEET_RELEASE", "")
 	IssueTrackerURL             = getenv.String("CSHEET_ISSUE_TRACKER_URL", "https://github.com/WuLiFang/csheet/issues")
-	FileWatchWorkers            = getenv.Int("CSHEET_FILE_WATCH_WORKERS", 8)
+	WatchWorkers                = getenv.Int("CSHEET_WATCH_WORKERS", 8)
 	TranscodeMaxWeight          = getenv.Int64("CSHEET_TRANSCODE_MAX_WEIGHT", transcode.MaxWeight)
 	TranscodeImageThumbWeight   = getenv.Int64("CSHEET_TRANSCODE_IMAGE_THUMB_WEIGHT", transcode.ImageThumbWeight)
 	TranscodeImageRegularWeight = getenv.Int64("CSHEET_TRANSCODE_IMAGE_REGULAR_WEIGHT", transcode.ImageRegularWeight)

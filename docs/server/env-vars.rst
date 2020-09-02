@@ -32,6 +32,10 @@ CSHEET_WATCH_RATE
 
   限制每秒钟最多检查多少文件的更新，默认值：50。
 
+CSHEET_WATCH_WORKERS
+
+  文件监控并发数量，默认为 8。
+
 CSHEET_FOLDER_EXCLUDE
 
   扫描文件夹时的前缀排除模式，用逗号分隔。
@@ -63,10 +67,6 @@ CSHEET_RELEASE
 CSHEET_ISSUE_TRACKER_URL
 
   问题反馈网址，显示在客户端界面上。
-
-CSHEET_FILE_WATCH_WORKERS
-
-  文件监控工作者数量，默认为 8。
 
 CSHEET_TRANSCODE_MAX_WEIGHT
 
