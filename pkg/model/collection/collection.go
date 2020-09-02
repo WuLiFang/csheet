@@ -19,7 +19,6 @@ type Collection struct {
 	Origin          string
 	Title           string
 	Metadata        map[string]string
-	Tags            []string
 	CollectTime     time.Time
 	PresentationIDs []string
 	presentations   []presentation.Presentation
