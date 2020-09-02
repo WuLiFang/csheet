@@ -14,6 +14,12 @@
 - [x] 自动生成缩略图
 - [x] 与 CGTeamwork5.2 集成
 
+## 部署
+
+使用 docker 构建。
+
+配置参考 [deployments](./deployments) 文件夹下的示例文件。
+
 ## 开发
 
 使用 [gotmpl](https://github.com/NateScarlet/gotmpl) 进行代码生成。

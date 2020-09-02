@@ -5,7 +5,7 @@ export CGO_ENABLED?=0
 default: docs/_build/html dist build
 
 docs/_build/html: docs/_build/html/.git docs/* docs/*/*.rst
-	$(MAKE) -C docs html
+	$(MAKE) -C docs
 
 deploy-docs:
 	cd docs/_build/html ; git add --all && git commit -m 'docs: build' -m '[skip ci]' && git push

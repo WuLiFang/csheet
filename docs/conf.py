@@ -21,14 +21,15 @@
 # -- Project information -----------------------------------------------------
 
 import socket
-project = 'csheet'
+
+project = vars().get("project", 'csheet')
 copyright = '2018-2020, 北京吾立方数码科技有限公司'
-author = 'NateScarlet <NateScarlet@Gmail.com>'
+author = '北京吾立方数码科技有限公司'
 
 # The short X.Y version
-version = '5.0.1'
+version = '6.0.0'
 # The full version, including alpha/beta/rc tags
-release = '5.0.1'
+release = '6.0.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -73,6 +74,11 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '.venv']
 pygments_style = None
 
 
+# -- Options for Docx output -------------------------------------------------
+
+if tags.has('docx'):
+    html_use_index = False
+
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -94,7 +100,7 @@ html_theme_options = {
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+# html_static_path = ['_static']
 html_search_language = 'zh'
 
 # Custom sidebar templates, must be a dictionary that maps document names
