@@ -7,6 +7,10 @@
 [项目主页](https://github.com/WuLiFang/csheet)
 [文档](https://wulifang.github.io/csheet/)
 
+![总览截图](docs/web/_images/chrome_2020-09-03_11-57-08.png)
+
+![查看器截图](docs/web/_images/chrome_2020-09-03_11-57-40.png)
+
 ## 功能
 
 - [x] 实时更新

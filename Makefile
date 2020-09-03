@@ -4,7 +4,7 @@ export CGO_ENABLED?=0
 
 default: docs/_build/html dist build
 
-docs/_build/html: docs/_build/html/.git docs/* docs/*/*.rst
+docs/_build/html: docs/_build/html/.git docs/* docs/*/*.rst docs/*/*/*.rst
 	$(MAKE) -C docs
 
 deploy-docs:
