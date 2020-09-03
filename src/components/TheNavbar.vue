@@ -23,6 +23,7 @@
           class="lg:mr-1"
         ) 项目
         CGTeamworkProjectSelect(
+          ref="cgteamworkProjectSelect"
           v-model="formData.cgteamwork.database"
           class="form-select"
           @change="formData.cgteamwork.prefix = ''"
@@ -174,10 +175,32 @@ export default class TheNavbar extends Vue {
   $el!: HTMLFormElement;
   $refs!: {
     cgteamworkPrefixInput: HTMLInputElement;
+    cgteamworkProjectSelect: CGTeamworkProjectSelect;
     collectButton: HTMLButtonElement;
   };
 
   folderOriginPrefix = 'folder:';
+
+  @Watch('formData', { deep: true })
+  updateTitle(): void {
+    const parts: string[] = [];
+    switch (this.formData.mode) {
+      case 'cgteamwork':
+        parts.push(
+          this.formData.cgteamwork.prefix,
+          (this.$refs?.cgteamworkProjectSelect?.projects ?? []).find(
+            i => i.database === this.formData.cgteamwork.database
+          )?.name ?? this.formData.cgteamwork.database,
+          this.formData.cgteamwork.pipeline
+        );
+        break;
+      case 'folder':
+        parts.push(this.formData.folder.root);
+        break;
+    }
+    parts.push('色板');
+    document.title = parts.filter(i => !!i).join(' - ');
+  }
 
   get cellOverlayVisible(): boolean {
     return preference.get('cellOverlayVisible');
