@@ -150,6 +150,12 @@ import { uniq } from 'lodash';
   },
   mounted() {
     this.loadState();
+    this.$watch(
+      () => this.title,
+      function(v) {
+        document.title = v;
+      }
+    );
   },
 })
 export default class TheNavbar extends Vue {
@@ -181,8 +187,7 @@ export default class TheNavbar extends Vue {
 
   folderOriginPrefix = 'folder:';
 
-  @Watch('formData', { deep: true })
-  updateTitle(): void {
+  get title(): string {
     const parts: string[] = [];
     switch (this.formData.mode) {
       case 'cgteamwork':
@@ -199,7 +204,7 @@ export default class TheNavbar extends Vue {
         break;
     }
     parts.push('色板');
-    document.title = parts.filter(i => !!i).join(' - ');
+    return parts.filter(i => !!i).join(' - ');
   }
 
   get cellOverlayVisible(): boolean {
