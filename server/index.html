@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
   <head>
     <meta charset="utf-8" />
-    <title>色板服务端文档 &#8212; csheet 5.0.1 文档</title>
+    <title>吾立方色板服务系统 文档 &#8212; csheet 6.0.0 文档</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -15,8 +15,8 @@
     <script src="../_static/translations.js"></script>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
-    <link rel="next" title="收集" href="collection.html" />
-    <link rel="prev" title="首页" href="../web/views/index.html" />
+    <link rel="next" title="术语表" href="glossary.html" />
+    <link rel="prev" title="使用查看器" href="../web/how-to/use-viewer.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -34,29 +34,64 @@
           <div class="body" role="main">
             
   <div class="section" id="id1">
-<h1>色板服务端文档<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">内容:</span></p>
+<h1>吾立方色板服务系统 文档<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>本系统用于统一收集媒体文件并集中查看和使用。</p>
+<p>用途：</p>
+<ul class="simple">
+<li><p>快捷镜头检查，保证临近镜头色调统一。</p></li>
+<li><p>实时更新的网络访问只读媒体库。</p></li>
+<li><p>自动多尺寸转码的媒体文件缓存。</p></li>
+</ul>
+<img alt="../_images/b8c5d45ab6727fb2f5529cab0d904a53eaa5f2fe6518db651ee5cbafa724d814.svg" class="align-center" src="../_images/b8c5d45ab6727fb2f5529cab0d904a53eaa5f2fe6518db651ee5cbafa724d814.svg" /><div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="collection.html">收集</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="collection.html#id2">元数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">术语表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collectors.html">收集模式</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="collectors/cgteamwork.html">CGTeamwork</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collectors/folder.html">文件夹</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="cgteamwork.html">CGTeamwork</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="cgteamwork.html#id1">附加流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">数据模型</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="models/collected-event.html">收集事件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models/collection.html">收藏</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models/file.html">文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models/presentation.html">展示</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="folder.html">文件夹</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="folder.html#id2">路径匹配</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transcode.html">转码</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="transcode.html#id2">图片</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transcode.html#id3">视频</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="deployment.html">部署</a></li>
-<li class="toctree-l1"><a class="reference internal" href="filestore.html">文件存储</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file-store.html">文件存储</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="file-store.html#id2">目录结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file-store.html#id3">路径处理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file-store.html#id4">自动清理</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="file-watch.html">文件监控</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">数据库</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="db.html#id2">键</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db.html#id3">(0) 元数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db.html#id4">(1) 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db.html#id5">(2) 收集日志</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db.html#id6">(3) 收集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db.html#id7">(4) 收集来源</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db.html#id8">(5) 展示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db.html#id9">(6) 展示摘要</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db.html#id10">(7) 文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db.html#id11">(8) 展示文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db.html#id12">(9) 过期的展示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db.html#graphql">(10) GraphQL 持久查询</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="route.html">HTTP 路由</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">GraphQL API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#id1">实时订阅</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#id2">编辑器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#id3">持久查询</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="env-vars.html">环境变量</a></li>
-<li class="toctree-l1"><a class="reference internal" href="development.html">开发</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="database-migration.html">数据库迁移</a></li>
-</ul>
-</li>
 </ul>
 </div>
 </div>
@@ -103,13 +138,16 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../web/index.html">网页端文档</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">服务端文档</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="collection.html">收集</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cgteamwork.html">CGTeamwork</a></li>
-<li class="toctree-l2"><a class="reference internal" href="folder.html">文件夹</a></li>
-<li class="toctree-l2"><a class="reference internal" href="deployment.html">部署</a></li>
-<li class="toctree-l2"><a class="reference internal" href="filestore.html">文件存储</a></li>
+<li class="toctree-l2"><a class="reference internal" href="glossary.html">术语表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collectors.html">收集模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">数据模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transcode.html">转码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file-store.html">文件存储</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file-watch.html">文件监控</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l2"><a class="reference internal" href="route.html">HTTP 路由</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">GraphQL API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="env-vars.html">环境变量</a></li>
-<li class="toctree-l2"><a class="reference internal" href="development.html">开发</a></li>
 </ul>
 </li>
 </ul>
@@ -118,8 +156,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="../web/views/index.html" title="上一章">首页</a></li>
-      <li>Next: <a href="collection.html" title="下一章">收集</a></li>
+      <li>Previous: <a href="../web/how-to/use-viewer.html" title="上一章">使用查看器</a></li>
+      <li>Next: <a href="glossary.html" title="下一章">术语表</a></li>
   </ul></li>
 </ul>
 </div>

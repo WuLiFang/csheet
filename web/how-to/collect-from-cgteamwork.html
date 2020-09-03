@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>从 CGTeamwork 收集 &#8212; csheet 6.0.0 文档</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="从文件夹收集" href="collect-from-folder.html" />
+    <link rel="prev" title="使用查看器" href="use-viewer.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="cgteamwork">
+<h1>从 CGTeamwork 收集<a class="headerlink" href="#cgteamwork" title="永久链接至标题">¶</a></h1>
+<p>使用 CGTeamwork 模式需要在服务端配置 CGTeamwork 的账号密码，所有查询配置的账号进行。
+色板用户无需拥有 CGTeamwork 账号。</p>
+<div class="section" id="id1">
+<h2>从导航栏表单收集<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>将在导航栏模式设为 CGTeamwork，会显示以下表单：</p>
+<p>项目</p>
+<blockquote>
+<div><p>选择要收集的 CGTeamwork 项目。</p>
+<div class="figure align-default" id="id4">
+<img alt="../../_images/chrome_2020-09-03_14-12-02.png" src="../../_images/chrome_2020-09-03_14-12-02.png" />
+<p class="caption"><span class="caption-text">提供当前 CGTeamwork 上的所有活动项目作为选项。</span><a class="headerlink" href="#id4" title="永久链接至图片">¶</a></p>
+</div>
+</div></blockquote>
+<p>流程</p>
+<blockquote>
+<div><p>选择要收集的流程名，支持输入任意字符串，将对匹配流程的任务提交文件进行收集。</p>
+<p>通常流程名等同于 CGTeamwork 上设置的流程名，但服务端可设置流程名覆盖来更改使用指定流程名匹配到的任务。</p>
+<div class="figure align-default" id="id5">
+<img alt="../../_images/chrome_2020-09-03_14-06-19.png" src="../../_images/chrome_2020-09-03_14-06-19.png" />
+<p class="caption"><span class="caption-text">会根据设置和历史收集提供自动完成。</span><a class="headerlink" href="#id5" title="永久链接至图片">¶</a></p>
+</div>
+</div></blockquote>
+<p>前缀</p>
+<blockquote>
+<div><p>使用前缀匹配镜头名，将跳过所有镜头名不以输入值开头的任务。</p>
+<div class="figure align-default" id="id6">
+<img alt="../../_images/chrome_2020-09-03_14-09-16.png" src="../../_images/chrome_2020-09-03_14-09-16.png" />
+<p class="caption"><span class="caption-text">会根据自动历史收集的共通前缀提供自动完成。</span><a class="headerlink" href="#id6" title="永久链接至图片">¶</a></p>
+</div>
+</div></blockquote>
+<div class="section" id="id2">
+<h3>校验<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h3>
+<p>表单在提交前会进行校验，并在对应的输入上提示错误。</p>
+<div class="figure align-default" id="id7">
+<img alt="../../_images/chrome_2020-09-03_15-48-49.png" src="../../_images/chrome_2020-09-03_15-48-49.png" />
+<p class="caption"><span class="caption-text">项目为必填项。</span><a class="headerlink" href="#id7" title="永久链接至图片">¶</a></p>
+</div>
+<div class="figure align-default" id="id8">
+<img alt="../../_images/chrome_2020-09-03_14-17-17.png" src="../../_images/chrome_2020-09-03_14-17-17.png" />
+<p class="caption"><span class="caption-text">流程为必填项。</span><a class="headerlink" href="#id8" title="永久链接至图片">¶</a></p>
+</div>
+</div>
+<div class="section" id="id3">
+<h3>返回结果<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h3>
+<img alt="../../_images/chrome_2020-09-03_15-43-52.png" src="../../_images/chrome_2020-09-03_15-43-52.png" />
+<p>成功收集完成会在右下角提示本次收集的结果。</p>
+<img alt="../../_images/chrome_2020-09-03_11-59-48.png" src="../../_images/chrome_2020-09-03_11-59-48.png" />
+<p>如果匹配任务过多，会提示更改前缀，需要前缀更改后才能再次提交表单。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">csheet</a></h1>
+
+
+
+<p class="blurb">色板服务</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=WuLiFang&repo=csheet&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://travis-ci.org/WuLiFang/csheet">
+    <img
+        alt="https://secure.travis-ci.org/WuLiFang/csheet.svg?branch=master"
+        src="https://secure.travis-ci.org/WuLiFang/csheet.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>导航</h3>
+<p class="caption"><span class="caption-text">内容:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">网页端文档</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../how-to.html">操作指引</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#id2">浏览器要求</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../server/index.html">服务端文档</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">吾立方色板网页客户端软件 文档</a><ul>
+  <li><a href="../how-to.html">操作指引</a><ul>
+      <li>Previous: <a href="use-viewer.html" title="上一章">使用查看器</a></li>
+      <li>Next: <a href="collect-from-folder.html" title="下一章">从文件夹收集</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018-2020, 北京吾立方数码科技有限公司.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/web/how-to/collect-from-cgteamwork.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

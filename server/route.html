@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>HTTP 路由 &#8212; csheet 6.0.0 文档</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="GraphQL API" href="api.html" />
+    <link rel="prev" title="数据库" href="db.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="http">
+<h1>HTTP 路由<a class="headerlink" href="#http" title="永久链接至标题">¶</a></h1>
+<p>系统将于绑定的端口运行 HTTP 服务，路由配置：</p>
+<p>/</p>
+<blockquote>
+<div><p>前端网页应用主页，提供访问工作目录下的 dist/index.html 文件。</p>
+</div></blockquote>
+<p>/favicon.ico</p>
+<blockquote>
+<div><p>站点图标，提供访问工作目录下的 dist/favicon.ico 文件。</p>
+</div></blockquote>
+<dl class="option-list">
+<dt><kbd><span class="option">/static</span></kbd></dt>
+<dd><p>静态资产文件，提供访问工作目录下的 dist/static 文件夹。</p>
+</dd>
+<dt><kbd><span class="option">/api</span></kbd></dt>
+<dd><p><a class="reference internal" href="api.html"><span class="doc">GraphQL API</span></a>。</p>
+</dd>
+<dt><kbd><span class="option">/files</span></kbd></dt>
+<dd><p>由系统管理的文件，提供访问 <a class="reference internal" href="file-store.html"><span class="doc">文件存储</span></a> files 文件夹。</p>
+<p>找不到文件时如果对应路径有对应的 <a class="reference internal" href="models/presentation.html"><span class="doc">展示</span></a>，会将展示标记为过期。</p>
+</dd>
+</dl>
+<p>/debug/pprof</p>
+<blockquote>
+<div><p>开发模式下可用，pprof 网页调试端点。</p>
+</div></blockquote>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">csheet</a></h1>
+
+
+
+<p class="blurb">色板服务</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=WuLiFang&repo=csheet&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://travis-ci.org/WuLiFang/csheet">
+    <img
+        alt="https://secure.travis-ci.org/WuLiFang/csheet.svg?branch=master"
+        src="https://secure.travis-ci.org/WuLiFang/csheet.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>导航</h3>
+<p class="caption"><span class="caption-text">内容:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../web/index.html">网页端文档</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">服务端文档</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="collectors.html">收集源</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">数据模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transcode.html">转码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file-store.html">文件存储</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file-watch.html">文件监控</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">HTTP 路由</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">GraphQL API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="env-vars.html">环境变量</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">吾立方色板服务系统 文档</a><ul>
+      <li>Previous: <a href="db.html" title="上一章">数据库</a></li>
+      <li>Next: <a href="api.html" title="下一章">GraphQL API</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018-2020, 北京吾立方数码科技有限公司.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/server/route.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

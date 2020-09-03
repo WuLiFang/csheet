@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>数据库 &#8212; csheet 6.0.0 文档</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="HTTP 路由" href="route.html" />
+    <link rel="prev" title="文件监控" href="file-watch.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>数据库<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>使用 Badger 键值数据库，使用预先定义的键前缀将将数据库分割为多个索引</p>
+<div class="section" id="id2">
+<h2>键<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>数据库的键统一格式为:</p>
+<p><code class="docutils literal notranslate"><span class="pre">索引</span> <span class="pre">字符串</span> <span class="pre">[制表符</span> <span class="pre">字符串]</span> <span class="pre">...</span></code></p>
+<p>索引为 2 字节大端序编码无符号整数，取值范围 [0, 65535]。</p>
+<p>每个索引对应一类数据。</p>
+<p>下方将索引标注在括号中。</p>
+</div>
+<div class="section" id="id3">
+<h2>(0) 元数据<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>存储数据库元数据，暂未使用。</p>
+</div>
+<div class="section" id="id4">
+<h2>(1) 序列<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<p>记录当前自增数字序列状态。</p>
+<p>键: 任意值</p>
+<p>值: 由 Badger 序列功能进行管理。</p>
+</div>
+<div class="section" id="id5">
+<h2>(2) 收集日志<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
+<p>键: 时间戳</p>
+<p>值: BSON 编码 <a class="reference internal" href="models/collected-event.html"><span class="doc">收集事件</span></a>。</p>
+</div>
+<div class="section" id="id6">
+<h2>(3) 收集<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
+<p>键: ID，自增数字序列值。</p>
+<p>值: BSON 编码 <a class="reference internal" href="models/collection.html"><span class="doc">收集</span></a>。</p>
+</div>
+<div class="section" id="id7">
+<h2>(4) 收集来源<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h2>
+<p>键: 收集来源字符串。</p>
+<p>值: 收集ID。</p>
+</div>
+<div class="section" id="id8">
+<h2>(5) 展示<a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h2>
+<p>键: ID，自增数字序列值。</p>
+<p>值: BSON 编码 <a class="reference internal" href="models/presentation.html"><span class="doc">展示</span></a></p>
+</div>
+<div class="section" id="id9">
+<h2>(6) 展示摘要<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h2>
+<p>键: 类型和原始路径生成的 sha256 信息摘要。</p>
+<p>值: 展示 ID。</p>
+</div>
+<div class="section" id="id10">
+<h2>(7) 文件<a class="headerlink" href="#id10" title="永久链接至标题">¶</a></h2>
+<p>键: 文件路径</p>
+<p>值: BSON 编码 <a class="reference internal" href="models/file.html"><span class="doc">文件</span></a></p>
+</div>
+<div class="section" id="id11">
+<h2>(8) 展示文件<a class="headerlink" href="#id11" title="永久链接至标题">¶</a></h2>
+<p>用于快速查询文件对应的展示。</p>
+<p>键: 文件路径，展示 ID。</p>
+<p>值: 空</p>
+</div>
+<div class="section" id="id12">
+<h2>(9) 过期的展示<a class="headerlink" href="#id12" title="永久链接至标题">¶</a></h2>
+<p>用于记录待转码的展示。</p>
+<p>键: 展示 ID。</p>
+<p>值: 空</p>
+</div>
+<div class="section" id="graphql">
+<h2>(10) GraphQL 持久查询<a class="headerlink" href="#graphql" title="永久链接至标题">¶</a></h2>
+<p>用于实现 API 请求使用查询摘要代替查询文本。</p>
+<p>键: 查询文本的 sha256 摘要。</p>
+<p>值: 查询文本</p>
+<p>键值对 24 小时未使用自动删除。</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">csheet</a></h1>
+
+
+
+<p class="blurb">色板服务</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=WuLiFang&repo=csheet&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://travis-ci.org/WuLiFang/csheet">
+    <img
+        alt="https://secure.travis-ci.org/WuLiFang/csheet.svg?branch=master"
+        src="https://secure.travis-ci.org/WuLiFang/csheet.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>导航</h3>
+<p class="caption"><span class="caption-text">内容:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../web/index.html">网页端文档</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">服务端文档</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="collectors.html">收集源</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">数据模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transcode.html">转码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file-store.html">文件存储</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file-watch.html">文件监控</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">数据库</a></li>
+<li class="toctree-l2"><a class="reference internal" href="route.html">HTTP 路由</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">GraphQL API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="env-vars.html">环境变量</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">吾立方色板服务系统 文档</a><ul>
+      <li>Previous: <a href="file-watch.html" title="上一章">文件监控</a></li>
+      <li>Next: <a href="route.html" title="下一章">HTTP 路由</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018-2020, 北京吾立方数码科技有限公司.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/server/db.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

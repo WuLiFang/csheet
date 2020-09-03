@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="309px" preserveAspectRatio="none" style="width:363px;height:309px;" version="1.1" viewBox="0 0 363 309" width="363px" zoomAndPan="magnify"><defs/><g><rect fill="#FFFFFF" height="126.4844" style="stroke: #1565C0; stroke-width: 1.0;" width="338.5" x="13" y="125.8906"/><rect fill="#FFFFFF" height="76.5938" style="stroke: none; stroke-width: 1.0;" width="338.5" x="13" y="175.7813"/><line style="stroke: #008000; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="44" x2="44" y1="34.2969" y2="269.375"/><line style="stroke: #008000; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="152" x2="152" y1="34.2969" y2="269.375"/><line style="stroke: #008000; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="287.5" x2="287.5" y1="34.2969" y2="269.375"/><rect fill="#1565C0" height="30.2969" style="stroke: #1565C0; stroke-width: 0.0;" width="42" x="23" y="3"/><text fill="#FFFFFF" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="30" y="22.9951">用户</text><rect fill="#1565C0" height="30.2969" style="stroke: #1565C0; stroke-width: 0.0;" width="42" x="23" y="268.375"/><text fill="#FFFFFF" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="30" y="288.3701">用户</text><rect fill="#1565C0" height="30.2969" style="stroke: #1565C0; stroke-width: 0.0;" width="42" x="131" y="3"/><text fill="#FFFFFF" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="138" y="22.9951">系统</text><rect fill="#1565C0" height="30.2969" style="stroke: #1565C0; stroke-width: 0.0;" width="42" x="131" y="268.375"/><text fill="#FFFFFF" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="138" y="288.3701">系统</text><rect fill="#1565C0" height="30.2969" style="stroke: #1565C0; stroke-width: 0.0;" width="107" x="234.5" y="3"/><text fill="#FFFFFF" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="93" x="241.5" y="22.9951">CGTeamwork</text><rect fill="#1565C0" height="30.2969" style="stroke: #1565C0; stroke-width: 0.0;" width="107" x="234.5" y="268.375"/><text fill="#FFFFFF" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="93" x="241.5" y="288.3701">CGTeamwork</text><polygon fill="#1565C0" points="140,62.5938,150,66.5938,140,70.5938,144,66.5938" style="stroke: #1565C0; stroke-width: 1.0;"/><line style="stroke: #1565C0; stroke-width: 1.0;" x1="44" x2="146" y1="66.5938" y2="66.5938"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="51" y="61.292">收集请求</text><polygon fill="#1565C0" points="276,92.8906,286,96.8906,276,100.8906,280,96.8906" style="stroke: #1565C0; stroke-width: 1.0;"/><line style="stroke: #1565C0; stroke-width: 1.0;" x1="152" x2="282" y1="96.8906" y2="96.8906"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="112" x="159" y="91.5889">获取对应任务数量</text><polygon fill="#1565C0" points="163,106.8906,153,110.8906,163,114.8906,159,110.8906" style="stroke: #1565C0; stroke-width: 1.0;"/><line style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 2.0,2.0;" x1="157" x2="287" y1="110.8906" y2="110.8906"/><path d="M13,125.8906 L74,125.8906 L74,133.8906 L64,143.8906 L13,143.8906 L13,125.8906 " fill="#BBDEFB" style="stroke: #1565C0; stroke-width: 1.0;"/><rect fill="none" height="126.4844" style="stroke: #1565C0; stroke-width: 1.0;" width="338.5" x="13" y="125.8906"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="16" x="28" y="139.8857">alt</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="122" x="89" y="140.8857">[任务数量超过限制]</text><polygon fill="#1565C0" points="55,163.7813,45,167.7813,55,171.7813,51,167.7813" style="stroke: #1565C0; stroke-width: 1.0;"/><line style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 2.0,2.0;" x1="49" x2="151" y1="167.7813" y2="167.7813"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="61" y="162.4795">报错</text><line style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 2.0,2.0;" x1="13" x2="351.5" y1="176.7813" y2="176.7813"/><polygon fill="#1565C0" points="276,196.0781,286,200.0781,276,204.0781,280,200.0781" style="stroke: #1565C0; stroke-width: 1.0;"/><line style="stroke: #1565C0; stroke-width: 1.0;" x1="152" x2="282" y1="200.0781" y2="200.0781"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="112" x="159" y="194.7764">获取对应任务数据</text><polygon fill="#1565C0" points="163,210.0781,153,214.0781,163,218.0781,159,214.0781" style="stroke: #1565C0; stroke-width: 1.0;"/><line style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 2.0,2.0;" x1="157" x2="287" y1="214.0781" y2="214.0781"/><polygon fill="#1565C0" points="55,240.375,45,244.375,55,248.375,51,244.375" style="stroke: #1565C0; stroke-width: 1.0;"/><line style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 2.0,2.0;" x1="49" x2="151" y1="244.375" y2="244.375"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="84" x="61" y="239.0732">返回收集结果</text><!--MD5=[7b3f1e3797356b9eb2c60e2377890e0c]
+@startuml
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam maxMessageSize 150
+skinparam ComponentStyle uml2
+skinparam Shadowing false
+
+skinparam Default {
+    FontName "Arial","Microsoft YaHei","黑体","宋体",sans-serif
+    FontColor #222222
+    FontSize  14
+    FontStyle plain
+    Shadowing false
+    TextAlignment center
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Title {
+    FontSize 20
+    FontStyle bold
+}
+
+skinparam Note {
+    BackgroundColor #90A4AE
+    BorderColor #90A4AE
+    BorderThickness 1
+    FontColor White
+    Shadowing false
+    TextAlignment left
+}
+
+skinparam Note<<quit>> {
+
+    BackgroundColor #F9A825
+    BorderColor #F9A825
+}
+
+skinparam Sequence {
+    ActorBorderThickness 1
+    LifeLineBorderColor GREEN
+    ParticipantBorderThickness 0
+    Shadowing false
+
+
+    GroupBorderThickness 1
+    GroupBorderColor #1565C0
+    GroupBackgroundColor #BBDEFB
+}
+
+skinparam Activity {
+
+    StartColor #37A77C
+    EndColor #F6363F
+    AttributeFontColor white
+    AttributeFontSize  15
+    AttributeFontname  Droid Sans Mono
+
+    BackgroundColor #BBDEFB
+    BorderColor #90CAF9
+    BorderThickness 1
+
+    ArrowThickness 1
+
+
+    BarColor   #0D47A1
+
+
+    DiamondBackgroundColor   #FFE0B2
+    DiamondBorderColor    #FFCC80
+
+
+}
+
+skinparam Class {
+    BackgroundColor #E3F2FD
+    BorderColor #64B5F6
+    BorderThickness 1
+
+
+    StereotypeFontColor #589DF6
+    StereotypeFontSize 14
+}
+
+
+
+skinparam Interface {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+    FontSize 14
+
+
+    StereotypeFontColor #589DF6
+    StereotypeFontSize 1
+}
+
+
+
+skinparam Participant {
+    BackgroundColor #1565C0
+    BorderColor #1565C0
+    FontColor White
+    Shadowing false
+}
+
+skinparam Actor {
+    BackgroundColor #1565C0
+    BorderColor #1565C0
+    Shadowing false
+}
+
+skinparam UseCase {
+    BackgroundColor #64B5F6
+    BorderColor #64B5F6
+    Shadowing false
+    ArrowThickness 1
+    ArrowColor #1565C0
+
+    ActorBackgroundColor #1565C0
+    ActorBorderColor #0D47A1
+    ActorShadowing false
+ 
+}
+
+
+skinparam State {
+    FontSize           17
+
+    AttributeFontSize  14
+    
+    BackgroundColor    #BBDEFB
+    BorderColor        #90CAF9
+    StartColor #37A77C
+    EndColor #F6363F
+}
+
+skinparam Partition {
+    BorderColor #424242
+    BorderStyle dashed
+
+    BorderThickness 1
+}
+
+skinparam rectangle {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam database {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam Queue {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Agent {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Artifact {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Boundary {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Card {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Cloud {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Component {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Control {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Database {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Entity {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam File {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Folder {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+   
+}
+skinparam Frame {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Node {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+
+skinparam Package {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Stack {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Rectangle {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Storage {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam rectangle<<usercase>> {
+    Shadowing false
+    StereotypeFontSize 0
+    FontColor #424242
+    BorderColor #424242
+    BorderStyle dashed
+    BackgroundColor White
+}
+
+
+
+
+
+
+
+
+
+
+
+
+participant 用户 as user
+participant 系统 as sys
+participant CGTeamwork as cg
+
+user -> sys: 收集请求
+sys -> cg: 获取对应任务数量
+return
+alt 任务数量超过限制
+  sys - -> user: 报错
+else
+  sys -> cg: 获取对应任务数据
+  return
+  sys - -> user: 返回收集结果
+end
+@enduml
+
+PlantUML version 1.2020.02(Sun Mar 01 10:22:07 UTC 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 1.8.0_242-b08
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>

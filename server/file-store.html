@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>文件存储 &#8212; csheet 6.0.0 文档</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="文件监控" href="file-watch.html" />
+    <link rel="prev" title="转码" href="transcode.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>文件存储<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>使用单个文件夹存储所有相关文件，用 <a class="reference internal" href="env-vars.html"><span class="doc">环境变量</span></a> 进行配置。</p>
+<div class="section" id="id2">
+<h2>目录结构<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>db/</p>
+<blockquote>
+<div><p>Badger 键值数据库。</p>
+</div></blockquote>
+<p>files/</p>
+<blockquote>
+<div><p>转码生成的文件。</p>
+<p>文件路径基于 sha256 内容摘要生成，格式为：</p>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;摘要</span> <span class="pre">1-2位&gt;/&lt;摘要</span> <span class="pre">3-4位&gt;/&lt;摘要</span> <span class="pre">5-64位&gt;/&lt;文件名&gt;</span></code></p>
+<p>系统自动删除过期文件。</p>
+</div></blockquote>
+<p>temp/</p>
+<blockquote>
+<div><p>临时文件。</p>
+<p>系统自动删除过期文件。</p>
+</div></blockquote>
+</div>
+<div class="section" id="id3">
+<h2>路径处理<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>支持为同一个路径返回 windows 或者 unix 对应的路径，通过设置路径映射规则实现。</p>
+<p>默认为映射 /c 至 C:，/d 至 D:，以此类推26个小写字母。</p>
+<p>路径规则通过环境变量 <code class="docutils literal notranslate"><span class="pre">UNIPATH_RULE</span></code> 设置，
+格式为逗号分隔的映射路径值，Windows 路径不区分大小写。例 <code class="docutils literal notranslate"><span class="pre">/mnt/c,C:,/mnt/d,D:</span></code>。</p>
+<p>因为 Windows 路径不区分大小写但是数据库区分，系统会将 Windows 路径统一转为小写再储存。</p>
+</div>
+<div class="section" id="id4">
+<h2>自动清理<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<p>系统每 24 小时清理一次过期的文件。</p>
+<p>最后访问时间早于 <a class="reference internal" href="env-vars.html"><span class="doc">环境变量</span></a> 设置时间的文件视为过期。</p>
+<p>每次通过 <a class="reference internal" href="route.html"><span class="doc">HTTP 路由</span></a> 访问存储都会由系统更新文件的最后访问时间，
+以兼容不会自动设置访问时间的文件系统。</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">csheet</a></h1>
+
+
+
+<p class="blurb">色板服务</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=WuLiFang&repo=csheet&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://travis-ci.org/WuLiFang/csheet">
+    <img
+        alt="https://secure.travis-ci.org/WuLiFang/csheet.svg?branch=master"
+        src="https://secure.travis-ci.org/WuLiFang/csheet.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>导航</h3>
+<p class="caption"><span class="caption-text">内容:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../web/index.html">网页端文档</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">服务端文档</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="collectors.html">收集源</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">数据模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transcode.html">转码</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">文件存储</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file-watch.html">文件监控</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l2"><a class="reference internal" href="route.html">HTTP 路由</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">GraphQL API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="env-vars.html">环境变量</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">吾立方色板服务系统 文档</a><ul>
+      <li>Previous: <a href="transcode.html" title="上一章">转码</a></li>
+      <li>Next: <a href="file-watch.html" title="下一章">文件监控</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018-2020, 北京吾立方数码科技有限公司.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/server/file-store.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

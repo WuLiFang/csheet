@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>收藏 &#8212; csheet 6.0.0 文档</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="文件" href="file.html" />
+    <link rel="prev" title="收集事件" href="collected-event.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>收藏<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>收藏是通过不同渠道获取到的色板单元。</p>
+<p>每个收藏可有多个不同的展示方式，例如视频方式和图片方式。</p>
+<div class="section" id="id2">
+<h2>结构<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>Origin string</p>
+<blockquote>
+<div><p>收集收藏</p>
+</div></blockquote>
+<p>Title string</p>
+<blockquote>
+<div><p>标题</p>
+</div></blockquote>
+<p>Metadata map[string]string</p>
+<blockquote>
+<div><p>收藏元数据，详见下方。</p>
+</div></blockquote>
+<p>CollectTime time.Time</p>
+<blockquote>
+<div><p>最后一次收集的时间</p>
+</div></blockquote>
+<p>PresentationIDs []string</p>
+<blockquote>
+<div><p>收藏提供的展示 ID。</p>
+</div></blockquote>
+</div>
+<div class="section" id="id3">
+<h2>元数据<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>记录收藏的额外数据。</p>
+<p>cgteamwork.tasks</p>
+<blockquote>
+<div><p>CGTeamwork 相关任务的 JSON 数据。</p>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="kr">interface</span> <span class="nx">Tasks</span> <span class="p">{</span>
+  <span class="nx">id</span>: <span class="kt">string</span><span class="p">;</span>
+  <span class="nx">pipeline</span>: <span class="kt">string</span><span class="p">;</span>
+  <span class="nx">artists</span><span class="o">:</span> <span class="p">[]</span><span class="kt">string</span><span class="p">;</span>
+  <span class="nx">status</span>: <span class="kt">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">string</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">}[]</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>cgteamwork.pipeline</p>
+<blockquote>
+<div><p>CGTeamwork 对应流程名称。</p>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">csheet</a></h1>
+
+
+
+<p class="blurb">色板服务</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=WuLiFang&repo=csheet&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://travis-ci.org/WuLiFang/csheet">
+    <img
+        alt="https://secure.travis-ci.org/WuLiFang/csheet.svg?branch=master"
+        src="https://secure.travis-ci.org/WuLiFang/csheet.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>导航</h3>
+<p class="caption"><span class="caption-text">内容:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../web/index.html">网页端文档</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务端文档</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../collectors.html">收集模式</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../models.html">数据模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transcode.html">转码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file-store.html">文件存储</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file-watch.html">文件监控</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../db.html">数据库</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../route.html">HTTP 路由</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html">GraphQL API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env-vars.html">环境变量</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">吾立方色板服务系统 文档</a><ul>
+  <li><a href="../models.html">数据模型</a><ul>
+      <li>Previous: <a href="collected-event.html" title="上一章">收集事件</a></li>
+      <li>Next: <a href="file.html" title="下一章">文件</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018-2020, 北京吾立方数码科技有限公司.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/server/models/collection.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

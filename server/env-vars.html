@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
   <head>
     <meta charset="utf-8" />
-    <title>环境变量 &#8212; csheet 5.0.1 文档</title>
+    <title>环境变量 &#8212; csheet 6.0.0 文档</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -15,8 +15,7 @@
     <script src="../_static/translations.js"></script>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
-    <link rel="next" title="开发" href="development.html" />
-    <link rel="prev" title="文件存储" href="filestore.html" />
+    <link rel="prev" title="GraphQL API" href="api.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -39,34 +38,13 @@
 <blockquote>
 <div><p>运行环境, “development” 或者 “production”。</p>
 </div></blockquote>
-<p>CSHEET_STORAGE</p>
-<blockquote>
-<div><p><a class="reference internal" href="filestore.html"><span class="doc">文件存储</span></a> 文件夹路径。</p>
-</div></blockquote>
 <p>CSHEET_ADDRESS</p>
 <blockquote>
 <div><p>服务运行地址。默认：localhost:80</p>
 </div></blockquote>
-<p>CSHEET_CGTEAMWORK_MAX_TASK_PER_COLLECT</p>
+<p>CSHEET_STORAGE</p>
 <blockquote>
-<div><p>每次从 CGTeamwork 收集时的最大任务数量。默认：1000。</p>
-</div></blockquote>
-<p>CSHEET_CGTEAMWORK_PIPELINE_OVERWRITE</p>
-<blockquote>
-<div><p>覆盖流程收集时使用的流程名称，JSON 编码的字典。</p>
-</div></blockquote>
-<p>CSHEET_FOLDER_INCLUDE</p>
-<blockquote>
-<div><p>从文件夹收集允许的文件夹，使用 <code class="docutils literal notranslate"><span class="pre">*</span></code> 代表允许任何文件夹。</p>
-<p>多个路径用逗号分隔。</p>
-</div></blockquote>
-<p>CSHEET_WATCH_RATE</p>
-<blockquote>
-<div><p>限制每秒钟最多检查多少文件的更新，默认值：50。</p>
-</div></blockquote>
-<p>CSHEET_FOLDER_EXCLUDE</p>
-<blockquote>
-<div><p>扫描文件夹时的前缀排除模式，用逗号分隔。</p>
+<div><p><a class="reference internal" href="file-store.html"><span class="doc">文件存储</span></a> 文件夹路径。</p>
 </div></blockquote>
 <p>CSHEET_FILE_LIFE</p>
 <blockquote>
@@ -78,6 +56,31 @@
 <div><p>残留的临时文件保留时间, 默认为 1 小时。</p>
 <p>使用 go 时间格式，例如：1h2m3s。</p>
 </div></blockquote>
+<p>CSHEET_WATCH_RATE</p>
+<blockquote>
+<div><p>限制每秒钟最多检查多少文件的更新，默认值：50。</p>
+</div></blockquote>
+<p>CSHEET_WATCH_WORKERS</p>
+<blockquote>
+<div><p>文件监控并发数量，默认为 8。</p>
+</div></blockquote>
+<p>CSHEET_CGTEAMWORK_MAX_TASK_PER_COLLECT</p>
+<blockquote>
+<div><p>每次从 CGTeamwork 收集时的最大任务数量。默认：1000。</p>
+</div></blockquote>
+<p>CSHEET_CGTEAMWORK_PIPELINE_OVERWRITE</p>
+<blockquote>
+<div><p>覆盖流程收集时使用的流程名称，JSON 编码的字典。例：<code class="docutils literal notranslate"><span class="pre">{&quot;合成&quot;:[&quot;合成&quot;,&quot;输出&quot;],&quot;灯光&quot;:[&quot;灯光&quot;,&quot;渲染&quot;]}</span></code></p>
+</div></blockquote>
+<p>CSHEET_FOLDER_INCLUDE</p>
+<blockquote>
+<div><p>从文件夹收集允许的文件夹，使用 <code class="docutils literal notranslate"><span class="pre">*</span></code> 代表允许任何文件夹。</p>
+<p>多个路径用逗号分隔。</p>
+</div></blockquote>
+<p>CSHEET_FOLDER_EXCLUDE</p>
+<blockquote>
+<div><p>扫描文件夹时的前缀排除模式，用逗号分隔。</p>
+</div></blockquote>
 <p>CSHEET_WEB_SENTRY_DSN</p>
 <blockquote>
 <div><p>网页端 Sentry DSN。</p>
@@ -85,6 +88,30 @@
 <p>CSHEET_SERVER_SENTRY_DSN</p>
 <blockquote>
 <div><p>服务端 Sentry DSN。</p>
+</div></blockquote>
+<p>CSHEET_RELEASE</p>
+<blockquote>
+<div><p>发布版本，在 Sentry 事件中记录。</p>
+</div></blockquote>
+<p>CSHEET_ISSUE_TRACKER_URL</p>
+<blockquote>
+<div><p>问题反馈网址，显示在客户端界面上。</p>
+</div></blockquote>
+<p>CSHEET_TRANSCODE_MAX_WEIGHT</p>
+<blockquote>
+<div><p>最大的转码工作权重，同时进行的工作权重和不会超过此值，默认为 1024。</p>
+</div></blockquote>
+<p>CSHEET_TRANSCODE_IMAGE_THUMB_WEIGHT</p>
+<blockquote>
+<div><p>缩略尺寸图片转码工作权重，默认为 1024 / (CPU 核数 / 2 + 1)。</p>
+</div></blockquote>
+<p>CSHEET_TRANSCODE_IMAGE_REGULAR_WEIGHT</p>
+<blockquote>
+<div><p>标准尺寸图片转码工作权重，默认为 1024 / (CPU 核数 / 2 + 1)。</p>
+</div></blockquote>
+<p>CSHEET_TRANSCODE_VIDEO_REGULAR_WEIGHT</p>
+<blockquote>
+<div><p>标准尺寸视频转码工作权重，默认为 1024 / 2 + 1。</p>
 </div></blockquote>
 <p>CGTEAMWORK_URL</p>
 <blockquote>
@@ -142,13 +169,15 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../web/index.html">网页端文档</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">服务端文档</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="collection.html">收集</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cgteamwork.html">CGTeamwork</a></li>
-<li class="toctree-l2"><a class="reference internal" href="folder.html">文件夹</a></li>
-<li class="toctree-l2"><a class="reference internal" href="deployment.html">部署</a></li>
-<li class="toctree-l2"><a class="reference internal" href="filestore.html">文件存储</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collectors.html">收集源</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">数据模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transcode.html">转码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file-store.html">文件存储</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file-watch.html">文件监控</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db.html">数据库</a></li>
+<li class="toctree-l2"><a class="reference internal" href="route.html">HTTP 路由</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">GraphQL API</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">环境变量</a></li>
-<li class="toctree-l2"><a class="reference internal" href="development.html">开发</a></li>
 </ul>
 </li>
 </ul>
@@ -157,9 +186,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-  <li><a href="index.html">色板服务端文档</a><ul>
-      <li>Previous: <a href="filestore.html" title="上一章">文件存储</a></li>
-      <li>Next: <a href="development.html" title="下一章">开发</a></li>
+  <li><a href="index.html">吾立方色板服务系统 文档</a><ul>
+      <li>Previous: <a href="api.html" title="上一章">GraphQL API</a></li>
   </ul></li>
   </ul></li>
 </ul>

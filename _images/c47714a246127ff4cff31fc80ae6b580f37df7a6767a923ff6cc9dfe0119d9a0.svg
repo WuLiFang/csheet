@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="389px" preserveAspectRatio="none" style="width:660px;height:389px;" version="1.1" viewBox="0 0 660 389" width="660px" zoomAndPan="magnify"><defs/><g><!--MD5=[f0c302470752fa6bdd772c5a57c47464]
+entity 用户--><ellipse cx="96.5" cy="17.5" fill="#1565C0" rx="8" ry="8" style="stroke: #1565C0; stroke-width: 1.5;"/><path d="M96.5,25.5 L96.5,52.5 M83.5,33.5 L109.5,33.5 M96.5,52.5 L83.5,67.5 M96.5,52.5 L109.5,67.5 " fill="none" style="stroke: #1565C0; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="82.5" y="82.9951">用户</text><ellipse cx="96.598" cy="164.0236" fill="#64B5F6" rx="42.598" ry="14.5236" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="68.598" y="168.6721">查看收集</text><ellipse cx="366.2526" cy="163.8505" fill="#64B5F6" rx="72.2526" ry="16.8505" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="112" x="310.2526" y="168.499">文件更新实时推送</text><ellipse cx="48.598" cy="256.5236" fill="#64B5F6" rx="42.598" ry="14.5236" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="20.598" y="261.1721">收集文件</text><!--MD5=[9fae836c6a53a1f542eea58019cc5af0]
+entity 系统--><rect fill="#E3F2FD" height="46.2969" style="stroke: #424242; stroke-width: 1.5;" width="68" x="493.5" y="24"/><rect fill="#E3F2FD" height="10" style="stroke: #424242; stroke-width: 1.5;" width="15" x="541.5" y="29"/><rect fill="#E3F2FD" height="2" style="stroke: #424242; stroke-width: 1.5;" width="4" x="539.5" y="31"/><rect fill="#E3F2FD" height="2" style="stroke: #424242; stroke-width: 1.5;" width="4" x="539.5" y="35"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="508.5" y="56.9951">系统</text><ellipse cx="216.598" cy="164.0236" fill="#64B5F6" rx="42.598" ry="14.5236" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="188.598" y="168.6721">转码文件</text><ellipse cx="410.5143" cy="256.7029" fill="#64B5F6" rx="61.5143" ry="14.7029" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="84" x="368.5143" y="261.3513">监控文件变更</text><ellipse cx="500.5143" cy="363.7029" fill="#64B5F6" rx="61.5143" ry="14.7029" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="84" x="458.5143" y="368.3513">记录文件使用</text><ellipse cx="216.598" cy="256.5236" fill="#64B5F6" rx="42.598" ry="14.5236" style="stroke: #64B5F6; stroke-width: 1.5;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="188.598" y="261.1721">文件缓存</text><!--MD5=[d0f2d125bdff8a17e1bd5b8f94a78568]
+link 用户 to 查看收集--><path d="M96.5,86.2848 C96.5,105.7287 96.5,128.3585 96.5,144.1664 " fill="none" id="用户-&gt;查看收集" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="96.5,149.2513,100.5,140.2513,96.5,144.2513,92.5,140.2513,96.5,149.2513" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[b3a38893008b47480cc6fb75eeea8fed]
+link 用户 to 文件更新实时推送--><path d="M111.0164,53.2904 C151.3692,70.7767 265.9234,120.4168 327.006,146.8859 " fill="none" id="用户-&gt;文件更新实时推送" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="331.6688,148.9065,325.0014,141.6576,327.0811,146.9184,321.8204,148.998,331.6688,148.9065" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[4940715a97280428585e58308b5d45c5]
+link 用户 to 收集文件--><path d="M81.9858,64.4114 C67.2251,83.3513 45.3092,115.1959 36.5,147 C27.9932,177.7124 35.6459,214.8386 42.0249,237.015 " fill="none" id="用户-&gt;收集文件" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="43.5255,242.0494,44.7879,232.2818,42.0972,237.2577,37.1212,234.5671,43.5255,242.0494" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[122eb40e9c84d7877308959022ff5a9e]
+link 系统 to 转码文件--><path d="M493.3279,59.8557 C433.3184,82.4317 309.7216,128.9295 250.111,151.3554 " fill="none" id="系统-&gt;转码文件" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="245.2381,153.1886,255.0702,153.7634,249.9179,151.4281,252.2533,146.2758,245.2381,153.1886" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[135b67a74de3648c8efe0d834b144e03]
+link 系统 to 监控文件变更--><path d="M533.3138,70 C540.5643,104.3471 548.6364,169.538 518.5,212 C506.1109,229.4561 485.5774,240.0826 465.7219,246.5437 " fill="none" id="系统-&gt;监控文件变更" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="460.6938,248.0982,470.4738,249.2611,465.4707,246.6212,468.1106,241.6181,460.6938,248.0982" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[2ee6ca073d7bb23037dc00ef35141e39]
+link 系统 to 记录文件使用--><path d="M544.516,70.0404 C578.7506,119.4509 648.4212,237.7042 596.5,319 C586.2869,334.9912 568.6873,345.3226 551.3244,351.9581 " fill="none" id="系统-&gt;记录文件使用" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="546.4397,353.7332,556.2647,354.4185,551.139,352.0253,553.5321,346.8996,546.4397,353.7332" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[24d7e899605576a64e658f74cd2bb000]
+link 系统 to 文件缓存--><path d="M521.2301,70.1597 C511.9717,100.0252 491.8103,151.6089 456.5,181 C400.3986,227.697 315.2735,245.6004 262.9218,252.4034 " fill="none" id="系统-&gt;文件缓存" style="stroke: #1565C0; stroke-width: 1.0;"/><polygon fill="#1565C0" points="257.9599,253.0277,267.3889,255.8727,262.9208,252.4034,266.3901,247.9353,257.9599,253.0277" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[8b9c5ef2443d0d0e0fb577de184d6458]
+link 转码文件 to 收集文件--><path d="M193.8428,176.475 C163.1965,193.3487 108.5977,223.4105 75.7492,241.4967 " fill="none" id="转码文件-&gt;收集文件" style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#1565C0" points="71.0659,244.0753,80.8791,243.2382,75.4458,241.6636,77.0204,236.2303,71.0659,244.0753" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[94830d658f8e45c0ac8fe62e846029cc]
+link 查看收集 to 文件缓存--><path d="M113.949,177.4503 C135.3671,193.9601 171.6892,221.9583 194.8625,239.8211 " fill="none" id="查看收集-&gt;文件缓存" style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#1565C0" points="199.0299,243.0335,194.3439,234.3708,195.0699,239.9809,189.4598,240.7069,199.0299,243.0335" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[39cde823de788d38bddbd3574db15492]
+link 转码文件 to 文件缓存--><path d="M216.5,178.8617 C216.5,194.5975 216.5,219.5119 216.5,236.8583 " fill="none" id="转码文件-&gt;文件缓存" style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#1565C0" points="216.5,241.9801,220.5,232.9801,216.5,236.9801,212.5,232.9801,216.5,241.9801" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[7aa43977c8371855d670a1b8d4f4d955]
+link 文件更新实时推送 to 监控文件变更--><path d="M374.5703,180.9659 C382.1247,196.8475 393.4019,220.5551 401.3017,237.1627 " fill="none" id="文件更新实时推送-&gt;监控文件变更" style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#1565C0" points="403.6371,242.0723,403.3832,232.2267,401.4893,237.5571,396.1589,235.6632,403.6371,242.0723" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[1f5e6f2bea902540ee1cfc5f04ae024c]
+link 转码文件 to 监控文件变更--><path d="M241.465,175.9034 C276.4736,192.5957 340.1619,222.9625 378.5763,241.2786 " fill="none" id="转码文件-&gt;监控文件变更" style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#1565C0" points="383.132,243.4508,376.7298,235.9667,378.6188,241.2988,373.2867,243.1878,383.132,243.4508" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[95af9dd6b3b2fff35c5482c358e55a5d]
+link 监控文件变更 to 记录文件使用--><path d="M422.6378,270.9305 C438.7413,290.0758 467.1902,323.8984 484.8795,344.929 " fill="none" id="监控文件变更-&gt;记录文件使用" style="stroke: #1565C0; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#1565C0" points="488.2671,348.9564,485.5349,339.4941,485.0486,345.13,479.4127,344.6438,488.2671,348.9564" style="stroke: #1565C0; stroke-width: 1.0;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="126" x="461.5" y="314.9951">跳过无人使用的文件</text><!--MD5=[ab7bfbdb5949528c5291b7bc9e61c6c9]
+@startuml
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam maxMessageSize 150
+skinparam ComponentStyle uml2
+skinparam Shadowing false
+
+skinparam Default {
+    FontName "Arial","Microsoft YaHei","黑体","宋体",sans-serif
+    FontColor #222222
+    FontSize  14
+    FontStyle plain
+    Shadowing false
+    TextAlignment center
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Title {
+    FontSize 20
+    FontStyle bold
+}
+
+skinparam Note {
+    BackgroundColor #90A4AE
+    BorderColor #90A4AE
+    BorderThickness 1
+    FontColor White
+    Shadowing false
+    TextAlignment left
+}
+
+skinparam Note<<quit>> {
+
+    BackgroundColor #F9A825
+    BorderColor #F9A825
+}
+
+skinparam Sequence {
+    ActorBorderThickness 1
+    LifeLineBorderColor GREEN
+    ParticipantBorderThickness 0
+    Shadowing false
+
+
+    GroupBorderThickness 1
+    GroupBorderColor #1565C0
+    GroupBackgroundColor #BBDEFB
+}
+
+skinparam Activity {
+
+    StartColor #37A77C
+    EndColor #F6363F
+    AttributeFontColor white
+    AttributeFontSize  15
+    AttributeFontname  Droid Sans Mono
+
+    BackgroundColor #BBDEFB
+    BorderColor #90CAF9
+    BorderThickness 1
+
+    ArrowThickness 1
+
+
+    BarColor   #0D47A1
+
+
+    DiamondBackgroundColor   #FFE0B2
+    DiamondBorderColor    #FFCC80
+
+
+}
+
+skinparam Class {
+    BackgroundColor #E3F2FD
+    BorderColor #64B5F6
+    BorderThickness 1
+
+
+    StereotypeFontColor #589DF6
+    StereotypeFontSize 14
+}
+
+
+
+skinparam Interface {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+    FontSize 14
+
+
+    StereotypeFontColor #589DF6
+    StereotypeFontSize 1
+}
+
+
+
+skinparam Participant {
+    BackgroundColor #1565C0
+    BorderColor #1565C0
+    FontColor White
+    Shadowing false
+}
+
+skinparam Actor {
+    BackgroundColor #1565C0
+    BorderColor #1565C0
+    Shadowing false
+}
+
+skinparam UseCase {
+    BackgroundColor #64B5F6
+    BorderColor #64B5F6
+    Shadowing false
+    ArrowThickness 1
+    ArrowColor #1565C0
+
+    ActorBackgroundColor #1565C0
+    ActorBorderColor #0D47A1
+    ActorShadowing false
+ 
+}
+
+
+skinparam State {
+    FontSize           17
+
+    AttributeFontSize  14
+    
+    BackgroundColor    #BBDEFB
+    BorderColor        #90CAF9
+    StartColor #37A77C
+    EndColor #F6363F
+}
+
+skinparam Partition {
+    BorderColor #424242
+    BorderStyle dashed
+
+    BorderThickness 1
+}
+
+skinparam rectangle {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam database {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam Queue {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Agent {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Artifact {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Boundary {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Card {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Cloud {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Component {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Control {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Database {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Entity {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam File {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Folder {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+   
+}
+skinparam Frame {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Node {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+
+skinparam Package {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Stack {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Rectangle {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Storage {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam rectangle<<usercase>> {
+    Shadowing false
+    StereotypeFontSize 0
+    FontColor #424242
+    BorderColor #424242
+    BorderStyle dashed
+    BackgroundColor White
+}
+
+
+
+
+
+
+
+
+
+
+
+
+:用户: - -> (查看收集)
+:用户: - -> (文件更新实时推送)
+:用户: - -> (收集文件)
+[系统] - -> (转码文件)
+[系统] - -> (监控文件变更)
+[系统] - -> (记录文件使用)
+[系统] - -> (文件缓存)
+(转码文件) ..> (收集文件)
+(查看收集) ..> (文件缓存)
+(转码文件) ..> (文件缓存)
+(文件更新实时推送) ..> (监控文件变更)
+(转码文件) ..> (监控文件变更)
+(监控文件变更) ..> (记录文件使用): 跳过无人使用的文件
+@enduml
+
+PlantUML version 1.2020.02(Sun Mar 01 10:22:07 UTC 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 1.8.0_242-b08
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>
