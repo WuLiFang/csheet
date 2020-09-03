@@ -17,12 +17,8 @@
         header(
           class="flex justify-between opacity-75"
         )
-          span {{topLeftText}}
-          CGTeamworkTaskStatus(
-            class="rounded-sm px-2"
-            v-if="cgteamworkTaskStatus"
-            :value="cgteamworkTaskStatus"
-          )
+          FunctionalComponent(:render="renderTopLeft")
+          FunctionalComponent(:render="renderTopRight")
         caption(
           class="absolute text-center w-full bottom-0 text-gray-400 text-sm"
         ) {{value.title}}
@@ -37,6 +33,7 @@ import * as cast from 'cast-unknown';
 import { sortBy } from 'lodash';
 import CGTeamworkTaskStatus from './CGTeamworkTaskStatus.vue';
 import * as preference from '@/preference';
+import { CreateElement, VNode } from 'vue';
 
 @Component<CollectionOverviewCell>({
   components: { Presentation, CGTeamworkTaskStatus },
@@ -49,24 +46,24 @@ export default class CollectionOverviewCell extends Vue {
     return preference.get('cellOverlayVisible');
   }
 
-  get topLeftText(): string {
-    let ret = '';
+  get cgteamworkArtists(): string[] {
     const pipeline = this.value.metadata.find(
       i => i.k === 'cgteamwork.pipeline'
     )?.v;
+    if (!pipeline) {
+      return [];
+    }
     for (const { k, v } of this.value.metadata) {
       switch (k) {
         case 'cgteamwork.tasks':
-          ret += cast
+          return cast
             .array(JSON.parse(v))
             .map(cast.object)
             .filter(i => cast.string(i.pipeline) === pipeline)
-            .flatMap(i => cast.array(i.artists).map(cast.string))
-            .join(',');
-          break;
+            .flatMap(i => cast.array(i.artists).map(cast.string));
       }
     }
-    return ret;
+    return [];
   }
 
   get cgteamworkTaskStatus(): string {
@@ -100,6 +97,24 @@ export default class CollectionOverviewCell extends Vue {
       i => -new Date(i.raw.modTime).getTime(),
       i => i.id,
     ])[0]?.id;
+  }
+
+  renderTopLeft(h: CreateElement): VNode {
+    return h(
+      'div',
+      this.cgteamworkArtists.map(i =>
+        h('span', { staticClass: 'artist mr-1' }, i)
+      )
+    );
+  }
+
+  renderTopRight(h: CreateElement): VNode | undefined {
+    if (this.cgteamworkTaskStatus) {
+      return h(CGTeamworkTaskStatus, {
+        staticClass: 'rounded-sm px-2',
+        props: { value: this.cgteamworkTaskStatus },
+      });
+    }
   }
 }
 </script>

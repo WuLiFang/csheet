@@ -30,7 +30,7 @@
               class="inline-block w-full h-full"
               :value="i.status[stage]")
           td
-            span.mx-1(v-for="j in i.artists") {{j}}
+            span.artist.mx-1(v-for="j in i.artists") {{j}}
 </template>
 
 <script lang="ts">
