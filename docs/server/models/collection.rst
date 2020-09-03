@@ -1,9 +1,9 @@
-收集
+收藏
 ==========================
 
-收集(名词)是通过不同渠道获取到的色板单元。
+收藏是通过不同渠道获取到的色板单元。
 
-每个收集可有多个不同的呈现方式，例如视频方式和图片方式。
+每个收藏可有多个不同的展示方式，例如视频方式和图片方式。
 
 
 结构
@@ -11,7 +11,7 @@
 
 Origin string
   
-  收集来源
+  收集收藏
 
 Title string
 
@@ -19,7 +19,7 @@ Title string
 
 Metadata map[string]string
 
-  收集元数据，详见下方。
+  收藏元数据，详见下方。
 
 CollectTime time.Time
 
@@ -27,13 +27,13 @@ CollectTime time.Time
 
 PresentationIDs []string
 
-  收集提供的展示 ID。
+  收藏提供的展示 ID。
 
 
 元数据
 -----------------------
 
-记录收集的额外数据。
+记录收藏的额外数据。
 
 cgteamwork.tasks
 

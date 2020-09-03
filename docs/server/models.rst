@@ -6,7 +6,7 @@
 
   class "CollectedEvent\n收集事件" as CollectLogEvent
 
-  class "Collection\n收集" as Collection
+  class "Collection\n收藏" as Collection
 
   class "File\n文件" as File 
 
