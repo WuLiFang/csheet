@@ -62,12 +62,13 @@ export default class PresentationSelect extends Vue {
           [preference.get('presentationType'), 'video', 'image'].findIndex(
             j => j === i.type
           ),
+        i => -new Date(i.raw.modTime).getTime(),
         i => i.id,
       ])[0]?.id
     );
   }
 
-  select(v: string):void {
+  select(v: string): void {
     if (this.value === v) {
       return;
     }
@@ -77,6 +78,5 @@ export default class PresentationSelect extends Vue {
       preference.set('presentationType', match.type);
     }
   }
-
 }
 </script>
