@@ -7,7 +7,7 @@
       class="bg-gray-800 text-right text-gray-400 text-sm"
     )
       span.mx-1.text-gray-600 {{ RELEASE }}
-      span.mx-1.text-gray-600 &copy; 2018 北京吾立方数码科技有限公司 
+      span.mx-1.text-gray-600 &copy; 2018-2020 北京吾立方数码科技有限公司 
       a.mx-1(
         v-if="config && config.issueTrackerURL"
         :href="config.issueTrackerURL"
