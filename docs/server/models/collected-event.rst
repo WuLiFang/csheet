@@ -1,6 +1,17 @@
 收集事件
 ====================
 
+
+.. uml::
+
+  class "CollectedEvent\n收集事件" as CollectLogEvent {
+    OriginPrefix string
+    Time time.Time
+    UpdatedCount int
+  }
+
+
+
 记录收集请求。
 
 结构

@@ -1,6 +1,20 @@
 展示
 ====================
 
+
+.. uml::
+
+  class "Presentation\n展示" as Presentation {
+    Type Type
+    Raw string
+    Thumb string
+    ThumbSuccessTag string
+    ThumbErrorTag string
+    Regular string 
+    RegularSuccessTag string
+    RegularErrorTag string
+  }
+
 从收集的文件中获取到的展示方式。
 
 每个文件可对应任意个数的展示方式。

@@ -1,6 +1,14 @@
 文件
 =========================
 
+.. uml::
+
+  class "File\n文件" as File {
+    Path string
+    ModTime time.Time
+    Size int64
+  }
+
 记录文件元数据，更改数据不影响硬盘上的文件。
 
 结构

@@ -1,6 +1,18 @@
 收藏
 ==========================
 
+
+.. uml::
+
+  class "Collection\n收藏" as Collection {
+    Origin string
+    Title string
+    Metadata map[string]string
+    CollectTime time.Time
+    PresentationIDs []string
+  }
+
+
 收藏是通过不同渠道获取到的色板单元。
 
 每个收藏可有多个不同的展示方式，例如视频方式和图片方式。
