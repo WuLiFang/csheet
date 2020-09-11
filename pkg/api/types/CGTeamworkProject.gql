@@ -2,5 +2,5 @@ type CGTeamworkProject {
   database: String!
   name: String!
   codename: String!
-  status: Boolean!
+  status: String!
 }

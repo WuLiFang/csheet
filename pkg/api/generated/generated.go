@@ -43,7 +43,6 @@ type Config struct {
 }
 
 type ResolverRoot interface {
-	CGTeamworkProject() CGTeamworkProjectResolver
 	Collection() CollectionResolver
 	DiskFile() DiskFileResolver
 	Mutation() MutationResolver
@@ -152,9 +151,6 @@ type ComplexityRoot struct {
 	}
 }
 
-type CGTeamworkProjectResolver interface {
-	Status(ctx context.Context, obj *cgteamwork.Project) (bool, error)
-}
 type CollectionResolver interface {
 	Metadata(ctx context.Context, obj *collection.Collection) ([]model.StringEntry, error)
 }
@@ -779,7 +775,7 @@ extend type Query {
   database: String!
   name: String!
   codename: String!
-  status: Boolean!
+  status: String!
 }
 `, BuiltIn: false},
 	{Name: "pkg/api/types/CollectedEvent.gql", Input: `type CollectedEvent implements Node {
@@ -1275,13 +1271,13 @@ func (ec *executionContext) _CGTeamworkProject_status(ctx context.Context, field
 		Object:   "CGTeamworkProject",
 		Field:    field,
 		Args:     nil,
-		IsMethod: true,
+		IsMethod: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.CGTeamworkProject().Status(rctx, obj)
+		return obj.Status, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1293,9 +1289,9 @@ func (ec *executionContext) _CGTeamworkProject_status(ctx context.Context, field
 		}
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ClientConfig_sentryDSN(ctx context.Context, field graphql.CollectedField, obj *model.ClientConfig) (ret graphql.Marshaler) {
@@ -4217,32 +4213,23 @@ func (ec *executionContext) _CGTeamworkProject(ctx context.Context, sel ast.Sele
 		case "database":
 			out.Values[i] = ec._CGTeamworkProject_database(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "name":
 			out.Values[i] = ec._CGTeamworkProject_name(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "codename":
 			out.Values[i] = ec._CGTeamworkProject_codename(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "status":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._CGTeamworkProject_status(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
+			out.Values[i] = ec._CGTeamworkProject_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
