@@ -1,1 +1,1 @@
-{"__schema":{"types":[{"kind":"INTERFACE","name":"File","possibleTypes":[{"name":"DiskFile"},{"name":"WebFile"}]},{"kind":"INTERFACE","name":"Node","possibleTypes":[{"name":"CollectedEvent"},{"name":"Collection"},{"name":"Presentation"}]}]}}
+{"__schema":{"types":[{"kind":"INTERFACE","name":"Node","possibleTypes":[{"name":"CollectedEvent"},{"name":"Collection"},{"name":"Presentation"}]},{"kind":"INTERFACE","name":"File","possibleTypes":[{"name":"DiskFile"},{"name":"WebFile"}]}]}}

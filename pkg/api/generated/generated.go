@@ -126,7 +126,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		CgteamworkProjects func(childComplexity int) int
+		CgteamworkProjects func(childComplexity int, q *string) int
 		ClientConfig       func(childComplexity int, name string) int
 		Collections        func(childComplexity int, originPrefix *string, presentationCountGt *int, first *int, last *int, before *string, after *string) int
 		FolderOriginPrefix func(childComplexity int, root string) int
@@ -176,7 +176,7 @@ type PresentationResolver interface {
 	IsRegularTranscodeFailed(ctx context.Context, obj *presentation.Presentation) (*bool, error)
 }
 type QueryResolver interface {
-	CgteamworkProjects(ctx context.Context) ([]cgteamwork.Project, error)
+	CgteamworkProjects(ctx context.Context, q *string) ([]cgteamwork.Project, error)
 	ClientConfig(ctx context.Context, name string) (*model.ClientConfig, error)
 	Collections(ctx context.Context, originPrefix *string, presentationCountGt *int, first *int, last *int, before *string, after *string) (*model.CollectionConnection, error)
 	FolderOriginPrefix(ctx context.Context, root string) (string, error)
@@ -496,7 +496,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Query.CgteamworkProjects(childComplexity), true
+		args, err := ec.field_Query_cgteamworkProjects_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CgteamworkProjects(childComplexity, args["q"].(*string)), true
 
 	case "Query.clientConfig":
 		if e.complexity.Query.ClientConfig == nil {
@@ -723,7 +728,7 @@ var sources = []*ast.Source{
 }
 `, BuiltIn: false},
 	{Name: "pkg/api/queries/cgteamworkProjects.gql", Input: `extend type Query {
-  cgteamworkProjects: [CGTeamworkProject!]
+  cgteamworkProjects(q: String): [CGTeamworkProject!]
 }
 `, BuiltIn: false},
 	{Name: "pkg/api/queries/clientConfig.gql", Input: `type ClientConfig {
@@ -936,6 +941,20 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_cgteamworkProjects_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["q"]; ok {
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["q"] = arg0
 	return args, nil
 }
 
@@ -2460,9 +2479,16 @@ func (ec *executionContext) _Query_cgteamworkProjects(ctx context.Context, field
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_cgteamworkProjects_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().CgteamworkProjects(rctx)
+		return ec.resolvers.Query().CgteamworkProjects(rctx, args["q"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

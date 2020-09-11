@@ -10,8 +10,15 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 )
 
-func (r *queryResolver) CgteamworkProjects(ctx context.Context) ([]cgteamwork.Project, error) {
-	return cgteamwork.DefaultClient.ListProjects(ctx, cgteamwork.Filter{})
+func (r *queryResolver) CgteamworkProjects(ctx context.Context, q *string) ([]cgteamwork.Project, error) {
+	var filter cgteamwork.Filter
+
+	if q != nil {
+		filter = cgteamwork.F("project.code", "has", q).
+			Or(cgteamwork.F("project.full_name", "has", q)).
+			Or(cgteamwork.F("project.database", "has", q))
+	}
+	return cgteamwork.DefaultClient.ListProjects(ctx, filter)
 }
 
 // Query returns generated.QueryResolver implementation.
