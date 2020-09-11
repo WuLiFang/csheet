@@ -21,10 +21,9 @@ func (i *Project) UnmarshalCGTeamworkRecord(v map[string]string) error {
 	return nil
 }
 
-// ListActiveProject list all active projects.
-func (c *Client) ListActiveProject(ctx context.Context) ([]Project, error) {
-	s := c.Select("public", "project").
-		WithFilter(F("project.status", "=", "Active"))
+// ListProjects with filter.
+func (c *Client) ListProjects(ctx context.Context, filter Filter) ([]Project, error) {
+	s := c.Select("public", "project").WithFilter(filter)
 	rs, err := s.Values(
 		ctx,
 		"project.id",

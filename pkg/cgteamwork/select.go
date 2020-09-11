@@ -85,6 +85,9 @@ func (c *Client) Select(database, module string) Selection {
 
 // WithFilter set filter for selection.
 func (s Selection) WithFilter(v Filter) Selection {
+	if (v == Filter{}) {
+		return s
+	}
 	s.Filter = v
 	return s
 }

@@ -11,7 +11,7 @@ import (
 )
 
 func (r *queryResolver) CgteamworkProjects(ctx context.Context) ([]cgteamwork.Project, error) {
-	return cgteamwork.DefaultClient.ListActiveProject(ctx)
+	return cgteamwork.DefaultClient.ListProjects(ctx, cgteamwork.Filter{})
 }
 
 // Query returns generated.QueryResolver implementation.
