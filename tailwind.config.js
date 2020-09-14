@@ -18,6 +18,11 @@ module.exports = {
         '16': '4rem',
         '32': '8rem',
       },
+      maxHeight: {
+        '64': '16rem',
+        '96': '24rem',
+        '128': '32rem',
+      },
     },
     customForms: theme => ({
       default: {

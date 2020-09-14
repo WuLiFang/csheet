@@ -12,8 +12,13 @@ export interface cgteamworkProjects_cgteamworkProjects {
   database: string;
   name: string;
   codename: string;
+  status: string;
 }
 
 export interface cgteamworkProjects {
   cgteamworkProjects: cgteamworkProjects_cgteamworkProjects[] | null;
+}
+
+export interface cgteamworkProjectsVariables {
+  q?: string | null;
 }

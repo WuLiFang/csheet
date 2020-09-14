@@ -1,7 +1,8 @@
-query cgteamworkProjects {
-  cgteamworkProjects {
+query cgteamworkProjects($q: String) {
+  cgteamworkProjects(q: $q) {
     database
     name
     codename
+    status
   }
 }

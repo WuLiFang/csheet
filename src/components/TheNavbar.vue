@@ -18,6 +18,7 @@
     template(v-if="formData.mode == 'cgteamwork'")
       label(
         class="mr-1 lg:mr-2 inline-block"
+        @click="() => $refs.cgteamworkProjectSelect.focus()"
       ) 
         span(
           class="lg:mr-1"
@@ -25,7 +26,6 @@
         CGTeamworkProjectSelect(
           ref="cgteamworkProjectSelect"
           v-model="formData.cgteamwork.database"
-          class="form-select"
           @change="formData.cgteamwork.prefix = ''"
           required
         )
