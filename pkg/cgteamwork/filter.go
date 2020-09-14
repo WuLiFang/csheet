@@ -10,6 +10,11 @@ type Filter struct {
 	Chain      *Filter
 }
 
+// IsZero check whether every field is empty.
+func (f Filter) IsZero() bool {
+	return f == Filter{}
+}
+
 // Array convert filter to cgteamwork sign filter array format.
 func (f Filter) Array() []interface{} {
 	v := []interface{}{[3]interface{}{f.Left, f.Op, f.Right}}
@@ -36,6 +41,9 @@ func F(left, op string, right interface{}) Filter {
 
 // And create filter with `and` chain.
 func (f Filter) And(other Filter) Filter {
+	if f.IsZero() {
+		return other
+	}
 	if f.Chain != nil {
 		c := f.Chain.And(other)
 		f.Chain = &c
@@ -48,6 +56,9 @@ func (f Filter) And(other Filter) Filter {
 
 // Or create filter with `or` chain.
 func (f Filter) Or(other Filter) Filter {
+	if f.IsZero() {
+		return f
+	}
 	if f.Chain != nil {
 		c := f.Chain.Or(other)
 		f.Chain = &c

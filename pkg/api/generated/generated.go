@@ -125,7 +125,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		CgteamworkProjects func(childComplexity int, q *string) int
+		CgteamworkProjects func(childComplexity int, q *string, status []string) int
 		ClientConfig       func(childComplexity int, name string) int
 		Collections        func(childComplexity int, originPrefix *string, presentationCountGt *int, first *int, last *int, before *string, after *string) int
 		FolderOriginPrefix func(childComplexity int, root string) int
@@ -172,7 +172,7 @@ type PresentationResolver interface {
 	IsRegularTranscodeFailed(ctx context.Context, obj *presentation.Presentation) (*bool, error)
 }
 type QueryResolver interface {
-	CgteamworkProjects(ctx context.Context, q *string) ([]cgteamwork.Project, error)
+	CgteamworkProjects(ctx context.Context, q *string, status []string) ([]cgteamwork.Project, error)
 	ClientConfig(ctx context.Context, name string) (*model.ClientConfig, error)
 	Collections(ctx context.Context, originPrefix *string, presentationCountGt *int, first *int, last *int, before *string, after *string) (*model.CollectionConnection, error)
 	FolderOriginPrefix(ctx context.Context, root string) (string, error)
@@ -497,7 +497,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.CgteamworkProjects(childComplexity, args["q"].(*string)), true
+		return e.complexity.Query.CgteamworkProjects(childComplexity, args["q"].(*string), args["status"].([]string)), true
 
 	case "Query.clientConfig":
 		if e.complexity.Query.ClientConfig == nil {
@@ -724,7 +724,7 @@ var sources = []*ast.Source{
 }
 `, BuiltIn: false},
 	{Name: "pkg/api/queries/cgteamworkProjects.gql", Input: `extend type Query {
-  cgteamworkProjects(q: String): [CGTeamworkProject!]
+  cgteamworkProjects(q: String, status: [String!]): [CGTeamworkProject!]
 }
 `, BuiltIn: false},
 	{Name: "pkg/api/queries/clientConfig.gql", Input: `type ClientConfig {
@@ -951,6 +951,14 @@ func (ec *executionContext) field_Query_cgteamworkProjects_args(ctx context.Cont
 		}
 	}
 	args["q"] = arg0
+	var arg1 []string
+	if tmp, ok := rawArgs["status"]; ok {
+		arg1, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["status"] = arg1
 	return args, nil
 }
 
@@ -2484,7 +2492,7 @@ func (ec *executionContext) _Query_cgteamworkProjects(ctx context.Context, field
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().CgteamworkProjects(rctx, args["q"].(*string))
+		return ec.resolvers.Query().CgteamworkProjects(rctx, args["q"].(*string), args["status"].([]string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5843,6 +5851,41 @@ func (ec *executionContext) unmarshalOString2string(ctx context.Context, v inter
 
 func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
 	return graphql.MarshalString(v)
+}
+
+func (ec *executionContext) unmarshalOString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]string, len(vSlice))
+	for i := range vSlice {
+		res[i], err = ec.unmarshalNString2string(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalOString2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalNString2string(ctx, sel, v[i])
+	}
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
