@@ -64,7 +64,7 @@
                   }`
                   @mouseenter="highlight = i.database"
                   :value="i"
-                  @click="$_value = i.database"
+                  @click="$_value = i.database; blur()"
                 )
             div(
               v-if="projects.length === 0"
@@ -107,6 +107,17 @@ const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
   },
   mounted() {
     this.$watch(
+      () => this.value,
+      n => {
+        if (this.required && !n) {
+          this.$refs.validationInput.setCustomValidity('请选择项目');
+        } else {
+          this.$refs.validationInput.setCustomValidity('');
+        }
+      },
+      { immediate: true }
+    );
+    this.$watch(
       () => this.hasFocus,
       n => {
         if (n) {
@@ -115,19 +126,6 @@ const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
           this.scrollToHighlight();
         }
       }
-    );
-    this.$watch(
-      () => this.value,
-      n => {
-        this.highlight = n;
-        this.scrollToHighlight();
-        if (this.required && !n) {
-          this.$refs.validationInput.setCustomValidity('请选择项目');
-        } else {
-          this.$refs.validationInput.setCustomValidity('');
-        }
-      },
-      { immediate: true }
     );
     this.$watch(
       () => this.projects,
@@ -150,17 +148,20 @@ export default class CGTeamworkProjectSelect extends Mixins(
     option: HTMLDivElement[];
   };
 
-  projects: Project[] = [];
+  projects?: Project[];
   query = '';
   highlight = '';
   hasFocus = false;
   loadingCount = 0;
 
   get selected(): Project | undefined {
-    return this.projects.find(i => i.database === this.$_value);
+    return this.projects?.find(i => i.database === this.$_value);
   }
 
   selectHighlight(offset = 0): void {
+    if (!this.projects) {
+      return;
+    }
     let index = this.projects.findIndex(i => i.database === this.highlight);
     index += offset;
     if (index < 0) {
@@ -186,6 +187,8 @@ export default class CGTeamworkProjectSelect extends Mixins(
 
   focus(): void {
     this.hasFocus = true;
+    this.highlight = this.$_value;
+    this.scrollToHighlight();
   }
 
   blur(): void {
