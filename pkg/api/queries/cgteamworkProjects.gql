@@ -1,3 +1,8 @@
 extend type Query {
-  cgteamworkProjects(q: String, status: [String!]): [CGTeamworkProject!]
+  cgteamworkProjects(
+    q: String
+    name: [String!]
+    database: [String!]
+    status: [String!]
+  ): [CGTeamworkProject!]
 }

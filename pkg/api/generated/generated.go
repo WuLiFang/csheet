@@ -125,7 +125,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		CgteamworkProjects func(childComplexity int, q *string, status []string) int
+		CgteamworkProjects func(childComplexity int, q *string, name []string, database []string, status []string) int
 		ClientConfig       func(childComplexity int, name string) int
 		Collections        func(childComplexity int, originPrefix *string, presentationCountGt *int, first *int, last *int, before *string, after *string) int
 		FolderOriginPrefix func(childComplexity int, root string) int
@@ -172,7 +172,7 @@ type PresentationResolver interface {
 	IsRegularTranscodeFailed(ctx context.Context, obj *presentation.Presentation) (*bool, error)
 }
 type QueryResolver interface {
-	CgteamworkProjects(ctx context.Context, q *string, status []string) ([]cgteamwork.Project, error)
+	CgteamworkProjects(ctx context.Context, q *string, name []string, database []string, status []string) ([]cgteamwork.Project, error)
 	ClientConfig(ctx context.Context, name string) (*model.ClientConfig, error)
 	Collections(ctx context.Context, originPrefix *string, presentationCountGt *int, first *int, last *int, before *string, after *string) (*model.CollectionConnection, error)
 	FolderOriginPrefix(ctx context.Context, root string) (string, error)
@@ -497,7 +497,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.CgteamworkProjects(childComplexity, args["q"].(*string), args["status"].([]string)), true
+		return e.complexity.Query.CgteamworkProjects(childComplexity, args["q"].(*string), args["name"].([]string), args["database"].([]string), args["status"].([]string)), true
 
 	case "Query.clientConfig":
 		if e.complexity.Query.ClientConfig == nil {
@@ -724,7 +724,12 @@ var sources = []*ast.Source{
 }
 `, BuiltIn: false},
 	{Name: "pkg/api/queries/cgteamworkProjects.gql", Input: `extend type Query {
-  cgteamworkProjects(q: String, status: [String!]): [CGTeamworkProject!]
+  cgteamworkProjects(
+    q: String
+    name: [String!]
+    database: [String!]
+    status: [String!]
+  ): [CGTeamworkProject!]
 }
 `, BuiltIn: false},
 	{Name: "pkg/api/queries/clientConfig.gql", Input: `type ClientConfig {
@@ -952,13 +957,29 @@ func (ec *executionContext) field_Query_cgteamworkProjects_args(ctx context.Cont
 	}
 	args["q"] = arg0
 	var arg1 []string
-	if tmp, ok := rawArgs["status"]; ok {
+	if tmp, ok := rawArgs["name"]; ok {
 		arg1, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["status"] = arg1
+	args["name"] = arg1
+	var arg2 []string
+	if tmp, ok := rawArgs["database"]; ok {
+		arg2, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["database"] = arg2
+	var arg3 []string
+	if tmp, ok := rawArgs["status"]; ok {
+		arg3, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["status"] = arg3
 	return args, nil
 }
 
@@ -2492,7 +2513,7 @@ func (ec *executionContext) _Query_cgteamworkProjects(ctx context.Context, field
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().CgteamworkProjects(rctx, args["q"].(*string), args["status"].([]string))
+		return ec.resolvers.Query().CgteamworkProjects(rctx, args["q"].(*string), args["name"].([]string), args["database"].([]string), args["status"].([]string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
