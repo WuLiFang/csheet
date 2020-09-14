@@ -16,12 +16,12 @@
         option(value="cgteamwork") CGTeamwork
         option(value="folder") 文件夹
     template(v-if="formData.mode == 'cgteamwork'")
-      label(
+      span(
         class="mr-1 lg:mr-2 inline-block"
-        @click="() => $refs.cgteamworkProjectSelect.focus()"
       ) 
-        span(
+        label(
           class="lg:mr-1"
+          @click="() => $refs.cgteamworkProjectSelect.focus()"
         ) 项目
         CGTeamworkProjectSelect(
           ref="cgteamworkProjectSelect"

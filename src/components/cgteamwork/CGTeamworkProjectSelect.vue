@@ -37,39 +37,38 @@
       leave-class="transform opacity-100 scale-100"
       leave-to-class="transform opacity-0 scale-95"
     )
-      div(
+      ol(
         class="origin-top-right absolute right-0 mt-4 w-64 border border-gray-700"
         class="rounded shadow-lg bg-gray-800"
+        class="max-h-96 overflow-y-auto"
         aria-orientation="vertical"
         v-show="hasFocus"
         role="menu"
       )
-        ol(
-          class="max-h-96 overflow-y-auto"
+        template(
+          v-if="loadingCount > 0"
         )
-          template(
-            v-if="loadingCount > 0"
-          )
-            .text-center.m-2.text-gray-500
-              FaIcon.h-16(name="spinner" spin)
-          template(v-else)
-            template(v-for="i in projects")
-              li
-                Option(
-                  ref="option"
-                  :data-value="i.database"
-                  class="p-2"
-                  :class=`{
-                    "bg-blue-500": highlight == i.database,
-                  }`
-                  @mouseenter="highlight = i.database"
-                  :value="i"
-                  @click="$_value = i.database; blur()"
-                )
-            div(
-              v-if="projects.length === 0"
-              class="text-gray-500 text-center text-md p-2"
-            ) 无匹配项目 
+          .text-center.m-2.text-gray-500
+            FaIcon.h-16(name="spinner" spin)
+        template(v-else)
+          template(v-for="i in projects")
+            li
+              Option(
+                tabindex="-1"
+                ref="option"
+                :data-value="i.database"
+                class="p-2"
+                :class=`{
+                  "bg-blue-500": highlight == i.database,
+                }`
+                @mouseenter="highlight = i.database"
+                :value="i"
+                @click="$_value = i.database;"
+              )
+          div(
+            v-if="projects.length === 0"
+            class="text-gray-500 text-center text-md p-2"
+          ) 无匹配项目 
 </template>
 
 <script lang="ts">
@@ -114,18 +113,9 @@ const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
         } else {
           this.$refs.validationInput.setCustomValidity('');
         }
+        this.$emit('change');
       },
       { immediate: true }
-    );
-    this.$watch(
-      () => this.hasFocus,
-      n => {
-        if (n) {
-          this.$refs.queryInput.focus();
-          this.highlight = this.value;
-          this.scrollToHighlight();
-        }
-      }
     );
     this.$watch(
       () => this.projects,
@@ -158,6 +148,14 @@ export default class CGTeamworkProjectSelect extends Mixins(
     return this.projects?.find(i => i.database === this.$_value);
   }
 
+  scrollToHighlight(): void {
+    this.$refs.option
+      .find(i => i.dataset.value === this.highlight)
+      ?.scrollIntoView({
+        block: 'nearest',
+      });
+  }
+
   selectHighlight(offset = 0): void {
     if (!this.projects) {
       return;
@@ -175,20 +173,17 @@ export default class CGTeamworkProjectSelect extends Mixins(
       return;
     }
     this.$_value = v.database;
-  }
-
-  scrollToHighlight(): void {
-    this.$refs.option
-      .find(i => i.dataset.value === this.highlight)
-      ?.scrollIntoView({
-        block: 'nearest',
-      });
+    this.highlight = v.database;
+    this.scrollToHighlight();
   }
 
   focus(): void {
     this.hasFocus = true;
     this.highlight = this.$_value;
-    this.scrollToHighlight();
+    this.$nextTick(() => {
+      this.scrollToHighlight();
+      this.$refs.queryInput.focus();
+    });
   }
 
   blur(): void {
