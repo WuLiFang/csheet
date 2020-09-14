@@ -119,8 +119,11 @@ const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
     );
     this.$watch(
       () => this.projects,
-      () => {
-        this.selectHighlight();
+      (n, o) => {
+        if (o){
+          // skip initial load
+          this.selectHighlight();
+        }
       }
     );
   },
