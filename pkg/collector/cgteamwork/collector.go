@@ -123,7 +123,7 @@ func CollectWithClient(ctx context.Context, c *client.Client, o Options) (ret *c
 		WithModuleType("task").
 		WithFilter(
 			c.F("task.pipeline", "in", pipelines(o.Pipeline)).
-				And(c.F("shot.shot", "has", o.Prefix+"%")),
+				And(c.F("shot.shot", "start", o.Prefix)),
 		)
 
 	n, err := s.Count(ctx)
