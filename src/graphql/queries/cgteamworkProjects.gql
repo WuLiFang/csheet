@@ -1,5 +1,5 @@
-query cgteamworkProjects($q: String) {
-  cgteamworkProjects(q: $q) {
+query cgteamworkProjects($q: String, $status: [String!]) {
+  cgteamworkProjects(q: $q, status: $status) {
     database
     name
     codename

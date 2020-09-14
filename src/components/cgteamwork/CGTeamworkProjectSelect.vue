@@ -91,7 +91,10 @@ const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
     projects: {
       query: require('@/graphql/queries/cgteamworkProjects.gql'),
       variables(): cgteamworkProjectsVariables {
-        return { q: this.query || undefined };
+        return {
+          q: this.query || undefined,
+          status: this.query ? undefined : ['Active'],
+        };
       },
       update(v: cgteamworkProjects): Project[] {
         return orderBy(

@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface cgteamworkProjects_cgteamworkProjects {
-  __typename: "CGTeamworkProject";
+  __typename: 'CGTeamworkProject';
   database: string;
   name: string;
   codename: string;
@@ -21,4 +21,5 @@ export interface cgteamworkProjects {
 
 export interface cgteamworkProjectsVariables {
   q?: string | null;
+  status?: string[] | null;
 }
