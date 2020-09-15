@@ -35,7 +35,16 @@ func (r *queryResolver) CgteamworkProjects(ctx context.Context, q *string, name 
 		filter = filter.And(cgteamwork.F("project.code", "has", q)).
 			Or(filter.And(cgteamwork.F("project.full_name", "has", q)))
 	}
-	return cgteamwork.DefaultClient.ListProjects(ctx, filter)
+	return cgteamwork.DefaultClient.ListProjects(
+		ctx,
+		func(s cgteamwork.Selection) (ret cgteamwork.Selection) {
+			ret = s.WithFilter(filter)
+			if q != nil {
+				ret = ret.WithLimit(20)
+			}
+			return
+		},
+	)
 }
 
 // Query returns generated.QueryResolver implementation.
