@@ -32,8 +32,7 @@ func (r *presentationResolver) Thumb(ctx context.Context, obj *presentation.Pres
 		return nil, nil
 	}
 	return &model.WebFile{
-		Path: obj.Thumb,
-		URL:  "/files/" + obj.Thumb,
+		URL: "/files/" + obj.Thumb,
 	}, nil
 }
 
@@ -58,8 +57,7 @@ func (r *presentationResolver) Regular(ctx context.Context, obj *presentation.Pr
 		return nil, nil
 	}
 	return &model.WebFile{
-		Path: obj.Regular,
-		URL:  "/files/" + obj.Regular,
+		URL: "/files/" + obj.Regular,
 	}, nil
 }
 

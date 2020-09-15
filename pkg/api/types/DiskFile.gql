@@ -1,4 +1,4 @@
-type DiskFile implements File {
+type DiskFile {
   path(format: String): String!
   modTime: Time
   size: Int

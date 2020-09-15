@@ -1,6 +1,3 @@
-type WebFile implements File {
+type WebFile {
   url: String!
-  path(format: String): String! @deprecated(reason: "use url instead")
-  modTime: Time @deprecated(reason: "remove after 2020-05-30")
-  size: Int @deprecated(reason: "remove after 2020-05-30")
 }

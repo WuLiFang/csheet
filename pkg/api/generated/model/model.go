@@ -3,16 +3,8 @@
 package model
 
 import (
-	"time"
-
 	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
 )
-
-// DEPRECATED: will be remove after 2020-05-30.
-// Temperary interface for backward compability.
-type File interface {
-	IsFile()
-}
 
 type Node interface {
 	IsNode()
@@ -49,10 +41,5 @@ type StringEntry struct {
 }
 
 type WebFile struct {
-	URL     string     `json:"url"`
-	Path    string     `json:"path"`
-	ModTime *time.Time `json:"modTime"`
-	Size    *int       `json:"size"`
+	URL string `json:"url"`
 }
-
-func (WebFile) IsFile() {}

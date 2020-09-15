@@ -142,10 +142,7 @@ type ComplexityRoot struct {
 	}
 
 	WebFile struct {
-		ModTime func(childComplexity int) int
-		Path    func(childComplexity int, format *string) int
-		Size    func(childComplexity int) int
-		URL     func(childComplexity int) int
+		URL func(childComplexity int) int
 	}
 }
 
@@ -575,32 +572,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Subscription.PresentationUpdated(childComplexity, args["id"].([]string)), true
 
-	case "WebFile.modTime":
-		if e.complexity.WebFile.ModTime == nil {
-			break
-		}
-
-		return e.complexity.WebFile.ModTime(childComplexity), true
-
-	case "WebFile.path":
-		if e.complexity.WebFile.Path == nil {
-			break
-		}
-
-		args, err := ec.field_WebFile_path_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.WebFile.Path(childComplexity, args["format"].(*string)), true
-
-	case "WebFile.size":
-		if e.complexity.WebFile.Size == nil {
-			break
-		}
-
-		return e.complexity.WebFile.Size(childComplexity), true
-
 	case "WebFile.url":
 		if e.complexity.WebFile.URL == nil {
 			break
@@ -783,17 +754,7 @@ type CollectionConnection {
   pageInfo: PageInfo!
 }
 `, BuiltIn: false},
-	{Name: "pkg/api/types/DiskFile.gql", Input: `type DiskFile implements File {
-  path(format: String): String!
-  modTime: Time
-  size: Int
-}
-`, BuiltIn: false},
-	{Name: "pkg/api/types/File.gql", Input: `"""
-DEPRECATED: will be remove after 2020-05-30.
-Temperary interface for backward compability.
-"""
-interface File {
+	{Name: "pkg/api/types/DiskFile.gql", Input: `type DiskFile {
   path(format: String): String!
   modTime: Time
   size: Int
@@ -832,11 +793,8 @@ interface File {
 `, BuiltIn: false},
 	{Name: "pkg/api/types/Time.gql", Input: `scalar Time
 `, BuiltIn: false},
-	{Name: "pkg/api/types/WebFile.gql", Input: `type WebFile implements File {
+	{Name: "pkg/api/types/WebFile.gql", Input: `type WebFile {
   url: String!
-  path(format: String): String! @deprecated(reason: "use url instead")
-  modTime: Time @deprecated(reason: "remove after 2020-05-30")
-  size: Int @deprecated(reason: "remove after 2020-05-30")
 }
 `, BuiltIn: false},
 }
@@ -1093,20 +1051,6 @@ func (ec *executionContext) field_Subscription_presentationUpdated_args(ctx cont
 		}
 	}
 	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_WebFile_path_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["format"]; ok {
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["format"] = arg0
 	return args, nil
 }
 
@@ -2883,109 +2827,6 @@ func (ec *executionContext) _WebFile_url(ctx context.Context, field graphql.Coll
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _WebFile_path(ctx context.Context, field graphql.CollectedField, obj *model.WebFile) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:   "WebFile",
-		Field:    field,
-		Args:     nil,
-		IsMethod: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_WebFile_path_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Path, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _WebFile_modTime(ctx context.Context, field graphql.CollectedField, obj *model.WebFile) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:   "WebFile",
-		Field:    field,
-		Args:     nil,
-		IsMethod: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ModTime, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _WebFile_size(ctx context.Context, field graphql.CollectedField, obj *model.WebFile) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:   "WebFile",
-		Field:    field,
-		Args:     nil,
-		IsMethod: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Size, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*int)
-	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4045,29 +3886,6 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    ************************** interface.gotpl ***************************
 
-func (ec *executionContext) _File(ctx context.Context, sel ast.SelectionSet, obj model.File) graphql.Marshaler {
-	switch obj := (obj).(type) {
-	case nil:
-		return graphql.Null
-	case file.File:
-		return ec._DiskFile(ctx, sel, &obj)
-	case *file.File:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._DiskFile(ctx, sel, obj)
-	case model.WebFile:
-		return ec._WebFile(ctx, sel, &obj)
-	case *model.WebFile:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._WebFile(ctx, sel, obj)
-	default:
-		panic(fmt.Errorf("unexpected type %T", obj))
-	}
-}
-
 func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj model.Node) graphql.Marshaler {
 	switch obj := (obj).(type) {
 	case nil:
@@ -4321,7 +4139,7 @@ func (ec *executionContext) _CollectionEdge(ctx context.Context, sel ast.Selecti
 	return out
 }
 
-var diskFileImplementors = []string{"DiskFile", "File"}
+var diskFileImplementors = []string{"DiskFile"}
 
 func (ec *executionContext) _DiskFile(ctx context.Context, sel ast.SelectionSet, obj *file.File) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, diskFileImplementors)
@@ -4699,7 +4517,7 @@ func (ec *executionContext) _Subscription(ctx context.Context, sel ast.Selection
 	}
 }
 
-var webFileImplementors = []string{"WebFile", "File"}
+var webFileImplementors = []string{"WebFile"}
 
 func (ec *executionContext) _WebFile(ctx context.Context, sel ast.SelectionSet, obj *model.WebFile) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, webFileImplementors)
@@ -4715,15 +4533,6 @@ func (ec *executionContext) _WebFile(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "path":
-			out.Values[i] = ec._WebFile_path(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "modTime":
-			out.Values[i] = ec._WebFile_modTime(ctx, field, obj)
-		case "size":
-			out.Values[i] = ec._WebFile_size(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5790,21 +5599,6 @@ func (ec *executionContext) unmarshalOTime2timeᚐTime(ctx context.Context, v in
 
 func (ec *executionContext) marshalOTime2timeᚐTime(ctx context.Context, sel ast.SelectionSet, v time.Time) graphql.Marshaler {
 	return graphql.MarshalTime(v)
-}
-
-func (ec *executionContext) unmarshalOTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalOTime2timeᚐTime(ctx, v)
-	return &res, err
-}
-
-func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel ast.SelectionSet, v *time.Time) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec.marshalOTime2timeᚐTime(ctx, sel, *v)
 }
 
 func (ec *executionContext) marshalOWebFile2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx context.Context, sel ast.SelectionSet, v model.WebFile) graphql.Marshaler {
