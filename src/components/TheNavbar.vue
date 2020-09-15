@@ -138,12 +138,12 @@ function getResultMessage({
   updatedCount?: number;
 }): string {
   if (createdCount && updatedCount) {
-    return `创建了 ${createdCount} 个并更新了 ${updatedCount} 个收集`;
+    return `创建了 ${createdCount} 个并更新了 ${updatedCount} 个收藏`;
   }
   if (createdCount) {
-    return `创建了 ${createdCount} 个收集`;
+    return `创建了 ${createdCount} 个收藏`;
   }
-  return `更新了 ${updatedCount} 个收集`;
+  return `更新了 ${updatedCount} 个收藏`;
 }
 
 @Component<TheNavbar>({
