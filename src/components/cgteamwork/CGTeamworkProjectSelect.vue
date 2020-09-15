@@ -27,8 +27,11 @@
         class="form-select cursor-pointer w-full"
         @focus="focus()"
       ) 
-        span {{ selected ? selected.name : '' }}
-        .text-gray-500(v-if="!selected") 请选择项目
+        | &#8203;
+        span.absolute.inset-0.flex.items-center.justify-center(v-if="loadingCount > 0") 
+          FaIcon.text-gray-500(name="spinner" spin)
+        span.text-gray-500(v-else-if="!selected") 请选择项目
+        span(v-else) {{ selected.name }}
     transition(
       enter-active-class="transition ease-out duration-100"
       enter-class="transform opacity-0 scale-95"
@@ -45,30 +48,28 @@
         v-show="hasFocus"
         role="menu"
       )
+        template(v-for="i in projects")
+          li
+            Option(
+              tabindex="-1"
+              ref="option"
+              :data-value="i.database"
+              class="p-2"
+              :class=`{
+                "bg-blue-500": highlight == i.database,
+              }`
+              @mouseenter="highlight = i.database"
+              :value="i"
+              @click="$_value = i.database;"
+            )
         template(
-          v-if="loadingCount > 0"
+          v-if="projects.length === 0"
         )
-          .text-center.m-2.text-gray-500
-            FaIcon.h-16(name="spinner" spin)
-        template(v-else)
-          template(v-for="i in projects")
-            li
-              Option(
-                tabindex="-1"
-                ref="option"
-                :data-value="i.database"
-                class="p-2"
-                :class=`{
-                  "bg-blue-500": highlight == i.database,
-                }`
-                @mouseenter="highlight = i.database"
-                :value="i"
-                @click="$_value = i.database;"
-              )
-          div(
-            v-if="projects.length === 0"
-            class="text-gray-500 text-center text-md p-2"
-          ) 无匹配项目 
+          .text-gray-500.text-center.text-md.p-2
+            template(v-if="loadingCount > 0") 
+              FaIcon.h-16(name="spinner" spin)
+            template(v-else)
+              span 无匹配项目 
 </template>
 
 <script lang="ts">
@@ -79,7 +80,7 @@ import {
   cgteamworkProjects_cgteamworkProjects as Project,
   cgteamworkProjectsVariables,
 } from '../../graphql/types/cgteamworkProjects';
-import { orderBy } from 'lodash';
+import { orderBy, uniqBy } from 'lodash';
 import Option from './CGTeamworkProjectSelectOption.vue';
 
 const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
@@ -87,7 +88,7 @@ const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
 @Component<CGTeamworkProjectSelect>({
   components: { Option },
   apollo: {
-    projects: {
+    matchedProjects: {
       query: require('@/graphql/queries/cgteamworkProjects.gql'),
       variables(): cgteamworkProjectsVariables {
         return {
@@ -103,28 +104,35 @@ const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
         );
       },
     },
+    selectedProjects: {
+      query: require('@/graphql/queries/cgteamworkProjects.gql'),
+      variables(): cgteamworkProjectsVariables {
+        return {
+          database: [this.$_value],
+        };
+      },
+      update(v: cgteamworkProjects): Project[] {
+        return v.cgteamworkProjects ?? [];
+      },
+      skip(): boolean {
+        return !this.$_value;
+      },
+    },
   },
   mounted() {
     this.$watch(
       () => this.value,
-      n => {
+      (n, o) => {
         if (this.required && !n) {
           this.$refs.validationInput.setCustomValidity('请选择项目');
         } else {
           this.$refs.validationInput.setCustomValidity('');
         }
-        this.$emit('change');
+        if (o) {
+          this.$emit('change');
+        }
       },
       { immediate: true }
-    );
-    this.$watch(
-      () => this.projects,
-      (n, o) => {
-        if (o){
-          // skip initial load
-          this.selectHighlight();
-        }
-      }
     );
   },
 })
@@ -141,7 +149,23 @@ export default class CGTeamworkProjectSelect extends Mixins(
     option: HTMLDivElement[];
   };
 
-  projects?: Project[];
+  matchedProjects?: Project[];
+  selectedProjects?: Project[];
+
+  get projects(): Project[] {
+    return orderBy(
+      uniqBy(
+        [
+          ...(this.query ? [] : this.selectedProjects ?? []),
+          ...(this.matchedProjects ?? []),
+        ],
+        i => i.database
+      ),
+      [i => statusOrder.indexOf(i.status.toUpperCase()), i => i.name],
+      ['desc', 'asc']
+    );
+  }
+
   query = '';
   highlight = '';
   hasFocus = false;
