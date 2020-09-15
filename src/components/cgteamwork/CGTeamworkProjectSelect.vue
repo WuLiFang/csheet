@@ -3,7 +3,7 @@
     class="relative w-48 text-left"
   )
     input(
-      tabindex="0"
+      tabindex="-1"
       class="opacity-0 absolute inset-0 pointer-events-none"
       ref="validationInput"
       @invalid="focus()"
