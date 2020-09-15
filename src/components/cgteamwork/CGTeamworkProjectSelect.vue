@@ -28,10 +28,10 @@
         @focus="focus()"
       ) 
         span &#8203;
-        span.absolute.inset-0.flex.items-center.justify-center(v-if="loadingCount > 0") 
+        span(v-if="selected") {{ selected.name }}
+        span.absolute.inset-0.flex.items-center.justify-center(v-else-if="loadingCount > 0") 
           FaIcon.text-gray-500(name="spinner" spin)
-        span.text-gray-500(v-else-if="!selected") 请选择项目
-        span(v-else) {{ selected.name }}
+        span.text-gray-500(v-else) 请选择项目
     transition(
       enter-active-class="transition ease-out duration-100"
       enter-class="transform opacity-0 scale-95"
