@@ -38,13 +38,22 @@ func (s Selection) Count(ctx context.Context) (int, error) {
 	return int(data.Int()), err
 }
 
+func stringSliceContains(source []string, target string) bool {
+	for _, i := range source {
+		if i == target {
+			return true
+		}
+	}
+	return false
+}
+
 // Values retrieves value from server.
 func (s Selection) Values(ctx context.Context, names ...string) (ResultSet, error) {
 	err := s.c.RefreshTokenOndemand(ctx)
 	if err != nil {
 		return ResultSet{}, err
 	}
-	if s.IDField != "" {
+	if s.IDField != "" && !stringSliceContains(names, s.IDField) {
 		names = append(names, s.IDField)
 	}
 	var limit = "5000"
