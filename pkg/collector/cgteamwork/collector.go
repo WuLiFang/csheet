@@ -117,6 +117,18 @@ func CollectWithClient(ctx context.Context, c *client.Client, o Options) (ret *c
 	var logger = logging.For(ctx).Logger("collector.cgteamwork").Sugar()
 
 	logger.Infow("collect", "options", o)
+	var started = time.Now()
+	defer func() {
+		if err != nil {
+			logger.Errorw("collect failed", "error", err)
+			return
+		}
+		logger.Infow("collected",
+			"result", ret,
+			"elapsed", time.Since(started),
+		)
+	}()
+
 	ret = new(collected.Event)
 	ret.OriginPrefix = collection.Origin("cgteamwork", o.Database, o.Pipeline, o.Prefix)
 	s := c.Select(o.Database, "shot").
