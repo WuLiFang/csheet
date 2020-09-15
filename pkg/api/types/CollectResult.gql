@@ -1,0 +1,5 @@
+type CollectResult {
+  originPrefix: String!
+  createdCount: Int!
+  updatedCount: Int!
+}

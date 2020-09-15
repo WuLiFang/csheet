@@ -54,9 +54,9 @@ models:
       - github.com/99designs/gqlgen/graphql.Int
       - github.com/99designs/gqlgen/graphql.Int64
       - github.com/99designs/gqlgen/graphql.Int32
-  CollectedEvent:
+  CollectResult:
     model:
-      - github.com/WuLiFang/csheet/v6/pkg/model/event/collected.Event
+      - github.com/WuLiFang/csheet/v6/pkg/collector/base.CollectResult
   Collection:
     model:
       - github.com/WuLiFang/csheet/v6/pkg/model/collection.Collection

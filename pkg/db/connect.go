@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
+	"github.com/WuLiFang/csheet/v6/pkg/db/migrations"
 	"github.com/dgraph-io/badger/v2"
 	"github.com/dgraph-io/badger/v2/options"
 	"go.uber.org/zap"
@@ -46,8 +47,11 @@ func Open(path string) (err error) {
 			WithTruncate(true).
 			WithLogger(zapLoggerAdapter{logging.Logger("db").Sugar()}),
 	)
-
-	return err
+	if err != nil {
+		return
+	}
+	err = migrations.Migrate(db)
+	return
 }
 
 // OpenInMemory open database in memory

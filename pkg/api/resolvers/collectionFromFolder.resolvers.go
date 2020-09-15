@@ -7,13 +7,13 @@ import (
 	"context"
 	"time"
 
+	"github.com/WuLiFang/csheet/v6/pkg/collector/base"
 	"github.com/WuLiFang/csheet/v6/pkg/collector/folder"
-	"github.com/WuLiFang/csheet/v6/pkg/model/event/collected"
 )
 
-func (r *mutationResolver) CollectFromFolder(ctx context.Context, root string) (*collected.Event, error) {
+func (r *mutationResolver) CollectFromFolder(ctx context.Context, root string) (*base.CollectResult, error) {
 	ctx, cancel := context.WithTimeout(ctx, 60*time.Second)
 	defer cancel()
 	v, err := folder.Collect(ctx, root)
-	return v, formatError(err)
+	return &v, formatError(err)
 }

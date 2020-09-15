@@ -4,12 +4,6 @@
 
 .. uml::
 
-  class "CollectedEvent\n收集事件" as CollectLogEvent {
-    OriginPrefix string
-    Time time.Time
-    UpdatedCount int
-  }
-
   class "Collection\n收藏" as Collection {
     Origin string
     Title string
@@ -36,7 +30,6 @@
   }
   Presentation "1" *--> "*" File
   Collection "*" o--> "*" Presentation
-
 
 
 .. toctree::

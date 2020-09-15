@@ -8,9 +8,8 @@ mutation collectFromCGTeamwork(
     prefix: $prefix
     pipeline: $pipeline
   ) {
-    id
     originPrefix
-    time
     updatedCount
+    createdCount
   }
 }

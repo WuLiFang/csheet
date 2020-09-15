@@ -7,6 +7,7 @@ import (
 	"context"
 	"strings"
 
+	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
 	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
 )
 
@@ -39,3 +40,8 @@ func (r *subscriptionResolver) CollectionUpdated(ctx context.Context, id []strin
 	}, 8)
 	return ret, nil
 }
+
+// Subscription returns generated.SubscriptionResolver implementation.
+func (r *Resolver) Subscription() generated.SubscriptionResolver { return &subscriptionResolver{r} }
+
+type subscriptionResolver struct{ *Resolver }

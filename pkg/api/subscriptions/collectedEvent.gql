@@ -1,3 +1,0 @@
-extend type Subscription {
-  collectedEvent(originPrefix: String!): CollectedEvent!
-}

@@ -8,18 +8,19 @@ import (
 	"time"
 
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
+	"github.com/WuLiFang/csheet/v6/pkg/collector/base"
 	"github.com/WuLiFang/csheet/v6/pkg/collector/cgteamwork"
-	"github.com/WuLiFang/csheet/v6/pkg/model/event/collected"
 )
 
-func (r *mutationResolver) CollectFromCGTeamwork(ctx context.Context, database string, prefix string, pipeline string) (*collected.Event, error) {
+func (r *mutationResolver) CollectFromCGTeamwork(ctx context.Context, database string, prefix string, pipeline string) (*base.CollectResult, error) {
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
-	return cgteamwork.Collect(ctx, cgteamwork.Options{
+	v, err := cgteamwork.Collect(ctx, cgteamwork.Options{
 		Database: database,
 		Pipeline: pipeline,
 		Prefix:   prefix,
 	})
+	return &v, formatError(err)
 }
 
 // Mutation returns generated.MutationResolver implementation.

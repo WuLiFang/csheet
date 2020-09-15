@@ -10,9 +10,9 @@ import (
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	client "github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
+	"github.com/WuLiFang/csheet/v6/pkg/collector/base"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
-	"github.com/WuLiFang/csheet/v6/pkg/model/event/collected"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
 	"github.com/WuLiFang/csheet/v6/pkg/unipath"
 	"github.com/tidwall/gjson"
@@ -27,7 +27,12 @@ type Options struct {
 	Pipeline string
 }
 
-func collectionFromTask(ctx context.Context, m map[string]collection.Collection, task client.Task, o Options) (err error) {
+func collectionFromTask(
+	ctx context.Context,
+	m map[string]collection.Collection,
+	task client.Task,
+	o Options,
+) (created bool, err error) {
 	var logger = logging.For(ctx).Logger("collector.cgteamwork").Sugar()
 
 	ret, ok := m[task.Shot.Title]
@@ -36,6 +41,7 @@ func collectionFromTask(ctx context.Context, m map[string]collection.Collection,
 		err = ret.Load()
 		if err == db.ErrKeyNotFound {
 			err = nil
+			created = true
 		}
 		if err != nil {
 			return
@@ -113,7 +119,7 @@ func collectionFromTask(ctx context.Context, m map[string]collection.Collection,
 }
 
 // CollectWithClient gallery with given client.
-func CollectWithClient(ctx context.Context, c *client.Client, o Options) (ret *collected.Event, err error) {
+func CollectWithClient(ctx context.Context, c *client.Client, o Options) (ret base.CollectResult, err error) {
 	var logger = logging.For(ctx).Logger("collector.cgteamwork").Sugar()
 
 	logger.Infow("collect", "options", o)
@@ -129,7 +135,6 @@ func CollectWithClient(ctx context.Context, c *client.Client, o Options) (ret *c
 		)
 	}()
 
-	ret = new(collected.Event)
 	ret.OriginPrefix = collection.Origin("cgteamwork", o.Database, o.Pipeline, o.Prefix)
 	s := c.Select(o.Database, "shot").
 		WithModuleType("task").
@@ -166,9 +171,15 @@ func CollectWithClient(ctx context.Context, c *client.Client, o Options) (ret *c
 
 	colM := map[string]collection.Collection{}
 	for _, v := range tasks {
-		err = collectionFromTask(ctx, colM, v, o)
+		var created bool
+		created, err = collectionFromTask(ctx, colM, v, o)
 		if err != nil {
 			return
+		}
+		// not created not means updated
+		// because we reuse previous created collection for same shot
+		if created {
+			ret.CreatedCount++
 		}
 	}
 	for _, col := range colM {
@@ -177,12 +188,11 @@ func CollectWithClient(ctx context.Context, c *client.Client, o Options) (ret *c
 			return
 		}
 	}
-	ret.UpdatedCount = len(colM)
-	err = ret.Save()
+	ret.UpdatedCount = len(colM) - ret.CreatedCount
 	return
 }
 
 // Collect collections with default client.
-func Collect(ctx context.Context, o Options) (*collected.Event, error) {
+func Collect(ctx context.Context, o Options) (base.CollectResult, error) {
 	return CollectWithClient(ctx, client.DefaultClient, o)
 }

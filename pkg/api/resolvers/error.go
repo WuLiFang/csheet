@@ -6,6 +6,7 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 
+// TODO: use https://gqlgen.com/reference/errors/#hooks instead
 func formatError(err error) error {
 	if err, ok := err.(*gqlerror.Error); ok {
 		return err

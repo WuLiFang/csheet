@@ -9,9 +9,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/WuLiFang/csheet/v6/pkg/collector/base"
+	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/filestore"
 	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
-	"github.com/WuLiFang/csheet/v6/pkg/model/event/collected"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
 	"github.com/WuLiFang/csheet/v6/pkg/unipath"
 )
@@ -26,13 +27,12 @@ func validRoot(p string) error {
 }
 
 // Collect from folder
-func Collect(ctx context.Context, root string) (ret *collected.Event, err error) {
+func Collect(ctx context.Context, root string) (ret base.CollectResult, err error) {
 	root = unipath.Auto(root)
 	if !filepath.IsAbs(root) {
 		err = errors.New("root must be a absolute path")
 		return
 	}
-	ret = new(collected.Event)
 	ret.OriginPrefix = collection.Origin("folder", root)
 	err = walk(root, func(i string, info os.FileInfo, err error) error {
 		select {
@@ -63,17 +63,25 @@ func Collect(ctx context.Context, root string) (ret *collected.Event, err error)
 		title = title[:len(title)-len(ext)]
 
 		var c = new(collection.Collection)
-		c.Title = title
 		c.Origin = collection.Origin("folder", unipath.Auto(i))
+		err = c.Load()
+		if err == nil {
+			ret.UpdatedCount++
+		} else if errors.Is(err, db.ErrKeyNotFound) {
+			ret.CreatedCount++
+			err = nil
+		}
+		if err != nil {
+			return err
+		}
+		c.Title = title
 		c.PresentationIDs = append(c.PresentationIDs, p.ID())
 		c.CollectTime = time.Now()
-		ret.UpdatedCount++
 
 		return c.Save()
 	})
 	if err != nil {
 		return
 	}
-	err = ret.Save()
 	return
 }

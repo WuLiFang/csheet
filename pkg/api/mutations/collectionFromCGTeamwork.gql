@@ -3,5 +3,5 @@ extend type Mutation {
     database: String!
     prefix: String!
     pipeline: String!
-  ): CollectedEvent!
+  ): CollectResult!
 }

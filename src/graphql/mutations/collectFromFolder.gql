@@ -1,8 +1,7 @@
 mutation collectFromFolder($root: String!) {
   collectFromFolder(root: $root) {
-    id
     originPrefix
-    time
     updatedCount
+    createdCount
   }
 }

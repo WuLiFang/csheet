@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface presentationNode_node_Collection {
-  __typename: "Collection" | "CollectedEvent";
+  __typename: "Collection";
 }
 
 export interface presentationNode_node_Presentation_raw {

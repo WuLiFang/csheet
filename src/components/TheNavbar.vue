@@ -130,6 +130,22 @@ import { db } from '../db';
 import { CGTeamworkOriginPrefix, FolderOriginPrefix } from '../client';
 import { uniq } from 'lodash';
 
+function getResultMessage({
+  createdCount,
+  updatedCount,
+}: {
+  createdCount?: number;
+  updatedCount?: number;
+}): string {
+  if (createdCount && updatedCount) {
+    return `创建了 ${createdCount} 个并更新了 ${updatedCount} 个收集`;
+  }
+  if (createdCount) {
+    return `创建了 ${createdCount} 个收集`;
+  }
+  return `更新了 ${updatedCount} 个收集`;
+}
+
 @Component<TheNavbar>({
   components: {
     CGTeamworkProjectSelect,
@@ -308,7 +324,7 @@ export default class TheNavbar extends Vue {
       this.$emit('collect');
       this.$root.$emit(
         'app-message',
-        `更新了 ${data?.collectFromCGTeamwork?.updatedCount} 个收藏`
+        getResultMessage(data?.collectFromCGTeamwork ?? {}),
       );
     } finally {
       this.loadingCount -= 1;
@@ -328,7 +344,7 @@ export default class TheNavbar extends Vue {
       this.$emit('collect');
       this.$root.$emit(
         'app-message',
-        `更新了 ${data?.collectFromFolder?.updatedCount} 个收藏`
+        getResultMessage(data?.collectFromFolder ?? {}),
       );
     } finally {
       this.loadingCount -= 1;

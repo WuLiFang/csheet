@@ -17,8 +17,8 @@ import (
 	"github.com/99designs/gqlgen/graphql/introspection"
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
+	"github.com/WuLiFang/csheet/v6/pkg/collector/base"
 	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
-	"github.com/WuLiFang/csheet/v6/pkg/model/event/collected"
 	"github.com/WuLiFang/csheet/v6/pkg/model/file"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
 	gqlparser "github.com/vektah/gqlparser/v2"
@@ -67,10 +67,9 @@ type ComplexityRoot struct {
 		SentryDsn       func(childComplexity int) int
 	}
 
-	CollectedEvent struct {
-		ID           func(childComplexity int) int
+	CollectResult struct {
+		CreatedCount func(childComplexity int) int
 		OriginPrefix func(childComplexity int) int
-		Time         func(childComplexity int) int
 		UpdatedCount func(childComplexity int) int
 	}
 
@@ -138,7 +137,6 @@ type ComplexityRoot struct {
 	}
 
 	Subscription struct {
-		CollectedEvent      func(childComplexity int, originPrefix string) int
 		CollectionUpdated   func(childComplexity int, id []string, originPrefix *string, presentationCountGt *int) int
 		PresentationUpdated func(childComplexity int, id []string) int
 	}
@@ -158,8 +156,8 @@ type DiskFileResolver interface {
 	Path(ctx context.Context, obj *file.File, format *string) (string, error)
 }
 type MutationResolver interface {
-	CollectFromCGTeamwork(ctx context.Context, database string, prefix string, pipeline string) (*collected.Event, error)
-	CollectFromFolder(ctx context.Context, root string) (*collected.Event, error)
+	CollectFromCGTeamwork(ctx context.Context, database string, prefix string, pipeline string) (*base.CollectResult, error)
+	CollectFromFolder(ctx context.Context, root string) (*base.CollectResult, error)
 }
 type PresentationResolver interface {
 	Type(ctx context.Context, obj *presentation.Presentation) (string, error)
@@ -179,7 +177,6 @@ type QueryResolver interface {
 	Node(ctx context.Context, id string) (model.Node, error)
 }
 type SubscriptionResolver interface {
-	CollectedEvent(ctx context.Context, originPrefix string) (<-chan *collected.Event, error)
 	CollectionUpdated(ctx context.Context, id []string, originPrefix *string, presentationCountGt *int) (<-chan *collection.Collection, error)
 	PresentationUpdated(ctx context.Context, id []string) (<-chan *presentation.Presentation, error)
 }
@@ -241,33 +238,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ClientConfig.SentryDsn(childComplexity), true
 
-	case "CollectedEvent.id":
-		if e.complexity.CollectedEvent.ID == nil {
+	case "CollectResult.createdCount":
+		if e.complexity.CollectResult.CreatedCount == nil {
 			break
 		}
 
-		return e.complexity.CollectedEvent.ID(childComplexity), true
+		return e.complexity.CollectResult.CreatedCount(childComplexity), true
 
-	case "CollectedEvent.originPrefix":
-		if e.complexity.CollectedEvent.OriginPrefix == nil {
+	case "CollectResult.originPrefix":
+		if e.complexity.CollectResult.OriginPrefix == nil {
 			break
 		}
 
-		return e.complexity.CollectedEvent.OriginPrefix(childComplexity), true
+		return e.complexity.CollectResult.OriginPrefix(childComplexity), true
 
-	case "CollectedEvent.time":
-		if e.complexity.CollectedEvent.Time == nil {
+	case "CollectResult.updatedCount":
+		if e.complexity.CollectResult.UpdatedCount == nil {
 			break
 		}
 
-		return e.complexity.CollectedEvent.Time(childComplexity), true
-
-	case "CollectedEvent.updatedCount":
-		if e.complexity.CollectedEvent.UpdatedCount == nil {
-			break
-		}
-
-		return e.complexity.CollectedEvent.UpdatedCount(childComplexity), true
+		return e.complexity.CollectResult.UpdatedCount(childComplexity), true
 
 	case "Collection.collectTime":
 		if e.complexity.Collection.CollectTime == nil {
@@ -561,18 +551,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.StringEntry.V(childComplexity), true
 
-	case "Subscription.collectedEvent":
-		if e.complexity.Subscription.CollectedEvent == nil {
-			break
-		}
-
-		args, err := ec.field_Subscription_collectedEvent_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Subscription.CollectedEvent(childComplexity, args["originPrefix"].(string)), true
-
 	case "Subscription.collectionUpdated":
 		if e.complexity.Subscription.CollectionUpdated == nil {
 			break
@@ -716,11 +694,11 @@ var sources = []*ast.Source{
     database: String!
     prefix: String!
     pipeline: String!
-  ): CollectedEvent!
+  ): CollectResult!
 }
 `, BuiltIn: false},
 	{Name: "pkg/api/mutations/collectionFromFolder.gql", Input: `extend type Mutation {
-  collectFromFolder(root: String!): CollectedEvent!
+  collectFromFolder(root: String!): CollectResult!
 }
 `, BuiltIn: false},
 	{Name: "pkg/api/queries/cgteamworkProjects.gql", Input: `extend type Query {
@@ -760,10 +738,6 @@ extend type Query {
   node(id: ID!): Node
 }
 `, BuiltIn: false},
-	{Name: "pkg/api/subscriptions/collectedEvent.gql", Input: `extend type Subscription {
-  collectedEvent(originPrefix: String!): CollectedEvent!
-}
-`, BuiltIn: false},
 	{Name: "pkg/api/subscriptions/collectionUpdated.gql", Input: `extend type Subscription {
   collectionUpdated(
     id: [ID!]
@@ -783,10 +757,9 @@ extend type Query {
   status: String!
 }
 `, BuiltIn: false},
-	{Name: "pkg/api/types/CollectedEvent.gql", Input: `type CollectedEvent implements Node {
-  id: ID!
-  time: Time!
+	{Name: "pkg/api/types/CollectResult.gql", Input: `type CollectResult {
   originPrefix: String!
+  createdCount: Int!
   updatedCount: Int!
 }
 `, BuiltIn: false},
@@ -1076,20 +1049,6 @@ func (ec *executionContext) field_Query_node_args(ctx context.Context, rawArgs m
 		}
 	}
 	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Subscription_collectedEvent_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["originPrefix"]; ok {
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["originPrefix"] = arg0
 	return args, nil
 }
 
@@ -1385,7 +1344,7 @@ func (ec *executionContext) _ClientConfig_issueTrackerURL(ctx context.Context, f
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectedEvent_id(ctx context.Context, field graphql.CollectedField, obj *collected.Event) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectResult_originPrefix(ctx context.Context, field graphql.CollectedField, obj *base.CollectResult) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1393,75 +1352,7 @@ func (ec *executionContext) _CollectedEvent_id(ctx context.Context, field graphq
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:   "CollectedEvent",
-		Field:    field,
-		Args:     nil,
-		IsMethod: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID(), nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNID2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _CollectedEvent_time(ctx context.Context, field graphql.CollectedField, obj *collected.Event) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:   "CollectedEvent",
-		Field:    field,
-		Args:     nil,
-		IsMethod: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Time, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(time.Time)
-	fc.Result = res
-	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _CollectedEvent_originPrefix(ctx context.Context, field graphql.CollectedField, obj *collected.Event) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:   "CollectedEvent",
+		Object:   "CollectResult",
 		Field:    field,
 		Args:     nil,
 		IsMethod: false,
@@ -1487,7 +1378,7 @@ func (ec *executionContext) _CollectedEvent_originPrefix(ctx context.Context, fi
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectedEvent_updatedCount(ctx context.Context, field graphql.CollectedField, obj *collected.Event) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectResult_createdCount(ctx context.Context, field graphql.CollectedField, obj *base.CollectResult) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1495,7 +1386,41 @@ func (ec *executionContext) _CollectedEvent_updatedCount(ctx context.Context, fi
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:   "CollectedEvent",
+		Object:   "CollectResult",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedCount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CollectResult_updatedCount(ctx context.Context, field graphql.CollectedField, obj *base.CollectResult) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "CollectResult",
 		Field:    field,
 		Args:     nil,
 		IsMethod: false,
@@ -2025,9 +1950,9 @@ func (ec *executionContext) _Mutation_collectFromCGTeamwork(ctx context.Context,
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*collected.Event)
+	res := resTmp.(*base.CollectResult)
 	fc.Result = res
-	return ec.marshalNCollectedEvent2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋeventᚋcollectedᚐEvent(ctx, field.Selections, res)
+	return ec.marshalNCollectResult2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcollectorᚋbaseᚐCollectResult(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_collectFromFolder(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2066,9 +1991,9 @@ func (ec *executionContext) _Mutation_collectFromFolder(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*collected.Event)
+	res := resTmp.(*base.CollectResult)
 	fc.Result = res
-	return ec.marshalNCollectedEvent2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋeventᚋcollectedᚐEvent(ctx, field.Selections, res)
+	return ec.marshalNCollectResult2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcollectorᚋbaseᚐCollectResult(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PageInfo_startCursor(ctx context.Context, field graphql.CollectedField, obj *model.PageInfo) (ret graphql.Marshaler) {
@@ -2820,57 +2745,6 @@ func (ec *executionContext) _StringEntry_v(ctx context.Context, field graphql.Co
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Subscription_collectedEvent(ctx context.Context, field graphql.CollectedField) (ret func() graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = nil
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:   "Subscription",
-		Field:    field,
-		Args:     nil,
-		IsMethod: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Subscription_collectedEvent_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return nil
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Subscription().CollectedEvent(rctx, args["originPrefix"].(string))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return nil
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return nil
-	}
-	return func() graphql.Marshaler {
-		res, ok := <-resTmp.(<-chan *collected.Event)
-		if !ok {
-			return nil
-		}
-		return graphql.WriterFunc(func(w io.Writer) {
-			w.Write([]byte{'{'})
-			graphql.MarshalString(field.Alias).MarshalGQL(w)
-			w.Write([]byte{':'})
-			ec.marshalNCollectedEvent2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋeventᚋcollectedᚐEvent(ctx, field.Selections, res).MarshalGQL(w)
-			w.Write([]byte{'}'})
-		})
-	}
 }
 
 func (ec *executionContext) _Subscription_collectionUpdated(ctx context.Context, field graphql.CollectedField) (ret func() graphql.Marshaler) {
@@ -4198,13 +4072,6 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
-	case collected.Event:
-		return ec._CollectedEvent(ctx, sel, &obj)
-	case *collected.Event:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._CollectedEvent(ctx, sel, obj)
 	case collection.Collection:
 		return ec._Collection(ctx, sel, &obj)
 	case *collection.Collection:
@@ -4296,34 +4163,29 @@ func (ec *executionContext) _ClientConfig(ctx context.Context, sel ast.Selection
 	return out
 }
 
-var collectedEventImplementors = []string{"CollectedEvent", "Node"}
+var collectResultImplementors = []string{"CollectResult"}
 
-func (ec *executionContext) _CollectedEvent(ctx context.Context, sel ast.SelectionSet, obj *collected.Event) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, collectedEventImplementors)
+func (ec *executionContext) _CollectResult(ctx context.Context, sel ast.SelectionSet, obj *base.CollectResult) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, collectResultImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("CollectedEvent")
-		case "id":
-			out.Values[i] = ec._CollectedEvent_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "time":
-			out.Values[i] = ec._CollectedEvent_time(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
+			out.Values[i] = graphql.MarshalString("CollectResult")
 		case "originPrefix":
-			out.Values[i] = ec._CollectedEvent_originPrefix(ctx, field, obj)
+			out.Values[i] = ec._CollectResult_originPrefix(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createdCount":
+			out.Values[i] = ec._CollectResult_createdCount(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "updatedCount":
-			out.Values[i] = ec._CollectedEvent_updatedCount(ctx, field, obj)
+			out.Values[i] = ec._CollectResult_updatedCount(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -4828,8 +4690,6 @@ func (ec *executionContext) _Subscription(ctx context.Context, sel ast.Selection
 	}
 
 	switch fields[0].Name {
-	case "collectedEvent":
-		return ec._Subscription_collectedEvent(ctx, fields[0])
 	case "collectionUpdated":
 		return ec._Subscription_collectionUpdated(ctx, fields[0])
 	case "presentationUpdated":
@@ -5138,18 +4998,18 @@ func (ec *executionContext) marshalNCGTeamworkProject2githubᚗcomᚋWuLiFangᚋ
 	return ec._CGTeamworkProject(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNCollectedEvent2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋeventᚋcollectedᚐEvent(ctx context.Context, sel ast.SelectionSet, v collected.Event) graphql.Marshaler {
-	return ec._CollectedEvent(ctx, sel, &v)
+func (ec *executionContext) marshalNCollectResult2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcollectorᚋbaseᚐCollectResult(ctx context.Context, sel ast.SelectionSet, v base.CollectResult) graphql.Marshaler {
+	return ec._CollectResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNCollectedEvent2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋeventᚋcollectedᚐEvent(ctx context.Context, sel ast.SelectionSet, v *collected.Event) graphql.Marshaler {
+func (ec *executionContext) marshalNCollectResult2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcollectorᚋbaseᚐCollectResult(ctx context.Context, sel ast.SelectionSet, v *base.CollectResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._CollectedEvent(ctx, sel, v)
+	return ec._CollectResult(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNCollection2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v collection.Collection) graphql.Marshaler {

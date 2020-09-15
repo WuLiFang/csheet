@@ -8,11 +8,10 @@
 // ====================================================
 
 export interface collectFromCGTeamwork_collectFromCGTeamwork {
-  __typename: "CollectedEvent";
-  id: string;
+  __typename: "CollectResult";
   originPrefix: string;
-  time: any;
   updatedCount: number;
+  createdCount: number;
 }
 
 export interface collectFromCGTeamwork {

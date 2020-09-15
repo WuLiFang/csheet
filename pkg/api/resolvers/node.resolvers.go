@@ -11,7 +11,6 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
-	"github.com/WuLiFang/csheet/v6/pkg/model/event/collected"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
 )
 
@@ -23,8 +22,6 @@ func (r *queryResolver) Node(ctx context.Context, id string) (model.Node, error)
 	index, err := db.UnmarshalKey(key)
 
 	switch index {
-	case db.IndexCollectedEvent:
-		return collected.FindByID(id)
 	case db.IndexCollection:
 		return collection.FindByID(id)
 	case db.IndexPresentation:
