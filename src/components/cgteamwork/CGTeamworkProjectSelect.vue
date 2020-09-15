@@ -27,7 +27,7 @@
         class="form-select cursor-pointer w-full"
         @focus="focus()"
       ) 
-        | &#8203;
+        span &#8203;
         span.absolute.inset-0.flex.items-center.justify-center(v-if="loadingCount > 0") 
           FaIcon.text-gray-500(name="spinner" spin)
         span.text-gray-500(v-else-if="!selected") 请选择项目
