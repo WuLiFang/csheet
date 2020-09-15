@@ -11,12 +11,13 @@
         }`
         @click="select(i.id)"
       ) 
-        template(v-if="i.type === 'image'")
-          FaIcon.w-full(name="image")
-        template(v-else-if="i.type === 'video'")
-          FaIcon.w-full(name="video")
-        template(v-else)
-          span {{i.type}}
+        div.text-center
+          template(v-if="i.type === 'image'")
+            FaIcon(name="image")
+          template(v-else-if="i.type === 'video'")
+            FaIcon(name="video")
+          template(v-else)
+            span {{i.type}}
         TimeWidget(
           v-if="i.raw.modTime"
           :value="i.raw.modTime"
