@@ -177,7 +177,7 @@ export default class CGTeamworkProjectSelect extends Mixins(
 
   scrollToHighlight(): void {
     this.$refs.option
-      .find(i => i.dataset.value === this.highlight)
+      ?.find(i => i.dataset.value === this.highlight)
       ?.scrollIntoView({
         block: 'nearest',
       });
