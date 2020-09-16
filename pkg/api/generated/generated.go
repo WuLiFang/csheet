@@ -43,6 +43,7 @@ type Config struct {
 }
 
 type ResolverRoot interface {
+	CollectResult() CollectResultResolver
 	Collection() CollectionResolver
 	DiskFile() DiskFileResolver
 	Mutation() MutationResolver
@@ -69,7 +70,9 @@ type ComplexityRoot struct {
 
 	CollectResult struct {
 		CreatedCount func(childComplexity int) int
+		ID           func(childComplexity int) int
 		OriginPrefix func(childComplexity int) int
+		Time         func(childComplexity int) int
 		UpdatedCount func(childComplexity int) int
 	}
 
@@ -146,6 +149,10 @@ type ComplexityRoot struct {
 	}
 }
 
+type CollectResultResolver interface {
+	ID(ctx context.Context, obj *base.CollectResult) (string, error)
+	Time(ctx context.Context, obj *base.CollectResult) (*time.Time, error)
+}
 type CollectionResolver interface {
 	Metadata(ctx context.Context, obj *collection.Collection) ([]model.StringEntry, error)
 }
@@ -242,12 +249,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CollectResult.CreatedCount(childComplexity), true
 
+	case "CollectResult.id":
+		if e.complexity.CollectResult.ID == nil {
+			break
+		}
+
+		return e.complexity.CollectResult.ID(childComplexity), true
+
 	case "CollectResult.originPrefix":
 		if e.complexity.CollectResult.OriginPrefix == nil {
 			break
 		}
 
 		return e.complexity.CollectResult.OriginPrefix(childComplexity), true
+
+	case "CollectResult.time":
+		if e.complexity.CollectResult.Time == nil {
+			break
+		}
+
+		return e.complexity.CollectResult.Time(childComplexity), true
 
 	case "CollectResult.updatedCount":
 		if e.complexity.CollectResult.UpdatedCount == nil {
@@ -732,6 +753,9 @@ extend type Query {
   originPrefix: String!
   createdCount: Int!
   updatedCount: Int!
+
+  id: ID! @deprecated(reason: "remove after 2020-10-01")
+  time: Time! @deprecated(reason: "remove after 2020-10-01")
 }
 `, BuiltIn: false},
 	{Name: "pkg/api/types/Collection.gql", Input: `type Collection implements Node {
@@ -1388,6 +1412,74 @@ func (ec *executionContext) _CollectResult_updatedCount(ctx context.Context, fie
 	res := resTmp.(int)
 	fc.Result = res
 	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CollectResult_id(ctx context.Context, field graphql.CollectedField, obj *base.CollectResult) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "CollectResult",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CollectResult().ID(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CollectResult_time(ctx context.Context, field graphql.CollectedField, obj *base.CollectResult) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "CollectResult",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CollectResult().Time(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Collection_id(ctx context.Context, field graphql.CollectedField, obj *collection.Collection) (ret graphql.Marshaler) {
@@ -3995,18 +4087,46 @@ func (ec *executionContext) _CollectResult(ctx context.Context, sel ast.Selectio
 		case "originPrefix":
 			out.Values[i] = ec._CollectResult_originPrefix(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "createdCount":
 			out.Values[i] = ec._CollectResult_createdCount(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "updatedCount":
 			out.Values[i] = ec._CollectResult_updatedCount(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
+		case "id":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CollectResult_id(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "time":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CollectResult_time(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5055,6 +5175,24 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalNTime2timeᚐTime(ctx, v)
+	return &res, err
+}
+
+func (ec *executionContext) marshalNTime2ᚖtimeᚐTime(ctx context.Context, sel ast.SelectionSet, v *time.Time) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec.marshalNTime2timeᚐTime(ctx, sel, *v)
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {
