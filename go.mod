@@ -3,7 +3,7 @@ module github.com/WuLiFang/csheet/v6
 go 1.14
 
 require (
-	github.com/99designs/gqlgen v0.11.3
+	github.com/99designs/gqlgen v0.12.2
 	github.com/NateScarlet/zap-sentry v0.1.0
 	github.com/dgraph-io/badger/v2 v2.0.3
 	github.com/getsentry/sentry-go v0.6.1
@@ -19,5 +19,3 @@ require (
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0
 	gopkg.in/djherbis/times.v1 v1.2.0
 )
-
-replace github.com/99designs/gqlgen v0.11.3 => github.com/NateScarlet/gqlgen v0.11.3-issue1203
