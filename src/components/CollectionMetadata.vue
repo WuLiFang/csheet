@@ -9,18 +9,24 @@
       template(v-else-if="i.k === 'cgteamwork.tasks'")
         dt CGTeamwork
         CollectionMetadataCGTeamworkTasks.pl-4(tag="dd" :value="i.v")
+      template(v-else-if="i.k === 'comment'")
       template(v-else)
         dt {{i.k}}
         dd.pl-4 {{i.v}}
+    dt(
+      @click="() => $refs.comment.focus()"
+    ) 评论
+    CollectionMetadataComment.pl-4.w-full(ref="comment" :value="value" tag="dd")
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { collection as Collection } from '../graphql/types/collection';
 import CollectionMetadataCGTeamworkTasks from './CollectionMetadataCGTeamworkTasks.vue';
+import CollectionMetadataComment from './CollectionMetadataComment.vue';
 
 @Component<CollectionMetadata>({
-  components: { CollectionMetadataCGTeamworkTasks },
+  components: { CollectionMetadataCGTeamworkTasks, CollectionMetadataComment },
 })
 export default class CollectionMetadata extends Vue {
   @Prop({ type: Object, required: true })

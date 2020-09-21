@@ -1,0 +1,11 @@
+mutation updateCollectionMetadata($input: UpdateCollectionMetadataInput!) {
+  updateCollectionMetadata(input: $input) {
+    updated {
+      id
+      metadata {
+        k
+        v
+      }
+    }
+  }
+}

@@ -154,6 +154,9 @@ import { presentation } from '../graphql/types/presentation';
       data: { value: this.value },
     });
     const keyupListener = (e: KeyboardEvent) => {
+      if (e.target !== document.body) {
+        return
+      }
       if (e.shiftKey || e.ctrlKey || e.altKey) {
         return;
       }
@@ -169,9 +172,9 @@ import { presentation } from '../graphql/types/presentation';
           break;
       }
     };
-    window.addEventListener('keyup', keyupListener);
+    document.body.addEventListener('keyup', keyupListener);
     this.$once('destroyed', () => {
-      window.removeEventListener('keyup', keyupListener);
+      document.body.removeEventListener('keyup', keyupListener);
     });
   },
   destroyed() {

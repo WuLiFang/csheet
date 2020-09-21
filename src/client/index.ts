@@ -1,6 +1,4 @@
-import * as config from './config';
+import * as client from './index.client';
 
-export * from './client';
-export * from './origin-prefix';
-export * from './relay';
-export { config };
+export * from './index.client';
+export default client;
