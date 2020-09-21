@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 
 import { collection as Collection } from '../graphql/types/collection';
 import client from '@/client';
@@ -66,8 +66,6 @@ export default class CollectionMetadataComment extends Vue {
     textarea: HTMLTextAreaElement;
   };
 
-  @Watch('localValue')
-  @Watch('remoteValue')
   autoGrow(): void {
     const el = this.$refs.textarea;
     if (!el) {
