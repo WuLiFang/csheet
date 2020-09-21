@@ -1,0 +1,9 @@
+{{ define "data" }}
+{{- if hasPrefix "update" .Name }}
+    id: ID!
+    key: String!
+    value: String!
+{{- end }}
+{{- end }}
+
+

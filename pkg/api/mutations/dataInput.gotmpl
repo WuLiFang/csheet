@@ -1,0 +1,13 @@
+{{ define "dataInput" }}
+input {{.Name | upperFirst}}InputData {
+    {{- block "data" . }}{{ end }}
+}
+{{- end }}
+
+{{ define "before" }}
+{{ template "dataInput" . }}
+{{- end }}
+
+{{ define "args" }}
+    data: [{{.Name | upperFirst}}InputData!]!
+{{- end }}
