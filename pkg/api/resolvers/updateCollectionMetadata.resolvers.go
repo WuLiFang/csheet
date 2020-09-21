@@ -23,11 +23,16 @@ func (r *mutationResolver) UpdateCollectionMetadata(ctx context.Context, input m
 			if err != nil {
 				return ret, err
 			}
+
 			m[i.ID] = v
 		}
 		if i.Value == "" {
 			delete(v.Metadata, i.Key)
 		} else {
+			if v.Metadata == nil {
+				v.Metadata = make(map[string]string)
+				m[i.ID] = v
+			}
 			v.Metadata[i.Key] = i.Value
 		}
 	}
