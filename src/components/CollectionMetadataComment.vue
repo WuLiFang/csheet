@@ -17,7 +17,7 @@
         ref="textarea"
         class="form-textarea w-full"
         @focus="focus()"
-        placeholder="评论将自动保存并实时同步"
+        placeholder="输入此收藏的公共留言信息"
         :value="remoteValue"
       )
 </template>

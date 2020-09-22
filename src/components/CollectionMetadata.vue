@@ -15,7 +15,7 @@
         dd.pl-4 {{i.v}}
     dt(
       @click="() => $refs.comment.focus()"
-    ) 评论
+    ) 留言
     CollectionMetadataComment.pl-4.w-full(ref="comment" :value="value" tag="dd")
 </template>
 
