@@ -2,6 +2,7 @@ package router
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/99designs/gqlgen/graphql"
@@ -12,6 +13,7 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/api"
 	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
+	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 
 func apiHandler() gin.HandlerFunc {
@@ -21,6 +23,20 @@ func apiHandler() gin.HandlerFunc {
 			Cache: api.QueryCache{TTL: 24 * time.Hour},
 		},
 	)
+	server.SetErrorPresenter(func(ctx context.Context, err error) *gqlerror.Error {
+		if errors.Is(err, context.DeadlineExceeded) {
+			return &gqlerror.Error{
+				Message: err.Error(),
+				Extensions: map[string]interface{}{
+					"code": "TIMEOUT",
+					"locales": map[string]string{
+						"zh": "请求超时",
+					},
+				},
+			}
+		}
+		return graphql.DefaultErrorPresenter(ctx, err)
+	})
 	server.AroundResponses(func(ctx context.Context, next graphql.ResponseHandler) (ret *graphql.Response) {
 		ret = next(ctx)
 		if ret != nil && len(ret.Errors) > 0 {

@@ -20,7 +20,7 @@ func (r *mutationResolver) CollectFromCGTeamwork(ctx context.Context, database s
 		Pipeline: pipeline,
 		Prefix:   prefix,
 	})
-	return &v, formatError(err)
+	return &v, err
 }
 
 // Mutation returns generated.MutationResolver implementation.

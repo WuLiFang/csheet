@@ -15,5 +15,5 @@ func (r *mutationResolver) CollectFromFolder(ctx context.Context, root string) (
 	ctx, cancel := context.WithTimeout(ctx, 60*time.Second)
 	defer cancel()
 	v, err := folder.Collect(ctx, root)
-	return &v, formatError(err)
+	return &v, err
 }
