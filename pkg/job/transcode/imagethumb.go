@@ -1,6 +1,7 @@
 package transcode
 
 import (
+	"context"
 	"path/filepath"
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
@@ -10,7 +11,7 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/transcode"
 )
 
-func transcodeImageThumb(p presentation.Presentation) error {
+func transcodeImageThumb(ctx context.Context, p presentation.Presentation) error {
 	return filestore.WithTempDir("image-thumb-", func(dir string) (err error) {
 		var logger = logging.Logger("job.transcode").Sugar()
 		raw, err := file.FindByPath(p.Raw)
@@ -29,9 +30,9 @@ func transcodeImageThumb(p presentation.Presentation) error {
 		})
 		err = runCommand(cmd)
 		if err != nil {
-			p.Load()
+			p.Load(ctx)
 			p.ThumbErrorTag = raw.Tag()
-			return p.Save()
+			return p.Save(ctx)
 		}
 
 		filename, err := filestore.Put(dst)
@@ -41,10 +42,10 @@ func transcodeImageThumb(p presentation.Presentation) error {
 		if p.Thumb != filename {
 			removeStoreFile(p.Thumb)
 		}
-		p.Load()
+		p.Load(ctx)
 		p.Thumb = filename
 		p.ThumbSuccessTag = raw.Tag()
-		err = p.Save()
+		err = p.Save(ctx)
 		if err != nil {
 			return
 		}

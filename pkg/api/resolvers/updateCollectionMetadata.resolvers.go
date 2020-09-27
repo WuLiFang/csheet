@@ -39,7 +39,7 @@ func (r *mutationResolver) UpdateCollectionMetadata(ctx context.Context, input m
 
 	ret.Updated = make([]collection.Collection, 0, len(m))
 	for _, i := range m {
-		i.Save()
+		i.Save(ctx)
 		ret.Updated = append(ret.Updated, i)
 	}
 

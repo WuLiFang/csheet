@@ -27,8 +27,12 @@ func (o File) ID() string {
 
 
 // Save File to db.
-func (o *File) Save() (err error) {
-	var ctx = context.TODO()
+func (o *File) Save(ctx context.Context) (err error) {
+	select {
+		case <- ctx.Done():
+			return ctx.Err()
+		default:
+	}
 	err = SignalWillSave.Emit(ctx, o)
 	if err != nil {
 		return
@@ -49,8 +53,12 @@ func (o *File) Save() (err error) {
 }
 
 // Load File from db.
-func (o *File) Load() (err error) {
-	var ctx = context.TODO()
+func (o *File) Load(ctx context.Context) (err error) {
+	select {
+		case <- ctx.Done():
+			return ctx.Err()
+		default:
+	}
 	err = SignalWillLoad.Emit(ctx, o)
 	if err != nil {
 		return
@@ -70,8 +78,12 @@ func (o *File) Load() (err error) {
 }
 
 // Delete File from db.
-func (o *File) Delete() (err error) {
-	var ctx = context.TODO()
+func (o *File) Delete(ctx context.Context) (err error) {
+	select {
+		case <- ctx.Done():
+			return ctx.Err()
+		default:
+	}
 	err = SignalWillDelete.Emit(ctx, o)
 	if err != nil {
 		return

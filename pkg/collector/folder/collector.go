@@ -54,7 +54,7 @@ func Collect(ctx context.Context, root string) (ret base.CollectResult, err erro
 			return nil
 
 		}
-		p, err := presentation.Put(t, i)
+		p, err := presentation.Put(ctx, t, i)
 		if err != nil {
 			return err
 		}
@@ -64,7 +64,7 @@ func Collect(ctx context.Context, root string) (ret base.CollectResult, err erro
 
 		var c = new(collection.Collection)
 		c.Origin = collection.Origin("folder", unipath.Auto(i))
-		err = c.Load()
+		err = c.Load(ctx)
 		if err == nil {
 			ret.UpdatedCount++
 		} else if errors.Is(err, db.ErrKeyNotFound) {
@@ -78,7 +78,7 @@ func Collect(ctx context.Context, root string) (ret base.CollectResult, err erro
 		c.PresentationIDs = append(c.PresentationIDs, p.ID())
 		c.CollectTime = time.Now()
 
-		return c.Save()
+		return c.Save(ctx)
 	})
 	if err != nil {
 		return

@@ -60,7 +60,7 @@ func (s *scheduler) transcodeOnDemand(
 			return
 		}
 		defer s.weight.Release(w)
-		var err = jt.Run(p)
+		var err = jt.Run(ctx, p)
 		if err != nil {
 			logger.Error(
 				"transcode error",

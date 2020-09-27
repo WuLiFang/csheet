@@ -39,7 +39,7 @@ func collectionFromTask(
 	ret, ok := m[task.Shot.Title]
 	if !ok {
 		ret.Origin = collection.Origin("cgteamwork", o.Database, o.Pipeline, task.Shot.Title)
-		err = ret.Load()
+		err = ret.Load(ctx)
 		if err == db.ErrKeyNotFound {
 			err = nil
 			created = true
@@ -87,6 +87,7 @@ func collectionFromTask(
 	if task.ImageFile != "" {
 		logger.Debugw("collect task image file", "task", task.Shot, "path", task.ImageFile)
 		p, err := presentation.Put(
+			ctx,
 			presentation.TypeImage,
 			unipath.Auto(task.ImageFile),
 		)
@@ -102,7 +103,7 @@ func collectionFromTask(
 		mt := mime.TypeByExtension(path.Ext(i))
 		t, err := presentation.TypeByMimeType(mt)
 		if err == nil {
-			p, err := presentation.Put(t, unipath.Auto(i))
+			p, err := presentation.Put(ctx, t, unipath.Auto(i))
 			if err == nil {
 				presentationIDSet[p.ID()] = struct{}{}
 			} else {
@@ -184,7 +185,7 @@ func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error)
 		}
 	}
 	for _, col := range colM {
-		err = col.Save()
+		err = col.Save(ctx)
 		if err != nil {
 			return
 		}

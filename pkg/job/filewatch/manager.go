@@ -97,7 +97,7 @@ func (m *manager) Scale(n int) (change int) {
 	for len(m.workers) < n {
 		w := m.newWorker()
 		m.workers = append(m.workers, w)
-		go w.Start()
+		go w.Start(context.Background())
 		change++
 	}
 	// Remove workers

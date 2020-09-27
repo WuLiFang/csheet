@@ -98,16 +98,16 @@ func FindByID(id string) (ret Presentation, err error) {
 }
 
 // Put a presentation to db, will validate raw file stat and unset error state.
-func Put(t Type, path string) (ret Presentation, err error) {
+func Put(ctx context.Context, t Type, path string) (ret Presentation, err error) {
 	var logger = logging.Logger("model.presentation").Sugar()
 	defer func() {
 		logger.Debugw("put", "type", t, "path", path, "ret", ret, "error", err)
 	}()
-	f, err := file.FindOrCreateByPath(path)
+	f, err := file.FindOrCreateByPath(ctx, path)
 	if err != nil {
 		return
 	}
-	err = f.Stat()
+	err = f.Stat(ctx)
 	if err != nil {
 		return
 	}
@@ -115,7 +115,7 @@ func Put(t Type, path string) (ret Presentation, err error) {
 		Type: t,
 		Raw:  path,
 	}
-	err = ret.Load()
+	err = ret.Load(ctx)
 	if err == db.ErrKeyNotFound {
 		err = nil
 	}
@@ -140,6 +140,6 @@ func Put(t Type, path string) (ret Presentation, err error) {
 	}
 	ret.ThumbErrorTag = ""
 	ret.RegularErrorTag = ""
-	err = ret.Save()
+	err = ret.Save(ctx)
 	return
 }

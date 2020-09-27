@@ -27,8 +27,12 @@ func (o Collection) ID() string {
 
 
 // Save Collection to db.
-func (o *Collection) Save() (err error) {
-	var ctx = context.TODO()
+func (o *Collection) Save(ctx context.Context) (err error) {
+	select {
+		case <- ctx.Done():
+			return ctx.Err()
+		default:
+	}
 	err = SignalWillSave.Emit(ctx, o)
 	if err != nil {
 		return
@@ -49,8 +53,12 @@ func (o *Collection) Save() (err error) {
 }
 
 // Load Collection from db.
-func (o *Collection) Load() (err error) {
-	var ctx = context.TODO()
+func (o *Collection) Load(ctx context.Context) (err error) {
+	select {
+		case <- ctx.Done():
+			return ctx.Err()
+		default:
+	}
 	err = SignalWillLoad.Emit(ctx, o)
 	if err != nil {
 		return
@@ -70,8 +78,12 @@ func (o *Collection) Load() (err error) {
 }
 
 // Delete Collection from db.
-func (o *Collection) Delete() (err error) {
-	var ctx = context.TODO()
+func (o *Collection) Delete(ctx context.Context) (err error) {
+	select {
+		case <- ctx.Done():
+			return ctx.Err()
+		default:
+	}
 	err = SignalWillDelete.Emit(ctx, o)
 	if err != nil {
 		return

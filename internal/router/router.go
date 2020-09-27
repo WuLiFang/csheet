@@ -1,7 +1,9 @@
 package router
 
 import (
+	"context"
 	"net/http"
+
 	// register pprof routes
 	_ "net/http/pprof"
 	"path"
@@ -64,7 +66,7 @@ func New() *gin.Engine {
 				logger.Infow("not found requested file", "filepath", filepath, "clientIP", c.ClientIP())
 				f, err := file.FindByPath(filepath)
 				if err == nil {
-					f.Delete()
+					f.Delete(context.Background())
 				}
 				if err == db.ErrKeyNotFound {
 					err = nil
@@ -85,7 +87,7 @@ func New() *gin.Engine {
 							p.Regular = ""
 							p.RegularSuccessTag = ""
 						}
-						p.Save()
+						p.Save(context.Background())
 					}
 				} else {
 					logger.Errorw("find presentation failed", "error", err)

@@ -1,6 +1,7 @@
 package transcode
 
 import (
+	"context"
 	"path/filepath"
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
@@ -10,7 +11,7 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/transcode"
 )
 
-func transcodeVideoRegular(p presentation.Presentation) error {
+func transcodeVideoRegular(ctx context.Context, p presentation.Presentation) error {
 	var logger = logging.Logger("job.transcode").Sugar()
 	return filestore.WithTempDir("video-regular-", func(dir string) (err error) {
 		raw, err := file.FindByPath(p.Raw)
@@ -28,9 +29,9 @@ func transcodeVideoRegular(p presentation.Presentation) error {
 
 		err = runCommand(cmd)
 		if err != nil {
-			p.Load()
+			p.Load(ctx)
 			p.RegularErrorTag = raw.Tag()
-			return p.Save()
+			return p.Save(ctx)
 		}
 
 		filename, err := filestore.Put(dst)
@@ -40,10 +41,10 @@ func transcodeVideoRegular(p presentation.Presentation) error {
 		if p.Regular != filename {
 			removeStoreFile(p.Regular)
 		}
-		p.Load()
+		p.Load(ctx)
 		p.Regular = filename
 		p.RegularSuccessTag = raw.Tag()
-		err = p.Save()
+		err = p.Save(ctx)
 		if err != nil {
 			return
 		}

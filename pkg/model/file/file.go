@@ -1,6 +1,7 @@
 package file
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"time"
@@ -37,7 +38,7 @@ func (f File) Tag() string {
 }
 
 // Stat update file stat data.
-func (f *File) Stat() error {
+func (f *File) Stat(ctx context.Context) error {
 	p, err := filestore.AbsPath(f.Path)
 	if err != nil {
 		return err
@@ -59,7 +60,7 @@ func (f *File) Stat() error {
 		f.Size = size
 	}
 	if changed {
-		f.Save()
+		f.Save(ctx)
 	}
 	return nil
 }
@@ -73,11 +74,11 @@ func FindByPath(p string) (ret File, err error) {
 }
 
 // FindOrCreateByPath find path matched file, create one if not found.
-func FindOrCreateByPath(p string) (ret File, err error) {
+func FindOrCreateByPath(ctx context.Context, p string) (ret File, err error) {
 	ret, err = FindByPath(p)
 	if err == db.ErrKeyNotFound {
 		ret = File{Path: p}
-		err = ret.Save()
+		err = ret.Save(ctx)
 	}
 	return
 }

@@ -1,6 +1,8 @@
 package transcode
 
 import (
+	"context"
+
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
 )
@@ -16,14 +18,14 @@ const (
 	JobTypeVideoRegular
 )
 
-func (j jobType) Run(p presentation.Presentation) error {
+func (j jobType) Run(ctx context.Context, p presentation.Presentation) error {
 	switch j {
 	case JobTypeImageThumb:
-		return transcodeImageThumb(p)
+		return transcodeImageThumb(ctx, p)
 	case JobTypeImageRegular:
-		transcodeImageRegular(p)
+		return transcodeImageRegular(ctx, p)
 	case JobTypeVideoRegular:
-		transcodeVideoRegular(p)
+		return transcodeVideoRegular(ctx, p)
 	default:
 		logging.Logger("job.transcode").Sugar().
 			DPanicw("unknown job type", "type", j)

@@ -39,8 +39,12 @@ func (o {{.Type}}) ID() string {
 
 
 // Save {{.Type}} to db.
-func (o *{{.Type}}) Save() (err error) {
-	var ctx = context.TODO()
+func (o *{{.Type}}) Save(ctx context.Context) (err error) {
+	select {
+		case <- ctx.Done():
+			return ctx.Err()
+		default:
+	}
 	err = SignalWillSave.Emit(ctx, o)
 	if err != nil {
 		return
@@ -61,8 +65,12 @@ func (o *{{.Type}}) Save() (err error) {
 }
 
 // Load {{.Type}} from db.
-func (o *{{.Type}}) Load() (err error) {
-	var ctx = context.TODO()
+func (o *{{.Type}}) Load(ctx context.Context) (err error) {
+	select {
+		case <- ctx.Done():
+			return ctx.Err()
+		default:
+	}
 	err = SignalWillLoad.Emit(ctx, o)
 	if err != nil {
 		return
@@ -82,8 +90,12 @@ func (o *{{.Type}}) Load() (err error) {
 }
 
 // Delete {{.Type}} from db.
-func (o *{{.Type}}) Delete() (err error) {
-	var ctx = context.TODO()
+func (o *{{.Type}}) Delete(ctx context.Context) (err error) {
+	select {
+		case <- ctx.Done():
+			return ctx.Err()
+		default:
+	}
 	err = SignalWillDelete.Emit(ctx, o)
 	if err != nil {
 		return

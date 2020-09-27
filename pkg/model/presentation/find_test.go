@@ -1,6 +1,7 @@
 package presentation
 
 import (
+	"context"
 	"testing"
 
 	"github.com/WuLiFang/csheet/v6/pkg/db"
@@ -9,6 +10,7 @@ import (
 )
 
 func TestFindByRaw(t *testing.T) {
+	ctx := context.Background()
 	err := db.OpenInMemory()
 	require.NoError(t, err)
 	defer db.Close()
@@ -16,7 +18,7 @@ func TestFindByRaw(t *testing.T) {
 	err = (&Presentation{
 		Type: "image",
 		Raw:  "test",
-	}).Save()
+	}).Save(ctx)
 	require.NoError(t, err)
 	result, err := FindByPath("test")
 	require.NoError(t, err)

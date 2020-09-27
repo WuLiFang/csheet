@@ -27,8 +27,12 @@ func (o Presentation) ID() string {
 
 
 // Save Presentation to db.
-func (o *Presentation) Save() (err error) {
-	var ctx = context.TODO()
+func (o *Presentation) Save(ctx context.Context) (err error) {
+	select {
+		case <- ctx.Done():
+			return ctx.Err()
+		default:
+	}
 	err = SignalWillSave.Emit(ctx, o)
 	if err != nil {
 		return
@@ -49,8 +53,12 @@ func (o *Presentation) Save() (err error) {
 }
 
 // Load Presentation from db.
-func (o *Presentation) Load() (err error) {
-	var ctx = context.TODO()
+func (o *Presentation) Load(ctx context.Context) (err error) {
+	select {
+		case <- ctx.Done():
+			return ctx.Err()
+		default:
+	}
 	err = SignalWillLoad.Emit(ctx, o)
 	if err != nil {
 		return
@@ -70,8 +78,12 @@ func (o *Presentation) Load() (err error) {
 }
 
 // Delete Presentation from db.
-func (o *Presentation) Delete() (err error) {
-	var ctx = context.TODO()
+func (o *Presentation) Delete(ctx context.Context) (err error) {
+	select {
+		case <- ctx.Done():
+			return ctx.Err()
+		default:
+	}
 	err = SignalWillDelete.Emit(ctx, o)
 	if err != nil {
 		return
