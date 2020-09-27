@@ -73,6 +73,9 @@ func (c *Client) callAPI(ctx context.Context, param interface{}) (data gjson.Res
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return
+	}
 	logger.Debugw("recv",
 		"body", string(body),
 	)
