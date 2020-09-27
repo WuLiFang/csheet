@@ -8,10 +8,9 @@ import (
 )
 
 func TestRefreshToken(t *testing.T) {
-	WithTestClient(t, func(c *Client) {
-		err := c.RefreshToken(context.Background())
-		assert.NoError(t, err)
-		assert.NotEmpty(t, c.token)
-		assert.NotEmpty(t, c.tokenExpireTime)
-	})
+	c := NewTestClient(t)
+	err := c.RefreshToken(context.Background())
+	assert.NoError(t, err)
+	assert.NotEmpty(t, c.token)
+	assert.NotEmpty(t, c.tokenExpireTime)
 }

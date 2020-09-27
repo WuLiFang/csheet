@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
+	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	client "github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	"github.com/WuLiFang/csheet/v6/pkg/collector/base"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
@@ -118,8 +119,8 @@ func collectionFromTask(
 	return
 }
 
-// CollectWithClient gallery with given client.
-func CollectWithClient(ctx context.Context, c *client.Client, o Options) (ret base.CollectResult, err error) {
+// Collect from cgteamwork.
+func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error) {
 	var logger = logging.For(ctx).Logger("collector.cgteamwork").Sugar()
 
 	logger.Infow("collect", "options", o)
@@ -136,11 +137,11 @@ func CollectWithClient(ctx context.Context, c *client.Client, o Options) (ret ba
 	}()
 
 	ret.OriginPrefix = collection.Origin("cgteamwork", o.Database, o.Pipeline, o.Prefix)
-	s := c.Select(o.Database, "shot").
+	s := cgteamwork.Select(o.Database, "shot").
 		WithModuleType("task").
 		WithFilter(
-			c.F("task.pipeline", "in", pipelines(o.Pipeline)).
-				And(c.F("shot.shot", "start", o.Prefix)),
+			cgteamwork.F("task.pipeline", "in", pipelines(o.Pipeline)).
+				And(cgteamwork.F("shot.shot", "start", o.Prefix)),
 		)
 
 	n, err := s.Count(ctx)
@@ -190,9 +191,4 @@ func CollectWithClient(ctx context.Context, c *client.Client, o Options) (ret ba
 	}
 	ret.UpdatedCount = len(colM) - ret.CreatedCount
 	return
-}
-
-// Collect collections with default client.
-func Collect(ctx context.Context, o Options) (base.CollectResult, error) {
-	return CollectWithClient(ctx, client.DefaultClient, o)
 }

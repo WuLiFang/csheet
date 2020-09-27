@@ -1,6 +1,7 @@
 package cgteamwork
 
 import (
+	"context"
 	"errors"
 	"net/url"
 	"os"
@@ -46,4 +47,20 @@ func NewClientFromEnv() (*Client, error) {
 
 func init() {
 	DefaultClient, _ = NewClientFromEnv()
+}
+
+type contextKey struct{}
+
+// ClientFor get client for context.
+func ClientFor(ctx context.Context) *Client {
+	ret, ok := ctx.Value(contextKey{}).(*Client)
+	if !ok {
+		return DefaultClient
+	}
+	return ret
+}
+
+// WithClient create a new context that will use given client.
+func WithClient(ctx context.Context, c *Client) context.Context {
+	return context.WithValue(ctx, contextKey{}, c)
 }

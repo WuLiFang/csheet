@@ -22,8 +22,8 @@ func (i *Project) UnmarshalCGTeamworkRecord(v map[string]string) error {
 }
 
 // ListProjects with filter.
-func (c *Client) ListProjects(ctx context.Context, filter func(Selection) Selection) ([]Project, error) {
-	s := c.Select("public", "project")
+func ListProjects(ctx context.Context, filter func(Selection) Selection) ([]Project, error) {
+	s := Select("public", "project")
 	if filter != nil {
 		s = filter(s)
 	}

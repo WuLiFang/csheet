@@ -68,8 +68,3 @@ func (f Filter) Or(other Filter) Filter {
 	f.Chain = &other
 	return f
 }
-
-// F is a alias for cgteamwork.F
-func (Client) F(left, op string, right interface{}) Filter {
-	return F(left, op, right)
-}

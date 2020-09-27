@@ -14,17 +14,17 @@ type Selection struct {
 	ModuleType string
 	IDField    string
 	Filter     Filter
-	c          *Client
 	Limit      int
 }
 
 // Count retrieves entries count from server.
 func (s Selection) Count(ctx context.Context) (int, error) {
-	err := s.c.RefreshTokenOndemand(ctx)
+	c := ClientFor(ctx)
+	err := c.RefreshTokenOndemand(ctx)
 	if err != nil {
 		return 0, err
 	}
-	data, err := s.c.callAPI(
+	data, err := c.callAPI(
 		ctx,
 		map[string]interface{}{
 			"controller":        "c_orm",
@@ -49,7 +49,8 @@ func stringSliceContains(source []string, target string) bool {
 
 // Values retrieves value from server.
 func (s Selection) Values(ctx context.Context, names ...string) (ResultSet, error) {
-	err := s.c.RefreshTokenOndemand(ctx)
+	c := ClientFor(ctx)
+	err := c.RefreshTokenOndemand(ctx)
 	if err != nil {
 		return ResultSet{}, err
 	}
@@ -60,7 +61,7 @@ func (s Selection) Values(ctx context.Context, names ...string) (ResultSet, erro
 	if s.Limit != 0 {
 		limit = strconv.Itoa(s.Limit)
 	}
-	data, err := s.c.callAPI(
+	data, err := c.callAPI(
 		ctx,
 		map[string]interface{}{
 			"controller":        "c_orm",
@@ -80,13 +81,12 @@ func (s Selection) Values(ctx context.Context, names ...string) (ResultSet, erro
 }
 
 // Select all item in given module.
-func (c *Client) Select(database, module string) Selection {
+func Select(database, module string) Selection {
 	idField := module + ".id"
 	return Selection{
 		Database:   database,
 		Module:     module,
 		ModuleType: "info",
-		c:          c,
 		Filter:     F(idField, "has", "%"),
 		IDField:    idField,
 	}
