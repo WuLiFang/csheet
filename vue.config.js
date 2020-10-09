@@ -39,10 +39,6 @@ module.exports = {
     proxy: {
       '/': {
         target: 'http://localhost:8000',
-        changeOrigin: true,
-        headers: {
-          Origin: 'http://localhost:8000',
-        },
         ws: true,
       },
     },

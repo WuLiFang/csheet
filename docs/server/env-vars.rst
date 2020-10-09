@@ -84,6 +84,12 @@ CSHEET_TRANSCODE_VIDEO_REGULAR_WEIGHT
 
   标准尺寸视频转码工作权重，默认为 1024 / 2 + 1。
 
+CSHEET_CORS_HOSTS
+
+  逗号分隔的主机 CORS 域名列表，例：``example.com,example.org``
+
+  使用非标准端口时要添加端口号。
+
 CGTEAMWORK_URL
 
   CGTeamwork 服务器地址。例：http://192.168.50.11

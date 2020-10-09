@@ -8,6 +8,7 @@ require (
 	github.com/dgraph-io/badger/v2 v2.0.3
 	github.com/getsentry/sentry-go v0.6.1
 	github.com/gin-gonic/gin v1.6.3
+	github.com/rs/cors v1.7.0
 	github.com/stretchr/testify v1.5.1
 	github.com/tidwall/gjson v1.6.0
 	github.com/tidwall/sjson v1.1.1

@@ -13,6 +13,7 @@ import (
 	"github.com/WuLiFang/csheet/v6/internal/config"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/filestore"
+	"github.com/WuLiFang/csheet/v6/pkg/middleware/cors"
 	"github.com/WuLiFang/csheet/v6/pkg/middleware/gincontext"
 	"github.com/WuLiFang/csheet/v6/pkg/middleware/ginsentry"
 	"github.com/WuLiFang/csheet/v6/pkg/model/file"
@@ -31,13 +32,17 @@ func New() *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.New()
-	r.Use(ginsentry.Middleware(), func(ctx *gin.Context) {
-		var hub = logging.For(ctx)
-		hub.Scope().SetUser(sentry.User{
-			IPAddress: ctx.ClientIP(),
-		})
-		ctx.Next()
-	})
+	r.Use(
+		ginsentry.Middleware(),
+		func(ctx *gin.Context) {
+			var hub = logging.For(ctx)
+			hub.Scope().SetUser(sentry.User{
+				IPAddress: ctx.ClientIP(),
+			})
+			ctx.Next()
+		},
+		cors.Middleware(config.CORSHosts),
+	)
 	r.Any("api", gincontext.Middleware(), apiHandler())
 	r.Static("static", "dist/static")
 	r.Group("").Use(func(c *gin.Context) {

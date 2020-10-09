@@ -1,11 +1,20 @@
 package config
 
 import (
+	"strings"
 	"time"
 
 	"github.com/WuLiFang/csheet/v6/pkg/getenv"
 	"github.com/WuLiFang/csheet/v6/pkg/job/transcode"
 )
+
+func newStringSet(v []string) (ret map[string]struct{}) {
+	ret = make(map[string]struct{})
+	for _, i := range v {
+		ret[i] = struct{}{}
+	}
+	return
+}
 
 // Config entries
 var (
@@ -27,4 +36,5 @@ var (
 	TranscodeImageThumbWeight   = getenv.Int64("CSHEET_TRANSCODE_IMAGE_THUMB_WEIGHT", transcode.ImageThumbWeight)
 	TranscodeImageRegularWeight = getenv.Int64("CSHEET_TRANSCODE_IMAGE_REGULAR_WEIGHT", transcode.ImageRegularWeight)
 	TranscodeVideoRegularWeight = getenv.Int64("CSHEET_TRANSCODE_VIDEO_REGULAR_WEIGHT", transcode.VideoRegularWeight)
+	CORSHosts                   = strings.Split(getenv.String("CSHEET_CORS_HOSTS", ""), ",")
 )
