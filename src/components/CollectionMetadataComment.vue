@@ -33,7 +33,6 @@ const METADATA_KEY = 'comment';
 
 @Component<CollectionMetadataComment>({
   mounted() {
-    this.debouncedSubmit = debounce(this.debouncedSubmit, 1000);
     this.$nextTick(() => this.autoGrow());
     this.$watch(
       () => [this.remoteValue, this.localValue, this.value.id],
@@ -49,6 +48,11 @@ const METADATA_KEY = 'comment';
       },
       { immediate: true }
     );
+  },
+  data() {
+    return {
+      debouncedSubmit: debounce(() => this.submit(), 1000),
+    };
   },
 })
 export default class CollectionMetadataComment extends Vue {
@@ -100,10 +104,6 @@ export default class CollectionMetadataComment extends Vue {
     } finally {
       this.loadingCount -= 1;
     }
-  }
-
-  async debouncedSubmit(): Promise<void> {
-    this.submit();
   }
 
   get statusText(): string {
