@@ -42,14 +42,14 @@ func (o *Presentation) Save(ctx context.Context) (err error) {
 	if err != nil {
 		return
 	}
-	return db.Update(func(txn *db.Txn) (err error) {
-		err = txn.Set(key, o)
-		if err != nil {
-			return
-		}
-		err = SignalSaved.Emit(ctx, o)
-		return
+	err = db.Update(func(txn *db.Txn) (err error) {
+		return txn.Set(key, o)
 	})
+	if err != nil {
+		return
+	}
+	err = SignalSaved.Emit(ctx, o)
+	return
 }
 
 // Load Presentation from db.
@@ -93,12 +93,12 @@ func (o *Presentation) Delete(ctx context.Context) (err error) {
 	if err != nil {
 		return
 	}
-	return db.Update(func(txn *db.Txn) (err error) {
-		err = txn.Delete(key)
-		if err != nil {
-			return
-		}
-		err = SignalDeleted.Emit(ctx, o)
-		return
+	err = db.Update(func(txn *db.Txn) (err error) {
+		return txn.Delete(key)
 	})
+	if err != nil {
+		return
+	}
+	err = SignalDeleted.Emit(ctx, o)
+	return
 }
