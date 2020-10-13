@@ -46,7 +46,7 @@ func (p Presentation) hash() (ret string, err error) {
 }
 
 // SetMetadata pair, use empty value to delete pair.
-func (p *Presentation) SetMetadata(k, v string) {
+func (p *Presentation) SetMetadata(k, v string) (changed bool) {
 	if v == "" {
 		delete(p.Metadata, k)
 		if len(p.Metadata) == 0 {
@@ -57,7 +57,12 @@ func (p *Presentation) SetMetadata(k, v string) {
 	if p.Metadata == nil {
 		p.Metadata = make(map[string]string)
 	}
+	if p.Metadata[k] == v {
+		return
+	}
 	p.Metadata[k] = v
+	changed = true
+	return
 }
 
 // Key in db.
@@ -116,20 +121,33 @@ func FindByID(id string) (ret Presentation, err error) {
 }
 
 // Probe update metadata by raw file media info
-func (p *Presentation) Probe() (err error) {
+func (p *Presentation) Probe() (changed bool, err error) {
 	info, err := transcode.Probe(p.Raw)
 	if err != nil {
 		return
 	}
 	switch p.Type {
 	case TypeVideo:
-		p.SetMetadata("duration", strconv.FormatFloat(info.Duration().Seconds(), 'f', -1, 64))
-		p.SetMetadata("frame-count", strconv.FormatInt(info.FrameCount(), 10))
-		p.SetMetadata("frame-rate", info.FrameRate())
+		changed = p.SetMetadata("duration", strconv.FormatFloat(info.Duration().Seconds(), 'f', -1, 64)) || changed
+		changed = p.SetMetadata("frame-count", strconv.FormatInt(info.FrameCount(), 10)) || changed
+		changed = p.SetMetadata("frame-rate", info.FrameRate()) || changed
 		fallthrough
 	case TypeImage:
-		p.SetMetadata("width", strconv.FormatInt(info.Width(), 10))
-		p.SetMetadata("height", strconv.FormatInt(info.Height(), 10))
+		changed = p.SetMetadata("width", strconv.FormatInt(info.Width(), 10)) || changed
+		changed = p.SetMetadata("height", strconv.FormatInt(info.Height(), 10)) || changed
+	}
+	return
+}
+
+// ProbeAndSave if metadata changed
+func (p *Presentation) ProbeAndSave(ctx context.Context) (err error) {
+	changed, err := p.Probe()
+	if err != nil {
+		return
+	}
+	if changed {
+		err = p.Save(ctx)
+		return
 	}
 	return
 }

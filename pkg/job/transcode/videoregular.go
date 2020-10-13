@@ -19,11 +19,7 @@ func transcodeVideoRegular(ctx context.Context, p presentation.Presentation) err
 			return
 		}
 
-		err = p.Probe()
-		if err != nil {
-			return
-		}
-		err = p.Save(ctx)
+		err = p.ProbeAndSave(ctx)
 		if err != nil {
 			return
 		}
