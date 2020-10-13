@@ -6,11 +6,13 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"errors"
+	"strconv"
 	"strings"
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/model/file"
+	"github.com/WuLiFang/csheet/v6/pkg/transcode"
 )
 
 //go:generate gotmpl -o presentation_gen.go ../model.go.gotmpl
@@ -20,12 +22,13 @@ import (
 type Presentation struct {
 	Type              Type
 	Raw               string
-	Thumb             string `bson:",omitempty"`
-	ThumbSuccessTag   string `bson:",omitempty"`
-	ThumbErrorTag     string `bson:",omitempty"`
-	Regular           string `bson:",omitempty"`
-	RegularSuccessTag string `bson:",omitempty"`
-	RegularErrorTag   string `bson:",omitempty"`
+	Thumb             string            `bson:",omitempty"`
+	ThumbSuccessTag   string            `bson:",omitempty"`
+	ThumbErrorTag     string            `bson:",omitempty"`
+	Regular           string            `bson:",omitempty"`
+	RegularSuccessTag string            `bson:",omitempty"`
+	RegularErrorTag   string            `bson:",omitempty"`
+	Metadata          map[string]string `bson:",omitempty"`
 }
 
 func (p Presentation) hash() (ret string, err error) {
@@ -40,6 +43,21 @@ func (p Presentation) hash() (ret string, err error) {
 	h := sha256.Sum256([]byte(strings.Join([]string{string(p.Type), p.Raw}, "\t")))
 	ret = hex.EncodeToString(h[:])
 	return
+}
+
+// SetMetadata pair, use empty value to delete pair.
+func (p *Presentation) SetMetadata(k, v string) {
+	if v == "" {
+		delete(p.Metadata, k)
+		if len(p.Metadata) == 0 {
+			p.Metadata = nil
+		}
+		return
+	}
+	if p.Metadata == nil {
+		p.Metadata = make(map[string]string)
+	}
+	p.Metadata[k] = v
 }
 
 // Key in db.
@@ -94,6 +112,25 @@ func FindByID(id string) (ret Presentation, err error) {
 	err = db.View(func(txn *db.Txn) error {
 		return txn.Get(key, &ret)
 	})
+	return
+}
+
+// Probe update metadata by raw file media info
+func (p *Presentation) Probe() (err error) {
+	info, err := transcode.Probe(p.Raw)
+	if err != nil {
+		return
+	}
+	switch p.Type {
+	case TypeVideo:
+		p.SetMetadata("duration", strconv.FormatFloat(info.Duration().Seconds(), 'f', -1, 64))
+		p.SetMetadata("frame-count", strconv.FormatInt(info.FrameCount(), 10))
+		p.SetMetadata("frame-rate", info.FrameRate())
+		fallthrough
+	case TypeImage:
+		p.SetMetadata("width", strconv.FormatInt(info.Width(), 10))
+		p.SetMetadata("height", strconv.FormatInt(info.Height(), 10))
+	}
 	return
 }
 

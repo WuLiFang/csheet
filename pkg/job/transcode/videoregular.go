@@ -18,10 +18,21 @@ func transcodeVideoRegular(ctx context.Context, p presentation.Presentation) err
 		if err != nil {
 			return
 		}
+
+		err = p.Probe()
+		if err != nil {
+			return
+		}
+		err = p.Save(ctx)
+		if err != nil {
+			return
+		}
+
 		dst := filepath.Join(dir, replaceExt(filepath.Base(p.Raw), ".mp4"))
 		if err != nil {
 			return
 		}
+
 		cmd := transcode.MP4(p.Raw, dst, &transcode.VideoOptions{
 			Height:    1080,
 			SizeLimit: 256 << 20,

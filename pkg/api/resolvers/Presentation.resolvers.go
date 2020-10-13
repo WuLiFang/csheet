@@ -5,6 +5,7 @@ package resolvers
 
 import (
 	"context"
+	"sort"
 
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
@@ -75,6 +76,17 @@ func (r *presentationResolver) IsRegularTranscodeFailed(ctx context.Context, obj
 	raw, _ := file.FindByPath(obj.Raw)
 	v := raw.Tag() == obj.RegularErrorTag
 	return &v, nil
+}
+
+func (r *presentationResolver) Metadata(ctx context.Context, obj *presentation.Presentation) ([]model.StringEntry, error) {
+	var ret []model.StringEntry
+	for k, v := range obj.Metadata {
+		ret = append(ret, model.StringEntry{K: k, V: v})
+	}
+	sort.Slice(ret, func(i, j int) bool {
+		return ret[i].K < ret[j].K
+	})
+	return ret, nil
 }
 
 // Presentation returns generated.PresentationResolver implementation.

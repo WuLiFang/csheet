@@ -8,4 +8,5 @@ type Presentation implements Node {
   regular: WebFile
   isRegularOutdated: Boolean
   isRegularTranscodeFailed: Boolean
+  metadata: [StringEntry!]!
 }

@@ -28,6 +28,18 @@ export interface presentationNode_node_Presentation_regular {
   url: string;
 }
 
+export interface presentationNode_node_Presentation_metadata {
+  __typename: "StringEntry";
+  /**
+   * key
+   */
+  k: string;
+  /**
+   * value
+   */
+  v: string;
+}
+
 export interface presentationNode_node_Presentation {
   __typename: "Presentation";
   id: string;
@@ -38,6 +50,7 @@ export interface presentationNode_node_Presentation {
   regular: presentationNode_node_Presentation_regular | null;
   isRegularOutdated: boolean | null;
   isRegularTranscodeFailed: boolean | null;
+  metadata: presentationNode_node_Presentation_metadata[];
 }
 
 export type presentationNode_node = presentationNode_node_Collection | presentationNode_node_Presentation;

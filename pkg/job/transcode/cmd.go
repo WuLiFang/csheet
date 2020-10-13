@@ -8,18 +8,17 @@ import (
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
-	"github.com/WuLiFang/csheet/v6/pkg/transcode"
 )
 
 func getMiddleFrameTimeOffset(p presentation.Presentation) (time.Duration, error) {
 	switch p.Type {
 	case presentation.TypeImage:
 	case presentation.TypeVideo:
-		info, err := transcode.Probe(p.Raw)
-		if err != nil {
-			return 0, err
+		if p.Metadata == nil {
+			return 0, errors.New("getMiddleFrameTimeOffset: should probe first")
 		}
-		return info.Duration() / 2, nil
+		duration, _ := time.ParseDuration(p.Metadata["duration"] + "s")
+		return duration / 2, nil
 	default:
 		logging.Logger("job.transcode.cmd").Sugar().
 			DPanic("unsupported type", "p", p)

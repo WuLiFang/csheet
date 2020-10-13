@@ -40,6 +40,18 @@ export interface collectionNode_node_Collection_presentations_regular {
   url: string;
 }
 
+export interface collectionNode_node_Collection_presentations_metadata {
+  __typename: "StringEntry";
+  /**
+   * key
+   */
+  k: string;
+  /**
+   * value
+   */
+  v: string;
+}
+
 export interface collectionNode_node_Collection_presentations {
   __typename: "Presentation";
   id: string;
@@ -50,6 +62,7 @@ export interface collectionNode_node_Collection_presentations {
   regular: collectionNode_node_Collection_presentations_regular | null;
   isRegularOutdated: boolean | null;
   isRegularTranscodeFailed: boolean | null;
+  metadata: collectionNode_node_Collection_presentations_metadata[];
 }
 
 export interface collectionNode_node_Collection {

@@ -121,6 +121,7 @@ type ComplexityRoot struct {
 		IsRegularTranscodeFailed func(childComplexity int) int
 		IsThumbOutdated          func(childComplexity int) int
 		IsThumbTranscodeFailed   func(childComplexity int) int
+		Metadata                 func(childComplexity int) int
 		Raw                      func(childComplexity int) int
 		Regular                  func(childComplexity int) int
 		Thumb                    func(childComplexity int) int
@@ -179,6 +180,7 @@ type PresentationResolver interface {
 	Regular(ctx context.Context, obj *presentation.Presentation) (*model.WebFile, error)
 	IsRegularOutdated(ctx context.Context, obj *presentation.Presentation) (*bool, error)
 	IsRegularTranscodeFailed(ctx context.Context, obj *presentation.Presentation) (*bool, error)
+	Metadata(ctx context.Context, obj *presentation.Presentation) ([]model.StringEntry, error)
 }
 type QueryResolver interface {
 	CgteamworkProjects(ctx context.Context, q *string, name []string, database []string, status []string) ([]cgteamwork.Project, error)
@@ -485,6 +487,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Presentation.IsThumbTranscodeFailed(childComplexity), true
+
+	case "Presentation.metadata":
+		if e.complexity.Presentation.Metadata == nil {
+			break
+		}
+
+		return e.complexity.Presentation.Metadata(childComplexity), true
 
 	case "Presentation.raw":
 		if e.complexity.Presentation.Raw == nil {
@@ -862,6 +871,7 @@ type CollectionConnection {
   regular: WebFile
   isRegularOutdated: Boolean
   isRegularTranscodeFailed: Boolean
+  metadata: [StringEntry!]!
 }
 `, BuiltIn: false},
 	{Name: "pkg/api/types/StringEntry.gql", Input: `type StringEntry {
@@ -2583,6 +2593,40 @@ func (ec *executionContext) _Presentation_isRegularTranscodeFailed(ctx context.C
 	res := resTmp.(*bool)
 	fc.Result = res
 	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Presentation_metadata(ctx context.Context, field graphql.CollectedField, obj *presentation.Presentation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Presentation",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Presentation().Metadata(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]model.StringEntry)
+	fc.Result = res
+	return ec.marshalNStringEntry2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEntryᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_cgteamworkProjects(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4742,6 +4786,20 @@ func (ec *executionContext) _Presentation(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._Presentation_isRegularTranscodeFailed(ctx, field, obj)
+				return res
+			})
+		case "metadata":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Presentation_metadata(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		default:

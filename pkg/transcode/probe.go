@@ -30,6 +30,16 @@ func (m MediaInfo) FrameCount() int64 {
 	return m.JSON.Get(`streams.#(codec_type="video").nb_frames`).Int()
 }
 
+// Width for first video stream.
+func (m MediaInfo) Width() int64 {
+	return m.JSON.Get(`streams.#(codec_type="video").width`).Int()
+}
+
+// Height for first video stream.
+func (m MediaInfo) Height() int64 {
+	return m.JSON.Get(`streams.#(codec_type="video").height`).Int()
+}
+
 // Probe file with ffprobe.
 func Probe(filename string) (ret MediaInfo, err error) {
 	var c = exec.Command(ffprobe, "-hide_banner",

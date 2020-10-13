@@ -36,6 +36,18 @@ export interface collection_presentations_regular {
   url: string;
 }
 
+export interface collection_presentations_metadata {
+  __typename: "StringEntry";
+  /**
+   * key
+   */
+  k: string;
+  /**
+   * value
+   */
+  v: string;
+}
+
 export interface collection_presentations {
   __typename: "Presentation";
   id: string;
@@ -46,6 +58,7 @@ export interface collection_presentations {
   regular: collection_presentations_regular | null;
   isRegularOutdated: boolean | null;
   isRegularTranscodeFailed: boolean | null;
+  metadata: collection_presentations_metadata[];
 }
 
 export interface collection {

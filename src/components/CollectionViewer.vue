@@ -119,6 +119,11 @@
                   FaIcon.h-full(name="spinner" spin)
                 template(v-else)
                   | 收集
+          PresentationMetadata(
+            class="flex-auto lg:mx-1"
+            v-if="presentation"
+            :value="presentation"
+          )
 </template>
 
 <script lang="ts">
@@ -135,6 +140,7 @@ import {
   collectionNodeVariables,
 } from '../graphql/types/collectionNode';
 import CollectionMetadata from './CollectionMetadata.vue';
+import PresentationMetadata from './PresentationMetadata.vue';
 import { filePathFormat } from '../const';
 import * as preference from '@/preference';
 import * as sentry from '@sentry/browser';
@@ -145,6 +151,7 @@ import { presentation } from '../graphql/types/presentation';
     Presentation,
     PresentationSelect,
     CollectionMetadata,
+    PresentationMetadata,
   },
   mounted() {
     sentry.addBreadcrumb({

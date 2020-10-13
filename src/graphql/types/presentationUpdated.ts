@@ -24,6 +24,18 @@ export interface presentationUpdated_presentationUpdated_regular {
   url: string;
 }
 
+export interface presentationUpdated_presentationUpdated_metadata {
+  __typename: "StringEntry";
+  /**
+   * key
+   */
+  k: string;
+  /**
+   * value
+   */
+  v: string;
+}
+
 export interface presentationUpdated_presentationUpdated {
   __typename: "Presentation";
   id: string;
@@ -34,6 +46,7 @@ export interface presentationUpdated_presentationUpdated {
   regular: presentationUpdated_presentationUpdated_regular | null;
   isRegularOutdated: boolean | null;
   isRegularTranscodeFailed: boolean | null;
+  metadata: presentationUpdated_presentationUpdated_metadata[];
 }
 
 export interface presentationUpdated {

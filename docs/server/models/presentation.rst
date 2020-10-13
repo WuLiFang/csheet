@@ -13,6 +13,7 @@
     Regular string 
     RegularSuccessTag string
     RegularErrorTag string
+    Metadata map[string]string
   }
 
 从收集的文件中获取到的展示方式。
@@ -55,3 +56,30 @@ RegularSuccessTag string
 RegularErrorTag string
 
   常规文件 :doc:`../transcode` 失败的原始文件 :ref:`内容标签`。
+
+Metadata map[string]string
+
+  文件元数据，可能的值见下方。
+  
+元数据
+-------------------
+
+width
+
+  图片或视频宽度
+
+height
+
+  图片或视频高度
+
+frame-rate
+
+  视频帧速率
+
+frame-count
+
+  视频总帧数
+
+duration
+
+  持续时间长度

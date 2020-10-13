@@ -14,10 +14,21 @@ import (
 func transcodeImageRegular(ctx context.Context, p presentation.Presentation) error {
 	return filestore.WithTempDir("image-regular-", func(dir string) (err error) {
 		var logger = logging.Logger("job.transode").Sugar()
+
 		raw, err := file.FindByPath(p.Raw)
 		if err != nil {
 			return
 		}
+
+		err = p.Probe()
+		if err != nil {
+			return
+		}
+		err = p.Save(ctx)
+		if err != nil {
+			return
+		}
+
 		dst := filepath.Join(dir, replaceExt(filepath.Base(p.Raw), ".jpg"))
 		offset, err := getMiddleFrameTimeOffset(p)
 		if err != nil {

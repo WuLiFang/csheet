@@ -15,4 +15,8 @@ fragment presentation on Presentation {
   }
   isRegularOutdated
   isRegularTranscodeFailed
+  metadata {
+    k
+    v
+  }
 }
