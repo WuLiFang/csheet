@@ -215,6 +215,9 @@ export default class Presentation extends Vue {
   }
 
   seekFrame(f: number, pause = false): void {
+    if (!isFinite(f)){
+      return
+    }
     if (this.frameRate <= 0) {
       return;
     }
