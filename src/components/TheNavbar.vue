@@ -82,9 +82,9 @@
           @keydown.enter="collectFromFolder()"
           list="navbar-folder-root"
         )
-    button(
+    button.form-button(
       ref="collectButton"
-      class="bg-gray-700 hover:bg-gray-600 mr-1 p-2 w-16 rounded-sm"
+      class="mr-1"
       type="button"
       :disabled="loadingCount > 0"
       @click="collect()"

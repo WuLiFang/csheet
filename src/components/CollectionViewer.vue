@@ -125,11 +125,11 @@
             :value="value"
           )
             template(#recollect-button)
-              button(
+              button.form-button(
                 type="button"
                 :disabled="recollectingCount > 0"
                 @click="recollect()"
-                class="h-8 bg-gray-700 hover:bg-gray-600 py-1 px-2 rounded-sm ml-1"
+                class="ml-1"
               ) 
                 template(v-if="recollectingCount > 0 ")
                   FaIcon.h-full(name="spinner" spin)
