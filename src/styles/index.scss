@@ -38,6 +38,24 @@ button:focus,
 
 @tailwind components;
 
+%form-button-common {
+  @apply px-5;
+  @apply py-2;
+  @apply rounded-sm;
+  &:disabled {
+    @apply cursor-not-allowed;
+  }
+}
+
+.form-button {
+  @extend %form-button-common;
+  @apply text-white;
+  @apply bg-gray-700;
+  &:hover {
+    @apply bg-gray-600;
+  }
+}
+
 /* purgecss end ignore */
 
 @tailwind utilities;
@@ -50,6 +68,20 @@ button:focus,
   @variants responsive {
     .clear-none {
       clear: none;
+    }
+  }
+
+  input.spin-button-none {
+    // https://stackoverflow.com/a/4298216
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      /* display: none; <- Crashes Chrome on hover */
+      -webkit-appearance: none;
+      margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+    }
+
+    &[type='number'] {
+      -moz-appearance: textfield; /* Firefox */
     }
   }
 }

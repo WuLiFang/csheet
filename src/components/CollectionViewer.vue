@@ -72,11 +72,13 @@
             leave-active-class="transition-all duration-500 ease-out"
           )
             Presentation(
+              ref="presentation"
               :key="value.id"
               class="object-contain w-full h-full absolute inset-0"
               :id="presentationID"
               size="regular"
               autoplay
+              @frameUpdate="currentFrame = $event"
             )
           //- placeholder for small screen
           Presentation(
@@ -91,15 +93,37 @@
             v-show="value.presentations.length > 0"
             v-model="presentationID"
             :options="value.presentations"
-            class="min-h-16"
+            class="min-h-16 mb-2"
           )
           label(
-            class="block mt-2 lg:mx-1"
+            class="block lg:mx-1"
+            for="frame-control-input"
+            v-if="$refs.presentation && $refs.presentation.frameRate > 0 "
+          )
+            p 帧控制
+            .flex.my-1
+              button.form-button(
+                type="button"
+                @click="() => $refs.presentation.seekFrameOffset(-1, true)"
+              ) 上一帧
+              input.form-input#frame-control-input(
+                type="number"
+                class="flex-auto spin-button-none z-10"
+                :value="currentFrame"
+                min="0"
+                @input="e => $refs.presentation.seekFrame(e.target.value, true)"
+              )
+              button.form-button(
+                type="button"
+                @click="() => $refs.presentation.seekFrameOffset(1, true)"
+              ) 下一帧
+          label(
+            class="block lg:mx-1"
           )
             span 查看器背景
-            select(
+            select.form-select(
               v-model="preferredBackground"
-              class="form-select py-1 ml-1"
+              class="inline-block py-1 ml-1"
             )
               option(value="checkboard") 棋盘格
               option(value="black") 纯黑
@@ -126,7 +150,7 @@
 </template>
 
 <script lang="ts">
-import { Component,  Mixins, Prop } from 'vue-property-decorator';
+import { Component, Mixins, Prop } from 'vue-property-decorator';
 import { ModalMixin } from '../mixins/ModalMixin';
 import Presentation, { fileSrc } from './Presentation.vue';
 import { collection as Collection } from '../graphql/types/collection';
@@ -161,7 +185,7 @@ import { presentation } from '../graphql/types/presentation';
     });
     const keyupListener = (e: KeyboardEvent) => {
       if (e.target !== document.body) {
-        return
+        return;
       }
       if (e.shiftKey || e.ctrlKey || e.altKey) {
         return;
@@ -214,13 +238,15 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
   $refs!: {
     prev: HTMLButtonElement;
     next: HTMLButtonElement;
+    presentation: Presentation;
   };
 
   presentationID = '';
   loadingCount = 0;
   recollectingCount = 0;
+  currentFrame = 0;
 
-  jumpPrev():void {
+  jumpPrev(): void {
     if (this.prev) {
       sentry.addBreadcrumb({
         category: 'collection-viewer',
@@ -233,7 +259,7 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
     }
   }
 
-  jumpNext() :void{
+  jumpNext(): void {
     if (this.next) {
       sentry.addBreadcrumb({
         category: 'collection-viewer',
@@ -246,7 +272,7 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
     }
   }
 
-  close():void {
+  close(): void {
     sentry.addBreadcrumb({
       category: 'collection-viewer',
       message: 'close',

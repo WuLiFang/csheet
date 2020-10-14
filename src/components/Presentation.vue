@@ -6,6 +6,7 @@ import {
   presentationNode,
 } from '@/graphql/types/presentationNode';
 import { filePathFormat } from '../const';
+import parseFrameRate from '@/utils/parseFrameRate';
 
 export function fileSrc(v: string | undefined): string {
   const d = require('@/assets/img/transcoding.svg');
@@ -33,6 +34,7 @@ export function fileSrc(v: string | undefined): string {
   render(h) {
     const src = this.path;
     const renderImage = () => {
+      this.updateCurrentFrame();
       return h('img', {
         domProps: {
           src,
@@ -64,6 +66,9 @@ export function fileSrc(v: string | undefined): string {
           error: () => {
             this.isLoadFailed = true;
           },
+          timeupdate: () => {
+            this.updateCurrentFrame();
+          },
           dragstart: this.handleDrag.bind(this),
         },
       });
@@ -91,6 +96,13 @@ export function fileSrc(v: string | undefined): string {
         this.isLoadFailed = false;
       }
     );
+    this.$watch(
+      () => this.currentFrame,
+      v => {
+        this.$emit('frameUpdate', v);
+      },
+      { immediate: true }
+    );
   },
 })
 export default class Presentation extends Vue {
@@ -103,9 +115,11 @@ export default class Presentation extends Vue {
   @Prop({ type: Boolean, default: false })
   autoplay!: boolean;
 
+  $el!: HTMLVideoElement | HTMLImageElement;
   node?: presentation;
 
   isLoadFailed = false;
+  currentFrame = 0;
 
   get path(): string {
     if (this.isTranscodeFailed) {
@@ -154,6 +168,47 @@ export default class Presentation extends Vue {
       return;
     }
     e.dataTransfer?.setData('text/plain', this.node.raw.path);
+  }
+
+  get frameRate(): number {
+    return (
+      parseFrameRate(
+        this.node?.metadata?.find(i => i.k === 'frame-rate')?.v ?? ''
+      ) || 0
+    );
+  }
+
+  updateCurrentFrame(): void {
+    if (!this.$el) {
+      return;
+    }
+    if (this.$el instanceof HTMLImageElement) {
+      this.currentFrame = 0;
+      return;
+    }
+    this.currentFrame = Math.round(this.$el.currentTime * this.frameRate);
+  }
+
+  pause(): void {
+    if (this.$el instanceof HTMLVideoElement) {
+      this.$el.pause();
+    }
+  }
+
+  seekFrame(f: number, pause = false): void {
+    if (this.frameRate <= 0) {
+      return;
+    }
+    if (pause) {
+      this.pause();
+    }
+    if (this.$el instanceof HTMLVideoElement) {
+      this.$el.currentTime = f / this.frameRate;
+    }
+  }
+
+  seekFrameOffset(offset: number, pause = false): void {
+    this.seekFrame(this.currentFrame + offset, pause);
   }
 }
 </script>
