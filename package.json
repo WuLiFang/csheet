@@ -21,6 +21,7 @@
     "localforage": "1.8.1",
     "lodash": "4.17.20",
     "moment": "2.24.0",
+    "to-digit-grouped": "^1.0.1",
     "vue": "2.6.11",
     "vue-apollo": "^3.0.4",
     "vue-awesome": "4.0.2",
