@@ -18,6 +18,12 @@ func transcodeImageThumb(ctx context.Context, p presentation.Presentation) error
 		if err != nil {
 			return
 		}
+
+		err = p.ProbeAndSave(ctx)
+		if err != nil {
+			return
+		}
+
 		dst := filepath.Join(dir, replaceExt(filepath.Base(p.Raw), ".jpg"))
 
 		offset, err := getMiddleFrameTimeOffset(p)

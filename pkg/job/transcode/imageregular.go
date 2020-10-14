@@ -20,11 +20,6 @@ func transcodeImageRegular(ctx context.Context, p presentation.Presentation) err
 			return
 		}
 
-		err = p.ProbeAndSave(ctx)
-		if err != nil {
-			return
-		}
-
 		dst := filepath.Join(dir, replaceExt(filepath.Base(p.Raw), ".jpg"))
 		offset, err := getMiddleFrameTimeOffset(p)
 		if err != nil {

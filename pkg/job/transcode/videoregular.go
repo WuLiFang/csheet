@@ -19,11 +19,6 @@ func transcodeVideoRegular(ctx context.Context, p presentation.Presentation) err
 			return
 		}
 
-		err = p.ProbeAndSave(ctx)
-		if err != nil {
-			return
-		}
-
 		dst := filepath.Join(dir, replaceExt(filepath.Base(p.Raw), ".mp4"))
 		if err != nil {
 			return

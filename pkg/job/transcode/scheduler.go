@@ -85,7 +85,6 @@ func (s *scheduler) transcode(ctx context.Context, p presentation.Presentation) 
 		return
 	}
 	rawTag := raw.Tag()
-	_ = rawTag
 	err = s.transcodeOnDemand(
 		ctx,
 		p,
