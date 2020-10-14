@@ -161,8 +161,6 @@ import Presentation, { fileSrc } from './Presentation.vue';
 import { collection as Collection } from '../graphql/types/collection';
 import 'vue-awesome/icons/window-close';
 import 'vue-awesome/icons/caret-square-up';
-import 'vue-awesome/icons/caret-square-left';
-import 'vue-awesome/icons/caret-square-right';
 import 'vue-awesome/icons/caret-square-down';
 import PresentationSelect from './PresentationSelect.vue';
 import {
