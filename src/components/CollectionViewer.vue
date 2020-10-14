@@ -99,7 +99,7 @@
             ) 上一帧
             input.form-input#frame-control-input(
               type="number"
-              class="flex-auto w-24 spin-button-none z-10"
+              class="flex-auto w-24 spin-button-none z-10 text-center"
               :value="currentFrame"
               min="0"
               @input="e => $refs.presentation.seekFrame(e.target.value, true)"
