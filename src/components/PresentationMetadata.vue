@@ -10,6 +10,26 @@
     template(v-if="metadata.frameCount")
       dt 帧数
       dd.pl-4 {{metadata.frameCount}}
+    template(v-if="metadata.frameCount > 0")
+      dt 帧范围
+      dd.pl-4.flex.items-center
+        input.form-input(
+          v-model.number="formData.firstFrame"
+          class="h-8 text-center flex-auto spin-button-none"
+          type="number"
+          @focus="hasFocus = true"
+          @keyup.enter="$event.target.blur()"
+          @blur="blur()"
+        )
+        span.mx-1 -
+        input.form-input(
+          v-model.number="formData.lastFrame"
+          class="h-8 text-center flex-auto spin-button-none"
+          type="number"
+          @focus="hasFocus = true"
+          @keyup.enter="$event.target.blur()"
+          @blur="blur()"
+        )
     template(v-if="metadata.frameRate")
       dt 帧速率
       dd.pl-4 {{metadata.frameRate}}
@@ -22,6 +42,8 @@
       template(v-else-if="k === 'duration'")
       template(v-else-if="k === 'frame-count'")
       template(v-else-if="k === 'frame-rate'")
+      template(v-else-if="k === 'first-frame'")
+      template(v-else-if="k === 'last-frame'")
       template(v-else)
         dt {{k}}
         dd.pl-4 {{v}}
@@ -34,13 +56,45 @@ import { camelCase } from 'lodash';
 import formatFileSize from '@/utils/formatFileSize';
 import formatDuration from '@/utils/formatDuration';
 import toDigitGrouped from 'to-digit-grouped';
+import client from '@/client';
 
-@Component<PresentationMetadata>({})
+@Component<PresentationMetadata>({
+  mounted() {
+    this.$watch(
+      () => [this.firstFrame, this.lastFrame],
+      ([first, last]) => {
+        this.setTimeRange(first, last);
+      },
+      { immediate: true }
+    );
+    this.$watch(
+      () => this.formData.firstFrame,
+      v => {
+        this.setTimeRange(v);
+      },
+      { immediate: true }
+    );
+    this.$watch(
+      () => this.formData.lastFrame,
+      v => {
+        this.setTimeRange(undefined, v);
+      },
+      { immediate: true }
+    );
+  },
+})
 export default class PresentationMetadata extends Vue {
   @Prop({ type: Object, required: true })
   value!: Presentation;
 
-  get metadata(): Record<string, string> {
+  formData = {
+    firstFrame: 0,
+    lastFrame: 0,
+  };
+
+  hasFocus = false;
+
+  get metadata(): Record<string, string | undefined> {
     return Object.fromEntries(
       this.value.metadata.map(({ k, v }) => [camelCase(k), v])
     );
@@ -57,11 +111,69 @@ export default class PresentationMetadata extends Vue {
   }
 
   get durationText(): string {
-    const duration = parseFloat(this.metadata.duration);
+    const duration = parseFloat(this.metadata.duration ?? '');
     if (!isFinite(duration)) {
       return this.metadata.duration ?? '';
     }
     return formatDuration(duration * 1e3);
+  }
+
+  get frameCount(): number {
+    return parseInt(this.metadata.frameCount ?? '') || 0;
+  }
+
+  get firstFrame(): number {
+    return parseInt(this.metadata.firstFrame ?? '') || 0;
+  }
+
+  set firstFrame(v: number) {
+    this.setTimeRange(v);
+  }
+
+  get lastFrame(): number {
+    return parseInt(this.metadata.lastFrame ?? '') || 0;
+  }
+
+  set lastFrame(v: number) {
+    this.setTimeRange(undefined, v);
+  }
+
+  setTimeRange(first?: number, last?: number): void {
+    if (first != null && last != null) {
+      last = first + (this.frameCount - 1);
+    } else if (first != null) {
+      last = first + (this.frameCount - 1);
+    } else if (last != null) {
+      first = last - (this.frameCount - 1);
+    } else {
+      return;
+    }
+    this.formData.firstFrame = first;
+    this.formData.lastFrame = last;
+  }
+
+  async submit(): Promise<void> {
+    await client.presentation.updateMetadata({
+      input: {
+        data: [
+          {
+            id: this.value.id,
+            key: 'first-frame',
+            value: this.formData.firstFrame.toString(),
+          },
+          {
+            id: this.value.id,
+            key: 'last-frame',
+            value: this.formData.lastFrame.toString(),
+          },
+        ],
+      },
+    });
+  }
+
+  blur():void {
+    this.hasFocus = false;
+    this.submit();
   }
 }
 </script>

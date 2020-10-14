@@ -1,0 +1,11 @@
+mutation updatePresentationMetadata($input: UpdatePresentationMetadataInput!) {
+  updatePresentationMetadata(input: $input) {
+    updated {
+      id
+      metadata {
+        k
+        v
+      }
+    }
+  }
+}

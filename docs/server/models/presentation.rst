@@ -83,3 +83,11 @@ frame-count
 duration
 
   持续时间长度
+
+first-frame
+  
+  第一帧的帧编号
+
+last-frame
+
+  最后一帧的帧编号

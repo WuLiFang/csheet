@@ -119,7 +119,7 @@ export default class Presentation extends Vue {
   node?: presentation;
 
   isLoadFailed = false;
-  currentFrame = 0;
+  rawCurrentFrame = 0;
 
   get path(): string {
     if (this.isTranscodeFailed) {
@@ -170,6 +170,14 @@ export default class Presentation extends Vue {
     e.dataTransfer?.setData('text/plain', this.node.raw.path);
   }
 
+  get frameCount(): number {
+    return (
+      parseInt(
+        this.node?.metadata?.find(i => i.k === 'frame-count')?.v ?? ''
+      ) || 0
+    );
+  }
+
   get frameRate(): number {
     return (
       parseFrameRate(
@@ -178,15 +186,26 @@ export default class Presentation extends Vue {
     );
   }
 
+  get firstFrame(): number {
+    return (
+      parseInt(this.node?.metadata.find(i => i.k === 'first-frame')?.v ?? '') ||
+      0
+    );
+  }
+
+  get currentFrame(): number {
+    return this.firstFrame + this.rawCurrentFrame;
+  }
+
   updateCurrentFrame(): void {
     if (!this.$el) {
       return;
     }
     if (this.$el instanceof HTMLImageElement) {
-      this.currentFrame = 0;
+      this.rawCurrentFrame = 0;
       return;
     }
-    this.currentFrame = Math.round(this.$el.currentTime * this.frameRate);
+    this.rawCurrentFrame = Math.round(this.$el.currentTime * this.frameRate);
   }
 
   pause(): void {
@@ -203,7 +222,7 @@ export default class Presentation extends Vue {
       this.pause();
     }
     if (this.$el instanceof HTMLVideoElement) {
-      this.$el.currentTime = f / this.frameRate;
+      this.$el.currentTime = (f - this.firstFrame) / this.frameRate;
     }
   }
 

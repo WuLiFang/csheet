@@ -101,9 +101,11 @@
             input.form-input#frame-control-input(
               type="number"
               class="flex-auto w-24 spin-button-none z-10 text-center"
-              :value="currentFrame"
-              min="0"
-              @input="e => $refs.presentation.seekFrame(e.target.value, true)"
+              :value="hasFocus ? formData.currentFrame : currentFrame"
+              @input="e => {formData.currentFrame = parseFloat(e.target.value); $refs.presentation.seekFrame(this.formData.currentFrame, true);}"
+              @keyup.enter="$event.target.blur()"
+              @focus="hasFocus = true; formData.currentFrame = currentFrame"
+              @blur="hasFocus = false;"
             )
             button.form-button(
               type="button"
@@ -207,11 +209,11 @@ import { presentation } from '../graphql/types/presentation';
       const now = new Date();
       switch (e.key) {
         case 'Escape':
-          e.preventDefault()
+          e.preventDefault();
           this.close();
           break;
         case 'ArrowUp':
-          e.preventDefault()
+          e.preventDefault();
           if (
             !e.repeat ||
             now.getTime() - lastJump.getTime() > minRepeatJumpInterval
@@ -221,7 +223,7 @@ import { presentation } from '../graphql/types/presentation';
           }
           break;
         case 'ArrowDown':
-          e.preventDefault()
+          e.preventDefault();
           if (
             !e.repeat ||
             now.getTime() - lastJump.getTime() > minRepeatJumpInterval
@@ -231,11 +233,11 @@ import { presentation } from '../graphql/types/presentation';
           }
           break;
         case 'ArrowLeft':
-          e.preventDefault()
+          e.preventDefault();
           this.$refs.presentation?.seekFrameOffset(-1, true);
           break;
         case 'ArrowRight':
-          e.preventDefault()
+          e.preventDefault();
           this.$refs.presentation?.seekFrameOffset(1, true);
           break;
       }
@@ -283,6 +285,11 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
   loadingCount = 0;
   recollectingCount = 0;
   currentFrame = 0;
+  hasFocus = false;
+
+  formData = {
+    currentFrame: 0,
+  };
 
   jumpPrev(): void {
     if (this.prev) {
