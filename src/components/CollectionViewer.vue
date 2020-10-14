@@ -17,31 +17,31 @@
           class="float-right h-16"
         )
           button(
-            class="h-full text-gray-400 hover:text-gray-200 outline-none"
-            title="关闭（快捷键：Esc）"
-            @click="close()"
-          )
-            FaIcon.h-full(name="window-close")
-          button(
             ref="prev"
-            class="h-full text-gray-400 ml-1 hover:text-gray-200 disabled:text-gray-600"
+            class="h-full text-gray-400 hover:text-gray-200 disabled:text-gray-600"
             class="outline-none"
             :disabled="!prev"
             @click="jumpPrev()"
             @animationend="$event.target.classList.remove('button-click-anim')"
-            title="上一个（快捷键：←）"
+            title="上一个（快捷键：↑）"
           )
-            FaIcon.h-full(name="caret-square-left")
+            FaIcon.h-full(name="caret-square-up")
           button(
             ref="next"
             class="h-full text-gray-400 ml-1 hover:text-gray-200 disabled:text-gray-600"
             class="outline-none"
             :disabled="!next"
-            title="下一个（快捷键：→）"
+            title="下一个（快捷键：↓）"
             @click="jumpNext()"
             @animationend="$event.target.classList.remove('button-click-anim')"
           )  
-            FaIcon.h-full(name="caret-square-right")
+            FaIcon.h-full(name="caret-square-down")
+          button(
+            class="h-full text-gray-400  ml-1 hover:text-gray-200 outline-none"
+            title="关闭（快捷键：Esc）"
+            @click="close()"
+          )
+            FaIcon.h-full(name="window-close")
         h1(
           class="text-2xl text-gray-400 break-words"
         ) {{value.title}}
@@ -95,6 +95,7 @@
             button.form-button(
               type="button"
               class="flex-none w-24"
+              title="上一帧（快捷键：←）"
               @click="() => $refs.presentation.seekFrameOffset(-1, true)"
             ) 上一帧
             input.form-input#frame-control-input(
@@ -107,6 +108,7 @@
             button.form-button(
               type="button"
               class="flex-none w-24"
+              title="下一帧（快捷键：→）"
               @click="() => $refs.presentation.seekFrameOffset(1, true)"
             ) 下一帧
         aside(
@@ -158,8 +160,10 @@ import { ModalMixin } from '../mixins/ModalMixin';
 import Presentation, { fileSrc } from './Presentation.vue';
 import { collection as Collection } from '../graphql/types/collection';
 import 'vue-awesome/icons/window-close';
+import 'vue-awesome/icons/caret-square-up';
 import 'vue-awesome/icons/caret-square-left';
 import 'vue-awesome/icons/caret-square-right';
+import 'vue-awesome/icons/caret-square-down';
 import PresentationSelect from './PresentationSelect.vue';
 import {
   collectionNode,
@@ -186,28 +190,61 @@ import { presentation } from '../graphql/types/presentation';
       level: sentry.Severity.Info,
       data: { value: this.value },
     });
+    let lastJump = new Date(0);
+    const minRepeatJumpInterval = 800;
     const keyupListener = (e: KeyboardEvent) => {
-      if (e.target !== document.body) {
+      if (
+        !(
+          e.target === document.body ||
+          e.target === this.$refs.presentation?.$el ||
+          e.target === this.$refs.prev ||
+          e.target === this.$refs.next
+        )
+      ) {
         return;
       }
       if (e.shiftKey || e.ctrlKey || e.altKey) {
         return;
       }
+      const now = new Date();
       switch (e.key) {
         case 'Escape':
+          e.preventDefault()
           this.close();
           break;
+        case 'ArrowUp':
+          e.preventDefault()
+          if (
+            !e.repeat ||
+            now.getTime() - lastJump.getTime() > minRepeatJumpInterval
+          ) {
+            this.jumpPrev();
+            lastJump = now;
+          }
+          break;
+        case 'ArrowDown':
+          e.preventDefault()
+          if (
+            !e.repeat ||
+            now.getTime() - lastJump.getTime() > minRepeatJumpInterval
+          ) {
+            this.jumpNext();
+            lastJump = now;
+          }
+          break;
         case 'ArrowLeft':
-          this.jumpPrev();
+          e.preventDefault()
+          this.$refs.presentation?.seekFrameOffset(-1, true);
           break;
         case 'ArrowRight':
-          this.jumpNext();
+          e.preventDefault()
+          this.$refs.presentation?.seekFrameOffset(1, true);
           break;
       }
     };
-    document.body.addEventListener('keyup', keyupListener);
+    document.body.addEventListener('keydown', keyupListener);
     this.$once('destroyed', () => {
-      document.body.removeEventListener('keyup', keyupListener);
+      document.body.removeEventListener('keydown', keyupListener);
     });
   },
   destroyed() {
