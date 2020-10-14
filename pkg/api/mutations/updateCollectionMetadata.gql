@@ -1,4 +1,4 @@
-# Code generated from [base.gql.gotmpl dataInput.gotmpl collectionMetadata.gotmpl], DO NOT EDIT.
+# Code generated from [base.gql.gotmpl dataInput.gotmpl updateMetadata.gotmpl], DO NOT EDIT.
 
 input UpdateCollectionMetadataInputData {
     id: ID!
