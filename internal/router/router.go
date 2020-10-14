@@ -53,30 +53,25 @@ func New() *gin.Engine {
 	r.Group("files").Use(func(c *gin.Context) {
 		var logger = logging.For(c.Request.Context()).Logger("router").Sugar()
 
+		c.Header("Cache-Control", "public, immutable, max-age=604800")
 		c.Next()
+		c.Header("Cache-Control", "no-store") // when body is empty
+
 		status := c.Writer.Status()
-		go func(status int, filepath string) {
-			if filepath[0] == '/' {
-				filepath = filepath[1:]
-			}
-			switch status {
-			case http.StatusOK:
-				fallthrough
-			case http.StatusNotModified:
-				err := filestore.SetAccessTime(path.Join(filestore.Dir, filepath), time.Now())
-				if err != nil {
-					logger.Errorw("update file atime failed", "error", err)
-				}
-			case http.StatusNotFound:
-				logger.Infow("not found requested file", "filepath", filepath, "clientIP", c.ClientIP())
+		filepath := c.Param("filepath")[1:]
+		switch status {
+		case http.StatusNotFound:
+			logger.Infow("not found requested file", "filepath", filepath, "clientIP", c.ClientIP())
+			go func() {
 				f, err := file.FindByPath(filepath)
 				if err == nil {
-					f.Delete(context.Background())
-				}
-				if err == db.ErrKeyNotFound {
+					err = f.Delete(context.Background())
+					if err != nil {
+						logger.Errorw("delete file from db failed", "file", f)
+					}
+				} else if err == db.ErrKeyNotFound {
 					err = nil
-				}
-				if err != nil {
+				} else {
 					logger.Errorw("find file failed", "error", err)
 				}
 
@@ -92,15 +87,26 @@ func New() *gin.Engine {
 							p.Regular = ""
 							p.RegularSuccessTag = ""
 						}
-						p.Save(context.Background())
+						err = p.Save(context.Background())
+						if err != nil {
+							logger.Errorw("save presentation failed", "error", err)
+						}
 					}
 				} else {
 					logger.Errorw("find presentation failed", "error", err)
 				}
-			}
-		}(status, c.Param("filepath"))
-		if status == http.StatusNotFound {
-			c.Header("Cache-Control", "no-store")
+			}()
+		case http.StatusNotModified:
+			fallthrough
+		case http.StatusPartialContent:
+			fallthrough
+		case http.StatusOK:
+			go func() {
+				err := filestore.SetAccessTime(path.Join(filestore.Dir, filepath), time.Now())
+				if err != nil {
+					logger.Errorw("update file atime failed", "error", err)
+				}
+			}()
 		}
 	}).Static("", filestore.Dir)
 	if config.Env == "development" {
