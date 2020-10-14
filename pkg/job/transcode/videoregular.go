@@ -6,7 +6,6 @@ import (
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/filestore"
-	"github.com/WuLiFang/csheet/v6/pkg/model/file"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
 	"github.com/WuLiFang/csheet/v6/pkg/transcode"
 )
@@ -14,11 +13,6 @@ import (
 func transcodeVideoRegular(ctx context.Context, p presentation.Presentation) error {
 	var logger = logging.Logger("job.transcode").Sugar()
 	return filestore.WithTempDir("video-regular-", func(dir string) (err error) {
-		raw, err := file.FindByPath(p.Raw)
-		if err != nil {
-			return
-		}
-
 		dst := filepath.Join(dir, replaceExt(filepath.Base(p.Raw), ".mp4"))
 		if err != nil {
 			return
@@ -30,9 +24,10 @@ func transcodeVideoRegular(ctx context.Context, p presentation.Presentation) err
 		})
 
 		err = runCommand(cmd)
+		rawTag := p.RawTag()
 		if err != nil {
 			p.Load(ctx)
-			p.RegularErrorTag = raw.Tag()
+			p.RegularErrorTag = rawTag
 			return p.Save(ctx)
 		}
 
@@ -43,9 +38,12 @@ func transcodeVideoRegular(ctx context.Context, p presentation.Presentation) err
 		if p.Regular != filename {
 			removeStoreFile(p.Regular)
 		}
-		p.Load(ctx)
+		err = p.Load(ctx)
+		if err != nil {
+			return
+		}
 		p.Regular = filename
-		p.RegularSuccessTag = raw.Tag()
+		p.RegularSuccessTag = rawTag
 		err = p.Save(ctx)
 		if err != nil {
 			return

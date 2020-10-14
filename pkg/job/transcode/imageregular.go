@@ -48,7 +48,10 @@ func transcodeImageRegular(ctx context.Context, p presentation.Presentation) err
 		if p.Regular != filename {
 			removeStoreFile(p.Regular)
 		}
-		p.Load(ctx)
+		err = p.Load(ctx)
+		if err != nil {
+			return
+		}
 		p.Regular = filename
 		p.RegularSuccessTag = raw.Tag()
 		err = p.Save(ctx)

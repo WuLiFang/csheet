@@ -13,6 +13,7 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/model/file"
 	"github.com/WuLiFang/csheet/v6/pkg/transcode"
+	"go.uber.org/zap"
 )
 
 //go:generate gotmpl -o presentation_gen.go ../model.go.gotmpl
@@ -63,6 +64,18 @@ func (p *Presentation) SetMetadata(k, v string) (changed bool) {
 	p.Metadata[k] = v
 	changed = true
 	return
+}
+
+// RawTag return tag of raw file, empty before file stat or file deleted from db.
+func (p Presentation) RawTag() string {
+	raw, err := file.FindByPath(p.Raw)
+	if errors.Is(err, db.ErrKeyNotFound) {
+		return ""
+	}
+	if err != nil {
+		logging.Logger("model.presentation").DPanic("load raw file failed", zap.Error(err))
+	}
+	return raw.Tag()
 }
 
 // Key in db.

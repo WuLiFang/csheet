@@ -41,18 +41,20 @@ type scheduler struct {
 	flight *onceflight.Group
 }
 
-func (s *scheduler) transcodeOnDemand(
+func isTagOutdated(rawTag, successTag, errorTag string) bool {
+	if rawTag == "" {
+		return false
+	}
+	return errorTag != rawTag &&
+		successTag != rawTag
+}
+
+func (s *scheduler) transcodeByType(
 	ctx context.Context,
 	p presentation.Presentation,
-	rawTag, errorTag, successTag, outputFile string,
 	jt jobType,
 ) (err error) {
 	var logger = logging.Logger("job.transcode")
-	var outdated = errorTag != rawTag &&
-		successTag != rawTag
-	if !outdated {
-		return
-	}
 	s.flight.Do(strconv.Itoa(int(jt))+":"+p.Raw, func() {
 		var w = weightByJobType(jt)
 		err = s.weight.Acquire(ctx, w)
@@ -73,33 +75,30 @@ func (s *scheduler) transcodeOnDemand(
 	return
 }
 
-// transcode create job for given presentation if needed,
+// transcode all size for given presentation if needed,
 // block if weight not enough (too many job running).
 func (s *scheduler) transcode(ctx context.Context, p presentation.Presentation) (err error) {
-	var raw file.File
-	raw, err = file.FindByPath(p.Raw)
-	if err == db.ErrKeyNotFound {
-		return db.Delete(db.IndexPresentationOutdated.Key(p.ID()))
+	if isTagOutdated(p.RawTag(), p.ThumbSuccessTag, p.ThumbErrorTag) {
+		err = p.ProbeAndSave(ctx)
+		if err != nil {
+			return
+		}
+		err = s.transcodeByType(
+			ctx,
+			p,
+			thumbJobType(p.Type))
+		if err != nil {
+			return
+		}
 	}
-	if err != nil {
-		return
-	}
-	rawTag := raw.Tag()
-	err = s.transcodeOnDemand(
-		ctx,
-		p,
-		rawTag, p.ThumbErrorTag, p.ThumbSuccessTag,
-		p.Thumb, thumbJobType(p.Type))
-	if err != nil {
-		return
-	}
-	err = s.transcodeOnDemand(
-		ctx,
-		p,
-		rawTag, p.RegularErrorTag, p.RegularSuccessTag,
-		p.Regular, regularJobType(p.Type))
-	if err != nil {
-		return
+	if isTagOutdated(p.RawTag(), p.RegularSuccessTag, p.RegularErrorTag) {
+		err = s.transcodeByType(
+			ctx,
+			p,
+			regularJobType(p.Type))
+		if err != nil {
+			return
+		}
 	}
 	err = db.Delete(db.IndexPresentationOutdated.Key(p.ID()))
 	return
