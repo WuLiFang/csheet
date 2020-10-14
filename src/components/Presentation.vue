@@ -26,7 +26,6 @@ export function fileSrc(v: string | undefined): string {
         return !this.id;
       },
       update(v: presentationNode): presentation | undefined {
-        this.isLoadFailed = false;
         return v.node?.__typename === 'Presentation' ? v.node : undefined;
       },
     },
@@ -84,6 +83,14 @@ export function fileSrc(v: string | undefined): string {
       default:
         return h('p', '尚未支持的格式');
     }
+  },
+  mounted() {
+    this.$watch(
+      () => this.path,
+      () => {
+        this.isLoadFailed = false;
+      }
+    );
   },
 })
 export default class Presentation extends Vue {
