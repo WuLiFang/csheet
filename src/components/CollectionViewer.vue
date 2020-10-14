@@ -51,9 +51,8 @@
       main(
         class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden"
       )
-        .viewport(
-          class="relative text-center lg:w-2/3"
-          :class=`{[backgroundClass]: true}`
+        .player(
+          class="relative text-center lg:w-2/3 h-full flex flex-col"
         )
           template(v-for="i in prefetchURLs")
             link(rel="prefetch" :href="i")
@@ -65,27 +64,51 @@
             v-else-if="presentation && presentation.isRegularOutdated"
             class="bg-orange-500 w-full"
           ) 预览已过期
-          transition(
-            enter-class="opacity-0"
-            leave-to-class="opacity-0"
-            enter-active-class="transition-all duration-500 ease-in"
-            leave-active-class="transition-all duration-500 ease-out"
+          .viewport(
+            class="relative text-center flex-auto"
+            :class=`{[backgroundClass]: true}`
           )
-            Presentation(
-              ref="presentation"
-              :key="value.id"
-              class="object-contain w-full h-full absolute inset-0"
-              :id="presentationID"
-              size="regular"
-              autoplay
-              @frameUpdate="currentFrame = $event"
+            transition(
+              enter-class="opacity-0"
+              leave-to-class="opacity-0"
+              enter-active-class="transition-all duration-500 ease-in"
+              leave-active-class="transition-all duration-500 ease-out"
             )
-          //- placeholder for small screen
-          Presentation(
-            class="object-contain w-full h-full invisible"
-            :id="presentationID"
-            size="thumb"
+              Presentation(
+                ref="presentation"
+                :key="value.id"
+                class="object-contain w-full h-full absolute inset-0"
+                :id="presentationID"
+                size="regular"
+                autoplay
+                @frameUpdate="currentFrame = $event"
+              )
+            //- placeholder for small screen
+            Presentation(
+              class="object-contain w-full h-full invisible"
+              :id="presentationID"
+              size="thumb"
+            )
+          .flex.overflow-x-hidden(
+            v-if="$refs.presentation && $refs.presentation.frameRate > 0"
           )
+            button.form-button(
+              type="button"
+              class="flex-none w-24"
+              @click="() => $refs.presentation.seekFrameOffset(-1, true)"
+            ) 上一帧
+            input.form-input#frame-control-input(
+              type="number"
+              class="flex-auto w-24 spin-button-none z-10"
+              :value="currentFrame"
+              min="0"
+              @input="e => $refs.presentation.seekFrame(e.target.value, true)"
+            )
+            button.form-button(
+              type="button"
+              class="flex-none w-24"
+              @click="() => $refs.presentation.seekFrameOffset(1, true)"
+            ) 下一帧
         aside(
           class="flex-auto bg-gray-900 lg:flex-initial lg:w-1/3 lg:overflow-auto"
         )
@@ -95,38 +118,6 @@
             :options="value.presentations"
             class="min-h-16 mb-2"
           )
-          label(
-            class="block lg:mx-1"
-            for="frame-control-input"
-            v-if="$refs.presentation && $refs.presentation.frameRate > 0 "
-          )
-            p 帧控制
-            .flex.my-1
-              button.form-button(
-                type="button"
-                @click="() => $refs.presentation.seekFrameOffset(-1, true)"
-              ) 上一帧
-              input.form-input#frame-control-input(
-                type="number"
-                class="flex-auto spin-button-none z-10"
-                :value="currentFrame"
-                min="0"
-                @input="e => $refs.presentation.seekFrame(e.target.value, true)"
-              )
-              button.form-button(
-                type="button"
-                @click="() => $refs.presentation.seekFrameOffset(1, true)"
-              ) 下一帧
-          label(
-            class="block lg:mx-1"
-          )
-            span 查看器背景
-            select.form-select(
-              v-model="preferredBackground"
-              class="inline-block py-1 ml-1"
-            )
-              option(value="checkboard") 棋盘格
-              option(value="black") 纯黑
           CollectionMetadata(
             class="flex-auto lg:mx-1"
             :value="value"
@@ -142,11 +133,23 @@
                   FaIcon.h-full(name="spinner" spin)
                 template(v-else)
                   | 收集
+          hr.border-gray-700.my-2
           PresentationMetadata(
             class="flex-auto lg:mx-1"
             v-if="presentation"
             :value="presentation"
           )
+          hr.border-gray-700.my-2
+          label(
+            class="block lg:mx-1"
+          )
+            span 查看器背景
+            select.form-select(
+              v-model="preferredBackground"
+              class="inline-block py-1 ml-1"
+            )
+              option(value="checkboard") 棋盘格
+              option(value="black") 纯黑
 </template>
 
 <script lang="ts">
