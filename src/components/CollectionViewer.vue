@@ -86,7 +86,6 @@
           )
         aside(
           class="flex-auto bg-gray-900 lg:flex-initial lg:w-1/3 lg:overflow-auto"
-          :style="{ filter: `blur(${loadingCount * 5}px)` }"
         )
           PresentationSelect(
             v-show="value.presentations.length > 0"
