@@ -57,7 +57,11 @@ export default class PresentationMetadata extends Vue {
   }
 
   get durationText(): string {
-    return formatDuration(parseFloat(this.metadata.duration) * 1e3);
+    const duration = parseFloat(this.metadata.duration);
+    if (!isFinite(duration)) {
+      return this.metadata.duration ?? '';
+    }
+    return formatDuration(duration * 1e3);
   }
 }
 </script>
