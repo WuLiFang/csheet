@@ -198,19 +198,17 @@ var Scheduler = &scheduler{}
 
 func init() {
 	file.SignalSaved.Connect(func(ctx context.Context, f *file.File) (err error) {
-		ids, err := presentation.FindIDByPath(f.Path)
+		ps, err := presentation.FindByPath(f.Path)
 		if err != nil {
 			return
 		}
-		err = db.Update(func(txn *db.Txn) (err error) {
-			for _, i := range ids {
-				err = txn.Set(db.IndexPresentationOutdated.Key(i), nil)
-				if err != nil {
-					return
-				}
+		for _, i := range ps {
+			// trigger save hooks
+			err = i.Save(ctx)
+			if err != nil {
+				return
 			}
-			return
-		})
+		}
 		return
 	})
 }
