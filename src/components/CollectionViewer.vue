@@ -98,14 +98,16 @@
               title="上一帧（快捷键：←）"
               @click="() => $refs.presentation.seekFrameOffset(-1, true)"
             ) 上一帧
-            input.form-input#frame-control-input(
+            input.form-input(
+              ref="frameInput"
               type="number"
               class="flex-auto w-24 spin-button-none z-10 text-center"
               :value="hasFocus ? formData.currentFrame : currentFrame"
               @input="e => {formData.currentFrame = parseFloat(e.target.value); $refs.presentation.seekFrame(this.formData.currentFrame, true);}"
               @keyup.enter="$event.target.blur()"
-              @focus="hasFocus = true; formData.currentFrame = currentFrame"
+              @focus="hasFocus = true; formData.currentFrame = currentFrame; $event.target.select()"
               @blur="hasFocus = false;"
+              title="设置当前帧 （快捷键：g）"
             )
             button.form-button(
               type="button"
@@ -174,6 +176,7 @@ import PresentationMetadata from './PresentationMetadata.vue';
 import { filePathFormat } from '../const';
 import * as preference from '@/preference';
 import * as sentry from '@sentry/browser';
+import toHotKey from '@/utils/toHotKey';
 import { presentation } from '../graphql/types/presentation';
 
 @Component<CollectionViewer>({
@@ -203,11 +206,8 @@ import { presentation } from '../graphql/types/presentation';
       ) {
         return;
       }
-      if (e.shiftKey || e.ctrlKey || e.altKey) {
-        return;
-      }
       const now = new Date();
-      switch (e.key) {
+      switch (toHotKey(e)) {
         case 'Escape':
           e.preventDefault();
           this.close();
@@ -240,6 +240,13 @@ import { presentation } from '../graphql/types/presentation';
           e.preventDefault();
           this.$refs.presentation?.seekFrameOffset(1, true);
           break;
+        case 'g': {
+          e.preventDefault();
+          const el = this.$refs.frameInput;
+          if (el) {
+            el.select();
+          }
+        }
       }
     };
     document.body.addEventListener('keydown', keyupListener);
@@ -279,6 +286,7 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
     prev: HTMLButtonElement;
     next: HTMLButtonElement;
     presentation: Presentation;
+    frameInput: HTMLInputElement;
   };
 
   presentationID = '';
