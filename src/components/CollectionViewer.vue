@@ -123,7 +123,7 @@
                 class="flex-none p-0 w-12 h-8 m-1"
                 class="flex justify-center items-center"
                 title="至起始帧（快捷键：Home）"
-                @click="() => $refs.presentation.seekFrameOffset(-$refs.presentation.frameCount, true)"
+                @click="() => $refs.presentation.seekFrame($refs.presentation.firstFrame, true)"
               ) 
                 FaIcon(name="fast-backward")
               button.form-button(
@@ -158,7 +158,7 @@
                 class="flex-none p-0 w-12 h-8 m-1"
                 class="flex justify-center items-center"
                 title="至结束帧（快捷键：End）"
-                @click="() => $refs.presentation.seekFrameOffset($refs.presentation.frameCount, true)"
+                @click="() => $refs.presentation.seekFrame($refs.presentation.lastFrame, true)"
               ) 
                 FaIcon(name="fast-forward")
               button.form-button(
@@ -240,6 +240,7 @@ import * as preference from '@/preference';
 import * as sentry from '@sentry/browser';
 import toHotKey from '@/utils/toHotKey';
 import { presentation } from '../graphql/types/presentation';
+import { throttle } from 'lodash';
 
 @Component<CollectionViewer>({
   components: {
@@ -255,9 +256,15 @@ import { presentation } from '../graphql/types/presentation';
       level: sentry.Severity.Info,
       data: { value: this.value },
     });
-    let lastJump = new Date(0);
-    const minRepeatJumpInterval = 800;
+    const throttleJump = throttle((fn: () => void) => fn(), 800);
+    const throttleSeek = throttle((fn: () => void) => fn(), 100);
     const keyupListener = (e: KeyboardEvent) => {
+      const throttleRepeatJump = e.repeat
+        ? throttleJump
+        : (fn: () => void) => fn();
+      const throttleRepeatSeek = e.repeat
+        ? throttleSeek
+        : (fn: () => void) => fn();
       if (
         !(
           e.target === document.body ||
@@ -268,7 +275,6 @@ import { presentation } from '../graphql/types/presentation';
       ) {
         return;
       }
-      const now = new Date();
       switch (toHotKey(e)) {
         case 'Escape':
           e.preventDefault();
@@ -284,57 +290,57 @@ import { presentation } from '../graphql/types/presentation';
           break;
         case 'ArrowUp':
           e.preventDefault();
-          if (
-            !e.repeat ||
-            now.getTime() - lastJump.getTime() > minRepeatJumpInterval
-          ) {
+          throttleRepeatJump(() => {
             this.jumpPrev();
-            lastJump = now;
-          }
+          });
           break;
         case 'ArrowDown':
           e.preventDefault();
-          if (
-            !e.repeat ||
-            now.getTime() - lastJump.getTime() > minRepeatJumpInterval
-          ) {
+          throttleRepeatJump(() => {
             this.jumpNext();
-            lastJump = now;
-          }
+          });
           break;
         case 'ArrowLeft':
           e.preventDefault();
-          this.$refs.presentation?.seekFrameOffset(-1, true);
+          throttleRepeatSeek(() => {
+            this.$refs.presentation?.seekFrameOffset(-1, true);
+          });
           break;
         case 'ArrowRight':
           e.preventDefault();
-          this.$refs.presentation?.seekFrameOffset(1, true);
+          throttleRepeatSeek(() => {
+            this.$refs.presentation?.seekFrameOffset(1, true);
+          });
           break;
         case '+ArrowLeft':
           e.preventDefault();
-          this.$refs.presentation?.seekFrameOffset(
-            -this.formData.frameSkip,
-            true
-          );
+          throttleRepeatSeek(() => {
+            this.$refs.presentation?.seekFrameOffset(
+              -this.formData.frameSkip,
+              true
+            );
+          });
           break;
         case '+ArrowRight':
           e.preventDefault();
-          this.$refs.presentation?.seekFrameOffset(
-            this.formData.frameSkip,
-            true
-          );
+          throttleRepeatSeek(() => {
+            this.$refs.presentation?.seekFrameOffset(
+              this.formData.frameSkip,
+              true
+            );
+          });
           break;
         case 'Home':
           e.preventDefault();
-          this.$refs.presentation?.seekFrameOffset(
-            -this.$refs.presentation?.frameCount,
+          this.$refs.presentation?.seekFrame(
+            this.$refs.presentation?.firstFrame,
             true
           );
           break;
         case 'End':
           e.preventDefault();
-          this.$refs.presentation?.seekFrameOffset(
-            this.$refs.presentation?.frameCount,
+          this.$refs.presentation?.seekFrame(
+            this.$refs.presentation?.lastFrame,
             true
           );
           break;

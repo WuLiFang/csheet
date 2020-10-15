@@ -202,6 +202,13 @@ export default class Presentation extends Vue {
     );
   }
 
+  get lastFrame(): number {
+    return (
+      parseInt(this.node?.metadata.find(i => i.k === 'last-frame')?.v ?? '') ||
+      this.firstFrame + this.frameCount
+    );
+  }
+
   get currentFrame(): number {
     return this.firstFrame + this.rawCurrentFrame;
   }
