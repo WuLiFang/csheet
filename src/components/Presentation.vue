@@ -240,11 +240,8 @@ export default class Presentation extends Vue {
     }
   }
 
-  seekFrame(f: number, pause = false): void {
-    if (!isFinite(f)) {
-      return;
-    }
-    if (this.frameRate <= 0) {
+  seek(time: number, pause = false): void {
+    if (!isFinite(time)) {
       return;
     }
     if (pause) {
@@ -253,13 +250,23 @@ export default class Presentation extends Vue {
     if (this.$el instanceof HTMLVideoElement) {
       // time out of range has different behaviour on different browser
       this.$el.currentTime = clamp(
-        // add 0.001 frame to avoid display previous frame for encoded video
-        (f - this.firstFrame + 0.001) / this.frameRate,
+        time,
         0,
         // substruct 0.001 second to avoid outrange on firefox
         this.$el.duration - 0.001
       );
     }
+  }
+
+  seekFrame(f: number, pause = false): void {
+    if (this.frameRate <= 0) {
+      return;
+    }
+    this.seek(
+      // add 0.001 frame to avoid display previous frame for encoded video
+      (f - this.firstFrame + 0.001) / this.frameRate,
+      pause
+    );
   }
 
   seekFrameOffset(offset: number, pause = false): void {

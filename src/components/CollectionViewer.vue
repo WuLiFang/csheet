@@ -83,6 +83,7 @@
                 autoplay
                 :playbackRate="formData.playbackRate"
                 @frameUpdate="currentFrame = $event"
+                @timeUpdate="currentTime = $event"
               )
             //- placeholder for small screen
             Presentation(
@@ -123,7 +124,7 @@
                 @keyup.enter="$event.target.blur()"
                 @focus="hasFocus = true; formData.currentFrame = currentFrame; $event.target.select()"
                 @blur="hasFocus = false;"
-                title="设置当前帧 （快捷键：g）"
+                title="当前帧（快捷键：f）"
               )
               button.form-button(
                 type="button"
@@ -142,8 +143,14 @@
               ) 
                 FaIcon(name="fast-forward")
             .inline-flex.items-center(
-              class="sm:order-3 my-px sm:mx-1"
+              class="flex-wrap sm:order-3 my-px sm:mx-1"
             )
+              DurationInput(
+                ref="timeInput"
+                v-model="currentTimeProxy"
+                class="h-8 w-32 m-px"
+                title="当前时间（快捷键：g）"
+              )
               button.form-button(
                 type="button"
                 class="flex-initial p-0 w-24 h-8 m-px"
@@ -262,6 +269,8 @@ import * as sentry from '@sentry/browser';
 import toHotKey from '@/utils/toHotKey';
 import { presentation } from '../graphql/types/presentation';
 import { throttle } from 'lodash';
+import DurationInput from './DurationInput.vue';
+import moment from 'moment';
 
 @Component<CollectionViewer>({
   components: {
@@ -269,6 +278,7 @@ import { throttle } from 'lodash';
     PresentationSelect,
     CollectionMetadata,
     PresentationMetadata,
+    DurationInput,
   },
   mounted() {
     sentry.addBreadcrumb({
@@ -367,6 +377,14 @@ import { throttle } from 'lodash';
           break;
         case 'g': {
           e.preventDefault();
+          const el = this.$refs.timeInput?.$el;
+          if (el) {
+            el.focus();
+          }
+          break;
+        }
+        case 'f': {
+          e.preventDefault();
           const el = this.$refs.frameInput;
           if (el) {
             el.select();
@@ -437,11 +455,13 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
     presentation: Presentation;
     frameInput: HTMLInputElement;
     playbackRateSelect: HTMLSelectElement;
+    timeInput: DurationInput;
   };
 
   presentationID = '';
   loadingCount = 0;
   recollectingCount = 0;
+  currentTime = 0;
   currentFrame = 0;
   hasFocus = false;
 
@@ -451,6 +471,15 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
     frameSkip: 10,
     playbackRate: 1,
   };
+
+  get currentTimeProxy(): string {
+    return moment.duration(this.currentTime * 1e3).toISOString();
+  }
+
+  set currentTimeProxy(s: string) {
+    const v = moment.duration(s).asSeconds();
+    this.$refs.presentation.seek(v, true);
+  }
 
   jumpPrev(): void {
     if (this.prev) {
