@@ -89,32 +89,78 @@
               :id="presentationID"
               size="thumb"
             )
-          .flex.overflow-x-hidden(
+          .text-center(
             v-if="$refs.presentation && $refs.presentation.frameRate > 0"
           )
-            button.form-button(
-              type="button"
-              class="flex-none w-24"
-              title="上一帧（快捷键：←）"
-              @click="() => $refs.presentation.seekFrameOffset(-1, true)"
-            ) 上一帧
-            input.form-input(
-              ref="frameInput"
-              type="number"
-              class="flex-auto w-24 spin-button-none z-10 text-center"
-              :value="hasFocus ? formData.currentFrame : currentFrame"
-              @input="e => {formData.currentFrame = parseFloat(e.target.value); $refs.presentation.seekFrame(this.formData.currentFrame, true);}"
-              @keyup.enter="$event.target.blur()"
-              @focus="hasFocus = true; formData.currentFrame = currentFrame; $event.target.select()"
-              @blur="hasFocus = false;"
-              title="设置当前帧 （快捷键：g）"
-            )
-            button.form-button(
-              type="button"
-              class="flex-none w-24"
-              title="下一帧（快捷键：→）"
-              @click="() => $refs.presentation.seekFrameOffset(1, true)"
-            ) 下一帧
+            .inline-flex.items-center.mx-2
+              button.form-button(
+                type="button"
+                class="flex-none p-0 w-10 h-6 m-1"
+                class="flex justify-center items-center"
+                title="向前跳帧（快捷键：Shift + ←）"
+                @click="() => $refs.presentation.seekFrameOffset(-formData.frameSkip, true)"
+              ) 
+                FaIcon.object-center(name="backward")
+              input.form-input(
+                type="number"
+                class="flex-auto p-0 w-12 h-6 spin-button-none z-10 text-center"
+                v-model.number="formData.frameSkip"
+                @keyup.enter="$event.target.blur()"
+                @focus="$event.target.select()"
+                title="跳帧的帧数"
+              )
+              button.form-button(
+                type="button"
+                class="flex-none p-0 w-10 h-6 m-1"
+                class="flex justify-center items-center"
+                title="向后跳帧（快捷键：Shift + →）"
+                @click="() => $refs.presentation.seekFrameOffset(formData.frameSkip, true)"
+              ) 
+                FaIcon(name="forward")
+            .inline-flex
+              button.form-button(
+                type="button"
+                class="flex-none p-0 w-12 h-8 m-1"
+                class="flex justify-center items-center"
+                title="至起始帧（快捷键：Home）"
+                @click="() => $refs.presentation.seekFrameOffset(-$refs.presentation.frameCount, true)"
+              ) 
+                FaIcon(name="fast-backward")
+              button.form-button(
+                type="button"
+                class="flex-none p-0 w-12 h-8 m-1"
+                class="flex justify-center items-center"
+                title="上一帧（快捷键：←）"
+                @click="() => $refs.presentation.seekFrameOffset(-1, true)"
+              ) 
+                FaIcon(name="step-backward")
+              input.form-input(
+                ref="frameInput"
+                type="number"
+                class="flex-auto w-24 h-8 spin-button-none z-10 text-center m-1"
+                :value="hasFocus ? formData.currentFrame : currentFrame"
+                @input="e => {formData.currentFrame = parseFloat(e.target.value); $refs.presentation.seekFrame(this.formData.currentFrame, true);}"
+                @keyup.enter="$event.target.blur()"
+                @focus="hasFocus = true; formData.currentFrame = currentFrame; $event.target.select()"
+                @blur="hasFocus = false;"
+                title="设置当前帧 （快捷键：g）"
+              )
+              button.form-button(
+                type="button"
+                class="flex-none p-0 w-12 h-8 m-1"
+                class="flex justify-center items-center"
+                title="下一帧（快捷键：→）"
+                @click="() => $refs.presentation.seekFrameOffset(1, true)"
+              ) 
+                FaIcon(name="step-forward")
+              button.form-button(
+                type="button"
+                class="flex-none p-0 w-12 h-8 m-1"
+                class="flex justify-center items-center"
+                title="至结束帧（快捷键：End）"
+                @click="() => $refs.presentation.seekFrameOffset($refs.presentation.frameCount, true)"
+              ) 
+                FaIcon(name="fast-forward")
         aside(
           class="flex-auto bg-gray-900 lg:flex-initial lg:w-1/3 lg:overflow-auto"
         )
@@ -166,6 +212,12 @@ import { collection as Collection } from '../graphql/types/collection';
 import 'vue-awesome/icons/window-close';
 import 'vue-awesome/icons/caret-square-up';
 import 'vue-awesome/icons/caret-square-down';
+import "vue-awesome/icons/forward"
+import "vue-awesome/icons/backward"
+import "vue-awesome/icons/step-forward"
+import "vue-awesome/icons/step-backward"
+import "vue-awesome/icons/fast-forward"
+import "vue-awesome/icons/fast-backward"
 import PresentationSelect from './PresentationSelect.vue';
 import {
   collectionNode,
@@ -240,6 +292,22 @@ import { presentation } from '../graphql/types/presentation';
           e.preventDefault();
           this.$refs.presentation?.seekFrameOffset(1, true);
           break;
+        case '+ArrowLeft':
+          e.preventDefault();
+          this.$refs.presentation?.seekFrameOffset(-this.formData.frameSkip, true);
+          break;
+        case '+ArrowRight':
+          e.preventDefault();
+          this.$refs.presentation?.seekFrameOffset(this.formData.frameSkip, true);
+          break;
+        case 'Home':
+          e.preventDefault();
+          this.$refs.presentation?.seekFrameOffset(-this.$refs.presentation?.frameCount, true);
+          break;
+        case 'End':
+          e.preventDefault();
+          this.$refs.presentation?.seekFrameOffset(this.$refs.presentation?.frameCount, true);
+          break;
         case 'g': {
           e.preventDefault();
           const el = this.$refs.frameInput;
@@ -297,6 +365,7 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
 
   formData = {
     currentFrame: 0,
+    frameSkip: 10,
   };
 
   jumpPrev(): void {
