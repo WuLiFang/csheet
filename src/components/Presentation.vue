@@ -215,8 +215,8 @@ export default class Presentation extends Vue {
   }
 
   seekFrame(f: number, pause = false): void {
-    if (!isFinite(f)){
-      return
+    if (!isFinite(f)) {
+      return;
     }
     if (this.frameRate <= 0) {
       return;
@@ -225,7 +225,8 @@ export default class Presentation extends Vue {
       this.pause();
     }
     if (this.$el instanceof HTMLVideoElement) {
-      this.$el.currentTime = (f - this.firstFrame) / this.frameRate;
+      // add 0.001 frame to avoid display previous frame for encoded video
+      this.$el.currentTime = ((f - this.firstFrame + 0.001) / this.frameRate); 
     }
   }
 
