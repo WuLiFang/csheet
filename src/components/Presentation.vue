@@ -7,6 +7,7 @@ import {
 } from '@/graphql/types/presentationNode';
 import { filePathFormat } from '../const';
 import parseFrameRate from '@/utils/parseFrameRate';
+import clamp from '@/utils/clamp';
 
 export function fileSrc(v: string | undefined): string {
   const d = require('@/assets/img/transcoding.svg');
@@ -239,8 +240,14 @@ export default class Presentation extends Vue {
       this.pause();
     }
     if (this.$el instanceof HTMLVideoElement) {
-      // add 0.001 frame to avoid display previous frame for encoded video
-      this.$el.currentTime = (f - this.firstFrame + 0.001) / this.frameRate;
+      // time out of range has different behaviour on different browser
+      this.$el.currentTime = clamp(
+        // add 0.001 frame to avoid display previous frame for encoded video
+        (f - this.firstFrame + 0.001) / this.frameRate,
+        0,
+        // substruct 0.001 second to avoid outrange on firefox
+        this.$el.duration - 0.001
+      );
     }
   }
 
