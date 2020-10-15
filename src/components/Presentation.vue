@@ -35,6 +35,7 @@ export function fileSrc(v: string | undefined): string {
     const src = this.path;
     const renderImage = () => {
       this.updateCurrentFrame();
+      this.paused = true;
       return h('img', {
         domProps: {
           src,
@@ -68,6 +69,12 @@ export function fileSrc(v: string | undefined): string {
           },
           timeupdate: () => {
             this.updateCurrentFrame();
+          },
+          play: () => {
+            this.paused = false;
+          },
+          pause: () => {
+            this.paused = true;
           },
           dragstart: this.handleDrag.bind(this),
         },
@@ -119,6 +126,7 @@ export default class Presentation extends Vue {
   node?: presentation;
 
   isLoadFailed = false;
+  paused = true;
   rawCurrentFrame = 0;
 
   get path(): string {
@@ -208,6 +216,12 @@ export default class Presentation extends Vue {
     this.rawCurrentFrame = Math.round(this.$el.currentTime * this.frameRate);
   }
 
+  play(): void {
+    if (this.$el instanceof HTMLVideoElement) {
+      this.$el.play();
+    }
+  }
+
   pause(): void {
     if (this.$el instanceof HTMLVideoElement) {
       this.$el.pause();
@@ -226,7 +240,7 @@ export default class Presentation extends Vue {
     }
     if (this.$el instanceof HTMLVideoElement) {
       // add 0.001 frame to avoid display previous frame for encoded video
-      this.$el.currentTime = ((f - this.firstFrame + 0.001) / this.frameRate); 
+      this.$el.currentTime = (f - this.firstFrame + 0.001) / this.frameRate;
     }
   }
 

@@ -161,6 +161,14 @@
                 @click="() => $refs.presentation.seekFrameOffset($refs.presentation.frameCount, true)"
               ) 
                 FaIcon(name="fast-forward")
+              button.form-button(
+                type="button"
+                class="flex-none p-0 w-24  h-8 m-1"
+                class="flex justify-center items-center"
+                title="播放/暂停（快捷键：空格）"
+                @click="() => $refs.presentation.paused ? $refs.presentation.play(): $refs.presentation.pause()"
+              ) 
+                FaIcon(:name="$refs.presentation.paused ? 'play' : 'pause'")
         aside(
           class="flex-auto bg-gray-900 lg:flex-initial lg:w-1/3 lg:overflow-auto"
         )
@@ -212,12 +220,14 @@ import { collection as Collection } from '../graphql/types/collection';
 import 'vue-awesome/icons/window-close';
 import 'vue-awesome/icons/caret-square-up';
 import 'vue-awesome/icons/caret-square-down';
-import "vue-awesome/icons/forward"
-import "vue-awesome/icons/backward"
-import "vue-awesome/icons/step-forward"
-import "vue-awesome/icons/step-backward"
-import "vue-awesome/icons/fast-forward"
-import "vue-awesome/icons/fast-backward"
+import 'vue-awesome/icons/forward';
+import 'vue-awesome/icons/backward';
+import 'vue-awesome/icons/step-forward';
+import 'vue-awesome/icons/step-backward';
+import 'vue-awesome/icons/fast-forward';
+import 'vue-awesome/icons/fast-backward';
+import 'vue-awesome/icons/pause';
+import 'vue-awesome/icons/play';
 import PresentationSelect from './PresentationSelect.vue';
 import {
   collectionNode,
@@ -264,6 +274,14 @@ import { presentation } from '../graphql/types/presentation';
           e.preventDefault();
           this.close();
           break;
+        case ' ':
+          e.preventDefault();
+          if (this.$refs.presentation?.paused) {
+            this.$refs.presentation?.play();
+          } else {
+            this.$refs.presentation?.pause();
+          }
+          break;
         case 'ArrowUp':
           e.preventDefault();
           if (
@@ -294,19 +312,31 @@ import { presentation } from '../graphql/types/presentation';
           break;
         case '+ArrowLeft':
           e.preventDefault();
-          this.$refs.presentation?.seekFrameOffset(-this.formData.frameSkip, true);
+          this.$refs.presentation?.seekFrameOffset(
+            -this.formData.frameSkip,
+            true
+          );
           break;
         case '+ArrowRight':
           e.preventDefault();
-          this.$refs.presentation?.seekFrameOffset(this.formData.frameSkip, true);
+          this.$refs.presentation?.seekFrameOffset(
+            this.formData.frameSkip,
+            true
+          );
           break;
         case 'Home':
           e.preventDefault();
-          this.$refs.presentation?.seekFrameOffset(-this.$refs.presentation?.frameCount, true);
+          this.$refs.presentation?.seekFrameOffset(
+            -this.$refs.presentation?.frameCount,
+            true
+          );
           break;
         case 'End':
           e.preventDefault();
-          this.$refs.presentation?.seekFrameOffset(this.$refs.presentation?.frameCount, true);
+          this.$refs.presentation?.seekFrameOffset(
+            this.$refs.presentation?.frameCount,
+            true
+          );
           break;
         case 'g': {
           e.preventDefault();
@@ -317,9 +347,11 @@ import { presentation } from '../graphql/types/presentation';
         }
       }
     };
-    document.body.addEventListener('keydown', keyupListener);
+    document.body.addEventListener('keydown', keyupListener, { capture: true });
     this.$once('destroyed', () => {
-      document.body.removeEventListener('keydown', keyupListener);
+      document.body.removeEventListener('keydown', keyupListener, {
+        capture: true,
+      });
     });
   },
   destroyed() {
