@@ -7,6 +7,7 @@ import {
 } from '@/graphql/types/presentationNode';
 import { filePathFormat } from '../const';
 import parseFrameRate from '@/utils/parseFrameRate';
+import parseFirstFrame from '@/utils/parseFirstFrame';
 import clamp from '@/utils/clamp';
 
 export function fileSrc(v: string | undefined): string {
@@ -196,9 +197,8 @@ export default class Presentation extends Vue {
   }
 
   get firstFrame(): number {
-    return (
-      parseInt(this.node?.metadata.find(i => i.k === 'first-frame')?.v ?? '') ||
-      0
+    return parseFirstFrame(
+      this.node?.metadata.find(i => i.k === 'first-frame')?.v ?? ''
     );
   }
 

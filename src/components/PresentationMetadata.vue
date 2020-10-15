@@ -55,6 +55,7 @@ import { presentation as Presentation } from '@/graphql/types/presentation';
 import { camelCase } from 'lodash';
 import formatFileSize from '@/utils/formatFileSize';
 import formatDuration from '@/utils/formatDuration';
+import parseFirstFrame from '@/utils/parseFirstFrame';
 import toDigitGrouped from 'to-digit-grouped';
 import client from '@/client';
 
@@ -88,8 +89,8 @@ export default class PresentationMetadata extends Vue {
   value!: Presentation;
 
   formData = {
-    firstFrame: 0,
-    lastFrame: 0,
+    firstFrame: 1,
+    lastFrame: 1,
   };
 
   hasFocus = false;
@@ -123,7 +124,7 @@ export default class PresentationMetadata extends Vue {
   }
 
   get firstFrame(): number {
-    return parseInt(this.metadata.firstFrame ?? '') || 0;
+    return parseFirstFrame(this.metadata.firstFrame ?? '');
   }
 
   set firstFrame(v: number) {
@@ -171,7 +172,7 @@ export default class PresentationMetadata extends Vue {
     });
   }
 
-  blur():void {
+  blur(): void {
     this.hasFocus = false;
     this.submit();
   }
