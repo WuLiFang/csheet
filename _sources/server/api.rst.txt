@@ -17,6 +17,7 @@ GraphQL API
 直接用浏览器访问（HTTP GET Accept 头匹配 text/html）时，
 将显示 `Graphql Playground <https://github.com/prisma-labs/graphql-playground>`_ 编辑器。
 
+.. image:: _images/chrome_2020-09-10_16-33-24.png
 
 持久查询
 ---------------------

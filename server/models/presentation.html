@@ -35,7 +35,7 @@
             
   <div class="section" id="id1">
 <h1>展示<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
-<p>从收集的文件中获取到的展示方式。</p>
+<img alt="../../_images/057bd441c9a27b62e163e7f1e1f06a369f3b0a10e664688316079076b1aea5c8.svg" class="align-center" src="../../_images/057bd441c9a27b62e163e7f1e1f06a369f3b0a10e664688316079076b1aea5c8.svg" /><p>从收集的文件中获取到的展示方式。</p>
 <p>每个文件可对应任意个数的展示方式。</p>
 <div class="section" id="id2">
 <h2>结构<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
@@ -71,6 +71,41 @@
 <p>RegularErrorTag string</p>
 <blockquote>
 <div><p>常规文件 <a class="reference internal" href="../transcode.html"><span class="doc">转码</span></a> 失败的原始文件 <a class="reference internal" href="file.html#id3"><span class="std std-ref">内容标签</span></a>。</p>
+</div></blockquote>
+<p>Metadata map[string]string</p>
+<blockquote>
+<div><p>文件元数据，可能的值见下方。</p>
+</div></blockquote>
+</div>
+<div class="section" id="id3">
+<h2>元数据<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>width</p>
+<blockquote>
+<div><p>图片或视频宽度</p>
+</div></blockquote>
+<p>height</p>
+<blockquote>
+<div><p>图片或视频高度</p>
+</div></blockquote>
+<p>frame-rate</p>
+<blockquote>
+<div><p>视频帧速率</p>
+</div></blockquote>
+<p>frame-count</p>
+<blockquote>
+<div><p>视频总帧数</p>
+</div></blockquote>
+<p>duration</p>
+<blockquote>
+<div><p>持续时间长度</p>
+</div></blockquote>
+<p>first-frame</p>
+<blockquote>
+<div><p>第一帧的帧编号</p>
+</div></blockquote>
+<p>last-frame</p>
+<blockquote>
+<div><p>最后一帧的帧编号</p>
 </div></blockquote>
 </div>
 </div>
@@ -117,7 +152,8 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../web/index.html">网页端文档</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务端文档</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../collectors.html">收集源</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../glossary.html">术语表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../collectors.html">收集模式</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../models.html">数据模型</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../transcode.html">转码</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file-store.html">文件存储</a></li>

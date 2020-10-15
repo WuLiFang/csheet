@@ -46,7 +46,12 @@
 </div>
 <div class="section" id="id3">
 <h2>(0) 元数据<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
-<p>存储数据库元数据，暂未使用。</p>
+<p>存储数据库元数据。</p>
+<p>migrationVersion</p>
+<blockquote>
+<div><p>类型 uint64</p>
+<p>数据库迁移版本</p>
+</div></blockquote>
 </div>
 <div class="section" id="id4">
 <h2>(1) 序列<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
@@ -55,14 +60,13 @@
 <p>值: 由 Badger 序列功能进行管理。</p>
 </div>
 <div class="section" id="id5">
-<h2>(2) 收集日志<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
-<p>键: 时间戳</p>
-<p>值: BSON 编码 <a class="reference internal" href="models/collected-event.html"><span class="doc">收集事件</span></a>。</p>
+<h2>(2) 未使用<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
+<p>曾为收集日志，在数据库版本 1 时移除。</p>
 </div>
 <div class="section" id="id6">
 <h2>(3) 收集<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
 <p>键: ID，自增数字序列值。</p>
-<p>值: BSON 编码 <a class="reference internal" href="models/collection.html"><span class="doc">收集</span></a>。</p>
+<p>值: BSON 编码 <a class="reference internal" href="models/collection.html"><span class="doc">收藏</span></a>。</p>
 </div>
 <div class="section" id="id7">
 <h2>(4) 收集来源<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h2>
@@ -147,7 +151,8 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../web/index.html">网页端文档</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">服务端文档</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="collectors.html">收集源</a></li>
+<li class="toctree-l2"><a class="reference internal" href="glossary.html">术语表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collectors.html">收集模式</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">数据模型</a></li>
 <li class="toctree-l2"><a class="reference internal" href="transcode.html">转码</a></li>
 <li class="toctree-l2"><a class="reference internal" href="file-store.html">文件存储</a></li>

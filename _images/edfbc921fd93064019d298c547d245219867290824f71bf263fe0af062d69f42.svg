@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="479px" preserveAspectRatio="none" style="width:195px;height:479px;" version="1.1" viewBox="0 0 195 479" width="195px" zoomAndPan="magnify"><defs/><g><ellipse cx="97" cy="20" fill="#37A77C" rx="10" ry="10" style="stroke: none; stroke-width: 1.0;"/><rect fill="#BBDEFB" height="36.2969" rx="12.5" ry="12.5" style="stroke: #90CAF9; stroke-width: 1.0;" width="174" x="10" y="50"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="154" x="20" y="72.9951">无限循环获取过期的展示</text><rect fill="#BBDEFB" height="36.2969" rx="12.5" ry="12.5" style="stroke: #90CAF9; stroke-width: 1.0;" width="104" x="45" y="150.2969"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="84" x="55" y="173.292">取消过期标记</text><ellipse cx="97" cy="224.9453" fill="#FFFFFF" rx="11" ry="11" style="stroke: #F6363F; stroke-width: 1.0;"/><ellipse cx="97" cy="224.9453" fill="#F6363F" rx="6" ry="6" style="stroke: #FA9A9F; stroke-width: 1.0;"/><polygon fill="#FFE0B2" points="55,106.2969,139,106.2969,151,118.2969,139,130.2969,55,130.2969,43,118.2969,55,106.2969" style="stroke: #FFCC80; stroke-width: 1.0;"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="84" x="55" y="123.1436">内容标签匹配</text><rect fill="#BBDEFB" height="36.2969" rx="12.5" ry="12.5" style="stroke: #90CAF9; stroke-width: 1.0;" width="48" x="73" y="277.9453"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="83" y="300.9404">转码</text><rect fill="#BBDEFB" height="36.2969" rx="12.5" ry="12.5" style="stroke: #90CAF9; stroke-width: 1.0;" width="104" x="45" y="334.2422"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="84" x="55" y="357.2373">更新内容标签</text><rect fill="#BBDEFB" height="36.2969" rx="12.5" ry="12.5" style="stroke: #90CAF9; stroke-width: 1.0;" width="104" x="45" y="390.5391"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="84" x="55" y="413.5342">取消过期标记</text><ellipse cx="97" cy="457.8359" fill="#FFFFFF" rx="11" ry="11" style="stroke: #F6363F; stroke-width: 1.0;"/><ellipse cx="97" cy="457.8359" fill="#F6363F" rx="6" ry="6" style="stroke: #FA9A9F; stroke-width: 1.0;"/><line style="stroke: #1565C0; stroke-width: 1.5;" x1="97" x2="97" y1="30" y2="50"/><polygon fill="#1565C0" points="93,40,97,50,101,40,97,44" style="stroke: #1565C0; stroke-width: 1.0;"/><line style="stroke: #1565C0; stroke-width: 1.5;" x1="97" x2="97" y1="186.5938" y2="213.9453"/><polygon fill="#1565C0" points="93,203.9453,97,213.9453,101,203.9453,97,207.9453" style="stroke: #1565C0; stroke-width: 1.0;"/><line style="stroke: #1565C0; stroke-width: 1.5;" x1="97" x2="97" y1="130.2969" y2="150.2969"/><polygon fill="#1565C0" points="93,140.2969,97,150.2969,101,140.2969,97,144.2969" style="stroke: #1565C0; stroke-width: 1.0;"/><line style="stroke: #1565C0; stroke-width: 1.5;" x1="151" x2="163" y1="118.2969" y2="118.2969"/><polygon fill="#1565C0" points="159,183.9453,163,193.9453,167,183.9453,163,187.9453" style="stroke: #1565C0; stroke-width: 1.5;"/><line style="stroke: #1565C0; stroke-width: 1.5;" x1="163" x2="163" y1="118.2969" y2="257.9453"/><line style="stroke: #1565C0; stroke-width: 1.5;" x1="163" x2="97" y1="257.9453" y2="257.9453"/><line style="stroke: #1565C0; stroke-width: 1.5;" x1="97" x2="97" y1="257.9453" y2="277.9453"/><polygon fill="#1565C0" points="93,267.9453,97,277.9453,101,267.9453,97,271.9453" style="stroke: #1565C0; stroke-width: 1.0;"/><line style="stroke: #1565C0; stroke-width: 1.5;" x1="97" x2="97" y1="86.2969" y2="106.2969"/><polygon fill="#1565C0" points="93,96.2969,97,106.2969,101,96.2969,97,100.2969" style="stroke: #1565C0; stroke-width: 1.0;"/><line style="stroke: #1565C0; stroke-width: 1.5;" x1="97" x2="97" y1="314.2422" y2="334.2422"/><polygon fill="#1565C0" points="93,324.2422,97,334.2422,101,324.2422,97,328.2422" style="stroke: #1565C0; stroke-width: 1.0;"/><line style="stroke: #1565C0; stroke-width: 1.5;" x1="97" x2="97" y1="370.5391" y2="390.5391"/><polygon fill="#1565C0" points="93,380.5391,97,390.5391,101,380.5391,97,384.5391" style="stroke: #1565C0; stroke-width: 1.0;"/><line style="stroke: #1565C0; stroke-width: 1.5;" x1="97" x2="97" y1="426.8359" y2="446.8359"/><polygon fill="#1565C0" points="93,436.8359,97,446.8359,101,436.8359,97,440.8359" style="stroke: #1565C0; stroke-width: 1.0;"/><!--MD5=[ff2d16c54e432a63a4f58b592987cf99]
+@startuml
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam maxMessageSize 150
+skinparam ComponentStyle uml2
+skinparam Shadowing false
+
+skinparam Default {
+    FontName "Arial","Microsoft YaHei","黑体","宋体",sans-serif
+    FontColor #222222
+    FontSize  14
+    FontStyle plain
+    Shadowing false
+    TextAlignment center
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Title {
+    FontSize 20
+    FontStyle bold
+}
+
+skinparam Note {
+    BackgroundColor #90A4AE
+    BorderColor #90A4AE
+    BorderThickness 1
+    FontColor White
+    Shadowing false
+    TextAlignment left
+}
+
+skinparam Note<<quit>> {
+
+    BackgroundColor #F9A825
+    BorderColor #F9A825
+}
+
+skinparam Sequence {
+    ActorBorderThickness 1
+    LifeLineBorderColor GREEN
+    ParticipantBorderThickness 0
+    Shadowing false
+
+
+    GroupBorderThickness 1
+    GroupBorderColor #1565C0
+    GroupBackgroundColor #BBDEFB
+}
+
+skinparam Activity {
+
+    StartColor #37A77C
+    EndColor #F6363F
+    AttributeFontColor white
+    AttributeFontSize  15
+    AttributeFontname  Droid Sans Mono
+
+    BackgroundColor #BBDEFB
+    BorderColor #90CAF9
+    BorderThickness 1
+
+    ArrowThickness 1
+
+
+    BarColor   #0D47A1
+
+
+    DiamondBackgroundColor   #FFE0B2
+    DiamondBorderColor    #FFCC80
+
+
+}
+
+skinparam Class {
+    BackgroundColor #E3F2FD
+    BorderColor #64B5F6
+    BorderThickness 1
+
+
+    StereotypeFontColor #589DF6
+    StereotypeFontSize 14
+}
+
+
+
+skinparam Interface {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+    FontSize 14
+
+
+    StereotypeFontColor #589DF6
+    StereotypeFontSize 1
+}
+
+
+
+skinparam Participant {
+    BackgroundColor #1565C0
+    BorderColor #1565C0
+    FontColor White
+    Shadowing false
+}
+
+skinparam Actor {
+    BackgroundColor #1565C0
+    BorderColor #1565C0
+    Shadowing false
+}
+
+skinparam UseCase {
+    BackgroundColor #64B5F6
+    BorderColor #64B5F6
+    Shadowing false
+    ArrowThickness 1
+    ArrowColor #1565C0
+
+    ActorBackgroundColor #1565C0
+    ActorBorderColor #0D47A1
+    ActorShadowing false
+ 
+}
+
+
+skinparam State {
+    FontSize           17
+
+    AttributeFontSize  14
+    
+    BackgroundColor    #BBDEFB
+    BorderColor        #90CAF9
+    StartColor #37A77C
+    EndColor #F6363F
+}
+
+skinparam Partition {
+    BorderColor #424242
+    BorderStyle dashed
+
+    BorderThickness 1
+}
+
+skinparam rectangle {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam database {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam Queue {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Agent {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Artifact {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Boundary {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Card {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Cloud {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Component {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Control {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Database {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Entity {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam File {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Folder {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+   
+}
+skinparam Frame {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Node {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+
+skinparam Package {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Stack {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Rectangle {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Storage {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam rectangle<<usercase>> {
+    Shadowing false
+    StereotypeFontSize 0
+    FontColor #424242
+    BorderColor #424242
+    BorderStyle dashed
+    BackgroundColor White
+}
+
+
+
+
+
+
+
+
+
+
+
+
+start
+:无限循环获取过期的展示;
+if (内容标签匹配)
+  :取消过期标记;
+  stop
+endif
+:转码;
+:更新内容标签;
+:取消过期标记;
+stop
+@enduml
+
+PlantUML version 1.2020.02(Sun Mar 01 10:22:07 UTC 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 1.8.0_242-b08
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>
