@@ -36,7 +36,7 @@ export function fileSrc(v: string | undefined): string {
   render(h) {
     const src = this.path;
     const renderImage = () => {
-      this.updateCurrentFrame();
+      this.currentTime = 0;
       this.paused = true;
       return h('img', {
         domProps: {
@@ -70,8 +70,8 @@ export function fileSrc(v: string | undefined): string {
           error: () => {
             this.isLoadFailed = true;
           },
-          timeupdate: () => {
-            this.updateCurrentFrame();
+          timeupdate: (e: Event & { target: HTMLVideoElement }) => {
+            this.currentTime = e.target.currentTime;
           },
           play: () => {
             this.paused = false;
@@ -107,6 +107,13 @@ export function fileSrc(v: string | undefined): string {
       }
     );
     this.$watch(
+      () => this.currentTime,
+      v => {
+        this.$emit('timeUpdate', v);
+      },
+      { immediate: true }
+    );
+    this.$watch(
       () => this.currentFrame,
       v => {
         this.$emit('frameUpdate', v);
@@ -133,10 +140,10 @@ export default class Presentation extends Vue {
 
   isLoadFailed = false;
   paused = true;
-  rawCurrentFrame = 0;
+  currentTime = 0;
 
   get type(): string {
-    return this.node?.type ?? ''
+    return this.node?.type ?? '';
   }
 
   get path(): string {
@@ -218,18 +225,7 @@ export default class Presentation extends Vue {
   }
 
   get currentFrame(): number {
-    return this.firstFrame + this.rawCurrentFrame;
-  }
-
-  updateCurrentFrame(): void {
-    if (!this.$el) {
-      return;
-    }
-    if (this.$el instanceof HTMLImageElement) {
-      this.rawCurrentFrame = 0;
-      return;
-    }
-    this.rawCurrentFrame = Math.round(this.$el.currentTime * this.frameRate);
+    return this.firstFrame + Math.round(this.currentTime * this.frameRate);
   }
 
   play(): void {
