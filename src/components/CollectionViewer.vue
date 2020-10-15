@@ -148,7 +148,7 @@
               DurationInput(
                 ref="timeInput"
                 v-model="currentTimeProxy"
-                class="h-8 w-32 m-px"
+                class="h-8 w-32 m-px text-center"
                 title="当前时间（快捷键：g）"
               )
               button.form-button(
