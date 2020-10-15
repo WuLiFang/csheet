@@ -81,6 +81,7 @@
                 :id="presentationID"
                 size="regular"
                 autoplay
+                :playbackRate="formData.playbackRate"
                 @frameUpdate="currentFrame = $event"
               )
             //- placeholder for small screen
@@ -90,10 +91,11 @@
               size="thumb"
             )
           .flex(
-            v-if="$refs.presentation && $refs.presentation.frameRate > 0"
+            v-if="$refs.presentation && $refs.presentation.type === 'video'"
             class="flex-col sm:flex-row overflow-x-hidden flex-wrap justify-center items-center"
           )
             .inline-flex(
+              v-if="$refs.presentation.frameRate > 0"
               class="sm:order-2 flex-wrap justify-center my-px sm:mx-1"
             )
               button.form-button(
@@ -139,15 +141,29 @@
                 @click="() => $refs.presentation.seekFrame($refs.presentation.lastFrame, true)"
               ) 
                 FaIcon(name="fast-forward")
-            button.form-button(
-              type="button"
-              class="flex-initial p-0 w-24 h-8 sm:order-3 my-px sm:mx-1"
-              class="flex justify-center items-center"
-              title="播放/暂停（快捷键：空格）"
-              @click="() => $refs.presentation.paused ? $refs.presentation.play(): $refs.presentation.pause()"
-            ) 
-              FaIcon(:name="$refs.presentation.paused ? 'play' : 'pause'")
             .inline-flex.items-center(
+              class="sm:order-3 my-px sm:mx-1"
+            )
+              button.form-button(
+                type="button"
+                class="flex-initial p-0 w-24 h-8 m-px"
+                class="flex justify-center items-center"
+                title="播放/暂停（快捷键：空格）"
+                @click="() => $refs.presentation.paused ? $refs.presentation.play(): $refs.presentation.pause()"
+              ) 
+                FaIcon(:name="$refs.presentation.paused ? 'play' : 'pause'")
+              select.form-select(
+                ref="playbackRateSelect"
+                class="flex-initial p-0 pl-2 w-20 h-8  m-px"
+                v-model="formData.playbackRate"
+                title="播放倍速 （快捷键：j/k/l）"
+              )
+                option(
+                  v-for="i in playbackRateOptions"
+                  :value="i"
+                ) ×{{i.toFixed(1)}}
+            .inline-flex.items-center(
+              v-if="$refs.presentation.frameRate > 0"
               class="sm:order-1 my-px sm:mx-1"
             )
               button.form-button(
@@ -355,6 +371,28 @@ import { throttle } from 'lodash';
           if (el) {
             el.select();
           }
+          break;
+        }
+        case 'j': {
+          e.preventDefault();
+          const o = this.playbackRateOptions;
+          this.formData.playbackRate =
+            o[Math.max(0, o.indexOf(this.formData.playbackRate) - 1)];
+          break;
+        }
+        case 'k': {
+          e.preventDefault();
+          this.formData.playbackRate = 1;
+          break;
+        }
+        case 'l': {
+          e.preventDefault();
+          const o = this.playbackRateOptions;
+          this.formData.playbackRate =
+            o[
+              Math.min(o.length - 1, o.indexOf(this.formData.playbackRate) + 1)
+            ];
+          break;
         }
       }
     };
@@ -398,6 +436,7 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
     next: HTMLButtonElement;
     presentation: Presentation;
     frameInput: HTMLInputElement;
+    playbackRateSelect: HTMLSelectElement;
   };
 
   presentationID = '';
@@ -406,9 +445,11 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
   currentFrame = 0;
   hasFocus = false;
 
+  playbackRateOptions = [0.1, 0.2, 0.5, 1, 2, 4, 8];
   formData = {
     currentFrame: 0,
     frameSkip: 10,
+    playbackRate: 1,
   };
 
   jumpPrev(): void {

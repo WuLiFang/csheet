@@ -64,6 +64,7 @@ export function fileSrc(v: string | undefined): string {
           loop: true,
           autoplay: this.autoplay,
           draggable: true,
+          playbackRate: clamp(this.playbackRate, 0.1, 10),
         },
         on: {
           error: () => {
@@ -124,12 +125,19 @@ export default class Presentation extends Vue {
   @Prop({ type: Boolean, default: false })
   autoplay!: boolean;
 
+  @Prop({ type: Number, default: 1 })
+  playbackRate!: number;
+
   $el!: HTMLVideoElement | HTMLImageElement;
   node?: presentation;
 
   isLoadFailed = false;
   paused = true;
   rawCurrentFrame = 0;
+
+  get type(): string {
+    return this.node?.type ?? ''
+  }
 
   get path(): string {
     if (this.isTranscodeFailed) {
