@@ -46,9 +46,7 @@ export default function formatDuration(
     if (ret[0] === '0' && ret[1] !== ':') {
       ret = ret.slice(1);
     }
-    if (ret.endsWith('.000')) {
-      ret = ret.slice(0, -4);
-    }
+    ret = ret.replace(/\.?0+$/, '')
   }
   ret = sign + ret;
   return ret;
