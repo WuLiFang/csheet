@@ -10,10 +10,10 @@ function formatAmount(v: number): string {
 }
 
 /**
- * Format duration seconds to `HH:MM:SS.sss` format
+ * Format duration to `HH:MM:SS.sss` format
  */
-export default function formatDuration(value: number): string {
-  let v = value;
+export default function formatDuration(milliseconds: number): string {
+  let v = milliseconds;
   let sign = '';
   if (v < 0) {
     sign = '-';
