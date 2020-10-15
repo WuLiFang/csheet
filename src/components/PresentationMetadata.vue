@@ -1,9 +1,9 @@
 <template lang="pug">
   dl
     dt 文件大小
-    dd.pl-4 
+    dd.pl-4
       span {{ fileSizeText }}
-      span.mx-2.text-gray-500 （{{ fileSizeExactText }}）
+      span.mx-2.text-gray-500.whitespace-no-wrap （{{ fileSizeExactText }}）
     template(v-if="metadata.width && metadata.height")
       dt 尺寸
       dd.pl-4 {{metadata.width}}x{{metadata.height}}
@@ -15,7 +15,7 @@
       dd.pl-4.flex.items-center
         input.form-input(
           v-model.number="formData.firstFrame"
-          class="h-8 text-center flex-auto spin-button-none"
+          class="h-8 w-12 text-center flex-auto spin-button-none"
           type="number"
           @focus="hasFocus = true; $event.target.select()"
           @keyup.enter="$event.target.blur()"
@@ -24,7 +24,7 @@
         span.mx-1 -
         input.form-input(
           v-model.number="formData.lastFrame"
-          class="h-8 text-center flex-auto spin-button-none"
+          class="h-8 w-12 text-center flex-auto spin-button-none"
           type="number"
           @focus="hasFocus = true; $event.target.select()"
           @keyup.enter="$event.target.blur()"

@@ -89,13 +89,70 @@
               :id="presentationID"
               size="thumb"
             )
-          .text-center(
+          .flex(
             v-if="$refs.presentation && $refs.presentation.frameRate > 0"
+            class="flex-col sm:flex-row overflow-x-hidden flex-wrap justify-center items-center"
           )
-            .inline-flex.items-center.mx-2
+            .inline-flex(
+              class="sm:order-2 flex-wrap justify-center my-px sm:mx-1"
+            )
               button.form-button(
                 type="button"
-                class="flex-none p-0 w-10 h-6 m-1"
+                class="flex-none p-0 w-12 h-8 m-px"
+                class="flex justify-center items-center"
+                title="至起始帧（快捷键：Home）"
+                @click="() => $refs.presentation.seekFrame($refs.presentation.firstFrame, true)"
+              ) 
+                FaIcon(name="fast-backward")
+              button.form-button(
+                type="button"
+                class="flex-none p-0 w-12 h-8 m-px"
+                class="flex justify-center items-center"
+                title="上一帧（快捷键：←）"
+                @click="() => $refs.presentation.seekFrameOffset(-1, true)"
+              ) 
+                FaIcon(name="step-backward")
+              input.form-input(
+                ref="frameInput"
+                type="number"
+                class="flex-auto w-24 h-8 spin-button-none z-10 text-center m-px"
+                :value="hasFocus ? formData.currentFrame : currentFrame"
+                @input="e => {formData.currentFrame = parseFloat(e.target.value); $refs.presentation.seekFrame(this.formData.currentFrame, true);}"
+                @keyup.enter="$event.target.blur()"
+                @focus="hasFocus = true; formData.currentFrame = currentFrame; $event.target.select()"
+                @blur="hasFocus = false;"
+                title="设置当前帧 （快捷键：g）"
+              )
+              button.form-button(
+                type="button"
+                class="flex-none p-0 w-12 h-8 m-px"
+                class="flex justify-center items-center"
+                title="下一帧（快捷键：→）"
+                @click="() => $refs.presentation.seekFrameOffset(1, true)"
+              ) 
+                FaIcon(name="step-forward")
+              button.form-button(
+                type="button"
+                class="flex-none p-0 w-12 h-8 m-px"
+                class="flex justify-center items-center"
+                title="至结束帧（快捷键：End）"
+                @click="() => $refs.presentation.seekFrame($refs.presentation.lastFrame, true)"
+              ) 
+                FaIcon(name="fast-forward")
+            button.form-button(
+              type="button"
+              class="flex-initial p-0 w-24 h-8 sm:order-3 my-px sm:mx-1"
+              class="flex justify-center items-center"
+              title="播放/暂停（快捷键：空格）"
+              @click="() => $refs.presentation.paused ? $refs.presentation.play(): $refs.presentation.pause()"
+            ) 
+              FaIcon(:name="$refs.presentation.paused ? 'play' : 'pause'")
+            .inline-flex.items-center(
+              class="sm:order-1 my-px sm:mx-1"
+            )
+              button.form-button(
+                type="button"
+                class="flex-none p-0 w-10 h-6 m-px"
                 class="flex justify-center items-center"
                 title="向前跳帧（快捷键：Shift + ←）"
                 @click="() => $refs.presentation.seekFrameOffset(-formData.frameSkip, true)"
@@ -111,64 +168,12 @@
               )
               button.form-button(
                 type="button"
-                class="flex-none p-0 w-10 h-6 m-1"
+                class="flex-none p-0 w-10 h-6 m-px"
                 class="flex justify-center items-center"
                 title="向后跳帧（快捷键：Shift + →）"
                 @click="() => $refs.presentation.seekFrameOffset(formData.frameSkip, true)"
               ) 
                 FaIcon(name="forward")
-            .inline-flex
-              button.form-button(
-                type="button"
-                class="flex-none p-0 w-12 h-8 m-1"
-                class="flex justify-center items-center"
-                title="至起始帧（快捷键：Home）"
-                @click="() => $refs.presentation.seekFrame($refs.presentation.firstFrame, true)"
-              ) 
-                FaIcon(name="fast-backward")
-              button.form-button(
-                type="button"
-                class="flex-none p-0 w-12 h-8 m-1"
-                class="flex justify-center items-center"
-                title="上一帧（快捷键：←）"
-                @click="() => $refs.presentation.seekFrameOffset(-1, true)"
-              ) 
-                FaIcon(name="step-backward")
-              input.form-input(
-                ref="frameInput"
-                type="number"
-                class="flex-auto w-24 h-8 spin-button-none z-10 text-center m-1"
-                :value="hasFocus ? formData.currentFrame : currentFrame"
-                @input="e => {formData.currentFrame = parseFloat(e.target.value); $refs.presentation.seekFrame(this.formData.currentFrame, true);}"
-                @keyup.enter="$event.target.blur()"
-                @focus="hasFocus = true; formData.currentFrame = currentFrame; $event.target.select()"
-                @blur="hasFocus = false;"
-                title="设置当前帧 （快捷键：g）"
-              )
-              button.form-button(
-                type="button"
-                class="flex-none p-0 w-12 h-8 m-1"
-                class="flex justify-center items-center"
-                title="下一帧（快捷键：→）"
-                @click="() => $refs.presentation.seekFrameOffset(1, true)"
-              ) 
-                FaIcon(name="step-forward")
-              button.form-button(
-                type="button"
-                class="flex-none p-0 w-12 h-8 m-1"
-                class="flex justify-center items-center"
-                title="至结束帧（快捷键：End）"
-                @click="() => $refs.presentation.seekFrame($refs.presentation.lastFrame, true)"
-              ) 
-                FaIcon(name="fast-forward")
-              button.form-button(
-                type="button"
-                class="flex-none p-0 w-24  h-8 m-1"
-                class="flex justify-center items-center"
-                title="播放/暂停（快捷键：空格）"
-                @click="() => $refs.presentation.paused ? $refs.presentation.play(): $refs.presentation.pause()"
-              ) 
-                FaIcon(:name="$refs.presentation.paused ? 'play' : 'pause'")
         aside(
           class="flex-auto bg-gray-900 lg:flex-initial lg:w-1/3 lg:overflow-auto"
         )
