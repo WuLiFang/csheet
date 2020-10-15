@@ -1,7 +1,7 @@
 使用查看器
 ========================
 
-.. image:: ../_images/chrome_2020-09-03_11-57-40.png
+.. image:: ../_images/chrome_2020-10-15_18-42-19.png
 
 在总览视图中点击任意图片将显示查看器。
 
@@ -48,11 +48,11 @@
 
 鼠标悬停在日期上可查看详细时间日期。
 
-.. figure:: ../_images/chrome_2020-09-03_11-57-48.png
+.. figure:: ../_images/chrome_2020-10-15_18-42-37.png
 
   图片展示
 
-.. figure:: ../_images/chrome_2020-09-03_11-57-40.png
+.. figure:: ../_images/chrome_2020-10-15_18-42-19.png
 
   视频展示
 

@@ -9,7 +9,7 @@
 
 ![总览截图](docs/web/_images/chrome_2020-09-03_11-57-08.png)
 
-![查看器截图](docs/web/_images/chrome_2020-09-03_11-57-40.png)
+![查看器截图](docs/web/_images/chrome_2020-10-15_18-42-19.png)
 
 ## 功能
 
