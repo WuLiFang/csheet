@@ -17,7 +17,7 @@
           v-model.number="formData.firstFrame"
           class="h-8 text-center flex-auto spin-button-none"
           type="number"
-          @focus="hasFocus = true"
+          @focus="hasFocus = true; $event.target.select()"
           @keyup.enter="$event.target.blur()"
           @blur="blur()"
         )
@@ -26,7 +26,7 @@
           v-model.number="formData.lastFrame"
           class="h-8 text-center flex-auto spin-button-none"
           type="number"
-          @focus="hasFocus = true"
+          @focus="hasFocus = true; $event.target.select()"
           @keyup.enter="$event.target.blur()"
           @blur="blur()"
         )
