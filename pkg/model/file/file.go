@@ -6,9 +6,11 @@ import (
 	"os"
 	"time"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/filestore"
 	"github.com/dgraph-io/badger/v2"
+	"go.uber.org/zap"
 )
 
 //go:generate gotmpl -o file_gen.go ../model.go.gotmpl
@@ -50,7 +52,6 @@ func (f *File) Stat(ctx context.Context) error {
 	var changed bool
 	modTime := s.ModTime()
 	if modTime.Unix() != f.ModTime.Unix() {
-
 		changed = true
 		f.ModTime = modTime
 	}
@@ -60,6 +61,7 @@ func (f *File) Stat(ctx context.Context) error {
 		f.Size = size
 	}
 	if changed {
+		logging.Logger("model.file").Info("change detected", zap.Any("file", f))
 		f.Save(ctx)
 	}
 	return nil
