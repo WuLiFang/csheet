@@ -27,6 +27,7 @@ func (r *mutationResolver) UpdatePresentationMetadata(ctx context.Context, input
 			m[i.ID] = v
 		}
 		v.SetMetadata(i.Key, i.Value)
+		m[i.ID] = v
 	}
 
 	ret.Updated = make([]presentation.Presentation, 0, len(m))
