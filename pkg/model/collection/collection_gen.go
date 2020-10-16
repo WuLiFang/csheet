@@ -28,6 +28,10 @@ func (o Collection) ID() string {
 
 // Save Collection to db.
 func (o *Collection) Save(ctx context.Context) (err error) {
+	err = o.Validate(ctx)
+	if err != nil {
+		return
+	}
 	select {
 		case <- ctx.Done():
 			return ctx.Err()

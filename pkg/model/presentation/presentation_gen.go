@@ -28,6 +28,10 @@ func (o Presentation) ID() string {
 
 // Save Presentation to db.
 func (o *Presentation) Save(ctx context.Context) (err error) {
+	err = o.Validate(ctx)
+	if err != nil {
+		return
+	}
 	select {
 		case <- ctx.Done():
 			return ctx.Err()

@@ -46,6 +46,11 @@ func (p Presentation) hash() (ret string, err error) {
 	return
 }
 
+// Validate and clean up data
+func (p *Presentation) Validate(ctx context.Context) (err error) {
+	return
+}
+
 // SetMetadata pair, use empty value to delete pair.
 func (p *Presentation) SetMetadata(k, v string) (changed bool) {
 	if v == "" {

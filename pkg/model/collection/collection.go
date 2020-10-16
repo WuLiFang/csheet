@@ -1,6 +1,7 @@
 package collection
 
 import (
+	"context"
 	"encoding/base64"
 	"errors"
 	"time"
@@ -31,6 +32,12 @@ func (c Collection) Key() ([]byte, error) {
 	}
 	var id, err = db.IndexCollectionOrigin.ValueID(c.Origin)
 	return db.IndexCollection.Key(id), err
+}
+
+// Validate and clean up data
+func (c *Collection) Validate(ctx context.Context) (err error) {
+	c.PresentationIDs = uniqString(c.PresentationIDs)
+	return
 }
 
 // Presentations related to this collection
@@ -65,4 +72,16 @@ func FindByID(id string) (ret Collection, err error) {
 		return txn.Get(key, &ret)
 	})
 	return
+}
+
+func uniqString(v []string) []string {
+	m := make(map[string]struct{})
+	for _, i := range v {
+		m[i] = struct{}{}
+	}
+	ret := make([]string, 0, len(m))
+	for i := range m {
+		ret = append(ret, i)
+	}
+	return ret
 }

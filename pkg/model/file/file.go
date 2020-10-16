@@ -39,6 +39,11 @@ func (f File) Tag() string {
 	return fmt.Sprintf("%x-%x", f.ModTime.UnixNano(), f.Size)
 }
 
+// Validate and clean up data
+func (f *File) Validate(ctx context.Context) (err error) {
+	return
+}
+
 // Stat update file stat data.
 func (f *File) Stat(ctx context.Context) error {
 	p, err := filestore.AbsPath(f.Path)

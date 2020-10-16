@@ -28,6 +28,10 @@ func (o File) ID() string {
 
 // Save File to db.
 func (o *File) Save(ctx context.Context) (err error) {
+	err = o.Validate(ctx)
+	if err != nil {
+		return
+	}
 	select {
 		case <- ctx.Done():
 			return ctx.Err()
