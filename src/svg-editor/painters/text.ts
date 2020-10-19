@@ -179,6 +179,7 @@ export class TextPainter extends NullPainter {
       );
       textarea.addEventListener('input', () => {
         this.renderText(textarea.value);
+        this.renderPopup();
       });
       textarea.addEventListener('blur', () => {
         this.hidePopup();
@@ -190,12 +191,18 @@ export class TextPainter extends NullPainter {
   customRenderPopup?(el: HTMLDivElement): void;
 
   renderPopup(): void {
-    const e = this.target?.lastEvent;
+    if (!this.target) {
+      return;
+    }
+    const e = this.target.lastEvent;
+    const text = this.target.text;
     const el = this.popupContainer;
     if (e) {
       el.style.position = 'absolute';
       el.style.left = `${e.offsetX}px`;
-      el.style.top = `${e.offsetY}px`;
+      el.style.top = `${e.offsetY +
+        (text.getClientRects().item(0)?.height ?? 0) +
+        this.config.fontSize / 2}px`;
       el.style.pointerEvents = 'none';
     }
     (this.customRenderPopup ?? this.defaultRenderPopup)(el);

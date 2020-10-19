@@ -73,6 +73,9 @@ export class SVGEditor {
       if (i.style.visibility === 'hidden') {
         continue;
       }
+      if (i.dataset.valueIgnore === 'true') {
+        continue;
+      }
       if (!(i.parentElement === this.valueContainer)) {
         i.remove();
       }
