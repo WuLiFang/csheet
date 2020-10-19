@@ -54,6 +54,11 @@
         .player(
           class="relative text-center lg:w-2/3 h-full flex flex-col"
         )
+
+          PresentationAnnotationEditorToolbar(
+            v-if="$refs.annotation"
+            :parent="$refs.annotation"
+          )
           template(v-for="i in prefetchURLs")
             link(rel="prefetch" :href="i")
           p(
@@ -90,6 +95,12 @@
               class="object-contain w-full h-full invisible"
               :id="presentationID"
               size="thumb"
+            )
+            PresentationAnnotationEditor(
+              ref="annotation"
+              :id="presentationID"
+              :frame="currentFrame"
+              class="object-contain w-full h-full absolute inset-0"
             )
           .flex(
             v-if="$refs.presentation && $refs.presentation.type === 'video'"
@@ -271,6 +282,8 @@ import { presentation } from '../graphql/types/presentation';
 import { throttle } from 'lodash';
 import DurationInput from './DurationInput.vue';
 import moment from 'moment';
+import PresentationAnnotationEditor from './PresentationAnnotationEditor.vue';
+import PresentationAnnotationEditorToolbar from './PresentationAnnotationEditorToolbar.vue';
 
 @Component<CollectionViewer>({
   components: {
@@ -279,6 +292,8 @@ import moment from 'moment';
     CollectionMetadata,
     PresentationMetadata,
     DurationInput,
+    PresentationAnnotationEditor,
+    PresentationAnnotationEditorToolbar,
   },
   mounted() {
     sentry.addBreadcrumb({
@@ -301,7 +316,8 @@ import moment from 'moment';
           e.target === document.body ||
           e.target === this.$refs.presentation?.$el ||
           e.target === this.$refs.prev ||
-          e.target === this.$refs.next
+          e.target === this.$refs.next ||
+          e.target === this.$refs.annotation?.$el
         )
       ) {
         return;
@@ -456,6 +472,7 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
     frameInput: HTMLInputElement;
     playbackRateSelect: HTMLSelectElement;
     timeInput: DurationInput;
+    annotation: PresentationAnnotationEditor;
   };
 
   presentationID = '';

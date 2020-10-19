@@ -1,0 +1,305 @@
+<template lang="pug">
+  svg.presentation-annotation-editor.svg-editor(
+    :viewBox="`0 0 ${width} ${height}`"
+    v-show="currentPainter !== 'null'"
+  )
+</template>
+
+<script lang="ts">
+import { Component, Vue, Prop } from 'vue-property-decorator';
+import { SVGEditor } from '@/svg-editor';
+import PolylinePainter from '@/svg-editor/painters/polyline';
+import RectanglePainter from '@/svg-editor/painters/rectangle';
+import EllipsePainter from '@/svg-editor/painters/ellipse';
+import client from '@/client';
+import { filePathFormat } from '@/const';
+import {
+  presentationNodeVariables,
+  presentationNode,
+} from '@/graphql/types/presentationNode';
+import { presentation } from '@/graphql/types/presentation';
+import NullPainter from '@/svg-editor/painters/null';
+import SelectPainter from '@/svg-editor/painters/select';
+import { Painter } from '@/svg-editor/painter';
+import formatFileSize from '@/utils/formatFileSize';
+import parseOptionalFloat from '@/utils/parseOptionalFloat';
+import setDOMStringMap from '@/utils/setDOMStringMap';
+import createSVGElement from '@/svg-editor/utils/createSVGElement';
+import iterateHTMLCollection from '@/svg-editor/utils/iterateHTMLCollection';
+import { debounce, DebouncedFunc } from 'lodash';
+import { TextPainter } from '@/svg-editor/painters/text';
+
+type PainterName =
+  | 'null'
+  | 'select'
+  | 'polyline'
+  | 'rectangle'
+  | 'ellipse'
+  | 'text';
+
+@Component<PresentationAnnotationEditor>({
+  apollo: {
+    presentation: {
+      query: require('@/graphql/queries/presentationNode.gql'),
+      variables(): presentationNodeVariables {
+        return { id: this.id ?? '', filePathFormat };
+      },
+      skip(): boolean {
+        return !this.id;
+      },
+      update(v: presentationNode): presentation | undefined {
+        return v.node?.__typename === 'Presentation' ? v.node : undefined;
+      },
+    },
+  },
+  data() {
+    return {
+      editor: undefined,
+      selected: undefined,
+      debouncedSubmit: debounce(() => this.submit(), 200),
+    };
+  },
+  mounted() {
+    this.editor = new SVGEditor(this.$el, {
+      hooks: {
+        drawEnd: () => {
+          this.editor.clearHistory();
+        },
+        changeHistory: () => {
+          this.canUndo = this.editor.canUndo();
+          this.canRedo = this.editor.canRedo();
+          this.debouncedSubmit();
+        },
+        pushOperation: el => {
+          const [first, last] = this.frameRange;
+          setDOMStringMap(el.dataset, 'firstFrame', first?.toString());
+          setDOMStringMap(el.dataset, 'lastFrame', last?.toString());
+        },
+        renderOperation: el => {
+          if (this.frame == null) {
+            el.classList.toggle('invisible', false);
+            return;
+          }
+          const first = parseOptionalFloat(el.dataset.firstFrame);
+          const last = parseOptionalFloat(el.dataset.lastFrame);
+          el.classList.toggle(
+            'invisible',
+            (first != null && this.frame < first) ||
+              (last != null && this.frame > last)
+          );
+        },
+      },
+    });
+    this.setPainter('select');
+    this.$watch(
+      () => this.id,
+      () => {
+        this.editor.clearHistory();
+        this.debouncedSubmit.cancel();
+      }
+    );
+    this.$watch(
+      () => this.frame,
+      () => {
+        this.editor.update();
+      }
+    );
+    this.$watch(
+      () =>
+        this.presentation?.metadata.find(i => i.k === 'annotation')?.v ?? '',
+      v => {
+        if (v.length > 1 << 20) {
+          throw new Error(
+            `PresentatinoAnnotationEditor: value length excess limit (1 MiB): ${formatFileSize(
+              v.length
+            )}`
+          );
+        }
+        this.editor.setValue(v);
+        this.canUndo = this.editor.canUndo();
+      },
+      { immediate: true }
+    );
+  },
+})
+export default class PresentationAnnotationEditor extends Vue {
+  @Prop({ type: String })
+  id?: string;
+
+  @Prop({ type: Number })
+  frame?: number;
+
+  @Prop({ type: Boolean, default: false })
+  toolbar!: boolean;
+
+  $el!: SVGSVGElement;
+
+  editor!: SVGEditor;
+
+  currentPainter: PainterName = 'null';
+
+  presentation?: presentation;
+
+  canUndo = false;
+  canRedo = false;
+  loadingCount = 0;
+
+  config = {
+    strokeWidth: 8,
+    color: '#ff0000',
+    cornerRadius: 0,
+    firstFrame: undefined as number | undefined,
+    lastFrame: undefined as number | undefined,
+    frameRangeMode: 'NULL',
+    fontSize: 24,
+    backgroundColor: '#000000',
+  };
+
+  selected = -1;
+
+  debouncedSubmit!: DebouncedFunc<() => Promise<void>>;
+
+  get frameRange(): [number | undefined, number | undefined] {
+    switch (this.config.frameRangeMode) {
+      case 'CURRENT':
+        return [this.frame, this.frame];
+      case 'GTE_CURRENT':
+        return [this.frame, undefined];
+      case 'LTE_CURRENT':
+        return [undefined, this.frame];
+      case 'INPUT':
+        return [this.config.firstFrame, this.config.lastFrame];
+      default:
+        return [undefined, undefined];
+    }
+  }
+
+  newPainter(name: PainterName): Painter {
+    switch (name) {
+      case 'null':
+        return new NullPainter(this.editor);
+      case 'select': {
+        const ret = new SelectPainter(this.editor);
+        ret.onSelect = v => {
+          this.selected = v;
+          const el = this.editor.operation(v);
+          if (el) {
+            this.config.firstFrame = parseOptionalFloat(el.dataset.firstFrame);
+            this.config.lastFrame = parseOptionalFloat(el.dataset.lastFrame);
+            if (this.config.firstFrame || this.config.lastFrame) {
+              this.config.frameRangeMode = 'INPUT';
+            } else {
+              this.config.frameRangeMode = 'NULL';
+            }
+          }
+        };
+        const unwatch = this.$watch(
+          () => this.frameRange,
+          ([first, last]) => {
+            const selected = this.editor.operation(this.selected);
+            if (!selected) {
+              return;
+            }
+            setDOMStringMap(selected.dataset, 'firstFrame', first?.toString());
+            setDOMStringMap(selected.dataset, 'lastFrame', last?.toString());
+            this.editor.update();
+            this.debouncedSubmit();
+          },
+          { deep: true }
+        );
+        ret.addCleanup(unwatch);
+        return ret;
+      }
+      case 'polyline': {
+        const ret = new PolylinePainter(this.editor);
+        ret.config = this.config;
+        return ret;
+      }
+      case 'rectangle': {
+        const ret = new RectanglePainter(this.editor);
+        ret.config = this.config;
+        return ret;
+      }
+      case 'ellipse': {
+        const ret = new EllipsePainter(this.editor);
+        ret.config = this.config;
+        return ret;
+      }
+      case 'text': {
+        const painter = new TextPainter(this.editor);
+        painter.customRenderPopup = el => {
+          painter.defaultRenderPopup(el);
+          const textarea = el.querySelector('textarea');
+          if (!textarea) {
+            throw new Error('should has textarea');
+          }
+          textarea.classList.add('form-textarea');
+        };
+        painter.config = this.config;
+        return painter;
+      }
+    }
+  }
+
+  setPainter(name: PainterName): void {
+    const painter = this.newPainter(name);
+    if (!painter) {
+      throw new Error();
+    }
+    this.editor.painter = painter;
+    this.currentPainter = name;
+  }
+
+  async submit(): Promise<void> {
+    if (!this.id || this.loadingCount > 0 || this.editor.painter.isDrawing) {
+      return;
+    }
+    this.loadingCount += 1;
+    try {
+      const rawValue = this.editor.getValue();
+      const g = createSVGElement('g');
+      g.innerHTML = rawValue;
+      for (const i of iterateHTMLCollection(g.children)) {
+        i.classList.forEach(c => i.classList.remove(c));
+      }
+      const value = g.innerHTML;
+
+      await client.presentation.updateMetadata({
+        input: {
+          data: [
+            {
+              id: this.id,
+              key: 'annotation',
+              value,
+            },
+          ],
+        },
+      });
+      this.canUndo = this.editor.canUndo();
+      this.canRedo = this.editor.canRedo();
+    } finally {
+      this.loadingCount -= 1;
+    }
+  }
+
+  get width(): number {
+    const v = parseFloat(
+      this.presentation?.metadata.find(i => i.k === 'width')?.v ?? ''
+    );
+    if (!isFinite(v)) {
+      return 1920;
+    }
+    return v;
+  }
+
+  get height(): number {
+    const v = parseFloat(
+      this.presentation?.metadata.find(i => i.k === 'height')?.v ?? ''
+    );
+    if (!isFinite(v)) {
+      return 1080;
+    }
+    return v;
+  }
+}
+</script>

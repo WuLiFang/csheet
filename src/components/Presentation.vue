@@ -42,7 +42,7 @@ export function fileSrc(v: string | undefined): string {
         domProps: {
           src,
           alt: this.node?.raw?.path,
-          draggable: true,
+          draggable: this.draggable,
         },
         style: {
           filter: this.imageFilter,
@@ -63,7 +63,7 @@ export function fileSrc(v: string | undefined): string {
           controls: true,
           loop: true,
           autoplay: this.autoplay,
-          draggable: true,
+          draggable: this.draggable,
           playbackRate: clamp(this.playbackRate, 0.1, 10),
         },
         on: {
@@ -131,6 +131,9 @@ export default class Presentation extends Vue {
 
   @Prop({ type: Boolean, default: false })
   autoplay!: boolean;
+
+  @Prop({ type: Boolean, default: false })
+  draggable!: boolean;
 
   @Prop({ type: Number, default: 1 })
   playbackRate!: number;

@@ -5,6 +5,7 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
 	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
@@ -18,6 +19,12 @@ func (r *mutationResolver) UpdateCollectionMetadata(ctx context.Context, input m
 
 	for _, i := range input.Data {
 		v, ok := m[i.ID]
+		if len(i.Key) > 1<<10 {
+			return ret, fmt.Errorf("key length excess limit (1 KiB): %s", i.Key)
+		}
+		if len(i.Value) > 1<<20 {
+			return ret, fmt.Errorf("value length excess limit (1 MiB): %s", i.Key)
+		}
 		if !ok {
 			v, err = collection.FindByID(i.ID)
 			if err != nil {

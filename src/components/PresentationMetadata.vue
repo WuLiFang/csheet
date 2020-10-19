@@ -44,6 +44,7 @@
       template(v-else-if="k === 'frame-rate'")
       template(v-else-if="k === 'first-frame'")
       template(v-else-if="k === 'last-frame'")
+      template(v-else-if="k === 'annotation'")
       template(v-else)
         dt {{k}}
         dd.pl-4 {{v}}

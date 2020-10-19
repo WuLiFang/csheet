@@ -54,7 +54,29 @@ button:focus,
   &:hover {
     @apply bg-gray-600;
   }
+  &:disabled {
+    @apply text-gray-700;
+    @apply bg-gray-900;
+  }
 }
+
+.form-input {
+  &:disabled {
+    @apply text-gray-700;
+    @apply cursor-not-allowed;
+    &::placeholder {
+      @apply text-gray-700;
+    }
+  }
+}
+
+.form-select {
+  &:disabled {
+    @apply cursor-not-allowed;
+  }
+}
+
+@import '@/svg-editor/style';
 
 /* purgecss end ignore */
 
@@ -83,5 +105,10 @@ button:focus,
     &[type='number'] {
       -moz-appearance: textfield; /* Firefox */
     }
+  }
+
+  .flex-center {
+    @apply justify-center;
+    @apply items-center;
   }
 }
