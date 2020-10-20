@@ -1,13 +1,13 @@
 <template lang="pug">
   .presentation-annotation-editor-toolbar(
-    class="flex flex-wrap"
+    class="flex flex-wrap justify-between"
   )
     fieldset(
-      class="inline-flex flex-center space-x-1"
+      class="inline-flex flex-center my-px flex-wrap"
     )
       button.form-button(
         type="button"
-        class="h-8 w-12 px-0"
+        class="h-8 w-12 px-0 m-px"
         class="inline-flex flex-center"
         :class=`{
           'text-gray-500': parent.currentPainter !== "null"
@@ -18,7 +18,7 @@
         FaIcon(name="eye-slash")
       button.form-button(
         type="button"
-        class="h-8 w-12 px-0"
+        class="h-8 w-12 px-0 m-px"
         class="inline-flex flex-center"
         :class=`{
           'text-gray-500': parent.currentPainter !== "select"
@@ -29,7 +29,7 @@
         FaIcon(name="mouse-pointer")
       button.form-button(
         type="button"
-        class="h-8 w-12 px-0"
+        class="h-8 w-12 px-0 m-px"
         class="inline-flex flex-center"
         :class=`{
           'text-gray-500': parent.currentPainter !== "polyline"
@@ -40,7 +40,7 @@
         FaIcon(name="pen")
       button.form-button(
         type="button"
-        class="h-8 w-12 px-0"
+        class="h-8 w-12 px-0 m-px"
         class="inline-flex flex-center"
         :class=`{
           'text-gray-500': parent.currentPainter !== "rectangle"
@@ -51,7 +51,7 @@
         FaIcon(name="regular/square")
       button.form-button(
         type="button"
-        class="h-8 w-12 px-0"
+        class="h-8 w-12 px-0 m-px"
         class="inline-flex flex-center"
         :class=`{
           'text-gray-500': parent.currentPainter !== "ellipse"
@@ -62,7 +62,7 @@
         FaIcon(name="regular/circle")
       button.form-button(
         type="button"
-        class="h-8 w-12 px-0"
+        class="h-8 w-12 px-0 m-px"
         class="inline-flex flex-center text-lg font-serif"
         :class=`{
           'text-gray-500': parent.currentPainter !== "text"
@@ -71,11 +71,13 @@
         title='文本工具'
       ) T
     fieldset(
-      class="flex-auto mx-1 text-left inline-flex items-center space-x-1"
+      class="inline-flex flex-wrap"
+      class="flex-auto mx-1 my-px text-left"
     )
       fieldset(
         v-if="frameRangeInputVisible"
         :disabled="frameRangeInputDisabled"
+        class="m-px"
       )
         label 帧范围
           select.form-select(
@@ -103,20 +105,20 @@
       template(v-if="['polyline', 'rectangle', 'ellipse', 'text'].includes(parent.currentPainter)")
         input.form-input(
           type="color"
-          class="h-8 w-8 p-0"
+          class="h-8 w-8 p-0 m-px"
           v-model="parent.config.color"
           title="颜色"
         )
       template(v-if="['text'].includes(parent.currentPainter)")
         input.form-input(
           type="color"
-          class="h-8 w-8 p-0"
+          class="h-8 w-8 p-0 m-px"
           v-model="parent.config.backgroundColor"
           title="背景颜色"
         )
       template(v-if="['polyline', 'eraser', 'rectangle', 'ellipse'].includes(parent.currentPainter)")
         label(
-          class="inline-flex items-center"
+          class="inline-flex items-center m-px"
         )
           FaIcon(name="circle"
             class="h-4 algin-top"
@@ -131,7 +133,7 @@
           )
       template(v-if="['text'].includes(parent.currentPainter)")
         label(
-          class="inline-flex items-center"
+          class="inline-flex items-center m-px"
         )
           FaIcon(name="text-height"
             class="h-4 algin-top"
@@ -144,16 +146,19 @@
       template(v-if="['select'].includes(parent.currentPainter)")
         button.form-button(
           class="h-8"
-          class="inline-flex flex-center"
+          class="inline-flex flex-center m-px"
           :disabled='parent.selected < 0'
           @click='removeSelected()'
-        ) 删除所选
-    fieldset.inline-block.space-x-1(
+          title="删除所选"
+        ) 
+          FaIcon(name="trash-alt")
+    fieldset(
       v-show="parent.currentPainter !== 'null'"
+      class="inline-flex justify-end m-px"
     )
       button.form-button(
         type="button"
-        class="h-8"
+        class="h-8 m-px"
         class="inline-flex flex-center"
         @click="parent.editor.undo()"
         :disabled="!parent.canUndo"
@@ -161,7 +166,7 @@
         FaIcon(name="undo")
       button.form-button(
         type="button"
-        class="h-8"
+        class="h-8 m-px"
         class="inline-flex flex-center"
         :disabled="!parent.canRedo"
         @click="parent.editor.redo()"
@@ -182,6 +187,7 @@ import 'vue-awesome/icons/regular/square';
 import 'vue-awesome/icons/regular/circle';
 import 'vue-awesome/icons/circle';
 import 'vue-awesome/icons/text-height';
+import 'vue-awesome/icons/trash-alt';
 import SelectPainter from '@/svg-editor/painters/select';
 
 @Component<PresentationAnnotationEditorToolbar>({})
