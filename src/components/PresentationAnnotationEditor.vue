@@ -57,7 +57,7 @@ type PainterName =
     return {
       editor: undefined,
       selected: undefined,
-      debouncedSubmit: debounce(() => this.submit(), 200),
+      debouncedSubmit: debounce(() => this.submit(), 1000),
     };
   },
   mounted() {
