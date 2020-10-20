@@ -158,7 +158,11 @@ export class TextPainter extends NullPainter {
 
     g.setAttribute(
       'transform',
-      `translate(${(x + padding).toFixed(0)}, ${(y - text.getBBox().height).toFixed(0)})`
+      `translate(${(x + padding).toFixed(0)}, ${(
+        y -
+        text.getBBox().height +
+        padding
+      ).toFixed(0)})`
     );
   }
 
