@@ -2,6 +2,7 @@ import NullPainter from '@/svg-editor/painters/null';
 import { SVGEditor } from '@/svg-editor/svg-editor';
 import createSVGElement from '@/svg-editor/utils/createSVGElement';
 import iterateHTMLCollection from '@/svg-editor/utils/iterateHTMLCollection';
+import relativeDOMPoint from '@/svg-editor/utils/relativeDOMPoint';
 import autoGrowTextArea from '@/utils/autoGrowTextArea';
 import toHotKey from '@/utils/toHotKey';
 
@@ -16,7 +17,7 @@ export class TextPainter extends NullPainter {
 
   private target:
     | {
-        lastEvent: PointerEvent;
+        origin: DOMPoint;
         g: SVGGElement;
         text: SVGTextElement;
         rect: SVGRectElement;
@@ -50,6 +51,7 @@ export class TextPainter extends NullPainter {
     super.onPointerdown(e);
 
     this.hidePopup();
+    const origin = this.absoluteSVGPoint(e);
 
     for (const el of e.composedPath()) {
       if (el instanceof SVGGElement) {
@@ -61,7 +63,7 @@ export class TextPainter extends NullPainter {
               g: el,
               rect: first,
               text: second,
-              lastEvent: e,
+              origin,
             };
             this.showPopup();
             return;
@@ -74,17 +76,17 @@ export class TextPainter extends NullPainter {
     const rect = g.appendChild(createSVGElement('rect'));
     const text = g.appendChild(createSVGElement('text'));
     this.editor.pushOperation(g);
-    this.target = { g, text, rect, lastEvent: e };
+    this.target = { g, text, rect, origin };
     this.renderText();
     this.showPopup();
   }
 
   onPointermove(e: PointerEvent): void {
-    if (!this.isDrawing) {
+    if (!this.isDrawing || e.target !== this.editor.el) {
       return;
     }
     // e.preventDefault();
-    this.mustTarget.lastEvent = e;
+    this.mustTarget.origin = this.absoluteSVGPoint(e);
     this.renderPopup();
     this.renderText();
   }
@@ -111,7 +113,12 @@ export class TextPainter extends NullPainter {
     if (!this.target) {
       return;
     }
-    const { text, rect, g, lastEvent } = this.target;
+    const {
+      text,
+      rect,
+      g,
+      origin: { x, y },
+    } = this.target;
 
     if (!value) {
       g.dataset.valueIgnore = 'true';
@@ -121,12 +128,11 @@ export class TextPainter extends NullPainter {
       rect.style.removeProperty('visibility');
     }
 
-    const { x, y } = this.absoluteSVGPoint(lastEvent);
     const padding = this.config.fontSize * 0.5;
     const lines = value.split('\n');
 
     text.style.fill = this.config.color;
-    text.style.fontSize = this.config.fontSize.toString();
+    text.style.fontSize = `${this.config.fontSize.toFixed(0)}px`;
     while (text.children.length < lines.length) {
       text.append(createSVGElement('tspan'));
     }
@@ -204,15 +210,13 @@ export class TextPainter extends NullPainter {
     if (!this.target) {
       return;
     }
-    const e = this.target.lastEvent;
+    const { origin } = this.target;
     const el = this.popupContainer;
-
-    if (e) {
-      el.style.position = 'absolute';
-      el.style.left = `${e.offsetX}px`;
-      el.style.top = `${e.offsetY}px`;
-      el.style.pointerEvents = 'none';
-    }
+    const { offsetX, offsetY } = relativeDOMPoint(this.editor.el, origin);
+    el.style.position = 'absolute';
+    el.style.left = `${offsetX}px`;
+    el.style.top = `${offsetY}px`;
+    el.style.pointerEvents = 'none';
     (this.customRenderPopup ?? this.defaultRenderPopup)(el);
   }
 }
