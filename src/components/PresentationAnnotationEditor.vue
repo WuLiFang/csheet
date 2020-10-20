@@ -103,6 +103,7 @@ type PainterName =
       () => {
         this.editor.clearHistory();
         this.debouncedSubmit.cancel();
+        this.selected = -1;
       }
     );
     this.$watch(
