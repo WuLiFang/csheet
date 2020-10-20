@@ -19,21 +19,15 @@ export default class PolylinePainter extends Painter {
     super.onPointerdown(e);
     const el = this.editor.pushOperation(createSVGElement('polyline'));
     el.dataset.valueIgnore = 'true';
+    el.points.appendItem(this.absoluteSVGPoint(e));
     this.target = el;
   }
 
-  private get mustTarget(): SVGPolylineElement {
-    if (!this.target) {
-      throw new Error('Should created a polyline element');
-    }
-    return this.target;
-  }
-
   onPointermove(e: PointerEvent): void {
-    if (!this.isDrawing) {
+    if (!this.isDrawing || !this.target) {
       return;
     }
-    const target = this.mustTarget;
+    const target = this.target;
     const p = this.absoluteSVGPoint(e);
     target.points.appendItem(p);
     if (target.points.length > 3) {
@@ -45,6 +39,7 @@ export default class PolylinePainter extends Painter {
 
   onPointerup(e: PointerEvent): void {
     super.onPointerup(e);
+    this.target?.points.appendItem(this.absoluteSVGPoint(e));
     this.target = undefined;
   }
 }
