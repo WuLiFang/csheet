@@ -429,6 +429,16 @@ import PresentationAnnotationEditorToolbar from './PresentationAnnotationEditorT
             ];
           break;
         }
+        case '^z': {
+          e.preventDefault();
+          this.$refs.annotation?.editor.undo()
+          break;
+        }
+        case '^y': {
+          e.preventDefault();
+          this.$refs.annotation?.editor.redo()
+          break;
+        }
       }
     };
     document.body.addEventListener('keydown', keyupListener, { capture: true });

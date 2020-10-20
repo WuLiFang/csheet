@@ -22,7 +22,7 @@ export interface SVGEditorOptions {
 }
 
 function isUndoHistory(el: Element): boolean {
-  return el instanceof SVGElement && el.style.visibility === 'hidden'
+  return el instanceof SVGElement && el.style.visibility === 'hidden';
 }
 
 function isValueIgnore(el: SVGElement): boolean {
@@ -109,7 +109,7 @@ export class SVGEditor {
     const data: string[] = [];
     for (const i of this.iterateOperations()) {
       if (isValueIgnore(i)) {
-        continue
+        continue;
       }
       data.push(i.outerHTML);
     }
@@ -137,7 +137,7 @@ export class SVGEditor {
   canUndo(): boolean {
     for (const i of this.iterateOperations()) {
       if (isValueIgnore(i)) {
-        continue
+        continue;
       }
       return true;
     }
@@ -156,24 +156,24 @@ export class SVGEditor {
   undo(): void {
     for (const el of this.iterateOperations(true)) {
       if (isValueIgnore(el)) {
-        continue
+        continue;
       }
       this.weakRemove(el);
-      break;
+      this.hooks.undo?.();
+      this.hooks.changeHistory?.();
+      return;
     }
-    this.hooks.undo?.();
-    this.hooks.changeHistory?.();
   }
 
   redo(): void {
     for (const el of this.iterateOperations(false)) {
       if (isUndoHistory(el)) {
         el.style.removeProperty('visibility');
-        break;
+        this.hooks.redo?.();
+        this.hooks.changeHistory?.();
+        return;
       }
     }
-    this.hooks.redo?.();
-    this.hooks.changeHistory?.();
   }
 
   pushOperation<T extends SVGElement>(el: T): T {

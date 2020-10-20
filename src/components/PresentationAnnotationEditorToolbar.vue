@@ -164,6 +164,7 @@
         class="inline-flex flex-center"
         @click="parent.editor.undo()"
         :disabled="parent.loadingCount > 0 || !parent.canUndo"
+        title="撤销（快捷键：Ctrl + z）"
       )
         FaIcon(name="undo")
       button.form-button(
@@ -172,6 +173,7 @@
         class="inline-flex flex-center"
         :disabled="parent.loadingCount > 0 || !parent.canRedo"
         @click="parent.editor.redo()"
+        title="重做（快捷键：Ctrl + y）"
       )
         FaIcon(name="redo")
 </template>
