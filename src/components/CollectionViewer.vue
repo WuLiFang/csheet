@@ -92,7 +92,7 @@
               )
             //- placeholder for small screen
             Presentation(
-              class="object-contain w-full h-full invisible"
+              class="object-contain w-full h-full invisible lg:hidden"
               :id="presentationID"
               size="thumb"
             )
