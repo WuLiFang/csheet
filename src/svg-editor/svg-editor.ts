@@ -5,7 +5,6 @@ import iterateHTMLCollection from '@/svg-editor/utils/iterateHTMLCollection';
 import DOMPurify from 'dompurify';
 
 export interface SVGEditorOptions {
-  operationClass?: string;
   sanitize?: (v: string) => string;
   hooks?: {
     discardChanges?: () => void;
@@ -61,7 +60,6 @@ function renderValue(el: Element, safeValue: string) {
 
 export class SVGEditor {
   readonly el: SVGSVGElement;
-  readonly operationClass: string;
   readonly valueContainer: Element;
   readonly editContainer: Element;
   readonly hooks: NonNullable<SVGEditorOptions['hooks']>;
@@ -72,14 +70,9 @@ export class SVGEditor {
 
   constructor(
     el: SVGSVGElement,
-    {
-      operationClass = '',
-      hooks = {},
-      sanitize = v => DOMPurify.sanitize(v),
-    }: SVGEditorOptions = {}
+    { hooks = {}, sanitize = v => DOMPurify.sanitize(v) }: SVGEditorOptions = {}
   ) {
     this.el = el;
-    this.operationClass = operationClass;
     this.hooks = hooks;
     this.sanitize = sanitize;
     this.valueContainer = createSVGElement('g');
@@ -108,8 +101,8 @@ export class SVGEditor {
   }
 
   /** call commit hooks */
-  commit():void {
-    this.hooks.commit?.()
+  commit(): void {
+    this.hooks.commit?.();
   }
 
   discardChanges(): void {
@@ -209,9 +202,6 @@ export class SVGEditor {
   }
 
   pushOperation<T extends SVGElement>(el: T): T {
-    if (this.operationClass) {
-      el.classList.add(this.operationClass);
-    }
     const ret = this.editContainer.appendChild(el);
     this.hooks.pushOperation?.(ret);
     return ret;
