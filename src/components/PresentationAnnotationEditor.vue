@@ -28,6 +28,7 @@ import createSVGElement from '@/svg-editor/utils/createSVGElement';
 import iterateHTMLCollection from '@/svg-editor/utils/iterateHTMLCollection';
 import { debounce, DebouncedFunc } from 'lodash';
 import { TextPainter } from '@/svg-editor/painters/text';
+import db from '@/db';
 
 type PainterName =
   | 'null'
@@ -90,7 +91,13 @@ type PainterName =
         },
       },
     });
-    this.setPainter('select');
+    this.$watch(
+      () => this.painter,
+      v => {
+        this.setPainter(v);
+      },
+      { immediate: true }
+    );
     this.$watch(
       () => this.id,
       () => {
@@ -120,6 +127,20 @@ type PainterName =
       },
       { immediate: true }
     );
+    this.$watch(
+      () => db.preference.get('viewerAnnotationConfig'),
+      v => {
+        this.config = v;
+      },
+      { immediate: true }
+    );
+    this.$watch(
+      () => this.config,
+      v => {
+        db.preference.set('viewerAnnotationConfig', v);
+      },
+      { deep: true }
+    );
   },
 })
 export default class PresentationAnnotationEditor extends Vue {
@@ -131,6 +152,9 @@ export default class PresentationAnnotationEditor extends Vue {
 
   @Prop({ type: Boolean, default: false })
   toolbar!: boolean;
+
+  @Prop({ type: String, default: 'select' })
+  painter!: PainterName;
 
   $el!: SVGSVGElement;
 
@@ -242,12 +266,16 @@ export default class PresentationAnnotationEditor extends Vue {
   }
 
   setPainter(name: PainterName): void {
+    if (name === this.currentPainter) {
+      return;
+    }
     const painter = this.newPainter(name);
     if (!painter) {
       throw new Error();
     }
     this.editor.painter = painter;
     this.currentPainter = name;
+    this.$emit('update:painter', name);
   }
 
   async submit(): Promise<void> {

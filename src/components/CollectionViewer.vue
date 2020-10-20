@@ -100,6 +100,7 @@
               ref="annotation"
               :id="presentationID"
               :frame="currentFrame"
+              :painter.sync="preferredPainter"
               class="object-contain w-full h-full absolute inset-0"
             )
           .flex(
@@ -561,6 +562,14 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
 
   set preferredBackground(v: string) {
     db.preference.set('viewerBackground', v);
+  }
+
+  get preferredPainter(): string {
+    return db.preference.get('viewerAnnotationPainter');
+  }
+
+  set preferredPainter(v: string) {
+    db.preference.set('viewerAnnotationPainter', v);
   }
 
   get backgroundClass(): string {

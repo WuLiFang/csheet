@@ -1,11 +1,23 @@
 import * as localForage from 'localforage';
 import Vue from 'vue';
 
+
 const preference = Vue.observable({
   presentationType: 'video',
   cgteamworkStage: 'leader',
   cellOverlayVisible: true,
   viewerBackground: 'checkboard',
+  viewerAnnotationPainter: 'select',
+  viewerAnnotationConfig: {
+    strokeWidth: 8,
+    color: '#ff0000',
+    cornerRadius: 0,
+    firstFrame: undefined as number | undefined,
+    lastFrame: undefined as number | undefined,
+    frameRangeMode: 'NULL',
+    fontSize: 24,
+    backgroundColor: '#000000',
+  },
 });
 
 export type Preference = typeof preference;
