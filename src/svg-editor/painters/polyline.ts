@@ -41,5 +41,6 @@ export default class PolylinePainter extends Painter {
     super.onPointerup(e);
     this.target?.points.appendItem(this.absoluteSVGPoint(e));
     this.target = undefined;
+    this.editor.commit();
   }
 }

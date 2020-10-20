@@ -10,14 +10,14 @@ export interface SVGEditorOptions {
   hooks?: {
     discardChanges?: () => void;
     clearHistory?: () => void;
-    changeHistory?: () => void;
+    changeValue?: () => void;
     undo?: () => void;
     redo?: () => void;
-    setValue?: (v: string) => void;
     drawStart?: () => void;
     drawEnd?: () => void;
     pushOperation?: (el: SVGElement) => void;
     renderOperation?: (el: SVGElement) => void;
+    commit?: () => void;
   };
 }
 
@@ -107,6 +107,11 @@ export class SVGEditor {
     delete this.el.dataset.drawing;
   }
 
+  /** call commit hooks */
+  commit():void {
+    this.hooks.commit?.()
+  }
+
   discardChanges(): void {
     for (const i of this.iterateOperations()) {
       if (isValueIgnore(i)) {
@@ -127,7 +132,6 @@ export class SVGEditor {
       }
     }
     this.hooks.clearHistory?.();
-    this.hooks.changeHistory?.();
   }
 
   getValue(): string {
@@ -155,8 +159,8 @@ export class SVGEditor {
     this.discardChanges();
     const safeValue = this.sanitize(v);
     renderValue(this.valueContainer, safeValue);
-    this.painter.onValueChange(safeValue)
-    this.hooks.setValue?.(safeValue);
+    this.painter.onValueChange(safeValue);
+    this.hooks.changeValue?.();
     this.update();
   }
 
@@ -186,7 +190,8 @@ export class SVGEditor {
       }
       this.weakRemove(el);
       this.hooks.undo?.();
-      this.hooks.changeHistory?.();
+      this.hooks.changeValue?.();
+      this.commit();
       return;
     }
   }
@@ -196,7 +201,8 @@ export class SVGEditor {
       if (isUndoHistory(el)) {
         el.style.removeProperty('visibility');
         this.hooks.redo?.();
-        this.hooks.changeHistory?.();
+        this.hooks.changeValue?.();
+        this.commit();
         return;
       }
     }

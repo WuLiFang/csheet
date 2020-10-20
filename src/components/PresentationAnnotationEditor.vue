@@ -57,7 +57,7 @@ type PainterName =
     return {
       editor: undefined,
       selected: undefined,
-      debouncedSubmit: debounce(() => this.submit(), 1000),
+      debouncedSubmit: debounce(() => this.submit(), 500),
     };
   },
   mounted() {
@@ -66,10 +66,12 @@ type PainterName =
         drawEnd: () => {
           this.editor.clearHistory();
         },
-        changeHistory: () => {
+        commit: () => {
+          this.debouncedSubmit();
+        },
+        changeValue: () => {
           this.canUndo = this.editor.canUndo();
           this.canRedo = this.editor.canRedo();
-          this.debouncedSubmit();
         },
         pushOperation: el => {
           const [first, last] = this.frameRange;
@@ -205,10 +207,12 @@ export default class PresentationAnnotationEditor extends Vue {
         return new NullPainter(this.editor);
       case 'select': {
         const ret = new SelectPainter(this.editor);
+        let frameRangeChangeIgnore = -1;
         ret.onSelect = v => {
           this.selected = v;
           const el = this.editor.operation(v);
           if (el) {
+            frameRangeChangeIgnore = v;
             this.config.firstFrame = parseOptionalFloat(el.dataset.firstFrame);
             this.config.lastFrame = parseOptionalFloat(el.dataset.lastFrame);
             if (this.config.firstFrame || this.config.lastFrame) {
@@ -221,6 +225,10 @@ export default class PresentationAnnotationEditor extends Vue {
         const unwatch = this.$watch(
           () => this.frameRange,
           ([first, last]) => {
+            if (frameRangeChangeIgnore === this.selected || this.selected < 0) {
+              frameRangeChangeIgnore = -1;
+              return;
+            }
             const selected = this.editor.operation(this.selected);
             if (!selected) {
               return;
@@ -228,7 +236,7 @@ export default class PresentationAnnotationEditor extends Vue {
             setDOMStringMap(selected.dataset, 'firstFrame', first?.toString());
             setDOMStringMap(selected.dataset, 'lastFrame', last?.toString());
             this.editor.update();
-            this.debouncedSubmit();
+            this.editor.commit();
           },
           { deep: true }
         );

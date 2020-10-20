@@ -1,4 +1,4 @@
-import NullPainter from '@/svg-editor/painters/null';
+import { Painter } from '@/svg-editor/painter';
 import { SVGEditor } from '@/svg-editor/svg-editor';
 import createSVGElement from '@/svg-editor/utils/createSVGElement';
 import iterateHTMLCollection from '@/svg-editor/utils/iterateHTMLCollection';
@@ -6,7 +6,7 @@ import relativeDOMPoint from '@/svg-editor/utils/relativeDOMPoint';
 import autoGrowTextArea from '@/utils/autoGrowTextArea';
 import toHotKey from '@/utils/toHotKey';
 
-export class TextPainter extends NullPainter {
+export class TextPainter extends Painter {
   config = {
     fontSize: 16,
     color: 'red',
@@ -48,13 +48,10 @@ export class TextPainter extends NullPainter {
 
   onPointerdown(e: PointerEvent): void {
     if (this.isDrawing) {
-      this.editor.hooks.drawEnd?.();
+      this.editor.commit();
     }
-    this.isDrawing = true;
-    this.editor.hooks.drawStart?.();
-    this.editor.el.dataset.drawing = 'true';
-    this.popupContainer.style.pointerEvents = 'none';
     super.onPointerdown(e);
+    this.popupContainer.style.pointerEvents = 'none';
 
     const origin = this.absoluteSVGPoint(e);
 
@@ -96,11 +93,8 @@ export class TextPainter extends NullPainter {
   }
 
   onPointerup(e: PointerEvent): void {
-    this.isDrawing = false;
-    this.editor.hooks.drawEnd?.();
-    delete this.editor.el.dataset.drawing;
-    this.popupContainer.style.removeProperty('pointer-events');
     super.onPointerup(e);
+    this.popupContainer.style.removeProperty('pointer-events');
     this.focus?.();
   }
 
@@ -172,7 +166,7 @@ export class TextPainter extends NullPainter {
       ).toFixed(0)})`
     );
 
-    this.editor.hooks.changeHistory?.();
+    this.editor.hooks.changeValue?.();
   }
 
   getValue(): string {
@@ -202,7 +196,7 @@ export class TextPainter extends NullPainter {
           if (toHotKey(e) === '^Enter') {
             e.preventDefault();
             this.hidePopup();
-            this.editor.hooks.changeHistory?.();
+            this.editor.commit();
           }
         },
         { capture: true }
@@ -212,7 +206,7 @@ export class TextPainter extends NullPainter {
       });
       textarea.addEventListener('blur', () => {
         this.hidePopup();
-        this.editor.hooks.changeHistory?.();
+        this.editor.commit();
       });
     }
     textarea.value = this.getValue();

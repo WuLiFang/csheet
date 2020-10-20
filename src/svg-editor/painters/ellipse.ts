@@ -63,5 +63,6 @@ export default class EllipsePainter extends Painter {
   public onPointerup(e: PointerEvent): void {
     super.onPointerup(e);
     this.target = undefined;
+    this.editor.commit();
   }
 }

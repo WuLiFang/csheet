@@ -3,7 +3,6 @@ import { SVGEditor } from '@/svg-editor/svg-editor';
 import createSVGElement from '@/svg-editor/utils/createSVGElement';
 
 export default class SelectPainter extends NullPainter {
-
   protected target: { selector: { fg: SVGRectElement; bg: SVGRectElement } };
 
   private _selected = -1;
@@ -37,9 +36,9 @@ export default class SelectPainter extends NullPainter {
     });
 
     this.addCleanup(() => {
-      delete editor.el.dataset.mode
+      delete editor.el.dataset.mode;
     });
-    editor.el.dataset.mode = 'select'
+    editor.el.dataset.mode = 'select';
   }
 
   onSelect?(index: number): void;
