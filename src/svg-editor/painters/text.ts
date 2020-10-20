@@ -84,7 +84,7 @@ export class TextPainter extends NullPainter {
   }
 
   onPointermove(e: PointerEvent): void {
-    if (!this.isDrawing || e.target !== this.editor.el) {
+    if (!this.isDrawing) {
       return;
     }
     // e.preventDefault();
