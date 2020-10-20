@@ -149,16 +149,16 @@ export class TextPainter extends NullPainter {
     }
 
     const textBBox = text.getBBox();
-    rect.setAttribute('x', (textBBox.x - padding).toString());
-    rect.setAttribute('y', (textBBox.y - padding).toString());
-    rect.setAttribute('width', (textBBox.width + 2 * padding).toString());
+    rect.setAttribute('x', (textBBox.x - padding).toFixed(0));
+    rect.setAttribute('y', (textBBox.y - padding).toFixed(0));
+    rect.setAttribute('width', (textBBox.width + 2 * padding).toFixed(0));
     rect.setAttribute('height', (textBBox.height + 2 * padding).toFixed(0));
     rect.style.fill = this.config.backgroundColor;
     rect.style.fillOpacity = '0.5';
 
     g.setAttribute(
       'transform',
-      `translate(${x + padding}, ${y - text.getBBox().height})`
+      `translate(${(x + padding).toFixed(0)}, ${(y - text.getBBox().height).toFixed(0)})`
     );
   }
 
