@@ -52,6 +52,11 @@ export abstract class Painter {
     // pass
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onValueChange(v: string): void {
+    // pass
+  }
+
   /** add cleanup that will be called once on destroy */
   addCleanup(fn: () => void): void {
     this.cleanup.push(fn);

@@ -47,10 +47,11 @@ export class TextPainter extends NullPainter {
   onTextAreaRender?(el: HTMLTextAreaElement): void;
 
   onPointerdown(e: PointerEvent): void {
-    if (this.isDrawing){
+    if (this.isDrawing) {
       this.editor.hooks.drawEnd?.();
     }
     this.isDrawing = true;
+    this.editor.hooks.drawStart?.();
     this.editor.el.dataset.drawing = 'true';
     this.popupContainer.style.pointerEvents = 'none';
     super.onPointerdown(e);
@@ -113,7 +114,6 @@ export class TextPainter extends NullPainter {
 
   hidePopup(): void {
     this.popupContainer.style.visibility = 'hidden';
-    this.editor.hooks.drawEnd?.();
   }
 
   renderText(value: string = this.getValue()): void {
@@ -172,7 +172,7 @@ export class TextPainter extends NullPainter {
       ).toFixed(0)})`
     );
 
-    this.editor.hooks.changeHistory?.()
+    this.editor.hooks.changeHistory?.();
   }
 
   getValue(): string {
@@ -202,6 +202,7 @@ export class TextPainter extends NullPainter {
           if (toHotKey(e) === '^Enter') {
             e.preventDefault();
             this.hidePopup();
+            this.editor.hooks.changeHistory?.();
           }
         },
         { capture: true }
@@ -211,6 +212,7 @@ export class TextPainter extends NullPainter {
       });
       textarea.addEventListener('blur', () => {
         this.hidePopup();
+        this.editor.hooks.changeHistory?.();
       });
     }
     textarea.value = this.getValue();
@@ -229,5 +231,11 @@ export class TextPainter extends NullPainter {
     el.style.left = `${offsetX}px`;
     el.style.top = `${offsetY}px`;
     (this.customRenderPopup ?? this.defaultRenderPopup)(el);
+  }
+
+  onValueChange(): void {
+    if (this.target?.g.parentElement == null) {
+      this.hidePopup();
+    }
   }
 }

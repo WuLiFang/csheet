@@ -155,6 +155,7 @@ export class SVGEditor {
     this.discardChanges();
     const safeValue = this.sanitize(v);
     renderValue(this.valueContainer, safeValue);
+    this.painter.onValueChange(safeValue)
     this.hooks.setValue?.(safeValue);
     this.update();
   }
