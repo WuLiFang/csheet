@@ -156,19 +156,21 @@
       v-show="parent.currentPainter !== 'null'"
       class="inline-flex justify-end m-px"
     )
+      span(v-if="parent.loadingCount > 0")
+        FaIcon.h-full(name="spinner" spin)
       button.form-button(
         type="button"
         class="h-8 m-px"
         class="inline-flex flex-center"
         @click="parent.editor.undo()"
-        :disabled="!parent.canUndo"
+        :disabled="parent.loadingCount > 0 || !parent.canUndo"
       )
         FaIcon(name="undo")
       button.form-button(
         type="button"
         class="h-8 m-px"
         class="inline-flex flex-center"
-        :disabled="!parent.canRedo"
+        :disabled="parent.loadingCount > 0 || !parent.canRedo"
         @click="parent.editor.redo()"
       )
         FaIcon(name="redo")
