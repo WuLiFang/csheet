@@ -431,12 +431,42 @@ import PresentationAnnotationEditorToolbar from './PresentationAnnotationEditorT
         }
         case '^z': {
           e.preventDefault();
-          this.$refs.annotation?.editor.undo()
+          this.$refs.annotation?.editor.undo();
           break;
         }
         case '^y': {
           e.preventDefault();
-          this.$refs.annotation?.editor.redo()
+          this.$refs.annotation?.editor.redo();
+          break;
+        }
+        case 'q': {
+          e.preventDefault();
+          this.$refs.annotation?.setPainter('null');
+          break;
+        }
+        case 'w': {
+          e.preventDefault();
+          this.$refs.annotation?.setPainter('select');
+          break;
+        }
+        case 'e': {
+          e.preventDefault();
+          this.$refs.annotation?.setPainter('polyline');
+          break;
+        }
+        case 'r': {
+          e.preventDefault();
+          this.$refs.annotation?.setPainter('rectangle');
+          break;
+        }
+        case 't': {
+          e.preventDefault();
+          this.$refs.annotation?.setPainter('ellipse');
+          break;
+        }
+        case 'y': {
+          e.preventDefault();
+          this.$refs.annotation?.setPainter('text');
           break;
         }
       }

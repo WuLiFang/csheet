@@ -13,7 +13,7 @@
           'text-gray-500': parent.currentPainter !== "null"
         }`
         @click="parent.setPainter('null')"
-        title='隐藏标注'
+        title='隐藏标注（快捷键：q）'
       )
         FaIcon(name="eye-slash")
       button.form-button(
@@ -24,7 +24,7 @@
           'text-gray-500': parent.currentPainter !== "select"
         }`
         @click="parent.setPainter('select')"
-        title='选择工具'
+        title='选择工具（快捷键：w）'
       )
         FaIcon(name="mouse-pointer")
       button.form-button(
@@ -35,7 +35,7 @@
           'text-gray-500': parent.currentPainter !== "polyline"
         }`
         @click="parent.setPainter('polyline')"
-        title='铅笔工具'
+        title='铅笔工具（快捷键：e）'
       )
         FaIcon(name="pen")
       button.form-button(
@@ -46,7 +46,7 @@
           'text-gray-500': parent.currentPainter !== "rectangle"
         }`
         @click="parent.setPainter('rectangle')"
-        title='矩形工具'
+        title='矩形工具（快捷键：r）'
       )
         FaIcon(name="regular/square")
       button.form-button(
@@ -57,7 +57,7 @@
           'text-gray-500': parent.currentPainter !== "ellipse"
         }`
         @click="parent.setPainter('ellipse')"
-        title='椭圆工具'
+        title='椭圆工具（快捷键：t）'
       ) 
         FaIcon(name="regular/circle")
       button.form-button(
@@ -68,7 +68,7 @@
           'text-gray-500': parent.currentPainter !== "text"
         }`
         @click="parent.setPainter('text')"
-        title='文本工具'
+        title='文本工具（快捷键：y）'
       ) T
     fieldset(
       class="inline-flex flex-wrap"
