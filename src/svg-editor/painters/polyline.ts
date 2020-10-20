@@ -21,6 +21,7 @@ export default class PolylinePainter extends Painter {
     el.dataset.valueIgnore = 'true';
     el.points.appendItem(this.absoluteSVGPoint(e));
     this.target = el;
+    this.editor.hooks.drawStart?.(el);
   }
 
   onPointermove(e: PointerEvent): void {
@@ -39,8 +40,11 @@ export default class PolylinePainter extends Painter {
 
   onPointerup(e: PointerEvent): void {
     super.onPointerup(e);
-    this.target?.points.appendItem(this.absoluteSVGPoint(e));
-    this.target = undefined;
-    this.editor.commit();
+    if (this.target) {
+      this.target.points.appendItem(this.absoluteSVGPoint(e));
+      this.editor.hooks.drawEnd?.(this.target);
+      this.target = undefined;
+      this.editor.commit();
+    }
   }
 }

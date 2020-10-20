@@ -22,7 +22,6 @@ export abstract class Painter {
       document.activeElement.blur();
     }
     e.preventDefault();
-    this.editor.hooks.drawStart?.();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -34,7 +33,6 @@ export abstract class Painter {
     this.isDrawing = false;
     delete this.editor.el.dataset.drawing;
     e.preventDefault();
-    this.editor.hooks.drawEnd?.();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

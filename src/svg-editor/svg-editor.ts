@@ -13,8 +13,8 @@ export interface SVGEditorOptions {
     changeValue?: () => void;
     undo?: () => void;
     redo?: () => void;
-    drawStart?: () => void;
-    drawEnd?: () => void;
+    drawStart?: (el: SVGElement) => void;
+    drawEnd?: (el: SVGElement) => void;
     pushOperation?: (el: SVGElement) => void;
     renderOperation?: (el: SVGElement) => void;
     commit?: () => void;

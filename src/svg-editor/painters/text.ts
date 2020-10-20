@@ -68,6 +68,7 @@ export class TextPainter extends Painter {
               origin,
             };
             this.showPopup();
+            this.editor.hooks.drawStart?.(el);
             return;
           }
         }
@@ -80,6 +81,7 @@ export class TextPainter extends Painter {
     this.editor.pushOperation(g);
     this.target = { g, text, rect, origin };
     this.showPopup();
+    this.editor.hooks.drawStart?.(g);
   }
 
   onPointermove(e: PointerEvent): void {
@@ -94,8 +96,12 @@ export class TextPainter extends Painter {
 
   onPointerup(e: PointerEvent): void {
     super.onPointerup(e);
+    if (!this.target) {
+      return;
+    }
     this.popupContainer.style.removeProperty('pointer-events');
     this.focus?.();
+    this.editor.hooks.drawEnd?.(this.target.g);
   }
 
   focus?(): void;

@@ -25,6 +25,7 @@ export default class EllipsePainter extends Painter {
     el.dataset.valueIgnore = 'true';
     const p = this.absoluteSVGPoint(e);
     this.target = { ellipse: el, origin: p };
+    this.editor.hooks.drawStart?.(el);
   }
 
   private get mustTarget(): NonNullable<EllipsePainter['target']> {
@@ -62,7 +63,10 @@ export default class EllipsePainter extends Painter {
 
   public onPointerup(e: PointerEvent): void {
     super.onPointerup(e);
-    this.target = undefined;
-    this.editor.commit();
+    if (this.target){
+      this.editor.hooks.drawEnd?.(this.target.ellipse);
+      this.target = undefined;
+      this.editor.commit();
+    }
   }
 }

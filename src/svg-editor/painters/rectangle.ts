@@ -23,6 +23,7 @@ export default class RectanglePainter extends Painter {
     el.dataset.valueIgnore = 'true';
     const p = this.absoluteSVGPoint(e);
     this.target = { rect: el, origin: p };
+    this.editor.hooks.drawStart?.(el);
   }
 
   private get mustTarget(): NonNullable<RectanglePainter['target']> {
@@ -61,7 +62,10 @@ export default class RectanglePainter extends Painter {
 
   public onPointerup(e: PointerEvent): void {
     super.onPointerup(e);
-    this.target = undefined;
-    this.editor.commit()
+    if (this.target) {
+      this.editor.hooks.drawEnd?.(this.target.rect);
+      this.target = undefined;
+      this.editor.commit();
+    }
   }
 }
