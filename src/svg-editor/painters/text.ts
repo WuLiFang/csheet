@@ -83,7 +83,7 @@ export class TextPainter extends NullPainter {
     if (!this.isDrawing) {
       return;
     }
-    e.preventDefault();
+    // e.preventDefault();
     this.mustTarget.lastEvent = e;
     this.renderPopup();
     this.renderText();
@@ -115,17 +115,18 @@ export class TextPainter extends NullPainter {
 
     if (!value) {
       g.dataset.valueIgnore = 'true';
+      rect.style.visibility = 'hidden';
     } else {
       delete g.dataset.valueIgnore;
+      rect.style.removeProperty('visibility');
     }
 
     const { x, y } = this.absoluteSVGPoint(lastEvent);
-    g.setAttribute('transform', `translate(${x}, ${y})`);
-
     const padding = this.config.fontSize * 0.5;
+    const lines = value.split('\n');
+
     text.style.fill = this.config.color;
     text.style.fontSize = this.config.fontSize.toString();
-    const lines = value.split('\n');
     while (text.children.length < lines.length) {
       text.append(createSVGElement('tspan'));
     }
@@ -136,17 +137,23 @@ export class TextPainter extends NullPainter {
     for (const i of iterateHTMLCollection(text.children)) {
       i.textContent = lines[index];
       i.setAttribute('x', '0');
-      i.setAttribute('dy', (this.config.fontSize * 1.2).toFixed(0));
+      i.setAttribute('y', '0');
+      i.setAttribute('dy', (index * this.config.fontSize * 1.2).toFixed(0));
       index += 1;
     }
 
     const textBBox = text.getBBox();
     rect.setAttribute('x', (textBBox.x - padding).toString());
-    rect.setAttribute('y', textBBox.y.toString());
+    rect.setAttribute('y', (textBBox.y - padding).toString());
     rect.setAttribute('width', (textBBox.width + 2 * padding).toString());
-    rect.setAttribute('height', textBBox.height.toFixed(0));
+    rect.setAttribute('height', (textBBox.height + 2 * padding).toFixed(0));
     rect.style.fill = this.config.backgroundColor;
     rect.style.fillOpacity = '0.5';
+
+    g.setAttribute(
+      'transform',
+      `translate(${x + padding}, ${y - text.getBBox().height})`
+    );
   }
 
   getValue(): string {
@@ -161,6 +168,9 @@ export class TextPainter extends NullPainter {
     const match = el.querySelector('textarea');
     if (match) {
       textarea = match;
+      if (textarea.scrollHeight > textarea.clientHeight) {
+        textarea.style.height = textarea.scrollHeight + 'px';
+      }
     } else {
       textarea = document.createElement('textarea');
       el.append(textarea);
@@ -195,14 +205,12 @@ export class TextPainter extends NullPainter {
       return;
     }
     const e = this.target.lastEvent;
-    const text = this.target.text;
     const el = this.popupContainer;
+
     if (e) {
       el.style.position = 'absolute';
       el.style.left = `${e.offsetX}px`;
-      el.style.top = `${e.offsetY +
-        (text.getClientRects().item(0)?.height ?? 0) +
-        this.config.fontSize / 2}px`;
+      el.style.top = `${e.offsetY}px`;
       el.style.pointerEvents = 'none';
     }
     (this.customRenderPopup ?? this.defaultRenderPopup)(el);

@@ -35,20 +35,19 @@ export abstract class Painter {
     this.editor.hooks.drawEnd?.();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onPointerover(e: PointerEvent): void {
     // pass
   }
-  
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onPointerenter(e: PointerEvent): void {
     // pass
   }
-  
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onPointerleave(e: PointerEvent): void {
-    if (this.isDrawing){
-      e.preventDefault();
-      this.isDrawing = false
-      this.editor.hooks.drawEnd?.();
-    }
+    // pass
   }
 
   /** add cleanup that will be called once on destroy */

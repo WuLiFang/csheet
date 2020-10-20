@@ -49,9 +49,15 @@ export class SVGEditor {
     this.editContainer = createSVGElement('g');
     el.appendChild(this.editContainer);
     el.addEventListener('click', e => this.painter.onClick(e));
-    el.addEventListener('pointerdown', e => this.painter.onPointerdown(e));
-    el.addEventListener('pointermove', e => this.painter.onPointermove(e));
-    el.addEventListener('pointerup', e => this.painter.onPointerup(e));
+    el.addEventListener('pointerdown', e => this.painter.onPointerdown(e), {
+      capture: true,
+    });
+    el.addEventListener('pointermove', e => this.painter.onPointermove(e), {
+      capture: true,
+    });
+    el.addEventListener('pointerup', e => this.painter.onPointerup(e), {
+      capture: true,
+    });
     el.addEventListener('pointerover', e => this.painter.onPointerover(e));
     el.addEventListener('pointerenter', e => this.painter.onPointerenter(e));
     el.addEventListener('pointerleave', e => this.painter.onPointerleave(e));
