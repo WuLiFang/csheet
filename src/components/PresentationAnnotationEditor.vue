@@ -77,6 +77,7 @@ type PainterName =
           const [first, last] = this.frameRange;
           setDOMStringMap(el.dataset, 'firstFrame', first?.toString());
           setDOMStringMap(el.dataset, 'lastFrame', last?.toString());
+          this.$emit("draw-start")
         },
         renderOperation: el => {
           if (this.frame == null) {

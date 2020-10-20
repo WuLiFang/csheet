@@ -102,6 +102,7 @@
               :frame="currentFrame"
               :painter.sync="preferredPainter"
               class="object-contain w-full h-full absolute inset-0"
+              @draw-start="$refs.presentation.pause()"
             )
           .flex(
             v-if="$refs.presentation && $refs.presentation.type === 'video'"
