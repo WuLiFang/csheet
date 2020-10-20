@@ -70,7 +70,7 @@
             class="bg-orange-500 w-full"
           ) 预览已过期
           .viewport(
-            class="relative text-center flex-auto"
+            class="relative text-center flex-auto z-10"
             :class=`{[backgroundClass]: true}`
           )
             transition(
@@ -105,7 +105,7 @@
             )
           .flex(
             v-if="$refs.presentation && $refs.presentation.type === 'video'"
-            class="flex-col sm:flex-row overflow-x-hidden flex-wrap justify-center items-center"
+            class="flex-col sm:flex-row overflow-x-hidden flex-wrap justify-center items-center z-0"
           )
             .inline-flex(
               v-if="$refs.presentation.frameRate > 0"
