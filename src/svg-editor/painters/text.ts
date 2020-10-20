@@ -99,15 +99,17 @@ export class TextPainter extends Painter {
   }
 
   focus?(): void;
+  blur?(): void;
 
   showPopup(): void {
     this.popupContainer.style.visibility = 'visible';
     this.renderText();
     this.renderPopup();
   }
-
+  
   hidePopup(): void {
     this.popupContainer.style.visibility = 'hidden';
+    this.blur?.();
   }
 
   renderText(value: string = this.getValue()): void {
@@ -189,6 +191,7 @@ export class TextPainter extends Painter {
       el.append(textarea);
       textarea.placeholder = 'Ctrl+Enter 确定';
       this.focus = () => textarea.focus();
+      this.blur = () => textarea.blur();
       autoGrowTextArea(textarea);
       textarea.addEventListener(
         'keyup',
