@@ -47,9 +47,6 @@ export class TextPainter extends Painter {
   onTextAreaRender?(el: HTMLTextAreaElement): void;
 
   onPointerdown(e: PointerEvent): void {
-    if (this.isDrawing) {
-      this.editor.commit();
-    }
     super.onPointerdown(e);
     this.popupContainer.style.pointerEvents = 'none';
 
