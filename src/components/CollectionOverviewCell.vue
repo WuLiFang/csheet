@@ -32,7 +32,7 @@ import Presentation from './Presentation.vue';
 import * as cast from 'cast-unknown';
 import { sortBy } from 'lodash';
 import CGTeamworkTaskStatus from './CGTeamworkTaskStatus.vue';
-import * as preference from '@/preference';
+import db from '@/db';
 import { CreateElement, VNode } from 'vue';
 
 @Component<CollectionOverviewCell>({
@@ -43,7 +43,7 @@ export default class CollectionOverviewCell extends Vue {
   value!: Collection;
 
   get overlayVisible(): boolean {
-    return preference.get('cellOverlayVisible');
+    return db.preference.get('cellOverlayVisible');
   }
 
   get cgteamworkArtists(): string[] {
@@ -83,7 +83,7 @@ export default class CollectionOverviewCell extends Vue {
       return '';
     }
     for (const i of cast.array(JSON.parse(data))) {
-      const status = i?.status?.[preference.get('cgteamworkStage')];
+      const status = i?.status?.[db.preference.get('cgteamworkStage')];
       if ((statusPriority[status] ?? 0) > (statusPriority[ret] ?? 0)) {
         ret = status;
       }

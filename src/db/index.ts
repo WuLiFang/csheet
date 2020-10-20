@@ -1,2 +1,3 @@
-import * as db from './db';
+import * as db from './index.db';
 export { db };
+export default db;

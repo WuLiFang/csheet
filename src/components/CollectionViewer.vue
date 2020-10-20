@@ -275,7 +275,7 @@ import {
 import CollectionMetadata from './CollectionMetadata.vue';
 import PresentationMetadata from './PresentationMetadata.vue';
 import { filePathFormat } from '../const';
-import * as preference from '@/preference';
+import db from '@/db';
 import * as sentry from '@sentry/browser';
 import toHotKey from '@/utils/toHotKey';
 import { presentation } from '../graphql/types/presentation';
@@ -556,11 +556,11 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
   }
 
   get preferredBackground(): string {
-    return preference.get('viewerBackground');
+    return db.preference.get('viewerBackground');
   }
 
   set preferredBackground(v: string) {
-    preference.set('viewerBackground', v);
+    db.preference.set('viewerBackground', v);
   }
 
   get backgroundClass(): string {

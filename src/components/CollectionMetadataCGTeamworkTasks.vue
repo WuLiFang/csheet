@@ -36,7 +36,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { uniq, sortBy } from 'lodash';
-import * as preference from '@/preference';
+import db from '@/db';
 import CGTeamworkTaskStatus from './CGTeamworkTaskStatus.vue';
 
 @Component<CollectionMetadataCGTeamworkTasks>({
@@ -61,11 +61,11 @@ export default class CollectionMetadataCGTeamworkTasks extends Vue {
   }
 
   get preferredStage(): string {
-    return preference.get('cgteamworkStage');
+    return db.preference.get('cgteamworkStage');
   }
 
   set preferredStage(v: string) {
-    preference.set('cgteamworkStage', v);
+    db.preference.set('cgteamworkStage', v);
   }
 
   get stages(): string[] {

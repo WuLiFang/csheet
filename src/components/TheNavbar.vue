@@ -125,8 +125,7 @@ import {
   folderOriginPrefix,
 } from '../graphql/types/folderOriginPrefix';
 import { collectionsVariables } from '../graphql/types/collections';
-import * as preference from '@/preference';
-import { db } from '../db';
+import db from '@/db';
 import { CGTeamworkOriginPrefix, FolderOriginPrefix } from '../client';
 import { uniq } from 'lodash';
 
@@ -224,11 +223,11 @@ export default class TheNavbar extends Vue {
   }
 
   get cellOverlayVisible(): boolean {
-    return preference.get('cellOverlayVisible');
+    return db.preference.get('cellOverlayVisible');
   }
 
   set cellOverlayVisible(v: boolean) {
-    preference.set('cellOverlayVisible', v);
+    db.preference.set('cellOverlayVisible', v);
   }
 
   get variables(): collectionsVariables {

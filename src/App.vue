@@ -45,7 +45,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import TheNavbar from './components/TheNavbar.vue';
 import CollectionOverview from './components/CollectionOverview.vue';
 import * as cast from 'cast-unknown';
-import * as preference from '@/preference';
+import db from '@/db';
 import {
   clientConfig,
   clientConfig_clientConfig as Config,
@@ -65,7 +65,7 @@ import {
     },
   },
   mounted() {
-    preference.load();
+    db.preference.load();
     const listener = (v: unknown) => {
       const msg: App['messages'][0] = {
         text: '',

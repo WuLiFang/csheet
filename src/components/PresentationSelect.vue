@@ -30,7 +30,7 @@ import { presentation as Presentation } from '../graphql/types/presentation';
 import 'vue-awesome/icons/image';
 import 'vue-awesome/icons/video';
 import { sortBy } from 'lodash';
-import * as preference from '@/preference';
+import db from '@/db';
 
 @Component<PresentationSelect>({})
 export default class PresentationSelect extends Vue {
@@ -60,7 +60,7 @@ export default class PresentationSelect extends Vue {
       'input',
       sortBy(this.options, [
         i =>
-          [preference.get('presentationType'), 'video', 'image'].findIndex(
+          [db.preference.get('presentationType'), 'video', 'image'].findIndex(
             j => j === i.type
           ),
         i => -new Date(i.raw.modTime).getTime(),
@@ -76,7 +76,7 @@ export default class PresentationSelect extends Vue {
     const match = this.options.find(i => i.id === v);
     this.$emit('input', v);
     if (match) {
-      preference.set('presentationType', match.type);
+      db.preference.set('presentationType', match.type);
     }
   }
 }
