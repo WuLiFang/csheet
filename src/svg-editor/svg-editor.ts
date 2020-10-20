@@ -136,7 +136,7 @@ export class SVGEditor {
 
   canUndo(): boolean {
     for (const i of this.iterateOperations()) {
-      if (isUndoHistory(i)) {
+      if (isValueIgnore(i)) {
         continue
       }
       return true;
@@ -155,7 +155,7 @@ export class SVGEditor {
 
   undo(): void {
     for (const el of this.iterateOperations(true)) {
-      if (isUndoHistory(el)) {
+      if (isValueIgnore(el)) {
         continue
       }
       this.weakRemove(el);
