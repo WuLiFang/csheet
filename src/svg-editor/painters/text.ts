@@ -47,12 +47,14 @@ export class TextPainter extends NullPainter {
   onTextAreaRender?(el: HTMLTextAreaElement): void;
 
   onPointerdown(e: PointerEvent): void {
+    if (this.isDrawing){
+      this.editor.hooks.drawEnd?.();
+    }
     this.isDrawing = true;
     this.editor.el.dataset.drawing = 'true';
     this.popupContainer.style.pointerEvents = 'none';
     super.onPointerdown(e);
 
-    this.hidePopup();
     const origin = this.absoluteSVGPoint(e);
 
     for (const el of e.composedPath()) {
@@ -79,7 +81,6 @@ export class TextPainter extends NullPainter {
     const text = g.appendChild(createSVGElement('text'));
     this.editor.pushOperation(g);
     this.target = { g, text, rect, origin };
-    this.renderText();
     this.showPopup();
   }
 
@@ -105,6 +106,7 @@ export class TextPainter extends NullPainter {
 
   showPopup(): void {
     this.popupContainer.style.visibility = 'visible';
+    this.renderText();
     this.renderPopup();
   }
 
@@ -203,7 +205,6 @@ export class TextPainter extends NullPainter {
       );
       textarea.addEventListener('input', () => {
         this.renderText(textarea.value);
-        this.renderPopup();
       });
       textarea.addEventListener('blur', () => {
         this.hidePopup();
