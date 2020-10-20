@@ -84,7 +84,7 @@ export class SVGEditor {
 
   discardChanges(): void {
     for (const i of this.iterateOperations()) {
-      if (isUndoHistory(i)) {
+      if (isValueIgnore(i)) {
         continue;
       }
       if (!(i.parentElement === this.valueContainer)) {
