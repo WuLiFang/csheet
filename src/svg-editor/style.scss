@@ -8,6 +8,12 @@
   ellipse {
     fill: none;
   }
+
+  &[data-drawing='true'] {
+    > g > * {
+      pointer-events: none;
+    }
+  }
   &[data-mode='select'] {
     > g > * {
       cursor: pointer;

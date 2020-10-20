@@ -17,6 +17,7 @@ export abstract class Painter {
 
   onPointerdown(e: PointerEvent): void {
     this.isDrawing = true;
+    this.editor.el.dataset.drawing = 'true';
     if (document.activeElement instanceof HTMLElement) {
       document.activeElement.blur();
     }
@@ -31,6 +32,7 @@ export abstract class Painter {
 
   onPointerup(e: PointerEvent): void {
     this.isDrawing = false;
+    delete this.editor.el.dataset.drawing;
     e.preventDefault();
     this.editor.hooks.drawEnd?.();
   }

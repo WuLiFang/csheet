@@ -48,6 +48,8 @@ export class TextPainter extends NullPainter {
 
   onPointerdown(e: PointerEvent): void {
     this.isDrawing = true;
+    this.editor.el.dataset.drawing = 'true';
+    this.popupContainer.style.pointerEvents = 'none';
     super.onPointerdown(e);
 
     this.hidePopup();
@@ -93,6 +95,8 @@ export class TextPainter extends NullPainter {
 
   onPointerup(e: PointerEvent): void {
     this.isDrawing = false;
+    delete this.editor.el.dataset.drawing;
+    this.popupContainer.style.removeProperty('pointer-events');
     super.onPointerup(e);
     this.focus?.();
   }
@@ -220,7 +224,6 @@ export class TextPainter extends NullPainter {
     el.style.position = 'absolute';
     el.style.left = `${offsetX}px`;
     el.style.top = `${offsetY}px`;
-    el.style.pointerEvents = 'none';
     (this.customRenderPopup ?? this.defaultRenderPopup)(el);
   }
 }
