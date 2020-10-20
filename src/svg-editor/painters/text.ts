@@ -171,6 +171,8 @@ export class TextPainter extends NullPainter {
         padding
       ).toFixed(0)})`
     );
+
+    this.editor.hooks.changeHistory?.()
   }
 
   getValue(): string {
