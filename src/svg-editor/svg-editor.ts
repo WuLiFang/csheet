@@ -35,6 +35,21 @@ function isValueIgnore(el: SVGElement): boolean {
   return false;
 }
 
+/** renderValue while reuse unchanged element */
+function renderValue(el: Element, safeValue: string) {
+  const template = createSVGElement('g');
+  template.innerHTML = safeValue;
+  const nodes: Node[] = [];
+  const existed = Array.from(el.children);
+  for (const i of Array.from(template.children)) {
+    nodes.push(existed.find(j => j.isEqualNode(i)) || i);
+  }
+  for (const i of existed) {
+    i.remove();
+  }
+  el.append(...nodes);
+}
+
 export class SVGEditor {
   readonly el: SVGSVGElement;
   readonly operationClass: string;
@@ -80,6 +95,7 @@ export class SVGEditor {
   set painter(v: Painter) {
     this._painter.destroy();
     this._painter = v;
+    delete this.el.dataset.drawing;
   }
 
   discardChanges(): void {
@@ -129,7 +145,7 @@ export class SVGEditor {
   setValue(v: string): void {
     this.discardChanges();
     const safeValue = this.sanitize(v);
-    this.valueContainer.innerHTML = safeValue;
+    renderValue(this.valueContainer, safeValue);
     this.hooks.setValue?.(safeValue);
     this.update();
   }

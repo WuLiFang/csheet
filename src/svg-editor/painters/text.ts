@@ -96,6 +96,7 @@ export class TextPainter extends NullPainter {
 
   onPointerup(e: PointerEvent): void {
     this.isDrawing = false;
+    this.editor.hooks.drawEnd?.();
     delete this.editor.el.dataset.drawing;
     this.popupContainer.style.removeProperty('pointer-events');
     super.onPointerup(e);
