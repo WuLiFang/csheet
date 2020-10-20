@@ -35,19 +35,28 @@ function isValueIgnore(el: SVGElement): boolean {
   return false;
 }
 
-/** renderValue while reuse unchanged element */
+/** renderValue while reuse element by index */
 function renderValue(el: Element, safeValue: string) {
   const template = createSVGElement('g');
   template.innerHTML = safeValue;
-  const nodes: Node[] = [];
-  const existed = Array.from(el.children);
-  for (const i of Array.from(template.children)) {
-    nodes.push(existed.find(j => j.isEqualNode(i)) || i);
+
+  while (el.children.length < template.children.length) {
+    el.append(createSVGElement('g'));
   }
-  for (const i of existed) {
-    i.remove();
+  while (el.children.length > template.children.length) {
+    el.lastChild?.remove();
   }
-  el.append(...nodes);
+  for (let i = 0; i < el.children.length; i++) {
+    const n = template.children.item(i);
+    const o = el.children.item(i);
+    if (!o || !n) {
+      continue;
+    }
+    if (o.isEqualNode(n)) {
+      continue;
+    }
+    o.outerHTML = n.outerHTML;
+  }
 }
 
 export class SVGEditor {
