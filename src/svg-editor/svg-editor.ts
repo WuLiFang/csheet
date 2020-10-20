@@ -21,6 +21,20 @@ export interface SVGEditorOptions {
   };
 }
 
+function isUndoHistory(el: Element): boolean {
+  return el instanceof SVGElement && el.style.visibility === 'hidden'
+}
+
+function isValueIgnore(el: SVGElement): boolean {
+  if (isUndoHistory(el)) {
+    return true;
+  }
+  if (el.dataset.valueIgnore === 'true') {
+    return true;
+  }
+  return false;
+}
+
 export class SVGEditor {
   readonly el: SVGSVGElement;
   readonly operationClass: string;
@@ -70,10 +84,7 @@ export class SVGEditor {
 
   discardChanges(): void {
     for (const i of this.iterateOperations()) {
-      if (i.style.visibility === 'hidden') {
-        continue;
-      }
-      if (i.dataset.valueIgnore === 'true') {
+      if (isUndoHistory(i)) {
         continue;
       }
       if (!(i.parentElement === this.valueContainer)) {
@@ -86,7 +97,7 @@ export class SVGEditor {
   /** clear history for redo */
   clearHistory(): void {
     for (const i of iterateHTMLCollection(this.editContainer.children)) {
-      if (i instanceof SVGElement && i.style.visibility === 'hidden') {
+      if (isUndoHistory(i)) {
         i.remove();
       }
     }
@@ -97,11 +108,8 @@ export class SVGEditor {
   getValue(): string {
     const data: string[] = [];
     for (const i of this.iterateOperations()) {
-      if (i.style.visibility === 'hidden') {
-        continue;
-      }
-      if (i.dataset.valueIgnore === 'true') {
-        continue;
+      if (isValueIgnore(i)) {
+        continue
       }
       data.push(i.outerHTML);
     }
@@ -128,16 +136,17 @@ export class SVGEditor {
 
   canUndo(): boolean {
     for (const i of this.iterateOperations()) {
-      if (i.style.visibility !== 'hidden') {
-        return true;
+      if (isUndoHistory(i)) {
+        continue
       }
+      return true;
     }
     return false;
   }
 
   canRedo(): boolean {
     for (const i of this.iterateOperations(true)) {
-      if (i.style.visibility === 'hidden') {
+      if (isUndoHistory(i)) {
         return true;
       }
     }
@@ -146,10 +155,11 @@ export class SVGEditor {
 
   undo(): void {
     for (const el of this.iterateOperations(true)) {
-      if (el.style.visibility !== 'hidden') {
-        this.weakRemove(el);
-        break;
+      if (isUndoHistory(el)) {
+        continue
       }
+      this.weakRemove(el);
+      break;
     }
     this.hooks.undo?.();
     this.hooks.changeHistory?.();
@@ -157,7 +167,7 @@ export class SVGEditor {
 
   redo(): void {
     for (const el of this.iterateOperations(false)) {
-      if (el.style.visibility === 'hidden') {
+      if (isUndoHistory(el)) {
         el.style.removeProperty('visibility');
         break;
       }
