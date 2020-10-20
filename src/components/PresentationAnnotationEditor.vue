@@ -131,7 +131,7 @@ type PainterName =
     this.$watch(
       () => db.preference.get('viewerAnnotationConfig'),
       v => {
-        this.config = v;
+        Object.assign(this.config, v);
       },
       { immediate: true }
     );
