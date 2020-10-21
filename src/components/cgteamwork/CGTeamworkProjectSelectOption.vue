@@ -4,17 +4,19 @@ import { cgteamworkProjects_cgteamworkProjects as Project } from '@/graphql/type
 
 export default Vue.extend<{
   value?: Project;
+  tag: string;
 }>({
   functional: true,
   props: {
     value: { type: Object, default: undefined },
+    tag: { type: String, default: 'div' },
   },
   render(h, ctx) {
-    const { value } = ctx.props;
+    const { value, tag } = ctx.props;
     if (!value) {
       return [];
     }
-    return h('div', ctx.data, [
+    return h(tag, ctx.data, [
       h('div', { staticClass: 'text-xs text-gray-500' }, [
         h('span', {}, value.codename),
         h(

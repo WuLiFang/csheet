@@ -49,19 +49,20 @@
         role="menu"
       )
         template(v-for="i in projects")
-          li
-            Option(
-              tabindex="-1"
-              ref="option"
-              :data-value="i.database"
-              class="p-2"
-              :class=`{
-                "bg-blue-500": highlight == i.database,
-              }`
-              @mouseenter="highlight = i.database"
-              :value="i"
-              @click="$_value = i.database;"
-            )
+          Option(
+            :key="i.database"
+            tag="li"
+            tabindex="-1"
+            ref="option"
+            :data-value="i.database"
+            class="p-2"
+            :class=`{
+              "bg-blue-500": highlight == i.database,
+            }`
+            @mouseenter="highlight = i.database"
+            :value="i"
+            @click.capture="$_value = i.database;"
+          )
         template(
           v-if="projects.length === 0"
         )
