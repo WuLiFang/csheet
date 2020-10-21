@@ -9,7 +9,7 @@
       @invalid="focus()"
       aria-hidden
     )
-    template(v-if="hasFocus")
+    template(v-if="popupVisible")
       input(
         ref="queryInput"
         type="search"
@@ -45,7 +45,7 @@
         class="rounded shadow-lg bg-gray-800"
         class="max-h-96 overflow-y-auto"
         aria-orientation="vertical"
-        v-show="hasFocus"
+        v-show="popupVisible"
         role="menu"
       )
         template(v-for="i in projects")
@@ -131,6 +131,9 @@ const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
         if (o) {
           this.$emit('change');
         }
+        if (!this.hasFocus){
+          this.popupVisible = false
+        }
       },
       { immediate: true }
     );
@@ -151,6 +154,7 @@ export default class CGTeamworkProjectSelect extends Mixins(
 
   matchedProjects?: Project[];
   selectedProjects?: Project[];
+  popupVisible=  false;
 
   get projects(): Project[] {
     return orderBy(
@@ -207,6 +211,7 @@ export default class CGTeamworkProjectSelect extends Mixins(
   focus(): void {
     this.hasFocus = true;
     this.highlight = this.$_value;
+    this.popupVisible = true;
     this.$nextTick(() => {
       this.scrollToHighlight();
       this.$refs.queryInput.focus();
