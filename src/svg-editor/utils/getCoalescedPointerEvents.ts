@@ -15,5 +15,5 @@ export default function getCoalescedPointerEvents(
   if (supportGetCoalescedEvents(e)) {
     return e.getCoalescedEvents();
   }
-  return [e];
+  return [];
 }

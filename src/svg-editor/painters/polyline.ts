@@ -90,5 +90,6 @@ export default class PolylinePainter extends Painter {
     for (const i of getCoalescedPointerEvents(e)) {
       this.appendPoint(this.absoluteSVGPoint(i));
     }
+    this.appendPoint(this.absoluteSVGPoint(e));
   }
 }
