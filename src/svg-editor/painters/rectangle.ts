@@ -51,13 +51,13 @@ export default class RectanglePainter extends Painter {
       delete rect.dataset.valueIgnore;
     }
 
-    rect.setAttribute('x', start.x.toString());
-    rect.setAttribute('y', start.y.toString());
-    rect.setAttribute('width', (end.x - start.x).toString());
-    rect.setAttribute('height', (end.y - start.y).toString());
-    rect.setAttribute('rx', this.config.cornerRadius.toString());
+    rect.setAttribute('x', start.x.toFixed(0));
+    rect.setAttribute('y', start.y.toFixed(0));
+    rect.setAttribute('width', (end.x - start.x).toFixed(0));
+    rect.setAttribute('height', (end.y - start.y).toFixed(0));
+    rect.setAttribute('rx', this.config.cornerRadius.toFixed(0));
     rect.style.stroke = this.config.color;
-    rect.style.strokeWidth = this.config.strokeWidth.toString();
+    rect.style.strokeWidth = `${this.config.strokeWidth.toFixed(0)}px`;
   }
 
   public onPointerup(e: PointerEvent): void {

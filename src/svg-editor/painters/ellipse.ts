@@ -53,12 +53,12 @@ export default class EllipsePainter extends Painter {
       delete ellipse.dataset.valueIgnore;
     }
 
-    ellipse.setAttribute('cx', ((start.x + end.x) / 2).toString());
-    ellipse.setAttribute('cy', ((start.y + end.y) / 2).toString());
-    ellipse.setAttribute('rx', ((end.x - start.x) / 2).toString());
-    ellipse.setAttribute('ry', ((end.y - start.y) / 2).toString());
+    ellipse.setAttribute('cx', ((start.x + end.x) / 2).toFixed(0));
+    ellipse.setAttribute('cy', ((start.y + end.y) / 2).toFixed(0));
+    ellipse.setAttribute('rx', ((end.x - start.x) / 2).toFixed(0));
+    ellipse.setAttribute('ry', ((end.y - start.y) / 2).toFixed(0));
     ellipse.style.stroke = this.config.color;
-    ellipse.style.strokeWidth = this.config.strokeWidth.toString();
+    ellipse.style.strokeWidth = `${this.config.strokeWidth.toFixed(0)}px`;
   }
 
   public onPointerup(e: PointerEvent): void {
