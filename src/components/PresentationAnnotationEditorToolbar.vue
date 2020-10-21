@@ -2,7 +2,7 @@
   .presentation-annotation-editor-toolbar(
     class="flex flex-wrap justify-between"
   )
-    fieldset(
+    div(
       class="inline-flex flex-center my-px flex-wrap"
     )
       button.form-button(
@@ -70,11 +70,11 @@
         @click="parent.setPainter('text')"
         title='文本工具（快捷键：y）'
       ) T
-    fieldset(
+    div(
       class="inline-flex flex-wrap"
       class="flex-auto mx-1 my-px text-left"
     )
-      fieldset(
+      div(
         v-if="frameRangeInputVisible"
         :disabled="frameRangeInputDisabled"
         class="m-px"
@@ -150,7 +150,7 @@
           title="删除所选"
         ) 
           FaIcon(name="trash-alt")
-    fieldset(
+    div(
       v-show="parent.currentPainter !== 'null'"
       class="inline-flex justify-end m-px"
     )
