@@ -1,6 +1,6 @@
 <template lang="pug">
   input(
-    v-model="valueString"
+    v-model.lazy="valueString"
     type="number"
     @focus="$event.target.select()"
     @blur="$event.target.value = valueString"
