@@ -217,6 +217,7 @@ import PresentationControls from './PresentationControls.vue';
       if (
         !(
           e.target === document.body ||
+          e.target instanceof HTMLButtonElement ||
           e.target === this.$refs.presentation?.$el ||
           e.target === this.$refs.prev ||
           e.target === this.$refs.next ||
