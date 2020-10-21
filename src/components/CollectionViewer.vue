@@ -87,7 +87,7 @@
                 size="regular"
                 autoplay
                 :controls="$refs.annotation && $refs.annotation.currentPainter === 'null'"
-                :playbackRate="formData.playbackRate"
+                :playbackRate="playbackRate"
                 @frameUpdate="currentFrame = $event"
                 @timeUpdate="currentTime = $event"
               )
@@ -105,112 +105,13 @@
               class="object-contain w-full h-full absolute inset-0"
               @draw-start="$refs.presentation.pause()"
             )
-          .flex(
+          PresentationControls(
+            ref="presentationControls"
             v-if="$refs.presentation && $refs.presentation.type === 'video'"
-            class="flex-col sm:flex-row overflow-x-hidden flex-wrap justify-center items-center z-0"
+            class="flex flex-col sm:flex-row overflow-x-hidden flex-wrap justify-center items-center z-0"
+            :parent="$refs.presentation"
+            :playbackRate.sync="playbackRate"
           )
-            .inline-flex(
-              v-if="$refs.presentation.frameRate > 0"
-              class="sm:order-2 flex-wrap justify-center my-px sm:mx-1"
-            )
-              button.form-button(
-                type="button"
-                class="flex-none p-0 w-12 h-8 m-px"
-                class="flex justify-center items-center"
-                title="至起始帧（快捷键：Home）"
-                @click="() => $refs.presentation.seekFrame($refs.presentation.firstFrame, true)"
-              ) 
-                FaIcon(name="fast-backward")
-              button.form-button(
-                type="button"
-                class="flex-none p-0 w-12 h-8 m-px"
-                class="flex justify-center items-center"
-                title="上一帧（快捷键：←）"
-                @click="() => $refs.presentation.seekFrameOffset(-1, true)"
-              ) 
-                FaIcon(name="step-backward")
-              input.form-input(
-                ref="frameInput"
-                type="number"
-                class="flex-auto w-24 h-8 spin-button-none z-10 text-center m-px"
-                :value="hasFocus ? formData.currentFrame : currentFrame"
-                @input="e => {formData.currentFrame = parseFloat(e.target.value); $refs.presentation.seekFrame(this.formData.currentFrame, true);}"
-                @keyup.enter="$event.target.blur()"
-                @focus="hasFocus = true; formData.currentFrame = currentFrame; $event.target.select()"
-                @blur="hasFocus = false;"
-                title="当前帧（快捷键：f）"
-              )
-              button.form-button(
-                type="button"
-                class="flex-none p-0 w-12 h-8 m-px"
-                class="flex justify-center items-center"
-                title="下一帧（快捷键：→）"
-                @click="() => $refs.presentation.seekFrameOffset(1, true)"
-              ) 
-                FaIcon(name="step-forward")
-              button.form-button(
-                type="button"
-                class="flex-none p-0 w-12 h-8 m-px"
-                class="flex justify-center items-center"
-                title="至结束帧（快捷键：End）"
-                @click="() => $refs.presentation.seekFrame($refs.presentation.lastFrame, true)"
-              ) 
-                FaIcon(name="fast-forward")
-            .inline-flex.items-center(
-              class="flex-wrap sm:order-3 my-px sm:mx-1"
-            )
-              DurationInput(
-                ref="timeInput"
-                v-model="currentTimeProxy"
-                class="h-8 w-32 m-px text-center"
-                title="当前时间（快捷键：g）"
-              )
-              button.form-button(
-                type="button"
-                class="flex-initial p-0 w-24 h-8 m-px"
-                class="flex justify-center items-center"
-                title="播放/暂停（快捷键：空格）"
-                @click="() => $refs.presentation.paused ? $refs.presentation.play(): $refs.presentation.pause()"
-              ) 
-                FaIcon(:name="$refs.presentation.paused ? 'play' : 'pause'")
-              select.form-select(
-                ref="playbackRateSelect"
-                class="flex-initial p-0 pl-2 w-20 h-8  m-px"
-                v-model="formData.playbackRate"
-                title="播放倍速 （快捷键：j/k/l）"
-              )
-                option(
-                  v-for="i in playbackRateOptions"
-                  :value="i"
-                ) ×{{i.toFixed(1)}}
-            .inline-flex.items-center(
-              v-if="$refs.presentation.frameRate > 0"
-              class="sm:order-1 my-px sm:mx-1"
-            )
-              button.form-button(
-                type="button"
-                class="flex-none p-0 w-10 h-6 m-px"
-                class="flex justify-center items-center"
-                title="向前跳帧（快捷键：Shift + ←）"
-                @click="() => $refs.presentation.seekFrameOffset(-formData.frameSkip, true)"
-              ) 
-                FaIcon.object-center(name="backward")
-              input.form-input(
-                type="number"
-                class="flex-auto p-0 w-12 h-6 spin-button-none z-10 text-center"
-                v-model.number="formData.frameSkip"
-                @keyup.enter="$event.target.blur()"
-                @focus="$event.target.select()"
-                title="跳帧的帧数"
-              )
-              button.form-button(
-                type="button"
-                class="flex-none p-0 w-10 h-6 m-px"
-                class="flex justify-center items-center"
-                title="向后跳帧（快捷键：Shift + →）"
-                @click="() => $refs.presentation.seekFrameOffset(formData.frameSkip, true)"
-              ) 
-                FaIcon(name="forward")
         aside(
           class="flex-auto bg-gray-900 lg:flex-initial lg:w-1/3 lg:overflow-auto"
         )
@@ -283,10 +184,9 @@ import * as sentry from '@sentry/browser';
 import toHotKey from '@/utils/toHotKey';
 import { presentation } from '../graphql/types/presentation';
 import { throttle } from 'lodash';
-import DurationInput from './DurationInput.vue';
-import moment from 'moment';
 import PresentationAnnotationEditor from './PresentationAnnotationEditor.vue';
 import PresentationAnnotationEditorToolbar from './PresentationAnnotationEditorToolbar.vue';
+import PresentationControls from './PresentationControls.vue';
 
 @Component<CollectionViewer>({
   components: {
@@ -294,9 +194,9 @@ import PresentationAnnotationEditorToolbar from './PresentationAnnotationEditorT
     PresentationSelect,
     CollectionMetadata,
     PresentationMetadata,
-    DurationInput,
     PresentationAnnotationEditor,
     PresentationAnnotationEditorToolbar,
+    PresentationControls,
   },
   mounted() {
     sentry.addBreadcrumb({
@@ -365,19 +265,13 @@ import PresentationAnnotationEditorToolbar from './PresentationAnnotationEditorT
         case '+ArrowLeft':
           e.preventDefault();
           throttleRepeatSeek(() => {
-            this.$refs.presentation?.seekFrameOffset(
-              -this.formData.frameSkip,
-              true
-            );
+            this.$refs.presentationControls?.skipFrameBackward();
           });
           break;
         case '+ArrowRight':
           e.preventDefault();
           throttleRepeatSeek(() => {
-            this.$refs.presentation?.seekFrameOffset(
-              this.formData.frameSkip,
-              true
-            );
+            this.$refs.presentationControls?.skipFrameForward();
           });
           break;
         case 'Home':
@@ -396,39 +290,27 @@ import PresentationAnnotationEditorToolbar from './PresentationAnnotationEditorT
           break;
         case 'g': {
           e.preventDefault();
-          const el = this.$refs.timeInput?.$el;
-          if (el) {
-            el.focus();
-          }
+          this.$refs.presentationControls?.$refs.timeInput?.$el.select();
           break;
         }
         case 'f': {
           e.preventDefault();
-          const el = this.$refs.frameInput;
-          if (el) {
-            el.select();
-          }
+          this.$refs.presentationControls?.$refs.frameInput?.$el.select();
           break;
         }
         case 'j': {
           e.preventDefault();
-          const o = this.playbackRateOptions;
-          this.formData.playbackRate =
-            o[Math.max(0, o.indexOf(this.formData.playbackRate) - 1)];
+          this.$refs.presentationControls?.offsetPlaybackRateIndex(-1);
           break;
         }
         case 'k': {
           e.preventDefault();
-          this.formData.playbackRate = 1;
+          this.$refs.presentationControls?.setPlaybackRate(1);
           break;
         }
         case 'l': {
           e.preventDefault();
-          const o = this.playbackRateOptions;
-          this.formData.playbackRate =
-            o[
-              Math.min(o.length - 1, o.indexOf(this.formData.playbackRate) + 1)
-            ];
+          this.$refs.presentationControls?.offsetPlaybackRateIndex(1);
           break;
         }
         case '^z': {
@@ -512,9 +394,7 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
     prev: HTMLButtonElement;
     next: HTMLButtonElement;
     presentation: Presentation;
-    frameInput: HTMLInputElement;
-    playbackRateSelect: HTMLSelectElement;
-    timeInput: DurationInput;
+    presentationControls: PresentationControls;
     annotation: PresentationAnnotationEditor;
   };
 
@@ -523,23 +403,7 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
   recollectingCount = 0;
   currentTime = 0;
   currentFrame = 0;
-  hasFocus = false;
-
-  playbackRateOptions = [0.1, 0.2, 0.5, 1, 2, 4, 8];
-  formData = {
-    currentFrame: 0,
-    frameSkip: 10,
-    playbackRate: 1,
-  };
-
-  get currentTimeProxy(): string {
-    return moment.duration(this.currentTime * 1e3).toISOString();
-  }
-
-  set currentTimeProxy(s: string) {
-    const v = moment.duration(s).asSeconds();
-    this.$refs.presentation.seek(v, true);
-  }
+  playbackRate = 1;
 
   jumpPrev(): void {
     if (this.prev) {

@@ -27,6 +27,8 @@ export default class InputNumber extends Mixins(
   @Prop({ type: Number })
   max?: number;
 
+  $el!: HTMLInputElement;
+
   get valueString(): string {
     if (this.$_value == null) {
       return '';
