@@ -60,7 +60,7 @@
             }`
             @mouseenter="highlight = i.database"
             :value="i"
-            @click="$_value = i.database;"
+            @click="$_value = i.database; popupVisible = false;"
           )
         template(
           v-if="projects.length === 0"
