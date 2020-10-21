@@ -25,11 +25,17 @@ function isUndoHistory(el: Element): boolean {
 }
 
 function isValueIgnore(el: SVGElement): boolean {
+  if (el.dataset.valueIgnore === 'true') {
+    return true;
+  }
   if (isUndoHistory(el)) {
     return true;
   }
-  if (el.dataset.valueIgnore === 'true') {
-    return true;
+  if (el instanceof SVGGraphicsElement) {
+    const bBox = el.getBBox();
+    if (bBox.width === 0 || bBox.height === 0) {
+      return true;
+    }
   }
   return false;
 }

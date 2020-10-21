@@ -35,7 +35,6 @@ export default class PolylinePainter extends Painter {
   onPointerdown(e: PointerEvent): void {
     super.onPointerdown(e);
     const el = this.editor.pushOperation(createSVGElement('polyline'));
-    el.dataset.valueIgnore = 'true';
     el.style.stroke = this.config.color;
     el.style.strokeWidth = this.config.strokeWidth.toString();
     this.target = el;
@@ -56,9 +55,6 @@ export default class PolylinePainter extends Painter {
       return;
     }
     this.appendPointByEvent(e);
-    if (this.target.points.length > 3) {
-      delete this.target.dataset.valueIgnore;
-    }
     this.editor.hooks.drawEnd?.(this.target);
     this.target = undefined;
     this.editor.commit();

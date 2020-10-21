@@ -1,7 +1,6 @@
 import { Painter } from '@/svg-editor/painter';
 import { SVGEditor } from '@/svg-editor/svg-editor';
 import createSVGElement from '@/svg-editor/utils/createSVGElement';
-import distanceVector2 from '@/svg-editor/utils/distanceVector2';
 import { Vector2 } from '@/svg-editor/vector2';
 
 export default class EllipsePainter extends Painter {
@@ -22,7 +21,6 @@ export default class EllipsePainter extends Painter {
   public onPointerdown(e: PointerEvent): void {
     super.onPointerdown(e);
     const el = this.editor.pushOperation(createSVGElement('ellipse'));
-    el.dataset.valueIgnore = 'true';
     const p = this.absoluteSVGPoint(e);
     this.target = { ellipse: el, origin: p };
     this.editor.hooks.drawStart?.(el);
@@ -49,9 +47,6 @@ export default class EllipsePainter extends Painter {
       x: Math.max(origin.x, p.x),
       y: Math.max(origin.y, p.y),
     };
-    if (distanceVector2(start, end) > this.config.strokeWidth * 2) {
-      delete ellipse.dataset.valueIgnore;
-    }
 
     ellipse.setAttribute('cx', ((start.x + end.x) / 2).toFixed(0));
     ellipse.setAttribute('cy', ((start.y + end.y) / 2).toFixed(0));
@@ -63,7 +58,7 @@ export default class EllipsePainter extends Painter {
 
   public onPointerup(e: PointerEvent): void {
     super.onPointerup(e);
-    if (this.target){
+    if (this.target) {
       this.editor.hooks.drawEnd?.(this.target.ellipse);
       this.target = undefined;
       this.editor.commit();
