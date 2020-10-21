@@ -139,6 +139,7 @@
           InputNumber.form-input(
             class="h-8 w-20"
             v-model="parent.config.fontSize"
+            :min="12"
             title="文本大小"
           )
       template(v-if="['select'].includes(parent.currentPainter)")
