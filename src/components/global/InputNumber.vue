@@ -18,25 +18,37 @@ import getVModelMixin from '@/mixins/VModelMixinV2';
 export default class InputNumber extends Mixins(
   getVModelMixin<number | undefined>()
 ) {
-  @Prop({type: Number})
-  default?: number
+  @Prop({ type: Number })
+  default?: number;
+
+  @Prop({ type: Number })
+  min?: number;
+
+  @Prop({ type: Number })
+  max?: number;
 
   get valueString(): string {
     if (this.$_value == null) {
-      return ""
+      return '';
     }
-    return this.$_value.toString()
+    return this.$_value.toString();
   }
 
-  set valueString(v : string){
-    this.$_value = parseFloat(v)
+  set valueString(v: string) {
+    this.$_value = parseFloat(v);
   }
 
   normalizeValue(v: number | undefined): number | undefined {
-    if (v == null || !isFinite(v)){
-      return this.default
+    if (v == null || !isFinite(v)) {
+      return this.default;
     }
-    return v
+    if (this.min != null && v < this.min) {
+      return this.min;
+    }
+    if (this.max != null && v > this.max) {
+      return this.max;
+    }
+    return v;
   }
 }
 </script>

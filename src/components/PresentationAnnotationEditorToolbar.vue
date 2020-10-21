@@ -123,12 +123,10 @@
           FaIcon(name="circle"
             class="h-4 algin-top"
           )
-          input.form-input(
-            type="number"
-            class="h-8 text-center"
-            class="spin-button-none w-20 leading-none"
-            @focus="$event.target.select()"
-            v-model.number="parent.config.strokeWidth"
+          InputNumber.form-input(
+            class="w-20 h-8 text-center"
+            v-model="parent.config.strokeWidth"
+            :min="1"
             title="描边粗细"
           )
       template(v-if="['text'].includes(parent.currentPainter)")
