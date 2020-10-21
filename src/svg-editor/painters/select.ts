@@ -1,8 +1,8 @@
-import { Painter } from '@/svg-editor/painter';
+import NullPainter from '@/svg-editor/painters/null';
 import { SVGEditor } from '@/svg-editor/svg-editor';
 import createSVGElement from '@/svg-editor/utils/createSVGElement';
 
-export default class SelectPainter extends Painter {
+export default class SelectPainter extends NullPainter {
   protected target: { selector: { fg: SVGRectElement; bg: SVGRectElement } };
 
   private _selected = -1;
