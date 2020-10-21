@@ -6,6 +6,7 @@
       button(
         class="flex-auto opacity-50 bg-gray-800 w-32"
         type="button"
+        :key="i.id"
         :class=`{
           'opacity-100': value === i.id
         }`
