@@ -106,7 +106,7 @@ export class TextPainter extends Painter {
     this.renderText();
     this.renderPopup();
   }
-  
+
   hidePopup(): void {
     this.popupContainer.style.visibility = 'hidden';
     this.blur?.();
@@ -146,8 +146,9 @@ export class TextPainter extends Painter {
     for (const i of iterateHTMLCollection(text.children)) {
       i.textContent = lines[index];
       i.setAttribute('x', '0');
-      i.setAttribute('y', '0');
-      i.setAttribute('dy', (index * this.config.fontSize * 1.2).toFixed(0));
+      i.setAttribute('y', (index * this.config.fontSize * 1.2).toFixed(0));
+      i.removeAttribute("dx")
+      i.removeAttribute("dy")
       index += 1;
     }
 
