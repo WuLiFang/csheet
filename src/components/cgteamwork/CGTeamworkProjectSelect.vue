@@ -52,16 +52,15 @@
           Option(
             :key="i.database"
             tag="li"
-            tabindex="-1"
             ref="option"
             :data-value="i.database"
-            class="p-2"
+            class="p-2 cursor-pointer"
             :class=`{
               "bg-blue-500": highlight == i.database,
             }`
             @mouseenter="highlight = i.database"
             :value="i"
-            @click.capture="$_value = i.database;"
+            @click="$_value = i.database;"
           )
         template(
           v-if="projects.length === 0"
