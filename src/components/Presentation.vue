@@ -60,7 +60,7 @@ export function fileSrc(v: string | undefined): string {
         domProps: {
           src,
           alt: this.node?.raw?.path,
-          controls: true,
+          controls: this.controls,
           loop: true,
           autoplay: this.autoplay,
           draggable: this.draggable,
@@ -134,6 +134,9 @@ export default class Presentation extends Vue {
 
   @Prop({ type: Boolean, default: false })
   draggable!: boolean;
+
+  @Prop({ type: Boolean, default: false })
+  controls!: boolean;
 
   @Prop({ type: Number, default: 1 })
   playbackRate!: number;

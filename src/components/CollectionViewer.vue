@@ -86,6 +86,7 @@
                 :id="presentationID"
                 size="regular"
                 autoplay
+                :controls="$refs.annotation && $refs.annotation.currentPainter === 'null'"
                 :playbackRate="formData.playbackRate"
                 @frameUpdate="currentFrame = $event"
                 @timeUpdate="currentTime = $event"
