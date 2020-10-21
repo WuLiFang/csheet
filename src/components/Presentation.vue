@@ -101,6 +101,14 @@ export function fileSrc(v: string | undefined): string {
   },
   mounted() {
     this.$watch(
+      () => this.id,
+      v => {
+        if (!v) {
+          this.node = undefined;
+        }
+      }
+    );
+    this.$watch(
       () => this.path,
       () => {
         this.isLoadFailed = false;

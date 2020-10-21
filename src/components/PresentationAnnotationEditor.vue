@@ -103,9 +103,11 @@ type PainterName =
     );
     this.$watch(
       () => this.id,
-      () => {
+      v => {
+        if (!v){
+          this.presentation = undefined;
+        }
         this.editor.clearHistory();
-        this.editor.setValue('');
         this.debouncedSubmit.cancel();
         this.selected = -1;
       }

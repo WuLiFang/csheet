@@ -58,6 +58,7 @@
           PresentationAnnotationEditorToolbar(
             v-if="$refs.annotation"
             :parent="$refs.annotation"
+            v-show="presentationID"
           )
           template(v-for="i in prefetchURLs")
             link(rel="prefetch" :href="i")
