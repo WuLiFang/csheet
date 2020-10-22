@@ -17,7 +17,7 @@
         v-model="query"
         placeholder="搜索项目"
         @blur="blur()"
-        @keydown.enter.stop="$_value = highlight; blur()"
+        @keydown.enter.stop="$_value = highlight; popupVisible = false;"
         @keydown.up.stop="selectHighlight(-1)"
         @keydown.down.stop="selectHighlight(1)"
       )
@@ -220,6 +220,7 @@ export default class CGTeamworkProjectSelect extends Mixins(
 
   blur(): void {
     this.hasFocus = false;
+    this.$refs.queryInput?.blur()
   }
 }
 </script>
