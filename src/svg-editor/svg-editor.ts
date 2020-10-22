@@ -102,6 +102,7 @@ export class SVGEditor {
 
   set painter(v: Painter) {
     this._painter.destroy();
+    v.setup()
     this._painter = v;
     delete this.el.dataset.drawing;
   }

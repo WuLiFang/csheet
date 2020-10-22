@@ -1,5 +1,4 @@
 import { Painter } from '@/svg-editor/painter';
-import { SVGEditor } from '@/svg-editor/svg-editor';
 import createSVGElement from '@/svg-editor/utils/createSVGElement';
 import { Vector2 } from '@/svg-editor/vector2';
 
@@ -7,13 +6,13 @@ export default class RectanglePainter extends Painter {
   public config = { strokeWidth: 3, color: 'red', cornerRadius: 0 };
   private target: { rect: SVGRectElement; origin: Vector2 } | undefined;
 
-  constructor(editor: SVGEditor) {
-    super(editor);
-    const rawCursor = editor.el.style.cursor;
+  setup(): void {
+    const el = this.editor.el;
+    const rawCursor = el.style.cursor;
     this.addCleanup(() => {
-      editor.el.style.cursor = rawCursor;
+      el.style.cursor = rawCursor;
     });
-    editor.el.style.cursor = 'crosshair';
+    el.style.cursor = 'crosshair';
   }
 
   public onPointerdown(e: PointerEvent): void {

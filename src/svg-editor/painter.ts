@@ -60,6 +60,11 @@ export abstract class Painter {
     this.cleanup.push(fn);
   }
 
+  /** setup when change painter to this */
+  setup(): void {
+    // pass
+  }
+
   /** cleanup before change painter  */
   destroy(): void {
     while (this.cleanup.length > 0) {

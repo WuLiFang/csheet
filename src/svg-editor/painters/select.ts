@@ -34,11 +34,14 @@ export default class SelectPainter extends NullPainter {
       bg.remove();
       fg.remove();
     });
+  }
 
+  setup(): void {
+    const el = this.editor.el;
     this.addCleanup(() => {
-      delete editor.el.dataset.mode;
+      delete el.dataset.mode;
     });
-    editor.el.dataset.mode = 'select';
+    el.dataset.mode = 'select';
   }
 
   onSelect?(index: number): void;

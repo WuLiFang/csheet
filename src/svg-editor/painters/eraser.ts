@@ -22,12 +22,15 @@ export default class EraserPainter extends Painter {
   constructor(editor: SVGEditor, bgHref: string) {
     super(editor);
     this.bgHref = bgHref;
+  }
 
-    const rawCursor = editor.el.style.cursor;
+  setup(): void {
+    const el = this.editor.el;
+    const rawCursor = el.style.cursor;
     this.addCleanup(() => {
-      editor.el.style.cursor = rawCursor;
+      el.style.cursor = rawCursor;
     });
-    editor.el.style.cursor = 'pointer';
+    el.style.cursor = 'pointer';
   }
 
   onPointerdown(e: PointerEvent): void {

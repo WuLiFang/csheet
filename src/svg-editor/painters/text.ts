@@ -26,14 +26,20 @@ export class TextPainter extends Painter {
 
   constructor(editor: SVGEditor) {
     super(editor);
-    const rawCursor = editor.el.style.cursor;
     this.popupContainer = document.createElement('div');
     this.addCleanup(() => {
-      editor.el.style.cursor = rawCursor;
       this.popupContainer.remove();
     });
-    editor.el.style.cursor = 'text';
     editor.el.after(this.popupContainer);
+  }
+
+  setup(): void {
+    const el = this.editor.el;
+    const rawCursor = el.style.cursor;
+    el.style.cursor = 'text';
+    this.addCleanup(() => {
+      el.style.cursor = rawCursor;
+    });
   }
 
   private get mustTarget(): NonNullable<TextPainter['target']> {
@@ -147,8 +153,8 @@ export class TextPainter extends Painter {
       i.textContent = lines[index];
       i.setAttribute('x', '0');
       i.setAttribute('y', (index * this.config.fontSize * 1.2).toFixed(0));
-      i.removeAttribute("dx")
-      i.removeAttribute("dy")
+      i.removeAttribute('dx');
+      i.removeAttribute('dy');
       index += 1;
     }
 

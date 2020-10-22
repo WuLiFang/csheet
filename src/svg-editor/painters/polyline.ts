@@ -1,5 +1,4 @@
 import { Painter } from '@/svg-editor/painter';
-import { SVGEditor } from '@/svg-editor/svg-editor';
 import createSVGElement from '@/svg-editor/utils/createSVGElement';
 import distanceVector2 from '@/svg-editor/utils/distanceVector2';
 import getCoalescedPointerEvents from '@/svg-editor/utils/getCoalescedPointerEvents';
@@ -23,13 +22,13 @@ export default class PolylinePainter extends Painter {
 
   private target: SVGPolylineElement | undefined;
 
-  constructor(editor: SVGEditor) {
-    super(editor);
-    const rawCursor = editor.el.style.cursor;
+  setup(): void {
+    const el = this.editor.el;
+    const rawCursor = el.style.cursor;
     this.addCleanup(() => {
-      editor.el.style.cursor = rawCursor;
+      el.style.cursor = rawCursor;
     });
-    editor.el.style.cursor = 'pointer';
+    el.style.cursor = 'pointer';
   }
 
   onPointerdown(e: PointerEvent): void {
