@@ -16,8 +16,8 @@ export default class EllipsePainter extends Painter {
     el.style.cursor = 'crosshair';
   }
 
-  public onPointerdown(e: PointerEvent): void {
-    super.onPointerdown(e);
+  public onPointerDown(e: PointerEvent): void {
+    super.onPointerDown(e);
     const el = this.editor.pushOperation(createSVGElement('ellipse'));
     const p = this.absoluteSVGPoint(e);
     this.target = { ellipse: el, origin: p };
@@ -31,7 +31,7 @@ export default class EllipsePainter extends Painter {
     return this.target;
   }
 
-  public onPointermove(e: PointerEvent): void {
+  public onPointerMove(e: PointerEvent): void {
     if (!this.isDrawing) {
       return;
     }
@@ -54,8 +54,8 @@ export default class EllipsePainter extends Painter {
     ellipse.style.strokeWidth = `${this.config.strokeWidth.toFixed(0)}px`;
   }
 
-  public onPointerup(e: PointerEvent): void {
-    super.onPointerup(e);
+  public onPointerUp(e: PointerEvent): void {
+    super.onPointerUp(e);
     if (this.target) {
       this.editor.hooks.drawEnd?.(this.target.ellipse);
       this.target = undefined;

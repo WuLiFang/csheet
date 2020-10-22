@@ -86,12 +86,12 @@ export class SVGEditor {
     this.editContainer = createSVGElement('g');
     el.appendChild(this.editContainer);
     el.addEventListener('click', e => this.painter.onClick(e));
-    el.addEventListener('pointerdown', e => this.painter.onPointerdown(e));
-    el.addEventListener('pointermove', e => this.painter.onPointermove(e));
-    el.addEventListener('pointerup', e => this.painter.onPointerup(e));
-    el.addEventListener('pointerover', e => this.painter.onPointerover(e));
-    el.addEventListener('pointerenter', e => this.painter.onPointerenter(e));
-    el.addEventListener('pointerleave', e => this.painter.onPointerleave(e));
+    el.addEventListener('pointerdown', e => this.painter.onPointerDown(e));
+    el.addEventListener('pointermove', e => this.painter.onPointerMove(e));
+    el.addEventListener('pointerup', e => this.painter.onPointerUp(e));
+    el.addEventListener('pointerover', e => this.painter.onPointerOver(e));
+    el.addEventListener('pointerenter', e => this.painter.onPointerEnter(e));
+    el.addEventListener('pointerleave', e => this.painter.onPointerLeave(e));
 
     this._painter = new NullPainter(this);
   }
@@ -102,7 +102,7 @@ export class SVGEditor {
 
   set painter(v: Painter) {
     this._painter.destroy();
-    v.setup()
+    v.setup();
     this._painter = v;
     delete this.el.dataset.drawing;
   }

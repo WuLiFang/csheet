@@ -33,8 +33,8 @@ export default class EraserPainter extends Painter {
     el.style.cursor = 'pointer';
   }
 
-  onPointerdown(e: PointerEvent): void {
-    super.onPointerdown(e);
+  onPointerDown(e: PointerEvent): void {
+    super.onPointerDown(e);
     const g = this.editor.pushOperation(createSVGElement('g'));
     g.dataset.type = 'eraser';
     const mask = g.appendChild(createSVGElement('mask'));
@@ -53,7 +53,7 @@ export default class EraserPainter extends Painter {
     return this.target;
   }
 
-  onPointermove(e: PointerEvent): void {
+  onPointerMove(e: PointerEvent): void {
     if (!this.isDrawing) {
       return;
     }
@@ -92,8 +92,8 @@ export default class EraserPainter extends Painter {
     }
   }
 
-  onPointerup(e: PointerEvent): void {
-    super.onPointerup(e);
+  onPointerUp(e: PointerEvent): void {
+    super.onPointerUp(e);
     delete this.target;
     delete this.lastCircle;
   }

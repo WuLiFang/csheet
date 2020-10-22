@@ -31,8 +31,8 @@ export default class PolylinePainter extends Painter {
     el.style.cursor = 'pointer';
   }
 
-  onPointerdown(e: PointerEvent): void {
-    super.onPointerdown(e);
+  onPointerDown(e: PointerEvent): void {
+    super.onPointerDown(e);
     const el = this.editor.pushOperation(createSVGElement('polyline'));
     el.style.stroke = this.config.color;
     el.style.strokeWidth = this.config.strokeWidth.toString();
@@ -41,15 +41,15 @@ export default class PolylinePainter extends Painter {
     this.editor.hooks.drawStart?.(el);
   }
 
-  onPointermove(e: PointerEvent): void {
+  onPointerMove(e: PointerEvent): void {
     if (!this.isDrawing || !this.target) {
       return;
     }
     this.appendPointByEvent(e);
   }
 
-  onPointerup(e: PointerEvent): void {
-    super.onPointerup(e);
+  onPointerUp(e: PointerEvent): void {
+    super.onPointerUp(e);
     if (!this.target) {
       return;
     }

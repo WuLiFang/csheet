@@ -15,7 +15,7 @@ export abstract class Painter {
     e.preventDefault();
   }
 
-  onPointerdown(e: PointerEvent): void {
+  onPointerDown(e: PointerEvent): void {
     this.isDrawing = true;
     this.editor.el.dataset.drawing = 'true';
     if (document.activeElement instanceof HTMLElement) {
@@ -25,28 +25,28 @@ export abstract class Painter {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onPointermove(e: PointerEvent): void {
+  onPointerMove(e: PointerEvent): void {
     // pass
   }
 
-  onPointerup(e: PointerEvent): void {
+  onPointerUp(e: PointerEvent): void {
     this.isDrawing = false;
     delete this.editor.el.dataset.drawing;
     e.preventDefault();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onPointerover(e: PointerEvent): void {
+  onPointerOver(e: PointerEvent): void {
     // pass
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onPointerenter(e: PointerEvent): void {
+  onPointerEnter(e: PointerEvent): void {
     // pass
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onPointerleave(e: PointerEvent): void {
+  onPointerLeave(e: PointerEvent): void {
     // pass
   }
 

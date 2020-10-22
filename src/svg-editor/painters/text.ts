@@ -49,8 +49,8 @@ export class TextPainter extends Painter {
     return this.target;
   }
 
-  onPointerdown(e: PointerEvent): void {
-    super.onPointerdown(e);
+  onPointerDown(e: PointerEvent): void {
+    super.onPointerDown(e);
     this.popupContainer.style.pointerEvents = 'none';
 
     const origin = this.absoluteSVGPoint(e);
@@ -84,7 +84,7 @@ export class TextPainter extends Painter {
     this.editor.hooks.drawStart?.(g);
   }
 
-  onPointermove(e: PointerEvent): void {
+  onPointerMove(e: PointerEvent): void {
     if (!this.isDrawing) {
       return;
     }
@@ -94,8 +94,8 @@ export class TextPainter extends Painter {
     this.renderText();
   }
 
-  onPointerup(e: PointerEvent): void {
-    super.onPointerup(e);
+  onPointerUp(e: PointerEvent): void {
+    super.onPointerUp(e);
     if (!this.target) {
       return;
     }

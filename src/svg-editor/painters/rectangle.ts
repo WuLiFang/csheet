@@ -15,8 +15,8 @@ export default class RectanglePainter extends Painter {
     el.style.cursor = 'crosshair';
   }
 
-  public onPointerdown(e: PointerEvent): void {
-    super.onPointerdown(e);
+  public onPointerDown(e: PointerEvent): void {
+    super.onPointerDown(e);
     const el = this.editor.pushOperation(createSVGElement('rect'));
     const p = this.absoluteSVGPoint(e);
     this.target = { rect: el, origin: p };
@@ -30,7 +30,7 @@ export default class RectanglePainter extends Painter {
     return this.target;
   }
 
-  public onPointermove(e: PointerEvent): void {
+  public onPointerMove(e: PointerEvent): void {
     if (!this.isDrawing) {
       return;
     }
@@ -54,8 +54,8 @@ export default class RectanglePainter extends Painter {
     rect.style.strokeWidth = `${this.config.strokeWidth.toFixed(0)}px`;
   }
 
-  public onPointerup(e: PointerEvent): void {
-    super.onPointerup(e);
+  public onPointerUp(e: PointerEvent): void {
+    super.onPointerUp(e);
     if (this.target) {
       this.editor.hooks.drawEnd?.(this.target.rect);
       this.target = undefined;
