@@ -17,7 +17,7 @@
         v-model="query"
         placeholder="搜索项目"
         @blur="blur()"
-        @keydown.enter.stop="$_value = highlight; popupVisible = false;"
+        @keydown.enter.stop="$_value = highlight; blur();"
         @keydown.up.stop="selectHighlight(-1)"
         @keydown.down.stop="selectHighlight(1)"
       )
@@ -60,7 +60,7 @@
             }`
             @mouseenter="highlight = i.database"
             :value="i"
-            @click="$_value = i.database; popupVisible = false;"
+            @click="$_value = i.database; blur();"
           )
         template(
           v-if="projects.length === 0"
@@ -131,9 +131,6 @@ const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
         if (o) {
           this.$emit('change');
         }
-        if (!this.hasFocus){
-          this.popupVisible = false
-        }
       },
       { immediate: true }
     );
@@ -154,7 +151,7 @@ export default class CGTeamworkProjectSelect extends Mixins(
 
   matchedProjects?: Project[];
   selectedProjects?: Project[];
-  popupVisible=  false;
+  popupVisible = false;
 
   get projects(): Project[] {
     return orderBy(
@@ -220,7 +217,16 @@ export default class CGTeamworkProjectSelect extends Mixins(
 
   blur(): void {
     this.hasFocus = false;
-    this.$refs.queryInput?.blur()
+    // delay popup hide so click event from popup can trigger.
+    setTimeout(() => {
+      if (this.hasFocus) {
+        return;
+      }
+      this.popupVisible = false;
+    }, 100);
+    if (document.activeElement === this.$refs.queryInput) {
+      this.$refs.queryInput.blur();
+    }
   }
 }
 </script>
