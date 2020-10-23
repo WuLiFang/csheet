@@ -1,3 +1,5 @@
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
+
 /** @type {import('@vue/cli-service').ProjectOptions & { devServer: import('webpack-dev-server').Configuration}} */
 module.exports = {
   assetsDir: 'static',
@@ -25,11 +27,16 @@ module.exports = {
           },
         })
     );
-
+    config.plugin('moment').use(MomentLocalesPlugin, [
+      {
+        localesToKeep: ['zh-cn'],
+      },
+    ]);
     config.plugin('define').tap(args => {
       args[0].RELEASE = JSON.stringify(process.env.CSHEET_RELEASE);
       return args;
     });
+    config.resolve.alias.set('lodash', 'lodash-es');
   },
   transpileDependencies: ['strip-ansi', 'ansi-regex'],
 
