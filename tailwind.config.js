@@ -38,5 +38,14 @@ module.exports = {
     textColor: ['responsive', 'hover', 'focus', 'disabled'],
   },
   plugins: [require('@tailwindcss/custom-forms')],
-  purge: false, // we do purge in postcss.config.js
+  purge: {
+    content: [
+      'src/**/*.{vue,ts}',
+      'node_modules/vue-awesome/components/Icon.vue',
+    ],
+  },
+  future: {
+    removeDeprecatedGapUtilities: true,
+    purgeLayersByDefault: true,
+  },
 };
