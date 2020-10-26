@@ -198,6 +198,9 @@ export default class PresentationAnnotationEditor extends Vue {
   debouncedSubmit!: DebouncedFunc<() => Promise<void>>;
 
   get frameRange(): [number | undefined, number | undefined] {
+    if (this.presentation?.type !== 'video') {
+      return [undefined, undefined]
+    }
     switch (this.config.frameRangeMode) {
       case 'CURRENT':
         return [this.frame, this.frame];
