@@ -118,7 +118,7 @@ type PainterName =
     this.$watch(
       () => this.frame,
       () => {
-        this.editor.update();
+        this.editor.render();
       }
     );
     this.$watch(
@@ -246,7 +246,7 @@ export default class PresentationAnnotationEditor extends Vue {
             }
             setDOMStringMap(selected.dataset, 'firstFrame', first?.toString());
             setDOMStringMap(selected.dataset, 'lastFrame', last?.toString());
-            this.editor.update();
+            this.editor.render();
             this.editor.commit();
           },
           { deep: true }

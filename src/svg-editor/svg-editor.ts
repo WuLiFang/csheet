@@ -147,8 +147,8 @@ export class SVGEditor {
     return data.join('').trim();
   }
 
-  // Update call renderOperation hooks on all operations.
-  update(): void {
+  /** Render all operations with hooks */
+  render(): void {
     if (!this.hooks.renderOperation) {
       return;
     }
@@ -163,7 +163,7 @@ export class SVGEditor {
     renderValue(this.valueContainer, safeValue);
     this.painter.onValueChange(safeValue);
     this.hooks.changeValue?.();
-    this.update();
+    this.render();
   }
 
   canUndo(): boolean {
