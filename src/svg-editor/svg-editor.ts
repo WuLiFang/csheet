@@ -113,26 +113,29 @@ export class SVGEditor {
   }
 
   discardChanges(): void {
-    for (const i of this.iterateOperations()) {
+    const removeTargets: SVGElement[] = [];
+    for (const i of iterateHTMLCollection(this.editContainer.children)) {
+      if (!(i instanceof SVGElement)) {
+        continue;
+      }
       if (isValueIgnore(i)) {
         continue;
       }
-      if (!(i.parentElement === this.valueContainer)) {
-        i.remove();
-      }
+      removeTargets.push(i);
     }
+    removeTargets.map(i => i.remove());
     this.hooks.discardChanges?.();
   }
 
   /** clear history for redo */
   clearHistory(): void {
-    for (const i of Array.from(
-      iterateHTMLCollection(this.editContainer.children)
-    )) {
+    const removeTargets: Element[] = [];
+    for (const i of iterateHTMLCollection(this.editContainer.children)) {
       if (isUndoHistory(i)) {
-        i.remove();
+        removeTargets.push(i);
       }
     }
+    removeTargets.map(i => i.remove());
     this.hooks.clearHistory?.();
   }
 
