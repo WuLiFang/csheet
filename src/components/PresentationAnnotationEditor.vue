@@ -104,11 +104,11 @@ type PainterName =
     this.$watch(
       () => this.id,
       v => {
-        if (!v){
+        this.debouncedSubmit.flush();
+        if (!v) {
           this.presentation = undefined;
         }
         this.editor.clearHistory();
-        this.debouncedSubmit.cancel();
         this.selected = -1;
       }
     );
@@ -130,6 +130,7 @@ type PainterName =
           );
         }
         this.editor.setValue(v);
+        this.formData.id = this.id ?? '';
       },
       { immediate: true }
     );
@@ -186,6 +187,10 @@ export default class PresentationAnnotationEditor extends Vue {
   };
 
   selected = -1;
+
+  formData = {
+    id: '',
+  };
 
   debouncedSubmit!: DebouncedFunc<() => Promise<void>>;
 
@@ -291,7 +296,8 @@ export default class PresentationAnnotationEditor extends Vue {
   }
 
   async submit(): Promise<void> {
-    if (!this.id || this.loadingCount > 0 || this.editor.painter.isDrawing) {
+    const id = this.formData.id;
+    if (!id || this.loadingCount > 0 || this.editor.painter.isDrawing) {
       return;
     }
     this.loadingCount += 1;
@@ -308,7 +314,7 @@ export default class PresentationAnnotationEditor extends Vue {
         input: {
           data: [
             {
-              id: this.id,
+              id,
               key: 'annotation',
               value,
             },
