@@ -106,13 +106,14 @@ type PainterName =
     );
     this.$watch(
       () => this.id,
-      v => {
-        this.debouncedSubmit.flush();
+      async v => {
         if (!v) {
           this.presentation = undefined;
         }
         this.editor.clearHistory();
         this.selected = -1;
+        await this.debouncedSubmit.flush();
+        this.formData.id = v ?? '';
       }
     );
     this.$watch(
@@ -133,7 +134,6 @@ type PainterName =
           );
         }
         this.editor.setValue(v);
-        this.formData.id = this.id ?? '';
       },
       { immediate: true }
     );
@@ -199,7 +199,7 @@ export default class PresentationAnnotationEditor extends Vue {
 
   get frameRange(): [number | undefined, number | undefined] {
     if (this.presentation?.type !== 'video') {
-      return [undefined, undefined]
+      return [undefined, undefined];
     }
     switch (this.config.frameRangeMode) {
       case 'CURRENT':
