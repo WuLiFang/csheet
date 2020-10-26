@@ -123,9 +123,11 @@ type PainterName =
       }
     );
     this.$watch(
-      () =>
-        this.presentation?.metadata.find(i => i.k === 'annotation')?.v ?? '',
-      v => {
+      () => ({
+        v: this.presentation?.metadata.find(i => i.k === 'annotation')?.v ?? '',
+        id: this.id,
+      }),
+      ({ v }) => {
         if (v.length > 1 << 20) {
           throw new Error(
             `PresentatinoAnnotationEditor: value length excess limit (1 MiB): ${formatFileSize(
