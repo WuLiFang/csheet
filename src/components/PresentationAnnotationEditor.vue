@@ -130,7 +130,6 @@ type PainterName =
           );
         }
         this.editor.setValue(v);
-        this.canUndo = this.editor.canUndo();
       },
       { immediate: true }
     );
