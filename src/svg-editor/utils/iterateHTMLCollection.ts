@@ -1,3 +1,4 @@
+/** should not modify collection while iterating */
 export default function* iterateHTMLCollection(
   collection: HTMLCollectionBase,
   reverse = false

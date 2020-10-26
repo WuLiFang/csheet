@@ -126,7 +126,9 @@ export class SVGEditor {
 
   /** clear history for redo */
   clearHistory(): void {
-    for (const i of iterateHTMLCollection(this.editContainer.children)) {
+    for (const i of Array.from(
+      iterateHTMLCollection(this.editContainer.children)
+    )) {
       if (isUndoHistory(i)) {
         i.remove();
       }
