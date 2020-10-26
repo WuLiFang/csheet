@@ -73,6 +73,9 @@ type PainterName =
           this.canUndo = this.editor.canUndo();
           this.canRedo = this.editor.canRedo();
         },
+        clearHistory: () => {
+          this.canRedo = this.editor.canRedo();
+        },
         drawStart: el => {
           const [first, last] = this.frameRange;
           setDOMStringMap(el.dataset, 'firstFrame', first?.toString());
