@@ -16,24 +16,24 @@ func (r *queryResolver) CgteamworkProjects(ctx context.Context, q *string, name 
 		if len(name) == 0 {
 			return []cgteamwork.Project{}, nil
 		}
-		filter = filter.And(cgteamwork.F("project.full_name", "in", name))
+		filter = filter.And(cgteamwork.F("project.full_name").In(name))
 	}
 	if database != nil {
 		if len(database) == 0 {
 			return []cgteamwork.Project{}, nil
 		}
-		filter = filter.And(cgteamwork.F("project.database", "in", database))
+		filter = filter.And(cgteamwork.F("project.database").In(database))
 	}
 	if status != nil {
 		if len(status) == 0 {
 			return []cgteamwork.Project{}, nil
 		}
-		filter = filter.And(cgteamwork.F("project.status", "in", status))
+		filter = filter.And(cgteamwork.F("project.status").In(status))
 	}
 
 	if q != nil {
-		filter = filter.And(cgteamwork.F("project.code", "has", q)).
-			Or(filter.And(cgteamwork.F("project.full_name", "has", q)))
+		filter = filter.And(cgteamwork.F("project.code").Has(*q)).
+			Or(filter.And(cgteamwork.F("project.full_name").Has(*q)))
 	}
 	return cgteamwork.ListProjects(
 		ctx,

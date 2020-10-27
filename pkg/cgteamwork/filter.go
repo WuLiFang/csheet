@@ -3,6 +3,22 @@ package cgteamwork
 import "encoding/json"
 
 // Filter is a cgteamwork filter
+// known operators:
+//   `!=` not equal
+//   `=` equal
+//   `~`
+//   `<` less than
+//   `>` greater than
+//   `<=` less or equal than
+//   `>=` less or equal than
+//   `has` string contains, use % to match any string
+//   `!has` oppsite of `has`
+//   `in`
+//   `concat`
+//   `!concat`
+//   `start` startswith
+//   `end` endswith
+//   `is`
 type Filter struct {
 	Left, Op   string
 	Right      interface{}
@@ -28,15 +44,6 @@ func (f Filter) Array() []interface{} {
 // MarshalJSON impelements json.Marshaler interface
 func (f Filter) MarshalJSON() ([]byte, error) {
 	return json.Marshal(f.Array())
-}
-
-// F create filter without chain.
-func F(left, op string, right interface{}) Filter {
-	return Filter{
-		Left:  left,
-		Op:    op,
-		Right: right,
-	}
 }
 
 // And create filter with `and` chain.

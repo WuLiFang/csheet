@@ -87,7 +87,7 @@ func Select(database, module string) Selection {
 		Database:   database,
 		Module:     module,
 		ModuleType: "info",
-		Filter:     F(idField, "has", "%"),
+		Filter:     F(idField).Has("%"),
 		IDField:    idField,
 	}
 }

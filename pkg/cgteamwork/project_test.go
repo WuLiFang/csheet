@@ -12,7 +12,7 @@ func TestListActivateProject(t *testing.T) {
 	ret, err := ListProjects(
 		ctx,
 		func(s Selection) Selection {
-			return s.WithFilter(F("project.status", "=", "Active"))
+			return s.WithFilter(F("project.status").Equal("Active"))
 		},
 	)
 	assert.NoError(t, err)

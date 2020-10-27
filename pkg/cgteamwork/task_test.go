@@ -12,7 +12,7 @@ func TestUnmarshalTask(t *testing.T) {
 
 	s := Select("proj_sdktest", "shot").
 		WithModuleType("task").
-		WithFilter(F("shot.shot", "=", "SDKTEST_EP01_01_sc001"))
+		WithFilter(F("shot.shot").Equal("SDKTEST_EP01_01_sc001"))
 	rs, err := s.Values(
 		ctx,
 		"shot.id", "shot.shot",

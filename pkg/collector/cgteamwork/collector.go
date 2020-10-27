@@ -141,8 +141,8 @@ func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error)
 	s := cgteamwork.Select(o.Database, "shot").
 		WithModuleType("task").
 		WithFilter(
-			cgteamwork.F("task.pipeline", "in", pipelines(o.Pipeline)).
-				And(cgteamwork.F("shot.shot", "start", o.Prefix)),
+			cgteamwork.F("task.pipeline").In(pipelines(o.Pipeline)).
+				And(cgteamwork.F("shot.shot").StartsWith(o.Prefix)),
 		)
 
 	n, err := s.Count(ctx)
