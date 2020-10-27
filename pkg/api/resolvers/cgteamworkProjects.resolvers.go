@@ -32,8 +32,8 @@ func (r *queryResolver) CgteamworkProjects(ctx context.Context, q *string, name 
 	}
 
 	if q != nil {
-		filter = filter.And(cgteamwork.F("project.code").Has(*q)).
-			Or(filter.And(cgteamwork.F("project.full_name").Has(*q)))
+		filter = filter.And(cgteamwork.F("project.code").HasIgnoreCase(*q)).
+			Or(filter.And(cgteamwork.F("project.full_name").HasIgnoreCase(*q)))
 	}
 	return cgteamwork.ListProjects(
 		ctx,
