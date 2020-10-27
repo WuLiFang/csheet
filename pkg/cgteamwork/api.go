@@ -3,7 +3,6 @@ package cgteamwork
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -28,16 +27,10 @@ func parseAPIResult(v []byte) (data gjson.Result, err error) {
 	result := gjson.ParseBytes(v)
 	data = result.Get("data")
 	if result.Get("type").String() == "msg" {
-		switch data.String() {
-		case "please login!!!":
-			err = ErrLoginRequired
-		default:
-			err = fmt.Errorf("api error: %s", data.String())
-		}
+		err = APIError{Message: data.String()}
 		return
 	}
 	return
-
 }
 
 func (c *Client) callAPI(ctx context.Context, param interface{}) (data gjson.Result, err error) {

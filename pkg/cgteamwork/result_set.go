@@ -41,3 +41,18 @@ func (rs ResultSet) Unmarshal(fn func(index int) RecordUnmarshaler) error {
 	}
 	return nil
 }
+
+// Field data
+func (rs ResultSet) Field(field string) []gjson.Result {
+	var index = -1
+	for i, v := range rs.Fields {
+		if v == field {
+			index = i
+			break
+		}
+	}
+	if index < 0 {
+		return nil
+	}
+	return rs.Data.Get(fmt.Sprintf("#.%d", index)).Array()
+}

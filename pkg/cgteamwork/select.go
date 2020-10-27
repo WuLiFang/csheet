@@ -80,6 +80,33 @@ func (s Selection) Values(ctx context.Context, names ...string) (ResultSet, erro
 	}, err
 }
 
+func (s Selection) resolveIDs(ctx context.Context) ([]string, error) {
+	if s.Filter.Chain == nil && s.Filter.Left == s.IDField {
+		switch s.Filter.Op {
+		case "in":
+			if v, ok := s.Filter.Right.([]string); ok {
+				return v, nil
+			}
+
+		case "=":
+			if v, ok := s.Filter.Right.(string); ok {
+				return []string{v}, nil
+			}
+		}
+	}
+
+	res, err := s.Values(ctx)
+	if err != nil {
+		return nil, err
+	}
+	data := res.Field(s.IDField)
+	ret := make([]string, 0, len(data))
+	for _, i := range data {
+		ret = append(ret, i.String())
+	}
+	return ret, nil
+}
+
 // Select all item in given module.
 func Select(database, module string) Selection {
 	idField := module + ".id"

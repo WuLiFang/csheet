@@ -1,0 +1,15 @@
+{{ define "extendArgs" }}
+    username: String!
+    password: String!
+{{- end }}
+
+{{ define "data" }}
+    id: ID!
+    stage: String!
+    status: String!
+    "Default to collection pipeline."
+    pipeline: String
+    note: String
+{{- end }}
+
+

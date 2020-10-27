@@ -10,4 +10,5 @@ input {{.Name | upperFirst}}InputData {
 
 {{ define "args" }}
     data: [{{.Name | upperFirst}}InputData!]!
+    {{- block "extendArgs" . }}{{ end }}
 {{- end }}
