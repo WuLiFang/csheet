@@ -17,9 +17,11 @@ import (
 	"github.com/WuLiFang/csheet/v6/internal/config"
 	"github.com/WuLiFang/csheet/v6/pkg/api"
 	"github.com/WuLiFang/csheet/v6/pkg/apperror"
+	"github.com/WuLiFang/csheet/v6/pkg/middleware/gincontext"
 	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 	"github.com/vektah/gqlparser/v2/gqlerror"
+	"go.uber.org/zap"
 )
 
 func apiHandler() gin.HandlerFunc {
@@ -98,6 +100,41 @@ func apiHandler() gin.HandlerFunc {
 
 		}
 		return
+	})
+	server.AroundOperations(func(ctx context.Context, next graphql.OperationHandler) graphql.ResponseHandler {
+		return func(innerCtx context.Context) (ret *graphql.Response) {
+			if innerCtx != nil {
+				ctx = innerCtx
+			}
+			handler := next(ctx)
+			if handler != nil {
+				ret = handler(ctx)
+			}
+			if ret == nil {
+				return
+			}
+
+			oc := graphql.GetOperationContext(ctx)
+			if oc.Operation.Operation == "mutation" {
+				clientIP := ""
+				if gc := gincontext.FromContext(ctx); gc != nil {
+					clientIP = gc.ClientIP()
+				}
+				fields := []zap.Field{
+					zap.String("operationName", oc.Operation.Name),
+					zap.String("clientIP", clientIP),
+					zap.Duration("elapsed", time.Since(oc.Stats.OperationStart)),
+				}
+				if ret != nil && len(ret.Errors) > 0 {
+					fields = append(fields, zap.Error(ret.Errors))
+				}
+				logging.For(ctx).Logger("router.api").Info(
+					"mutate",
+					fields...,
+				)
+			}
+			return
+		}
 	})
 	gui := playground.Handler("GraphQL", "/api")
 
