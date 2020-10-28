@@ -28,12 +28,19 @@ func (r *subscriptionResolver) PresentationUpdated(ctx context.Context, id []str
 			case <-ctx.Done():
 				return
 			case i := <-c:
-				if _, ok := wantedIDs[i.ID()]; ok {
-					ret <- &i
+				if _, ok := wantedIDs[i.ID()]; !ok {
+					continue
+				}
+
+				select {
+				case <-ctx.Done():
+					return
+				case ret <- &i:
 				}
 			}
+
 		}
-	}, 8)
+	}, 64)
 
 	return ret, nil
 }

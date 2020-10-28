@@ -35,10 +35,16 @@ func (r *subscriptionResolver) CollectionUpdated(ctx context.Context, id []strin
 				if presentationCountGt != nil && len(i.PresentationIDs) <= *presentationCountGt {
 					continue
 				}
-				ret <- &i
+
+				select {
+				case <-ctx.Done():
+					return
+				case ret <- &i:
+				}
 			}
+
 		}
-	}, 8)
+	}, 64)
 	return ret, nil
 }
 
