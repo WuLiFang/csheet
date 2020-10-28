@@ -1,6 +1,6 @@
 <template lang="pug">
   .cgteamwork-flow-form-drawer(
-    class="fixed inset-0 z-20 flex flex-col overflow-hidden"
+    class="fixed inset-0 z-20"
   )
     transition(
       enter-class="opacity-0"
@@ -40,36 +40,24 @@
         CGTeamworkFlowForm(
           ref="form"
           class="my-2"
-          :id="id"
-          :default=`{
-            pipeline,
-            stage
-          }`
+          v-bind="$attrs"
           @submit="close()"
         )
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop } from 'vue-property-decorator';
+import { Component, Mixins } from 'vue-property-decorator';
 import { ModalMixin } from '@/mixins/ModalMixin';
 import CGTeamworkFlowForm from './CGTeamworkFlowForm.vue';
 import 'vue-awesome/icons/arrow-left';
 
 @Component<CGTeamworkFlowFormDrawer>({
+  inheritAttrs: false,
   components: {
     CGTeamworkFlowForm,
   },
 })
 export default class CGTeamworkFlowFormDrawer extends Mixins(ModalMixin) {
-  @Prop({ type: String, required: true })
-  id!: string;
-
-  @Prop({ type: String })
-  pipeline?: string;
-
-  @Prop({ type: String })
-  stage?: string;
-
   $refs!: {
     form: CGTeamworkFlowForm;
   };

@@ -91,10 +91,12 @@ export default class CollectionMetadataCGTeamworkTasks extends Vue {
       return;
     }
     show(CGTeamworkFlowFormDrawer, {
-      props: {
+      attrs: {
         id: this.id,
-        stage,
-        pipeline,
+        default: {
+          stage,
+          pipeline,
+        },
       },
     });
   }
