@@ -2,7 +2,6 @@ package router
 
 import (
 	"context"
-	"errors"
 	"net/http"
 	"net/url"
 	"strings"
@@ -17,6 +16,7 @@ import (
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/internal/config"
 	"github.com/WuLiFang/csheet/v6/pkg/api"
+	"github.com/WuLiFang/csheet/v6/pkg/apperror"
 	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 	"github.com/vektah/gqlparser/v2/gqlerror"
@@ -65,16 +65,9 @@ func apiHandler() gin.HandlerFunc {
 		},
 	)
 	server.SetErrorPresenter(func(ctx context.Context, err error) *gqlerror.Error {
-		if errors.Is(err, context.DeadlineExceeded) {
-			return &gqlerror.Error{
-				Message: err.Error(),
-				Extensions: map[string]interface{}{
-					"code": "TIMEOUT",
-					"locales": map[string]string{
-						"zh": "请求超时",
-					},
-				},
-			}
+		var e = new(apperror.AppError)
+		if apperror.As(err, e) {
+			return e
 		}
 		return graphql.DefaultErrorPresenter(ctx, err)
 	})

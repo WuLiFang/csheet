@@ -2,13 +2,13 @@ package cgteamwork
 
 import (
 	"context"
-	"fmt"
 	"mime"
 	"path"
 	"strconv"
 	"time"
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
+	"github.com/WuLiFang/csheet/v6/pkg/apperror"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	client "github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	"github.com/WuLiFang/csheet/v6/pkg/collector/base"
@@ -18,7 +18,6 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/unipath"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
-	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 
 // Options for collect collections.
@@ -150,15 +149,7 @@ func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error)
 		return
 	}
 	if n > MaxTaskPerCollect {
-		err = &gqlerror.Error{
-			Message: fmt.Sprintf("select match %d tasks, max allowed value is %d", n, MaxTaskPerCollect),
-			Extensions: map[string]interface{}{
-				"code": "CGTEAMWORK_COLLECT_OVER_TASK_LIMIT",
-				"locales": map[string]string{
-					"zh": fmt.Sprintf("所选条件匹配 %d 任务, 允许的最大值为 %d", n, MaxTaskPerCollect),
-				},
-			},
-		}
+		err = apperror.NewErrCGTeamworkCollectOverTaskLimit(n, MaxTaskPerCollect)
 		return
 	}
 	rs, err := s.Values(

@@ -17,6 +17,8 @@ func (e APIError) localMessage() string {
 		msg = "unauthenticated"
 	case "work_flow::python_update_flow, no permission to qc":
 		msg = "unauthorized"
+	case "token::login, get account data error":
+		msg = "login failed"
 	}
 	return msg
 }
@@ -33,6 +35,11 @@ func (e APIError) IsUnauthenticated() bool {
 // IsUnauthorized error
 func (e APIError) IsUnauthorized() bool {
 	return e.localMessage() == "unauthorized"
+}
+
+// IsLoginFailed error
+func (e APIError) IsLoginFailed() bool {
+	return e.localMessage() == "login failed"
 }
 
 // ErrEmptySelection when execute operation with a empty selection
