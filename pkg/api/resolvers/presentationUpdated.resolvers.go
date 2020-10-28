@@ -17,6 +17,7 @@ func (r *subscriptionResolver) PresentationUpdated(ctx context.Context, id []str
 		presentation.ViewerCounter.Add(i, 1)
 	}
 	go presentation.SignalSaved.Subscribe(func(c <-chan presentation.Presentation) {
+		defer close(ret)
 		defer func() {
 			for _, i := range id {
 				presentation.ViewerCounter.Add(i, -1)

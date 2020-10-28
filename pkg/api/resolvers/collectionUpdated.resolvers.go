@@ -18,6 +18,7 @@ func (r *subscriptionResolver) CollectionUpdated(ctx context.Context, id []strin
 		wantedIDs[i] = struct{}{}
 	}
 	go collection.SignalSaved.Subscribe(func(c <-chan collection.Collection) {
+		defer close(ret)
 		for {
 			select {
 			case <-ctx.Done():
