@@ -110,8 +110,10 @@ export function fileSrc(v: string | undefined): string {
     );
     this.$watch(
       () => this.path,
-      () => {
-        this.isLoadFailed = false;
+      v => {
+        if (v !== require('@/assets/img/load_failed.svg')) {
+          this.isLoadFailed = false;
+        }
       }
     );
     this.$watch(
