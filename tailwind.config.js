@@ -36,6 +36,7 @@ module.exports = {
   },
   variants: {
     textColor: ['responsive', 'hover', 'focus', 'disabled'],
+    display: ['responsive', 'group-hover']
   },
   plugins: [require('@tailwindcss/custom-forms')],
   purge: {

@@ -1,0 +1,15 @@
+mutation updateCGTeamworkFlow(
+  $input: UpdateCGTeamworkFlowInput!
+) {
+  updateCGTeamworkFlow(
+    input: $input
+  ) {
+    updated {
+      id
+      metadata {
+        k
+        v
+      }
+    }
+  }
+}

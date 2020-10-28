@@ -25,10 +25,16 @@
           td {{i.pipeline}}
           td(
             v-for="stage in stages"
+            class="cursor-pointer hover:bg-gray-800 group relative"
+            @click="showFlowDrawer(stage, i.pipeline)"
           )
             CGTeamworkTaskStatus(
               class="inline-block w-full h-full"
               :value="i.status[stage]")
+            FaIcon(
+              class="hidden group-hover:block absolute object-contain h-full top-0 right-0 p-1"
+              name="edit"
+            )
           td
             span.artist.mx-1(v-for="j in i.artists") {{j}}
 </template>
@@ -38,6 +44,9 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import { uniq, sortBy } from 'lodash';
 import db from '@/db';
 import CGTeamworkTaskStatus from './CGTeamworkTaskStatus.vue';
+import { show } from '@/modal';
+import CGTeamworkFlowFormDrawer from './cgteamwork/CGTeamworkFlowFormDrawer.vue';
+import 'vue-awesome/icons/edit';
 
 @Component<CollectionMetadataCGTeamworkTasks>({
   components: {
@@ -45,6 +54,9 @@ import CGTeamworkTaskStatus from './CGTeamworkTaskStatus.vue';
   },
 })
 export default class CollectionMetadataCGTeamworkTasks extends Vue {
+  @Prop({ type: String })
+  id?: string;
+
   @Prop({ type: String, required: true })
   value!: string;
 
@@ -72,6 +84,19 @@ export default class CollectionMetadataCGTeamworkTasks extends Vue {
     return sortBy(uniq(this.tasks.flatMap(i => Object.keys(i.status))), [
       i => -['client', 'director', 'leader'].indexOf(i),
     ]);
+  }
+
+  showFlowDrawer(stage?: string, pipeline?: string): void {
+    if (!this.id) {
+      return;
+    }
+    show(CGTeamworkFlowFormDrawer, {
+      props: {
+        id: this.id,
+        stage,
+        pipeline,
+      },
+    });
   }
 }
 </script>

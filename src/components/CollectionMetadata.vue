@@ -8,7 +8,8 @@
       template(v-if="i.k === 'cgteamwork.pipeline'")
       template(v-else-if="i.k === 'cgteamwork.tasks'")
         dt CGTeamwork
-        CollectionMetadataCGTeamworkTasks.pl-4(tag="dd" :value="i.v")
+        CollectionMetadataCGTeamworkTasks.pl-4(tag="dd" :value="i.v" :id="value.id")
+        p.text-center.text-sm.text-gray-600 点击状态进行更改
       template(v-else-if="i.k === 'comment'")
       template(v-else)
         dt {{i.k}}
@@ -26,7 +27,10 @@ import CollectionMetadataCGTeamworkTasks from './CollectionMetadataCGTeamworkTas
 import CollectionMetadataComment from './CollectionMetadataComment.vue';
 
 @Component<CollectionMetadata>({
-  components: { CollectionMetadataCGTeamworkTasks, CollectionMetadataComment },
+  components: {
+    CollectionMetadataCGTeamworkTasks,
+    CollectionMetadataComment,
+  },
 })
 export default class CollectionMetadata extends Vue {
   @Prop({ type: Object, required: true })
