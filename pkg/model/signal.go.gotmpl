@@ -40,15 +40,15 @@ import (
 
 // Signal that emit {{ $type }} to receivers.
 type Signal struct {
-	mu sync.RWMutex
-	m map[chan<- {{ $valueType }}]struct{}
+	mu sync.Mutex
+	m map[chan<- {{ $valueType }}]<-chan struct{}
 	sideEffects []func(context.Context, {{ $type }}) error
 }
 
 // Emit send object to every receivers. error when hook function errors.
 func (s *Signal) Emit(ctx context.Context, o {{ $type }}) error {
-	s.mu.RLock()
-    defer s.mu.RUnlock()
+	s.mu.Lock()
+    defer s.mu.Unlock()
 
 	for _, fn := range s.sideEffects {
 		err := fn(ctx, o)
@@ -57,7 +57,7 @@ func (s *Signal) Emit(ctx context.Context, o {{ $type }}) error {
 		}
 	}
 
-	for c := range s.m {
+	for c, done := range s.m {
 		select {
 {{- if $isPointer }}
 			case c <- *o:
@@ -66,30 +66,24 @@ func (s *Signal) Emit(ctx context.Context, o {{ $type }}) error {
 {{- end }}
 			case <- ctx.Done():
 				return ctx.Err()
+			case <- done:
 		}
 	}
 
 	return nil
 }
 
-func (s *Signal) addReceiver(c chan<- {{ $valueType }}) {
+func (s *Signal) addReceiver(c chan<- {{ $valueType }}, done <-chan struct{}) {
 	s.mu.Lock()
     defer s.mu.Unlock()
 
 	if s.m == nil {
-		s.m = make(map[chan<- {{ $valueType }}]struct{})
+		s.m = make(map[chan<- {{ $valueType }}]<-chan struct{})
 	}
-	s.m[c] = struct{}{}
+	s.m[c] = done
 }
 
-// Notify add channel to receivers. Emit will wait when channel is blocked.
-// It is the caller's responsibility to Stop notify before channel close.
-func (s *Signal) Notify(c chan<- {{ $valueType }}) {
-	s.addReceiver(c)
-}
-
-// Stop remove channel from receivers.
-func (s *Signal) Stop(c chan<- {{ $valueType }}) {
+func (s *Signal) removeReceiver(c chan<- {{ $valueType }}) {
 	s.mu.Lock()
     defer s.mu.Unlock()
 
@@ -105,15 +99,18 @@ func (s *Signal) Connect(fn func(context.Context, {{ $type }}) error) {
 	s.sideEffects = append(s.sideEffects, fn)
 }
 
-// Subscribe signal with a function. 
-// channel only available before function return.
+// Subscribe signal with a channel. 
+// return channel will close when context cancelled.
 // Emit will wait when channel is blocked.
-func (s *Signal) Subscribe(fn func (<-chan {{ $valueType }}), cap int) {
+func (s *Signal) Subscribe(ctx context.Context, cap int) <-chan {{ $valueType }} {
 	var c = make(chan {{ $valueType }}, cap)
-	s.addReceiver(c)
-	fn(c)
-	s.Stop(c)
-	close(c)
+	go func() {
+		<- ctx.Done()
+		s.removeReceiver(c)
+		close(c)
+	}()
+	s.addReceiver(c, ctx.Done())
+	return c
 }
 
 

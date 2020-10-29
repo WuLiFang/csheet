@@ -6,41 +6,38 @@ package resolvers
 import (
 	"context"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
+	"go.uber.org/zap"
 )
 
 func (r *subscriptionResolver) PresentationUpdated(ctx context.Context, id []string) (<-chan *presentation.Presentation, error) {
-	ret := make(chan *presentation.Presentation)
 	wantedIDs := map[string]struct{}{}
 	for _, i := range id {
 		wantedIDs[i] = struct{}{}
 		presentation.ViewerCounter.Add(i, 1)
 	}
-	go presentation.SignalSaved.Subscribe(func(c <-chan presentation.Presentation) {
+
+	ctx, cancel := context.WithCancel(ctx)
+	ret := make(chan *presentation.Presentation, 8)
+	c := presentation.SignalSaved.Subscribe(ctx, 0)
+	go func() {
 		defer close(ret)
-		defer func() {
-			for _, i := range id {
-				presentation.ViewerCounter.Add(i, -1)
+		for i := range c {
+			if _, ok := wantedIDs[i.ID()]; !ok {
+				continue
 			}
-		}()
-		for {
+
 			select {
 			case <-ctx.Done():
 				return
-			case i := <-c:
-				if _, ok := wantedIDs[i.ID()]; !ok {
-					continue
-				}
-
-				select {
-				case <-ctx.Done():
-					return
-				case ret <- &i:
-				}
+			case ret <- &i:
+			default:
+				logging.For(ctx).Logger("api").Error("subscription item overflow", zap.Any("presentation", i))
+				cancel()
 			}
-
 		}
-	}, 64)
+	}()
 
 	return ret, nil
 }

@@ -9,15 +9,15 @@ import (
 
 // Signal that emit *Presentation to receivers.
 type Signal struct {
-	mu sync.RWMutex
-	m map[chan<- Presentation]struct{}
+	mu sync.Mutex
+	m map[chan<- Presentation]<-chan struct{}
 	sideEffects []func(context.Context, *Presentation) error
 }
 
 // Emit send object to every receivers. error when hook function errors.
 func (s *Signal) Emit(ctx context.Context, o *Presentation) error {
-	s.mu.RLock()
-    defer s.mu.RUnlock()
+	s.mu.Lock()
+    defer s.mu.Unlock()
 
 	for _, fn := range s.sideEffects {
 		err := fn(ctx, o)
@@ -26,35 +26,29 @@ func (s *Signal) Emit(ctx context.Context, o *Presentation) error {
 		}
 	}
 
-	for c := range s.m {
+	for c, done := range s.m {
 		select {
 			case c <- *o:
 			case <- ctx.Done():
 				return ctx.Err()
+			case <- done:
 		}
 	}
 
 	return nil
 }
 
-func (s *Signal) addReceiver(c chan<- Presentation) {
+func (s *Signal) addReceiver(c chan<- Presentation, done <-chan struct{}) {
 	s.mu.Lock()
     defer s.mu.Unlock()
 
 	if s.m == nil {
-		s.m = make(map[chan<- Presentation]struct{})
+		s.m = make(map[chan<- Presentation]<-chan struct{})
 	}
-	s.m[c] = struct{}{}
+	s.m[c] = done
 }
 
-// Notify add channel to receivers. Emit will wait when channel is blocked.
-// It is the caller's responsibility to Stop notify before channel close.
-func (s *Signal) Notify(c chan<- Presentation) {
-	s.addReceiver(c)
-}
-
-// Stop remove channel from receivers.
-func (s *Signal) Stop(c chan<- Presentation) {
+func (s *Signal) removeReceiver(c chan<- Presentation) {
 	s.mu.Lock()
     defer s.mu.Unlock()
 
@@ -73,12 +67,15 @@ func (s *Signal) Connect(fn func(context.Context, *Presentation) error) {
 // Subscribe signal with a function. 
 // channel only available before function return.
 // Emit will wait when channel is blocked.
-func (s *Signal) Subscribe(fn func (<-chan Presentation), cap int) {
+func (s *Signal) Subscribe(ctx context.Context, cap int) <-chan Presentation {
 	var c = make(chan Presentation, cap)
-	s.addReceiver(c)
-	fn(c)
-	s.Stop(c)
-	close(c)
+	go func() {
+		<- ctx.Done()
+		s.removeReceiver(c)
+		close(c)
+	}()
+	s.addReceiver(c, ctx.Done())
+	return c
 }
 
 // Model signals

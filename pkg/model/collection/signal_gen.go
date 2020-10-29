@@ -9,15 +9,15 @@ import (
 
 // Signal that emit *Collection to receivers.
 type Signal struct {
-	mu sync.RWMutex
-	m map[chan<- Collection]struct{}
+	mu sync.Mutex
+	m map[chan<- Collection]<-chan struct{}
 	sideEffects []func(context.Context, *Collection) error
 }
 
 // Emit send object to every receivers. error when hook function errors.
 func (s *Signal) Emit(ctx context.Context, o *Collection) error {
-	s.mu.RLock()
-    defer s.mu.RUnlock()
+	s.mu.Lock()
+    defer s.mu.Unlock()
 
 	for _, fn := range s.sideEffects {
 		err := fn(ctx, o)
@@ -26,35 +26,29 @@ func (s *Signal) Emit(ctx context.Context, o *Collection) error {
 		}
 	}
 
-	for c := range s.m {
+	for c, done := range s.m {
 		select {
 			case c <- *o:
 			case <- ctx.Done():
 				return ctx.Err()
+			case <- done:
 		}
 	}
 
 	return nil
 }
 
-func (s *Signal) addReceiver(c chan<- Collection) {
+func (s *Signal) addReceiver(c chan<- Collection, done <-chan struct{}) {
 	s.mu.Lock()
     defer s.mu.Unlock()
 
 	if s.m == nil {
-		s.m = make(map[chan<- Collection]struct{})
+		s.m = make(map[chan<- Collection]<-chan struct{})
 	}
-	s.m[c] = struct{}{}
+	s.m[c] = done
 }
 
-// Notify add channel to receivers. Emit will wait when channel is blocked.
-// It is the caller's responsibility to Stop notify before channel close.
-func (s *Signal) Notify(c chan<- Collection) {
-	s.addReceiver(c)
-}
-
-// Stop remove channel from receivers.
-func (s *Signal) Stop(c chan<- Collection) {
+func (s *Signal) removeReceiver(c chan<- Collection) {
 	s.mu.Lock()
     defer s.mu.Unlock()
 
@@ -73,12 +67,15 @@ func (s *Signal) Connect(fn func(context.Context, *Collection) error) {
 // Subscribe signal with a function. 
 // channel only available before function return.
 // Emit will wait when channel is blocked.
-func (s *Signal) Subscribe(fn func (<-chan Collection), cap int) {
+func (s *Signal) Subscribe(ctx context.Context, cap int) <-chan Collection {
 	var c = make(chan Collection, cap)
-	s.addReceiver(c)
-	fn(c)
-	s.Stop(c)
-	close(c)
+	go func() {
+		<- ctx.Done()
+		s.removeReceiver(c)
+		close(c)
+	}()
+	s.addReceiver(c, ctx.Done())
+	return c
 }
 
 // Model signals

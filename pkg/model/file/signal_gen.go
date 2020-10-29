@@ -9,15 +9,15 @@ import (
 
 // Signal that emit *File to receivers.
 type Signal struct {
-	mu sync.RWMutex
-	m map[chan<- File]struct{}
+	mu sync.Mutex
+	m map[chan<- File]<-chan struct{}
 	sideEffects []func(context.Context, *File) error
 }
 
 // Emit send object to every receivers. error when hook function errors.
 func (s *Signal) Emit(ctx context.Context, o *File) error {
-	s.mu.RLock()
-    defer s.mu.RUnlock()
+	s.mu.Lock()
+    defer s.mu.Unlock()
 
 	for _, fn := range s.sideEffects {
 		err := fn(ctx, o)
@@ -26,35 +26,29 @@ func (s *Signal) Emit(ctx context.Context, o *File) error {
 		}
 	}
 
-	for c := range s.m {
+	for c, done := range s.m {
 		select {
 			case c <- *o:
 			case <- ctx.Done():
 				return ctx.Err()
+			case <- done:
 		}
 	}
 
 	return nil
 }
 
-func (s *Signal) addReceiver(c chan<- File) {
+func (s *Signal) addReceiver(c chan<- File, done <-chan struct{}) {
 	s.mu.Lock()
     defer s.mu.Unlock()
 
 	if s.m == nil {
-		s.m = make(map[chan<- File]struct{})
+		s.m = make(map[chan<- File]<-chan struct{})
 	}
-	s.m[c] = struct{}{}
+	s.m[c] = done
 }
 
-// Notify add channel to receivers. Emit will wait when channel is blocked.
-// It is the caller's responsibility to Stop notify before channel close.
-func (s *Signal) Notify(c chan<- File) {
-	s.addReceiver(c)
-}
-
-// Stop remove channel from receivers.
-func (s *Signal) Stop(c chan<- File) {
+func (s *Signal) removeReceiver(c chan<- File) {
 	s.mu.Lock()
     defer s.mu.Unlock()
 
@@ -73,12 +67,15 @@ func (s *Signal) Connect(fn func(context.Context, *File) error) {
 // Subscribe signal with a function. 
 // channel only available before function return.
 // Emit will wait when channel is blocked.
-func (s *Signal) Subscribe(fn func (<-chan File), cap int) {
+func (s *Signal) Subscribe(ctx context.Context, cap int) <-chan File {
 	var c = make(chan File, cap)
-	s.addReceiver(c)
-	fn(c)
-	s.Stop(c)
-	close(c)
+	go func() {
+		<- ctx.Done()
+		s.removeReceiver(c)
+		close(c)
+	}()
+	s.addReceiver(c, ctx.Done())
+	return c
 }
 
 // Model signals
