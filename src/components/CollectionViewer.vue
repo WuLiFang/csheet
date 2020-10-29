@@ -159,7 +159,7 @@
 <script lang="ts">
 import { Component, Mixins, Prop } from 'vue-property-decorator';
 import { ModalMixin } from '../mixins/ModalMixin';
-import Presentation, { fileSrc } from './Presentation.vue';
+import Presentation from './Presentation.vue';
 import { collection as Collection } from '../graphql/types/collection';
 import 'vue-awesome/icons/window-close';
 import 'vue-awesome/icons/caret-square-up';
@@ -450,7 +450,7 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
         continue;
       }
       i.presentations.forEach(j => {
-        ret.push(fileSrc(j.regular?.url));
+        ret.push(j.regular?.url || require('@/assets/img/transcoding.svg'));
       });
     }
     return ret;

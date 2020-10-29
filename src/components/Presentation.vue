@@ -10,14 +10,6 @@ import parseFrameRate from '@/utils/parseFrameRate';
 import parseFirstFrame from '@/utils/parseFirstFrame';
 import clamp from '@/utils/clamp';
 
-export function fileSrc(v: string | undefined): string {
-  const d = require('@/assets/img/transcoding.svg');
-  if (!v) {
-    return d;
-  }
-  return v;
-}
-
 @Component<Presentation>({
   apollo: {
     node: {
@@ -29,12 +21,13 @@ export function fileSrc(v: string | undefined): string {
         return !this.id;
       },
       update(v: presentationNode): presentation | undefined {
+        this.isLoadFailed = false;
         return v.node?.__typename === 'Presentation' ? v.node : undefined;
       },
     },
   },
   render(h) {
-    const src = this.path;
+    const src = this.src;
     const renderImage = () => {
       this.currentTime = 0;
       this.paused = true;
@@ -49,7 +42,9 @@ export function fileSrc(v: string | undefined): string {
         },
         on: {
           error: () => {
-            this.isLoadFailed = true;
+            if (this.src === src) {
+              this.isLoadFailed = true;
+            }
           },
           dragstart: this.handleDrag.bind(this),
         },
@@ -68,7 +63,9 @@ export function fileSrc(v: string | undefined): string {
         },
         on: {
           error: () => {
-            this.isLoadFailed = true;
+            if (this.src === src) {
+              this.isLoadFailed = true;
+            }
           },
           timeupdate: (e: Event & { target: HTMLVideoElement }) => {
             this.currentTime = e.target.currentTime;
@@ -105,14 +102,6 @@ export function fileSrc(v: string | undefined): string {
       v => {
         if (!v) {
           this.node = undefined;
-        }
-      }
-    );
-    this.$watch(
-      () => this.path,
-      v => {
-        if (v !== require('@/assets/img/load_failed.svg')) {
-          this.isLoadFailed = false;
         }
       }
     );
@@ -162,23 +151,27 @@ export default class Presentation extends Vue {
     return this.node?.type ?? '';
   }
 
-  get path(): string {
+  get url(): string | undefined {
+    switch (this.size) {
+      case 'regular':
+        return this.node?.regular?.url;
+      case 'thumb':
+      default:
+        return this.node?.thumb?.url;
+    }
+  }
+
+  get src(): string {
+    if (!this.id) {
+      return require('@/assets/img/default.svg');
+    }
     if (this.isTranscodeFailed) {
       return require('@/assets/img/transcode_failed.svg');
     }
     if (this.isLoadFailed) {
       return require('@/assets/img/load_failed.svg');
     }
-    if (!this.id || this.isLoadFailed) {
-      return require('@/assets/img/default.svg');
-    }
-    switch (this.size) {
-      case 'regular':
-        return fileSrc(this.node?.regular?.url);
-      case 'thumb':
-      default:
-        return fileSrc(this.node?.thumb?.url);
-    }
+    return this.url || require('@/assets/img/transcoding.svg');
   }
 
   get isTranscodeFailed(): boolean {
