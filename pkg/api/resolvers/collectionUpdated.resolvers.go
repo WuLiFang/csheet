@@ -7,10 +7,8 @@ import (
 	"context"
 	"strings"
 
-	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
 	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
-	"go.uber.org/zap"
 )
 
 func (r *subscriptionResolver) CollectionUpdated(ctx context.Context, id []string, originPrefix *string, presentationCountGt *int) (<-chan *collection.Collection, error) {
@@ -19,11 +17,12 @@ func (r *subscriptionResolver) CollectionUpdated(ctx context.Context, id []strin
 		wantedIDs[i] = struct{}{}
 	}
 
-	ret := make(chan *collection.Collection, 8)
+	ret := make(chan *collection.Collection)
 	ctx, cancel := context.WithCancel(ctx)
 	c := collection.SignalSaved.Subscribe(ctx, 0)
 	go func() {
 		defer close(ret)
+		defer cancel()
 		for i := range c {
 			if originPrefix != nil && !strings.HasPrefix(i.Origin, *originPrefix) {
 				continue
@@ -39,12 +38,9 @@ func (r *subscriptionResolver) CollectionUpdated(ctx context.Context, id []strin
 
 			select {
 			case <-ctx.Done():
-				return
 			case ret <- &i:
-			default:
-				logging.For(ctx).Logger("api").Error("subscription item overflow", zap.Any("collection", i))
-				cancel()
 			}
+			return // only one item for each resolve call
 		}
 	}()
 	return ret, nil

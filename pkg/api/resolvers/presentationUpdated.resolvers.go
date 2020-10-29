@@ -6,9 +6,7 @@ package resolvers
 import (
 	"context"
 
-	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
-	"go.uber.org/zap"
 )
 
 func (r *subscriptionResolver) PresentationUpdated(ctx context.Context, id []string) (<-chan *presentation.Presentation, error) {
@@ -19,10 +17,11 @@ func (r *subscriptionResolver) PresentationUpdated(ctx context.Context, id []str
 	}
 
 	ctx, cancel := context.WithCancel(ctx)
-	ret := make(chan *presentation.Presentation, 8)
+	ret := make(chan *presentation.Presentation)
 	c := presentation.SignalSaved.Subscribe(ctx, 0)
 	go func() {
 		defer close(ret)
+		defer cancel()
 		for i := range c {
 			if _, ok := wantedIDs[i.ID()]; !ok {
 				continue
@@ -30,12 +29,10 @@ func (r *subscriptionResolver) PresentationUpdated(ctx context.Context, id []str
 
 			select {
 			case <-ctx.Done():
-				return
 			case ret <- &i:
-			default:
-				logging.For(ctx).Logger("api").Error("subscription item overflow", zap.Any("presentation", i))
-				cancel()
 			}
+
+			return
 		}
 	}()
 

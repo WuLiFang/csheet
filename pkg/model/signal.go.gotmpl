@@ -104,12 +104,12 @@ func (s *Signal) Connect(fn func(context.Context, {{ $type }}) error) {
 // Emit will wait when channel is blocked.
 func (s *Signal) Subscribe(ctx context.Context, cap int) <-chan {{ $valueType }} {
 	var c = make(chan {{ $valueType }}, cap)
+	s.addReceiver(c, ctx.Done())
 	go func() {
 		<- ctx.Done()
 		s.removeReceiver(c)
 		close(c)
 	}()
-	s.addReceiver(c, ctx.Done())
 	return c
 }
 

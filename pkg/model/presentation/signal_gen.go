@@ -64,17 +64,17 @@ func (s *Signal) Connect(fn func(context.Context, *Presentation) error) {
 	s.sideEffects = append(s.sideEffects, fn)
 }
 
-// Subscribe signal with a function. 
-// channel only available before function return.
+// Subscribe signal with a channel. 
+// return channel will close when context cancelled.
 // Emit will wait when channel is blocked.
 func (s *Signal) Subscribe(ctx context.Context, cap int) <-chan Presentation {
 	var c = make(chan Presentation, cap)
+	s.addReceiver(c, ctx.Done())
 	go func() {
 		<- ctx.Done()
 		s.removeReceiver(c)
 		close(c)
 	}()
-	s.addReceiver(c, ctx.Done())
 	return c
 }
 
