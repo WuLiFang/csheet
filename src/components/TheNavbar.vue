@@ -84,7 +84,7 @@
         )
     button.form-button(
       ref="collectButton"
-      class="mr-1"
+      class="mr-1 w-24"
       type="button"
       :disabled="loadingCount > 0"
       @click="collect()"
