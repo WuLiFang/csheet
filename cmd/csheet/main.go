@@ -6,6 +6,7 @@ import (
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/internal/config"
+	"github.com/WuLiFang/csheet/v6/internal/healthcheck"
 	"github.com/WuLiFang/csheet/v6/internal/router"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/filestore"
@@ -23,9 +24,17 @@ func main() {
 
 	var err error
 
+	err = db.Open(config.Storage + "/db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	db.EnableGC(5 * time.Minute)
+
 	go func() {
 		var ticker = time.NewTicker(24 * time.Hour)
 		for {
+			healthcheck.PresentationHashIndex()
 			if config.FileLife > 0 {
 				filestore.Prune(filestore.Dir, time.Now().Add(-config.FileLife))
 			}
@@ -35,13 +44,6 @@ func main() {
 			<-ticker.C
 		}
 	}()
-
-	err = db.Open(config.Storage + "/db")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-	db.EnableGC(5 * time.Minute)
 
 	filewatch.Manager.Scale(config.WatchWorkers)
 

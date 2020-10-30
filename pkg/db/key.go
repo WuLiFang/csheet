@@ -77,6 +77,9 @@ func (index Index) Exists() (ret bool, err error) {
 
 // Prefix key for index scan.
 func (index Index) Prefix(parts ...string) (ret []byte) {
+	if len(parts) == 0 {
+		return index.Bytes()
+	}
 	ret = index.Key(parts...)
 	return ret[:len(ret)-1]
 }

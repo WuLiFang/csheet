@@ -32,7 +32,8 @@ type Presentation struct {
 	Metadata          map[string]string `bson:",omitempty"`
 }
 
-func (p Presentation) hash() (ret string, err error) {
+// Hash from type and raw file path.
+func (p Presentation) Hash() (ret string, err error) {
 	if p.Type == "" {
 		err = errors.New("missing presentation type")
 		return
@@ -85,7 +86,7 @@ func (p Presentation) RawTag() string {
 
 // Key in db.
 func (p Presentation) Key() (ret []byte, err error) {
-	h, err := p.hash()
+	h, err := p.Hash()
 	if err != nil {
 		return
 	}
@@ -194,22 +195,6 @@ func Put(ctx context.Context, t Type, path string) (ret Presentation, err error)
 	}
 	if err != nil {
 		return
-	}
-	if ret.Raw != path || ret.Type != t {
-		logger.Warnw("duplicated id detected, auto fix start", "id", ret.ID())
-		ret = Presentation{
-			Type: t,
-			Raw:  path,
-		}
-		var h string
-		h, err = ret.hash()
-		if err != nil {
-			return
-		}
-		_, err = db.IndexPresentationHash.NewValueID(h)
-		if err != nil {
-			return
-		}
 	}
 	ret.ThumbErrorTag = ""
 	ret.RegularErrorTag = ""
