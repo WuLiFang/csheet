@@ -58,9 +58,6 @@ func apiHandler() gin.HandlerFunc {
 	server.SetQueryCache(lru.New(1000))
 
 	server.Use(extension.Introspection{})
-	server.Use(extension.AutomaticPersistedQuery{
-		Cache: lru.New(100),
-	})
 	server.Use(
 		extension.AutomaticPersistedQuery{
 			Cache: api.QueryCache{TTL: 24 * time.Hour},
