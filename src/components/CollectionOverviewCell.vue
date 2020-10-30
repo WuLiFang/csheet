@@ -2,7 +2,7 @@
   figure.collection-overview-cell.inline-block.relative(
     class="cursor-pointer flex items-center"
     @click="$emit('click', $event)"
-    :title="value.title"
+    :title="node && node.title"
   )
     transition(
       enter-class="opacity-0"
@@ -21,7 +21,7 @@
           FunctionalComponent(:render="renderTopRight")
         caption(
           class="absolute text-center w-full bottom-0 text-gray-400 text-sm"
-        ) {{value.title}}
+        ) {{node && node.title}}
     Presentation.w-full(:id="presentation")
 </template>
 
@@ -34,26 +34,44 @@ import { sortBy } from 'lodash';
 import CGTeamworkTaskStatus from './CGTeamworkTaskStatus.vue';
 import db from '@/db';
 import { CreateElement, VNode } from 'vue';
+import { collectionNodeVariables, collectionNode } from '@/graphql/types/collectionNode';
+import { filePathFormat } from '@/const';
 
 @Component<CollectionOverviewCell>({
   components: { Presentation, CGTeamworkTaskStatus },
+    apollo: {
+    node: {
+      query: require('@/graphql/queries/collectionNode.gql'),
+      variables(): collectionNodeVariables {
+        return { id: this.id, filePathFormat };
+      },
+      skip(): boolean {
+        return !this.id
+      },
+      update(v: collectionNode): Collection | undefined {
+        return v.node?.__typename === "Collection" ? v.node : undefined
+      },
+    },
+  },
 })
 export default class CollectionOverviewCell extends Vue {
-  @Prop({ type: Object, required: true })
-  value!: Collection;
+  @Prop({ type: String, required: true })
+  id!: string;
+
+  node?: Collection;
 
   get overlayVisible(): boolean {
     return db.preference.get('cellOverlayVisible');
   }
 
   get cgteamworkArtists(): string[] {
-    const pipeline = this.value.metadata.find(
+    const pipeline = this.node?.metadata.find(
       i => i.k === 'cgteamwork.pipeline'
     )?.v;
     if (!pipeline) {
       return [];
     }
-    for (const { k, v } of this.value.metadata) {
+    for (const { k, v } of this.node?.metadata?? []) {
       switch (k) {
         case 'cgteamwork.tasks':
           return cast
@@ -74,8 +92,8 @@ export default class CollectionOverviewCell extends Vue {
       Retake: 4,
       Close: 5,
     };
-    const data = this.value.metadata.find(i => i.k === 'cgteamwork.tasks')?.v;
-    const pipeline = this.value.metadata.find(
+    const data = this.node?.metadata.find(i => i.k === 'cgteamwork.tasks')?.v;
+    const pipeline = this.node?.metadata.find(
       i => i.k === 'cgteamwork.pipeline'
     )?.v;
     let ret = '';
@@ -92,7 +110,7 @@ export default class CollectionOverviewCell extends Vue {
   }
 
   get presentation(): string {
-    return sortBy(this.value.presentations, [
+    return sortBy(this.node?.presentations ?? [], [
       i => !i.thumb,
       i => -new Date(i.raw.modTime).getTime(),
       i => i.id,

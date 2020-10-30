@@ -13,7 +13,7 @@
     template(v-for="i in nodes")
       CollectionOverviewCell(
         class="min-h-32"
-        :value="i"
+        :id="i.id"
         :key="i.id"
         @click="showViewer(i)"
       )
