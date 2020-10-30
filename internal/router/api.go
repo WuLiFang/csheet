@@ -98,40 +98,32 @@ func apiHandler() gin.HandlerFunc {
 		}
 		return
 	})
-	server.AroundOperations(func(ctx context.Context, next graphql.OperationHandler) graphql.ResponseHandler {
-		handler := next(ctx)
-		return func(innerCtx context.Context) (ret *graphql.Response) {
-			if innerCtx != nil {
-				ctx = innerCtx
-			}
-			if handler != nil {
-				ret = handler(ctx)
-			}
-			if ret == nil {
-				return
-			}
-
-			oc := graphql.GetOperationContext(ctx)
-			if oc.Operation.Operation == "mutation" {
-				clientIP := ""
-				if gc := gincontext.FromContext(ctx); gc != nil {
-					clientIP = gc.ClientIP()
-				}
-				fields := []zap.Field{
-					zap.String("operationName", oc.Operation.Name),
-					zap.String("clientIP", clientIP),
-					zap.Duration("elapsed", time.Since(oc.Stats.OperationStart)),
-				}
-				if ret != nil && len(ret.Errors) > 0 {
-					fields = append(fields, zap.Error(ret.Errors))
-				}
-				logging.For(ctx).Logger("router.api").Info(
-					"mutate",
-					fields...,
-				)
-			}
+	server.AroundResponses(func(ctx context.Context, next graphql.ResponseHandler) (ret *graphql.Response) {
+		ret = next(ctx)
+		if ret == nil {
 			return
 		}
+
+		oc := graphql.GetOperationContext(ctx)
+		if oc != nil && oc.Operation != nil && oc.Operation.Operation == "mutation" {
+			clientIP := ""
+			if gc := gincontext.FromContext(ctx); gc != nil {
+				clientIP = gc.ClientIP()
+			}
+			fields := []zap.Field{
+				zap.String("operationName", oc.Operation.Name),
+				zap.String("clientIP", clientIP),
+				zap.Duration("elapsed", time.Since(oc.Stats.OperationStart)),
+			}
+			if ret != nil && len(ret.Errors) > 0 {
+				fields = append(fields, zap.Error(ret.Errors))
+			}
+			logging.For(ctx).Logger("router.api").Info(
+				"mutate",
+				fields...,
+			)
+		}
+		return
 	})
 	gui := playground.Handler("GraphQL", "/api")
 
