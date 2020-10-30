@@ -75,7 +75,7 @@ export class FolderOriginPrefix extends OriginPrefix {
   }
 
   static parse(v: string): FolderOriginPrefix {
-    const data = v.split(':', 2);
+    const data = splitN(v, ':', 2);
     if (data[0] !== 'folder') {
       return new FolderOriginPrefix('');
     }
