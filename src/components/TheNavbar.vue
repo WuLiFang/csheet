@@ -171,6 +171,22 @@ function getResultMessage({
         document.title = v;
       }
     );
+    this.$watch(
+      () => [this.formData.mode, this.formData.cgteamwork.database],
+      () => {
+        this.isHistoryStateChanged = true;
+      }
+    );
+    const popstateListener = () => {
+      this.loadState();
+    };
+    window.addEventListener('popstate', popstateListener);
+    this.$once('destoryed', () =>
+      window.removeEventListener('popstate', popstateListener)
+    );
+  },
+  destroyed() {
+    this.$emit('destoryed');
   },
 })
 export default class TheNavbar extends Vue {
@@ -201,6 +217,7 @@ export default class TheNavbar extends Vue {
   };
 
   folderOriginPrefix = 'folder:';
+  isHistoryStateChanged = false;
 
   get title(): string {
     const parts: string[] = [];
@@ -260,7 +277,17 @@ export default class TheNavbar extends Vue {
         u.searchParams.set('root', this.formData.folder.root);
         break;
     }
-    history.replaceState(null, document.title, u.toString());
+    const title = document.title;
+    const url = u.toString();
+    if (url === location.href){
+      return
+    }
+    if (this.isHistoryStateChanged) {
+      history.pushState(null, title, url);
+    } else {
+      history.replaceState(null, title, url);
+    }
+    this.isHistoryStateChanged = false;
   }
 
   loadState(): void {
@@ -323,7 +350,7 @@ export default class TheNavbar extends Vue {
       this.$emit('collect');
       this.$root.$emit(
         'app-message',
-        getResultMessage(data?.collectFromCGTeamwork ?? {}),
+        getResultMessage(data?.collectFromCGTeamwork ?? {})
       );
     } finally {
       this.loadingCount -= 1;
@@ -343,7 +370,7 @@ export default class TheNavbar extends Vue {
       this.$emit('collect');
       this.$root.$emit(
         'app-message',
-        getResultMessage(data?.collectFromFolder ?? {}),
+        getResultMessage(data?.collectFromFolder ?? {})
       );
     } finally {
       this.loadingCount -= 1;
@@ -351,6 +378,7 @@ export default class TheNavbar extends Vue {
   }
 
   async collect(): Promise<void> {
+    this.isHistoryStateChanged = true;
     switch (this.formData.mode) {
       case 'cgteamwork':
         await this.collectFromCGTeamwork();
