@@ -127,9 +127,11 @@ import { getCommonPrefix } from '../utils/getCommonPrefix';
       presentaionUpdated: {
         query: require('@/graphql/subscriptions/presentationUpdated.gql'),
         variables(): presentationUpdatedVariables {
-          const id = this.nodes.flatMap(i => i.presentations.map(j => j.id));
-          return { id, filePathFormat };
+          return { id: this.presentationIDs, filePathFormat };
         },
+        skip():boolean {
+          return this.presentationIDs.length === 0
+        }
       },
     },
   },
@@ -152,6 +154,10 @@ export default class CollectionOverview extends Vue {
 
   get nodes(): collection[] {
     return extractNodes(this.collections);
+  }
+
+  get presentationIDs(): string[] {
+    return this.nodes.flatMap(i => i.presentations.map(j => j.id))
   }
 
   get pageInfo(): Relay.PageInfo {
