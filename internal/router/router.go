@@ -32,6 +32,7 @@ func New() *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.New()
+	r.ForwardedByClientIP = config.UseXForwardedFor
 	r.Use(
 		ginsentry.Middleware(),
 		func(ctx *gin.Context) {

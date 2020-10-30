@@ -90,6 +90,10 @@ CSHEET_CORS_HOSTS
 
   使用非标准端口时要添加端口号。
 
+USE_X_FORWARDED_FOR
+
+  是否使用 X-Forwarded-For 表头来记录 IP。
+
 CGTEAMWORK_URL
 
   CGTeamwork 服务器地址。例：http://192.168.50.11

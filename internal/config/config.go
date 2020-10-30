@@ -37,4 +37,5 @@ var (
 	TranscodeImageRegularWeight = getenv.Int64("CSHEET_TRANSCODE_IMAGE_REGULAR_WEIGHT", transcode.ImageRegularWeight)
 	TranscodeVideoRegularWeight = getenv.Int64("CSHEET_TRANSCODE_VIDEO_REGULAR_WEIGHT", transcode.VideoRegularWeight)
 	CORSHosts                   = strings.Split(getenv.String("CSHEET_CORS_HOSTS", ""), ",")
+	UseXForwardedFor            = getenv.Bool("USE_X_FORWARDED_FOR", false)
 )
