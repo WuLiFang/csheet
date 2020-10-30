@@ -56,10 +56,11 @@ func (r *subscriptionResolver) CollectionUpdated(ctx context.Context, id []strin
 
 			logger.Debug("receive", zap.String("id", i.ID()))
 
+			v := i // avoid share pointer
 			select {
 			case <-ctx.Done():
 				return
-			case ret <- &i:
+			case ret <- &v:
 				logger.Debug("send", zap.String("id", i.ID()))
 			}
 		}

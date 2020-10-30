@@ -50,10 +50,11 @@ func (r *subscriptionResolver) PresentationUpdated(ctx context.Context, id []str
 			}
 			logger.Debug("receive", zap.String("id", i.ID()))
 
+			v := i // avoid share pointer
 			select {
 			case <-ctx.Done():
 				return
-			case ret <- &i:
+			case ret <- &v:
 				logger.Debug("send", zap.String("id", i.ID()))
 			}
 		}
