@@ -99,11 +99,11 @@ func apiHandler() gin.HandlerFunc {
 		return
 	})
 	server.AroundOperations(func(ctx context.Context, next graphql.OperationHandler) graphql.ResponseHandler {
+		handler := next(ctx)
 		return func(innerCtx context.Context) (ret *graphql.Response) {
 			if innerCtx != nil {
 				ctx = innerCtx
 			}
-			handler := next(ctx)
 			if handler != nil {
 				ret = handler(ctx)
 			}

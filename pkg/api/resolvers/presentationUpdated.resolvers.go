@@ -52,8 +52,6 @@ func (r *subscriptionResolver) PresentationUpdated(ctx context.Context, id []str
 				return
 			case ret <- &i:
 				logger.Debug("send", zap.String("id", i.ID()))
-			default:
-				logger.Error("overflow")
 			}
 		}
 

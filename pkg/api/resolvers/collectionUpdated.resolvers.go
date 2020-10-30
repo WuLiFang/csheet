@@ -61,8 +61,6 @@ func (r *subscriptionResolver) CollectionUpdated(ctx context.Context, id []strin
 				return
 			case ret <- &i:
 				logger.Debug("send", zap.String("id", i.ID()))
-			default:
-				logger.Error("overflow")
 			}
 		}
 	}()
