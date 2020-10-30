@@ -27,6 +27,11 @@ func (r *subscriptionResolver) CollectionUpdated(ctx context.Context, id []strin
 
 	ret := make(chan *collection.Collection, 1)
 	c, unsubscribe := collection.SignalSaved.Subscribe(1)
+	logger.Debug("start", zap.Any("args", map[string]interface{}{
+		"id":             id,
+		"originPrefix":   originPrefix,
+		"presentationGt": presentationCountGt,
+	}))
 	go func() {
 		<-ctx.Done()
 		logger.Debug("context done")

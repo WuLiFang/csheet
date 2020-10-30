@@ -26,7 +26,9 @@ func (r *subscriptionResolver) PresentationUpdated(ctx context.Context, id []str
 
 	ret := make(chan *presentation.Presentation, 1)
 	c, unsubscribe := presentation.SignalSaved.Subscribe(1)
-	logger.Debug("start", zap.Any("id", id))
+	logger.Debug("start", zap.Any("args", map[string]interface{}{
+		"id": id,
+	}))
 	go func() {
 		<-ctx.Done()
 		logger.Debug("context done")
