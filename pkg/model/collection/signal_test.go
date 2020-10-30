@@ -9,16 +9,15 @@ import (
 
 func TestSignalSubscribe(t *testing.T) {
 
-	ctx1, cancel1 := context.WithCancel(context.Background())
-	c1 := SignalSaved.Subscribe(ctx1, 0)
-	ctx2, cancel2 := context.WithCancel(context.Background())
-	c2 := SignalSaved.Subscribe(ctx2, 1)
+	ctx := context.Background()
+	c1, unsubscribe1 := SignalSaved.Subscribe(0)
+	c2, unsubscribe2 := SignalSaved.Subscribe(1)
 	assert.Len(t, SignalSaved.m, 2)
 	go func() {
-		SignalSaved.Emit(ctx1, new(Collection))
-		cancel2()
-		SignalSaved.Emit(ctx1, new(Collection))
-		cancel1()
+		SignalSaved.Emit(ctx, new(Collection))
+		unsubscribe2()
+		SignalSaved.Emit(ctx, new(Collection))
+		unsubscribe1()
 	}()
 
 	var count = 0

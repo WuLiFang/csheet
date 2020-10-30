@@ -67,15 +67,15 @@ func (s *Signal) Connect(fn func(context.Context, *Collection) error) {
 // Subscribe signal with a channel. 
 // return channel will close when context cancelled.
 // Emit will wait when channel is blocked.
-func (s *Signal) Subscribe(ctx context.Context, cap int) <-chan Collection {
+func (s *Signal) Subscribe(cap int) (ret <-chan Collection, unsubscribe func()) {
 	var c = make(chan Collection, cap)
-	s.addReceiver(c, ctx.Done())
-	go func() {
-		<- ctx.Done()
+	var done = make(chan struct{})
+	s.addReceiver(c, done)
+	return c, func() {
+		close(done)
 		s.removeReceiver(c)
 		close(c)
-	}()
-	return c
+	}
 }
 
 // Model signals

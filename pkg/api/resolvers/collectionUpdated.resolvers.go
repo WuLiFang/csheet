@@ -7,23 +7,36 @@ import (
 	"context"
 	"strings"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
 	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
+	"go.uber.org/zap"
 )
 
 func (r *subscriptionResolver) CollectionUpdated(ctx context.Context, id []string, originPrefix *string, presentationCountGt *int) (<-chan *collection.Collection, error) {
+	logger := logging.For(ctx).Logger("api.subscription").
+		With(
+			zap.Int("index", subscriptionIndex()),
+			zap.String("path", "collectionUpdated"),
+		)
+
 	wantedIDs := map[string]struct{}{}
 	for _, i := range id {
 		wantedIDs[i] = struct{}{}
 	}
 
-	ret := make(chan *collection.Collection)
-	ctx, cancel := context.WithCancel(ctx)
-	c := collection.SignalSaved.Subscribe(ctx, 0)
+	ret := make(chan *collection.Collection, 1)
+	c, unsubscribe := collection.SignalSaved.Subscribe(1)
+	go func() {
+		<-ctx.Done()
+		logger.Debug("context done")
+		unsubscribe()
+		logger.Debug("stop")
+	}()
 	go func() {
 		defer close(ret)
-		defer cancel()
 		for i := range c {
+			logger.Debug("match", zap.String("id", i.ID()))
 			if originPrefix != nil && !strings.HasPrefix(i.Origin, *originPrefix) {
 				continue
 			}
@@ -36,11 +49,16 @@ func (r *subscriptionResolver) CollectionUpdated(ctx context.Context, id []strin
 				continue
 			}
 
+			logger.Debug("receive", zap.String("id", i.ID()))
+
 			select {
 			case <-ctx.Done():
+				return
 			case ret <- &i:
+				logger.Debug("send", zap.String("id", i.ID()))
+			default:
+				logger.Error("overflow")
 			}
-			return // only one item for each resolve call
 		}
 	}()
 	return ret, nil
