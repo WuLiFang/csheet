@@ -34,6 +34,7 @@ func main() {
 	go func() {
 		var ticker = time.NewTicker(24 * time.Hour)
 		for {
+			healthcheck.CollectionOriginIndex()
 			healthcheck.PresentationHashIndex()
 			if config.FileLife > 0 {
 				filestore.Prune(filestore.Dir, time.Now().Add(-config.FileLife))

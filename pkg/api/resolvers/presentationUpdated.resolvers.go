@@ -41,6 +41,9 @@ func (r *subscriptionResolver) PresentationUpdated(ctx context.Context, id []str
 	go func() {
 		defer close(ret)
 		for i := range c {
+			if i.ID() == "AAUxMDAwMQk" && i.Raw != "e:/temp/b.jpg" {
+				logger.Error("wrong")
+			}
 			logger.Debug("match", zap.String("id", i.ID()))
 			if _, ok := wantedIDs[i.ID()]; !ok {
 				continue
