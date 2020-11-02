@@ -24,7 +24,7 @@ type Note struct {
 func (n *Note) UnmarshalCGTeamworkRecord(v map[string]string) error {
 	n.ID = v["#id"]
 	n.TaskID = v["#task_id"]
-	n.Created, _ = time.Parse("2006-01-02 15:04:05", v["create_time"])
+	n.Created, _ = time.ParseInLocation("2006-01-02 15:04:05", v["create_time"], time.FixedZone("UTF+8", 8*3600))
 	n.CreatedByID = v["#from_account_id"]
 	n.CreatedByName = v["create_by"]
 	n.Module = v["module"]
