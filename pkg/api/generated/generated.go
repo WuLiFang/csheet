@@ -1051,8 +1051,8 @@ extend type Query {
 `, BuiltIn: false},
 	{Name: "pkg/api/types/CGTeamworkImage.gql", Input: `type CGTeamworkImage
   @goModel(model: "github.com/WuLiFang/csheet/v6/pkg/cgteamwork.Image") {
-  max: WebFile
-  min: WebFile
+  max: WebFile!
+  min: WebFile!
 }
 `, BuiltIn: false},
 	{Name: "pkg/api/types/CGTeamworkMessage.gql", Input: `type CGTeamworkMessage
@@ -1560,11 +1560,14 @@ func (ec *executionContext) _CGTeamworkImage_max(ctx context.Context, field grap
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.WebFile)
 	fc.Result = res
-	return ec.marshalOWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx, field.Selections, res)
+	return ec.marshalNWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CGTeamworkImage_min(ctx context.Context, field graphql.CollectedField, obj *cgteamwork.Image) (ret graphql.Marshaler) {
@@ -1591,11 +1594,14 @@ func (ec *executionContext) _CGTeamworkImage_min(ctx context.Context, field grap
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.WebFile)
 	fc.Result = res
-	return ec.marshalOWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx, field.Selections, res)
+	return ec.marshalNWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CGTeamworkMessage_text(ctx context.Context, field graphql.CollectedField, obj *cgteamwork.Message) (ret graphql.Marshaler) {
@@ -5377,6 +5383,9 @@ func (ec *executionContext) _CGTeamworkImage(ctx context.Context, sel ast.Select
 					}
 				}()
 				res = ec._CGTeamworkImage_max(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "min":
@@ -5388,6 +5397,9 @@ func (ec *executionContext) _CGTeamworkImage(ctx context.Context, sel ast.Select
 					}
 				}()
 				res = ec._CGTeamworkImage_min(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		default:
@@ -6989,6 +7001,20 @@ func (ec *executionContext) unmarshalNUpdatePresentationMetadataInputData2ᚕgit
 		}
 	}
 	return res, nil
+}
+
+func (ec *executionContext) marshalNWebFile2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx context.Context, sel ast.SelectionSet, v model.WebFile) graphql.Marshaler {
+	return ec._WebFile(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx context.Context, sel ast.SelectionSet, v *model.WebFile) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._WebFile(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {

@@ -1,5 +1,5 @@
 type CGTeamworkImage
   @goModel(model: "github.com/WuLiFang/csheet/v6/pkg/cgteamwork.Image") {
-  max: WebFile
-  min: WebFile
+  max: WebFile!
+  min: WebFile!
 }
