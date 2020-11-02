@@ -43,7 +43,7 @@
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { uniq, sortBy } from 'lodash';
 import db from '@/db';
-import CGTeamworkTaskStatus from './CGTeamworkTaskStatus.vue';
+import CGTeamworkTaskStatus from './cgteamwork/CGTeamworkTaskStatus.vue';
 import { show } from '@/modal';
 import CGTeamworkFlowFormDrawer from './cgteamwork/CGTeamworkFlowFormDrawer.vue';
 import 'vue-awesome/icons/edit';

@@ -31,7 +31,7 @@ import { collection as Collection } from '../graphql/types/collection';
 import Presentation from './Presentation.vue';
 import * as cast from 'cast-unknown';
 import { sortBy } from 'lodash';
-import CGTeamworkTaskStatus from './CGTeamworkTaskStatus.vue';
+import CGTeamworkTaskStatus from './cgteamwork/CGTeamworkTaskStatus.vue';
 import db from '@/db';
 import { CreateElement, VNode } from 'vue';
 import { collectionNodeVariables, collectionNode } from '@/graphql/types/collectionNode';
