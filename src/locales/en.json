@@ -11,6 +11,7 @@
     "RETAKE": "Retake",
     "UNSET": "Unset",
     "WAIT": "Wait",
+    "CHANGE_STATUS": "Change status",
     "SUBMIT": "Submit"
   }
 }

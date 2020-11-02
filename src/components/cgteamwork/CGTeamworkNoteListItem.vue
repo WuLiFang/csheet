@@ -9,7 +9,7 @@
         class="mx-1"
       ) {{value.pipeline}}
       CGTeamworkTaskStatus.inline-block(
-        class="px-1 m-1 rounded-sm w-12 text-center"
+        class="px-1 m-1 rounded-sm w-24 text-center"
         :value="value.type"
       )
       TimeWidget.inline-block(

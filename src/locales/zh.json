@@ -11,6 +11,7 @@
     "RETAKE": "返修",
     "UNSET": "默认",
     "WAIT": "等待",
+    "CHANGE_STATUS": "变更状态",
     "SUBMIT": "提交"
   }
 }
