@@ -50,10 +50,10 @@ func (c *Client) newRequest(ctx context.Context, method string, pathname string,
 	if err != nil {
 		return
 	}
-	if c.token != "" {
+	if c.Token != "" {
 		r.AddCookie(&http.Cookie{
 			Name:  "token",
-			Value: c.token,
+			Value: c.Token,
 		})
 	}
 	return

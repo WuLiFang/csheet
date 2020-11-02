@@ -22,7 +22,7 @@ func (c *Client) RefreshToken(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	c.token = data.Get("token").String()
+	c.Token = data.Get("token").String()
 	c.tokenExpireTime = time.Now().Add(tokenLife)
 
 	return nil

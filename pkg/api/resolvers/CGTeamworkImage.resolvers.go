@@ -13,13 +13,13 @@ import (
 
 func (r *cGTeamworkImageResolver) Max(ctx context.Context, obj *cgteamwork.Image) (*model.WebFile, error) {
 	return &model.WebFile{
-		URL: cgteamwork.ClientFor(ctx).URL.String() + obj.Max,
+		URL: "/cgteamwork" + obj.Max,
 	}, nil
 }
 
 func (r *cGTeamworkImageResolver) Min(ctx context.Context, obj *cgteamwork.Image) (*model.WebFile, error) {
 	return &model.WebFile{
-		URL: cgteamwork.ClientFor(ctx).URL.String() + obj.Min,
+		URL: "/cgteamwork" + obj.Min,
 	}, nil
 }
 

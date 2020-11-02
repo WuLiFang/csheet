@@ -25,6 +25,10 @@ HTTP 路由
 
   找不到文件时如果对应路径有对应的 :doc:`models/presentation`，会将展示标记为过期。
 
+/cgteamwork/upload
+
+  使用服务器账号对 cgteamwork 的 `/upload` 路由进行反向代理以提供免登陆上传文件访问。
+
 /debug/pprof
 
   开发模式下可用，pprof 网页调试端点。

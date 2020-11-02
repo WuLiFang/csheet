@@ -13,7 +13,7 @@ type Client struct {
 	URL             url.URL
 	Username        string
 	Password        string
-	token           string
+	Token           string
 	tokenExpireTime time.Time
 }
 
