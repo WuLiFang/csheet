@@ -7,7 +7,7 @@ query collectionCGTeamworkNotes($id: ID!, $pipeline: [String!]) {
         notes {
           type
           message {
-            text
+            html
             images {
               max {
                 url

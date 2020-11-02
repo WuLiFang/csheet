@@ -35,7 +35,7 @@ func (n *Note) UnmarshalCGTeamworkRecord(v map[string]string) error {
 
 	// parse message
 	msg := gjson.Parse(v["text"])
-	n.Message.Text = msg.Get("data").String()
+	n.Message.HTML = msg.Get("data").String()
 	n.Message.Images = nil
 	msg.Get("image").ForEach(func(key, value gjson.Result) bool {
 		n.Message.Images = append(n.Message.Images, Image{

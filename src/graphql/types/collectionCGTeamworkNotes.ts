@@ -30,7 +30,7 @@ export interface collectionCGTeamworkNotes_node_Collection_cgteamworkNotes_notes
 
 export interface collectionCGTeamworkNotes_node_Collection_cgteamworkNotes_notes_message {
   __typename: "CGTeamworkMessage";
-  text: string;
+  html: string;
   images: collectionCGTeamworkNotes_node_Collection_cgteamworkNotes_notes_message_images[];
 }
 

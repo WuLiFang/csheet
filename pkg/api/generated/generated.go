@@ -63,8 +63,8 @@ type ComplexityRoot struct {
 	}
 
 	CGTeamworkMessage struct {
+		HTML   func(childComplexity int) int
 		Images func(childComplexity int) int
-		Text   func(childComplexity int) int
 	}
 
 	CGTeamworkNote struct {
@@ -267,19 +267,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CGTeamworkImage.Min(childComplexity), true
 
+	case "CGTeamworkMessage.html":
+		if e.complexity.CGTeamworkMessage.HTML == nil {
+			break
+		}
+
+		return e.complexity.CGTeamworkMessage.HTML(childComplexity), true
+
 	case "CGTeamworkMessage.images":
 		if e.complexity.CGTeamworkMessage.Images == nil {
 			break
 		}
 
 		return e.complexity.CGTeamworkMessage.Images(childComplexity), true
-
-	case "CGTeamworkMessage.text":
-		if e.complexity.CGTeamworkMessage.Text == nil {
-			break
-		}
-
-		return e.complexity.CGTeamworkMessage.Text(childComplexity), true
 
 	case "CGTeamworkNote.created":
 		if e.complexity.CGTeamworkNote.Created == nil {
@@ -1057,7 +1057,7 @@ extend type Query {
 `, BuiltIn: false},
 	{Name: "pkg/api/types/CGTeamworkMessage.gql", Input: `type CGTeamworkMessage
   @goModel(model: "github.com/WuLiFang/csheet/v6/pkg/cgteamwork.Message") {
-  text: String!
+  html: String!
   images: [CGTeamworkImage!]!
 }
 `, BuiltIn: false},
@@ -1604,7 +1604,7 @@ func (ec *executionContext) _CGTeamworkImage_min(ctx context.Context, field grap
 	return ec.marshalNWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CGTeamworkMessage_text(ctx context.Context, field graphql.CollectedField, obj *cgteamwork.Message) (ret graphql.Marshaler) {
+func (ec *executionContext) _CGTeamworkMessage_html(ctx context.Context, field graphql.CollectedField, obj *cgteamwork.Message) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1621,7 +1621,7 @@ func (ec *executionContext) _CGTeamworkMessage_text(ctx context.Context, field g
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Text, nil
+		return obj.HTML, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5424,8 +5424,8 @@ func (ec *executionContext) _CGTeamworkMessage(ctx context.Context, sel ast.Sele
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("CGTeamworkMessage")
-		case "text":
-			out.Values[i] = ec._CGTeamworkMessage_text(ctx, field, obj)
+		case "html":
+			out.Values[i] = ec._CGTeamworkMessage_html(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

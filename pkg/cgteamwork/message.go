@@ -4,7 +4,7 @@ import "encoding/json"
 
 // Message can have image attachment.
 type Message struct {
-	Text   string  `bson:"text" json:"text"`
+	HTML   string  `bson:"text" json:"text"`
 	Images []Image `bson:"images" json:"image"`
 }
 
@@ -19,7 +19,7 @@ func (m *Message) UnmarshalJSON(data []byte) (err error) {
 	if err != nil {
 		return
 	}
-	m.Text = doc.Data
+	m.HTML = doc.Data
 	if doc.Image != nil {
 		m.Images = doc.Image
 	} else {

@@ -1,5 +1,5 @@
 type CGTeamworkMessage
   @goModel(model: "github.com/WuLiFang/csheet/v6/pkg/cgteamwork.Message") {
-  text: String!
+  html: String!
   images: [CGTeamworkImage!]!
 }

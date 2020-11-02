@@ -39,7 +39,7 @@ export interface CGTeamworkNoteListItemValue {
   created: Date;
   createdByName: string;
   message: {
-    text: string;
+    html: string;
     images: { max: { url: string }; min: { url: string } }[];
   };
 }
@@ -58,7 +58,7 @@ export default class CGTeamworkNoteListItem extends Vue {
 
   get safeHTML(): string {
 
-    return DOMPurify.sanitize(this.value.message.text)
+    return DOMPurify.sanitize(this.value.message.html)
   }
 }
 </script>
