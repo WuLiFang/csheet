@@ -1,15 +1,11 @@
 <template lang="pug">
   .cgteamwork-note-list(open)
-    .flex.items-center
-      span 备注
-      button.form-button(
-        class="inline-flex flex-center"
-        class="p-0 px-2 h-6 mx-1"
-        type="button"
-        @click="refetch().then(() => $root.$emit('app-message', '刷新完成'))"
-      ) 
-        FaIcon(name="sync" class="mx-1")
-        span 刷新
+    span 备注
+    span.mx-1.text-gray-600
+      span 于
+      TimeWidget.mx-1(:value="fetched" format="HH:mm:ss")
+      span 查询
+    span.mx-1.text-gray-600.inline-flex.items-center 每 10 秒自动刷新
     template(v-if="loadingCount > 0 ")
       FaIcon(name="spinner" spin class="w-full inline-block h-8 text-gray-500")
     template(v-else-if="values.length === 0")
@@ -76,7 +72,11 @@ import 'vue-awesome/icons/sync';
           'desc'
         );
       },
+      result() {
+        this.fetched = new Date()
+      },
       fetchPolicy: 'cache-and-network',
+      pollInterval: 10e3
     },
   },
 })
@@ -88,6 +88,8 @@ export default class CGTeamworkNoteList extends Vue {
   values: CGTeamworkNoteListItemValue[] = [];
 
   loadingCount = 0;
+
+  fetched = new Date(0)
 
   get pipelines(): string[] {
     return cast
