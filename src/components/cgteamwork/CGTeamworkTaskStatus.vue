@@ -1,5 +1,5 @@
 <template lang="pug">
-  span(:class="staticClass") {{value && $t('cgteamwork-status.'+value)}}
+  span(:class="staticClass") {{value && $t('cgteamwork-status.'+value.toUpperCase())}}
 </template>
 
 <script lang="ts">
@@ -11,14 +11,15 @@ export default class CGTeamworkTaskStatus extends Vue {
   value!: string;
   
   get staticClass(): string {
-    switch (this.value) {
-      case 'Approve':
+    switch (this.value.toUpperCase()) {
+      case 'APPROVE':
         return 'bg-green-600';
-      case 'Check':
+      case 'SUBMIT':
+      case 'CHECK':
         return 'bg-yellow-600';
-      case 'Wait':
+      case 'WAIT':
         return 'bg-blue-600';
-      case 'Retake':
+      case 'RETAKE':
         return 'bg-red-600';
       default:
         return '';

@@ -5,11 +5,12 @@
     "client": "client"
   },
   "cgteamwork-status": {
-    "Approve": "Approve",
-    "Check": "Check",
-    "Close": "Close",
-    "Retake": "Retake",
-    "Unset": "Unset",
-    "Wait": "Wait"
+    "APPROVE": "Approve",
+    "CHECK": "Check",
+    "CLOSE": "Close",
+    "RETAKE": "Retake",
+    "UNSET": "Unset",
+    "WAIT": "Wait",
+    "SUBMIT": "Submit"
   }
 }

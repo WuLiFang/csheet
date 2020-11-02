@@ -10,6 +10,7 @@
         dt CGTeamwork
         CollectionMetadataCGTeamworkTasks.pl-4(tag="dd" :value="i.v" :id="value.id")
         p.text-center.text-sm.text-gray-600 点击状态进行更改
+        CGTeamworkNoteList.pl-4(:id="value.id")
       template(v-else-if="i.k === 'comment'")
       template(v-else)
         dt {{i.k}}
@@ -25,11 +26,14 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import { collection as Collection } from '../graphql/types/collection';
 import CollectionMetadataCGTeamworkTasks from './CollectionMetadataCGTeamworkTasks.vue';
 import CollectionMetadataComment from './CollectionMetadataComment.vue';
+import CGTeamworkNoteList from './cgteamwork/CGTeamworkNoteList.vue';
+
 
 @Component<CollectionMetadata>({
   components: {
     CollectionMetadataCGTeamworkTasks,
     CollectionMetadataComment,
+    CGTeamworkNoteList
   },
 })
 export default class CollectionMetadata extends Vue {

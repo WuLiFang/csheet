@@ -5,11 +5,12 @@
     "client": "客户"
   },
   "cgteamwork-status": {
-    "Approve": "通过",
-    "Check": "检查",
-    "Close": "关闭",
-    "Retake": "返修",
-    "Unset": "默认",
-    "Wait": "等待"
+    "APPROVE": "通过",
+    "CHECK": "检查",
+    "CLOSE": "关闭",
+    "RETAKE": "返修",
+    "UNSET": "默认",
+    "WAIT": "等待",
+    "SUBMIT": "提交"
   }
 }

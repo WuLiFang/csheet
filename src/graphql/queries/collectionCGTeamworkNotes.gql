@@ -1,0 +1,26 @@
+query collectionCGTeamworkNotes($id: ID!, $pipeline: [String!]) {
+  node(id: $id) {
+    id
+    ... on Collection {
+      cgteamworkNotes(pipeline: $pipeline) {
+        pipeline
+        notes {
+          type
+          message {
+            text
+            images {
+              max {
+                url
+              }
+              min {
+                url
+              }
+            }
+          }
+          created
+          createdByName
+        }
+      }
+    }
+  }
+}
