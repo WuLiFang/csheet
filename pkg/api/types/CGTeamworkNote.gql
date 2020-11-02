@@ -1,0 +1,16 @@
+type CGTeamworkNote
+  @goModel(model: "github.com/WuLiFang/csheet/v6/pkg/cgteamwork.Note") {
+  type: String!
+  message: CGTeamworkMessage!
+  created: Time!
+  createdByName: String!
+}
+
+type CollectionCGTeamworkNote {
+  pipeline: String!
+  notes: [CGTeamworkNote!]!
+}
+
+extend type Collection {
+  cgteamworkNotes(pipeline: [String!]): [CollectionCGTeamworkNote!]
+}

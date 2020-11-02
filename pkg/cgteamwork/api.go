@@ -3,6 +3,7 @@ package cgteamwork
 import (
 	"context"
 	"encoding/json"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -24,11 +25,36 @@ func encodeAPIPayload(data interface{}) (string, error) {
 }
 
 func parseAPIResult(v []byte) (data gjson.Result, err error) {
-	result := gjson.ParseBytes(v)
+	var s = string(v)
+	if !gjson.Valid(s) {
+		err = APIError{Message: s}
+		return
+	}
+	result := gjson.Parse(s)
 	data = result.Get("data")
 	if result.Get("type").String() == "msg" {
 		err = APIError{Message: data.String()}
 		return
+	}
+	return
+}
+
+// newRequest with token set.
+func (c *Client) newRequest(ctx context.Context, method string, pathname string, body io.Reader) (r *http.Request, err error) {
+	r, err = http.NewRequestWithContext(
+		ctx,
+		method,
+		c.urlWithPath(pathname).String(),
+		body,
+	)
+	if err != nil {
+		return
+	}
+	if c.token != "" {
+		r.AddCookie(&http.Cookie{
+			Name:  "token",
+			Value: c.token,
+		})
 	}
 	return
 }
@@ -43,23 +69,11 @@ func (c *Client) callAPI(ctx context.Context, param interface{}) (data gjson.Res
 	if err != nil {
 		return
 	}
-	r, err := http.NewRequestWithContext(
-		ctx,
-		"POST",
-		c.urlWithPath("api.php").String(),
-		strings.NewReader(payload),
-	)
-
+	r, err := c.newRequest(ctx, "POST", "api.php", strings.NewReader(payload))
 	if err != nil {
 		return
 	}
 	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	if c.token != "" {
-		r.AddCookie(&http.Cookie{
-			Name:  "token",
-			Value: c.token,
-		})
-	}
 	resp, err := http.DefaultClient.Do(r)
 	if err != nil {
 		return
@@ -72,6 +86,5 @@ func (c *Client) callAPI(ctx context.Context, param interface{}) (data gjson.Res
 	logger.Debugw("recv",
 		"body", string(body),
 	)
-	data, err = parseAPIResult(body)
-	return
+	return parseAPIResult(body)
 }

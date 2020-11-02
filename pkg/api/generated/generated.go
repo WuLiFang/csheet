@@ -43,6 +43,7 @@ type Config struct {
 }
 
 type ResolverRoot interface {
+	CGTeamworkImage() CGTeamworkImageResolver
 	CollectResult() CollectResultResolver
 	Collection() CollectionResolver
 	DiskFile() DiskFileResolver
@@ -56,6 +57,23 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
+	CGTeamworkImage struct {
+		Max func(childComplexity int) int
+		Min func(childComplexity int) int
+	}
+
+	CGTeamworkMessage struct {
+		Images func(childComplexity int) int
+		Text   func(childComplexity int) int
+	}
+
+	CGTeamworkNote struct {
+		Created       func(childComplexity int) int
+		CreatedByName func(childComplexity int) int
+		Message       func(childComplexity int) int
+		Type          func(childComplexity int) int
+	}
+
 	CGTeamworkProject struct {
 		Codename func(childComplexity int) int
 		Database func(childComplexity int) int
@@ -77,12 +95,18 @@ type ComplexityRoot struct {
 	}
 
 	Collection struct {
-		CollectTime   func(childComplexity int) int
-		ID            func(childComplexity int) int
-		Metadata      func(childComplexity int) int
-		Origin        func(childComplexity int) int
-		Presentations func(childComplexity int) int
-		Title         func(childComplexity int) int
+		CgteamworkNotes func(childComplexity int, pipeline []string) int
+		CollectTime     func(childComplexity int) int
+		ID              func(childComplexity int) int
+		Metadata        func(childComplexity int) int
+		Origin          func(childComplexity int) int
+		Presentations   func(childComplexity int) int
+		Title           func(childComplexity int) int
+	}
+
+	CollectionCGTeamworkNote struct {
+		Notes    func(childComplexity int) int
+		Pipeline func(childComplexity int) int
 	}
 
 	CollectionConnection struct {
@@ -168,12 +192,18 @@ type ComplexityRoot struct {
 	}
 }
 
+type CGTeamworkImageResolver interface {
+	Max(ctx context.Context, obj *cgteamwork.Image) (*model.WebFile, error)
+	Min(ctx context.Context, obj *cgteamwork.Image) (*model.WebFile, error)
+}
 type CollectResultResolver interface {
 	ID(ctx context.Context, obj *base.CollectResult) (string, error)
 	Time(ctx context.Context, obj *base.CollectResult) (*time.Time, error)
 }
 type CollectionResolver interface {
 	Metadata(ctx context.Context, obj *collection.Collection) ([]model.StringEntry, error)
+
+	CgteamworkNotes(ctx context.Context, obj *collection.Collection, pipeline []string) ([]model.CollectionCGTeamworkNote, error)
 }
 type DiskFileResolver interface {
 	Path(ctx context.Context, obj *file.File, format *string) (string, error)
@@ -222,6 +252,62 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "CGTeamworkImage.max":
+		if e.complexity.CGTeamworkImage.Max == nil {
+			break
+		}
+
+		return e.complexity.CGTeamworkImage.Max(childComplexity), true
+
+	case "CGTeamworkImage.min":
+		if e.complexity.CGTeamworkImage.Min == nil {
+			break
+		}
+
+		return e.complexity.CGTeamworkImage.Min(childComplexity), true
+
+	case "CGTeamworkMessage.images":
+		if e.complexity.CGTeamworkMessage.Images == nil {
+			break
+		}
+
+		return e.complexity.CGTeamworkMessage.Images(childComplexity), true
+
+	case "CGTeamworkMessage.text":
+		if e.complexity.CGTeamworkMessage.Text == nil {
+			break
+		}
+
+		return e.complexity.CGTeamworkMessage.Text(childComplexity), true
+
+	case "CGTeamworkNote.created":
+		if e.complexity.CGTeamworkNote.Created == nil {
+			break
+		}
+
+		return e.complexity.CGTeamworkNote.Created(childComplexity), true
+
+	case "CGTeamworkNote.createdByName":
+		if e.complexity.CGTeamworkNote.CreatedByName == nil {
+			break
+		}
+
+		return e.complexity.CGTeamworkNote.CreatedByName(childComplexity), true
+
+	case "CGTeamworkNote.message":
+		if e.complexity.CGTeamworkNote.Message == nil {
+			break
+		}
+
+		return e.complexity.CGTeamworkNote.Message(childComplexity), true
+
+	case "CGTeamworkNote.type":
+		if e.complexity.CGTeamworkNote.Type == nil {
+			break
+		}
+
+		return e.complexity.CGTeamworkNote.Type(childComplexity), true
 
 	case "CGTeamworkProject.codename":
 		if e.complexity.CGTeamworkProject.Codename == nil {
@@ -300,6 +386,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CollectResult.UpdatedCount(childComplexity), true
 
+	case "Collection.cgteamworkNotes":
+		if e.complexity.Collection.CgteamworkNotes == nil {
+			break
+		}
+
+		args, err := ec.field_Collection_cgteamworkNotes_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Collection.CgteamworkNotes(childComplexity, args["pipeline"].([]string)), true
+
 	case "Collection.collectTime":
 		if e.complexity.Collection.CollectTime == nil {
 			break
@@ -341,6 +439,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Collection.Title(childComplexity), true
+
+	case "CollectionCGTeamworkNote.notes":
+		if e.complexity.CollectionCGTeamworkNote.Notes == nil {
+			break
+		}
+
+		return e.complexity.CollectionCGTeamworkNote.Notes(childComplexity), true
+
+	case "CollectionCGTeamworkNote.pipeline":
+		if e.complexity.CollectionCGTeamworkNote.Pipeline == nil {
+			break
+		}
+
+		return e.complexity.CollectionCGTeamworkNote.Pipeline(childComplexity), true
 
 	case "CollectionConnection.edges":
 		if e.complexity.CollectionConnection.Edges == nil {
@@ -789,6 +901,16 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
+	{Name: "pkg/api/directives/gqlgen.gql", Input: `directive @goModel(
+  model: String
+  models: [String!]
+) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | INTERFACE | UNION
+
+directive @goField(
+  forceResolver: Boolean
+  name: String
+) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+`, BuiltIn: false},
 	{Name: "pkg/api/mutations/collectionFromCGTeamwork.gql", Input: `extend type Mutation {
   collectFromCGTeamwork(
     database: String!
@@ -927,6 +1049,35 @@ extend type Query {
   presentationUpdated(id: [ID!]!): Presentation!
 }
 `, BuiltIn: false},
+	{Name: "pkg/api/types/CGTeamworkImage.gql", Input: `type CGTeamworkImage
+  @goModel(model: "github.com/WuLiFang/csheet/v6/pkg/cgteamwork.Image") {
+  max: WebFile
+  min: WebFile
+}
+`, BuiltIn: false},
+	{Name: "pkg/api/types/CGTeamworkMessage.gql", Input: `type CGTeamworkMessage
+  @goModel(model: "github.com/WuLiFang/csheet/v6/pkg/cgteamwork.Message") {
+  text: String!
+  images: [CGTeamworkImage!]!
+}
+`, BuiltIn: false},
+	{Name: "pkg/api/types/CGTeamworkNote.gql", Input: `type CGTeamworkNote
+  @goModel(model: "github.com/WuLiFang/csheet/v6/pkg/cgteamwork.Note") {
+  type: String!
+  message: CGTeamworkMessage!
+  created: Time!
+  createdByName: String!
+}
+
+type CollectionCGTeamworkNote {
+  pipeline: String!
+  notes: [CGTeamworkNote!]!
+}
+
+extend type Collection {
+  cgteamworkNotes(pipeline: [String!]): [CollectionCGTeamworkNote!]
+}
+`, BuiltIn: false},
 	{Name: "pkg/api/types/CGTeamworkProject.gql", Input: `type CGTeamworkProject {
   database: String!
   name: String!
@@ -1013,6 +1164,21 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Collection_cgteamworkNotes_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 []string
+	if tmp, ok := rawArgs["pipeline"]; ok {
+		ctx := graphql.WithFieldInputContext(ctx, graphql.NewFieldInputWithField("pipeline"))
+		arg0, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["pipeline"] = arg0
+	return args, nil
+}
 
 func (ec *executionContext) field_DiskFile_path_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -1369,6 +1535,272 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
+
+func (ec *executionContext) _CGTeamworkImage_max(ctx context.Context, field graphql.CollectedField, obj *cgteamwork.Image) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "CGTeamworkImage",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CGTeamworkImage().Max(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.WebFile)
+	fc.Result = res
+	return ec.marshalOWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CGTeamworkImage_min(ctx context.Context, field graphql.CollectedField, obj *cgteamwork.Image) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "CGTeamworkImage",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CGTeamworkImage().Min(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.WebFile)
+	fc.Result = res
+	return ec.marshalOWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CGTeamworkMessage_text(ctx context.Context, field graphql.CollectedField, obj *cgteamwork.Message) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "CGTeamworkMessage",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Text, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CGTeamworkMessage_images(ctx context.Context, field graphql.CollectedField, obj *cgteamwork.Message) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "CGTeamworkMessage",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Images, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]cgteamwork.Image)
+	fc.Result = res
+	return ec.marshalNCGTeamworkImage2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcgteamworkᚐImageᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CGTeamworkNote_type(ctx context.Context, field graphql.CollectedField, obj *cgteamwork.Note) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "CGTeamworkNote",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Type, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CGTeamworkNote_message(ctx context.Context, field graphql.CollectedField, obj *cgteamwork.Note) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "CGTeamworkNote",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Message, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(cgteamwork.Message)
+	fc.Result = res
+	return ec.marshalNCGTeamworkMessage2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcgteamworkᚐMessage(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CGTeamworkNote_created(ctx context.Context, field graphql.CollectedField, obj *cgteamwork.Note) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "CGTeamworkNote",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Created, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CGTeamworkNote_createdByName(ctx context.Context, field graphql.CollectedField, obj *cgteamwork.Note) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "CGTeamworkNote",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedByName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
 
 func (ec *executionContext) _CGTeamworkProject_database(ctx context.Context, field graphql.CollectedField, obj *cgteamwork.Project) (ret graphql.Marshaler) {
 	defer func() {
@@ -1940,6 +2372,112 @@ func (ec *executionContext) _Collection_collectTime(ctx context.Context, field g
 	res := resTmp.(time.Time)
 	fc.Result = res
 	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Collection_cgteamworkNotes(ctx context.Context, field graphql.CollectedField, obj *collection.Collection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Collection",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Collection_cgteamworkNotes_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Collection().CgteamworkNotes(rctx, obj, args["pipeline"].([]string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]model.CollectionCGTeamworkNote)
+	fc.Result = res
+	return ec.marshalOCollectionCGTeamworkNote2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionCGTeamworkNoteᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CollectionCGTeamworkNote_pipeline(ctx context.Context, field graphql.CollectedField, obj *model.CollectionCGTeamworkNote) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "CollectionCGTeamworkNote",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Pipeline, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CollectionCGTeamworkNote_notes(ctx context.Context, field graphql.CollectedField, obj *model.CollectionCGTeamworkNote) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "CollectionCGTeamworkNote",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Notes, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]cgteamwork.Note)
+	fc.Result = res
+	return ec.marshalNCGTeamworkNote2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcgteamworkᚐNoteᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CollectionConnection_edges(ctx context.Context, field graphql.CollectedField, obj *model.CollectionConnection) (ret graphql.Marshaler) {
@@ -4819,6 +5357,124 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 
 // region    **************************** object.gotpl ****************************
 
+var cGTeamworkImageImplementors = []string{"CGTeamworkImage"}
+
+func (ec *executionContext) _CGTeamworkImage(ctx context.Context, sel ast.SelectionSet, obj *cgteamwork.Image) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cGTeamworkImageImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CGTeamworkImage")
+		case "max":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CGTeamworkImage_max(ctx, field, obj)
+				return res
+			})
+		case "min":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CGTeamworkImage_min(ctx, field, obj)
+				return res
+			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var cGTeamworkMessageImplementors = []string{"CGTeamworkMessage"}
+
+func (ec *executionContext) _CGTeamworkMessage(ctx context.Context, sel ast.SelectionSet, obj *cgteamwork.Message) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cGTeamworkMessageImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CGTeamworkMessage")
+		case "text":
+			out.Values[i] = ec._CGTeamworkMessage_text(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "images":
+			out.Values[i] = ec._CGTeamworkMessage_images(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var cGTeamworkNoteImplementors = []string{"CGTeamworkNote"}
+
+func (ec *executionContext) _CGTeamworkNote(ctx context.Context, sel ast.SelectionSet, obj *cgteamwork.Note) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cGTeamworkNoteImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CGTeamworkNote")
+		case "type":
+			out.Values[i] = ec._CGTeamworkNote_type(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "message":
+			out.Values[i] = ec._CGTeamworkNote_message(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "created":
+			out.Values[i] = ec._CGTeamworkNote_created(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createdByName":
+			out.Values[i] = ec._CGTeamworkNote_createdByName(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var cGTeamworkProjectImplementors = []string{"CGTeamworkProject"}
 
 func (ec *executionContext) _CGTeamworkProject(ctx context.Context, sel ast.SelectionSet, obj *cgteamwork.Project) graphql.Marshaler {
@@ -5001,6 +5657,49 @@ func (ec *executionContext) _Collection(ctx context.Context, sel ast.SelectionSe
 			out.Values[i] = ec._Collection_collectTime(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
+			}
+		case "cgteamworkNotes":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Collection_cgteamworkNotes(ctx, field, obj)
+				return res
+			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var collectionCGTeamworkNoteImplementors = []string{"CollectionCGTeamworkNote"}
+
+func (ec *executionContext) _CollectionCGTeamworkNote(ctx context.Context, sel ast.SelectionSet, obj *model.CollectionCGTeamworkNote) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, collectionCGTeamworkNoteImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CollectionCGTeamworkNote")
+		case "pipeline":
+			out.Values[i] = ec._CollectionCGTeamworkNote_pipeline(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "notes":
+			out.Values[i] = ec._CollectionCGTeamworkNote_notes(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -5836,6 +6535,92 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) marshalNCGTeamworkImage2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcgteamworkᚐImage(ctx context.Context, sel ast.SelectionSet, v cgteamwork.Image) graphql.Marshaler {
+	return ec._CGTeamworkImage(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNCGTeamworkImage2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcgteamworkᚐImageᚄ(ctx context.Context, sel ast.SelectionSet, v []cgteamwork.Image) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCGTeamworkImage2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcgteamworkᚐImage(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalNCGTeamworkMessage2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcgteamworkᚐMessage(ctx context.Context, sel ast.SelectionSet, v cgteamwork.Message) graphql.Marshaler {
+	return ec._CGTeamworkMessage(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNCGTeamworkNote2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcgteamworkᚐNote(ctx context.Context, sel ast.SelectionSet, v cgteamwork.Note) graphql.Marshaler {
+	return ec._CGTeamworkNote(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNCGTeamworkNote2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcgteamworkᚐNoteᚄ(ctx context.Context, sel ast.SelectionSet, v []cgteamwork.Note) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCGTeamworkNote2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcgteamworkᚐNote(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
 func (ec *executionContext) marshalNCGTeamworkProject2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcgteamworkᚐProject(ctx context.Context, sel ast.SelectionSet, v cgteamwork.Project) graphql.Marshaler {
 	return ec._CGTeamworkProject(ctx, sel, &v)
 }
@@ -5866,6 +6651,10 @@ func (ec *executionContext) marshalNCollection2ᚖgithubᚗcomᚋWuLiFangᚋcshe
 		return graphql.Null
 	}
 	return ec._Collection(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNCollectionCGTeamworkNote2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionCGTeamworkNote(ctx context.Context, sel ast.SelectionSet, v model.CollectionCGTeamworkNote) graphql.Marshaler {
+	return ec._CollectionCGTeamworkNote(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNCollectionConnection2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionConnection(ctx context.Context, sel ast.SelectionSet, v model.CollectionConnection) graphql.Marshaler {
@@ -6587,6 +7376,46 @@ func (ec *executionContext) marshalOCollection2ᚖgithubᚗcomᚋWuLiFangᚋcshe
 		return graphql.Null
 	}
 	return ec._Collection(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOCollectionCGTeamworkNote2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionCGTeamworkNoteᚄ(ctx context.Context, sel ast.SelectionSet, v []model.CollectionCGTeamworkNote) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCollectionCGTeamworkNote2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionCGTeamworkNote(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
 }
 
 func (ec *executionContext) marshalOCollectionEdge2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionEdge(ctx context.Context, sel ast.SelectionSet, v []*model.CollectionEdge) graphql.Marshaler {

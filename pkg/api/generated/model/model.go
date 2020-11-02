@@ -3,6 +3,7 @@
 package model
 
 import (
+	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
 )
@@ -14,6 +15,11 @@ type Node interface {
 type ClientConfig struct {
 	SentryDsn       *string `json:"sentryDSN"`
 	IssueTrackerURL *string `json:"issueTrackerURL"`
+}
+
+type CollectionCGTeamworkNote struct {
+	Pipeline string            `json:"pipeline"`
+	Notes    []cgteamwork.Note `json:"notes"`
 }
 
 type CollectionConnection struct {
