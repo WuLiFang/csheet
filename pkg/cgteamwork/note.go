@@ -11,6 +11,7 @@ import (
 type Note struct {
 	ID            string
 	TaskID        string
+	ParentID      string
 	Module        string
 	ModuleType    string
 	Created       time.Time
@@ -24,6 +25,7 @@ type Note struct {
 func (n *Note) UnmarshalCGTeamworkRecord(v map[string]string) error {
 	n.ID = v["#id"]
 	n.TaskID = v["#task_id"]
+	n.ParentID = v["parent_id"]
 	n.Created, _ = time.ParseInLocation("2006-01-02 15:04:05", v["create_time"], time.FixedZone("UTF+8", 8*3600))
 	n.CreatedByID = v["#from_account_id"]
 	n.CreatedByName = v["create_by"]
@@ -73,6 +75,7 @@ func (s Selection) Notes(ctx context.Context, fields ...string) (ret []Note, err
 			"module",
 			"module_type",
 			"type",
+			"parent_id",
 		}
 	}
 	data, err := c.callAPI(ctx, map[string]interface{}{
