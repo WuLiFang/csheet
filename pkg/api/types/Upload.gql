@@ -1,0 +1,2 @@
+"The `Upload` scalar type represents a multipart file upload."
+scalar Upload

@@ -1,0 +1,18 @@
+{{- define "extendArgs" }}
+    username: String!
+    password: String!
+{{- end }}
+
+{{- define "data" }}
+    "collection id"
+    id: ID!
+    pipeline: String!
+    html: String!
+    images: [Upload!]
+{{- end }}
+
+{{- define "type" }}
+    updatedCollections: [Collection!]
+    createdCount: Int!
+{{- end }}
+

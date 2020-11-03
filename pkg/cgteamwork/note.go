@@ -2,6 +2,7 @@ package cgteamwork
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/tidwall/gjson"
@@ -97,5 +98,59 @@ func (s Selection) Notes(ctx context.Context, fields ...string) (ret []Note, err
 		func(index int) RecordUnmarshaler {
 			return &ret[index]
 		})
+	return
+}
+
+// CreateNoteOption for CreateNote
+type CreateNoteOption = func(map[string]interface{})
+
+// CreateNoteOptionAccount set note created by account id.
+func CreateNoteOptionAccount(id string) CreateNoteOption {
+	return func(m map[string]interface{}) {
+		m["#from_account_id"] = id
+	}
+}
+
+// CreateNote for all task in selection.
+func (s Selection) CreateNote(ctx context.Context, message Message, opts ...CreateNoteOption) (err error) {
+	c := ClientFor(ctx)
+	err = c.RefreshTokenOndemand(ctx)
+	if err != nil {
+		return
+	}
+	ids, err := s.resolveIDs(ctx)
+	if err != nil {
+		return
+	}
+	if len(ids) == 0 {
+		return
+	}
+
+	paramData := map[string]interface{}{
+		"module":      s.Module,
+		"module_type": s.ModuleType,
+		"#task_id":    strings.Join(ids, ","),
+		"text":        message,
+	}
+	param := map[string]interface{}{
+		"controller":       "c_note",
+		"method":           "create",
+		"db":               s.Database,
+		"field_data_array": paramData,
+	}
+	for _, i := range opts {
+		i(paramData)
+	}
+	if _, ok := paramData["#from_account_id"]; !ok {
+		paramData["#from_account_id"], err = CurrentAccountID(ctx)
+		if err != nil {
+			return
+		}
+	}
+
+	_, err = c.callAPI(ctx, param)
+	if err != nil {
+		return
+	}
 	return
 }

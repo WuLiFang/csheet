@@ -30,3 +30,16 @@ func TestNotes(t *testing.T) {
 		assert.NotEmpty(t, i.ModuleType)
 	}
 }
+
+func TestCreateNote(t *testing.T) {
+	ctx := WithClient(context.Background(), NewTestClient(t))
+	s := Select("proj_sdktest", "shot").
+		WithModuleType("task").
+		WithFilter(
+			F("shot.shot").Equal("SDKTEST_EP01_01_sc001").
+				And(F("task.pipeline").Equal("合成")),
+		)
+
+	err := s.CreateNote(ctx, Message{HTML: "test"})
+	require.NoError(t, err)
+}

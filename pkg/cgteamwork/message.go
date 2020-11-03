@@ -4,26 +4,18 @@ import "encoding/json"
 
 // Message can have image attachment.
 type Message struct {
-	HTML   string  `bson:"text" json:"text"`
-	Images []Image `bson:"images" json:"image"`
+	HTML   string  `json:"data"`
+	Images []Image `json:"image"`
 }
 
-// UnmarshalJSON implements json.Unmarshaler
-func (m *Message) UnmarshalJSON(data []byte) (err error) {
-	var doc = new(struct {
-		Data   string
-		Image  []Image
-		Images []Image
+// MarshalJSON implements json.Marshaler
+func (m Message) MarshalJSON() ([]byte, error) {
+	images := m.Images
+	if images == nil {
+		images = make([]Image, 0)
+	}
+	return json.Marshal(map[string]interface{}{
+		"data":  m.HTML,
+		"image": images,
 	})
-	err = json.Unmarshal(data, doc)
-	if err != nil {
-		return
-	}
-	m.HTML = doc.Data
-	if doc.Image != nil {
-		m.Images = doc.Image
-	} else {
-		m.Images = doc.Images
-	}
-	return
 }
