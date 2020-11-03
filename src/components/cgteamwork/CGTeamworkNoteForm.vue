@@ -121,6 +121,7 @@ export default class CGTeamworkNoteForm extends Vue {
     if (!this.$el.reportValidity()) {
       return;
     }
+    const id = this.id;
     await client.collection.createCGTeamworkNote({
       input: {
         username: this.formData.username,
@@ -135,6 +136,7 @@ export default class CGTeamworkNoteForm extends Vue {
         ],
       },
     });
+    this.$root.$emit('refetch:cgteamwork-note', id);
     this.$emit('submit');
   }
 }

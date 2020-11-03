@@ -150,13 +150,14 @@ export default class CGTeamworkFlowForm extends Vue {
       return;
     }
     this.$el.submit();
+    const id = this.id;
     await client.collection.updateCGTeamworkFlow({
       input: {
         username: this.formData.username,
         password: this.formData.password,
         data: [
           {
-            id: this.id,
+            id,
             stage: this.formData.stage,
             status: this.formData.status,
             pipeline: this.formData.pipeline,
@@ -166,7 +167,7 @@ export default class CGTeamworkFlowForm extends Vue {
       },
     });
     this.$emit('submit');
-    this.$root.$emit('app-message', '任务状态更新成功');
+    this.$root.$emit('refetch:cgteamwork-note', id);
   }
 
   focus(): void {

@@ -91,6 +91,20 @@ import CGTeamworkNoteFormDrawer from '@/components/cgteamwork/CGTeamworkNoteForm
       pollInterval: 10e3,
     },
   },
+  mounted() {
+    const refetchListener = (id: string) => {
+      if (id === this.id) {
+        this.refetch();
+      }
+    };
+    this.$root.$on('refetch:cgteamwork-note', refetchListener);
+    this.$once('destory', () =>
+      this.$root.$off('refetch:cgteamwork-note', refetchListener)
+    );
+  },
+  destroyed() {
+    this.$emit('destory');
+  },
 })
 export default class CGTeamworkNoteList extends Vue {
   @Prop({ type: String, required: true })
@@ -118,14 +132,7 @@ export default class CGTeamworkNoteList extends Vue {
   }
 
   showFormDrawer(): void {
-    show(CGTeamworkNoteFormDrawer, {
-      attrs: { id: this.id },
-      on: {
-        submit: () => {
-          this.refetch();
-        },
-      },
-    });
+    show(CGTeamworkNoteFormDrawer, { attrs: { id: this.id } });
   }
 }
 </script>
