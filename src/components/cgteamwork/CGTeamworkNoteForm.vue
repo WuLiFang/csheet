@@ -34,7 +34,6 @@
         RadioOrSelect(
           v-model="formData.pipeline"
           :options="pipelines.map(i => ({value: i, label: i}))"
-          required
         )
     CGTeamworkMessageEditor(
       v-model="formData.message"

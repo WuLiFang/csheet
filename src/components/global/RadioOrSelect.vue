@@ -9,13 +9,11 @@
             type="radio"
             :value="i.value"
             v-model="$_value"
-            v-bind="$attrs"
           ) 
           span.mx-1 {{ i.label }}
     template(v-else)
       select.form-select(
         v-model="$value"
-        v-bind="$attrs"
       )
         template(v-for="i in options")
           option(

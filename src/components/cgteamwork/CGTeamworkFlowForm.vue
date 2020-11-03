@@ -30,10 +30,7 @@
       class="m-1"
     )
       span.inline-block.w-16 阶段
-      CGTeamworkStageSelect(
-        v-model="formData.stage"
-        required
-      )
+      CGTeamworkStageSelect(v-model="formData.stage")
     label.block(
       class="m-1"
     )
@@ -41,7 +38,6 @@
       RadioOrSelect(
         v-model="formData.pipeline"
         :options="pipelines.map(i => ({value: i, label: i}))"
-        required
       )
     label.block(
       class="m-1"
