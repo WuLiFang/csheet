@@ -2,6 +2,7 @@
   Drawer.cgteamwork-note-form-drawer(
     :visible.sync="$_visible"
     v-on="$listeners"
+    @after-enter="() => $refs.form.focus()"
   )
     header(
       class="flex items-center"

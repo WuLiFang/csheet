@@ -36,6 +36,7 @@
           :options="pipelines.map(i => ({value: i, label: i}))"
         )
     CGTeamworkMessageEditor(
+      ref="messageEditor"
       v-model="formData.message"
       :required="formData.message.images.length === 0"
       class="mb-2"
@@ -103,6 +104,12 @@ export default class CGTeamworkNoteForm extends Vue {
 
   $el!: HTMLFormElement;
 
+  $refs!: {
+    usernameInput: HTMLInputElement;
+    passwardInput: HTMLInputElement;
+    messageEditor: CGTeamworkMessageEditor;
+  };
+
   formData = {
     username: '',
     password: '',
@@ -115,6 +122,16 @@ export default class CGTeamworkNoteForm extends Vue {
 
   get pipelines(): string[] {
     return getCollectionPipelines(this.collection);
+  }
+
+  focus(): void {
+    if (!this.formData.username) {
+      this.$refs.usernameInput.focus();
+    } else if (!this.formData.password) {
+      this.$refs.passwardInput.focus();
+    } else {
+      this.$refs.messageEditor.focus();
+    }
   }
 
   async submit(): Promise<void> {
