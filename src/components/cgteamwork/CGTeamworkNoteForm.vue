@@ -29,65 +29,39 @@
     label.block(
       class="m-1"
     )
-      span.inline-block.w-16 阶段
-      CGTeamworkStageSelect(
-        v-model="formData.stage"
-        required
-      )
-    label.block(
-      class="m-1"
-    )
       span.inline-block.w-16 流程
-      RadioOrSelect(
-        v-model="formData.pipeline"
-        :options="pipelines.map(i => ({value: i, label: i}))"
-        required
-      )
-    label.block(
-      class="m-1"
+      SessionStorage(name="cgteamwork.note-pipeline" v-model="formData.pipeline")
+        RadioOrSelect(
+          v-model="formData.pipeline"
+          :options="pipelines.map(i => ({value: i, label: i}))"
+          required
+        )
+    CGTeamworkMessageEditor(
+      v-model="formData.message"
+      :required="formData.message.images.length === 0"
+      class="mb-2"
     )
-      span 备注
-      textarea.form-textarea(
-        ref="noteTextarea"
-        v-model="formData.note"
-        class="w-full my-1"
-      )
-    fieldset
-      button.form-button(
-        class="w-1/3 px-0"
-        type="button"
-        @click="formData.status = 'Close'; submit()"
-      ) 关闭
-      button.form-button(
-        class="w-1/3 px-0"
-        class="bg-red-600"
-        type="button"
-        @click="formData.status = 'Retake'; submit()"
-      ) 返修
-      button.form-button(
-        class="w-1/3 px-0"
-        class="bg-green-600"
-        type="button"
-        @click="formData.status = 'Approve'; submit()"
-      ) 通过
+    button.form-button(
+      class="w-full px-0"
+      @click="submit()"
+    ) 提交
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import db from '@/db';
-import client from '@/client';
+import getCollectionPipelines from '@/client/utils/getCollectionPipelines';
 import { collection as Collection } from '@/graphql/types/collection';
 import { filePathFormat } from '@/const';
 import {
   collectionNodeVariables,
   collectionNode,
 } from '@/graphql/types/collectionNode';
-import getCollectionPipelines from '@/client/utils/getCollectionPipelines';
-import CGTeamworkStageSelect from '@/components/cgteamwork/CGTeamworkStageSelect.vue';
+import CGTeamworkMessageEditor from '@/components/cgteamwork/CGTeamworkMessageEditor.vue';
+import client from '@/client';
 
-@Component<CGTeamworkFlowForm>({
+@Component<CGTeamworkNoteForm>({
   components: {
-    CGTeamworkStageSelect,
+    CGTeamworkMessageEditor,
   },
   apollo: {
     collection: {
@@ -115,30 +89,25 @@ import CGTeamworkStageSelect from '@/components/cgteamwork/CGTeamworkStageSelect
     );
   },
 })
-export default class CGTeamworkFlowForm extends Vue {
+export default class CGTeamworkNoteForm extends Vue {
   @Prop({ type: String, required: true })
   id!: string;
 
   @Prop({ type: Object })
-  default?: Partial<CGTeamworkFlowForm['formData']>;
-
-  formData = {
-    username: '',
-    password: '',
-    stage: db.preference.get('cgteamworkStage'),
-    status: '',
-    note: '',
-    pipeline: '',
-  };
+  default?: Partial<CGTeamworkNoteForm['formData']>;
 
   collection?: Collection;
 
   $el!: HTMLFormElement;
 
-  $refs!: {
-    usernameInput: HTMLInputElement;
-    passwardInput: HTMLInputElement;
-    noteTextarea: HTMLTextAreaElement;
+  formData = {
+    username: '',
+    password: '',
+    pipeline: '',
+    message: {
+      html: '',
+      images: [] as (Blob | File)[],
+    },
   };
 
   get pipelines(): string[] {
@@ -149,34 +118,21 @@ export default class CGTeamworkFlowForm extends Vue {
     if (!this.$el.reportValidity()) {
       return;
     }
-    this.$el.submit();
-    await client.collection.updateCGTeamworkFlow({
+    await client.collection.createCGTeamworkNote({
       input: {
         username: this.formData.username,
         password: this.formData.password,
         data: [
           {
             id: this.id,
-            stage: this.formData.stage,
-            status: this.formData.status,
+            html: this.formData.message.html,
             pipeline: this.formData.pipeline,
-            note: this.formData.note || undefined,
+            images: this.formData.message.images,
           },
         ],
       },
     });
     this.$emit('submit');
-    this.$root.$emit('app-message', '任务状态更新成功');
-  }
-
-  focus(): void {
-    if (!this.formData.username) {
-      this.$refs.usernameInput.focus();
-    } else if (!this.formData.password) {
-      this.$refs.passwardInput.focus();
-    } else {
-      this.$refs.noteTextarea.focus();
-    }
   }
 }
 </script>

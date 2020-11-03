@@ -1,0 +1,16 @@
+fragment cgteamworkNote on CGTeamworkNote {
+  type
+  message {
+    html
+    images {
+      max {
+        url
+      }
+      min {
+        url
+      }
+    }
+  }
+  created
+  createdByName
+}

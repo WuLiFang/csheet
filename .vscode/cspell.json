@@ -62,6 +62,7 @@
         "pylint",
         "pytest",
         "readonly",
+        "renderless",
         "ROCKETCHAT",
         "rpartition",
         "sdktest",

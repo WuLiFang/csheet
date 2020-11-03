@@ -1,0 +1,5 @@
+mutation createCGTeamworkNote($input: CreateCGTeamworkNoteInput!) {
+  createCGTeamworkNote(input: $input) {
+    createdCount
+  }
+}

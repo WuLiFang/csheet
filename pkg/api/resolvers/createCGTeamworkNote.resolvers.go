@@ -47,7 +47,7 @@ func (r *mutationResolver) CreateCGTeamworkNote(ctx context.Context, input model
 		s := cgteamwork.Select(db, "shot").WithModuleType("task").WithFilter(cgteamwork.F("task.id").Equal(id))
 		msg := cgteamwork.Message{
 			HTML:   i.HTML,
-			Images: make([]cgteamwork.Image, len(i.Images)),
+			Images: make([]cgteamwork.Image, 0, len(i.Images)),
 		}
 		for _, img := range i.Images {
 			uploaded, err := cgteamwork.UploadImage(ctx, img.Filename, img.File, img.Size, cgteamwork.UploadOptionProject(db))

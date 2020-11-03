@@ -1,11 +1,20 @@
 <template lang="pug">
   .cgteamwork-note-list(open)
-    span 备注
-    span.mx-1.text-gray-600
-      span 于
-      TimeWidget.mx-1(:value="fetched" format="HH:mm:ss")
-      span 查询
-    span.mx-1.text-gray-600.inline-flex.items-center 每 10 秒自动刷新
+    .flex.items-center
+      span 备注
+      button.form-button(
+        type="button"
+        title="添加备注"
+        class="p-0 w-12 h-6 m-1"
+        class="inline-flex flex-center"
+        @click="showFormDrawer()"
+      )
+        FaIcon(name="plus")
+      span.mx-1.text-gray-600
+        span 于
+        TimeWidget.mx-1(:value="fetched" format="HH:mm:ss")
+        span 查询
+      span.mx-1.text-gray-600.inline-flex.items-center 每 10 秒自动刷新
     template(v-if="loadingCount > 0 ")
       FaIcon(name="spinner" spin class="w-full inline-block h-8 text-gray-500")
     template(v-else-if="values.length === 0")
@@ -36,6 +45,9 @@ import { collection as Collection } from '@/graphql/types/collection';
 import cast from 'cast-unknown';
 import { orderBy } from 'lodash';
 import 'vue-awesome/icons/sync';
+import 'vue-awesome/icons/plus';
+import { show } from '@/modal';
+import CGTeamworkNoteFormDrawer from '@/components/cgteamwork/CGTeamworkNoteFormDrawer.vue';
 
 @Component<CGTeamworkNoteList>({
   components: {
@@ -73,10 +85,10 @@ import 'vue-awesome/icons/sync';
         );
       },
       result() {
-        this.fetched = new Date()
+        this.fetched = new Date();
       },
       fetchPolicy: 'cache-and-network',
-      pollInterval: 10e3
+      pollInterval: 10e3,
     },
   },
 })
@@ -89,7 +101,7 @@ export default class CGTeamworkNoteList extends Vue {
 
   loadingCount = 0;
 
-  fetched = new Date(0)
+  fetched = new Date(0);
 
   get pipelines(): string[] {
     return cast
@@ -103,6 +115,17 @@ export default class CGTeamworkNoteList extends Vue {
 
   async refetch(): Promise<void> {
     await this.$apollo.queries.values.refetch();
+  }
+
+  showFormDrawer(): void {
+    show(CGTeamworkNoteFormDrawer, {
+      attrs: { id: this.id },
+      on: {
+        submit: () => {
+          this.refetch();
+        },
+      },
+    });
   }
 }
 </script>

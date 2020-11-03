@@ -1,4 +1,9 @@
 import { apolloClient } from '@/client/client';
+import { collection } from '@/graphql/types/collection';
+import {
+  createCGTeamworkNote,
+  createCGTeamworkNoteVariables,
+} from '@/graphql/types/createCGTeamworkNote';
 import {
   updateCGTeamworkFlow,
   updateCGTeamworkFlowVariables,
@@ -22,6 +27,15 @@ export async function updateCGTeamworkFlow(
 ): Promise<void> {
   await apolloClient.mutate<updateCGTeamworkFlow>({
     mutation: require('@/graphql/mutations/updateCGTeamworkFlow.gql'),
+    variables,
+  });
+}
+
+export async function createCGTeamworkNote(
+  variables: createCGTeamworkNoteVariables
+): Promise<void> {
+  await apolloClient.mutate<createCGTeamworkNote>({
+    mutation: require('@/graphql/mutations/createCGTeamworkNote.gql'),
     variables,
   });
 }

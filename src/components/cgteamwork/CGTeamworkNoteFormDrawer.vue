@@ -1,7 +1,6 @@
 <template lang="pug">
-  Drawer.cgteamwork-flow-form-drawer(
+  Drawer.cgteamwork-note-form-drawer(
     :visible.sync="$_visible"
-    @after-enter="() => $refs.form.focus()"
     v-on="$listeners"
   )
     header(
@@ -9,39 +8,31 @@
     )
       button.form-button(
         type="button"
-        @click="close()"
+        @click="$_visible = false"
       )
         FaIcon(name="arrow-left")
       h1.inline-block(
         class="text-lg sm:text-xl font-semibold mx-2"
-      ) 更改 CGTeamwork 流程状态
-    CGTeamworkFlowForm(
+      ) 添加 CGTeamwork 备注
+    CGTeamworkNoteForm(
       ref="form"
       class="my-2"
       v-bind="$attrs"
-      @submit="close()"
+      @submit="$_visible = false; $emit('submit');"
     )
 </template>
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator';
 import { ModalMixin } from '@/mixins/ModalMixin';
-import CGTeamworkFlowForm from './CGTeamworkFlowForm.vue';
+import CGTeamworkNoteForm from '@/components/cgteamwork/CGTeamworkNoteForm.vue';
 import 'vue-awesome/icons/arrow-left';
 
-@Component<CGTeamworkFlowFormDrawer>({
+@Component<CGTeamworkNoteFormDrawer>({
   inheritAttrs: false,
   components: {
-    CGTeamworkFlowForm,
+    CGTeamworkNoteForm,
   },
 })
-export default class CGTeamworkFlowFormDrawer extends Mixins(ModalMixin) {
-  $refs!: {
-    form: CGTeamworkFlowForm;
-  };
-
-  close(): void {
-    this.$_visible = false;
-  }
-}
+export default class CGTeamworkNoteFormDrawer extends Mixins(ModalMixin) {}
 </script>

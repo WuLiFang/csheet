@@ -8,9 +8,9 @@ import {
 import { ApolloClient } from 'apollo-client';
 import { ApolloLink, split } from 'apollo-link';
 import { ErrorResponse, onError } from 'apollo-link-error';
-import { HttpLink } from 'apollo-link-http';
 import { createPersistedQueryLink } from 'apollo-link-persisted-queries';
 import { WebSocketLink } from 'apollo-link-ws';
+import { createUploadLink } from 'apollo-upload-client';
 import { getMainDefinition } from 'apollo-utilities';
 import { GraphQLError } from 'graphql';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
@@ -19,7 +19,7 @@ function getErrorMessage(e: GraphQLError): string {
   return msg;
 }
 
-const httpLink: HttpLink = new HttpLink({
+const httpLink = createUploadLink({
   uri: '/api',
 });
 
@@ -88,7 +88,7 @@ const link = split(
     );
   },
   apqLink.concat(wsLink),
-  apqLink.concat(httpLink)
+  apqLink.concat((httpLink as unknown) as ApolloLink)
 );
 const linkErrorAfterWare: ApolloLink = onError(
   ({ graphQLErrors, networkError, operation }: ErrorResponse): void => {
