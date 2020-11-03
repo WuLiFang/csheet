@@ -100,12 +100,16 @@ import CGTeamworkStageSelect from '@/components/cgteamwork/CGTeamworkStageSelect
     this.$watch(
       () => this.collection,
       v => {
-        Object.assign(this.formData, this.default, {
-          pipeline:
-            (this.formData.pipeline ||
-              v?.metadata.find(i => i.k === 'cgteamwork.pipeline')?.v) ??
-            this.formData.pipeline,
-        });
+        Object.assign(
+          this.formData,
+          {
+            pipeline:
+              (this.formData.pipeline ||
+                v?.metadata.find(i => i.k === 'cgteamwork.pipeline')?.v) ??
+              this.formData.pipeline,
+          },
+          this.default
+        );
       },
       { immediate: true }
     );
