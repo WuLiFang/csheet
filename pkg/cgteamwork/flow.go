@@ -6,7 +6,7 @@ import (
 )
 
 // UpdateFlow state for first task in selection
-func (s Selection) UpdateFlow(ctx context.Context, field string, status string, note string) (err error) {
+func (s Selection) UpdateFlow(ctx context.Context, field string, status string, message Message) (err error) {
 	c := ClientFor(ctx)
 	err = c.RefreshTokenOndemand(ctx)
 	if err != nil {
@@ -20,15 +20,9 @@ func (s Selection) UpdateFlow(ctx context.Context, field string, status string, 
 		return ErrEmptySelection
 	}
 
-	text := ""
-	if note != "" {
-		// no image upload support for now yet
-		var textData []byte
-		textData, err = json.Marshal(map[string]interface{}{"data": note, "image": []string{}})
-		if err != nil {
-			return err
-		}
-		text = string(textData)
+	textData, err := json.Marshal(message)
+	if err != nil {
+		return
 	}
 	_, err = c.callAPI(
 		ctx,
@@ -41,8 +35,8 @@ func (s Selection) UpdateFlow(ctx context.Context, field string, status string, 
 			"task_id":     ids[0],
 			"field_sign":  field,
 			"status":      status,
-			"text":        text,
+			"text":        string(textData),
 		},
 	)
-	return err
+	return
 }

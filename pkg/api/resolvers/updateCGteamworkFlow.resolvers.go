@@ -6,19 +6,15 @@ package resolvers
 import (
 	"context"
 	"fmt"
-	"strings"
 
-	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	cgteamworkCollector "github.com/WuLiFang/csheet/v6/pkg/collector/cgteamwork"
 	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
 	"github.com/tidwall/gjson"
-	"go.uber.org/zap"
 )
 
 func (r *mutationResolver) UpdateCGTeamworkFlow(ctx context.Context, input model.UpdateCGTeamworkFlowInput) (*model.UpdateCGTeamworkFlowPayload, error) {
-	logger := logging.For(ctx).Logger("api")
 	ctx = cgteamwork.WithClient(ctx, &cgteamwork.Client{
 		URL:      cgteamwork.DefaultClient.URL,
 		Username: input.Username,
@@ -42,27 +38,35 @@ func (r *mutationResolver) UpdateCGTeamworkFlow(ctx context.Context, input model
 		if taskID == "" {
 			continue
 		}
-		parts := strings.Split(col.Origin, collection.OriginSeperator)
-		if len(parts) != 4 {
-			logger.DPanic("invalid origin", zap.Any("collection", col))
-			continue
+		db, pipeline, prefix, err := cgteamworkCollector.ParseOrigin(col.Origin)
+		if err != nil {
+			return ret, err
 		}
-		database := parts[1]
-		s := cgteamwork.Select(database, "shot").
+
+		s := cgteamwork.Select(db, "shot").
 			WithModuleType("task").
 			WithFilter(cgteamwork.F("task.id").Equal(taskID))
-		note := ""
-		if i.Note != nil {
-			note = *i.Note
+		msg := cgteamwork.Message{
+			Images: make([]cgteamwork.Image, 0, len(i.Images)),
 		}
-		err = s.UpdateFlow(ctx, fmt.Sprintf("task.%s_status", i.Stage), i.Status, note)
+		if i.Note != nil {
+			msg.HTML = *i.Note
+		}
+		for _, img := range i.Images {
+			uploaded, err := cgteamwork.UploadImage(ctx, img.Filename, img.File, img.Size, cgteamwork.UploadOptionProject(db))
+			if err != nil {
+				return ret, err
+			}
+			msg.Images = append(msg.Images, uploaded)
+		}
+		err = s.UpdateFlow(ctx, fmt.Sprintf("task.%s_status", i.Stage), i.Status, msg)
 		if err != nil {
 			return ret, err
 		}
 		m[cgteamworkCollector.Options{
-			Database: database,
-			Pipeline: col.Metadata["cgteamwork.pipeline"],
-			Prefix:   parts[3],
+			Database: db,
+			Pipeline: pipeline,
+			Prefix:   prefix,
 		}] = struct{}{}
 	}
 

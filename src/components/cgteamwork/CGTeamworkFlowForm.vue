@@ -39,15 +39,11 @@
         v-model="formData.pipeline"
         :options="pipelines.map(i => ({value: i, label: i}))"
       )
-    label.block(
-      class="m-1"
+    CGTeamworkMessageEditor(
+      class="mb-2"
+      ref="messageEditor"
+      v-model="formData.message"
     )
-      span 备注
-      textarea.form-textarea(
-        ref="noteTextarea"
-        v-model="formData.note"
-        class="w-full my-1"
-      )
     fieldset
       button.form-button(
         class="w-1/3 px-0"
@@ -80,10 +76,12 @@ import {
 } from '@/graphql/types/collectionNode';
 import getCollectionPipelines from '@/client/utils/getCollectionPipelines';
 import CGTeamworkStageSelect from '@/components/cgteamwork/CGTeamworkStageSelect.vue';
+import CGTeamworkMessageEditor from '@/components/cgteamwork/CGTeamworkMessageEditor.vue';
 
 @Component<CGTeamworkFlowForm>({
   components: {
     CGTeamworkStageSelect,
+    CGTeamworkMessageEditor,
   },
   apollo: {
     collection: {
@@ -127,8 +125,11 @@ export default class CGTeamworkFlowForm extends Vue {
     password: '',
     stage: db.preference.get('cgteamworkStage'),
     status: '',
-    note: '',
     pipeline: '',
+    message: {
+      html: '',
+      images: [] as (File | Blob)[],
+    },
   };
 
   collection?: Collection;
@@ -138,7 +139,7 @@ export default class CGTeamworkFlowForm extends Vue {
   $refs!: {
     usernameInput: HTMLInputElement;
     passwardInput: HTMLInputElement;
-    noteTextarea: HTMLTextAreaElement;
+    messageEditor: CGTeamworkMessageEditor;
   };
 
   get pipelines(): string[] {
@@ -161,7 +162,8 @@ export default class CGTeamworkFlowForm extends Vue {
             stage: this.formData.stage,
             status: this.formData.status,
             pipeline: this.formData.pipeline,
-            note: this.formData.note || undefined,
+            note: this.formData.message.html,
+            images: this.formData.message.images,
           },
         ],
       },
@@ -176,7 +178,7 @@ export default class CGTeamworkFlowForm extends Vue {
     } else if (!this.formData.password) {
       this.$refs.passwardInput.focus();
     } else {
-      this.$refs.noteTextarea.focus();
+      this.$refs.messageEditor.focus();
     }
   }
 }

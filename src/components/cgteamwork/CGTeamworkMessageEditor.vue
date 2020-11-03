@@ -1,6 +1,7 @@
 <template lang="pug">
   .cgteamwork-message-editor
     textarea.form-textarea(
+      ref="textarea"
       class="w-full h-32"
       v-model="text"
       @blur="commit()"
@@ -60,6 +61,10 @@ export interface CGTeamworkMessageEditorValue {
 export default class CGTeamworkMessageEditor extends Mixins(
   getVModelMixin<CGTeamworkMessageEditorValue>()
 ) {
+  $refs!: {
+    textarea: HTMLTextAreaElement;
+  };
+
   text = '';
   images: (File | Blob)[] = [];
 
@@ -68,6 +73,10 @@ export default class CGTeamworkMessageEditor extends Mixins(
       html: this.text.replaceAll('\n', '<br>'),
       images: this.images,
     };
+  }
+
+  focus(): void {
+    this.$refs.textarea.focus();
   }
 
   protected handlePaste(e: ClipboardEvent): void {

@@ -15,8 +15,8 @@ func TestUpdateFlow(t *testing.T) {
 			F("shot.shot").Equal("SDKTEST_EP01_01_sc001").
 				And(F("task.pipeline").Equal("合成")),
 		)
-	err := s.UpdateFlow(ctx, "task.leader_status", "Retake", "golang sdk test")
+	err := s.UpdateFlow(ctx, "task.leader_status", "Retake", Message{HTML: "golang sdk test"})
 	require.NoError(t, err)
-	err = s.UpdateFlow(ctx, "task.leader_status", "Close", "")
+	err = s.UpdateFlow(ctx, "task.leader_status", "Close", Message{})
 	require.NoError(t, err)
 }

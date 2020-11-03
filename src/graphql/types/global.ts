@@ -40,6 +40,7 @@ export interface UpdateCGTeamworkFlowInputData {
   status: string;
   pipeline?: string | null;
   note?: string | null;
+  images?: any[] | null;
 }
 
 /**
