@@ -5,6 +5,8 @@
     img(
       class="w-full h-full object-contain"
       :src="src"
+      class="cursor-zoom-in"
+      @click="showImageViewer(src)"
     )
     FaIcon(
       name="times-circle"
@@ -16,6 +18,8 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import "vue-awesome/icons/times-circle"
+import { show } from '@/modal'
+import ImageViewer from '@/components/ImageViewer.vue'
 
 @Component<CGteamworkEditorImagePreview>({
   mounted() {
@@ -37,5 +41,10 @@ export default class CGteamworkEditorImagePreview extends Vue {
   value!: File | Blob
 
   src = ""
+
+  
+  showImageViewer(src: string): void {
+    show(ImageViewer, { attrs: { src } });
+  }
 }
 </script>
