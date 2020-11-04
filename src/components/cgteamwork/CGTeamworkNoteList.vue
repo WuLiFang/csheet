@@ -33,6 +33,7 @@
       )
         template(v-for="i in values")
           CGTeamworkNoteListItem(
+            :key="i.id"
             v-if="emptyNoteVisible || i.message.html || i.message.images.length > 0"
             class="border-t first:border-t-0 p-1 border-gray-700"
             :value="i"
