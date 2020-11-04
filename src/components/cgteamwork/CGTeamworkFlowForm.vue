@@ -52,13 +52,13 @@
       ) 关闭
       button.form-button(
         class="w-1/3 px-0"
-        class="bg-red-600"
+        class="bg-red-600 hover:bg-red-500"
         type="button"
         @click="formData.status = 'Retake'; submit()"
       ) 返修
       button.form-button(
         class="w-1/3 px-0"
-        class="bg-green-600"
+        class="bg-green-600 hover:bg-green-500"
         type="button"
         @click="formData.status = 'Approve'; submit()"
       ) 通过
