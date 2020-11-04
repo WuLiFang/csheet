@@ -26,7 +26,7 @@
           required
         )
     button.form-button(
-      class="w-full px-0 bg-red-500 inline-flex flex-center"
+      class="w-full px-0 bg-red-600 hover:bg-red-500 inline-flex flex-center"
       @click="submit()"
     ) 
       FaIcon.mx-1(name="trash")
