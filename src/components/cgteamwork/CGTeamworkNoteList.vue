@@ -21,7 +21,7 @@
       p.text-gray-600.text-center 无备注
     template(v-else)
       ol(
-        class="ml-2 space-y-1"
+        class="ml-2 space-y-1 max-h-128 overflow-y-auto"
       )
         template(v-for="i in values")
           CGTeamworkNoteListItem(
