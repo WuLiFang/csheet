@@ -5,13 +5,19 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	cgteamworkCollector "github.com/WuLiFang/csheet/v6/pkg/collector/cgteamwork"
 	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
 	"github.com/tidwall/gjson"
 )
+
+func (r *cGTeamworkNoteResolver) ID(ctx context.Context, obj *cgteamwork.Note) (string, error) {
+	return fmt.Sprintf("%s:%s", obj.Database, obj.ID), nil
+}
 
 func (r *collectionResolver) CgteamworkNotes(ctx context.Context, obj *collection.Collection, pipeline []string) ([]model.CollectionCGTeamworkNote, error) {
 	db, _, _, err := cgteamworkCollector.ParseOrigin(obj.Origin)
@@ -53,10 +59,9 @@ func (r *collectionResolver) CgteamworkNotes(ctx context.Context, obj *collectio
 	return ret, innerError
 }
 
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+// CGTeamworkNote returns generated.CGTeamworkNoteResolver implementation.
+func (r *Resolver) CGTeamworkNote() generated.CGTeamworkNoteResolver {
+	return &cGTeamworkNoteResolver{r}
+}
+
 type cGTeamworkNoteResolver struct{ *Resolver }

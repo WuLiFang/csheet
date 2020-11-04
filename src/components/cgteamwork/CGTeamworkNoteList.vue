@@ -24,7 +24,12 @@
         class="ml-2 space-y-1"
       )
         template(v-for="i in values")
-          CGTeamworkNoteListItem(:value="i" :hide-pipeline="pipelines.length === 1")
+          CGTeamworkNoteListItem(
+            class="border-t first:border-t-0 p-1 border-gray-700"
+            :value="i"
+            :hide-pipeline="pipelines.length === 1"
+            @delete="refetch()"
+          )
 </template>
 
 <script lang="ts">

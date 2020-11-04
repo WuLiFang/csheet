@@ -20,6 +20,7 @@ Accept data:
 input {{.Name | upperFirst }}Input {
 {{- block "args" . }}
     id: [ID!]!
+    {{- block "extendArgs" . }}{{ end }}
 {{- end}}
     clientMutationId: String
 }
@@ -35,7 +36,7 @@ type {{.Name | upperFirst }}Payload {
     created: [{{ .Model }}!]
     updated: [{{ .Model }}!]
 {{- else if .Action | eq "delete" }}
-    deletedCount: Int
+    deletedCount: Int!
 {{- else }}
 {{- end }}
     {{- block "extendType" . }}

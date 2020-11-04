@@ -12,7 +12,11 @@
 {{- end }}
 
 {{- define "type" }}
+{{- if .Action | eq "create" }}
     updatedCollections: [Collection!]
     createdCount: Int!
+{{- else if .Action | eq "delete" }}
+    deletedCount: Int!
+{{- end }}
 {{- end }}
 

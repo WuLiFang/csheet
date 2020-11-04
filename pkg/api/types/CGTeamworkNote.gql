@@ -1,5 +1,6 @@
 type CGTeamworkNote
   @goModel(model: "github.com/WuLiFang/csheet/v6/pkg/cgteamwork.Note") {
+  id: ID! @goField(forceResolver: true)
   type: String!
   message: CGTeamworkMessage!
   created: Time!

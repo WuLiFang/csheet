@@ -10,3 +10,4 @@ generate:
 	gotmpl -o updatePresentationMetadata.gql Model=Presentation base.gql.gotmpl dataInput.gotmpl updateMetadata.gotmpl
 	gotmpl -o updateCGTeamworkFlow.gql Model=Collection base.gql.gotmpl dataInput.gotmpl updateCGTeamworkFlow.gotmpl
 	gotmpl -o createCGTeamworkNote.gql base.gql.gotmpl dataInput.gotmpl cgteamworkNote.gotmpl
+	gotmpl -o deleteCGTeamworkNote.gql base.gql.gotmpl cgteamworkNote.gotmpl 

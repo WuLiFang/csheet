@@ -10,6 +10,7 @@ import (
 
 // Note on task
 type Note struct {
+	Database      string
 	ID            string
 	TaskID        string
 	ParentID      string
@@ -96,6 +97,7 @@ func (s Selection) Notes(ctx context.Context, fields ...string) (ret []Note, err
 	ret = make([]Note, res.Count())
 	err = res.Unmarshal(
 		func(index int) RecordUnmarshaler {
+			ret[index].Database = s.Database
 			return &ret[index]
 		})
 	return
@@ -149,6 +151,34 @@ func (s Selection) CreateNote(ctx context.Context, message Message, opts ...Crea
 	}
 
 	_, err = c.callAPI(ctx, param)
+	if err != nil {
+		return
+	}
+	return
+}
+
+// DeleteNote by id.
+func (s Selection) DeleteNote(ctx context.Context, id ...string) (err error) {
+	if len(id) == 0 {
+		return
+
+	}
+	c := ClientFor(ctx)
+	err = c.RefreshTokenOndemand(ctx)
+	if err != nil {
+		return
+	}
+
+	_, err = c.callAPI(ctx, map[string]interface{}{
+		"controller":      "v_note",
+		"method":          "del_in_id",
+		"id_array":        id,
+		"db":              s.Database,
+		"module":          s.Module,
+		"module_type":     s.ModuleType,
+		"task_id_array":   []string{},
+		"show_sign_array": []string{},
+	})
 	if err != nil {
 		return
 	}

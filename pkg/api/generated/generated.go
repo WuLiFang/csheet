@@ -44,6 +44,7 @@ type Config struct {
 
 type ResolverRoot interface {
 	CGTeamworkImage() CGTeamworkImageResolver
+	CGTeamworkNote() CGTeamworkNoteResolver
 	CollectResult() CollectResultResolver
 	Collection() CollectionResolver
 	DiskFile() DiskFileResolver
@@ -70,6 +71,7 @@ type ComplexityRoot struct {
 	CGTeamworkNote struct {
 		Created       func(childComplexity int) int
 		CreatedByName func(childComplexity int) int
+		ID            func(childComplexity int) int
 		Message       func(childComplexity int) int
 		Type          func(childComplexity int) int
 	}
@@ -126,6 +128,11 @@ type ComplexityRoot struct {
 		UpdatedCollections func(childComplexity int) int
 	}
 
+	DeleteCGTeamworkNotePayload struct {
+		ClientMutationID func(childComplexity int) int
+		DeletedCount     func(childComplexity int) int
+	}
+
 	DiskFile struct {
 		ModTime func(childComplexity int) int
 		Path    func(childComplexity int, format *string) int
@@ -136,6 +143,7 @@ type ComplexityRoot struct {
 		CollectFromCGTeamwork      func(childComplexity int, database string, prefix string, pipeline string) int
 		CollectFromFolder          func(childComplexity int, root string) int
 		CreateCGTeamworkNote       func(childComplexity int, input model.CreateCGTeamworkNoteInput) int
+		DeleteCGTeamworkNote       func(childComplexity int, input model.DeleteCGTeamworkNoteInput) int
 		UpdateCGTeamworkFlow       func(childComplexity int, input model.UpdateCGTeamworkFlowInput) int
 		UpdateCollectionMetadata   func(childComplexity int, input model.UpdateCollectionMetadataInput) int
 		UpdatePresentationMetadata func(childComplexity int, input model.UpdatePresentationMetadataInput) int
@@ -203,6 +211,9 @@ type CGTeamworkImageResolver interface {
 	Max(ctx context.Context, obj *cgteamwork.Image) (*model.WebFile, error)
 	Min(ctx context.Context, obj *cgteamwork.Image) (*model.WebFile, error)
 }
+type CGTeamworkNoteResolver interface {
+	ID(ctx context.Context, obj *cgteamwork.Note) (string, error)
+}
 type CollectResultResolver interface {
 	ID(ctx context.Context, obj *base.CollectResult) (string, error)
 	Time(ctx context.Context, obj *base.CollectResult) (*time.Time, error)
@@ -219,6 +230,7 @@ type MutationResolver interface {
 	CollectFromCGTeamwork(ctx context.Context, database string, prefix string, pipeline string) (*base.CollectResult, error)
 	CollectFromFolder(ctx context.Context, root string) (*base.CollectResult, error)
 	CreateCGTeamworkNote(ctx context.Context, input model.CreateCGTeamworkNoteInput) (*model.CreateCGTeamworkNotePayload, error)
+	DeleteCGTeamworkNote(ctx context.Context, input model.DeleteCGTeamworkNoteInput) (*model.DeleteCGTeamworkNotePayload, error)
 	UpdateCGTeamworkFlow(ctx context.Context, input model.UpdateCGTeamworkFlowInput) (*model.UpdateCGTeamworkFlowPayload, error)
 	UpdateCollectionMetadata(ctx context.Context, input model.UpdateCollectionMetadataInput) (*model.UpdateCollectionMetadataPayload, error)
 	UpdatePresentationMetadata(ctx context.Context, input model.UpdatePresentationMetadataInput) (*model.UpdatePresentationMetadataPayload, error)
@@ -302,6 +314,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CGTeamworkNote.CreatedByName(childComplexity), true
+
+	case "CGTeamworkNote.id":
+		if e.complexity.CGTeamworkNote.ID == nil {
+			break
+		}
+
+		return e.complexity.CGTeamworkNote.ID(childComplexity), true
 
 	case "CGTeamworkNote.message":
 		if e.complexity.CGTeamworkNote.Message == nil {
@@ -518,6 +537,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CreateCGTeamworkNotePayload.UpdatedCollections(childComplexity), true
 
+	case "DeleteCGTeamworkNotePayload.clientMutationId":
+		if e.complexity.DeleteCGTeamworkNotePayload.ClientMutationID == nil {
+			break
+		}
+
+		return e.complexity.DeleteCGTeamworkNotePayload.ClientMutationID(childComplexity), true
+
+	case "DeleteCGTeamworkNotePayload.deletedCount":
+		if e.complexity.DeleteCGTeamworkNotePayload.DeletedCount == nil {
+			break
+		}
+
+		return e.complexity.DeleteCGTeamworkNotePayload.DeletedCount(childComplexity), true
+
 	case "DiskFile.modTime":
 		if e.complexity.DiskFile.ModTime == nil {
 			break
@@ -579,6 +612,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateCGTeamworkNote(childComplexity, args["input"].(model.CreateCGTeamworkNoteInput)), true
+
+	case "Mutation.deleteCGTeamworkNote":
+		if e.complexity.Mutation.DeleteCGTeamworkNote == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteCGTeamworkNote_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteCGTeamworkNote(childComplexity, args["input"].(model.DeleteCGTeamworkNoteInput)), true
 
 	case "Mutation.updateCGTeamworkFlow":
 		if e.complexity.Mutation.UpdateCGTeamworkFlow == nil {
@@ -993,6 +1038,26 @@ extend type Mutation {
     createCGTeamworkNote(input: CreateCGTeamworkNoteInput!): CreateCGTeamworkNotePayload
 }
 `, BuiltIn: false},
+	{Name: "pkg/api/mutations/deleteCGTeamworkNote.gql", Input: `# Code generated from [base.gql.gotmpl cgteamworkNote.gotmpl], DO NOT EDIT.
+
+"Autogenerated input type of DeleteCGTeamworkNote"
+input DeleteCGTeamworkNoteInput {
+    id: [ID!]!
+    username: String!
+    password: String!
+    clientMutationId: String
+}
+
+"Autogenerated return type of DeleteCGTeamworkNote"
+type DeleteCGTeamworkNotePayload {
+    deletedCount: Int!
+    clientMutationId: String
+}
+
+extend type Mutation {
+    deleteCGTeamworkNote(input: DeleteCGTeamworkNoteInput!): DeleteCGTeamworkNotePayload
+}
+`, BuiltIn: false},
 	{Name: "pkg/api/mutations/updateCGteamworkFlow.gql", Input: `# Code generated from [base.gql.gotmpl dataInput.gotmpl updateCGTeamworkFlow.gotmpl], DO NOT EDIT.
 
 input UpdateCGTeamworkFlowInputData {
@@ -1135,6 +1200,7 @@ extend type Query {
 `, BuiltIn: false},
 	{Name: "pkg/api/types/CGTeamworkNote.gql", Input: `type CGTeamworkNote
   @goModel(model: "github.com/WuLiFang/csheet/v6/pkg/cgteamwork.Note") {
+  id: ID! @goField(forceResolver: true)
   type: String!
   message: CGTeamworkMessage!
   created: Time!
@@ -1325,6 +1391,21 @@ func (ec *executionContext) field_Mutation_createCGTeamworkNote_args(ctx context
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithFieldInputContext(ctx, graphql.NewFieldInputWithField("input"))
 		arg0, err = ec.unmarshalNCreateCGTeamworkNoteInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCreateCGTeamworkNoteInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteCGTeamworkNote_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.DeleteCGTeamworkNoteInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithFieldInputContext(ctx, graphql.NewFieldInputWithField("input"))
+		arg0, err = ec.unmarshalNDeleteCGTeamworkNoteInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐDeleteCGTeamworkNoteInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1760,6 +1841,40 @@ func (ec *executionContext) _CGTeamworkMessage_images(ctx context.Context, field
 	res := resTmp.([]cgteamwork.Image)
 	fc.Result = res
 	return ec.marshalNCGTeamworkImage2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcgteamworkᚐImageᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CGTeamworkNote_id(ctx context.Context, field graphql.CollectedField, obj *cgteamwork.Note) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "CGTeamworkNote",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CGTeamworkNote().ID(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CGTeamworkNote_type(ctx context.Context, field graphql.CollectedField, obj *cgteamwork.Note) (ret graphql.Marshaler) {
@@ -2833,6 +2948,71 @@ func (ec *executionContext) _CreateCGTeamworkNotePayload_clientMutationId(ctx co
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _DeleteCGTeamworkNotePayload_deletedCount(ctx context.Context, field graphql.CollectedField, obj *model.DeleteCGTeamworkNotePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "DeleteCGTeamworkNotePayload",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DeletedCount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DeleteCGTeamworkNotePayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *model.DeleteCGTeamworkNotePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "DeleteCGTeamworkNotePayload",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ClientMutationID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _DiskFile_path(ctx context.Context, field graphql.CollectedField, obj *file.File) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3054,6 +3234,44 @@ func (ec *executionContext) _Mutation_createCGTeamworkNote(ctx context.Context, 
 	res := resTmp.(*model.CreateCGTeamworkNotePayload)
 	fc.Result = res
 	return ec.marshalOCreateCGTeamworkNotePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCreateCGTeamworkNotePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_deleteCGTeamworkNote(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Mutation",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_deleteCGTeamworkNote_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteCGTeamworkNote(rctx, args["input"].(model.DeleteCGTeamworkNoteInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.DeleteCGTeamworkNotePayload)
+	fc.Result = res
+	return ec.marshalODeleteCGTeamworkNotePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐDeleteCGTeamworkNotePayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_updateCGTeamworkFlow(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5420,6 +5638,50 @@ func (ec *executionContext) unmarshalInputCreateCGTeamworkNoteInputData(ctx cont
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputDeleteCGTeamworkNoteInput(ctx context.Context, obj interface{}) (model.DeleteCGTeamworkNoteInput, error) {
+	var it model.DeleteCGTeamworkNoteInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithFieldInputContext(ctx, graphql.NewFieldInputWithField("id"))
+			it.ID, err = ec.unmarshalNID2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "username":
+			var err error
+
+			ctx := graphql.WithFieldInputContext(ctx, graphql.NewFieldInputWithField("username"))
+			it.Username, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "password":
+			var err error
+
+			ctx := graphql.WithFieldInputContext(ctx, graphql.NewFieldInputWithField("password"))
+			it.Password, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "clientMutationId":
+			var err error
+
+			ctx := graphql.WithFieldInputContext(ctx, graphql.NewFieldInputWithField("clientMutationId"))
+			it.ClientMutationID, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpdateCGTeamworkFlowInput(ctx context.Context, obj interface{}) (model.UpdateCGTeamworkFlowInput, error) {
 	var it model.UpdateCGTeamworkFlowInput
 	var asMap = obj.(map[string]interface{})
@@ -5776,25 +6038,39 @@ func (ec *executionContext) _CGTeamworkNote(ctx context.Context, sel ast.Selecti
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("CGTeamworkNote")
+		case "id":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CGTeamworkNote_id(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "type":
 			out.Values[i] = ec._CGTeamworkNote_type(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "message":
 			out.Values[i] = ec._CGTeamworkNote_message(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "created":
 			out.Values[i] = ec._CGTeamworkNote_created(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "createdByName":
 			out.Values[i] = ec._CGTeamworkNote_createdByName(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -6135,6 +6411,35 @@ func (ec *executionContext) _CreateCGTeamworkNotePayload(ctx context.Context, se
 	return out
 }
 
+var deleteCGTeamworkNotePayloadImplementors = []string{"DeleteCGTeamworkNotePayload"}
+
+func (ec *executionContext) _DeleteCGTeamworkNotePayload(ctx context.Context, sel ast.SelectionSet, obj *model.DeleteCGTeamworkNotePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, deleteCGTeamworkNotePayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("DeleteCGTeamworkNotePayload")
+		case "deletedCount":
+			out.Values[i] = ec._DeleteCGTeamworkNotePayload_deletedCount(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "clientMutationId":
+			out.Values[i] = ec._DeleteCGTeamworkNotePayload_clientMutationId(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var diskFileImplementors = []string{"DiskFile"}
 
 func (ec *executionContext) _DiskFile(ctx context.Context, sel ast.SelectionSet, obj *file.File) graphql.Marshaler {
@@ -6202,6 +6507,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "createCGTeamworkNote":
 			out.Values[i] = ec._Mutation_createCGTeamworkNote(ctx, field)
+		case "deleteCGTeamworkNote":
+			out.Values[i] = ec._Mutation_deleteCGTeamworkNote(ctx, field)
 		case "updateCGTeamworkFlow":
 			out.Values[i] = ec._Mutation_updateCGTeamworkFlow(ctx, field)
 		case "updateCollectionMetadata":
@@ -7067,6 +7374,11 @@ func (ec *executionContext) unmarshalNCreateCGTeamworkNoteInputData2ᚕgithubᚗ
 	return res, nil
 }
 
+func (ec *executionContext) unmarshalNDeleteCGTeamworkNoteInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐDeleteCGTeamworkNoteInput(ctx context.Context, v interface{}) (model.DeleteCGTeamworkNoteInput, error) {
+	res, err := ec.unmarshalInputDeleteCGTeamworkNoteInput(ctx, v)
+	return res, graphql.WrapErrorWithInputPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNDiskFile2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋfileᚐFile(ctx context.Context, sel ast.SelectionSet, v file.File) graphql.Marshaler {
 	return ec._DiskFile(ctx, sel, &v)
 }
@@ -7895,6 +8207,13 @@ func (ec *executionContext) marshalOCreateCGTeamworkNotePayload2ᚖgithubᚗcom�
 		return graphql.Null
 	}
 	return ec._CreateCGTeamworkNotePayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalODeleteCGTeamworkNotePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐDeleteCGTeamworkNotePayload(ctx context.Context, sel ast.SelectionSet, v *model.DeleteCGTeamworkNotePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._DeleteCGTeamworkNotePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOID2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {

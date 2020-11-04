@@ -1,0 +1,5 @@
+mutation deleteCGTeamworkNote($input: DeleteCGTeamworkNoteInput!) {
+  deleteCGTeamworkNote(input: $input) {
+    deletedCount
+  }
+}

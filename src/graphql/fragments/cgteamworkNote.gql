@@ -1,4 +1,5 @@
 fragment cgteamworkNote on CGTeamworkNote {
+  id
   type
   message {
     html

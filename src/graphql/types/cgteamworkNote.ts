@@ -31,6 +31,7 @@ export interface cgteamworkNote_message {
 
 export interface cgteamworkNote {
   __typename: "CGTeamworkNote";
+  id: string;
   type: string;
   message: cgteamworkNote_message;
   created: any;

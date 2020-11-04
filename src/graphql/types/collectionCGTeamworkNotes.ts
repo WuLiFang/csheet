@@ -36,6 +36,7 @@ export interface collectionCGTeamworkNotes_node_Collection_cgteamworkNotes_notes
 
 export interface collectionCGTeamworkNotes_node_Collection_cgteamworkNotes_notes {
   __typename: "CGTeamworkNote";
+  id: string;
   type: string;
   message: collectionCGTeamworkNotes_node_Collection_cgteamworkNotes_notes_message;
   created: any;

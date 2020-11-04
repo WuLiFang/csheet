@@ -16,8 +16,17 @@
         class="mx-1 text-gray-500"
         :value="value.created"
       )
-    .ml-4
-      p(v-html="safeHTML")
+      button.form-button(
+        type="button"
+        class="float-right m-1 p-0 h-6 w-12 inline-flex flex-center"
+        @click="showDeleteFormDrawer()"
+        title="删除备注"
+      )
+        FaIcon.h-4(name="trash")
+    .ml-2.clear-both(
+      class="overflow-hidden"
+    )
+      p(class="mx-1" v-html="safeHTML")
       template(v-for="i in value.message.images")
         a.inline-block(
           target="_blank"
@@ -31,9 +40,13 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import CGTeamworkTaskStatus from './CGTeamworkTaskStatus.vue';
-import DOMPurify from "dompurify"
+import DOMPurify from 'dompurify';
+import { show } from '@/modal';
+import 'vue-awesome/icons/trash';
+import CGTeamworkNoteDeleteFormDrawer from '@/components/cgteamwork/CGTeamworkNoteDeleteFormDrawer.vue';
 
 export interface CGTeamworkNoteListItemValue {
+  id: string;
   pipeline: string;
   type: string;
   created: Date;
@@ -45,9 +58,9 @@ export interface CGTeamworkNoteListItemValue {
 }
 
 @Component<CGTeamworkNoteListItem>({
-  components:{
-    CGTeamworkTaskStatus
-  }
+  components: {
+    CGTeamworkTaskStatus,
+  },
 })
 export default class CGTeamworkNoteListItem extends Vue {
   @Prop({ required: true, type: Object })
@@ -57,8 +70,18 @@ export default class CGTeamworkNoteListItem extends Vue {
   hidePipeline!: boolean;
 
   get safeHTML(): string {
+    return DOMPurify.sanitize(this.value.message.html);
+  }
 
-    return DOMPurify.sanitize(this.value.message.html)
+  showDeleteFormDrawer(): void {
+    show(CGTeamworkNoteDeleteFormDrawer, {
+      attrs: { id: this.value.id },
+      on: {
+        submit: () => {
+          this.$emit('delete');
+        },
+      },
+    });
   }
 }
 </script>
