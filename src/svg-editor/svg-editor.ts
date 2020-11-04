@@ -6,6 +6,7 @@ import DOMPurify from 'dompurify';
 
 export interface SVGEditorOptions {
   sanitize?: (v: string) => string;
+  style?: string;
   hooks?: {
     discardChanges?: () => void;
     clearHistory?: () => void;
@@ -68,6 +69,7 @@ export class SVGEditor {
   readonly el: SVGSVGElement;
   readonly valueContainer: Element;
   readonly editContainer: Element;
+  readonly style: SVGStyleElement;
   readonly hooks: NonNullable<SVGEditorOptions['hooks']>;
 
   protected sanitize: (v: string) => string;
@@ -76,11 +78,27 @@ export class SVGEditor {
 
   constructor(
     el: SVGSVGElement,
-    { hooks = {}, sanitize = v => DOMPurify.sanitize(v) }: SVGEditorOptions = {}
+    {
+      hooks = {},
+      sanitize = v => DOMPurify.sanitize(v),
+      style = `\
+polyline {
+  stroke-linecap: round;
+}
+polyline,
+rect,
+ellipse {
+  fill: none;
+}
+`,
+    }: SVGEditorOptions = {}
   ) {
     this.el = el;
     this.hooks = hooks;
     this.sanitize = sanitize;
+    this.style = createSVGElement('style');
+    this.style.textContent = style;
+    el.appendChild(this.style);
     this.valueContainer = createSVGElement('g');
     el.appendChild(this.valueContainer);
     this.editContainer = createSVGElement('g');

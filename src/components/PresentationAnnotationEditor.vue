@@ -62,6 +62,19 @@ type PainterName =
   },
   mounted() {
     this.editor = new SVGEditor(this.$el, {
+      style: `
+polyline {
+  stroke-linecap: round;
+}
+polyline,
+rect,
+ellipse {
+  fill: none;
+}
+.invisible {
+  visibility: hidden;
+}
+`,
       hooks: {
         drawEnd: () => {
           this.editor.clearHistory();

@@ -1,13 +1,5 @@
 .svg-editor {
   touch-action: none;
-  polyline {
-    stroke-linecap: round;
-  }
-  polyline,
-  rect,
-  ellipse {
-    fill: none;
-  }
 
   &[data-drawing='true'] {
     > g > * {

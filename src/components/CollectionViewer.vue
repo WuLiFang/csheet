@@ -60,6 +60,15 @@
             :parent="$refs.annotation"
             v-show="presentationID"
           )
+            template(#right)
+              button.form-button(
+                class="h-8 m-px"
+                class="inline-flex flex-center"
+                type="button"
+                @click="saveScreenshot()"
+                title="保存截图"
+              )
+                FaIcon(name="camera")
           template(v-for="i in prefetchURLs")
             link(rel="prefetch" :href="i")
           p(
@@ -172,6 +181,7 @@ import 'vue-awesome/icons/fast-forward';
 import 'vue-awesome/icons/fast-backward';
 import 'vue-awesome/icons/pause';
 import 'vue-awesome/icons/play';
+import 'vue-awesome/icons/camera';
 import PresentationSelect from './PresentationSelect.vue';
 import {
   collectionNode,
@@ -188,6 +198,7 @@ import { throttle } from 'lodash';
 import PresentationAnnotationEditor from './PresentationAnnotationEditor.vue';
 import PresentationAnnotationEditorToolbar from './PresentationAnnotationEditorToolbar.vue';
 import PresentationControls from './PresentationControls.vue';
+import { saveAs } from 'file-saver';
 
 @Component<CollectionViewer>({
   components: {
@@ -524,6 +535,88 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
     } finally {
       this.recollectingCount -= 1;
     }
+  }
+
+  get width(): number {
+    const v = parseFloat(
+      this.presentation?.metadata.find(i => i.k === 'width')?.v ?? ''
+    );
+    if (!isFinite(v)) {
+      return 1920;
+    }
+    return v;
+  }
+
+  get height(): number {
+    const v = parseFloat(
+      this.presentation?.metadata.find(i => i.k === 'height')?.v ?? ''
+    );
+    if (!isFinite(v)) {
+      return 1080;
+    }
+    return v;
+  }
+
+  async screenshot(type = 'image/jpeg', quality = 1): Promise<Blob | null> {
+    const bg = this.$refs.presentation.$el;
+    const canvas = document.createElement('canvas');
+    let w = bg.width;
+    let h = bg.height;
+    if (bg instanceof HTMLVideoElement) {
+      w = bg.videoWidth;
+      h = bg.videoHeight;
+    } else if (bg instanceof HTMLImageElement) {
+      w = bg.naturalWidth;
+      h = bg.naturalHeight;
+    }
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      throw new Error('2d context not supported ');
+    }
+
+    ctx.drawImage(bg, 0, 0, w, h);
+    if (this.$refs.annotation.painter !== 'null') {
+      const annotation = this.$refs.annotation.$el;
+      await new Promise(resolve => {
+        const svg = new Blob(
+          [new XMLSerializer().serializeToString(annotation)],
+          { type: 'image/svg+xml' }
+        );
+        const src = URL.createObjectURL(svg);
+        const img = new Image(w, h);
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0, w, h);
+          URL.revokeObjectURL(src);
+          resolve();
+        };
+        img.src = src;
+      });
+    }
+
+    return new Promise(resolve => {
+      canvas.toBlob(
+        v => {
+          resolve(v);
+        },
+        type,
+        quality
+      );
+    });
+  }
+
+  async saveScreenshot(): Promise<void> {
+    const data = await this.screenshot('image/jpeg');
+    if (!data) {
+      return;
+    }
+    saveAs(
+      data,
+      this.presentation?.type === 'video'
+        ? `${this.value.origin}.${this.$refs.presentation.currentFrame}.jpg`
+        : `${this.value.origin}.jpg`
+    );
   }
 }
 </script>

@@ -175,6 +175,7 @@
         title="重做（快捷键：Ctrl + y）"
       )
         FaIcon(name="redo")
+    slot(name="right")
 </template>
 
 <script lang="ts">
