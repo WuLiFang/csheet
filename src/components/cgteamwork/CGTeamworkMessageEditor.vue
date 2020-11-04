@@ -18,10 +18,10 @@
           @close="images.splice($index, 1); commit()"
         )
       label(
-        class="h-16 w-16 border border-dotted cursor-pointer"
-        class="inline-flex flex-center"
+        class="h-16 w-16 border border-dashed cursor-pointer"
+        class="inline-flex flex-center rounded"
       )
-        FaIcon(name="plus" class="h-8")
+        FaIcon(name="plus" class="h-4")
         input(type="file" accept="image/*" hidden @input="handleFileInput")
 </template>
 
