@@ -117,4 +117,8 @@ button:focus,
     @apply justify-center;
     @apply items-center;
   }
+
+  .bg-checkboard {
+    background-image: url('../assets/img/checkboard.svg');
+  }
 }

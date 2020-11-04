@@ -645,8 +645,4 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
     @apply opacity-25;
   }
 }
-
-.bg-checkboard {
-  background-image: url('../assets/img/checkboard.svg');
-}
 </style>
