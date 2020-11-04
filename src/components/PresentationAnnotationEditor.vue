@@ -1,6 +1,8 @@
 <template lang="pug">
   svg.presentation-annotation-editor.svg-editor(
     :viewBox="`0 0 ${width} ${height}`"
+    :width="width"
+    :height="height"
     v-show="currentPainter !== 'null'"
   )
 </template>
