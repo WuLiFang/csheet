@@ -14,7 +14,15 @@
         span 于
         TimeWidget.mx-1(:value="fetched" format="HH:mm:ss")
         span 查询
-      span.mx-1.text-gray-600.inline-flex.items-center 每 10 秒自动刷新
+      span.mx-1.text-gray-600.inline-flex.items-center.flex-auto 每 10 秒自动刷新
+      LocalStorage(name="cgteamwork.empty-note-visible" v-model="emptyNoteVisible")
+        label.inline-flex.flex-center
+          input.form-checkbox(
+            class="mx-1"
+            type="checkbox"
+            v-model="emptyNoteVisible"
+          )
+          span 显示空备注
     template(v-if="loadingCount > 0 ")
       FaIcon(name="spinner" spin class="w-full inline-block h-8 text-gray-500")
     template(v-else-if="values.length === 0")
@@ -25,6 +33,7 @@
       )
         template(v-for="i in values")
           CGTeamworkNoteListItem(
+            v-if="emptyNoteVisible || i.message.html || i.message.images.length > 0"
             class="border-t first:border-t-0 p-1 border-gray-700"
             :value="i"
             :hide-pipeline="pipelines.length === 1"
@@ -79,11 +88,12 @@ import CGTeamworkNoteFormDrawer from '@/components/cgteamwork/CGTeamworkNoteForm
             ? v.node.cgteamworkNotes ?? []
             : []
           ).flatMap(i =>
-            i.notes.map(j => ({
-              ...j,
-              pipeline: i.pipeline,
-              created: cast.date(j.created),
-            }))
+            i.notes
+              .map(j => ({
+                ...j,
+                pipeline: i.pipeline,
+                created: cast.date(j.created),
+              }))
           ),
           i => i.created,
           'desc'
@@ -119,6 +129,7 @@ export default class CGTeamworkNoteList extends Vue {
   values: CGTeamworkNoteListItemValue[] = [];
 
   loadingCount = 0;
+  emptyNoteVisible = false;
 
   fetched = new Date(0);
 
