@@ -10,7 +10,7 @@ export default Vue.extend({
     value: { default: undefined as unknown },
   },
   mounted() {
-    const v = sessionStorage.getItem(this.name);
+    const v = localStorage.getItem(this.name);
     if (v) {
       try {
         this.$emit('input', JSON.parse(v));
@@ -23,9 +23,9 @@ export default Vue.extend({
       () => this.value,
       v => {
         if (v == null) {
-          sessionStorage.removeItem(this.name);
+          localStorage.removeItem(this.name);
         } else {
-          sessionStorage.setItem(this.name, JSON.stringify(v));
+          localStorage.setItem(this.name, JSON.stringify(v));
         }
       }
     );
