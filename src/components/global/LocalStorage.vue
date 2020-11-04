@@ -7,7 +7,7 @@ export default Vue.extend({
   props: {
     name: { type: String, required: true },
     // eslint-disable-next-line vue/require-prop-types
-    value: {default: undefined as unknown},
+    value: { default: undefined as unknown },
   },
   mounted() {
     const v = sessionStorage.getItem(this.name);

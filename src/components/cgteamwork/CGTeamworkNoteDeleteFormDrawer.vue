@@ -35,5 +35,7 @@ import 'vue-awesome/icons/arrow-left';
     CGTeamworkNoteDeleteForm,
   },
 })
-export default class CGTeamworkNoteDeleteFormDrawer extends Mixins(ModalMixin) {}
+export default class CGTeamworkNoteDeleteFormDrawer extends Mixins(
+  ModalMixin
+) {}
 </script>

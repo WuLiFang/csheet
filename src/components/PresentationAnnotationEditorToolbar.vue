@@ -205,25 +205,25 @@ export default class PresentationAnnotationEditorToolbar extends Vue {
       this.parent.editor.clearHistory();
       this.parent.editor.operation(painter.selected)?.remove();
       painter.selected = -1;
-      this.parent.debouncedSubmit()
+      this.parent.debouncedSubmit();
     }
   }
 
   get frameRangeInputVisible(): boolean {
     return (
-      this.parent.presentation?.type === "video" &&
-      (['select', 'polyline', 'ellipse', 'rectangle', 'text'].includes(
+      this.parent.presentation?.type === 'video' &&
+      ['select', 'polyline', 'ellipse', 'rectangle', 'text'].includes(
         this.parent.currentPainter
-      ))
+      )
     );
   }
 
   get frameRangeInputDisabled(): boolean {
     return !(
-      (['polyline', 'ellipse', 'rectangle', 'text'].includes(
+      ['polyline', 'ellipse', 'rectangle', 'text'].includes(
         this.parent.currentPainter
       ) ||
-        (this.parent.currentPainter === 'select' && this.parent.selected >= 0))
+      (this.parent.currentPainter === 'select' && this.parent.selected >= 0)
     );
   }
 }

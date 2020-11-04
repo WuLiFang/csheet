@@ -89,12 +89,11 @@ import CGTeamworkNoteFormDrawer from '@/components/cgteamwork/CGTeamworkNoteForm
             ? v.node.cgteamworkNotes ?? []
             : []
           ).flatMap(i =>
-            i.notes
-              .map(j => ({
-                ...j,
-                pipeline: i.pipeline,
-                created: cast.date(j.created),
-              }))
+            i.notes.map(j => ({
+              ...j,
+              pipeline: i.pipeline,
+              created: cast.date(j.created),
+            }))
           ),
           i => i.created,
           'desc'

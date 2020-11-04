@@ -129,9 +129,9 @@ import { getCommonPrefix } from '../utils/getCommonPrefix';
         variables(): presentationUpdatedVariables {
           return { id: this.presentationIDs, filePathFormat };
         },
-        skip():boolean {
-          return this.presentationIDs.length === 0
-        }
+        skip(): boolean {
+          return this.presentationIDs.length === 0;
+        },
       },
     },
   },
@@ -157,7 +157,7 @@ export default class CollectionOverview extends Vue {
   }
 
   get presentationIDs(): string[] {
-    return this.nodes.flatMap(i => i.presentations.map(j => j.id))
+    return this.nodes.flatMap(i => i.presentations.map(j => j.id));
   }
 
   get pageInfo(): Relay.PageInfo {

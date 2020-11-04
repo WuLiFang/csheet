@@ -16,33 +16,36 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
-import "vue-awesome/icons/times-circle"
-import { show } from '@/modal'
-import ImageViewer from '@/components/ImageViewer.vue'
+import { Component, Vue, Prop } from 'vue-property-decorator';
+import 'vue-awesome/icons/times-circle';
+import { show } from '@/modal';
+import ImageViewer from '@/components/ImageViewer.vue';
 
 @Component<CGteamworkEditorImagePreview>({
   mounted() {
-    this.$watch(() => this.value,v => {
-      if (this.src){
-        URL.revokeObjectURL(this.src)
-      }
-      this.src=  URL.createObjectURL(v)
-    },{immediate: true})
+    this.$watch(
+      () => this.value,
+      v => {
+        if (this.src) {
+          URL.revokeObjectURL(this.src);
+        }
+        this.src = URL.createObjectURL(v);
+      },
+      { immediate: true }
+    );
   },
   destroyed() {
-    if(this.src){
-      URL.revokeObjectURL(this.src)
+    if (this.src) {
+      URL.revokeObjectURL(this.src);
     }
-  }
+  },
 })
 export default class CGteamworkEditorImagePreview extends Vue {
-  @Prop({required: true})
-  value!: File | Blob
+  @Prop({ required: true })
+  value!: File | Blob;
 
-  src = ""
+  src = '';
 
-  
   showImageViewer(src: string): void {
     show(ImageViewer, { attrs: { src } });
   }

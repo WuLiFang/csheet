@@ -34,22 +34,25 @@ import { sortBy } from 'lodash';
 import CGTeamworkTaskStatus from './cgteamwork/CGTeamworkTaskStatus.vue';
 import db from '@/db';
 import { CreateElement, VNode } from 'vue';
-import { collectionNodeVariables, collectionNode } from '@/graphql/types/collectionNode';
+import {
+  collectionNodeVariables,
+  collectionNode,
+} from '@/graphql/types/collectionNode';
 import { filePathFormat } from '@/const';
 
 @Component<CollectionOverviewCell>({
   components: { Presentation, CGTeamworkTaskStatus },
-    apollo: {
+  apollo: {
     node: {
       query: require('@/graphql/queries/collectionNode.gql'),
       variables(): collectionNodeVariables {
         return { id: this.id, filePathFormat };
       },
       skip(): boolean {
-        return !this.id
+        return !this.id;
       },
       update(v: collectionNode): Collection | undefined {
-        return v.node?.__typename === "Collection" ? v.node : undefined
+        return v.node?.__typename === 'Collection' ? v.node : undefined;
       },
     },
   },
@@ -71,7 +74,7 @@ export default class CollectionOverviewCell extends Vue {
     if (!pipeline) {
       return [];
     }
-    for (const { k, v } of this.node?.metadata?? []) {
+    for (const { k, v } of this.node?.metadata ?? []) {
       switch (k) {
         case 'cgteamwork.tasks':
           return cast

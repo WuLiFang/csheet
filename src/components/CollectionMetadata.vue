@@ -28,12 +28,11 @@ import CollectionMetadataCGTeamworkTasks from './CollectionMetadataCGTeamworkTas
 import CollectionMetadataComment from './CollectionMetadataComment.vue';
 import CGTeamworkNoteList from './cgteamwork/CGTeamworkNoteList.vue';
 
-
 @Component<CollectionMetadata>({
   components: {
     CollectionMetadataCGTeamworkTasks,
     CollectionMetadataComment,
-    CGTeamworkNoteList
+    CGTeamworkNoteList,
   },
 })
 export default class CollectionMetadata extends Vue {

@@ -279,8 +279,8 @@ export default class TheNavbar extends Vue {
     }
     const title = document.title;
     const url = u.toString();
-    if (url === location.href){
-      return
+    if (url === location.href) {
+      return;
     }
     if (this.isHistoryStateChanged) {
       history.pushState(null, title, url);

@@ -593,14 +593,13 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
 
     ctx.drawImage(bg, 0, 0, w, h);
     if (this.$refs.annotation.painter !== 'null') {
-      const el = this.$refs.annotation.$el
+      const el = this.$refs.annotation.$el;
       await new Promise(resolve => {
-        const svg = new Blob(
-          [new XMLSerializer().serializeToString(el)],
-          { type: 'image/svg+xml' }
-        );
+        const svg = new Blob([new XMLSerializer().serializeToString(el)], {
+          type: 'image/svg+xml',
+        });
         const src = URL.createObjectURL(svg);
-        const img = document.createElement("img");
+        const img = document.createElement('img');
         img.onload = () => {
           ctx.drawImage(img, 0, 0, w, h);
           URL.revokeObjectURL(src);
