@@ -2,18 +2,31 @@
 import Vue from 'vue';
 import { RenderlessMixin } from '@/mixins/RenderlessMixin';
 export default Vue.extend({
-  name: "SessionStorage",
+  name: 'SessionStorage',
   mixins: [RenderlessMixin],
   props: {
     name: { type: String, required: true },
-    value: { type: String, default: '' },
+    // eslint-disable-next-line vue/require-prop-types
+    value: {default: undefined as unknown},
   },
   mounted() {
-    this.$emit('input', sessionStorage.getItem(this.name) ?? '');
+    const v = sessionStorage.getItem(this.name);
+    if (v) {
+      try {
+        this.$emit('input', JSON.parse(v));
+      } catch {
+        // not json encoded
+        this.$emit('input', v);
+      }
+    }
     this.$watch(
       () => this.value,
       v => {
-        sessionStorage.setItem(this.name, v);
+        if (v == null) {
+          sessionStorage.removeItem(this.name);
+        } else {
+          sessionStorage.setItem(this.name, JSON.stringify(v));
+        }
       }
     );
   },
