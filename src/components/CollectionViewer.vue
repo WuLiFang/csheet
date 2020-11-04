@@ -374,6 +374,18 @@ import { saveAs } from 'file-saver';
         capture: true,
       });
     });
+
+    const screenshotListener = async (cb: (v: Blob) => void) => {
+      const data = await this.screenshot();
+      if (data) {
+        cb(data);
+      }
+    };
+
+    this.$root.$on('viewer-screenshot', screenshotListener);
+    this.$once('destoryed', () => {
+      this.$root.$off('viewer-screenshot', screenshotListener);
+    });
   },
   destroyed() {
     this.$emit('destroyed');
@@ -558,6 +570,9 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
   }
 
   async screenshot(type = 'image/jpeg', quality = 1): Promise<Blob | null> {
+    if (!this.presentation) {
+      return null;
+    }
     const bg = this.$refs.presentation.$el;
     const canvas = document.createElement('canvas');
     let w = bg.width;

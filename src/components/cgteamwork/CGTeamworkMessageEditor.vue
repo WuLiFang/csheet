@@ -42,6 +42,9 @@ export interface CGTeamworkMessageEditorValue {
     CGteamworkEditorImagePreview,
   },
   mounted() {
+    this.$root.$emit('viewer-screenshot', (v: Blob) => {
+      this.images.push(v);
+    });
     this.$watch(
       () => this.$_value,
       v => {

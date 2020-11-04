@@ -6,6 +6,7 @@ package resolvers
 import (
 	"context"
 	"fmt"
+	"mime"
 
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
@@ -50,7 +51,11 @@ func (r *mutationResolver) CreateCGTeamworkNote(ctx context.Context, input model
 			Images: make([]cgteamwork.Image, 0, len(i.Images)),
 		}
 		for _, img := range i.Images {
-			uploaded, err := cgteamwork.UploadImage(ctx, img.Filename, img.File, img.Size, cgteamwork.UploadOptionProject(db))
+			var filename = img.Filename
+			if ext, _ := mime.ExtensionsByType(img.ContentType); len(ext) > 0 {
+				filename += ext[0]
+			}
+			uploaded, err := cgteamwork.UploadImage(ctx, filename, img.File, img.Size, cgteamwork.UploadOptionProject(db))
 			if err != nil {
 				return ret, err
 			}
