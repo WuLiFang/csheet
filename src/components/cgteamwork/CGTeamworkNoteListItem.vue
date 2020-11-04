@@ -28,13 +28,12 @@
     )
       p(class="mx-1" v-html="safeHTML")
       template(v-for="i in value.message.images")
-        a.inline-block(
-          target="_blank"
-          :href="i.max.url"
+        img.inline-block(
+          :src="i.min.url"
+          class="cursor-zoom-in"
+          class="m-1 h-16"
+          @click="showImageViewer(i.max.url)"
         )
-          img(:src="i.min.url"
-            class="m-1 h-16"
-          )
 </template>
 
 <script lang="ts">
@@ -44,6 +43,7 @@ import DOMPurify from 'dompurify';
 import { show } from '@/modal';
 import 'vue-awesome/icons/trash';
 import CGTeamworkNoteDeleteFormDrawer from '@/components/cgteamwork/CGTeamworkNoteDeleteFormDrawer.vue';
+import ImageViewer from '@/components/ImageViewer.vue';
 
 export interface CGTeamworkNoteListItemValue {
   id: string;
@@ -82,6 +82,10 @@ export default class CGTeamworkNoteListItem extends Vue {
         },
       },
     });
+  }
+
+  showImageViewer(src: string): void {
+    show(ImageViewer, { attrs: { src } });
   }
 }
 </script>

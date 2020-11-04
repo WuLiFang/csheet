@@ -23,6 +23,10 @@ module.exports = {
         '96': '24rem',
         '128': '32rem',
       },
+      cursor: {
+        "zoom-in": "zoom-in",
+        "zoom-out": "zoom-out"
+      }
     },
     customForms: theme => ({
       default: {
