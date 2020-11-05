@@ -20,3 +20,10 @@ func subscriptionIndex() int {
 	nextSubscriptionIndex++
 	return ret
 }
+
+func dereferenceBool(v *bool) bool {
+	if v != nil {
+		return *v
+	}
+	return false
+}

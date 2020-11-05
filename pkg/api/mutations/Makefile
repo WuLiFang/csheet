@@ -12,3 +12,4 @@ generate:
 	gotmpl -o createCGTeamworkNote.gql base.gql.gotmpl dataInput.gotmpl cgteamworkNote.gotmpl
 	gotmpl -o deleteCGTeamworkNote.gql base.gql.gotmpl cgteamworkNote.gotmpl 
 	gotmpl -o backupDatabase.gql base.gql.gotmpl backupDatabase.gotmpl 
+	gotmpl -o restoreDatabase.gql base.gql.gotmpl restoreDatabase.gotmpl 

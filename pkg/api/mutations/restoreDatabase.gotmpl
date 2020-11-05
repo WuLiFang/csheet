@@ -1,0 +1,11 @@
+{{- define "args" }}
+    adminToken: String!
+    backupFile: String!
+    skipDrop: Boolean = false
+    skipBackup: Boolean = false
+{{- end}}
+
+{{- define "type" }}
+    backup: DiskFile!
+    isDropped: Boolean!
+{{- end}}
