@@ -11,4 +11,9 @@ func init() {
 		"Use base64 id",
 		useBase64ID,
 	})
+	addMigration(migration{
+		3,
+		"Remove common key suffix",
+		removeCommonKeySuffix,
+	})
 }

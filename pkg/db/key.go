@@ -5,27 +5,30 @@ import (
 	"encoding/base64"
 	"encoding/binary"
 	"errors"
-	"strings"
+	"io"
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
 )
 
 // KeyPartsDelimiter used to join key parts.
-const KeyPartsDelimiter = '\t'
+const KeyPartsDelimiter byte = '\t'
 
 func marshalKeyParts(parts ...string) ([]byte, error) {
-	b := bytes.NewBuffer([]byte{})
-	for _, i := range parts {
-		if strings.Contains(i, string(KeyPartsDelimiter)) {
+	b := new(bytes.Buffer)
+	for index, i := range parts {
+		data := []byte(i)
+		if bytes.IndexByte(data, KeyPartsDelimiter) >= 0 {
 			return b.Bytes(), errors.New("key parts can not contains \t")
 		}
-		_, err := b.Write([]byte(i))
+		_, err := b.Write(data)
 		if err != nil {
 			return b.Bytes(), err
 		}
-		_, err = b.Write([]byte{KeyPartsDelimiter})
-		if err != nil {
-			return b.Bytes(), err
+		if index < len(parts)-1 {
+			err = b.WriteByte(KeyPartsDelimiter)
+			if err != nil {
+				return b.Bytes(), err
+			}
 		}
 	}
 	return b.Bytes(), nil
@@ -35,11 +38,16 @@ func unmarshalKeyParts(data []byte, parts ...*string) error {
 	b := bytes.NewBuffer(data)
 	for _, i := range parts {
 		d, err := b.ReadBytes(KeyPartsDelimiter)
-		if err != nil {
+		if err == io.EOF {
+			err = nil
+		} else if err != nil {
 			return err
+		} else {
+			// remove delimiter
+			d = d[:len(d)-1]
 		}
 		if i != nil {
-			*i = string(d[:len(d)-1])
+			*i = string(d)
 		}
 	}
 	return nil

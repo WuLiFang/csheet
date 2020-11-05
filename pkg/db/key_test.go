@@ -12,7 +12,7 @@ func TestPartsEncoding(t *testing.T) {
 		func(t *testing.T) {
 			data, err := marshalKeyParts("test")
 			require.NoError(t, err)
-			assert.Equal(t, []byte{0x74, 0x65, 0x73, 0x74, 0x09}, data)
+			assert.Equal(t, []byte{0x74, 0x65, 0x73, 0x74}, data)
 			var v string
 			err = unmarshalKeyParts(data, &v)
 			require.NoError(t, err)
@@ -23,7 +23,7 @@ func TestPartsEncoding(t *testing.T) {
 		func(t *testing.T) {
 			data, err := marshalKeyParts("foo", "bar")
 			require.NoError(t, err)
-			assert.Equal(t, []byte{0x66, 0x6f, 0x6f, 0x09, 0x62, 0x61, 0x72, 0x09}, data)
+			assert.Equal(t, []byte{0x66, 0x6f, 0x6f, 0x09, 0x62, 0x61, 0x72}, data)
 			var v1, v2 string
 			err = unmarshalKeyParts(data, &v1, &v2)
 			require.NoError(t, err)
@@ -34,7 +34,7 @@ func TestPartsEncoding(t *testing.T) {
 		func(t *testing.T) {
 			data, err := marshalKeyParts("foo", "bar")
 			require.NoError(t, err)
-			assert.Equal(t, []byte{0x66, 0x6f, 0x6f, 0x09, 0x62, 0x61, 0x72, 0x09}, data)
+			assert.Equal(t, []byte{0x66, 0x6f, 0x6f, 0x09, 0x62, 0x61, 0x72}, data)
 			var v2 string
 			err = unmarshalKeyParts(data, nil, &v2)
 			require.NoError(t, err)
