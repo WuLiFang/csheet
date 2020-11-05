@@ -19,7 +19,7 @@ func Put(filename string) (ret string, err error) {
 	if err != nil {
 		return
 	}
-	err = os.MkdirAll(filepath.Dir(dst), 0x600)
+	err = os.MkdirAll(filepath.Dir(dst), 0700)
 	if err != nil {
 		return
 	}

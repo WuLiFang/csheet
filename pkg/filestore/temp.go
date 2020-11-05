@@ -11,7 +11,7 @@ var TempDir = ""
 // WithTempFile wraps ioutil.TempFile.
 func WithTempFile(pattern string, fn func(f *os.File) error) (err error) {
 	if TempDir != "" {
-		os.MkdirAll(TempDir, 0x600)
+		os.MkdirAll(TempDir, 0700)
 	}
 	f, err := ioutil.TempFile(TempDir, pattern)
 	if err != nil {
@@ -28,7 +28,7 @@ func WithTempFile(pattern string, fn func(f *os.File) error) (err error) {
 // WithTempDir create a tempdir to use and do cleanup when fn finished.
 func WithTempDir(pattern string, fn func(dir string) error) (err error) {
 	if TempDir != "" {
-		os.MkdirAll(TempDir, 0x600)
+		os.MkdirAll(TempDir, 0700)
 	}
 	name, err := ioutil.TempDir(TempDir, pattern)
 	if err != nil {

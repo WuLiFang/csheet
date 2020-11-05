@@ -25,7 +25,7 @@ func Load() {
 			"use CSHEET_FOLDER_INCLUDE to limit allowed folder.")
 	}
 
-	os.MkdirAll(Storage, 0x600)
+	os.MkdirAll(Storage, 0700)
 	filestore.Dir = Storage + "/files"
 	filestore.TempDir = Storage + "/temp"
 
