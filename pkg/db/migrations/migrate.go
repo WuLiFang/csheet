@@ -92,6 +92,12 @@ func Migrate(db *badger.DB) (err error) {
 			return setVersion(db, latestVersion)
 		}
 	}
+
+	// v1 migration has bug, we need rerun.
+	if currentVersion == 1 {
+		currentVersion = 0
+	}
+
 	if currentVersion == latestVersion {
 		logger.Info(
 			"no migration required",
