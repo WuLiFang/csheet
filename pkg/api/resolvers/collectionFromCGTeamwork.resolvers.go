@@ -7,7 +7,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
 	"github.com/WuLiFang/csheet/v6/pkg/collector/base"
 	"github.com/WuLiFang/csheet/v6/pkg/collector/cgteamwork"
 )
@@ -22,8 +21,3 @@ func (r *mutationResolver) CollectFromCGTeamwork(ctx context.Context, database s
 	})
 	return &v, err
 }
-
-// Mutation returns generated.MutationResolver implementation.
-func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
-
-type mutationResolver struct{ *Resolver }

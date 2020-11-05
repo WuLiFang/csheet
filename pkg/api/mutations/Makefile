@@ -11,3 +11,4 @@ generate:
 	gotmpl -o updateCGTeamworkFlow.gql Model=Collection base.gql.gotmpl dataInput.gotmpl updateCGTeamworkFlow.gotmpl
 	gotmpl -o createCGTeamworkNote.gql base.gql.gotmpl dataInput.gotmpl cgteamworkNote.gotmpl
 	gotmpl -o deleteCGTeamworkNote.gql base.gql.gotmpl cgteamworkNote.gotmpl 
+	gotmpl -o backupDatabase.gql base.gql.gotmpl backupDatabase.gotmpl 

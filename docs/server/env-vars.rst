@@ -90,6 +90,12 @@ CSHEET_CORS_HOSTS
 
   使用非标准端口时要添加端口号。
 
+CSHEET_ADMIN_TOKEN
+
+  调用 API 管理相关字段时使用的令牌。
+
+  必须设置且调用时提供相同令牌才能执行相关字段。
+
 USE_X_FORWARDED_FOR
 
   是否使用 X-Forwarded-For 表头来记录 IP。
