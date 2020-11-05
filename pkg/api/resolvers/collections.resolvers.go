@@ -61,7 +61,8 @@ func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, p
 			if useSecondaryIndex {
 				var pk string
 				err = cursor.Item().Value(func(v []byte) error {
-					return db.UnmarshalValue(v, &pk)
+					pk = string(v)
+					return nil
 				})
 				if err != nil {
 					return

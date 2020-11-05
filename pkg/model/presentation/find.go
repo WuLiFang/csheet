@@ -14,12 +14,12 @@ func FindIDByPath(path string) (ret []string, err error) {
 		var prefix = db.IndexPresentationFile.Key(path)
 		for it.Seek(prefix); it.ValidForPrefix(prefix); it.Next() {
 			key := it.Item().Key()
-			var id string
-			_, err := db.UnmarshalKey(key, nil, &id)
+			var pk string
+			_, err := db.UnmarshalKey(key, nil, &pk)
 			if err != nil {
 				return err
 			}
-			ret = append(ret, id)
+			ret = append(ret, keyToID(db.IndexPresentation.Key(pk)))
 		}
 		return nil
 	})
@@ -36,11 +36,12 @@ func FindByPath(path string) (ret []Presentation, err error) {
 		var prefix = db.IndexPresentationFile.Key(path)
 		for it.Seek(prefix); it.ValidForPrefix(prefix); it.Next() {
 			key := it.Item().Key()
-			var id string
-			_, err := db.UnmarshalKey(key, nil, &id)
+			var pk string
+			_, err := db.UnmarshalKey(key, nil, &pk)
 			if err != nil {
 				return err
 			}
+			var id = keyToID(db.IndexPresentation.Key(pk))
 			p, err := FindByID(id)
 			if err == db.ErrKeyNotFound {
 				err = nil

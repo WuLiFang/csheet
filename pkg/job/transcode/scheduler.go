@@ -100,35 +100,8 @@ func (s *scheduler) transcode(ctx context.Context, p presentation.Presentation) 
 			return
 		}
 	}
-	err = db.Delete(db.IndexPresentationOutdated.Key(p.ID()))
+	err = db.Delete(db.IndexPresentationOutdated.Key(p.PrimaryKey()))
 	return
-}
-
-func iterateOutdatedPresentation(fn func(p presentation.Presentation) error) error {
-	return db.View(func(txn *db.Txn) (err error) {
-		opts := db.DefaultIteratorOptions
-		opts.PrefetchValues = false
-		it := txn.NewIterator(opts)
-		defer it.Close()
-		prefix := db.IndexPresentationOutdated.Bytes()
-		for it.Seek(prefix); it.ValidForPrefix(prefix); it.Next() {
-			var id string
-			_, err = db.UnmarshalKey(it.Item().Key(), &id)
-			if err != nil {
-				return
-			}
-			var v presentation.Presentation
-			v, err = presentation.FindByID(id)
-			if err != nil {
-				return
-			}
-			err = fn(v)
-			if err != nil {
-				return
-			}
-		}
-		return
-	})
 }
 
 // Start schedule jobs, restart if already started.
@@ -165,7 +138,7 @@ func (s *scheduler) Start() {
 			<-ticker.C
 			jobCount := 0
 			startTime := time.Now()
-			err := iterateOutdatedPresentation(func(v presentation.Presentation) (err error) {
+			err := presentation.IterateOutdated(func(v presentation.Presentation) (err error) {
 				jobCount++
 				c <- v
 				return

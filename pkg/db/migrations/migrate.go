@@ -28,7 +28,7 @@ func addMigration(m migration) {
 	migrations = append(migrations, m)
 }
 
-var migrationVersionKey = []byte(`\x00\x00migrationVersion`)
+var migrationVersionKey = []byte("\x00\x00migration-version")
 
 func version(db *badger.DB) (ret uint64, err error) {
 	err = db.View(func(txn *badger.Txn) error {
@@ -63,9 +63,22 @@ func isEmptyDatabase(db *badger.DB) (ret bool, err error) {
 	return
 }
 
+func fixVersionKey(db *badger.DB) error {
+	return db.Update(func(txn *badger.Txn) error {
+		return ignoreKeyNotFound(renameEntry(txn, []byte(`\x00\x00migrationVersion`), migrationVersionKey))
+	})
+}
+
 // Migrate database to latest.
 func Migrate(db *badger.DB) (err error) {
 	var logger = logging.Logger("db.migrations")
+
+	// Fix wrong migration key before version 3
+	err = fixVersionKey(db)
+	if err != nil {
+		return
+	}
+
 	var latestVersion = migrations[len(migrations)-1].Version
 	currentVersion, err := version(db)
 	if errors.Is(err, badger.ErrKeyNotFound) {

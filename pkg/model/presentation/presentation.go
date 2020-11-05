@@ -84,14 +84,27 @@ func (p Presentation) RawTag() string {
 	return raw.Tag()
 }
 
-// Key in db.
-func (p Presentation) Key() (ret []byte, err error) {
+func (p Presentation) pk() (ret string, err error) {
 	h, err := p.Hash()
 	if err != nil {
 		return
 	}
-	id, err := db.IndexPresentationHash.ValueID(h)
-	return db.IndexPresentation.Key(id), err
+	return db.IndexPresentationHash.ValueID(h)
+}
+
+// PrimaryKey for presentation, base64 encoded number by hash.
+func (p Presentation) PrimaryKey() string {
+	pk, err := p.pk()
+	if err != nil {
+		logging.Logger("model.presentation").DPanic("get pk failed", zap.Error(err))
+	}
+	return pk
+}
+
+// Key in db.
+func (p Presentation) Key() (ret []byte, err error) {
+	pk, err := p.pk()
+	return db.IndexPresentation.Key(pk), err
 }
 
 func keyToID(key []byte) string {
@@ -100,25 +113,24 @@ func keyToID(key []byte) string {
 
 func init() {
 	SignalSaved.Connect(func(ctx context.Context, p *Presentation) error {
-		key, err := p.Key()
+		pk, err := p.pk()
 		if err != nil {
 			return err
 		}
 		return db.Update(func(txn *db.Txn) error {
-			id := keyToID(key)
-			err = txn.Set(db.IndexPresentationFile.Key(p.Raw, id), nil)
+			err = txn.Set(db.IndexPresentationFile.Key(p.Raw, pk), nil)
 			if err != nil {
 				return err
 			}
-			err = txn.Set(db.IndexPresentationFile.Key(p.Thumb, id), nil)
+			err = txn.Set(db.IndexPresentationFile.Key(p.Thumb, pk), nil)
 			if err != nil {
 				return err
 			}
-			err = txn.Set(db.IndexPresentationFile.Key(p.Regular, id), nil)
+			err = txn.Set(db.IndexPresentationFile.Key(p.Regular, pk), nil)
 			if err != nil {
 				return err
 			}
-			err = txn.Set(db.IndexPresentationOutdated.Key(id), nil)
+			err = txn.Set(db.IndexPresentationOutdated.Key(pk), nil)
 			if err != nil {
 				return err
 			}

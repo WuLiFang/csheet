@@ -26,11 +26,11 @@ const (
 	IndexPresentationHash
 	IndexFile
 	// to search presentation by path
-	// key format: path, presentation id
+	// key format: path, presentation pk
 	// value: empty
 	IndexPresentationFile
 	// to search presentation that any file is outdated
-	// key format: presentation id
+	// key format: presentation pk
 	// value: empty
 	IndexPresentationOutdated
 	// to store persisted query

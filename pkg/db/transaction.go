@@ -64,6 +64,21 @@ func Get(key []byte, value interface{}) (err error) {
 	)
 }
 
+// GetBytes without decoding.
+func GetBytes(key []byte) (ret []byte, err error) {
+	err = View(
+		func(txn *Txn) (err error) {
+			item, err := txn.Txn.Get(key)
+			if err != nil {
+				return err
+			}
+			ret, err = item.ValueCopy(nil)
+			return
+		},
+	)
+	return
+}
+
 // Set single key value pair.
 func Set(key []byte, value interface{}) (err error) {
 	return Update(
@@ -71,4 +86,14 @@ func Set(key []byte, value interface{}) (err error) {
 			return txn.Set(key, value)
 		},
 	)
+}
+
+// SetBytes without decoding.
+func SetBytes(key []byte, value []byte) (err error) {
+	err = Update(
+		func(txn *Txn) error {
+			return txn.Txn.Set(key, value)
+		},
+	)
+	return
 }

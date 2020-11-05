@@ -29,8 +29,7 @@ func CollectionOriginIndex() (err error) {
 			err = i.Value(func(v []byte) (err error) {
 				logger := logger.With(zap.Binary("k", key), zap.Binary("v", v))
 				logger.Debug("read")
-				id := ""
-				err = db.UnmarshalValue(v, &id)
+				id := string(v)
 				if err != nil {
 					return
 				}
