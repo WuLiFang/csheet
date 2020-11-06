@@ -38,6 +38,10 @@
       class="w-full z-0"
       :variables="variables"
     )
+    ModalWrapper(
+      class="modals"
+      ref="modalWrapper"
+    )
 </template>
 
 <script lang="ts">
@@ -50,11 +54,14 @@ import {
   clientConfig,
   clientConfig_clientConfig as Config,
 } from './graphql/types/clientConfig';
+import { ModalWrapper } from '@/modal';
+
 
 @Component<App>({
   components: {
     TheNavbar,
     CollectionOverview,
+    ModalWrapper
   },
   apollo: {
     config: {
@@ -101,6 +108,7 @@ export default class App extends Vue {
 
   $refs!: {
     overview: CollectionOverview;
+    modalWrapper: Vue,
   };
 
   messages: {

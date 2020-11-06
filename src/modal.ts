@@ -1,5 +1,38 @@
-import { app } from '@/app';
-import Vue, { VNode, VNodeData, VueConstructor } from 'vue';
+import Vue, { CreateElement, VNode, VNodeData, VueConstructor } from 'vue';
+
+const wrapperData = Vue.observable({
+  modals: [] as {
+    key: number;
+    render: (h: CreateElement) => VNode;
+  }[],
+});
+
+export const ModalWrapper = Vue.extend<
+  {
+    modals: typeof wrapperData.modals;
+  },
+  unknown,
+  unknown,
+  never
+>({
+  name: 'ModalWrapper',
+  data() {
+    return wrapperData;
+  },
+  render(h) {
+    return h(
+      'div',
+      {},
+      this.modals.map(i => {
+        const ret = i.render(h);
+        ret.key = i.key;
+        return ret;
+      })
+    );
+  },
+});
+
+let nextModalKey = 0;
 
 /**
  * Show a modal vue component
@@ -9,39 +42,38 @@ import Vue, { VNode, VNodeData, VueConstructor } from 'vue';
 export function show<V extends Vue>(
   constructor: VueConstructor<V>,
   data?: VNodeData
-): V {
-  const wrapper = new Vue({
-    name: 'ModalWrapper',
-    parent: app,
-    data: {
-      visible: false,
-    },
-    mounted(): void {
-      this.visible = true;
-    },
-    render(h): VNode {
+): void {
+  const key = nextModalKey;
+  nextModalKey += 1;
+
+  const props = Vue.observable({ visible: false });
+  wrapperData.modals.push({
+    key,
+    render(h) {
       const d: VNodeData = {
         ...data,
         props: {
-          ...(data && data.props),
-          visible: this.$data.visible,
+          ...data?.props,
+          ...props,
         },
         on: {
           ...(data && data.on),
           'update:visible': (v: boolean): void => {
-            this.$data.visible = v;
+            props.visible = v;
           },
           close: () => {
-            this.$destroy();
-            this.$el.remove();
+            const index = wrapperData.modals.findIndex(i => i.key === key);
+            if (index < 0) {
+              return;
+            }
+            wrapperData.modals.splice(index, 1);
           },
         },
       };
       return h(constructor, d);
     },
   });
-  wrapper.$mount(document.createElement('div'));
-  wrapper.$parent.$el.append(wrapper.$el);
-  const ret = wrapper.$children[0] as V;
-  return ret;
+  setTimeout(() => {
+    props.visible = true;
+  }, 0);
 }
