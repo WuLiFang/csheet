@@ -8,9 +8,7 @@ const wrapperData = Vue.observable({
 });
 
 export const ModalWrapper = Vue.extend<
-  {
-    modals: typeof wrapperData.modals;
-  },
+  typeof wrapperData,
   unknown,
   unknown,
   never
@@ -32,7 +30,7 @@ export const ModalWrapper = Vue.extend<
   },
 });
 
-let nextModalKey = 0;
+let nextKey = 0;
 
 /**
  * Show a modal vue component
@@ -43,10 +41,17 @@ export function show<V extends Vue>(
   constructor: VueConstructor<V>,
   data?: VNodeData
 ): void {
-  const key = nextModalKey;
-  nextModalKey += 1;
+  const key = nextKey;
+  nextKey += 1;
 
   const props = Vue.observable({ visible: false });
+  const close = () => {
+    const index = wrapperData.modals.findIndex(i => i.key === key);
+    if (index < 0) {
+      return;
+    }
+    wrapperData.modals.splice(index, 1);
+  };
   wrapperData.modals.push({
     key,
     render(h) {
@@ -61,13 +66,7 @@ export function show<V extends Vue>(
           'update:visible': (v: boolean): void => {
             props.visible = v;
           },
-          close: () => {
-            const index = wrapperData.modals.findIndex(i => i.key === key);
-            if (index < 0) {
-              return;
-            }
-            wrapperData.modals.splice(index, 1);
-          },
+          close,
         },
       };
       return h(constructor, d);
