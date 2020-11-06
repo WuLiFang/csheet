@@ -3,6 +3,7 @@
     class="fixed inset-0 z-20"
   )
     transition(
+      appear
       enter-class="opacity-0"
       leave-to-class="opacity-0"
       enter-active-class="transition-all duration-300 ease-in-out"
@@ -10,10 +11,11 @@
     )
       .overlay(
         class="z-0 absolute inset-0 bg-black bg-opacity-50"
-        @click="$_visible = false"
+        @click="$emit('update:visible', false)"
         v-if="visible"
       )
     transition(
+      appear
       enter-class="transform translate-x-full"
       leave-to-class="transform translate-x-full"
       enter-active-class="transition-all duration-300 ease-in-out"
@@ -30,9 +32,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator';
-import { ModalMixin } from '@/mixins/ModalMixin';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 
 @Component<Drawer>({})
-export default class Drawer extends Mixins(ModalMixin) {}
+export default class Drawer extends Vue {
+  @Prop({ type: Boolean, required: true })
+  visible!: boolean;
+}
 </script>

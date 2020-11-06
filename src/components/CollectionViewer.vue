@@ -1,5 +1,6 @@
 <template lang="pug">
   transition(
+    appear
     enter-class="transform -translate-y-full"
     leave-to-class="transform -translate-y-full"
     enter-active-class="transition-all duration-300 ease-in-out"
@@ -166,8 +167,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop } from 'vue-property-decorator';
-import { ModalMixin } from '../mixins/ModalMixin';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import Presentation from './Presentation.vue';
 import { collection as Collection } from '../graphql/types/collection';
 import 'vue-awesome/icons/window-close';
@@ -406,7 +406,7 @@ import { info } from '@/message';
     },
   },
 })
-export default class CollectionViewer extends Mixins(ModalMixin) {
+export default class CollectionViewer extends Vue {
   @Prop({ type: Object, required: true })
   value!: Collection;
 
@@ -424,6 +424,7 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
     annotation: PresentationAnnotationEditor;
   };
 
+  visible = true;
   presentationID = '';
   loadingCount = 0;
   recollectingCount = 0;
@@ -464,7 +465,7 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
       level: sentry.Severity.Info,
       data: { value: this.value },
     });
-    this.$_visible = false;
+    this.visible = false;
   }
 
   get prefetchURLs(): string[] {
@@ -544,7 +545,7 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
           break;
       }
       await this.refetch();
-      info('更新成功')
+      info('更新成功');
     } finally {
       this.recollectingCount -= 1;
     }

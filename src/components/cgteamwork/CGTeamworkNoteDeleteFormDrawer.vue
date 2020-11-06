@@ -1,6 +1,6 @@
 <template lang="pug">
   Drawer.cgteamwork-note-form-drawer(
-    :visible.sync="$_visible"
+    :visible.sync="visible"
     v-on="$listeners"
     @after-enter="() => $refs.form.focus()"
   )
@@ -9,7 +9,7 @@
     )
       button.form-button(
         type="button"
-        @click="$_visible = false"
+        @click="visible = false"
       )
         FaIcon(name="arrow-left")
       h1.inline-block(
@@ -19,13 +19,12 @@
       ref="form"
       class="my-2"
       v-bind="$attrs"
-      @submit="$_visible = false; $emit('submit');"
+      @submit="visible = false; $emit('submit');"
     )
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator';
-import { ModalMixin } from '@/mixins/ModalMixin';
+import { Component, Vue } from 'vue-property-decorator';
 import CGTeamworkNoteDeleteForm from '@/components/cgteamwork/CGTeamworkNoteDeleteForm.vue';
 import 'vue-awesome/icons/arrow-left';
 
@@ -35,7 +34,7 @@ import 'vue-awesome/icons/arrow-left';
     CGTeamworkNoteDeleteForm,
   },
 })
-export default class CGTeamworkNoteDeleteFormDrawer extends Mixins(
-  ModalMixin
-) {}
+export default class CGTeamworkNoteDeleteFormDrawer extends Vue {
+  visible = true
+}
 </script>

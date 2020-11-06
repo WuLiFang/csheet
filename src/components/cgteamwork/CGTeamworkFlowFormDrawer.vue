@@ -1,6 +1,6 @@
 <template lang="pug">
   Drawer.cgteamwork-flow-form-drawer(
-    :visible.sync="$_visible"
+    :visible.sync="visible"
     @after-enter="() => $refs.form.focus()"
     v-on="$listeners"
   )
@@ -9,7 +9,7 @@
     )
       button.form-button(
         type="button"
-        @click="close()"
+        @click="visible = false"
       )
         FaIcon(name="arrow-left")
       h1.inline-block(
@@ -19,13 +19,12 @@
       ref="form"
       class="my-2"
       v-bind="$attrs"
-      @submit="close()"
+      @submit="visible = false"
     )
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator';
-import { ModalMixin } from '@/mixins/ModalMixin';
+import { Component, Vue } from 'vue-property-decorator';
 import CGTeamworkFlowForm from './CGTeamworkFlowForm.vue';
 import 'vue-awesome/icons/arrow-left';
 
@@ -35,13 +34,11 @@ import 'vue-awesome/icons/arrow-left';
     CGTeamworkFlowForm,
   },
 })
-export default class CGTeamworkFlowFormDrawer extends Mixins(ModalMixin) {
+export default class CGTeamworkFlowFormDrawer extends Vue {
   $refs!: {
     form: CGTeamworkFlowForm;
   };
 
-  close(): void {
-    this.$_visible = false;
-  }
+  visible = true;
 }
 </script>

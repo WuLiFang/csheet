@@ -33,7 +33,28 @@ export const ModalWrapper = Vue.extend<
 let nextKey = 0;
 
 /**
- * Show a modal vue component
+ * Open a modal component
+ * @returns modal close function
+ */
+export function open(render: (h: CreateElement) => VNode): () => void {
+  const key = nextKey;
+  nextKey += 1;
+
+  wrapperData.modals.push({
+    key,
+    render,
+  });
+  return () => {
+    const index = wrapperData.modals.findIndex(i => i.key === key);
+    if (index < 0) {
+      return;
+    }
+    wrapperData.modals.splice(index, 1);
+  };
+}
+
+/**
+ * Open a component and close it on `close` event.
  * @param constructor Component constructor
  * @param data Component data
  */
@@ -41,38 +62,22 @@ export function show<V extends Vue>(
   constructor: VueConstructor<V>,
   data?: VNodeData
 ): void {
-  const key = nextKey;
-  nextKey += 1;
-
-  const props = Vue.observable({ visible: false });
-  const close = () => {
-    const index = wrapperData.modals.findIndex(i => i.key === key);
-    if (index < 0) {
-      return;
-    }
-    wrapperData.modals.splice(index, 1);
-  };
-  wrapperData.modals.push({
-    key,
-    render(h) {
-      const d: VNodeData = {
-        ...data,
-        props: {
-          ...data?.props,
-          ...props,
-        },
-        on: {
-          ...(data && data.on),
-          'update:visible': (v: boolean): void => {
-            props.visible = v;
-          },
+  const close = open(h =>
+    h(constructor, {
+      ...data,
+      on: {
+        ...data?.on,
+        close: [
+          ...(() => {
+            const v = data?.on?.close ?? [];
+            if (Array.isArray(v)) {
+              return v;
+            }
+            return [v];
+          })(),
           close,
-        },
-      };
-      return h(constructor, d);
-    },
-  });
-  setTimeout(() => {
-    props.visible = true;
-  }, 0);
+        ],
+      },
+    })
+  );
 }
