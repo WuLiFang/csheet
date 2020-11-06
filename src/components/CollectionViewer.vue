@@ -383,7 +383,7 @@ import { saveAs } from 'file-saver';
     };
 
     this.$root.$on('viewer-screenshot', screenshotListener);
-    this.$once('destoryed', () => {
+    this.$once('destroyed', () => {
       this.$root.$off('viewer-screenshot', screenshotListener);
     });
   },
