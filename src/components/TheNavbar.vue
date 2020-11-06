@@ -128,6 +128,7 @@ import { collectionsVariables } from '../graphql/types/collections';
 import db from '@/db';
 import { CGTeamworkOriginPrefix, FolderOriginPrefix } from '../client';
 import { uniq } from 'lodash';
+import { info } from '@/message';
 
 function getResultMessage({
   createdCount,
@@ -351,10 +352,7 @@ export default class TheNavbar extends Vue {
         return;
       }
       this.$emit('collect');
-      this.$root.$emit(
-        'app-message',
-        getResultMessage(data?.collectFromCGTeamwork ?? {})
-      );
+      info(getResultMessage(data?.collectFromCGTeamwork ?? {}));
     } finally {
       this.loadingCount -= 1;
     }
@@ -371,10 +369,7 @@ export default class TheNavbar extends Vue {
         variables: this.formData.folder,
       });
       this.$emit('collect');
-      this.$root.$emit(
-        'app-message',
-        getResultMessage(data?.collectFromFolder ?? {})
-      );
+      info(getResultMessage(data?.collectFromFolder ?? {}));
     } finally {
       this.loadingCount -= 1;
     }

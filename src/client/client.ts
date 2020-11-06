@@ -1,9 +1,9 @@
-import { app } from '@/app';
+import { error } from '@/message';
 import { locale } from '@/plugins/i18n';
 import {
   IdGetterObj,
   InMemoryCache,
-  IntrospectionFragmentMatcher,
+  IntrospectionFragmentMatcher
 } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { ApolloLink, split } from 'apollo-link';
@@ -94,10 +94,7 @@ const linkErrorAfterWare: ApolloLink = onError(
   ({ graphQLErrors, networkError, operation }: ErrorResponse): void => {
     if (graphQLErrors) {
       for (const i of graphQLErrors) {
-        app.$emit('app-message', {
-          text: getErrorMessage(i),
-          class: 'bg-red-700',
-        });
+        error(getErrorMessage(i));
         if (i.extensions?.traceback && process.env.NODE_ENV === 'development') {
           // eslint-disable-next-line no-console
           console.error(
@@ -110,14 +107,11 @@ const linkErrorAfterWare: ApolloLink = onError(
       }
     }
     if (networkError) {
-      const msg =
+      error(
         'response' in networkError
           ? `${operation.operationName}: ${networkError.response.status} ${networkError.response.statusText}`
-          : `${operation.operationName}: ${networkError.message}`;
-      app.$emit('app-message', {
-        text: msg,
-        class: 'bg-red-700',
-      });
+          : `${operation.operationName}: ${networkError.message}`
+      );
     }
   }
 );

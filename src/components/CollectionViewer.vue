@@ -199,6 +199,7 @@ import PresentationAnnotationEditor from './PresentationAnnotationEditor.vue';
 import PresentationAnnotationEditorToolbar from './PresentationAnnotationEditorToolbar.vue';
 import PresentationControls from './PresentationControls.vue';
 import { saveAs } from 'file-saver';
+import { info } from '@/message';
 
 @Component<CollectionViewer>({
   components: {
@@ -543,7 +544,7 @@ export default class CollectionViewer extends Mixins(ModalMixin) {
           break;
       }
       await this.refetch();
-      this.$root.$emit('app-message', '更新成功');
+      info('更新成功')
     } finally {
       this.recollectingCount -= 1;
     }
