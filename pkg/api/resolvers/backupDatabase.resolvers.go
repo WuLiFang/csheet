@@ -24,7 +24,7 @@ func (r *mutationResolver) BackupDatabase(ctx context.Context, input model.Backu
 		return ret, err
 	}
 
-	var fullpath = path.Join(config.Storage, "backup", time.Now().Format("csheet-20060102-030405.bak"))
+	var fullpath = path.Join(config.Storage, "backup", time.Now().Format("csheet-20060102-150405.bak"))
 	err = os.MkdirAll(path.Dir(fullpath), 0700)
 	if err != nil {
 		return ret, err
