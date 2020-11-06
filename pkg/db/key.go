@@ -89,7 +89,7 @@ func (index Index) Prefix(parts ...string) (ret []byte) {
 		return index.Bytes()
 	}
 	ret = index.Key(parts...)
-	return ret[:len(ret)-1]
+	return ret
 }
 
 // UnmarshalKey to index and parts.
