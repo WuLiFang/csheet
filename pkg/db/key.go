@@ -57,6 +57,9 @@ func unmarshalKeyParts(data []byte, parts ...*string) error {
 // index must be registered index name, will be converted to 2 bytes.
 // follow parts joined by keySeperator.
 func (index Index) Key(parts ...string) []byte {
+	if len(parts) == 0 {
+		return index.Bytes()
+	}
 	data, err := marshalKeyParts(parts...)
 	if err != nil {
 		logging.Logger("db").Sugar().
@@ -81,15 +84,6 @@ func (index Index) Exists() (ret bool, err error) {
 		return nil
 	})
 	return
-}
-
-// Prefix key for index scan.
-func (index Index) Prefix(parts ...string) (ret []byte) {
-	if len(parts) == 0 {
-		return index.Bytes()
-	}
-	ret = index.Key(parts...)
-	return ret
 }
 
 // UnmarshalKey to index and parts.

@@ -15,7 +15,7 @@ func CollectionOriginIndex() (err error) {
 	logger := logging.Logger("healthcheck").With(zap.String("func", "CollectionOriginIndex"))
 	logger.Info("start")
 	err = db.Update(func(txn *db.Txn) (err error) {
-		prefix := db.IndexCollectionOrigin.Prefix()
+		prefix := db.IndexCollectionOrigin.Key()
 		cur := txn.NewIterator(badger.IteratorOptions{
 			Prefix: prefix,
 		})

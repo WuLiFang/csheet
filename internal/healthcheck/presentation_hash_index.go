@@ -15,7 +15,7 @@ func PresentationHashIndex() (err error) {
 	logger := logging.Logger("healthcheck").With(zap.String("func", "PresentationHashIndex"))
 	logger.Info("start")
 	err = db.Update(func(txn *db.Txn) (err error) {
-		prefix := db.IndexPresentationHash.Prefix()
+		prefix := db.IndexPresentationHash.Key()
 		cur := txn.NewIterator(badger.IteratorOptions{
 			Prefix: prefix,
 		})

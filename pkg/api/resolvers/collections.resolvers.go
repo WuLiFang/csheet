@@ -39,10 +39,10 @@ func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, p
 		var prefix []byte
 		var useSecondaryIndex bool
 		if originPrefix != nil {
-			prefix = db.IndexCollectionOrigin.Prefix(*originPrefix)
+			prefix = db.IndexCollectionOrigin.Key(*originPrefix)
 			useSecondaryIndex = true
 		} else {
-			prefix = db.IndexCollection.Bytes()
+			prefix = db.IndexCollection.Key()
 		}
 		start := prefix
 		if pag.reverse {
