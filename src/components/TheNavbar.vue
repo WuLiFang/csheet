@@ -184,6 +184,14 @@ function getResultMessage({
     this.$once('destoryed', () =>
       window.removeEventListener('popstate', popstateListener)
     );
+
+    this.$watch(
+      () => this.variables,
+      v => {
+        this.$emit('update:variables', v);
+      },
+      { immediate: true }
+    );
   },
   destroyed() {
     this.$emit('destoryed');
@@ -252,11 +260,6 @@ export default class TheNavbar extends Vue {
       originPrefix: this.originPrefix,
       presentationCountGt: this.formData.skipEmptyPresentation ? 0 : undefined,
     };
-  }
-
-  @Watch('variables')
-  setVariables(v: collectionsVariables): void {
-    this.$emit('update:variables', v);
   }
 
   @Watch('formData', { deep: true })
