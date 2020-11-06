@@ -70,7 +70,9 @@ export default class CGTeamworkNoteListItem extends Vue {
   hidePipeline!: boolean;
 
   get safeHTML(): string {
-    return DOMPurify.sanitize(this.value.message.html);
+    return DOMPurify.sanitize(this.value.message.html, {
+      FORBID_ATTR: ["class", "style"]
+    });
   }
 
   showDeleteFormDrawer(): void {
