@@ -45,6 +45,7 @@ type Config struct {
 type ResolverRoot interface {
 	CGTeamworkImage() CGTeamworkImageResolver
 	CGTeamworkNote() CGTeamworkNoteResolver
+	ClientConfig() ClientConfigResolver
 	CollectResult() CollectResultResolver
 	Collection() CollectionResolver
 	DiskFile() DiskFileResolver
@@ -90,6 +91,7 @@ type ComplexityRoot struct {
 
 	ClientConfig struct {
 		EnableCGTeamwork func(childComplexity int) int
+		FolderInclude    func(childComplexity int, format *string) int
 		IssueTrackerURL  func(childComplexity int) int
 		SentryDsn        func(childComplexity int) int
 	}
@@ -227,6 +229,9 @@ type CGTeamworkImageResolver interface {
 }
 type CGTeamworkNoteResolver interface {
 	ID(ctx context.Context, obj *cgteamwork.Note) (string, error)
+}
+type ClientConfigResolver interface {
+	FolderInclude(ctx context.Context, obj *model.ClientConfig, format *string) ([]string, error)
 }
 type CollectResultResolver interface {
 	ID(ctx context.Context, obj *base.CollectResult) (string, error)
@@ -400,6 +405,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ClientConfig.EnableCGTeamwork(childComplexity), true
+
+	case "ClientConfig.folderInclude":
+		if e.complexity.ClientConfig.FolderInclude == nil {
+			break
+		}
+
+		args, err := ec.field_ClientConfig_folderInclude_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.ClientConfig.FolderInclude(childComplexity, args["format"].(*string)), true
 
 	case "ClientConfig.issueTrackerURL":
 		if e.complexity.ClientConfig.IssueTrackerURL == nil {
@@ -1272,6 +1289,7 @@ extend type Mutation {
   sentryDSN: String
   issueTrackerURL: String
   enableCGTeamwork: Boolean!
+  folderInclude(format: String): [String!] @goField(forceResolver: true)
 }
 
 extend type Query {
@@ -1428,6 +1446,21 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_ClientConfig_folderInclude_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["format"]; ok {
+		ctx := graphql.WithFieldInputContext(ctx, graphql.NewFieldInputWithField("format"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["format"] = arg0
+	return args, nil
+}
 
 func (ec *executionContext) field_Collection_cgteamworkNotes_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -2461,6 +2494,44 @@ func (ec *executionContext) _ClientConfig_enableCGTeamwork(ctx context.Context, 
 	res := resTmp.(bool)
 	fc.Result = res
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClientConfig_folderInclude(ctx context.Context, field graphql.CollectedField, obj *model.ClientConfig) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "ClientConfig",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_ClientConfig_folderInclude_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.ClientConfig().FolderInclude(rctx, obj, args["format"].(*string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]string)
+	fc.Result = res
+	return ec.marshalOString2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CollectResult_originPrefix(ctx context.Context, field graphql.CollectedField, obj *base.CollectResult) (ret graphql.Marshaler) {
@@ -6676,8 +6747,19 @@ func (ec *executionContext) _ClientConfig(ctx context.Context, sel ast.Selection
 		case "enableCGTeamwork":
 			out.Values[i] = ec._ClientConfig_enableCGTeamwork(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
+		case "folderInclude":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._ClientConfig_folderInclude(ctx, field, obj)
+				return res
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

@@ -13,7 +13,7 @@
         class="form-select"
         type="select"
       )
-        option(value="cgteamwork" :disabled="!enableCGTeamwork") CGTeamwork
+        option(value="cgteamwork" :disabled="!config.enableCGTeamwork") CGTeamwork
         option(value="folder") 文件夹
     template(v-if="formData.mode == 'cgteamwork'")
       span(
@@ -129,6 +129,7 @@ import db from '@/db';
 import client, { CGTeamworkOriginPrefix, FolderOriginPrefix } from '../client';
 import { uniq } from 'lodash';
 import { info } from '@/message';
+import { clientConfig_clientConfig as Config } from '@/graphql/types/clientConfig';
 
 function getResultMessage({
   createdCount,
@@ -167,8 +168,8 @@ function getResultMessage({
   async mounted() {
     const config = await client.config.get();
     if (config) {
-      this.enableCGTeamwork = config.enableCGTeamwork;
-      if (this.enableCGTeamwork) {
+      this.config = config;
+      if (this.config.enableCGTeamwork) {
         this.formData.mode = 'cgteamwork';
       }
     }
@@ -225,7 +226,12 @@ export default class TheNavbar extends Vue {
     skipEmptyPresentation: false,
   };
 
-  enableCGTeamwork = false;
+  config: Omit<Config, '__typename'> = {
+    sentryDSN: null,
+    issueTrackerURL: null,
+    enableCGTeamwork: false,
+    folderInclude: [],
+  };
 
   loadingCount = 0;
   $el!: HTMLFormElement;
@@ -412,13 +418,14 @@ export default class TheNavbar extends Vue {
   }
 
   get recentFolderRoot(): string[] {
-    return uniq(
-      db.recentOriginPrefix
+    return uniq([
+      ...db.recentOriginPrefix
         .get()
         .filter((i): i is FolderOriginPrefix => i instanceof FolderOriginPrefix)
         .filter(i => i.root !== this.formData.folder.root)
-        .map(i => i.root)
-    );
+        .map(i => i.root),
+      ...this.config.folderInclude ?? [],
+    ]);
   }
 
   get recentCGTeamworkPrefix(): string[] {

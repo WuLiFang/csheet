@@ -2,6 +2,7 @@ type ClientConfig {
   sentryDSN: String
   issueTrackerURL: String
   enableCGTeamwork: Boolean!
+  folderInclude(format: String): [String!] @goField(forceResolver: true)
 }
 
 extend type Query {

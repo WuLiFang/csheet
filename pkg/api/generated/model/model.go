@@ -27,9 +27,10 @@ type BackupDatabasePayload struct {
 }
 
 type ClientConfig struct {
-	SentryDsn        *string `json:"sentryDSN"`
-	IssueTrackerURL  *string `json:"issueTrackerURL"`
-	EnableCGTeamwork bool    `json:"enableCGTeamwork"`
+	SentryDsn        *string  `json:"sentryDSN"`
+	IssueTrackerURL  *string  `json:"issueTrackerURL"`
+	EnableCGTeamwork bool     `json:"enableCGTeamwork"`
+	FolderInclude    []string `json:"folderInclude"`
 }
 
 type CollectionCGTeamworkNote struct {

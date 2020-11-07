@@ -12,8 +12,13 @@ export interface clientConfig_clientConfig {
   sentryDSN: string | null;
   issueTrackerURL: string | null;
   enableCGTeamwork: boolean;
+  folderInclude: string[] | null;
 }
 
 export interface clientConfig {
   clientConfig: clientConfig_clientConfig | null;
+}
+
+export interface clientConfigVariables {
+  filePathFormat?: string | null;
 }
