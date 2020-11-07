@@ -26,7 +26,7 @@ func transcodeImageThumb(ctx context.Context, p presentation.Presentation) error
 			return
 		}
 		cmd := transcode.JPG(p.Raw, dst, &transcode.ImageOptions{
-			Height:     200,
+			Width:      512,
 			TimeOffset: offset,
 		})
 		err = runCommand(cmd)
