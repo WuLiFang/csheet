@@ -41,6 +41,10 @@ func parseAPIResult(v []byte) (data gjson.Result, err error) {
 
 // newRequest with token set.
 func (c *Client) newRequest(ctx context.Context, method string, pathname string, body io.Reader) (r *http.Request, err error) {
+	if c == nil {
+		err = ErrNotConfigured
+		return
+	}
 	r, err = http.NewRequestWithContext(
 		ctx,
 		method,
@@ -60,6 +64,10 @@ func (c *Client) newRequest(ctx context.Context, method string, pathname string,
 }
 
 func (c *Client) callAPI(ctx context.Context, param interface{}) (data gjson.Result, err error) {
+	if c == nil {
+		err = ErrNotConfigured
+		return
+	}
 	var logger = logging.For(ctx).Logger("cgteamwork.api").Sugar()
 	logger.Debugw(
 		"send",

@@ -30,6 +30,9 @@ func (c *Client) RefreshToken(ctx context.Context) error {
 
 // RefreshTokenOndemand skip request when token not expired.
 func (c *Client) RefreshTokenOndemand(ctx context.Context) error {
+	if c == nil {
+		return ErrNotConfigured
+	}
 	if time.Now().Before(c.tokenExpireTime) {
 		return nil
 	}
