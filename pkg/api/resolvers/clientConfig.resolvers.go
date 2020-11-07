@@ -9,10 +9,12 @@ import (
 
 	"github.com/WuLiFang/csheet/v6/internal/config"
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 )
 
 func (r *queryResolver) ClientConfig(ctx context.Context, name string) (*model.ClientConfig, error) {
 	var ret = new(model.ClientConfig)
+	ret.EnableCGTeamwork = cgteamwork.DefaultClient != nil
 	if config.IssueTrackerURL != "" {
 		ret.IssueTrackerURL = &config.IssueTrackerURL
 	}

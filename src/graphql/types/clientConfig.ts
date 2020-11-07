@@ -11,6 +11,7 @@ export interface clientConfig_clientConfig {
   __typename: "ClientConfig";
   sentryDSN: string | null;
   issueTrackerURL: string | null;
+  enableCGTeamwork: boolean;
 }
 
 export interface clientConfig {

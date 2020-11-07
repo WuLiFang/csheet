@@ -89,8 +89,9 @@ type ComplexityRoot struct {
 	}
 
 	ClientConfig struct {
-		IssueTrackerURL func(childComplexity int) int
-		SentryDsn       func(childComplexity int) int
+		EnableCGTeamwork func(childComplexity int) int
+		IssueTrackerURL  func(childComplexity int) int
+		SentryDsn        func(childComplexity int) int
 	}
 
 	CollectResult struct {
@@ -392,6 +393,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CGTeamworkProject.Status(childComplexity), true
+
+	case "ClientConfig.enableCGTeamwork":
+		if e.complexity.ClientConfig.EnableCGTeamwork == nil {
+			break
+		}
+
+		return e.complexity.ClientConfig.EnableCGTeamwork(childComplexity), true
 
 	case "ClientConfig.issueTrackerURL":
 		if e.complexity.ClientConfig.IssueTrackerURL == nil {
@@ -1263,6 +1271,7 @@ extend type Mutation {
 	{Name: "pkg/api/queries/clientConfig.gql", Input: `type ClientConfig {
   sentryDSN: String
   issueTrackerURL: String
+  enableCGTeamwork: Boolean!
 }
 
 extend type Query {
@@ -2418,6 +2427,40 @@ func (ec *executionContext) _ClientConfig_issueTrackerURL(ctx context.Context, f
 	res := resTmp.(*string)
 	fc.Result = res
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClientConfig_enableCGTeamwork(ctx context.Context, field graphql.CollectedField, obj *model.ClientConfig) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "ClientConfig",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EnableCGTeamwork, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CollectResult_originPrefix(ctx context.Context, field graphql.CollectedField, obj *base.CollectResult) (ret graphql.Marshaler) {
@@ -6630,6 +6673,11 @@ func (ec *executionContext) _ClientConfig(ctx context.Context, sel ast.Selection
 			out.Values[i] = ec._ClientConfig_sentryDSN(ctx, field, obj)
 		case "issueTrackerURL":
 			out.Values[i] = ec._ClientConfig_issueTrackerURL(ctx, field, obj)
+		case "enableCGTeamwork":
+			out.Values[i] = ec._ClientConfig_enableCGTeamwork(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

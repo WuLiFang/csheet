@@ -1,6 +1,7 @@
 type ClientConfig {
   sentryDSN: String
   issueTrackerURL: String
+  enableCGTeamwork: Boolean!
 }
 
 extend type Query {

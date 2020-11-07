@@ -13,7 +13,7 @@
         class="form-select"
         type="select"
       )
-        option(value="cgteamwork") CGTeamwork
+        option(value="cgteamwork" :disabled="!enableCGTeamwork") CGTeamwork
         option(value="folder") 文件夹
     template(v-if="formData.mode == 'cgteamwork'")
       span(
@@ -126,7 +126,7 @@ import {
 } from '../graphql/types/folderOriginPrefix';
 import { collectionsVariables } from '../graphql/types/collections';
 import db from '@/db';
-import { CGTeamworkOriginPrefix, FolderOriginPrefix } from '../client';
+import client, { CGTeamworkOriginPrefix, FolderOriginPrefix } from '../client';
 import { uniq } from 'lodash';
 import { info } from '@/message';
 
@@ -164,7 +164,15 @@ function getResultMessage({
       },
     },
   },
-  mounted() {
+  async mounted() {
+    const config = await client.config.get();
+    if (config) {
+      this.enableCGTeamwork = config.enableCGTeamwork;
+      if (this.enableCGTeamwork) {
+        this.formData.mode = 'cgteamwork';
+      }
+    }
+
     this.loadState();
     this.$watch(
       () => this.title,
@@ -205,7 +213,7 @@ export default class TheNavbar extends Vue {
     cgteamwork: collectFromCGTeamworkVariables;
     skipEmptyPresentation: boolean;
   } = {
-    mode: 'cgteamwork',
+    mode: 'folder',
     folder: {
       root: '',
     },
@@ -216,6 +224,8 @@ export default class TheNavbar extends Vue {
     },
     skipEmptyPresentation: false,
   };
+
+  enableCGTeamwork = false;
 
   loadingCount = 0;
   $el!: HTMLFormElement;
