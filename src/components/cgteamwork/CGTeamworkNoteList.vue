@@ -10,11 +10,11 @@
         @click="showFormDrawer()"
       )
         FaIcon(name="plus")
-      span.mx-1.text-gray-600
+      span.mx-1.text-gray-600.text-sm
         span 于
         TimeWidget.mx-1(:value="fetched" format="HH:mm:ss")
         span 查询
-      span.mx-1.text-gray-600.inline-flex.items-center.flex-auto 每 10 秒自动刷新
+      span.mx-1.text-gray-600.inline-flex.items-center.flex-auto.text-sm 每 10 秒自动刷新
       LocalStorage(name="cgteamwork.empty-note-visible" v-model="emptyNoteVisible")
         label.inline-flex.flex-center
           input.form-checkbox(
