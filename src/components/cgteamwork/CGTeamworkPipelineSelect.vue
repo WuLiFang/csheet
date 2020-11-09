@@ -24,14 +24,10 @@ import {
   cgteamworkPipelinesVariables,
 } from '../../graphql/types/cgteamworkPipelines';
 import { uniqBy, sortBy } from 'lodash';
-import CGTeamworkPipelineSelectOption from './CGTeamworkPipelineSelectOption.vue';
 import { Option } from '@/components/global/Select.vue';
 
 @Component<CGTeamworkPipelineSelect>({
   inheritAttrs: false,
-  components: {
-    CGTeamworkPipelineSelectOption,
-  },
   apollo: {
     matchedpipelines: {
       query: require('@/graphql/queries/cgteamworkPipelines.gql'),
@@ -97,7 +93,12 @@ export default class CGTeamworkPipelineSelect extends Mixins(
     return this.pipelines.map(i => ({
       key: i.name,
       value: i.name,
-      render: h => h(CGTeamworkPipelineSelectOption, { props: { value: i } }),
+      render: h => [
+        ...(i.description !== i.name
+          ? [h('div', { staticClass: 'text-xs text-gray-500' }, i.description)]
+          : []),
+        h('div', { staticClass: 'text-lg' }, i.name),
+      ],
     }));
   }
 }

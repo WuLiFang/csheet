@@ -25,7 +25,6 @@ import {
   cgteamworkProjectsVariables,
 } from '../../graphql/types/cgteamworkProjects';
 import { orderBy, uniqBy } from 'lodash';
-import CGTeamworkProjectSelectOption from './CGTeamworkProjectSelectOption.vue';
 import { Option } from '@/components/global/Select.vue';
 
 const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
@@ -98,7 +97,25 @@ export default class CGTeamworkProjectSelect extends Mixins(
     return this.projects.map(i => ({
       key: i.database,
       value: i.database,
-      render: h => h(CGTeamworkProjectSelectOption, { props: { value: i } }),
+      render: h => [
+        h('div', { staticClass: 'text-xs text-gray-500' }, [
+          h('span', {}, i.codename),
+          h(
+            'span',
+            {
+              staticClass: 'px-1 rounded-sm text-white float-right',
+              class: {
+                'bg-blue-600': i.status.toUpperCase() === 'ACTIVE',
+                'bg-gray-600': i.status.toUpperCase() === 'CLOSE',
+                'bg-green-600': i.status.toUpperCase() === 'APPROVE',
+                'bg-purple-600': i.status.toUpperCase() === 'WORK',
+              },
+            },
+            i.status
+          ),
+        ]),
+        h('div', { staticClass: 'text-lg' }, i.name),
+      ],
     }));
   }
 }

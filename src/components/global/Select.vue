@@ -54,7 +54,9 @@
         role="menu"
       )
         template(v-for="i in options")
-          li(
+          Fragment(
+            tag="li"
+            :render='i.render'
             :key="i.key"
             :data-key="i.key"
             ref="option"
@@ -65,7 +67,6 @@
             @mouseenter="highlight = i.key"
             @click="$_value = i.value; blur();"
           )
-            FunctionalComponent(:render="i.render")
         template(
           v-if="options.length === 0"
         )
@@ -85,7 +86,7 @@ import { CreateElement, VNode } from 'vue';
 export type Option<T> = {
   key: string;
   value: T;
-  render: (h: CreateElement) => VNode;
+  render: (h: CreateElement) => VNode[];
 };
 
 @Component<Select>({
