@@ -13,7 +13,7 @@
         class="form-select"
         type="select"
       )
-        option(value="cgteamwork") CGTeamwork
+        option(value="cgteamwork" :disabled="!config.enableCGTeamwork") CGTeamwork
         option(value="folder") 文件夹
     template(v-if="formData.mode == 'cgteamwork'")
       span(
@@ -126,9 +126,10 @@ import {
 } from '../graphql/types/folderOriginPrefix';
 import { collectionsVariables } from '../graphql/types/collections';
 import db from '@/db';
-import { CGTeamworkOriginPrefix, FolderOriginPrefix } from '../client';
+import client, { CGTeamworkOriginPrefix, FolderOriginPrefix } from '../client';
 import { uniq } from 'lodash';
 import { info } from '@/message';
+import { clientConfig_clientConfig as Config } from '@/graphql/types/clientConfig';
 
 function getResultMessage({
   createdCount,
@@ -164,7 +165,15 @@ function getResultMessage({
       },
     },
   },
-  mounted() {
+  async mounted() {
+    const config = await client.config.get();
+    if (config) {
+      this.config = config;
+      if (this.config.enableCGTeamwork) {
+        this.formData.mode = 'cgteamwork';
+      }
+    }
+
     this.loadState();
     this.$watch(
       () => this.title,
@@ -205,7 +214,7 @@ export default class TheNavbar extends Vue {
     cgteamwork: collectFromCGTeamworkVariables;
     skipEmptyPresentation: boolean;
   } = {
-    mode: 'cgteamwork',
+    mode: 'folder',
     folder: {
       root: '',
     },
@@ -215,6 +224,13 @@ export default class TheNavbar extends Vue {
       prefix: '',
     },
     skipEmptyPresentation: false,
+  };
+
+  config: Omit<Config, '__typename'> = {
+    sentryDSN: null,
+    issueTrackerURL: null,
+    enableCGTeamwork: false,
+    folderInclude: [],
   };
 
   loadingCount = 0;
@@ -402,13 +418,14 @@ export default class TheNavbar extends Vue {
   }
 
   get recentFolderRoot(): string[] {
-    return uniq(
-      db.recentOriginPrefix
+    return uniq([
+      ...db.recentOriginPrefix
         .get()
         .filter((i): i is FolderOriginPrefix => i instanceof FolderOriginPrefix)
         .filter(i => i.root !== this.formData.folder.root)
-        .map(i => i.root)
-    );
+        .map(i => i.root),
+      ...this.config.folderInclude ?? [],
+    ]);
   }
 
   get recentCGTeamworkPrefix(): string[] {

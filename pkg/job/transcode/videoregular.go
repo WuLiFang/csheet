@@ -19,7 +19,7 @@ func transcodeVideoRegular(ctx context.Context, p presentation.Presentation) err
 		}
 
 		cmd := transcode.MP4(p.Raw, dst, &transcode.VideoOptions{
-			Height:    1080,
+			Width:     1920,
 			SizeLimit: 256 << 20,
 		})
 

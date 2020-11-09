@@ -40,22 +40,27 @@ import db from '@/db';
 import {
   clientConfig,
   clientConfig_clientConfig as Config,
+  clientConfigVariables,
 } from './graphql/types/clientConfig';
 import { ModalWrapper } from '@/modal';
 import { MessageList } from '@/message';
+import { filePathFormat } from '@/const';
 
 @Component<App>({
   components: {
     TheNavbar,
     CollectionOverview,
     ModalWrapper,
-    MessageList
+    MessageList,
   },
   apollo: {
     config: {
       query: require('@/graphql/queries/clientConfig.gql'),
       update(v: clientConfig): Config | undefined {
         return v.clientConfig ?? undefined;
+      },
+      variables(): clientConfigVariables {
+        return { filePathFormat };
       },
     },
   },
@@ -72,7 +77,7 @@ export default class App extends Vue {
 
   $refs!: {
     overview: CollectionOverview;
-    modalWrapper: Vue,
+    modalWrapper: Vue;
   };
 
   collapseNav = false;

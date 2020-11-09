@@ -66,3 +66,14 @@ var ErrCGTeamworkUnauthorized = &AppError{
 		},
 	},
 }
+
+// ErrCGTeamworkNotConfigured when cgteamwork not configured
+var ErrCGTeamworkNotConfigured = &AppError{
+	Message: "cgteamwork not configured",
+	Extensions: map[string]interface{}{
+		"code": "CGTEAMWORK_NOT_CONFIGURED",
+		"locales": map[string]string{
+			"zh": fmt.Sprintf("CGTeamwork 未配置"),
+		},
+	},
+}

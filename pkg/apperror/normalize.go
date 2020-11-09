@@ -29,6 +29,10 @@ func As(err error, target *AppError) bool {
 			return true
 		}
 	}
+	if errors.Is(err, cgteamwork.ErrNotConfigured) {
+		*target = *ErrCGTeamworkNotConfigured
+		return true
+	}
 
 	return false
 }

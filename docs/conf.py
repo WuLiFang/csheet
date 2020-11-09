@@ -206,12 +206,14 @@ def plantweb_patch_render(inject_text):
         return _original('\n'.join([inject_text, content]), *args, **kwargs)
     plantweb.directive.render = _patched_render
 
+try:
+    if socket.gethostbyname('wlf.com').startswith('192.'):
+        plantweb_defaults = {
+            'server': 'https://plantuml.cg.wlf.com/'
+        }
 
-if socket.gethostbyname('wlf.com').startswith('192.'):
-    plantweb_defaults = {
-        'server': 'https://plantuml.cg.wlf.com/'
-    }
-
-    plantweb_patch_render(
-        '!includeurl https://git.wlf.com/WuLiFang/plantuml-style/raw/branch/master/core.puml'
-    )
+        plantweb_patch_render(
+            '!includeurl https://git.wlf.com/WuLiFang/plantuml-style/raw/branch/master/core.puml'
+        )
+except socket.gaierror:
+    pass

@@ -26,7 +26,7 @@ func transcodeImageRegular(ctx context.Context, p presentation.Presentation) err
 			return
 		}
 		cmd := transcode.JPG(p.Raw, dst, &transcode.ImageOptions{
-			Height:     2160,
+			Width:      3840,
 			TimeOffset: offset,
 		})
 

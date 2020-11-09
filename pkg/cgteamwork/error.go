@@ -42,5 +42,8 @@ func (e APIError) IsLoginFailed() bool {
 	return e.localMessage() == "login failed"
 }
 
-// ErrEmptySelection when execute operation with a empty selection
+// ErrEmptySelection when execute operation with a empty selection.
 var ErrEmptySelection = errors.New("cgteamwork: empty selection")
+
+// ErrNotConfigured when execute operation without client configured.
+var ErrNotConfigured = errors.New("cgteamwork: not configured")

@@ -1,6 +1,8 @@
-query clientConfig {
+query clientConfig($filePathFormat: String) {
   clientConfig(name: "web") {
     sentryDSN
     issueTrackerURL
+    enableCGTeamwork
+    folderInclude(format: $filePathFormat)
   }
 }
