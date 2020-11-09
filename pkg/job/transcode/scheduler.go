@@ -111,7 +111,7 @@ func (s *scheduler) Start() {
 	}
 	s.weight = semaphore.NewWeighted(MaxWeight)
 	s.flight = new(onceflight.Group)
-	logger := logging.Logger("transcode.scheduler")
+	logger := logging.Logger("job.transcode")
 	var ctx = context.Background()
 	ctx, s.cancel = context.WithCancel(ctx)
 
@@ -146,9 +146,14 @@ func (s *scheduler) Start() {
 			if err == context.Canceled {
 				return
 			} else if err != nil {
-				logger.Error("presentation scan failed", zap.Error(err))
+				logger.Error("scan failed", zap.Error(err))
+			} else if jobCount > 0 {
+				logger.Info("scan",
+					zap.Int("count", jobCount),
+					zap.Duration("elapsed", time.Since(startTime)),
+				)
 			} else {
-				logger.Info("presentation scan completed",
+				logger.Debug("scan",
 					zap.Int("count", jobCount),
 					zap.Duration("elapsed", time.Since(startTime)),
 				)

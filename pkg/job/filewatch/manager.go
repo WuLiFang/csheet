@@ -77,10 +77,17 @@ func (m *manager) Start() {
 					j <- f
 					jobCount++
 				}
-				logger.Info("file watch loop completed",
-					zap.Int("count", jobCount),
-					zap.Duration("elapsed", time.Since(startTime)),
-				)
+				if jobCount > 0 {
+					logger.Info("scan",
+						zap.Int("count", jobCount),
+						zap.Duration("elapsed", time.Since(startTime)),
+					)
+				} else {
+					logger.Debug("scan",
+						zap.Int("count", jobCount),
+						zap.Duration("elapsed", time.Since(startTime)),
+					)
+				}
 			}
 		}(m.job, m.stop)
 	})
