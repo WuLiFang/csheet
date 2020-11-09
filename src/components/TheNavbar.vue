@@ -29,13 +29,15 @@
           @change="formData.cgteamwork.prefix = ''"
           required
         )
-      label(
+      span(
         class="mr-1 lg:mr-2 inline-block"
       )
-        span(
+        label(
           class="lg:mr-1"
+          @click="() => $refs.cgteamworkPipelineSelect.focus()"
         ) 流程
         CGTeamworkPipelineSelect(
+          ref="cgteamworkPipelineSelect"
           v-model="formData.cgteamwork.pipeline"
           :database="formData.cgteamwork.database"
           required
@@ -142,7 +144,6 @@ function getResultMessage({
   return `更新了 ${updatedCount} 个收藏`;
 }
 
-
 @Component<TheNavbar>({
   components: {
     CGTeamworkProjectSelect,
@@ -235,6 +236,7 @@ export default class TheNavbar extends Vue {
   $refs!: {
     cgteamworkPrefixInput: HTMLInputElement;
     cgteamworkProjectSelect: CGTeamworkProjectSelect;
+    cgteamworkPipelineSelect: CGTeamworkPipelineSelect;
     collectButton: HTMLButtonElement;
   };
 
@@ -421,7 +423,7 @@ export default class TheNavbar extends Vue {
         .filter((i): i is FolderOriginPrefix => i instanceof FolderOriginPrefix)
         .filter(i => i.root !== this.formData.folder.root)
         .map(i => i.root),
-      ...this.config.folderInclude ?? [],
+      ...(this.config.folderInclude ?? []),
     ]);
   }
 

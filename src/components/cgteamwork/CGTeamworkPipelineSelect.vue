@@ -1,5 +1,6 @@
 <template lang="pug">
   Select(
+    ref="select"
     v-bind="$attrs"
     v-on="$listeners"
     class="w-48"
@@ -24,7 +25,7 @@ import {
   cgteamworkPipelinesVariables,
 } from '../../graphql/types/cgteamworkPipelines';
 import { uniqBy, orderBy } from 'lodash';
-import { Option } from '@/components/global/Select.vue';
+import Select, { Option } from '@/components/global/Select.vue';
 
 @Component<CGTeamworkPipelineSelect>({
   inheritAttrs: false,
@@ -53,10 +54,9 @@ export default class CGTeamworkPipelineSelect extends Mixins(
   database!: string;
 
   $el!: HTMLDivElement;
+
   $refs!: {
-    queryInput: HTMLInputElement;
-    validationInput: HTMLInputElement;
-    option: HTMLDivElement[];
+    select: Select;
   };
 
   query = '';
@@ -99,6 +99,10 @@ export default class CGTeamworkPipelineSelect extends Mixins(
         h('div', { staticClass: 'text-lg' }, i.name),
       ],
     }));
+  }
+
+  focus(): void {
+    this.$refs.select?.focus();
   }
 }
 </script>

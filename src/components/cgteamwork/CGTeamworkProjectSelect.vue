@@ -1,5 +1,6 @@
 <template lang="pug">
   Select(
+    ref="select"
     v-bind="$attrs"
     v-on="$listeners"
     class="w-48"
@@ -25,7 +26,7 @@ import {
   cgteamworkProjectsVariables,
 } from '../../graphql/types/cgteamworkProjects';
 import { orderBy, uniqBy } from 'lodash';
-import { Option } from '@/components/global/Select.vue';
+import Select, { Option } from '@/components/global/Select.vue';
 
 const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
 
@@ -68,6 +69,10 @@ export default class CGTeamworkProjectSelect extends Mixins(
   getVModelMixin<string>()
 ) {
   $el!: HTMLDivElement;
+
+  $refs!: {
+    select: Select;
+  };
 
   query = '';
   loadingCount = 0;
@@ -117,6 +122,10 @@ export default class CGTeamworkProjectSelect extends Mixins(
         h('div', { staticClass: 'text-lg' }, i.name),
       ],
     }));
+  }
+
+  focus(): void {
+    this.$refs.select?.focus();
   }
 }
 </script>
