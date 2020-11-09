@@ -139,7 +139,7 @@ ellipse {
     );
     this.$watch(
       () => ({
-        v: this.presentation?.metadata.find(i => i.k === 'annotation')?.v ?? '',
+        v: this.value,
         id: this.id,
       }),
       ({ v }) => {
@@ -213,6 +213,10 @@ export default class PresentationAnnotationEditor extends Vue {
   };
 
   debouncedSubmit!: DebouncedFunc<() => Promise<void>>;
+
+  get value(): string {
+    return this.presentation?.metadata.find(i => i.k === 'annotation')?.v ?? '';
+  }
 
   get frameRange(): [number | undefined, number | undefined] {
     if (this.presentation?.type !== 'video') {
@@ -332,6 +336,10 @@ export default class PresentationAnnotationEditor extends Vue {
         i.classList.forEach(c => i.classList.remove(c));
       }
       const value = g.innerHTML;
+      if (value === this.value) {
+        // not submit when no changes
+        return;
+      }
 
       await client.presentation.updateMetadata({
         input: {
