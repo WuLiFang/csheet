@@ -23,7 +23,7 @@ import {
   cgteamworkPipelines_cgteamworkPipelines as Pipeline,
   cgteamworkPipelinesVariables,
 } from '../../graphql/types/cgteamworkPipelines';
-import { uniqBy, sortBy } from 'lodash';
+import { uniqBy, orderBy } from 'lodash';
 import { Option } from '@/components/global/Select.vue';
 
 @Component<CGTeamworkPipelineSelect>({
@@ -66,7 +66,7 @@ export default class CGTeamworkPipelineSelect extends Mixins(
   selectedpipelines?: Pipeline[];
 
   get pipelines(): Pipeline[] {
-    return sortBy(
+    return orderBy(
       uniqBy(
         [
           ...(this.matchedpipelines ?? []),
@@ -85,7 +85,8 @@ export default class CGTeamworkPipelineSelect extends Mixins(
         ],
         i => i.name
       ),
-      [i => i.order, i => i.name]
+      [i => i.order, i => i.name],
+      ['desc', 'asc']
     );
   }
 
