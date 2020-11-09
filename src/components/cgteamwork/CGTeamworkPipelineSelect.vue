@@ -29,7 +29,7 @@ import { Option } from '@/components/global/Select.vue';
 @Component<CGTeamworkPipelineSelect>({
   inheritAttrs: false,
   apollo: {
-    matchedpipelines: {
+    matchedPipelines: {
       query: require('@/graphql/queries/cgteamworkPipelines.gql'),
       variables(): cgteamworkPipelinesVariables {
         return {
@@ -61,15 +61,13 @@ export default class CGTeamworkPipelineSelect extends Mixins(
 
   query = '';
   loadingCount = 0;
-
-  matchedpipelines?: Pipeline[];
-  selectedpipelines?: Pipeline[];
+  matchedPipelines?: Pipeline[];
 
   get pipelines(): Pipeline[] {
     return orderBy(
       uniqBy(
         [
-          ...(this.matchedpipelines ?? []),
+          ...(this.matchedPipelines ?? []),
           ...(this.query
             ? []
             : this.$_value
