@@ -1,0 +1,7 @@
+query cgteamworkPipelines($database: String!, $q: String) {
+  cgteamworkPipelines(q: $q, database: $database, module: "shot") {
+    name
+    description
+    order
+  }
+}

@@ -1,0 +1,8 @@
+type CGTeamworkPipeline
+  @goModel(model: "github.com/WuLiFang/csheet/v6/pkg/cgteamwork.Pipeline") {
+  name: String!
+  description: String!
+  "order key for sort pipelines"
+  order: String!
+  module: CGTeamworkModule!
+}

@@ -1,0 +1,7 @@
+extend type Query {
+  cgteamworkPipelines(
+    database: String!
+    q: String
+    module: [String!]
+  ): [CGTeamworkPipeline!]
+}

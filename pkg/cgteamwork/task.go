@@ -5,12 +5,6 @@ import (
 	"strings"
 )
 
-// Pipeline a task belongs to.
-type Pipeline struct {
-	ID   string
-	Name string
-}
-
 // Task created on server
 type Task struct {
 	ID         string

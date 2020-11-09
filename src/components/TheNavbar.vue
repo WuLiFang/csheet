@@ -35,16 +35,9 @@
         span(
           class="lg:mr-1"
         ) 流程
-        datalist#navbar-cgteamwork-pipeline
-          option(
-            v-for="i in recentCGTeamworkPipeline"
-          ) {{i}}
-        input(
+        CGTeamworkPipelineSelect(
           v-model="formData.cgteamwork.pipeline"
-          class="form-input"
-          placeholder="选择或输入"
-          required
-          list="navbar-cgteamwork-pipeline"
+          :database="formData.cgteamwork.database"
         )
       label(
         class="mr-1 lg:mr-2 inline-block"
@@ -130,6 +123,7 @@ import client, { CGTeamworkOriginPrefix, FolderOriginPrefix } from '../client';
 import { uniq } from 'lodash';
 import { info } from '@/message';
 import { clientConfig_clientConfig as Config } from '@/graphql/types/clientConfig';
+import CGTeamworkPipelineSelect from '@/components/cgteamwork/CGTeamworkPipelineSelect.vue';
 
 function getResultMessage({
   createdCount,
@@ -147,9 +141,11 @@ function getResultMessage({
   return `更新了 ${updatedCount} 个收藏`;
 }
 
+
 @Component<TheNavbar>({
   components: {
     CGTeamworkProjectSelect,
+    CGTeamworkPipelineSelect,
   },
   apollo: {
     folderOriginPrefix: {
@@ -442,21 +438,6 @@ export default class TheNavbar extends Vue {
             i.prefix !== this.formData.cgteamwork.prefix
         )
         .map(i => i.prefix)
-    );
-  }
-
-  get recentCGTeamworkPipeline(): string[] {
-    return uniq(
-      ['合成', '灯光', '动画', '特效', '场景细化'].concat(
-        ...db.recentOriginPrefix
-          .get()
-          .filter(
-            (i): i is CGTeamworkOriginPrefix =>
-              i instanceof CGTeamworkOriginPrefix
-          )
-          .filter(i => i.pipeline !== this.formData.cgteamwork.pipeline)
-          .map(i => i.pipeline)
-      )
     );
   }
 }
