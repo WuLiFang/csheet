@@ -10,9 +10,11 @@ import (
 
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
+	"go.uber.org/zap"
 )
 
 func (r *mutationResolver) DeleteCGTeamworkNote(ctx context.Context, input model.DeleteCGTeamworkNoteInput) (*model.DeleteCGTeamworkNotePayload, error) {
+	var logger = getLogger(ctx).With(zap.String("username", input.Username))
 	ret := new(model.DeleteCGTeamworkNotePayload)
 	ret.ClientMutationID = input.ClientMutationID
 
@@ -36,6 +38,7 @@ func (r *mutationResolver) DeleteCGTeamworkNote(ctx context.Context, input model
 			return ret, err
 		}
 		ret.DeletedCount++
+		logger.Info("delete", zap.String("id", i))
 	}
 	return ret, nil
 }

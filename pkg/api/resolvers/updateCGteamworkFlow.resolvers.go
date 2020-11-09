@@ -12,9 +12,11 @@ import (
 	cgteamworkCollector "github.com/WuLiFang/csheet/v6/pkg/collector/cgteamwork"
 	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
 	"github.com/tidwall/gjson"
+	"go.uber.org/zap"
 )
 
 func (r *mutationResolver) UpdateCGTeamworkFlow(ctx context.Context, input model.UpdateCGTeamworkFlowInput) (*model.UpdateCGTeamworkFlowPayload, error) {
+	var logger = getLogger(ctx).With(zap.String("username", input.Username))
 	ctx = cgteamwork.WithClient(ctx, &cgteamwork.Client{
 		URL:      cgteamwork.DefaultClient.URL,
 		Username: input.Username,
@@ -30,11 +32,11 @@ func (r *mutationResolver) UpdateCGTeamworkFlow(ctx context.Context, input model
 		if err != nil {
 			return ret, err
 		}
-		pipeline := col.Metadata["cgteamwork.pipeline"]
+		taskPipeline := col.Metadata["cgteamwork.pipeline"]
 		if i.Pipeline != nil {
-			pipeline = *i.Pipeline
+			taskPipeline = *i.Pipeline
 		}
-		taskID := gjson.Parse(col.Metadata["cgteamwork.tasks"]).Get(fmt.Sprintf("#(pipeline=%s).id", pipeline)).String()
+		taskID := gjson.Parse(col.Metadata["cgteamwork.tasks"]).Get(fmt.Sprintf("#(pipeline=%s).id", taskPipeline)).String()
 		if taskID == "" {
 			continue
 		}
@@ -68,6 +70,14 @@ func (r *mutationResolver) UpdateCGTeamworkFlow(ctx context.Context, input model
 			Pipeline: pipeline,
 			Prefix:   prefix,
 		}] = struct{}{}
+		logger.Info("update",
+			zap.String("origin", col.Origin),
+			zap.String("pipeline", pipeline),
+			zap.String("stage", i.Stage),
+			zap.String("status", i.Status),
+			zap.Int("htmlLength", len(msg.HTML)),
+			zap.Int("imageCount", len(msg.Images)),
+		)
 	}
 
 	for i := range m {

@@ -1,9 +1,14 @@
 package resolvers
 
 import (
+	"context"
 	"sync"
 
+	"github.com/99designs/gqlgen/graphql"
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
+	"github.com/WuLiFang/csheet/v6/pkg/middleware/gincontext"
 	"github.com/WuLiFang/csheet/v6/pkg/unipath"
+	"go.uber.org/zap"
 )
 
 // This file will not be regenerated automatically.
@@ -45,4 +50,22 @@ func formatPath(v string, format *string) string {
 	default:
 		return unipath.Auto(v)
 	}
+}
+
+func getLogger(ctx context.Context) *zap.Logger {
+	gc := gincontext.FromContext(ctx)
+	var clientIP = ""
+	if gc != nil {
+		clientIP = gc.ClientIP()
+	}
+	var path = ""
+	fc := graphql.GetFieldContext(ctx)
+	if fc != nil {
+		path = fc.Object + "." + fc.Path().String()
+	}
+
+	return logging.Logger("api").With(
+		zap.String("path", path),
+		zap.String("clientIP", clientIP),
+	)
 }

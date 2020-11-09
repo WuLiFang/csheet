@@ -6,16 +6,14 @@ package resolvers
 import (
 	"context"
 
-	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
 	"go.uber.org/zap"
 )
 
 func (r *subscriptionResolver) PresentationUpdated(ctx context.Context, id []string) (<-chan *presentation.Presentation, error) {
-	logger := logging.For(ctx).Logger("api.subscription").
+	logger := getLogger(ctx).
 		With(
 			zap.Int("index", subscriptionIndex()),
-			zap.String("path", "presentationUpdated"),
 		)
 
 	wantedIDs := map[string]struct{}{}

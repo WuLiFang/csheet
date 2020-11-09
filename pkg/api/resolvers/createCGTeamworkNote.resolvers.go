@@ -13,9 +13,11 @@ import (
 	cgteamworkCollector "github.com/WuLiFang/csheet/v6/pkg/collector/cgteamwork"
 	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
 	"github.com/tidwall/gjson"
+	"go.uber.org/zap"
 )
 
 func (r *mutationResolver) CreateCGTeamworkNote(ctx context.Context, input model.CreateCGTeamworkNoteInput) (*model.CreateCGTeamworkNotePayload, error) {
+	var logger = getLogger(ctx).With(zap.String("username", input.Username))
 	ret := new(model.CreateCGTeamworkNotePayload)
 	ret.ClientMutationID = input.ClientMutationID
 	ret.UpdatedCollections = make([]collection.Collection, 0, len(input.Data))
@@ -70,6 +72,12 @@ func (r *mutationResolver) CreateCGTeamworkNote(ctx context.Context, input model
 			updateIDSet[i.ID] = struct{}{}
 			ret.UpdatedCollections = append(ret.UpdatedCollections, col)
 		}
+		logger.Info("create",
+			zap.String("origin", col.Origin),
+			zap.String("pipeline", i.Pipeline),
+			zap.Int("htmlLength", len(msg.HTML)),
+			zap.Int("imageCount", len(msg.Images)),
+		)
 	}
 
 	return ret, nil

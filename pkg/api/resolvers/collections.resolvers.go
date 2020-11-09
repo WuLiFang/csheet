@@ -6,7 +6,6 @@ package resolvers
 import (
 	"context"
 
-	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
@@ -69,7 +68,7 @@ func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, p
 				}
 				err = txn.Get(db.IndexCollection.Key(pk), node)
 				if err == db.ErrKeyNotFound {
-					var logger = logging.For(ctx).Logger("api")
+					var logger = getLogger(ctx)
 					var key = cursor.Item().KeyCopy(nil)
 					logger.Warn(
 						"delete entry from secondary index that key not found in primary index",

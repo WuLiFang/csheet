@@ -9,9 +9,11 @@ import (
 
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
 	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
+	"go.uber.org/zap"
 )
 
 func (r *mutationResolver) UpdateCollectionMetadata(ctx context.Context, input model.UpdateCollectionMetadataInput) (*model.UpdateCollectionMetadataPayload, error) {
+	var logger = getLogger(ctx)
 	var ret = new(model.UpdateCollectionMetadataPayload)
 	var err error
 	ret.ClientMutationID = input.ClientMutationID
@@ -42,6 +44,7 @@ func (r *mutationResolver) UpdateCollectionMetadata(ctx context.Context, input m
 			}
 			v.Metadata[i.Key] = i.Value
 		}
+		logger.Info("set", zap.String("origin", v.Origin), zap.String("key", i.Key))
 	}
 
 	ret.Updated = make([]collection.Collection, 0, len(m))
