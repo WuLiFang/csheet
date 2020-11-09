@@ -22,7 +22,7 @@ import {
   cgteamworkPipelines,
   cgteamworkPipelines_cgteamworkPipelines as Pipeline,
   cgteamworkPipelinesVariables,
-} from '../../graphql/types/cgteamworkpipelines';
+} from '../../graphql/types/cgteamworkPipelines';
 import { uniqBy, sortBy } from 'lodash';
 import CGTeamworkPipelineSelectOption from './CGTeamworkPipelineSelectOption.vue';
 import { Option } from '@/components/global/Select.vue';
