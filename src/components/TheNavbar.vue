@@ -38,6 +38,7 @@
         CGTeamworkPipelineSelect(
           v-model="formData.cgteamwork.pipeline"
           :database="formData.cgteamwork.database"
+          required
         )
       label(
         class="mr-1 lg:mr-2 inline-block"
