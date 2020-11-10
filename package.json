@@ -76,7 +76,8 @@
     "vue-template-compiler": "2.6.11"
   },
   "browserslist": [
-    "> 1% in CN"
+    "defaults",
+    "chrome >= 69"
   ],
   "repository": {
     "url": "https://github.com/WuLiFang/csheet.git"

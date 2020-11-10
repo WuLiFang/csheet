@@ -48,7 +48,7 @@ export interface CGTeamworkMessageEditorValue {
     this.$watch(
       () => this.$_value,
       v => {
-        this.text = v.html.replaceAll('<br>', '\n');
+        this.text = v.html.replace(/<br>/g, '\n');
         this.images = v.images;
       },
       {
@@ -73,7 +73,7 @@ export default class CGTeamworkMessageEditor extends Mixins(
 
   commit(): void {
     this.$_value = {
-      html: this.text.replaceAll('\n', '<br>'),
+      html: this.text.replace(/\n/g, '<br>'),
       images: this.images,
     };
   }
