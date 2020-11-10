@@ -11,7 +11,6 @@ import (
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/apperror"
-	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	client "github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	"github.com/WuLiFang/csheet/v6/pkg/collector/base"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
@@ -32,8 +31,8 @@ type Options struct {
 
 var errEmptyKey = errors.New("collectionFromTask: empty key")
 
-func findPipelineByName(ctx context.Context, db string, pipeline string) (ret cgteamwork.Pipeline, err error) {
-	res, err := cgteamwork.Pipelines(ctx, db, cgteamwork.PipelinesOptionFilter(cgteamwork.F("entity_name").Equal(pipeline)))
+func findPipelineByName(ctx context.Context, db string, pipeline string) (ret client.Pipeline, err error) {
+	res, err := client.Pipelines(ctx, db, client.PipelinesOptionFilter(client.F("entity_name").Equal(pipeline)))
 	if err != nil {
 		return
 	}
@@ -199,11 +198,11 @@ func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error)
 		err = fmt.Errorf("collector.cgteamwork: pipeline not supported: %s", o.Pipeline)
 		return
 	}
-	s := cgteamwork.Select(o.Database, pipeline.Module.Name).
+	s := client.Select(o.Database, pipeline.Module.Name).
 		WithModuleType(pipeline.Module.Type).
 		WithFilter(
-			cgteamwork.F("task.pipeline").In(pipelines(o.Pipeline)).
-				And(cgteamwork.F(keyField).StartsWith(o.Prefix)),
+			client.F("task.pipeline").In(pipelines(o.Pipeline)).
+				And(client.F(keyField).StartsWith(o.Prefix)),
 		)
 
 	n, err := s.Count(ctx)
