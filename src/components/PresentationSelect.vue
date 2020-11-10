@@ -75,7 +75,7 @@ function dirname(v: string): string {
     };
 
     const renderOptionGroup = (v: OptionGroup): VNode =>
-      h('details', { attrs: { open: true } }, [
+      h('details', { attrs: { open: true }, key: v.name }, [
         h('summary', { staticClass: 'sticky top-0 bg-gray-900' }, v.name),
         h('ol', v.children.map(renderItem)),
       ]);
@@ -119,10 +119,12 @@ export default class PresentationSelect extends Vue {
   get groupedOptions(): OptionGroup[] {
     return Object.entries(
       groupBy(this.sortedOptions, i => humanizeTime(i.modTime))
-    ).map(([k, v]) => ({
-      name: k,
-      children: v,
-    })).sort((a,b)=> -compare(a.name, b.name));
+    )
+      .map(([k, v]) => ({
+        name: k,
+        children: v,
+      }))
+      .sort((a, b) => -compare(a.name, b.name));
   }
 
   @Watch('options', { immediate: true })
