@@ -6,6 +6,7 @@ import 'vue-awesome/icons/video';
 import { sortBy, groupBy } from 'lodash';
 import db from '@/db';
 import humanizeTime from '@/utils/humanizeTime';
+import compare from '@/utils/compare';
 import { VNode } from 'vue';
 
 interface Option {
@@ -121,7 +122,7 @@ export default class PresentationSelect extends Vue {
     ).map(([k, v]) => ({
       name: k,
       children: v,
-    }));
+    })).sort((a,b)=> -compare(a.name, b.name));
   }
 
   @Watch('options', { immediate: true })
