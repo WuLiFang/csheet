@@ -1,5 +1,5 @@
-query cgteamworkPipelines($database: String!, $q: String) {
-  cgteamworkPipelines(q: $q, database: $database, module: "shot") {
+query cgteamworkPipelines($database: String!, $q: String, $module: [String!]) {
+  cgteamworkPipelines(q: $q, database: $database, module: $module) {
     name
     description
     order

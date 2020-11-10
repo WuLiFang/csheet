@@ -30,7 +30,7 @@
           required
         )
       span(
-        class="mr-1 lg:mr-2 inline-block"
+        class="mr-1 lg:mr-2 inline-flex items-center"
       )
         label(
           class="lg:mr-1"
@@ -120,6 +120,7 @@ import {
   folderOriginPrefixVariables,
   folderOriginPrefix,
 } from '../graphql/types/folderOriginPrefix';
+import { CollectFromCGTeamworkInput } from '@/graphql/types/global';
 import { collectionsVariables } from '../graphql/types/collections';
 import db from '@/db';
 import client, { CGTeamworkOriginPrefix, FolderOriginPrefix } from '../client';
@@ -209,7 +210,7 @@ export default class TheNavbar extends Vue {
   formData: {
     mode: 'cgteamwork' | 'folder';
     folder: collectFromFolderVariables;
-    cgteamwork: collectFromCGTeamworkVariables;
+    cgteamwork: CollectFromCGTeamworkInput;
     skipEmptyPresentation: boolean;
   } = {
     mode: 'folder',
@@ -346,13 +347,14 @@ export default class TheNavbar extends Vue {
     }
     this.loadingCount += 1;
     try {
-      const { data, errors } = await this.$apollo.mutate<collectFromCGTeamwork>(
-        {
-          mutation: require('@/graphql/mutations/collectFromCGTeamwork.gql'),
-          variables: this.formData.cgteamwork,
-          errorPolicy: 'all',
-        }
-      );
+      const { data, errors } = await this.$apollo.mutate<
+        collectFromCGTeamwork,
+        collectFromCGTeamworkVariables
+      >({
+        mutation: require('@/graphql/mutations/collectFromCGTeamwork.gql'),
+        variables: { input: this.formData.cgteamwork },
+        errorPolicy: 'all',
+      });
       for (const err of errors ?? []) {
         switch (err.extensions?.code) {
           case 'CGTEAMWORK_COLLECT_OVER_TASK_LIMIT':
@@ -379,7 +381,10 @@ export default class TheNavbar extends Vue {
     }
     this.loadingCount += 1;
     try {
-      const { data } = await this.$apollo.mutate<collectFromFolder>({
+      const { data } = await this.$apollo.mutate<
+        collectFromFolder,
+        collectFromFolderVariables
+      >({
         mutation: require('@/graphql/mutations/collectFromFolder.gql'),
         variables: this.formData.folder,
       });

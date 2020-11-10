@@ -4,11 +4,13 @@
       template(v-for="i in options")
         label.mx-1(
           :key="i.value"
+          :class="radioLabelClass"
         )
           input.form-radio(
             type="radio"
             :value="i.value"
             v-model="$_value"
+            :class="radioInputClass"
           ) 
           span.mx-1 {{ i.label }}
     template(v-else)
@@ -48,6 +50,12 @@ export interface RadioOrSelectOption {
 export default class RadioOrSelect extends Mixins(getVModelMixin<string>()) {
   @Prop({ type: Array, required: true })
   options!: RadioOrSelectOption[];
+
+  @Prop({type: String})
+  radioLabelClass?: string
+
+  @Prop({type: String})
+  radioInputClass?: string
 
   get isRadio(): boolean {
     return this.options.length <= 5;

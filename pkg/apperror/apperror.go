@@ -34,6 +34,19 @@ func NewErrCGTeamworkCollectOverTaskLimit(current, max int) error {
 	}
 }
 
+// NewErrCGTeamworkPipelineNotFound create a error
+func NewErrCGTeamworkPipelineNotFound(name string) error {
+	return &AppError{
+		Message: fmt.Sprintf("pipeline not found: %s", name),
+		Extensions: map[string]interface{}{
+			"code": "CGTEAMWORK_PIPELINE_NOT_FOUND",
+			"locales": map[string]string{
+				"zh": fmt.Sprintf("找不到流程: %s", name),
+			},
+		},
+	}
+}
+
 // ErrCGTeamworkLoginFailed when cgteamwork login failed
 var ErrCGTeamworkLoginFailed = &AppError{
 	Message: "cgteamwork login failed",

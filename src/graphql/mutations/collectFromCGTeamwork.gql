@@ -1,12 +1,8 @@
 mutation collectFromCGTeamwork(
-  $database: String!
-  $prefix: String!
-  $pipeline: String!
+  $input: CollectFromCGTeamworkInput!
 ) {
   collectFromCGTeamwork(
-    database: $database
-    prefix: $prefix
-    pipeline: $pipeline
+    input: $input
   ) {
     originPrefix
     updatedCount

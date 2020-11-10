@@ -1,19 +1,38 @@
 <template lang="pug">
-  Select(
-    ref="select"
-    v-bind="$attrs"
-    v-on="$listeners"
-    class="w-48"
-    v-model="$_value"
-    :options="options"
-    :query.sync="query"
-    search-placeholder="搜索流程"
-    required-message="请选择流程"
-    dropdown-class="w-48"
-    :loading="loadingCount > 0"
-  )
-    template(#placeholder)
-      span.text-gray-500 请选择流程
+  .inline-flex.items-center
+    LocalStorage(name="cgteamwork.module" v-model="module")
+      RadioOrSelect(
+        v-model="module",
+        :options=`[
+          { value: "shot", label: "镜头" },
+          { value: "asset", label: "资产" },
+        ]`
+        class=""
+        radio-label-class="text-sm block"
+      )
+    Select(
+      ref="select"
+      v-bind="$attrs"
+      v-on="$listeners"
+      class="w-48"
+      v-model="$_value"
+      :options="options"
+      :query.sync="query"
+      search-placeholder="搜索流程"
+      required-message="请选择流程"
+      dropdown-class="w-64"
+      :loading="loadingCount > 0"
+    )
+      template(#placeholder)
+        span.text-gray-500 请选择流程
+      template(#before-options)
+        .stikcy.top-0
+          button.form-button(
+            type="button"
+          ) 镜头
+          button.form-button(
+            type="button"
+          ) 资产
 </template>
 
 <script lang="ts">
@@ -24,7 +43,7 @@ import {
   cgteamworkPipelines_cgteamworkPipelines as Pipeline,
   cgteamworkPipelinesVariables,
 } from '../../graphql/types/cgteamworkPipelines';
-import { uniqBy, orderBy } from 'lodash';
+import { orderBy } from 'lodash';
 import Select, { Option } from '@/components/global/Select.vue';
 
 @Component<CGTeamworkPipelineSelect>({
@@ -36,6 +55,7 @@ import Select, { Option } from '@/components/global/Select.vue';
         return {
           q: this.query || undefined,
           database: this.database,
+          module: this.module ? [this.module] : undefined,
         };
       },
       update(v: cgteamworkPipelines): Pipeline[] {
@@ -62,27 +82,11 @@ export default class CGTeamworkPipelineSelect extends Mixins(
   query = '';
   loadingCount = 0;
   matchedPipelines?: Pipeline[];
+  module = 'shot';
 
   get pipelines(): Pipeline[] {
     return orderBy(
-      uniqBy(
-        [
-          ...(this.matchedPipelines ?? []),
-          ...(this.query
-            ? []
-            : this.$_value
-            ? [
-                {
-                  __typename: 'CGTeamworkPipeline',
-                  name: this.$_value,
-                  description: '',
-                  order: '',
-                } as Pipeline,
-              ]
-            : []),
-        ],
-        i => i.name
-      ),
+      this.matchedPipelines ?? [],
       [i => i.order, i => i.name],
       ['desc', 'asc']
     );

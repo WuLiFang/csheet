@@ -1,7 +1,0 @@
-extend type Mutation {
-  collectFromCGTeamwork(
-    database: String!
-    prefix: String!
-    pipeline: String!
-  ): CollectResult!
-}

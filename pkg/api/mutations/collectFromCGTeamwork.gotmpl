@@ -1,0 +1,22 @@
+{{ define "args" }}
+    database: String!
+    prefix: String!
+    pipeline: String!
+{{- end }}
+
+
+{{ define "outerArgs" }}
+    "Deprecated: remove after 2020-12-10"
+    database: String
+    "Deprecated: remove after 2020-12-10"
+    prefix: String
+    "Deprecated: remove after 2020-12-10"
+    pipeline: String
+{{- end }}
+
+
+{{ define "type"}}
+    originPrefix: String!
+    createdCount: Int!
+    updatedCount: Int!
+{{- end}}

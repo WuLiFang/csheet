@@ -50,5 +50,5 @@ type {{.Name | upperFirst }}Payload {
 
 extend type Mutation {
     {{- block "description" . }}{{end}}
-    {{.Name}}(input: {{.Name | upperFirst}}Input{{if not .InputNullable}}!{{end}}): {{.Name | upperFirst }}Payload
+    {{.Name}}(input: {{.Name | upperFirst}}Input{{if not .InputNullable}}!{{end}}{{ block "outerArgs" .}}{{end}}): {{.Name | upperFirst }}Payload
 }

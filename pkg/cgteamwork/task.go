@@ -8,7 +8,9 @@ import (
 // Task created on server
 type Task struct {
 	ID         string
+	Module     string
 	Shot       Shot
+	Asset      Asset
 	Artists    []User
 	Pipeline   Pipeline
 	ImageFile  string
@@ -30,7 +32,9 @@ func (i *Task) UnmarshalCGTeamworkRecord(m map[string]string) error {
 	i.ID = m["task.id"]
 	i.Pipeline.ID = m["task.flow_id"]
 	i.Pipeline.Name = m["task.pipeline"]
+	i.Module = m["task.module"]
 	i.Shot.UnmarshalCGTeamworkRecord(m)
+	i.Asset.UnmarshalCGTeamworkRecord(m)
 	if m["task.account_id"] == "" &&
 		m["task.artist"] == "" &&
 		m["task.account"] == "" {

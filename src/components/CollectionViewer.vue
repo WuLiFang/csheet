@@ -200,6 +200,14 @@ import PresentationAnnotationEditorToolbar from './PresentationAnnotationEditorT
 import PresentationControls from './PresentationControls.vue';
 import { saveAs } from 'file-saver';
 import { info } from '@/message';
+import {
+  collectFromCGTeamwork,
+  collectFromCGTeamworkVariables,
+} from '@/graphql/types/collectFromCGTeamwork';
+import {
+  collectFromFolderVariables,
+  collectFromFolder,
+} from '@/graphql/types/collectFromFolder';
 
 @Component<CollectionViewer>({
   components: {
@@ -526,7 +534,10 @@ export default class CollectionViewer extends Vue {
       const parts = this.value.origin.split(':');
       switch (parts[0]) {
         case 'folder':
-          await this.$apollo.mutate({
+          await this.$apollo.mutate<
+            collectFromFolder,
+            collectFromFolderVariables
+          >({
             mutation: require('@/graphql/mutations/collectFromFolder.gql'),
             variables: {
               root: parts.slice(1).join(':'),
@@ -534,12 +545,17 @@ export default class CollectionViewer extends Vue {
           });
           break;
         case 'cgteamwork':
-          await this.$apollo.mutate({
+          await this.$apollo.mutate<
+            collectFromCGTeamwork,
+            collectFromCGTeamworkVariables
+          >({
             mutation: require('@/graphql/mutations/collectFromCGTeamwork.gql'),
             variables: {
-              database: parts[1],
-              pipeline: parts[2],
-              prefix: parts.slice(3).join(':'),
+              input: {
+                database: parts[1],
+                pipeline: parts[2],
+                prefix: parts.slice(3).join(':'),
+              },
             },
           });
           break;

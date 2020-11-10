@@ -3,23 +3,23 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { CollectFromCGTeamworkInput } from "./global";
+
 // ====================================================
 // GraphQL mutation operation: collectFromCGTeamwork
 // ====================================================
 
 export interface collectFromCGTeamwork_collectFromCGTeamwork {
-  __typename: "CollectResult";
+  __typename: "CollectFromCGTeamworkPayload";
   originPrefix: string;
   updatedCount: number;
   createdCount: number;
 }
 
 export interface collectFromCGTeamwork {
-  collectFromCGTeamwork: collectFromCGTeamwork_collectFromCGTeamwork;
+  collectFromCGTeamwork: collectFromCGTeamwork_collectFromCGTeamwork | null;
 }
 
 export interface collectFromCGTeamworkVariables {
-  database: string;
-  prefix: string;
-  pipeline: string;
+  input: CollectFromCGTeamworkInput;
 }

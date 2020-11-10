@@ -10,11 +10,24 @@ import (
 type ResultSet struct {
 	Fields []string
 	Data   gjson.Result
+	d      map[string]string
 }
 
 // Count data rows.
 func (rs ResultSet) Count() int {
 	return int(rs.Data.Get("#").Int())
+}
+
+// SetDefault data that will used when unmarshal
+func (rs *ResultSet) SetDefault(k, v string) {
+	if v == "" {
+		delete(rs.d, k)
+		return
+	}
+	if rs.d == nil {
+		rs.d = make(map[string]string)
+	}
+	rs.d[k] = v
 }
 
 // RecordUnmarshaler allow unmarshal from a result set row
@@ -31,6 +44,9 @@ func (rs ResultSet) Unmarshal(fn func(index int) RecordUnmarshaler) error {
 			continue
 		}
 		data := map[string]string{}
+		for k, v := range rs.d {
+			data[k] = v
+		}
 		for col, name := range rs.Fields {
 			data[name] = rs.Data.Get(fmt.Sprintf("%d.%d", row, col)).String()
 		}

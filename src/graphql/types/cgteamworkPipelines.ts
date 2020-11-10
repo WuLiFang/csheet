@@ -24,4 +24,5 @@ export interface cgteamworkPipelines {
 export interface cgteamworkPipelinesVariables {
   database: string;
   q?: string | null;
+  module?: string[] | null;
 }

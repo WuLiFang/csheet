@@ -13,3 +13,4 @@ generate:
 	gotmpl -o deleteCGTeamworkNote.gql base.gql.gotmpl cgteamworkNote.gotmpl 
 	gotmpl -o backupDatabase.gql base.gql.gotmpl backupDatabase.gotmpl 
 	gotmpl -o restoreDatabase.gql base.gql.gotmpl restoreDatabase.gotmpl 
+	gotmpl -o collectFromCGTeamwork.gql base.gql.gotmpl collectFromCGTeamwork.gotmpl InputNullable=true
