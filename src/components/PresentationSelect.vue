@@ -67,7 +67,7 @@ function dirname(v: string): string {
                 return h('span', [v.type]);
             }
           })(),
-          h('span', { staticClass: 'mx-1' }, v.basename),
+          h('span', { staticClass: 'mx-1 break-all' }, v.basename),
         ]
       );
     };
