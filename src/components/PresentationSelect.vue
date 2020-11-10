@@ -43,7 +43,6 @@ function dirname(v: string): string {
             'bg-blue-600 hover:bg-blue-500': v.id === this.value,
           },
           attrs: {
-            type: 'button',
             title: v.path,
           },
           key: v.id,
