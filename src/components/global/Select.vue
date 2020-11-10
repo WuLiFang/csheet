@@ -45,8 +45,8 @@
       leave-to-class="transform opacity-0 scale-95"
     )
       ol(
-        class="origin-top-right absolute right-0 mt-4 border border-gray-700"
-        class="rounded shadow-lg bg-gray-800"
+        class="origin-top-right absolute right-0 mt-px z-30"
+        class="border border-gray-700 rounded shadow-lg bg-gray-800"
         class="max-h-96 overflow-y-auto"
         :class="dropdownClass"
         aria-orientation="vertical"
