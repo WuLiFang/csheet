@@ -3,10 +3,9 @@ import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 import { presentation as Presentation } from '../graphql/types/presentation';
 import 'vue-awesome/icons/image';
 import 'vue-awesome/icons/video';
-import { sortBy, groupBy } from 'lodash';
+import { sortBy, groupBy, orderBy } from 'lodash';
 import db from '@/db';
 import humanizeTime from '@/utils/humanizeTime';
-import compare from '@/utils/compare';
 import { VNode } from 'vue';
 
 interface Option {
@@ -99,7 +98,7 @@ export default class PresentationSelect extends Vue {
   options!: Presentation[];
 
   get sortedOptions(): Option[] {
-    return sortBy(
+    return orderBy(
       this.options.map(i => ({
         id: i.id,
         type: i.type,
@@ -109,22 +108,22 @@ export default class PresentationSelect extends Vue {
         modTime: new Date(i.raw.modTime),
       })),
       [
+        i => i.modTime,
         i => i.basename,
         i => ['video', 'image'].findIndex(j => j === i.type),
         i => i.id,
-      ]
+      ],
+      ['desc', 'asc', 'asc', 'asc']
     );
   }
 
   get groupedOptions(): OptionGroup[] {
     return Object.entries(
       groupBy(this.sortedOptions, i => humanizeTime(i.modTime))
-    )
-      .map(([k, v]) => ({
-        name: k,
-        children: v,
-      }))
-      .sort((a, b) => -compare(a.name, b.name));
+    ).map(([k, v]) => ({
+      name: k,
+      children: v,
+    }));
   }
 
   @Watch('options', { immediate: true })
