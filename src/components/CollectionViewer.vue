@@ -53,9 +53,8 @@
         class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden"
       )
         .player(
-          class="relative text-center lg:w-2/3 h-full flex flex-col"
+          class="flex-none relative text-center lg:w-2/3 lg:h-full flex flex-col"
         )
-
           PresentationAnnotationEditorToolbar(
             v-if="$refs.annotation"
             :parent="$refs.annotation"
