@@ -9,7 +9,7 @@
 <script lang="ts">
 import moment from 'moment';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import cloneDate from '@/utils/cloneDate';
+import humanizeTime from '@/utils/humanizeTime';
 
 @Component<TimeWidget>({
   components: {},
@@ -44,13 +44,7 @@ export default class TimeWidget extends Vue {
   public updateText(): void {
     this.text = this.format
       ? this.momentValue.format(this.format)
-      : this.momentValue.isBefore(cloneDate(new Date(), { month: -1 })) ||
-        this.momentValue.isAfter(cloneDate(new Date(), { month: 1 }))
-      ? this.momentValue.isBefore(cloneDate(new Date(), { year: -1 })) ||
-        this.momentValue.isAfter(cloneDate(new Date(), { year: 1 }))
-        ? this.momentValue.format('YYYY-MM-DD')
-        : this.momentValue.format('MMMM DD')
-      : this.momentValue.fromNow();
+      : humanizeTime(this.momentValue.toDate());
   }
 
   public startTick(): void {

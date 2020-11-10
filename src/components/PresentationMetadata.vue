@@ -4,6 +4,9 @@
     dd.pl-4
       span {{ fileSizeText }}
       span.mx-2.text-gray-500.whitespace-no-wrap （{{ fileSizeExactText }}）
+    dt 修改时间
+    dd.pl-4
+      TimeWidget(:value="value.raw.modTime" format="llll")
     template(v-if="metadata.width && metadata.height")
       dt 尺寸
       dd.pl-4 {{metadata.width}}x{{metadata.height}}
