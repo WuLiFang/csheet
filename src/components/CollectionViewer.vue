@@ -168,7 +168,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import Presentation from './Presentation.vue';
-import { collection as Collection } from '../graphql/types/collection';
+import { Collection } from '../graphql/types/Collection';
 import 'vue-awesome/icons/window-close';
 import 'vue-awesome/icons/caret-square-up';
 import 'vue-awesome/icons/caret-square-down';
@@ -192,7 +192,7 @@ import { filePathFormat } from '../const';
 import db from '@/db';
 import * as sentry from '@sentry/browser';
 import toHotKey from '@/utils/toHotKey';
-import { presentation } from '../graphql/types/presentation';
+import { Presentation as PresentationData } from '../graphql/types/Presentation';
 import { throttle } from 'lodash';
 import PresentationAnnotationEditor from './PresentationAnnotationEditor.vue';
 import PresentationAnnotationEditorToolbar from './PresentationAnnotationEditorToolbar.vue';
@@ -488,7 +488,7 @@ export default class CollectionViewer extends Vue {
     return ret;
   }
 
-  get presentation(): presentation | undefined {
+  get presentation(): PresentationData | undefined {
     return this.value.presentations.find(i => i.id === this.presentationID);
   }
 

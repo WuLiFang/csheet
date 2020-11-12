@@ -19,7 +19,7 @@ import {
   presentationNodeVariables,
   presentationNode,
 } from '@/graphql/types/presentationNode';
-import { presentation } from '@/graphql/types/presentation';
+import { Presentation } from '@/graphql/types/Presentation';
 import NullPainter from '@/svg-editor/painters/null';
 import SelectPainter from '@/svg-editor/painters/select';
 import { Painter } from '@/svg-editor/painter';
@@ -50,7 +50,7 @@ type PainterName =
       skip(): boolean {
         return !this.id;
       },
-      update(v: presentationNode): presentation | undefined {
+      update(v: presentationNode): Presentation | undefined {
         return v.node?.__typename === 'Presentation' ? v.node : undefined;
       },
     },
@@ -189,7 +189,7 @@ export default class PresentationAnnotationEditor extends Vue {
 
   currentPainter: PainterName = 'null';
 
-  presentation?: presentation;
+  presentation?: Presentation;
 
   canUndo = false;
   canRedo = false;

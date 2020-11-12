@@ -1,7 +1,7 @@
-#import "@/graphql/fragments/presentation.gql"
+#import "@/graphql/fragments/Presentation.gql"
 
 subscription presentationUpdated($id: [ID!]!, $filePathFormat: String) {
   presentationUpdated(id: $id) {
-    ...presentation
+    ...Presentation
   }
 }

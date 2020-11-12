@@ -33,11 +33,8 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import {
-  collection as Collection,
-  collection,
-} from '../graphql/types/collection';
-import { pageInfo as PageInfo } from '../graphql/types/pageInfo';
+import { Collection } from '../graphql/types/Collection';
+import { PageInfo } from '../graphql/types/PageInfo';
 
 import {
   collectionsVariables,
@@ -152,7 +149,7 @@ export default class CollectionOverview extends Vue {
 
   loadingCount = 0;
 
-  get nodes(): collection[] {
+  get nodes(): Collection[] {
     return extractNodes(this.collections);
   }
 

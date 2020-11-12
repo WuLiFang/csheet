@@ -4,10 +4,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: collection
+// GraphQL fragment: Collection
 // ====================================================
 
-export interface collection_metadata {
+export interface Collection_metadata {
   __typename: "StringEntry";
   /**
    * key
@@ -19,24 +19,24 @@ export interface collection_metadata {
   v: string;
 }
 
-export interface collection_presentations_raw {
+export interface Collection_presentations_raw {
   __typename: "DiskFile";
   path: string;
   modTime: any | null;
   size: number | null;
 }
 
-export interface collection_presentations_thumb {
+export interface Collection_presentations_thumb {
   __typename: "WebFile";
   url: string;
 }
 
-export interface collection_presentations_regular {
+export interface Collection_presentations_regular {
   __typename: "WebFile";
   url: string;
 }
 
-export interface collection_presentations_metadata {
+export interface Collection_presentations_metadata {
   __typename: "StringEntry";
   /**
    * key
@@ -48,25 +48,25 @@ export interface collection_presentations_metadata {
   v: string;
 }
 
-export interface collection_presentations {
+export interface Collection_presentations {
   __typename: "Presentation";
   id: string;
   type: string;
-  raw: collection_presentations_raw;
-  thumb: collection_presentations_thumb | null;
+  raw: Collection_presentations_raw;
+  thumb: Collection_presentations_thumb | null;
   isThumbTranscodeFailed: boolean | null;
-  regular: collection_presentations_regular | null;
+  regular: Collection_presentations_regular | null;
   isRegularOutdated: boolean | null;
   isRegularTranscodeFailed: boolean | null;
-  metadata: collection_presentations_metadata[];
+  metadata: Collection_presentations_metadata[];
 }
 
-export interface collection {
+export interface Collection {
   __typename: "Collection";
   id: string;
   title: string;
   origin: string;
-  metadata: collection_metadata[];
-  presentations: collection_presentations[];
+  metadata: Collection_metadata[];
+  presentations: Collection_presentations[];
   collectTime: any;
 }

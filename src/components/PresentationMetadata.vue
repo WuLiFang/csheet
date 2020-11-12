@@ -55,7 +55,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { presentation as Presentation } from '@/graphql/types/presentation';
+import { Presentation } from '@/graphql/types/Presentation';
 import { camelCase } from 'lodash';
 import formatFileSize from '@/utils/formatFileSize';
 import formatDuration from '@/utils/formatDuration';

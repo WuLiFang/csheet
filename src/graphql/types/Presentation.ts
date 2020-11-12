@@ -4,27 +4,27 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: presentation
+// GraphQL fragment: Presentation
 // ====================================================
 
-export interface presentation_raw {
+export interface Presentation_raw {
   __typename: "DiskFile";
   path: string;
   modTime: any | null;
   size: number | null;
 }
 
-export interface presentation_thumb {
+export interface Presentation_thumb {
   __typename: "WebFile";
   url: string;
 }
 
-export interface presentation_regular {
+export interface Presentation_regular {
   __typename: "WebFile";
   url: string;
 }
 
-export interface presentation_metadata {
+export interface Presentation_metadata {
   __typename: "StringEntry";
   /**
    * key
@@ -36,15 +36,15 @@ export interface presentation_metadata {
   v: string;
 }
 
-export interface presentation {
+export interface Presentation {
   __typename: "Presentation";
   id: string;
   type: string;
-  raw: presentation_raw;
-  thumb: presentation_thumb | null;
+  raw: Presentation_raw;
+  thumb: Presentation_thumb | null;
   isThumbTranscodeFailed: boolean | null;
-  regular: presentation_regular | null;
+  regular: Presentation_regular | null;
   isRegularOutdated: boolean | null;
   isRegularTranscodeFailed: boolean | null;
-  metadata: presentation_metadata[];
+  metadata: Presentation_metadata[];
 }

@@ -1,4 +1,4 @@
-import { collection as Collection } from '@/graphql/types/collection';
+import { Collection } from '@/graphql/types/Collection';
 import cast from 'cast-unknown';
 
 export default function getCollectionPipelines(

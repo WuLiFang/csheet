@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { collection as Collection } from '../graphql/types/collection';
+import { Collection } from '../graphql/types/Collection';
 import Presentation from './Presentation.vue';
 import * as cast from 'cast-unknown';
 import { sortBy } from 'lodash';

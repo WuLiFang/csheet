@@ -1,6 +1,6 @@
-#import "./presentation.gql"
+#import "./Presentation.gql"
 
-fragment collection on Collection {
+fragment Collection on Collection {
   id
   title
   origin
@@ -9,7 +9,7 @@ fragment collection on Collection {
     v
   }
   presentations {
-    ...presentation
+    ...Presentation
   }
   collectTime
 }

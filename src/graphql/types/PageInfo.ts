@@ -4,10 +4,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: pageInfo
+// GraphQL fragment: PageInfo
 // ====================================================
 
-export interface pageInfo {
+export interface PageInfo {
   __typename: "PageInfo";
   startCursor: string | null;
   endCursor: string | null;

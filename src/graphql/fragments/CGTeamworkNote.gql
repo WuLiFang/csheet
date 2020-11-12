@@ -1,4 +1,4 @@
-fragment cgteamworkNote on CGTeamworkNote {
+fragment CGTeamworkNote on CGTeamworkNote {
   id
   type
   message {

@@ -1,9 +1,9 @@
-#import "@/graphql/fragments/collection.gql"
+#import "@/graphql/fragments/Collection.gql"
 
 query collectionNode($id: ID!, $filePathFormat: String) {
   node(id: $id) {
     ... on Collection {
-      ...collection
+      ...Collection
     }
   }
 }

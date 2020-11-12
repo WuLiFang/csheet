@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { presentation } from '../graphql/types/presentation';
+import { Presentation as Data } from '../graphql/types/Presentation';
 import {
   presentationNodeVariables,
   presentationNode,
@@ -20,7 +20,7 @@ import clamp from '@/utils/clamp';
       skip(): boolean {
         return !this.id;
       },
-      update(v: presentationNode): presentation | undefined {
+      update(v: presentationNode): Data | undefined {
         this.isLoadFailed = false;
         return v.node?.__typename === 'Presentation' ? v.node : undefined;
       },
@@ -141,7 +141,7 @@ export default class Presentation extends Vue {
   playbackRate!: number;
 
   $el!: HTMLVideoElement | HTMLImageElement;
-  node?: presentation;
+  node?: Data;
 
   isLoadFailed = false;
   paused = true;

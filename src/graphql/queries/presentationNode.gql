@@ -1,9 +1,9 @@
-#import "@/graphql/fragments/presentation.gql"
+#import "@/graphql/fragments/Presentation.gql"
 
 query presentationNode($id: ID!, $filePathFormat: String) {
   node(id: $id) {
     ... on Presentation {
-      ...presentation
+      ...Presentation
     }
   }
 }

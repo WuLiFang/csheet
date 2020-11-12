@@ -50,7 +50,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import getCollectionPipelines from '@/client/utils/getCollectionPipelines';
-import { collection as Collection } from '@/graphql/types/collection';
+import { Collection } from '@/graphql/types/Collection';
 import { filePathFormat } from '@/const';
 import {
   collectionNodeVariables,

@@ -1,4 +1,4 @@
-fragment presentation on Presentation {
+fragment Presentation on Presentation {
   id
   type
   raw {

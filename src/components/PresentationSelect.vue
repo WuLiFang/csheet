@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
-import { presentation as Presentation } from '../graphql/types/presentation';
+import { Presentation } from '../graphql/types/Presentation';
 import 'vue-awesome/icons/image';
 import 'vue-awesome/icons/video';
 import { sortBy, groupBy, orderBy } from 'lodash';

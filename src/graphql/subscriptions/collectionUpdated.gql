@@ -1,4 +1,4 @@
-#import "@/graphql/fragments/collection.gql"
+#import "@/graphql/fragments/Collection.gql"
 
 subscription collectionUpdated(
   $id: [ID!]
@@ -11,6 +11,6 @@ subscription collectionUpdated(
     originPrefix: $originPrefix
     presentationCountGt: $presentationCountGt
   ) {
-    ...collection
+    ...Collection
   }
 }

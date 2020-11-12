@@ -4,36 +4,36 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: cgteamworkNote
+// GraphQL fragment: CGTeamworkNote
 // ====================================================
 
-export interface cgteamworkNote_message_images_max {
+export interface CGTeamworkNote_message_images_max {
   __typename: "WebFile";
   url: string;
 }
 
-export interface cgteamworkNote_message_images_min {
+export interface CGTeamworkNote_message_images_min {
   __typename: "WebFile";
   url: string;
 }
 
-export interface cgteamworkNote_message_images {
+export interface CGTeamworkNote_message_images {
   __typename: "CGTeamworkImage";
-  max: cgteamworkNote_message_images_max;
-  min: cgteamworkNote_message_images_min;
+  max: CGTeamworkNote_message_images_max;
+  min: CGTeamworkNote_message_images_min;
 }
 
-export interface cgteamworkNote_message {
+export interface CGTeamworkNote_message {
   __typename: "CGTeamworkMessage";
   html: string;
-  images: cgteamworkNote_message_images[];
+  images: CGTeamworkNote_message_images[];
 }
 
-export interface cgteamworkNote {
+export interface CGTeamworkNote {
   __typename: "CGTeamworkNote";
   id: string;
   type: string;
-  message: cgteamworkNote_message;
+  message: CGTeamworkNote_message;
   created: any;
   createdByName: string;
 }

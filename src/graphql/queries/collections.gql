@@ -1,5 +1,5 @@
-#import "@/graphql/fragments/collection.gql"
-#import "@/graphql/fragments/pageInfo.gql"
+#import "@/graphql/fragments/Collection.gql"
+#import "@/graphql/fragments/PageInfo.gql"
 
 query collections(
   $after: String
@@ -19,10 +19,10 @@ query collections(
     presentationCountGt: $presentationCountGt
   ) {
     nodes {
-      ...collection
+      ...Collection
     }
     pageInfo {
-      ...pageInfo
+      ...PageInfo
     }
   }
 }

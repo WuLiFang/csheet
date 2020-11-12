@@ -1,4 +1,4 @@
-#import "@/graphql/fragments/cgteamworkNote.gql"
+#import "@/graphql/fragments/CGTeamworkNote.gql"
 
 query collectionCGTeamworkNotes($id: ID!, $pipeline: [String!]) {
   node(id: $id) {
@@ -7,7 +7,7 @@ query collectionCGTeamworkNotes($id: ID!, $pipeline: [String!]) {
       cgteamworkNotes(pipeline: $pipeline) {
         pipeline
         notes {
-          ...cgteamworkNote
+          ...CGTeamworkNote
         }
       }
     }

@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { collection as Collection } from '../graphql/types/collection';
+import { Collection } from '../graphql/types/Collection';
 import CollectionMetadataCGTeamworkTasks from './CollectionMetadataCGTeamworkTasks.vue';
 import CollectionMetadataComment from './CollectionMetadataComment.vue';
 import CGTeamworkNoteList from './cgteamwork/CGTeamworkNoteList.vue';

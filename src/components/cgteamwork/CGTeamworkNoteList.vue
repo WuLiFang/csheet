@@ -56,7 +56,7 @@ import {
   collectionCGTeamworkNotes,
 } from '@/graphql/types/collectionCGTeamworkNotes';
 import { filePathFormat } from '@/const';
-import { collection as Collection } from '@/graphql/types/collection';
+import { Collection } from '@/graphql/types/Collection';
 import cast from 'cast-unknown';
 import { orderBy } from 'lodash';
 import 'vue-awesome/icons/sync';
