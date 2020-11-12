@@ -1,0 +1,14 @@
+{{ define "args" }}
+    root: String!
+{{- end }}
+
+{{ define "outerArgs" }}
+    "Deprecated: remove after 2020-12-12"
+    root: String
+{{- end }}
+
+{{ define "type"}}
+    originPrefix: String!
+    createdCount: Int!
+    updatedCount: Int!
+{{- end}}

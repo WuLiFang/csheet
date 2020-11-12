@@ -120,7 +120,10 @@ import {
   folderOriginPrefixVariables,
   folderOriginPrefix,
 } from '../graphql/types/folderOriginPrefix';
-import { CollectFromCGTeamworkInput } from '@/graphql/types/global';
+import {
+  CollectFromCGTeamworkInput,
+  CollectFromFolderInput,
+} from '@/graphql/types/global';
 import { collectionsVariables } from '../graphql/types/collections';
 import db from '@/db';
 import client, { CGTeamworkOriginPrefix, FolderOriginPrefix } from '../client';
@@ -209,7 +212,7 @@ function getResultMessage({
 export default class TheNavbar extends Vue {
   formData: {
     mode: 'cgteamwork' | 'folder';
-    folder: collectFromFolderVariables;
+    folder: CollectFromFolderInput;
     cgteamwork: CollectFromCGTeamworkInput;
     skipEmptyPresentation: boolean;
   } = {
@@ -386,7 +389,7 @@ export default class TheNavbar extends Vue {
         collectFromFolderVariables
       >({
         mutation: require('@/graphql/mutations/collectFromFolder.gql'),
-        variables: this.formData.folder,
+        variables: { input: this.formData.folder },
       });
       this.$emit('collect');
       info(getResultMessage(data?.collectFromFolder ?? {}));

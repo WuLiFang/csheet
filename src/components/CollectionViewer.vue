@@ -538,9 +538,7 @@ export default class CollectionViewer extends Vue {
             collectFromFolderVariables
           >({
             mutation: require('@/graphql/mutations/collectFromFolder.gql'),
-            variables: {
-              root: parts.slice(1).join(':'),
-            },
+            variables: { input: { root: parts.slice(1).join(':') } },
           });
           break;
         case 'cgteamwork':

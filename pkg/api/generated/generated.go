@@ -17,7 +17,6 @@ import (
 	"github.com/99designs/gqlgen/graphql/introspection"
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
-	"github.com/WuLiFang/csheet/v6/pkg/collector/base"
 	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
 	"github.com/WuLiFang/csheet/v6/pkg/model/file"
 	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
@@ -46,7 +45,6 @@ type ResolverRoot interface {
 	CGTeamworkImage() CGTeamworkImageResolver
 	CGTeamworkNote() CGTeamworkNoteResolver
 	ClientConfig() ClientConfigResolver
-	CollectResult() CollectResultResolver
 	Collection() CollectionResolver
 	DiskFile() DiskFileResolver
 	Mutation() MutationResolver
@@ -115,12 +113,11 @@ type ComplexityRoot struct {
 		UpdatedCount     func(childComplexity int) int
 	}
 
-	CollectResult struct {
-		CreatedCount func(childComplexity int) int
-		ID           func(childComplexity int) int
-		OriginPrefix func(childComplexity int) int
-		Time         func(childComplexity int) int
-		UpdatedCount func(childComplexity int) int
+	CollectFromFolderPayload struct {
+		ClientMutationID func(childComplexity int) int
+		CreatedCount     func(childComplexity int) int
+		OriginPrefix     func(childComplexity int) int
+		UpdatedCount     func(childComplexity int) int
 	}
 
 	Collection struct {
@@ -169,7 +166,7 @@ type ComplexityRoot struct {
 	Mutation struct {
 		BackupDatabase             func(childComplexity int, input model.BackupDatabaseInput) int
 		CollectFromCGTeamwork      func(childComplexity int, input *model.CollectFromCGTeamworkInput, database *string, prefix *string, pipeline *string) int
-		CollectFromFolder          func(childComplexity int, root string) int
+		CollectFromFolder          func(childComplexity int, input *model.CollectFromFolderInput, root *string) int
 		CreateCGTeamworkNote       func(childComplexity int, input model.CreateCGTeamworkNoteInput) int
 		DeleteCGTeamworkNote       func(childComplexity int, input model.DeleteCGTeamworkNoteInput) int
 		RestoreDatabase            func(childComplexity int, input model.RestoreDatabaseInput) int
@@ -253,10 +250,6 @@ type CGTeamworkNoteResolver interface {
 type ClientConfigResolver interface {
 	FolderInclude(ctx context.Context, obj *model.ClientConfig, format *string) ([]string, error)
 }
-type CollectResultResolver interface {
-	ID(ctx context.Context, obj *base.CollectResult) (string, error)
-	Time(ctx context.Context, obj *base.CollectResult) (*time.Time, error)
-}
 type CollectionResolver interface {
 	Metadata(ctx context.Context, obj *collection.Collection) ([]model.StringEntry, error)
 
@@ -268,7 +261,7 @@ type DiskFileResolver interface {
 type MutationResolver interface {
 	BackupDatabase(ctx context.Context, input model.BackupDatabaseInput) (*model.BackupDatabasePayload, error)
 	CollectFromCGTeamwork(ctx context.Context, input *model.CollectFromCGTeamworkInput, database *string, prefix *string, pipeline *string) (*model.CollectFromCGTeamworkPayload, error)
-	CollectFromFolder(ctx context.Context, root string) (*base.CollectResult, error)
+	CollectFromFolder(ctx context.Context, input *model.CollectFromFolderInput, root *string) (*model.CollectFromFolderPayload, error)
 	CreateCGTeamworkNote(ctx context.Context, input model.CreateCGTeamworkNoteInput) (*model.CreateCGTeamworkNotePayload, error)
 	DeleteCGTeamworkNote(ctx context.Context, input model.DeleteCGTeamworkNoteInput) (*model.DeleteCGTeamworkNotePayload, error)
 	RestoreDatabase(ctx context.Context, input model.RestoreDatabaseInput) (*model.RestoreDatabasePayload, error)
@@ -523,40 +516,33 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CollectFromCGTeamworkPayload.UpdatedCount(childComplexity), true
 
-	case "CollectResult.createdCount":
-		if e.complexity.CollectResult.CreatedCount == nil {
+	case "CollectFromFolderPayload.clientMutationId":
+		if e.complexity.CollectFromFolderPayload.ClientMutationID == nil {
 			break
 		}
 
-		return e.complexity.CollectResult.CreatedCount(childComplexity), true
+		return e.complexity.CollectFromFolderPayload.ClientMutationID(childComplexity), true
 
-	case "CollectResult.id":
-		if e.complexity.CollectResult.ID == nil {
+	case "CollectFromFolderPayload.createdCount":
+		if e.complexity.CollectFromFolderPayload.CreatedCount == nil {
 			break
 		}
 
-		return e.complexity.CollectResult.ID(childComplexity), true
+		return e.complexity.CollectFromFolderPayload.CreatedCount(childComplexity), true
 
-	case "CollectResult.originPrefix":
-		if e.complexity.CollectResult.OriginPrefix == nil {
+	case "CollectFromFolderPayload.originPrefix":
+		if e.complexity.CollectFromFolderPayload.OriginPrefix == nil {
 			break
 		}
 
-		return e.complexity.CollectResult.OriginPrefix(childComplexity), true
+		return e.complexity.CollectFromFolderPayload.OriginPrefix(childComplexity), true
 
-	case "CollectResult.time":
-		if e.complexity.CollectResult.Time == nil {
+	case "CollectFromFolderPayload.updatedCount":
+		if e.complexity.CollectFromFolderPayload.UpdatedCount == nil {
 			break
 		}
 
-		return e.complexity.CollectResult.Time(childComplexity), true
-
-	case "CollectResult.updatedCount":
-		if e.complexity.CollectResult.UpdatedCount == nil {
-			break
-		}
-
-		return e.complexity.CollectResult.UpdatedCount(childComplexity), true
+		return e.complexity.CollectFromFolderPayload.UpdatedCount(childComplexity), true
 
 	case "Collection.cgteamworkNotes":
 		if e.complexity.Collection.CgteamworkNotes == nil {
@@ -756,7 +742,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CollectFromFolder(childComplexity, args["root"].(string)), true
+		return e.complexity.Mutation.CollectFromFolder(childComplexity, args["input"].(*model.CollectFromFolderInput), args["root"].(*string)), true
 
 	case "Mutation.createCGTeamworkNote":
 		if e.complexity.Mutation.CreateCGTeamworkNote == nil {
@@ -1245,8 +1231,26 @@ extend type Mutation {
     pipeline: String): CollectFromCGTeamworkPayload
 }
 `, BuiltIn: false},
-	{Name: "pkg/api/mutations/collectionFromFolder.gql", Input: `extend type Mutation {
-  collectFromFolder(root: String!): CollectResult!
+	{Name: "pkg/api/mutations/collectFromFolder.gql", Input: `# Code generated from [base.gql.gotmpl collectFromFolder.gotmpl], DO NOT EDIT.
+
+"Autogenerated input type of CollectFromFolder"
+input CollectFromFolderInput {
+    root: String!
+    clientMutationId: String
+}
+
+"Autogenerated return type of CollectFromFolder"
+type CollectFromFolderPayload {
+    originPrefix: String!
+    createdCount: Int!
+    updatedCount: Int!
+    clientMutationId: String
+}
+
+extend type Mutation {
+    collectFromFolder(input: CollectFromFolderInput
+    "Deprecated: remove after 2020-12-12"
+    root: String): CollectFromFolderPayload
 }
 `, BuiltIn: false},
 	{Name: "pkg/api/mutations/createCGTeamworkNote.gql", Input: `# Code generated from [base.gql.gotmpl dataInput.gotmpl cgteamworkNote.gotmpl], DO NOT EDIT.
@@ -1510,15 +1514,6 @@ extend type Collection {
   status: String!
 }
 `, BuiltIn: false},
-	{Name: "pkg/api/types/CollectResult.gql", Input: `type CollectResult {
-  originPrefix: String!
-  createdCount: Int!
-  updatedCount: Int!
-
-  id: ID! @deprecated(reason: "remove after 2020-10-01")
-  time: Time! @deprecated(reason: "remove after 2020-10-01")
-}
-`, BuiltIn: false},
 	{Name: "pkg/api/types/Collection.gql", Input: `type Collection implements Node {
   id: ID!
   origin: String!
@@ -1698,15 +1693,24 @@ func (ec *executionContext) field_Mutation_collectFromCGTeamwork_args(ctx contex
 func (ec *executionContext) field_Mutation_collectFromFolder_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["root"]; ok {
-		ctx := graphql.WithFieldInputContext(ctx, graphql.NewFieldInputWithField("root"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+	var arg0 *model.CollectFromFolderInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithFieldInputContext(ctx, graphql.NewFieldInputWithField("input"))
+		arg0, err = ec.unmarshalOCollectFromFolderInput2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectFromFolderInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["root"] = arg0
+	args["input"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["root"]; ok {
+		ctx := graphql.WithFieldInputContext(ctx, graphql.NewFieldInputWithField("root"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["root"] = arg1
 	return args, nil
 }
 
@@ -3059,7 +3063,7 @@ func (ec *executionContext) _CollectFromCGTeamworkPayload_clientMutationId(ctx c
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectResult_originPrefix(ctx context.Context, field graphql.CollectedField, obj *base.CollectResult) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectFromFolderPayload_originPrefix(ctx context.Context, field graphql.CollectedField, obj *model.CollectFromFolderPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3067,7 +3071,7 @@ func (ec *executionContext) _CollectResult_originPrefix(ctx context.Context, fie
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:   "CollectResult",
+		Object:   "CollectFromFolderPayload",
 		Field:    field,
 		Args:     nil,
 		IsMethod: false,
@@ -3093,7 +3097,7 @@ func (ec *executionContext) _CollectResult_originPrefix(ctx context.Context, fie
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectResult_createdCount(ctx context.Context, field graphql.CollectedField, obj *base.CollectResult) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectFromFolderPayload_createdCount(ctx context.Context, field graphql.CollectedField, obj *model.CollectFromFolderPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3101,7 +3105,7 @@ func (ec *executionContext) _CollectResult_createdCount(ctx context.Context, fie
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:   "CollectResult",
+		Object:   "CollectFromFolderPayload",
 		Field:    field,
 		Args:     nil,
 		IsMethod: false,
@@ -3127,7 +3131,7 @@ func (ec *executionContext) _CollectResult_createdCount(ctx context.Context, fie
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectResult_updatedCount(ctx context.Context, field graphql.CollectedField, obj *base.CollectResult) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectFromFolderPayload_updatedCount(ctx context.Context, field graphql.CollectedField, obj *model.CollectFromFolderPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3135,7 +3139,7 @@ func (ec *executionContext) _CollectResult_updatedCount(ctx context.Context, fie
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:   "CollectResult",
+		Object:   "CollectFromFolderPayload",
 		Field:    field,
 		Args:     nil,
 		IsMethod: false,
@@ -3161,7 +3165,7 @@ func (ec *executionContext) _CollectResult_updatedCount(ctx context.Context, fie
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectResult_id(ctx context.Context, field graphql.CollectedField, obj *base.CollectResult) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectFromFolderPayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *model.CollectFromFolderPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3169,64 +3173,27 @@ func (ec *executionContext) _CollectResult_id(ctx context.Context, field graphql
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:   "CollectResult",
+		Object:   "CollectFromFolderPayload",
 		Field:    field,
 		Args:     nil,
-		IsMethod: true,
+		IsMethod: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.CollectResult().ID(rctx, obj)
+		return obj.ClientMutationID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalNID2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _CollectResult_time(ctx context.Context, field graphql.CollectedField, obj *base.CollectResult) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:   "CollectResult",
-		Field:    field,
-		Args:     nil,
-		IsMethod: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.CollectResult().Time(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Collection_id(ctx context.Context, field graphql.CollectedField, obj *collection.Collection) (ret graphql.Marshaler) {
@@ -4064,21 +4031,18 @@ func (ec *executionContext) _Mutation_collectFromFolder(ctx context.Context, fie
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CollectFromFolder(rctx, args["root"].(string))
+		return ec.resolvers.Mutation().CollectFromFolder(rctx, args["input"].(*model.CollectFromFolderInput), args["root"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(*base.CollectResult)
+	res := resTmp.(*model.CollectFromFolderPayload)
 	fc.Result = res
-	return ec.marshalNCollectResult2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcollectorᚋbaseᚐCollectResult(ctx, field.Selections, res)
+	return ec.marshalOCollectFromFolderPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectFromFolderPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createCGTeamworkNote(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -6677,6 +6641,34 @@ func (ec *executionContext) unmarshalInputCollectFromCGTeamworkInput(ctx context
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCollectFromFolderInput(ctx context.Context, obj interface{}) (model.CollectFromFolderInput, error) {
+	var it model.CollectFromFolderInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "root":
+			var err error
+
+			ctx := graphql.WithFieldInputContext(ctx, graphql.NewFieldInputWithField("root"))
+			it.Root, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "clientMutationId":
+			var err error
+
+			ctx := graphql.WithFieldInputContext(ctx, graphql.NewFieldInputWithField("clientMutationId"))
+			it.ClientMutationID, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreateCGTeamworkNoteInput(ctx context.Context, obj interface{}) (model.CreateCGTeamworkNoteInput, error) {
 	var it model.CreateCGTeamworkNoteInput
 	var asMap = obj.(map[string]interface{})
@@ -7488,60 +7480,34 @@ func (ec *executionContext) _CollectFromCGTeamworkPayload(ctx context.Context, s
 	return out
 }
 
-var collectResultImplementors = []string{"CollectResult"}
+var collectFromFolderPayloadImplementors = []string{"CollectFromFolderPayload"}
 
-func (ec *executionContext) _CollectResult(ctx context.Context, sel ast.SelectionSet, obj *base.CollectResult) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, collectResultImplementors)
+func (ec *executionContext) _CollectFromFolderPayload(ctx context.Context, sel ast.SelectionSet, obj *model.CollectFromFolderPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, collectFromFolderPayloadImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("CollectResult")
+			out.Values[i] = graphql.MarshalString("CollectFromFolderPayload")
 		case "originPrefix":
-			out.Values[i] = ec._CollectResult_originPrefix(ctx, field, obj)
+			out.Values[i] = ec._CollectFromFolderPayload_originPrefix(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "createdCount":
-			out.Values[i] = ec._CollectResult_createdCount(ctx, field, obj)
+			out.Values[i] = ec._CollectFromFolderPayload_createdCount(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "updatedCount":
-			out.Values[i] = ec._CollectResult_updatedCount(ctx, field, obj)
+			out.Values[i] = ec._CollectFromFolderPayload_updatedCount(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
-		case "id":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._CollectResult_id(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
-		case "time":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._CollectResult_time(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
+		case "clientMutationId":
+			out.Values[i] = ec._CollectFromFolderPayload_clientMutationId(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -7838,9 +7804,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_collectFromCGTeamwork(ctx, field)
 		case "collectFromFolder":
 			out.Values[i] = ec._Mutation_collectFromFolder(ctx, field)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "createCGTeamworkNote":
 			out.Values[i] = ec._Mutation_createCGTeamworkNote(ctx, field)
 		case "deleteCGTeamworkNote":
@@ -8690,20 +8653,6 @@ func (ec *executionContext) marshalNCGTeamworkProject2githubᚗcomᚋWuLiFangᚋ
 	return ec._CGTeamworkProject(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNCollectResult2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcollectorᚋbaseᚐCollectResult(ctx context.Context, sel ast.SelectionSet, v base.CollectResult) graphql.Marshaler {
-	return ec._CollectResult(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNCollectResult2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcollectorᚋbaseᚐCollectResult(ctx context.Context, sel ast.SelectionSet, v *base.CollectResult) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._CollectResult(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalNCollection2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v collection.Collection) graphql.Marshaler {
 	return ec._Collection(ctx, sel, &v)
 }
@@ -8975,27 +8924,6 @@ func (ec *executionContext) unmarshalNTime2timeᚐTime(ctx context.Context, v in
 
 func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel ast.SelectionSet, v time.Time) graphql.Marshaler {
 	res := graphql.MarshalTime(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-	}
-	return res
-}
-
-func (ec *executionContext) unmarshalNTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {
-	res, err := graphql.UnmarshalTime(v)
-	return &res, graphql.WrapErrorWithInputPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNTime2ᚖtimeᚐTime(ctx context.Context, sel ast.SelectionSet, v *time.Time) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := graphql.MarshalTime(*v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -9486,6 +9414,21 @@ func (ec *executionContext) marshalOCollectFromCGTeamworkPayload2ᚖgithubᚗcom
 		return graphql.Null
 	}
 	return ec._CollectFromCGTeamworkPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOCollectFromFolderInput2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectFromFolderInput(ctx context.Context, v interface{}) (*model.CollectFromFolderInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputCollectFromFolderInput(ctx, v)
+	return &res, graphql.WrapErrorWithInputPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOCollectFromFolderPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectFromFolderPayload(ctx context.Context, sel ast.SelectionSet, v *model.CollectFromFolderPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CollectFromFolderPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOCollection2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollectionᚄ(ctx context.Context, sel ast.SelectionSet, v []collection.Collection) graphql.Marshaler {

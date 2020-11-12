@@ -1,3 +1,0 @@
-extend type Mutation {
-  collectFromFolder(root: String!): CollectResult!
-}

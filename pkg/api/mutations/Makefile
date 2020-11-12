@@ -2,8 +2,6 @@
 
 default: generate
 
-# TODO: make all mutation relay compatible
-
 generate:
 	# Use https://github.com/NateScarlet/gotmpl
 	gotmpl -o updateCollectionMetadata.gql Model=Collection base.gql.gotmpl dataInput.gotmpl updateMetadata.gotmpl
@@ -14,3 +12,4 @@ generate:
 	gotmpl -o backupDatabase.gql base.gql.gotmpl backupDatabase.gotmpl 
 	gotmpl -o restoreDatabase.gql base.gql.gotmpl restoreDatabase.gotmpl 
 	gotmpl -o collectFromCGTeamwork.gql base.gql.gotmpl collectFromCGTeamwork.gotmpl InputNullable=true
+	gotmpl -o collectFromFolder.gql base.gql.gotmpl collectFromFolder.gotmpl InputNullable=true

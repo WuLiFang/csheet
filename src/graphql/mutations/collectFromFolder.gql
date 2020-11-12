@@ -1,5 +1,5 @@
-mutation collectFromFolder($root: String!) {
-  collectFromFolder(root: $root) {
+mutation collectFromFolder($input: CollectFromFolderInput!) {
+  collectFromFolder(input: $input) {
     originPrefix
     updatedCount
     createdCount

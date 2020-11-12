@@ -1,8 +1,0 @@
-type CollectResult {
-  originPrefix: String!
-  createdCount: Int!
-  updatedCount: Int!
-
-  id: ID! @deprecated(reason: "remove after 2020-10-01")
-  time: Time! @deprecated(reason: "remove after 2020-10-01")
-}
