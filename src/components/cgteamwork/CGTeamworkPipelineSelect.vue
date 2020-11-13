@@ -17,11 +17,11 @@
         v-slot="{ pipeline }"
       )
         template(v-if="pipeline")
+          p {{ pipeline.name }}
           p(
             v-if="location !== 'output' && pipeline.description !== pipeline.name"
             class="text-xs text-gray-500"
           ) {{ pipeline.description }}
-          p {{ pipeline.name }}
         template(v-else-if="loadingCount > 0")
           FaIcon(
             class="text-center w-full"
