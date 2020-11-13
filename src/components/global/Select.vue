@@ -248,7 +248,7 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
     option: HTMLLIElement[];
   };
 
-  highlight = null as unknown;
+  highlight = '';
   dropdownVisible = false;
   selectedKeys = new Set<string>();
   hasFocus = false;
@@ -328,7 +328,7 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
     }
     this.hasFocus = true;
 
-    this.highlight = this.$_value;
+    this.highlight = this.valueEntries[0]?.key ?? '';
     this.dropdownVisible = true;
     this.$nextTick(() => {
       if (!this.hasFocus) {
