@@ -35,21 +35,21 @@
     template(#search="{ inputListeners }")
       .flex.items-center
         LocalStorage(name="cgteamwork.module" v-model="module")
-          RadioOrSelect(
-            class="flex-none"
+          Radio(
             tabindex="-1"
+            class="flex-none"
             v-model="module",
             :options=`[
               { key: 'shot', value: "shot", label: "镜头" },
               { key: 'asset', value: "asset", label: "资产" },
             ]`
-            radio-label-class="text-sm block"
+            label-class="text-sm block"
             v-on="inputListeners"
           )
         input.form-input(
           v-model="query"
           v-on="inputListeners"
-          class="flex-1 w-16"
+          class="flex-auto w-16"
           ref="queryInput"
           placeholder="搜索流程"
         )

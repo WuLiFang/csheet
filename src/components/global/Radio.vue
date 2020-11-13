@@ -18,7 +18,7 @@
           :disabled="i.disabled"
         )
         slot(v-bind="entryContext(i)")
-          span.mx-1 {{ i.label != null ? i.label : i.value }}
+          span.mx-1.align-middle {{ i.label != null ? i.label : i.value }}
 </template>
 
 <script lang="ts">
