@@ -33,7 +33,7 @@
       SessionStorage(name="cgteamwork.note-pipeline" v-model="formData.pipeline")
         RadioOrSelect(
           v-model="formData.pipeline"
-          :options="pipelines.map(i => ({value: i, label: i}))"
+          :options="pipelines"
         )
     CGTeamworkMessageEditor(
       ref="messageEditor"

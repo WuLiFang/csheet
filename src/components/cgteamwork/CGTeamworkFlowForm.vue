@@ -37,7 +37,7 @@
       span.inline-block.w-16 流程
       RadioOrSelect(
         v-model="formData.pipeline"
-        :options="pipelines.map(i => ({value: i, label: i}))"
+        :options="pipelines"
       )
     CGTeamworkMessageEditor(
       class="mb-2"

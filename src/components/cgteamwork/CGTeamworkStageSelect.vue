@@ -12,16 +12,16 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator';
 import getVModelMixin from '@/mixins/VModelMixinV2';
-import { RadioOrSelectOption } from '@/components/global/RadioOrSelect.vue';
+import { Entry } from '@/components/global/entry';
 
 @Component<CGTeamworkStageSelect>({})
 export default class CGTeamworkStageSelect extends Mixins(
   getVModelMixin<string>()
 ) {
-  options: RadioOrSelectOption[] = [
-    { value: 'leader', label: '组长' },
-    { value: 'director', label: '导演' },
-    { value: 'client', label: '客户' },
+  options: Entry<string>[] = [
+    { key: 'leader', value: 'leader', label: '组长' },
+    { key: 'director', value: 'director', label: '导演' },
+    { key: 'client', value: 'client', label: '客户' },
   ];
 }
 </script>

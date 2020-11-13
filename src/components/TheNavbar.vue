@@ -3,18 +3,30 @@
     @submit.prevent
   )
     label(
-      class="mr-1 lg:mr-2 inline-block"
+      class="mr-1 lg:mr-2 inline-flex items-center"
     )
       span(
           class="lg:mr-1"
       ) 模式
-      select(
+      RadioOrSelect(
         v-model="formData.mode"
-        class="form-select"
-        type="select"
+        radio-label-class="text-sm block"
+        select-dropdown-class="w-32"
+        :threshold="2"
+        :options=`[
+        {
+          key: 'cgteamwork',
+          value: 'cgteamwork',
+          disabled: !config.enableCGTeamwork,
+          label: 'CGTeamwork',
+        },
+        {
+          key: 'folder',
+          value: 'folder',
+          label: '文件夹',
+        },
+        ]`
       )
-        option(value="cgteamwork" :disabled="!config.enableCGTeamwork") CGTeamwork
-        option(value="folder") 文件夹
     template(v-if="formData.mode == 'cgteamwork'")
       span(
         class="mr-1 lg:mr-2 inline-block"
@@ -147,6 +159,7 @@ function getResultMessage({
   }
   return `更新了 ${updatedCount} 个收藏`;
 }
+
 
 @Component<TheNavbar>({
   components: {

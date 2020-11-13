@@ -1,46 +1,31 @@
 <template lang="pug">
-  component(:is="isRadio ? 'div': 'label'" class="inline-block")
-    template(v-if="isRadio")
-      template(v-for="i in options")
-        label.mx-1(
-          :key="i.value"
-          :class="radioLabelClass"
-        )
-          input.form-radio(
-            type="radio"
-            :value="i.value"
-            v-model="$_value"
-            :class="radioInputClass"
-          ) 
-          span.mx-1 {{ i.label }}
-    template(v-else)
-      select.form-select(
-        v-model="$value"
-      )
-        template(v-for="i in options")
-          option(
-            :value="i.value"
-            :key="i.value"
-          ) {{ i.label }}
+  component(
+    v-model="$_value"
+    v-bind=`{
+      ...$attrs,
+      ...componentAttrs,
+    }`
+    v-on="$listeners"
+  )
 </template>
 
 <script lang="ts">
 import { Component, Prop, Mixins } from 'vue-property-decorator';
 import getVModelMixin from '@/mixins/VModelMixinV2';
-
-export interface RadioOrSelectOption {
-  value: string;
-  label: string;
-}
+import { Option, Entry, optionEntries } from '@/components/global/entry';
 
 @Component<RadioOrSelect>({
+  inheritAttrs: false,
   mounted() {
     this.$watch(
       () => this.value,
       v => {
         // Coerce input value to option value.
-        if (this.options.length > 0 && !this.options.some(i => i.value === v)) {
-          this.$emit('input', this.options[0].value);
+        if (
+          this.optionEntries.length > 0 &&
+          !this.optionEntries.some(i => i.value === v)
+        ) {
+          this.$emit('input', this.optionEntries[0].value);
         }
       },
       { immediate: true }
@@ -48,17 +33,42 @@ export interface RadioOrSelectOption {
   },
 })
 export default class RadioOrSelect extends Mixins(getVModelMixin<string>()) {
+  @Prop({ type: Number, default: 5 })
+  threshold!: number;
+
   @Prop({ type: Array, required: true })
-  options!: RadioOrSelectOption[];
+  options!: Option<unknown>[];
 
-  @Prop({type: String})
-  radioLabelClass?: string
+  @Prop({ type: String })
+  radioLabelClass?: string;
 
-  @Prop({type: String})
-  radioInputClass?: string
+  @Prop({ type: String })
+  radioInputClass?: string;
+
+  @Prop({ type: String })
+  selectDropdownClass?: string;
 
   get isRadio(): boolean {
-    return this.options.length <= 5;
+    return this.options.length <= this.threshold;
+  }
+
+  get optionEntries(): Entry<unknown>[] {
+    return optionEntries(this.options);
+  }
+
+  get componentAttrs(): unknown {
+    return this.isRadio
+      ? {
+          is: 'Radio',
+          options: this.options,
+          labelClass: this.radioLabelClass,
+          inputClass: this.radioInputClass,
+        }
+      : {
+          is: 'Select',
+          options: this.options,
+          dropdownClass: this.selectDropdownClass,
+        };
   }
 }
 </script>

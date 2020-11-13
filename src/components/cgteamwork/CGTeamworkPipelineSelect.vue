@@ -1,38 +1,58 @@
 <template lang="pug">
-  .inline-flex.items-center
-    LocalStorage(name="cgteamwork.module" v-model="module")
-      RadioOrSelect(
-        v-model="module",
-        :options=`[
-          { value: "shot", label: "镜头" },
-          { value: "asset", label: "资产" },
-        ]`
-        class=""
-        radio-label-class="text-sm block"
+  Select(
+    ref="select"
+    v-bind="$attrs"
+    v-on="$listeners"
+    class="w-48"
+    v-model="$_value"
+    :options="options"
+    required-message="请选择流程"
+    dropdown-class="w-64"
+    :loading="loadingCount > 0"
+    @focus="() => $refs.queryInput.focus()"
+  )
+    template(#default="{ value, location }")
+      Variable(
+        :pipeline="getPipeline(value)"
+        v-slot="{ pipeline }"
       )
-    Select(
-      ref="select"
-      v-bind="$attrs"
-      v-on="$listeners"
-      class="w-48"
-      v-model="$_value"
-      :options="options"
-      :query.sync="query"
-      search-placeholder="搜索流程"
-      required-message="请选择流程"
-      dropdown-class="w-64"
-      :loading="loadingCount > 0"
-    )
-      template(#placeholder)
-        span.text-gray-500 请选择流程
-      template(#before-options)
-        .stikcy.top-0
-          button.form-button(
-            type="button"
-          ) 镜头
-          button.form-button(
-            type="button"
-          ) 资产
+        template(v-if="pipeline")
+          p(
+            v-if="location !== 'output' && pipeline.description !== pipeline.name"
+            class="text-xs text-gray-500"
+          ) {{ pipeline.description }}
+          p {{ pipeline.name }}
+        template(v-else-if="loadingCount > 0")
+          FaIcon(
+            class="text-center w-full"
+            name="spinner"
+            spin
+          )
+        template(v-else)
+          p {{ value }}
+    template(#placeholder)
+      span.text-gray-500 请选择流程
+    template(#search="{ inputListeners }")
+      .flex.items-center
+        LocalStorage(name="cgteamwork.module" v-model="module")
+          RadioOrSelect(
+            class="flex-none"
+            tabindex="-1"
+            v-model="module",
+            :options=`[
+              { key: 'shot', value: "shot", label: "镜头" },
+              { key: 'asset', value: "asset", label: "资产" },
+            ]`
+            radio-label-class="text-sm block"
+            v-on="inputListeners"
+          )
+        input.form-input(
+          v-model="query"
+          v-on="inputListeners"
+          class="flex-1 w-16"
+          ref="queryInput"
+          placeholder="搜索流程"
+        )
 </template>
 
 <script lang="ts">
@@ -44,7 +64,7 @@ import {
   cgteamworkPipelinesVariables,
 } from '../../graphql/types/cgteamworkPipelines';
 import { orderBy } from 'lodash';
-import Select, { Option } from '@/components/global/Select.vue';
+import Select from '@/components/global/Select.vue';
 
 @Component<CGTeamworkPipelineSelect>({
   inheritAttrs: false,
@@ -92,17 +112,12 @@ export default class CGTeamworkPipelineSelect extends Mixins(
     );
   }
 
-  get options(): Option<string>[] {
-    return this.pipelines.map(i => ({
-      key: i.name,
-      value: i.name,
-      render: h => [
-        ...(i.description !== i.name
-          ? [h('div', { staticClass: 'text-xs text-gray-500' }, i.description)]
-          : []),
-        h('div', { staticClass: 'text-lg' }, i.name),
-      ],
-    }));
+  getPipeline(name: string): Pipeline | undefined {
+    return this.pipelines.find(i => i.name === name);
+  }
+
+  get options(): string[] {
+    return this.pipelines.map(i => i.name);
   }
 
   focus(): void {
