@@ -17,7 +17,7 @@
           :class="inputClass"
           :disabled="i.disabled"
         )
-        slot
+        slot(v-bind="entryContext(i)")
           span.mx-1 {{ i.label != null ? i.label : i.value }}
 </template>
 
@@ -41,8 +41,32 @@ export default class Radio extends Mixins(getVModelMixin<unknown>()) {
   @Prop({ type: String, default: () => defaults.radio.disabledClass })
   disabledClass?: string;
 
+  @Prop({ type: Function, default: (a: unknown,b: unknown) => a === b })
+  equalValue!: (a: unknown, b :unknown) => boolean;
+
   get optionEntries(): Entry<unknown>[] {
     return optionEntries(this.options);
+  }
+
+    protected entryContext(
+    v: Entry<unknown>,
+    location?: string
+  ): {
+    key_: string;
+    value: unknown;
+    label?: string;
+    disbaled?: boolean;
+    selected: boolean;
+    location?: string;
+  } {
+    return {
+      selected: this.equalValue(this.value, v.value),
+      key_: v.key,
+      value: v.value,
+      label: v.label,
+      disbaled: v.disabled,
+      location,
+    };
   }
 }
 </script>

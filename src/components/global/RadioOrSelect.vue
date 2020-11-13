@@ -6,7 +6,9 @@
       ...componentAttrs,
     }`
     v-on="$listeners"
+    v-slot="scope"
   )
+    slot(v-bind="scope" :isRadio="isRadio")
 </template>
 
 <script lang="ts">
