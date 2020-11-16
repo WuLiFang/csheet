@@ -213,6 +213,9 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
   @Prop({ type: String, default: '请选择' })
   placeholder!: string;
 
+  @Prop()
+  nullValue?: unknown;
+
   @Prop({ type: Boolean, default: false })
   multiple!: boolean;
 
@@ -260,7 +263,7 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
   }
 
   set values(v: unknown[]) {
-    this.$emit('input', this.multiple ? v : v[0]);
+    this.$emit('input', this.multiple ? v : v[0] ?? this.nullValue);
   }
 
   get optionEntries(): Entry<unknown>[] {
@@ -391,6 +394,7 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
 
   clear(): void {
     this.selectedKeys = new Set();
+    this.$emit("clear")
   }
 
   protected validateRequired(): void {

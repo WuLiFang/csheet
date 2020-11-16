@@ -53,6 +53,9 @@
           v-model="formData.cgteamwork.pipeline"
           :database="formData.cgteamwork.database"
           required
+          clearable
+          null-value=""
+          @clear="formData.cgteamwork.pipeline = ''; formData.cgteamwork.prefix = '';"
         )
       label(
         class="mr-1 lg:mr-2 inline-block"
