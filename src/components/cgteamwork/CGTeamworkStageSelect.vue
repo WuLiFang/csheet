@@ -4,9 +4,6 @@
     :options="options"
     required
   )
-    option(value="leader") 组长
-    option(value="director") 导演
-    option(value="client") 客户
 </template>
 
 <script lang="ts">
