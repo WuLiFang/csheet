@@ -24,10 +24,15 @@ import clamp from '@/utils/clamp';
         this.isLoadFailed = false;
         return v.node?.__typename === 'Presentation' ? v.node : undefined;
       },
+      result() {
+        this.version += 1;
+        this.isLoadFailed = false;
+      },
     },
   },
   render(h) {
     const src = this.src;
+    const version = this.version;
     const renderImage = () => {
       this.currentTime = 0;
       this.paused = true;
@@ -42,9 +47,10 @@ import clamp from '@/utils/clamp';
         },
         on: {
           error: () => {
-            if (this.src === src) {
-              this.isLoadFailed = true;
+            if (this.version !== version) {
+              return;
             }
+            this.isLoadFailed = true;
           },
           dragstart: this.handleDrag.bind(this),
         },
@@ -63,9 +69,10 @@ import clamp from '@/utils/clamp';
         },
         on: {
           error: () => {
-            if (this.src === src) {
-              this.isLoadFailed = true;
+            if (this.version !== version) {
+              return;
             }
+            this.isLoadFailed = true;
           },
           timeupdate: (e: Event & { target: HTMLVideoElement }) => {
             this.currentTime = e.target.currentTime;
@@ -149,6 +156,7 @@ export default class Presentation extends Vue {
   isLoadFailed = false;
   paused = true;
   currentTime = 0;
+  version = 0;
 
   get type(): string {
     return this.node?.type ?? '';
