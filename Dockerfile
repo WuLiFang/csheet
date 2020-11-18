@@ -4,7 +4,11 @@ FROM node:lts AS web
 ARG DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8
 RUN set -e
+RUN ping -c 1 google.com ||\
+    npm_config_registry=http://registry.npm.taobao.org npx npm-mirror-set -g taobao &&\
+    npm -g config list
 ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
+ARG NODEJS_ORG_MIRROR=http://npm.taobao.org/mirrors/node
 
 WORKDIR /app/
 COPY ./package*.json ./
