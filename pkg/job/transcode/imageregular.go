@@ -20,16 +20,15 @@ func transcodeImageRegular(ctx context.Context, p presentation.Presentation) err
 			return
 		}
 
-		dst := filepath.Join(dir, replaceExt(filepath.Base(p.Raw), ".jpg"))
+		dst := filepath.Join(dir, replaceExt(filepath.Base(p.Raw), extByPixelFormat(p.Metadata["pixel-format"])))
 		offset, err := getMiddleFrameTimeOffset(p)
 		if err != nil {
 			return
 		}
-		cmd := transcode.JPG(p.Raw, dst, &transcode.ImageOptions{
+		cmd := transcodeImage(p.Raw, dst, &transcode.ImageOptions{
 			Width:      3840,
 			TimeOffset: offset,
 		})
-
 		err = runCommand(cmd)
 		if err != nil {
 			logger.Errorw("transcode failed",

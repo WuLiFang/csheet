@@ -38,7 +38,7 @@ import clamp from '@/utils/clamp';
           draggable: this.draggable,
         },
         style: {
-          filter: this.imageFilter,
+          filter: this.imageFilter(this),
         },
         on: {
           error: () => {
@@ -140,6 +140,9 @@ export default class Presentation extends Vue {
   @Prop({ type: Number, default: 1 })
   playbackRate!: number;
 
+  @Prop({ type: Function, default: () => '' })
+  imageFilter!: (v: Presentation) => string;
+
   $el!: HTMLVideoElement | HTMLImageElement;
   node?: Data;
 
@@ -182,19 +185,6 @@ export default class Presentation extends Vue {
       default:
         return this.node?.isThumbTranscodeFailed ?? false;
     }
-  }
-
-  get imageFilter(): string {
-    if (this.isLoadFailed || this.isTranscodeFailed || !this.id) {
-      switch (this.size) {
-        case 'regular':
-          return '';
-        case 'thumb':
-        default:
-          return 'brightness(0.3)';
-      }
-    }
-    return '';
   }
 
   handleDrag(e: DragEvent): void {

@@ -1,20 +1,17 @@
 <template lang="pug">
   dl
-    dt 文件大小
+    dt {{ $t('presentation-metadata.file-size') }}
     dd.pl-4
       span {{ fileSizeText }}
       span.mx-2.text-gray-500.whitespace-no-wrap （{{ fileSizeExactText }}）
-    dt 修改时间
+    dt {{ $t('presentation-metadata.modified-time') }}
     dd.pl-4
       TimeWidget(:value="value.raw.modTime" format="llll")
     template(v-if="metadata.width && metadata.height")
-      dt 尺寸
+      dt {{ $t('presentation-metadata.resolution') }}
       dd.pl-4 {{metadata.width}}x{{metadata.height}}
-    template(v-if="metadata.frameCount")
-      dt 帧数
-      dd.pl-4 {{metadata.frameCount}}
     template(v-if="metadata.frameCount > 0")
-      dt 帧范围
+      dt {{ $t('presentation-metadata.frame-range') }}
       dd.pl-4.flex.items-center
         input.form-input(
           v-model.number="formData.firstFrame"
@@ -33,23 +30,18 @@
           @keyup.enter="$event.target.blur()"
           @blur="blur()"
         )
-    template(v-if="metadata.frameRate")
-      dt 帧速率
-      dd.pl-4 {{metadata.frameRate}}
     template(v-if="metadata.duration")
-      dt 时长
+      dt {{ $t('presentation-metadata.duration') }}
       dd.pl-4 {{durationText}}
     template(v-for="{k, v} in value.metadata")
       template(v-if="k === 'width'")
       template(v-else-if="k === 'height'")
       template(v-else-if="k === 'duration'")
-      template(v-else-if="k === 'frame-count'")
-      template(v-else-if="k === 'frame-rate'")
       template(v-else-if="k === 'first-frame'")
       template(v-else-if="k === 'last-frame'")
       template(v-else-if="k === 'annotation'")
       template(v-else)
-        dt {{k}}
+        dt {{ $te(`presentation-metadata.${k}`) ? $t(`presentation-metadata.${k}`) : k }}
         dd.pl-4 {{v}}
 </template>
 

@@ -157,12 +157,16 @@
             class="block lg:mx-1"
           )
             span 查看器背景
-            select.form-select(
+            RadioOrSelect(
               v-model="preferredBackground"
               class="inline-block py-1 ml-1"
+              :options=`[
+                { key: "checkboard", value: "checkboard", label: "棋盘格", },
+                { key: "checkboard-sm", value: "checkboard-sm", label: "棋盘格(小)", },
+                { key: "white", value: "white", label: "纯白" },
+                { key: "black", value: "black", label: "纯黑" },
+              ]`
             )
-              option(value="checkboard") 棋盘格
-              option(value="black") 纯黑
 </template>
 
 <script lang="ts">
@@ -516,6 +520,10 @@ export default class CollectionViewer extends Vue {
     switch (this.preferredBackground) {
       case 'checkboard':
         return 'bg-checkboard';
+      case 'checkboard-sm':
+        return 'bg-checkboard-sm';
+      case 'white':
+        return 'bg-white';
       default:
         return 'bg-black';
     }

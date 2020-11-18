@@ -120,5 +120,15 @@ button:focus,
 
   .bg-checkboard {
     background-image: url('../assets/img/checkboard.svg');
+    // background-size: 4rem;
+  }
+
+  .bg-checkboard-sm {
+    @extend .bg-checkboard;
+    background-size: 2rem;
+  }
+  .bg-checkboard-xs {
+    @extend .bg-checkboard;
+    background-size: 1rem;
   }
 }

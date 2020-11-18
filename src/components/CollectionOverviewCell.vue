@@ -3,6 +3,7 @@
     class="cursor-pointer flex items-center"
     @click="$emit('click', $event)"
     :title="node && node.title"
+    :class=`{[backgroundClass]: true}`
   )
     transition(
       enter-class="opacity-0"
@@ -22,7 +23,11 @@
         caption(
           class="absolute text-center w-full bottom-0 text-gray-400 text-sm"
         ) {{node && node.title}}
-    Presentation.w-full(:id="presentation")
+    Presentation.w-full(
+      ref="presentation"
+      :id="presentation"
+      :image-filter=`imageFilter`
+    )
 </template>
 
 <script lang="ts">
@@ -62,6 +67,10 @@ export default class CollectionOverviewCell extends Vue {
   id!: string;
 
   node?: Collection;
+
+  $refs!: {
+    presentation: Presentation;
+  };
 
   get overlayVisible(): boolean {
     return db.preference.get('cellOverlayVisible');
@@ -120,6 +129,37 @@ export default class CollectionOverviewCell extends Vue {
     ])[0]?.id;
   }
 
+  get backgroundClass(): string {
+    switch (db.preference.get('viewerBackground')) {
+      case 'checkboard':
+        return 'bg-checkboard-sm';
+      case 'checkboard-sm':
+        return 'bg-checkboard-xs';
+      case 'white':
+        return 'bg-white';
+      default:
+        return 'bg-black';
+    }
+  }
+
+  imageFilter(p: Presentation): string {
+    if (p.isLoadFailed || p.isTranscodeFailed || !p.id) {
+      switch (p.size) {
+        case 'regular':
+          return '';
+        case 'thumb':
+        default:
+          switch (db.preference.get('viewerBackground')) {
+            case 'white':
+              return '';
+            default:
+              return 'brightness(0.3)';
+          }
+      }
+    }
+    return '';
+  }
+
   renderTopLeft(h: CreateElement): VNode {
     return h(
       'div',
@@ -145,10 +185,12 @@ export default class CollectionOverviewCell extends Vue {
   .overlay {
     background: linear-gradient(
       0deg,
-      rgba(0, 0, 0, 0.6) 0%,
-      rgba(0, 0, 0, 0) 40%,
+      rgba(0, 0, 0, 0.5) 0%,
+      rgba(0, 0, 0, 0.1) 20%,
+      rgba(0, 0, 0, 0) 30%,
       rgba(0, 0, 0, 0) 70%,
-      rgba(0, 0, 0, 0.4) 100%
+      rgba(0, 0, 0, 0.1) 80%,
+      rgba(0, 0, 0, 0.5) 100%
     );
   }
 }

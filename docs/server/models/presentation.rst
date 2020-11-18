@@ -92,6 +92,10 @@ last-frame
 
   最后一帧的帧编号
 
+pixel-format
+
+  图像像素格式
+
 annotation
 
   标注 SVG 数据。

@@ -13,5 +13,15 @@
     "WAIT": "Wait",
     "CHANGE_STATUS": "Change status",
     "SUBMIT": "Submit"
+  },
+  "presentation-metadata": {
+    "file-size": "file size",
+    "modified-time": "modified time",
+    "resolution": "resolution",
+    "frame-count": "frame count",
+    "frame-rate": "frame rate",
+    "frame-range": "frame range",
+    "duration": "duration",
+    "pixel-format": "pixel format"
   }
 }

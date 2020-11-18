@@ -166,6 +166,7 @@ func (p *Presentation) Probe() (changed bool, err error) {
 	case TypeImage:
 		changed = p.SetMetadata("width", strconv.FormatInt(info.Width(), 10)) || changed
 		changed = p.SetMetadata("height", strconv.FormatInt(info.Height(), 10)) || changed
+		changed = p.SetMetadata("pixel-format", info.PixelFormat()) || changed
 	}
 	return
 }
