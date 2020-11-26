@@ -12,16 +12,16 @@
       leave-active-class="transition-all duration-500 ease-in-out"
     )
       .overlay(
-        class="absolute inset-0 p-1 pointer-events-none"
+        class="absolute inset-0 pointer-events-none"
         v-show="overlayVisible"
       )
         header(
-          class="flex justify-between opacity-75"
+          class="flex justify-between opacity-75 p-1"
         )
           FunctionalComponent(:render="renderTopLeft")
           FunctionalComponent(:render="renderTopRight")
         caption(
-          class="absolute text-center w-full bottom-0 text-gray-400 text-sm"
+          class="absolute text-center w-full bottom-0 text-gray-400 text-sm break-all p-1"
         ) {{node && node.title}}
     Presentation.w-full(
       ref="presentation"

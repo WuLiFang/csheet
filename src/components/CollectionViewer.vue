@@ -44,10 +44,10 @@
           )
             FaIcon.h-full(name="window-close")
         h1(
-          class="text-2xl text-gray-400 break-words"
+          class="text-2xl text-gray-400 break-all"
         ) {{value.title}}
         p(
-          class="text-sm text-gray-500 select-all break-words"
+          class="text-sm text-gray-500 select-all break-all"
         ) {{presentation && presentation.raw.path}}
       main(
         class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden"
