@@ -44,6 +44,7 @@ func findPipelineByName(ctx context.Context, db string, pipeline string) (ret cl
 		logging.Logger("collector.cgteamwork").DPanic("duplicated pipeline",
 			zap.String("database", db),
 			zap.String("name", pipeline),
+			zap.Any("result", res),
 		)
 	}
 	ret = res[0]
