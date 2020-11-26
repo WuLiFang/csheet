@@ -8,12 +8,13 @@ services:
       - '60000:80'
     image: 'csheet'
     restart: unless-stopped
-    cpu_shares: 128
-    mem_limit: 2G
+    # cpu_shares: 128
+    # mem_limit: 2G
     volumes:
       - csheet_data:/app/storage/db
       - ./files:/app/storage/files
-      - /mnt/z:/z:ro
+      - ./backup:/app/storage/backup
+      # - /mnt/z:/z:ro
     env_file:
       - ./.env
 volumes:
