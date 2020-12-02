@@ -4,9 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	// register pprof routes
-
 	"net/http/httputil"
+	// register pprof routes
 	_ "net/http/pprof"
 	"path"
 	"time"
