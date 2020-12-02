@@ -48,7 +48,7 @@ func New() *gin.Engine {
 	)
 	r.Any("api", gincontext.Middleware(), apiHandler())
 	r.Group("").Use(func(c *gin.Context) {
-		c.Header("Cache-Control", "public, immutable, max-age=604800")
+		c.Header("Cache-Control", "public, max-age=31536000, immutable")
 		c.Next()
 	}).Static("static", "dist/static")
 	r.Group("").Use(func(c *gin.Context) {
@@ -59,7 +59,7 @@ func New() *gin.Engine {
 	r.Group("files").Use(func(c *gin.Context) {
 		var logger = logging.For(c.Request.Context()).Logger("router").Sugar()
 
-		c.Header("Cache-Control", "public, immutable, max-age=604800")
+		c.Header("Cache-Control", "public, max-age=31536000, immutable")
 		c.Next()
 		c.Header("Cache-Control", "no-store") // when body is empty
 
