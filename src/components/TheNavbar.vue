@@ -1,12 +1,10 @@
 <template lang="pug">
-  nav#navbar(
-    @submit.prevent
-  )
-    label(
+  nav#navbar
+    div(
       class="mr-1 lg:mr-2 inline-flex items-center"
     )
       span(
-          class="lg:mr-1"
+        class="lg:mr-1"
       ) 模式
       Radio(
         v-model="formData.mode"

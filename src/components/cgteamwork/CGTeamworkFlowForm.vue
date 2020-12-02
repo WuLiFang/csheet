@@ -26,15 +26,15 @@
           required
         )
     hr.border-gray-600.my-2
-    label.block(
+    .block(
       class="m-1"
     )
       span.inline-block.w-16 阶段
       CGTeamworkStageSelect(v-model="formData.stage")
-    label.block(
+    fieldset.block(
       class="m-1"
     )
-      span.inline-block.w-16 流程
+      legend.inline-block.w-16 流程
       Radio(
         v-model="formData.pipeline"
         :options="pipelines"

@@ -153,9 +153,7 @@
             :value="presentation"
           )
           hr.border-gray-700.my-2
-          label(
-            class="block lg:mx-1"
-          )
+          .block(class="lg:mx-1")
             span 查看器背景
             Radio(
               v-model="preferredBackground"

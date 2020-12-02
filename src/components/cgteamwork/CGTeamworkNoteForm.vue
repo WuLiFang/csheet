@@ -26,7 +26,7 @@
           required
         )
     hr.border-gray-600.my-2
-    label.block(
+    .block(
       class="m-1"
     )
       span.inline-block.w-16 流程
