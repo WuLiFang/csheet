@@ -1,5 +1,5 @@
 <template lang="pug">
-  form#navbar(
+  nav#navbar(
     @submit.prevent
   )
     label(
@@ -30,7 +30,7 @@
     template(v-if="formData.mode == 'cgteamwork'")
       span(
         class="mr-1 lg:mr-2 inline-block"
-      ) 
+      )
         label(
           class="lg:mr-1"
           @click="() => $refs.cgteamworkProjectSelect.focus()"
@@ -59,7 +59,7 @@
         )
       label(
         class="mr-1 lg:mr-2 inline-block"
-      ) 
+      )
         span(
           class="lg:mr-1"
         ) 前缀
@@ -78,7 +78,7 @@
     template(v-else-if="formData.mode == 'folder'")
       label(
         class="mr-1 lg:mr-2"
-      ) 
+      )
         span(
           class="lg:mr-1"
         ) 路径
@@ -99,21 +99,21 @@
       type="button"
       :disabled="loadingCount > 0"
       @click="collect()"
-    ) 
+    )
       template(v-if="loadingCount > 0 ")
         FaIcon(name='spinner' spin)
       template(v-else)
         | 收集
     label
       input(
-        type="checkbox" 
+        type="checkbox"
         v-model="formData.skipEmptyPresentation"
         class="form-checkbox text-gray-900"
       )
       span.mx-1 跳过无内容
     label
       input(
-        type="checkbox" 
+        type="checkbox"
         v-model="cellOverlayVisible"
         class="form-checkbox text-gray-900"
       )
