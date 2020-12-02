@@ -48,7 +48,10 @@ func New() *gin.Engine {
 		cors.Middleware(config.CORSHosts),
 	)
 	r.Any("api", gincontext.Middleware(), apiHandler())
-	r.Static("static", "dist/static")
+	r.Group("").Use(func(c *gin.Context) {
+		c.Header("Cache-Control", "public, immutable, max-age=604800")
+		c.Next()
+	}).Static("static", "dist/static")
 	r.Group("").Use(func(c *gin.Context) {
 		c.Header("Cache-Control", "no-cache")
 		c.Next()
