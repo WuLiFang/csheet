@@ -41,14 +41,14 @@ export default class Radio extends Mixins(getVModelMixin<unknown>()) {
   @Prop({ type: String, default: () => defaults.radio.disabledClass })
   disabledClass?: string;
 
-  @Prop({ type: Function, default: (a: unknown,b: unknown) => a === b })
-  equalValue!: (a: unknown, b :unknown) => boolean;
+  @Prop({ type: Function, default: (a: unknown, b: unknown) => a === b })
+  equalValue!: (a: unknown, b: unknown) => boolean;
 
   get optionEntries(): Entry<unknown>[] {
     return optionEntries(this.options);
   }
 
-    protected entryContext(
+  protected entryContext(
     v: Entry<unknown>,
     location?: string
   ): {
