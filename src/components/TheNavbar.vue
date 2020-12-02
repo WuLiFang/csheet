@@ -8,11 +8,9 @@
       span(
           class="lg:mr-1"
       ) 模式
-      RadioOrSelect(
+      Radio(
         v-model="formData.mode"
-        radio-label-class="text-sm block"
-        select-dropdown-class="w-32"
-        :threshold="2"
+        label-class="text-sm block"
         :options=`[
         {
           key: 'cgteamwork',

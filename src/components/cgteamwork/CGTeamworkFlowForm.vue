@@ -35,7 +35,7 @@
       class="m-1"
     )
       span.inline-block.w-16 流程
-      RadioOrSelect(
+      Radio(
         v-model="formData.pipeline"
         :options="pipelines"
       )

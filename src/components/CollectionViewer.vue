@@ -35,7 +35,7 @@
             title="下一个（快捷键：↓）"
             @click="jumpNext()"
             @animationend="$event.target.classList.remove('button-click-anim')"
-          )  
+          )
             FaIcon.h-full(name="caret-square-down")
           button(
             class="h-full text-gray-400  ml-1 hover:text-gray-200 outline-none"
@@ -141,7 +141,7 @@
                 :disabled="recollectingCount > 0"
                 @click="recollect()"
                 class="ml-1"
-              ) 
+              )
                 template(v-if="recollectingCount > 0 ")
                   FaIcon.h-full(name="spinner" spin)
                 template(v-else)
@@ -157,7 +157,7 @@
             class="block lg:mx-1"
           )
             span 查看器背景
-            RadioOrSelect(
+            Radio(
               v-model="preferredBackground"
               class="inline-block py-1 ml-1"
               :options=`[

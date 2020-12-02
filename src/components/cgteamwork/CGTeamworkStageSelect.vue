@@ -1,5 +1,5 @@
 <template lang="pug">
-  RadioOrSelect(
+  Radio(
     v-model="$_value"
     :options="options"
     required

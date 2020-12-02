@@ -31,7 +31,7 @@
     )
       span.inline-block.w-16 流程
       SessionStorage(name="cgteamwork.note-pipeline" v-model="formData.pipeline")
-        RadioOrSelect(
+        Radio(
           v-model="formData.pipeline"
           :options="pipelines"
         )
