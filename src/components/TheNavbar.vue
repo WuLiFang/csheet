@@ -44,7 +44,7 @@
           class="lg:mr-1"
           @click="() => $refs.cgteamworkPipelineSelect.focus()"
         ) 流程
-        CGTeamworkPipelineSelect(
+        CGTeamworkPipelineRadio(
           ref="cgteamworkPipelineSelect"
           v-model="formData.cgteamwork.pipeline"
           :database="formData.cgteamwork.database"
@@ -141,7 +141,7 @@ import client, { CGTeamworkOriginPrefix, FolderOriginPrefix } from '../client';
 import { uniq } from 'lodash';
 import { info } from '@/message';
 import { clientConfig_clientConfig as Config } from '@/graphql/types/clientConfig';
-import CGTeamworkPipelineSelect from '@/components/cgteamwork/CGTeamworkPipelineSelect.vue';
+import CGTeamworkPipelineRadio from '@/components/cgteamwork/CGTeamworkPipelineRadio.vue';
 
 function getResultMessage({
   createdCount,
@@ -163,7 +163,7 @@ function getResultMessage({
 @Component<TheNavbar>({
   components: {
     CGTeamworkProjectSelect,
-    CGTeamworkPipelineSelect,
+    CGTeamworkPipelineRadio,
   },
   apollo: {
     folderOriginPrefix: {
@@ -252,7 +252,7 @@ export default class TheNavbar extends Vue {
   $refs!: {
     cgteamworkPrefixInput: HTMLInputElement;
     cgteamworkProjectSelect: CGTeamworkProjectSelect;
-    cgteamworkPipelineSelect: CGTeamworkPipelineSelect;
+    cgteamworkPipelineSelect: CGTeamworkPipelineRadio;
     collectButton: HTMLButtonElement;
   };
 

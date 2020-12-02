@@ -66,7 +66,8 @@ import {
 import { orderBy } from 'lodash';
 import Select from '@/components/global/Select.vue';
 
-@Component<CGTeamworkPipelineSelect>({
+
+@Component<CGTeamworkPipelineRadio>({
   inheritAttrs: false,
   apollo: {
     matchedPipelines: {
@@ -87,7 +88,7 @@ import Select from '@/components/global/Select.vue';
     },
   },
 })
-export default class CGTeamworkPipelineSelect extends Mixins(
+export default class CGTeamworkPipelineRadio extends Mixins(
   getVModelMixin<string>()
 ) {
   @Prop({ type: String, required: true })
