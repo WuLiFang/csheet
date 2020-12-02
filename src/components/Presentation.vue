@@ -9,6 +9,7 @@ import { filePathFormat } from '../const';
 import parseFrameRate from '@/utils/parseFrameRate';
 import parseFirstFrame from '@/utils/parseFirstFrame';
 import clamp from '@/utils/clamp';
+import getPathBasename from '@/utils/getPathBasename';
 
 @Component<Presentation>({
   apollo: {
@@ -39,7 +40,7 @@ import clamp from '@/utils/clamp';
       return h('img', {
         domProps: {
           src,
-          alt: this.node?.raw?.path,
+          alt: getPathBasename(src),
           draggable: this.draggable,
         },
         style: {
@@ -60,7 +61,7 @@ import clamp from '@/utils/clamp';
       return h('video', {
         domProps: {
           src,
-          alt: this.node?.raw?.path,
+          alt: getPathBasename(src),
           controls: this.controls,
           loop: true,
           autoplay: this.autoplay,
