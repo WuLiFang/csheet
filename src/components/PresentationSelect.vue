@@ -6,6 +6,8 @@ import 'vue-awesome/icons/video';
 import { sortBy, groupBy, orderBy } from 'lodash';
 import db from '@/db';
 import humanizeTime from '@/utils/humanizeTime';
+import basename from '@/utils/getPathBasename';
+import dirname from '@/utils/getPathDirname';
 import { VNode } from 'vue';
 
 interface Option {
@@ -22,14 +24,6 @@ interface OptionGroup {
   children: (Option | OptionGroup)[];
 }
 
-function basename(v: string): string {
-  const parts = v.split('/');
-  return parts[parts.length - 1];
-}
-function dirname(v: string): string {
-  const parts = v.split('/');
-  return parts.slice(0, parts.length - 1).join('/');
-}
 
 @Component<PresentationSelect>({
   render(h) {
@@ -156,11 +150,6 @@ export default class PresentationSelect extends Vue {
     if (match) {
       db.preference.set('presentationType', match.type);
     }
-  }
-
-  protected basename(v: string): string {
-    const parts = v.split('/');
-    return parts[parts.length - 1];
   }
 }
 </script>
