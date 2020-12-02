@@ -11,8 +11,8 @@ import { Component, Mixins } from 'vue-property-decorator';
 import getVModelMixin from '@/mixins/VModelMixinV2';
 import { Entry } from '@/components/global/entry';
 
-@Component<CGTeamworkStageSelect>({})
-export default class CGTeamworkStageSelect extends Mixins(
+@Component<CGTeamworkStageRadio>({})
+export default class CGTeamworkStageRadio extends Mixins(
   getVModelMixin<string>()
 ) {
   options: Entry<string>[] = [

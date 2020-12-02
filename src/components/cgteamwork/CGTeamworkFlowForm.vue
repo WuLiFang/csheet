@@ -30,7 +30,7 @@
       class="m-1"
     )
       span.inline-block.w-16 阶段
-      CGTeamworkStageSelect(v-model="formData.stage")
+      CGTeamworkStageRadio(v-model="formData.stage")
     fieldset.block(
       class="m-1"
     )
@@ -75,12 +75,12 @@ import {
   collectionNode,
 } from '@/graphql/types/collectionNode';
 import getCollectionPipelines from '@/client/utils/getCollectionPipelines';
-import CGTeamworkStageSelect from '@/components/cgteamwork/CGTeamworkStageSelect.vue';
+import CGTeamworkStageRadio from '@/components/cgteamwork/CGTeamworkStageRadio.vue';
 import CGTeamworkMessageEditor from '@/components/cgteamwork/CGTeamworkMessageEditor.vue';
 
 @Component<CGTeamworkFlowForm>({
   components: {
-    CGTeamworkStageSelect,
+    CGTeamworkStageRadio,
     CGTeamworkMessageEditor,
   },
   apollo: {
