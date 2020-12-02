@@ -4,13 +4,16 @@
   )
     output.inline-block(
       ref="output"
-      :tabindex="dropdownVisible ? undefined : 0"
+      :tabindex="dropdownVisible || disabled ? undefined : 0"
       class="form-select cursor-pointer w-full relative"
       :class=`{
         'bg-none': clearButtonVisible,
+        'h-10 flex items-center': multiple,
+        [outputClass]: true,
+        [disabledClass]: disabled,
       }`
       @focus="focus()"
-    ) 
+    )
       template(v-if="values.length > 0")
         slot(
           name="output"
@@ -18,9 +21,9 @@
         )
           template(v-for="i in selected")
             template(v-if="multiple")
-              .inline-block(
-                :key="key"
-                class="border bg-gray-200 p-1 m-px rounded"
+              .inline-flex.items-center(
+                :key="i.key"
+                class="border bg-gray-200 p-px m-px rounded"
               )
                 slot(v-bind="entryContext(i, 'output')")
                   span {{ i.label != null ? i.label : i.value }}
@@ -31,30 +34,26 @@
                   type="button"
                 )
                   FaIcon(
+                    class="flex flex-center"
                     name="times-circle"
-                    @click="toggle(key, false)"
+                    @click="toggle(i.key, false)"
                   )
             template(v-else)
               slot(v-bind="entryContext(i, 'output')")
                 span {{ i.label != null ? i.label : i.value }}
-      span(v-else-if="loading") 
-        FaIcon(
-          class="text-center text-gray-500 w-full"
-          name="spinner"
-          spin
-        )
-      template(v-else) 
+      template(v-else)
         slot(name="placeholder")
           span.text-gray-500.text-sm {{ placeholder }}
       template(v-if="clearButtonVisible")
         button.block(
           type="button"
           tabindex="-1"
-          class="absolute top-0 bottom-0 right-0 mr-2 p-2"
+          class="absolute top-0 bottom-0 right-0 mr-2 px-2"
           class="cursor-pointer text-gray-400"
           class="flex items-center"
           class="outline-none"
           @click.prevent="clear(); blur();"
+          title="清空"
         )
           FaIcon(name="times")
     transition(
@@ -113,7 +112,7 @@
             v-if="options.length === 0"
           )
             .text-gray-500.text-center.text-md.p-2
-              template(v-if="loading") 
+              template(v-if="loading")
                 FaIcon.h-16(name="spinner" spin)
               template(v-else)
                 slot(name="empty")
@@ -123,7 +122,7 @@
       class="opacity-0 absolute inset-0 pointer-events-none w-full h-full"
       ref="transparentInput"
       @invalid="$emit('invalid', $event)"
-      aria-hidden
+      aria-hidden="true"
       value=""
       v-on="hasSearch ? undefined : inputListeners"
     )
@@ -223,6 +222,9 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
   clearable!: boolean;
 
   @Prop({ type: Boolean, default: false })
+  disabled!: boolean;
+
+  @Prop({ type: Boolean, default: false })
   loading!: boolean;
 
   @Prop({ type: Array, required: true })
@@ -236,6 +238,9 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
 
   @Prop({ type: String })
   dropdownClass?: string;
+
+  @Prop({ type: String })
+  outputClass?: string;
 
   @Prop({ type: String, default: () => defaults.select.highlightClass })
   highlightClass!: string;
