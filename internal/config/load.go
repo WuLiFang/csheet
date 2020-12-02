@@ -56,4 +56,5 @@ func Load() {
 	transcode.ImageThumbWeight = TranscodeImageThumbWeight
 	transcode.ImageRegularWeight = TranscodeImageRegularWeight
 	transcode.VideoRegularWeight = TranscodeVideoRegularWeight
+	transcode.DisableWebP = DisableWebP
 }

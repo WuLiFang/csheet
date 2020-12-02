@@ -35,7 +35,6 @@ func (o ImageOptions) outputOptions() (ret []string) {
 		ret = append(ret, "-vf")
 		ret = append(ret, fmt.Sprintf("scale=min(iw\\,%s):min(ih\\,%s):flags=lanczos", w, h))
 	}
-	ret = append(ret, "-q:v", "1")
 	ret = append(ret, "-frames:v", "1")
 	return
 }
@@ -74,6 +73,28 @@ func PNG(src string, dst string, o *ImageOptions) *exec.Cmd {
 	args = append(args,
 		"-codec:v", "png",
 		"-f", "image2",
+		dst,
+	)
+
+	c := exec.Command(ffmpeg, args...)
+	niceCommand(c, 19)
+	return c
+}
+
+// WebP command to trancode src to dst as webP.
+func WebP(src string, dst string, o *ImageOptions) *exec.Cmd {
+	var args = ffmpegOptions()
+	if o != nil {
+		args = append(args, o.inputOptions()...)
+	}
+	args = append(args, "-i", src)
+	if o != nil {
+		args = append(args, o.outputOptions()...)
+	}
+
+	args = append(args,
+		"-codec:v", "webp",
+		"-f", "webp",
 		dst,
 	)
 

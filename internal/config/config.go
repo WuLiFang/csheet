@@ -38,5 +38,6 @@ var (
 	TranscodeVideoRegularWeight = getenv.Int64("CSHEET_TRANSCODE_VIDEO_REGULAR_WEIGHT", transcode.VideoRegularWeight)
 	CORSHosts                   = strings.Split(getenv.String("CSHEET_CORS_HOSTS", ""), ",")
 	AdminToken                  = getenv.String("CSHEET_ADMIN_TOKEN", "")
+	DisableWebP                 = getenv.Bool("CSHEET_DISABLE_WEBP", false)
 	UseXForwardedFor            = getenv.Bool("USE_X_FORWARDED_FOR", false)
 )
