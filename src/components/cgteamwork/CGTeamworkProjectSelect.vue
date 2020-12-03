@@ -49,48 +49,35 @@
 import { Component, Mixins } from 'vue-property-decorator';
 import getVModelMixin from '../../mixins/VModelMixinV2';
 import {
-  cgteamworkProjects,
   cgteamworkProjects_cgteamworkProjects as Project,
-  cgteamworkProjectsVariables,
 } from '../../graphql/types/cgteamworkProjects';
 import { orderBy } from 'lodash';
 import Select from '@/components/global/Select.vue';
+import cgteamworkProjectsQuery from '@/graphql/queries/cgteamworkProjects';
 
 const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
 
 @Component<CGTeamworkProjectSelect>({
   inheritAttrs: false,
   apollo: {
-    matchedProjects: {
-      query: require('@/graphql/queries/cgteamworkProjects.gql'),
-      variables(): cgteamworkProjectsVariables {
+    matchedProjects: cgteamworkProjectsQuery<CGTeamworkProjectSelect>({
+      variables() {
         return {
           q: this.query || undefined,
           status: this.query ? undefined : ['Active'],
         };
       },
-      update(v: cgteamworkProjects): Project[] {
-        return orderBy(
-          v.cgteamworkProjects ?? [],
-          [i => statusOrder.indexOf(i.status.toUpperCase()), i => i.name],
-          ['desc', 'asc']
-        );
-      },
-    },
-    selectedProjects: {
-      query: require('@/graphql/queries/cgteamworkProjects.gql'),
-      variables(): cgteamworkProjectsVariables {
+    }),
+    selectedProjects: cgteamworkProjectsQuery<CGTeamworkProjectSelect>({
+      variables() {
         return {
           database: [this.$_value],
         };
       },
-      update(v: cgteamworkProjects): Project[] {
-        return v.cgteamworkProjects ?? [];
-      },
       skip(): boolean {
         return !this.$_value;
       },
-    },
+    }),
   },
 })
 export default class CGTeamworkProjectSelect extends Mixins(
