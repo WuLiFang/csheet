@@ -1,119 +1,123 @@
 <template lang="pug">
   nav#navbar
-    div(
-      class="mr-1 lg:mr-2 inline-flex items-center"
+    form(
+      ref="form"
+      action="javascript:void(0)"
+      @submit="collect()"
     )
-      span(
-        class="lg:mr-1"
-      ) 模式
-      Radio(
-        v-model="formData.mode"
-        label-class="text-sm block"
-        :options=`[
-        {
-          key: 'cgteamwork',
-          value: 'cgteamwork',
-          disabled: !config.enableCGTeamwork,
-          label: 'CGTeamwork',
-        },
-        {
-          key: 'folder',
-          value: 'folder',
-          label: '文件夹',
-        },
-        ]`
-      )
-    template(v-if="formData.mode == 'cgteamwork'")
-      span(
-        class="mr-1 lg:mr-2 inline-block"
-      )
-        label(
-          class="lg:mr-1"
-          @click="() => $refs.cgteamworkProjectSelect.focus()"
-        ) 项目
-        CGTeamworkProjectSelect(
-          ref="cgteamworkProjectSelect"
-          v-model="formData.cgteamwork.database"
-          @change="formData.cgteamwork.prefix = ''"
-          required
-        )
-      span(
+      div(
         class="mr-1 lg:mr-2 inline-flex items-center"
       )
+        span(
+          class="lg:mr-1"
+        ) 模式
+        Radio(
+          v-model="formData.mode"
+          label-class="text-sm block"
+          :options=`[
+          {
+            key: 'cgteamwork',
+            value: 'cgteamwork',
+            disabled: !config.enableCGTeamwork,
+            label: 'CGTeamwork',
+          },
+          {
+            key: 'folder',
+            value: 'folder',
+            label: '文件夹',
+          },
+          ]`
+        )
+      template(v-if="formData.mode == 'cgteamwork'")
+        span(
+          class="mr-1 lg:mr-2 inline-block"
+        )
+          label(
+            class="lg:mr-1"
+            @click="() => $refs.cgteamworkProjectSelect.focus()"
+          ) 项目
+          CGTeamworkProjectSelect(
+            ref="cgteamworkProjectSelect"
+            v-model="formData.cgteamwork.database"
+            @change="formData.cgteamwork.prefix = ''"
+            required
+          )
+        span(
+          class="mr-1 lg:mr-2 inline-flex items-center"
+        )
+          label(
+            class="lg:mr-1"
+            @click="() => $refs.cgteamworkPipelineSelect.focus()"
+          ) 流程
+          CGTeamworkPipelineRadio(
+            ref="cgteamworkPipelineSelect"
+            v-model="formData.cgteamwork.pipeline"
+            :database="formData.cgteamwork.database"
+            required
+            clearable
+            null-value=""
+            @clear="formData.cgteamwork.pipeline = ''; formData.cgteamwork.prefix = '';"
+          )
         label(
-          class="lg:mr-1"
-          @click="() => $refs.cgteamworkPipelineSelect.focus()"
-        ) 流程
-        CGTeamworkPipelineRadio(
-          ref="cgteamworkPipelineSelect"
-          v-model="formData.cgteamwork.pipeline"
-          :database="formData.cgteamwork.database"
-          required
-          clearable
-          null-value=""
-          @clear="formData.cgteamwork.pipeline = ''; formData.cgteamwork.prefix = '';"
+          class="mr-1 lg:mr-2 inline-block"
         )
-      label(
-        class="mr-1 lg:mr-2 inline-block"
+          span(
+            class="lg:mr-1"
+          ) 前缀
+          datalist#navbar-cgteamwork-prefix
+            option(
+              v-for="i in recentCGTeamworkPrefix"
+            ) {{i}}
+          input(
+            ref="cgteamworkPrefixInput"
+            v-model="formData.cgteamwork.prefix"
+            class="form-input"
+            @keydown.enter="$refs.form.submit()"
+            @input="$event.target.setCustomValidity('')"
+            list="navbar-cgteamwork-prefix"
+          )
+      template(v-else-if="formData.mode == 'folder'")
+        label(
+          class="mr-1 lg:mr-2"
+        )
+          span(
+            class="lg:mr-1"
+          ) 路径
+          datalist#navbar-folder-root
+            option(
+              v-for="i in recentFolderRoot"
+            ) {{i}}
+          input(
+            v-model="formData.folder.root"
+            class="form-input"
+            required
+            @keydown.enter="$refs.form.submit()"
+            list="navbar-folder-root"
+          )
+      button.form-button(
+        ref="collectButton"
+        class="mr-1 w-24"
+        type="submit"
+        :disabled="loadingCount > 0"
       )
-        span(
-          class="lg:mr-1"
-        ) 前缀
-        datalist#navbar-cgteamwork-prefix
-          option(
-            v-for="i in recentCGTeamworkPrefix"
-          ) {{i}}
+        template(v-if="loadingCount > 0 ")
+          FaIcon(name='spinner' spin)
+        template(v-else)
+          | 收集
+      label
         input(
-          ref="cgteamworkPrefixInput"
-          v-model="formData.cgteamwork.prefix"
-          class="form-input"
-          @keydown.enter="collectFromCGTeamwork()"
-          @input="$event.target.setCustomValidity('')"
-          list="navbar-cgteamwork-prefix"
+          type="checkbox"
+          v-model="formData.skipEmptyPresentation"
+          class="form-checkbox text-gray-900"
         )
-    template(v-else-if="formData.mode == 'folder'")
-      label(
-        class="mr-1 lg:mr-2"
-      )
-        span(
-          class="lg:mr-1"
-        ) 路径
-        datalist#navbar-folder-root
-          option(
-            v-for="i in recentFolderRoot"
-          ) {{i}}
+        span.mx-1 跳过无内容
+      label
         input(
-          v-model="formData.folder.root"
-          class="form-input"
-          required
-          @keydown.enter="collectFromFolder()"
-          list="navbar-folder-root"
+          type="checkbox"
+          v-model="cellOverlayVisible"
+          class="form-checkbox text-gray-900"
         )
-    button.form-button(
-      ref="collectButton"
-      class="mr-1 w-24"
-      type="button"
-      :disabled="loadingCount > 0"
-      @click="collect()"
-    )
-      template(v-if="loadingCount > 0 ")
-        FaIcon(name='spinner' spin)
-      template(v-else)
-        | 收集
-    label
-      input(
-        type="checkbox"
-        v-model="formData.skipEmptyPresentation"
-        class="form-checkbox text-gray-900"
-      )
-      span.mx-1 跳过无内容
-    label
-      input(
-        type="checkbox"
-        v-model="cellOverlayVisible"
-        class="form-checkbox text-gray-900"
-      )
-      span.mx-1 信息显示
+        span.mx-1 信息显示
 </template>
 
 <script lang="ts">
@@ -158,7 +162,6 @@ function getResultMessage({
   }
   return `更新了 ${updatedCount} 个收藏`;
 }
-
 
 @Component<TheNavbar>({
   components: {
@@ -248,8 +251,8 @@ export default class TheNavbar extends Vue {
   };
 
   loadingCount = 0;
-  $el!: HTMLFormElement;
   $refs!: {
+    form: HTMLFormElement;
     cgteamworkPrefixInput: HTMLInputElement;
     cgteamworkProjectSelect: CGTeamworkProjectSelect;
     cgteamworkPipelineSelect: CGTeamworkPipelineRadio;
@@ -357,7 +360,7 @@ export default class TheNavbar extends Vue {
   }
 
   async collectFromCGTeamwork(): Promise<void> {
-    if (!this.$el.reportValidity()) {
+    if (this.loadingCount > 0) {
       return;
     }
     this.loadingCount += 1;
@@ -380,7 +383,7 @@ export default class TheNavbar extends Vue {
           default:
             throw err;
         }
-        this.$el.reportValidity();
+        this.$refs.form?.reportValidity();
         return;
       }
       this.$emit('collect');
@@ -391,7 +394,7 @@ export default class TheNavbar extends Vue {
   }
 
   async collectFromFolder(): Promise<void> {
-    if (!this.$el.reportValidity()) {
+    if (this.loadingCount > 0) {
       return;
     }
     this.loadingCount += 1;
