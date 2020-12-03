@@ -48,9 +48,7 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator';
 import getVModelMixin from '../../mixins/VModelMixinV2';
-import {
-  cgteamworkProjects_cgteamworkProjects as Project,
-} from '../../graphql/types/cgteamworkProjects';
+import { cgteamworkProjects_cgteamworkProjects as Project } from '../../graphql/types/cgteamworkProjects';
 import { orderBy } from 'lodash';
 import Select from '@/components/global/Select.vue';
 import cgteamworkProjectsQuery from '@/graphql/queries/cgteamworkProjects';
@@ -78,6 +76,15 @@ const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
         return !this.$_value;
       },
     }),
+  },
+  mounted() {
+    this.$watch(
+      () => this.getProject(this.$_value),
+      v => {
+        this.$emit('update:project', v);
+      },
+      { immediate: true }
+    );
   },
 })
 export default class CGTeamworkProjectSelect extends Mixins(

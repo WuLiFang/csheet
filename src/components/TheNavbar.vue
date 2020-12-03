@@ -40,6 +40,7 @@
             ref="cgteamworkProjectSelect"
             v-model="formData.cgteamwork.database"
             @change="formData.cgteamwork.prefix = ''"
+            @update:project="cgteamworkProject = $event"
             required
           )
         span(
@@ -146,6 +147,7 @@ import { uniq } from 'lodash';
 import { info } from '@/message';
 import { clientConfig_clientConfig as Config } from '@/graphql/types/clientConfig';
 import CGTeamworkPipelineRadio from '@/components/cgteamwork/CGTeamworkPipelineRadio.vue';
+import { cgteamworkProjects_cgteamworkProjects as CGTeamworkProject } from '@/graphql/types/cgteamworkProjects';
 
 function getResultMessage({
   createdCount,
@@ -182,6 +184,12 @@ function getResultMessage({
       },
     },
   },
+  data() {
+    // make undefined field reactive.
+    return {
+      cgteamworkProject: undefined,
+    };
+  },
   async mounted() {
     const config = await client.config.get();
     if (config) {
@@ -194,7 +202,7 @@ function getResultMessage({
     this.loadState();
     this.$watch(
       () => this.title,
-      function(v) {
+      v => {
         document.title = v;
       }
     );
@@ -260,6 +268,7 @@ export default class TheNavbar extends Vue {
   };
 
   folderOriginPrefix = 'folder:';
+  cgteamworkProject?: CGTeamworkProject;
   isHistoryStateChanged = false;
 
   get title(): string {
@@ -268,9 +277,7 @@ export default class TheNavbar extends Vue {
       case 'cgteamwork':
         parts.push(
           this.formData.cgteamwork.prefix,
-          (this.$refs?.cgteamworkProjectSelect?.projects ?? []).find(
-            i => i.database === this.formData.cgteamwork.database
-          )?.name ?? this.formData.cgteamwork.database,
+          this.cgteamworkProject?.name ?? this.formData.cgteamwork.database,
           this.formData.cgteamwork.pipeline
         );
         break;
