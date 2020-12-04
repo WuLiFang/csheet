@@ -8,7 +8,6 @@
       class="form-select cursor-pointer w-full relative"
       :class=`{
         'bg-none': clearButtonVisible,
-        'h-10 flex items-center': multiple,
         [outputClass]: true,
         [disabledClass]: disabled,
       }`
@@ -21,16 +20,17 @@
         )
           template(v-for="i in selected")
             template(v-if="multiple")
-              .inline-flex.items-center(
+              .inline-block(
                 :key="i.key"
-                class="border bg-gray-200 p-px m-px rounded"
+                class="border bg-gray-200 pl-1 pr-6 mr-1 rounded relative"
+                class="leading-8"
               )
                 slot(v-bind="entryContext(i, 'output')")
                   span {{ i.label != null ? i.label : i.value }}
                 button(
                   tabindex="-1"
-                  class="inline-block ml-1 outline-none"
-                  class="text-gray-500"
+                  class="absolute right-0 top-0 h-full pr-1"
+                  class="text-gray-400 outline-none"
                   type="button"
                 )
                   FaIcon(
@@ -49,7 +49,7 @@
           type="button"
           tabindex="-1"
           class="absolute top-0 bottom-0 right-0 mr-2 px-2"
-          class="cursor-pointer text-gray-400"
+          class="cursor-pointer text-gray-500"
           class="flex items-center"
           class="outline-none"
           @click.prevent="clear(); blur();"
@@ -66,7 +66,7 @@
     )
       .container(
         v-show="dropdownVisible"
-        class="origin-top-right absolute right-0 mt-px z-30"
+        class="origin-top-right absolute right-0 mt-px z-30 w-full"
         :class="[dropdownBaseClass, dropdownClass]"
       )
         slot(
@@ -81,7 +81,6 @@
           template(v-for="i in optionEntries")
             li(
               ref="option"
-              tag="li"
               :key="i.key"
               :data-key="i.key"
               class="p-2 cursor-pointer relative"

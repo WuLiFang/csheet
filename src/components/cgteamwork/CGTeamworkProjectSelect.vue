@@ -7,7 +7,6 @@
     v-model="$_value"
     :options="options"
     required-message="请选择项目"
-    dropdown-class="w-64"
     :loading="loadingCount > 0"
     @focus="() => $refs.queryInput.focus()"
   )
