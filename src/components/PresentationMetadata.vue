@@ -1,12 +1,14 @@
 <template lang="pug">
   dl
-    dt {{ $t('presentation-metadata.file-size') }}
-    dd.pl-4
-      span {{ fileSizeText }}
-      span.mx-2.text-gray-500.whitespace-no-wrap （{{ fileSizeExactText }}）
-    dt {{ $t('presentation-metadata.modified-time') }}
-    dd.pl-4
-      TimeWidget(:value="value.raw.modTime" format="llll")
+    template(v-if="value.raw.size")
+      dt {{ $t('presentation-metadata.file-size') }}
+      dd.pl-4
+        span {{ fileSizeText }}
+        span.mx-2.text-gray-500.whitespace-no-wrap （{{ fileSizeExactText }}）
+    template(v-if="value.raw.modTime")
+      dt {{ $t('presentation-metadata.modified-time') }}
+      dd.pl-4
+        TimeWidget(:value="value.raw.modTime" format="llll")
     template(v-if="metadata.width && metadata.height")
       dt {{ $t('presentation-metadata.resolution') }}
       dd.pl-4 {{metadata.width}}x{{metadata.height}}

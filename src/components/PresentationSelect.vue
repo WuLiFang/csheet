@@ -16,14 +16,13 @@ interface Option {
   path: string;
   dirname: string;
   basename: string;
-  modTime: Date;
+  modTime: Date | undefined;
 }
 
 interface OptionGroup {
   name: string;
   children: (Option | OptionGroup)[];
 }
-
 
 @Component<PresentationSelect>({
   render(h) {
@@ -98,7 +97,7 @@ export default class PresentationSelect extends Vue {
         path: i.raw.path,
         basename: basename(i.raw.path),
         dirname: dirname(i.raw.path),
-        modTime: new Date(i.raw.modTime),
+        modTime: i.raw.modTime ? new Date(i.raw.modTime) : undefined,
       })),
       [
         i => i.modTime,
@@ -112,7 +111,9 @@ export default class PresentationSelect extends Vue {
 
   get groupedOptions(): OptionGroup[] {
     return Object.entries(
-      groupBy(this.sortedOptions, i => humanizeTime(i.modTime))
+      groupBy(this.sortedOptions, i =>
+        i.modTime ? humanizeTime(i.modTime) : '已删除'
+      )
     ).map(([k, v]) => ({
       name: k,
       children: v,
@@ -135,7 +136,7 @@ export default class PresentationSelect extends Vue {
           [db.preference.get('presentationType'), 'video', 'image'].findIndex(
             j => j === i.type
           ),
-        i => -new Date(i.raw.modTime).getTime(),
+        i => -new Date(i.raw.modTime || 0).getTime(),
         i => i.id,
       ])[0]?.id
     );

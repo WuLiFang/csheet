@@ -124,7 +124,7 @@ export default class CollectionOverviewCell extends Vue {
   get presentation(): string {
     return sortBy(this.node?.presentations ?? [], [
       i => !i.thumb,
-      i => -new Date(i.raw.modTime).getTime(),
+      i => -new Date(i.raw.modTime || 0).getTime(),
       i => i.id,
     ])[0]?.id;
   }
