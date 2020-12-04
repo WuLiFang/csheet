@@ -1,4 +1,4 @@
-#!/usr/bin/env ts-node-script
+#!/usr/bin/env -S npx ts-node-script
 
 import { spawnSync } from 'child_process';
 import { promises as fs } from 'fs';
