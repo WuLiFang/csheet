@@ -34,6 +34,6 @@ export interface CGTeamworkNote {
   id: string;
   type: string;
   message: CGTeamworkNote_message;
-  created: any;
+  created: import('./scalars').Time;
   createdByName: string;
 }

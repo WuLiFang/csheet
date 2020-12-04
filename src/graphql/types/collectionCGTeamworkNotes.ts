@@ -39,7 +39,7 @@ export interface collectionCGTeamworkNotes_node_Collection_cgteamworkNotes_notes
   id: string;
   type: string;
   message: collectionCGTeamworkNotes_node_Collection_cgteamworkNotes_notes_message;
-  created: any;
+  created: import('./scalars').Time;
   createdByName: string;
 }
 

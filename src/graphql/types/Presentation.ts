@@ -10,7 +10,7 @@
 export interface Presentation_raw {
   __typename: "DiskFile";
   path: string;
-  modTime: any | null;
+  modTime: import('./scalars').Time | null;
   size: number | null;
 }
 

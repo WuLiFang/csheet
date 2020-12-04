@@ -39,7 +39,7 @@ export interface CreateCGTeamworkNoteInputData {
   id: string;
   pipeline: string;
   html: string;
-  images?: any[] | null;
+  images?: import('./scalars').Upload[] | null;
 }
 
 /**
@@ -68,7 +68,7 @@ export interface UpdateCGTeamworkFlowInputData {
   status: string;
   pipeline?: string | null;
   note?: string | null;
-  images?: any[] | null;
+  images?: import('./scalars').Upload[] | null;
 }
 
 /**

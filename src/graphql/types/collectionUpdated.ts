@@ -22,7 +22,7 @@ export interface collectionUpdated_collectionUpdated_metadata {
 export interface collectionUpdated_collectionUpdated_presentations_raw {
   __typename: "DiskFile";
   path: string;
-  modTime: any | null;
+  modTime: import('./scalars').Time | null;
   size: number | null;
 }
 
@@ -68,7 +68,7 @@ export interface collectionUpdated_collectionUpdated {
   origin: string;
   metadata: collectionUpdated_collectionUpdated_metadata[];
   presentations: collectionUpdated_collectionUpdated_presentations[];
-  collectTime: any;
+  collectTime: import('./scalars').Time;
 }
 
 export interface collectionUpdated {
