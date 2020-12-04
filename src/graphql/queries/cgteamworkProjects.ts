@@ -5,7 +5,6 @@ import {
 } from '@/graphql/types/cgteamworkProjects';
 import { OperationVariables } from 'apollo-client';
 import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
-import { orderBy } from 'lodash';
 
 export default function cgteamworkProjectsQuery<V>(
   o: Omit<
