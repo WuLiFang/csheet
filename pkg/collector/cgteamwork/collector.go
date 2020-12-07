@@ -56,6 +56,7 @@ func collectionFromTask(
 	m map[string]collection.Collection,
 	task client.Task,
 	o Options,
+	status map[string]string,
 ) (created bool, err error) {
 	var logger = logging.For(ctx).Logger("collector.cgteamwork").Sugar()
 
@@ -118,7 +119,7 @@ func collectionFromTask(
 		"id":       task.ID,
 		"pipeline": task.Pipeline.Name,
 		"artists":  artists,
-		"status":   task.Status,
+		"status":   status,
 	})
 	if err != nil {
 		return
@@ -199,6 +200,10 @@ func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error)
 		err = fmt.Errorf("collector.cgteamwork: pipeline not supported: %s", o.Pipeline)
 		return
 	}
+	var pipelineMap = map[string]struct{}{}
+	for _, i := range pipelines(o.Pipeline) {
+		pipelineMap[i] = struct{}{}
+	}
 	s := client.Select(o.Database, pipeline.Module.Name).
 		WithModuleType(pipeline.Module.Type).
 		WithFilter(
@@ -222,6 +227,30 @@ func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error)
 		"task.image", "task.submit_file_path",
 		"task.leader_status", "task.director_status", "task.client_status",
 	}
+	var statusFieldIDs = map[string]struct{}{}
+	flows, err := s.Flows(ctx)
+	if err != nil {
+		return
+	}
+	for _, flow := range flows {
+		if _, ok := pipelineMap[flow.Pipeline.Name]; !ok {
+			continue
+		}
+		for _, stage := range flow.Stages {
+			statusFieldIDs[stage.Field.ID] = struct{}{}
+		}
+	}
+	var statusFields = map[client.FieldSign]client.Field{}
+	for id := range statusFieldIDs {
+		var f = client.Field{Database: o.Database, ID: id}
+		err = f.Fetch(ctx)
+		if err != nil {
+			return
+		}
+		statusFields[f.Sign] = f
+		fields = append(fields, string(f.Sign))
+	}
+
 	switch pipeline.Module.Name {
 	case "asset":
 		fields = append(fields, "asset.cn_name")
@@ -232,14 +261,27 @@ func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error)
 	}
 	rs.SetDefault("task.module", pipeline.Module.Name)
 	tasks := make([]client.Task, rs.Count())
-	rs.Unmarshal(func(i int) client.RecordUnmarshaler {
-		return &tasks[i]
+	statuses := make([]map[string]string, len(tasks))
+	err = rs.ForEach(func(index int, data map[string]string) error {
+		err = tasks[index].UnmarshalCGTeamworkRecord(data)
+		if err != nil {
+			return err
+		}
+		var status = map[string]string{}
+		for _, field := range statusFields {
+			status[field.Label] = data[string(field.Sign)]
+		}
+		statuses[index] = status
+		return nil
 	})
+	if err != nil {
+		return
+	}
 
 	colM := map[string]collection.Collection{}
-	for _, v := range tasks {
+	for index, v := range tasks {
 		var created bool
-		created, err = collectionFromTask(ctx, colM, v, o)
+		created, err = collectionFromTask(ctx, colM, v, o, statuses[index])
 		if err != nil {
 			return
 		}

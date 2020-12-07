@@ -1,6 +1,7 @@
 <template lang="pug">
   form(
     action="javascript:void(0)"
+    @submit="submit()"
   )
     SessionStorage(name="cgteamwork.username" v-model="formData.username")
       label.block(
@@ -30,14 +31,33 @@
       class="m-1"
     )
       span.inline-block.w-16 阶段
-      CGTeamworkStageRadio(v-model="formData.stage")
+      CGTeamworkStageRadio(
+        class="w-64"
+        v-model="formData.stage"
+        :variables="{ database, pipeline: [formData.pipeline] }"
+        required
+      )
     fieldset.block(
       class="m-1"
     )
-      legend.inline-block.w-16 流程
+      span.inline-block.w-16 流程
       Radio(
         v-model="formData.pipeline"
         :options="pipelines"
+        required
+        @change="formData.stage = ''; formData.status = '';"
+      )
+    fieldset.block(
+      class="m-1"
+    )
+      span.inline-block.w-16 状态
+      CGTeamworkStatusSelect(
+        ref="statusSelect"
+        class="w-64"
+        v-model="formData.status"
+        :stage="formData.stage"
+        :variables="{ database, pipeline: [formData.pipeline] }"
+        required
       )
     CGTeamworkMessageEditor(
       class="mb-2"
@@ -46,28 +66,15 @@
     )
     fieldset
       button.form-button(
-        class="w-1/3 px-0"
-        type="button"
-        @click="formData.status = 'Close'; submit()"
-      ) 关闭
-      button.form-button(
-        class="w-1/3 px-0"
-        class="bg-red-600 hover:bg-red-500"
-        type="button"
-        @click="formData.status = 'Retake'; submit()"
-      ) 返修
-      button.form-button(
-        class="w-1/3 px-0"
-        class="bg-green-600 hover:bg-green-500"
-        type="button"
-        @click="formData.status = 'Approve'; submit()"
-      ) 通过
+        class="w-full"
+        type="submit"
+      ) 提交
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import db from '@/db';
-import client from '@/client';
+import client, { CGTeamworkOriginPrefix } from '@/client';
 import { Collection } from '@/graphql/types/Collection';
 import { filePathFormat } from '@/const';
 import {
@@ -76,11 +83,13 @@ import {
 } from '@/graphql/types/collectionNode';
 import getCollectionPipelines from '@/client/utils/getCollectionPipelines';
 import CGTeamworkStageRadio from '@/components/cgteamwork/CGTeamworkStageRadio.vue';
+import CGTeamworkStatusSelect from '@/components/cgteamwork/CGTeamworkStatusSelect.vue';
 import CGTeamworkMessageEditor from '@/components/cgteamwork/CGTeamworkMessageEditor.vue';
 
 @Component<CGTeamworkFlowForm>({
   components: {
     CGTeamworkStageRadio,
+    CGTeamworkStatusSelect,
     CGTeamworkMessageEditor,
   },
   apollo: {
@@ -140,10 +149,18 @@ export default class CGTeamworkFlowForm extends Vue {
     usernameInput: HTMLInputElement;
     passwardInput: HTMLInputElement;
     messageEditor: CGTeamworkMessageEditor;
+    statusSelect: CGTeamworkStatusSelect;
   };
 
   get pipelines(): string[] {
     return getCollectionPipelines(this.collection);
+  }
+
+  get database(): string {
+    if (!this.collection) {
+      return '';
+    }
+    return CGTeamworkOriginPrefix.parse(this.collection?.origin).database;
   }
 
   async submit(): Promise<void> {
@@ -177,6 +194,8 @@ export default class CGTeamworkFlowForm extends Vue {
       this.$refs.usernameInput.focus();
     } else if (!this.formData.password) {
       this.$refs.passwardInput.focus();
+    } else if (!this.formData.status) {
+      this.$refs.statusSelect.focus();
     } else {
       this.$refs.messageEditor.focus();
     }

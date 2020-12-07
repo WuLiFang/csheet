@@ -1,0 +1,13 @@
+type CGTeamworkFlowStage
+  @goModel(model: "github.com/WuLiFang/csheet/v6/pkg/cgteamwork.FlowStage") {
+  id: ID!
+  name: String!
+  statuses: [CGTeamworkStatus!]!
+}
+
+type CGTeamworkFlow
+  @goModel(model: "github.com/WuLiFang/csheet/v6/pkg/cgteamwork.Flow") {
+  name: String!
+  pipeline: CGTeamworkPipeline!
+  stages: [CGTeamworkFlowStage!]!
+}

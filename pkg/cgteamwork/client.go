@@ -3,6 +3,7 @@ package cgteamwork
 import (
 	"context"
 	"errors"
+	"net/http"
 	"net/url"
 	"os"
 	"time"
@@ -21,6 +22,10 @@ func (c *Client) urlWithPath(path string) *url.URL {
 	ret := c.URL
 	ret.Path = path
 	return &ret
+}
+
+func (c *Client) do(req *http.Request) (*http.Response, error) {
+	return http.DefaultClient.Do(req)
 }
 
 // DefaultClient for global call, init from env.

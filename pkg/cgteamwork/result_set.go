@@ -35,6 +35,25 @@ type RecordUnmarshaler interface {
 	UnmarshalCGTeamworkRecord(data map[string]string) error
 }
 
+// ForEach iterate through all data in map form.
+func (rs ResultSet) ForEach(fn func(index int, data map[string]string) error) error {
+	rowCount := rs.Count()
+	for row := 0; row < rowCount; row++ {
+		data := map[string]string{}
+		for k, v := range rs.d {
+			data[k] = v
+		}
+		for col, name := range rs.Fields {
+			data[name] = rs.Data.Get(fmt.Sprintf("%d.%d", row, col)).String()
+		}
+		err := fn(row, data)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // Unmarshal iterate through all data in map form.
 func (rs ResultSet) Unmarshal(fn func(index int) RecordUnmarshaler) error {
 	rowCount := rs.Count()

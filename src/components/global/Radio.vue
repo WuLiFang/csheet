@@ -1,7 +1,7 @@
 <template lang="pug">
   .inline-block
     template(v-for="i in optionEntries")
-      label.mx-1(
+      label.mx-1.inline-block(
         :key="i.key"
         :class=`{
           [labelClass]: true,

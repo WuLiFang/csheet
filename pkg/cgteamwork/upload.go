@@ -110,7 +110,7 @@ func UploadImage(ctx context.Context, filename string, file io.Reader, size int6
 	req, err := c.newRequest(
 		ctx,
 		"POST",
-		"web_upload_file",
+		c.urlWithPath("web_upload_file").String(),
 		r,
 	)
 	if err != nil {

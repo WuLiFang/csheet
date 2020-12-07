@@ -1,0 +1,17 @@
+query cgteamworkFlows($database: String!, $pipeline: [String!]) {
+  cgteamworkFlows(database: $database, pipeline: $pipeline) {
+    name
+    pipeline {
+      name
+    }
+    stages {
+      id
+      name
+      statuses {
+        id
+        name
+        color
+      }
+    }
+  }
+}

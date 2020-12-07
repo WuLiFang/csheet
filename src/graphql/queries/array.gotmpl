@@ -1,0 +1,30 @@
+{{- define "Item" }}
+{{- .Item | default (regexReplaceAll "s$" .Name "" | upperFirst) }}
+{{- end }}
+
+{{- define "import" }}
+import { apolloClient } from "@/client"
+{{- end }}
+
+{{- define "before" }}
+export type {{ template "Item" . }} = NonNullable<{{ .Name }}['{{ .Name }}']>[0];
+{{- end }}
+
+{{- define "options" }}
+    update(data): {{ template "Item" . }}[] {
+      return data.{{ .Name }} ?? [];
+    },
+{{- end }}
+
+
+{{- define "after" }}
+
+export async function find(variables: {{ .Name }}Variables): Promise<{{ template "Item" . }}[]> {
+  const { data } = await apolloClient.query<{{ .Name }}, {{ .Name }}Variables>({
+    query: require('./{{ .Name }}.gql'),
+    variables,
+  });
+
+  return data.{{ .Name }} ?? [];
+}
+{{- end }}

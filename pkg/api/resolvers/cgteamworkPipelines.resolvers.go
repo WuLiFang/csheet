@@ -6,7 +6,6 @@ package resolvers
 import (
 	"context"
 
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 )
 
@@ -21,8 +20,3 @@ func (r *queryResolver) CgteamworkPipelines(ctx context.Context, database string
 	}
 	return cgteamwork.Pipelines(ctx, database, cgteamwork.PipelinesOptionFilter(f))
 }
-
-// Query returns generated.QueryResolver implementation.
-func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
-
-type queryResolver struct{ *Resolver }

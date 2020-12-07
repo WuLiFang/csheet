@@ -1,0 +1,82 @@
+[
+  {
+    "$Status": {
+      "Color": "#00ce00",
+      "ID": "1C82E03F-574D-43EC-A07B-89B948C68D5E",
+      "Name": "Approve",
+      "Type": "approve"
+    }
+  },
+  {
+    "$Status": {
+      "Color": "#ff0000",
+      "ID": "16F676CB-9921-2D9A-0A75-845487EBDF14",
+      "Name": "Retake",
+      "Type": "retake"
+    }
+  },
+  {
+    "$Status": {
+      "Color": "#e1e100",
+      "ID": "d61861d4-2728-473f-b1ac-e93ecc5f38e0",
+      "Name": "Check",
+      "Type": "check"
+    }
+  },
+  {
+    "$Status": {
+      "Color": "#00007f",
+      "ID": "1b5a9ede-167b-4a5f-af67-f8dd13f88381",
+      "Name": "Pause",
+      "Type": "pause"
+    }
+  },
+  {
+    "$Status": {
+      "Color": "#00557f",
+      "ID": "9b9326ce-9f59-42a7-b5d3-fb98dfcce987",
+      "Name": "Wait",
+      "Type": "wait"
+    }
+  },
+  {
+    "$Status": {
+      "Color": "#7266ba",
+      "ID": "4333b9df-cb37-4759-9a3b-f26b038aa870",
+      "Name": "Work",
+      "Type": "work"
+    }
+  },
+  {
+    "$Status": {
+      "Color": "#000000",
+      "ID": "87323881-D045-BEE7-A7D9-AEF34A02B11A",
+      "Name": "Close",
+      "Type": "change_status"
+    }
+  },
+  {
+    "$Status": {
+      "Color": "#AC0056",
+      "ID": "ACE7FF2C-CC13-6B8C-D716-9E6610D15ABC",
+      "Name": "Revert",
+      "Type": "revert"
+    }
+  },
+  {
+    "$Status": {
+      "Color": "#0E86FE",
+      "ID": "08C76592-543A-B452-BA3F-69DA684E035F",
+      "Name": "Active",
+      "Type": "change_status"
+    }
+  },
+  {
+    "$Status": {
+      "Color": "#3E7C00",
+      "ID": "7BFF303A-DE3A-3BB3-3771-31FADD4BF1D3",
+      "Name": "NoSim",
+      "Type": "approve"
+    }
+  }
+]

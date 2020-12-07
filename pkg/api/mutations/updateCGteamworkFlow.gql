@@ -2,8 +2,8 @@
 
 input UpdateCGTeamworkFlowInputData {
     id: ID!
-    stage: String!
-    status: String!
+    stage: ID!
+    status: ID!
     "Default to collection pipeline."
     pipeline: String
     "HTML note message"

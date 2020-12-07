@@ -1,6 +1,17 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
-@Component
+@Component<VModelMixin<unknown>>({
+  mounted() {
+    this.$watch(
+      () => this.value,
+      (n, o) => {
+        if (o) {
+          this.$emit('change', n, o);
+        }
+      }
+    );
+  },
+})
 class VModelMixin<T> extends Vue {
   @Prop()
   value!: T;

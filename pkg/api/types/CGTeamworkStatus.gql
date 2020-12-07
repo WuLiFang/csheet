@@ -1,0 +1,6 @@
+type CGTeamworkStatus
+  @goModel(model: "github.com/WuLiFang/csheet/v6/pkg/cgteamwork.Status") {
+  id: ID!
+  name: String!
+  color: String!
+}

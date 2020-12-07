@@ -1,0 +1,37 @@
+{{- define "Node" }}
+{{- .Node | default (regexReplaceAll "Node$" .Name "" | upperFirst) }}
+{{- end }}
+
+{{- define "import" }}
+import { apolloClient } from "@/client"
+{{- end }}
+
+{{- define "before" }}
+export type {{ template "Node" . }} = {{ .Name }}['node'] & { __typename: '{{ template "Node" . }}' };
+
+function castNode(node: {{.Name}}['node'] | null | undefined ): {{ template "Node" . }} | undefined {
+    return node?.__typename === '{{ template "Node" . }}' ? node : undefined;
+}
+{{- end }}
+
+{{- define "options" }}
+    update(data): {{ template "Node" . }} | undefined {
+      return castNode(data.node);
+    },
+{{- end }}
+
+
+{{- define "after" }}
+
+export async function findById(id: string): Promise<{{ template "Node" . }} | undefined> {
+  if (!id) {
+    return;
+  }
+  const { data } = await apolloClient.query<{{ .Name }}, {{ .Name }}Variables>({
+    query: require('./{{ .Name }}.gql'),
+    variables: { id },
+  });
+
+  return castNode(data.node);
+}
+{{- end }}

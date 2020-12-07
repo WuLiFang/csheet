@@ -4,13 +4,14 @@ go 1.14
 
 require (
 	github.com/99designs/gqlgen v0.13.0
+	github.com/NateScarlet/snapshot v0.4.0
 	github.com/NateScarlet/zap-sentry v0.1.0
 	github.com/dgraph-io/badger/v2 v2.0.3
 	github.com/getsentry/sentry-go v0.8.0
 	github.com/gin-gonic/gin v1.6.3
 	github.com/rs/cors v1.7.0
 	github.com/spf13/cobra v1.1.1
-	github.com/stretchr/testify v1.5.1
+	github.com/stretchr/testify v1.6.1
 	github.com/tidwall/gjson v1.6.0
 	github.com/tidwall/sjson v1.1.1
 	github.com/vektah/gqlparser/v2 v2.1.0

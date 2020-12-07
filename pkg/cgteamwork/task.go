@@ -15,7 +15,6 @@ type Task struct {
 	Pipeline   Pipeline
 	ImageFile  string
 	SubmitFile []string
-	Status     map[string]string
 }
 
 func max(values ...int) (ret int) {
@@ -68,13 +67,6 @@ func (i *Task) UnmarshalCGTeamworkRecord(m map[string]string) error {
 		i.SubmitFile = submit.FilePath
 	} else {
 		i.SubmitFile = submit.Path
-	}
-
-	i.Status = make(map[string]string)
-	for k, v := range m {
-		if strings.HasPrefix(k, "task.") && strings.HasSuffix(k, "_status") {
-			i.Status[k[5:len(k)-7]] = v
-		}
 	}
 
 	return nil

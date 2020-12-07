@@ -1,14 +1,41 @@
 <template lang="pug">
-  span(:class="staticClass") {{value && $t('cgteamwork-status.'+value.toUpperCase())}}
+  span(:class="staticClass"
+    :style=`{
+      backgroundColor: status ? status.color : undefined,
+    }`
+  ) {{ text }}
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
+import cgteamworkStatusesQuery, {
+  CGTeamworkStatus,
+} from '@/graphql/queries/cgteamworkStatuses';
 
-@Component<CGTeamworkTaskStatus>({})
+@Component<CGTeamworkTaskStatus>({
+  apollo: {
+    statuses: cgteamworkStatusesQuery<CGTeamworkTaskStatus>({}),
+  },
+})
 export default class CGTeamworkTaskStatus extends Vue {
   @Prop({ type: String, required: true })
   value!: string;
+
+  statuses?: CGTeamworkStatus[];
+  get status(): CGTeamworkStatus | undefined {
+    return this.statuses?.find(
+      i => i.id === this.value || i.name === this.value
+    );
+  }
+
+  get text(): string {
+    let ret = this.status?.name ?? this.value;
+    const i18nKey = `cgteamwork-status.${ret.toUpperCase()}`;
+    if (this.$te(i18nKey)) {
+      ret = this.$t(i18nKey).toString();
+    }
+    return ret;
+  }
 
   get staticClass(): string {
     switch (this.value.toUpperCase()) {

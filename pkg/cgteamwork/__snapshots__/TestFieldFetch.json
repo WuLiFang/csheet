@@ -1,0 +1,31 @@
+{
+  "$Field": {
+    "Database": "proj_sdktest",
+    "ID": "2920928F-68D2-2441-21CF-00CFF17AC97C",
+    "IsEditable": false,
+    "IsLocked": true,
+    "IsRequired": false,
+    "IsSystem": true,
+    "Label": "导演状态",
+    "Module": {
+      "$Module": {
+        "Name": "task",
+        "Type": ""
+      }
+    },
+    "Order": "0015",
+    "ReadPermission": [
+      "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+      "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+      "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+      "79973C7B-CACC-48E1-50BB-C4761433551E"
+    ],
+    "Sign": {
+      "$FieldSign": "task.director_status"
+    },
+    "Type": "status",
+    "WritePermission": [
+      ""
+    ]
+  }
+}

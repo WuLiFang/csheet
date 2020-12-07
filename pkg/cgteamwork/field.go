@@ -1,155 +1,86 @@
 package cgteamwork
 
-// `concat`,`is`,`!concat` is not included because they seems are alias to `=`, `!=`.
+import (
+	"context"
+	"errors"
+	"strings"
+)
 
-// Field sign name
-type Field string
-
-// F is shortcut to Field
-type F = Field
-
-// Equal filter
-func (f Field) Equal(v interface{}) Filter {
-	return Filter{
-		Left:  string(f),
-		Op:    "=",
-		Right: v,
-	}
+// Field in table view
+type Field struct {
+	Database        string
+	ID              string
+	Sign            FieldSign
+	Module          Module
+	Type            string
+	Label           string
+	IsSystem        bool
+	IsRequired      bool
+	IsLocked        bool
+	IsEditable      bool
+	Order           string
+	ReadPermission  []string
+	WritePermission []string
 }
 
-// NotEqual filter
-func (f Field) NotEqual(v interface{}) Filter {
-	return Filter{
-		Left:  string(f),
-		Op:    "!=",
-		Right: v,
-	}
+// UnmarshalCGTeamworkRecord implement RecordUnmarshaler
+func (f *Field) UnmarshalCGTeamworkRecord(v map[string]string) error {
+	f.ID = v["#id"]
+	f.Module.Name = v["module"]
+	f.Sign = FieldSign(v["sign"])
+	f.Type = v["type"]
+	f.Label = v["field_str"]
+	f.IsSystem = v["is_sys"] == "Y"
+	f.IsRequired = v["is_required"] == "Y"
+	f.IsLocked = v["lock"] == "Y"
+	f.IsEditable = v["edit_is_show"] == "Y"
+	f.Order = v["sort_id"]
+	f.ReadPermission = strings.Split(v["see_permission"], ",")
+	f.WritePermission = strings.Split(v["edit_permission"], ",")
+	return nil
 }
 
-// EqualIgnoreCase is ignore case version of `Equal`.
-func (f Field) EqualIgnoreCase(v interface{}) Filter {
-	return Filter{
-		Left:  string(f),
-		Op:    "~",
-		Right: v,
+// Fetch field data by id.
+func (f *Field) Fetch(ctx context.Context) (err error) {
+	if f.Database == "" {
+		err = errors.New("cgteamwork: Field: Fetch: empty database")
+		return
 	}
-}
-
-// LessThan filter
-func (f Field) LessThan(v interface{}) Filter {
-	return Filter{
-		Left:  string(f),
-		Op:    "<",
-		Right: v,
+	if f.ID == "" {
+		err = errors.New("cgteamwork: Field: Fetch: empty id")
+		return
 	}
-}
-
-// LessEqualThan filter
-func (f Field) LessEqualThan(v interface{}) Filter {
-	return Filter{
-		Left:  string(f),
-		Op:    "<=",
-		Right: v,
+	c := ClientFor(ctx)
+	err = c.RefreshTokenOndemand(ctx)
+	if err != nil {
+		return
 	}
-}
-
-// GreaterThan filter
-func (f Field) GreaterThan(v interface{}) Filter {
-	return Filter{
-		Left:  string(f),
-		Op:    ">",
-		Right: v,
+	fields := []string{
+		"#id", "module", "sign",
+		"type", "field_str", "is_sys",
+		"see_permission", "edit_permission",
+		"is_required", "lock", "edit_is_show",
+		"sort_id",
 	}
-}
-
-// GreaterEqualThan filter
-func (f Field) GreaterEqualThan(v interface{}) Filter {
-	return Filter{
-		Left:  string(f),
-		Op:    ">=",
-		Right: v,
+	res, err := c.callAPI(
+		ctx,
+		map[string]interface{}{
+			"controller":  "c_field",
+			"method":      "get_in_id",
+			"db":          f.Database,
+			"field_array": fields,
+			"id_array":    []string{f.ID},
+		},
+	)
+	if err != nil {
+		return
 	}
-}
-
-// Like filter
-// `%` match zero or many character.
-// `-` match one character.
-func (f Field) Like(v string) Filter {
-	return Filter{
-		Left:  string(f),
-		Op:    "concat",
-		Right: v,
+	rs := ResultSet{
+		Fields: fields,
+		Data:   res,
 	}
-}
-
-// NotLike filter, opposite of `Like`.
-func (f Field) NotLike(v string) Filter {
-	return Filter{
-		Left:  string(f),
-		Op:    "!concat",
-		Right: v,
-	}
-}
-
-// Has filter, partial match version of `Like`.
-func (f Field) Has(v string) Filter {
-	return Filter{
-		Left:  string(f),
-		Op:    "has",
-		Right: v,
-	}
-}
-
-// NotHas filter, opposite of `Has`.
-func (f Field) NotHas(v string) Filter {
-	return Filter{
-		Left:  string(f),
-		Op:    "!has",
-		Right: v,
-	}
-}
-
-// HasIgnoreCase is ignore case version of `Has`.
-func (f Field) HasIgnoreCase(v interface{}) Filter {
-	return Filter{
-		Left:  string(f),
-		Op:    "~has",
-		Right: v,
-	}
-}
-
-// In filter match any element in given array.
-func (f Field) In(v interface{}) Filter {
-	return Filter{
-		Left:  string(f),
-		Op:    "in",
-		Right: v,
-	}
-}
-
-// StartsWith filter
-func (f Field) StartsWith(v string) Filter {
-	return Filter{
-		Left:  string(f),
-		Op:    "start",
-		Right: v,
-	}
-}
-
-// EndsWith filter
-func (f Field) EndsWith(v string) Filter {
-	return Filter{
-		Left:  string(f),
-		Op:    "start",
-		Right: v,
-	}
-}
-
-// Is filter, usage unknown.
-func (f Field) Is(v interface{}) Filter {
-	return Filter{
-		Left:  string(f),
-		Op:    "is",
-		Right: v,
-	}
+	err = rs.Unmarshal(func(index int) RecordUnmarshaler {
+		return f
+	})
+	return
 }

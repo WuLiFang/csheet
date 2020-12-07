@@ -27,7 +27,7 @@ func encodeAPIPayload(data interface{}) (string, error) {
 func parseAPIResult(v []byte) (data gjson.Result, err error) {
 	var s = string(v)
 	if !gjson.Valid(s) {
-		err = APIError{Message: s}
+		err = APIError{Message: "invalid json:" + s}
 		return
 	}
 	result := gjson.Parse(s)
@@ -40,7 +40,7 @@ func parseAPIResult(v []byte) (data gjson.Result, err error) {
 }
 
 // newRequest with token set.
-func (c *Client) newRequest(ctx context.Context, method string, pathname string, body io.Reader) (r *http.Request, err error) {
+func (c *Client) newRequest(ctx context.Context, method string, url string, body io.Reader) (r *http.Request, err error) {
 	if c == nil {
 		err = ErrNotConfigured
 		return
@@ -48,7 +48,7 @@ func (c *Client) newRequest(ctx context.Context, method string, pathname string,
 	r, err = http.NewRequestWithContext(
 		ctx,
 		method,
-		c.urlWithPath(pathname).String(),
+		url,
 		body,
 	)
 	if err != nil {
@@ -77,12 +77,12 @@ func (c *Client) callAPI(ctx context.Context, param interface{}) (data gjson.Res
 	if err != nil {
 		return
 	}
-	r, err := c.newRequest(ctx, "POST", "api.php", strings.NewReader(payload))
+	r, err := c.newRequest(ctx, "POST", c.urlWithPath("api.php").String(), strings.NewReader(payload))
 	if err != nil {
 		return
 	}
 	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	resp, err := http.DefaultClient.Do(r)
+	resp, err := c.do(r)
 	if err != nil {
 		return
 	}
@@ -95,4 +95,48 @@ func (c *Client) callAPI(ctx context.Context, param interface{}) (data gjson.Res
 		"body", string(body),
 	)
 	return parseAPIResult(body)
+}
+
+func (c *Client) getJSON(ctx context.Context, path string, param *url.Values) (ret gjson.Result, err error) {
+	if c == nil {
+		err = ErrNotConfigured
+		return
+	}
+	var logger = logging.For(ctx).Logger("cgteamwork.api").Sugar()
+	logger.Debugw(
+		"get",
+		"path", path,
+		"param", param,
+	)
+	var u = c.urlWithPath(path)
+	if param != nil {
+		u.RawQuery = param.Encode()
+	}
+	logger.Debugw(
+		"get",
+		"url", u.String(),
+	)
+	r, err := c.newRequest(ctx, "GET", u.String(), nil)
+	if err != nil {
+		return
+	}
+	resp, err := c.do(r)
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return
+	}
+	logger.Debugw(
+		"recv",
+		"body", string(body),
+	)
+	if !gjson.ValidBytes(body) {
+		err = APIError{Message: "invalid json:" + string(body)}
+		return
+	}
+	ret = gjson.ParseBytes(body)
+	return
 }

@@ -16,7 +16,7 @@
             :class=`{
               "opacity-75": preferredStage != i,
             }`
-          ) {{$t('cgteamwork-stage.' + i)}}
+          ) {{$te(`cgteamwork-stage.${i}`) ? $t(`cgteamwork-stage.${i}`) : i }}
             p.text-xs.text-gray-500(
               v-if="preferredStage == i"
             ) 总览显示
@@ -41,14 +41,46 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { uniq, sortBy } from 'lodash';
+import { uniq, sortBy, uniqBy } from 'lodash';
 import db from '@/db';
 import CGTeamworkTaskStatus from './cgteamwork/CGTeamworkTaskStatus.vue';
 import { show } from '@/modal';
 import CGTeamworkFlowFormDrawer from './cgteamwork/CGTeamworkFlowFormDrawer.vue';
 import 'vue-awesome/icons/edit';
+import cgteamworkFlowsQuery, {
+  CGTeamworkFlow,
+} from '@/graphql/queries/cgteamworkFlows';
+import collectionNodeQuery, {
+  Collection,
+} from '@/graphql/queries/collectionNode';
+import { CGTeamworkOriginPrefix } from '@/client';
 
 @Component<CollectionMetadataCGTeamworkTasks>({
+  apollo: {
+    flows: cgteamworkFlowsQuery<CollectionMetadataCGTeamworkTasks>({
+      variables() {
+        return {
+          database: CGTeamworkOriginPrefix.parse(this.collection?.origin ?? '')
+            .database,
+          pipeline: uniqBy(
+            this.tasks.map(i => i.pipeline),
+            i => i
+          ),
+        };
+      },
+      skip() {
+        return !this.collection;
+      },
+    }),
+    collection: collectionNodeQuery<CollectionMetadataCGTeamworkTasks>({
+      variables() {
+        return { id: this.id ?? '' };
+      },
+      skip() {
+        return !this.id;
+      },
+    }),
+  },
   components: {
     CGTeamworkTaskStatus,
   },
@@ -62,6 +94,9 @@ export default class CollectionMetadataCGTeamworkTasks extends Vue {
 
   @Prop({ type: String, default: 'div' })
   tag!: string;
+
+  collection?: Collection;
+  flows?: CGTeamworkFlow[];
 
   get tasks(): {
     artists: string[];
@@ -80,9 +115,11 @@ export default class CollectionMetadataCGTeamworkTasks extends Vue {
     db.preference.set('cgteamworkStage', v);
   }
 
+
   get stages(): string[] {
-    return sortBy(uniq(this.tasks.flatMap(i => Object.keys(i.status))), [
-      i => -['client', 'director', 'leader'].indexOf(i),
+    return uniq([
+      ...(this.flows?.flatMap(i => i.stages.map(i => i.name)) ?? []),
+      ...this.tasks.flatMap(i => Object.keys(i.status)),
     ]);
   }
 

@@ -1,0 +1,31 @@
+{{- /*
+Accept data:
+    Name: operation name.
+*/ -}}
+
+// Code Generated from {{ templateFiles }}, DO NOT EDIT.
+
+import { {{.Name}}, {{.Name}}Variables } from '@/graphql/types/{{.Name}}';
+import { OperationVariables } from 'apollo-client';
+import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
+{{- block "import" . }}{{ end }}
+
+export { {{.Name}}Variables, {{.Name}} };
+
+{{- block "before" . }}{{ end }}
+
+export default function {{.Name}}Query<V>(
+  o: Omit<
+    VueApolloQueryDefinition<{{.Name}}, {{.Name}}Variables>,
+    'query' | 'update'
+  > &
+    ThisType<V>
+): VueApolloQueryDefinition<{{.Name}}, OperationVariables> & ThisType<V> {
+  return {
+    ...o,
+    query: require('./{{.Name}}.gql'),
+{{- block "options" . }}{{ end }}
+  } as VueApolloQueryDefinition<{{.Name}}, OperationVariables>;
+}
+
+{{- block "after" . }}{{ end }}

@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"mime"
+	"strings"
 
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
@@ -28,6 +29,26 @@ func (r *mutationResolver) UpdateCGTeamworkFlow(ctx context.Context, input model
 
 	m := make(map[cgteamworkCollector.Options]struct{})
 
+	var statuses map[string]cgteamwork.Status
+	var findStatusByID = func(id string) (ret cgteamwork.Status, err error) {
+		if statuses == nil {
+			statuses = map[string]cgteamwork.Status{}
+			var data []cgteamwork.Status
+			data, err = cgteamwork.Statuses(ctx)
+			if err != nil {
+				return
+			}
+			for _, i := range data {
+				statuses[i.ID] = i
+			}
+		}
+		if o, ok := statuses[id]; ok {
+			ret = o
+			return
+		}
+		err = fmt.Errorf("cgteamwork: status not found: %s", id)
+		return
+	}
 	for _, i := range input.Data {
 		col, err := collection.FindByID(i.ID)
 		if err != nil {
@@ -66,7 +87,38 @@ func (r *mutationResolver) UpdateCGTeamworkFlow(ctx context.Context, input model
 			}
 			msg.Images = append(msg.Images, uploaded)
 		}
-		err = s.UpdateFlow(ctx, fmt.Sprintf("task.%s_status", i.Stage), i.Status, msg)
+
+		var field = cgteamwork.Field{}
+		// old client support
+		if "leader" == i.Stage || "director" == i.Stage || "client" == i.Stage {
+			field.Sign = cgteamwork.F(fmt.Sprintf("task.%s_status", i.Stage))
+		} else {
+			parts := strings.Split(i.Stage, ":")
+			if len(parts) != 2 {
+				return ret, fmt.Errorf("invalid stage id: %s", i.Stage)
+			}
+			if parts[0] != db {
+				return ret, fmt.Errorf("stage is in other db: %s", i.Stage)
+			}
+			field.Database = db
+			field.ID = parts[1]
+			err = field.Fetch(ctx)
+			if err != nil {
+				return ret, err
+			}
+		}
+
+		var status = cgteamwork.Status{}
+		// old client support
+		if len(i.Status) < 36 {
+			status.Name = i.Status
+		} else {
+			status, err = findStatusByID(i.Status)
+			if err != nil {
+				return ret, err
+			}
+		}
+		err = s.UpdateFlow(ctx, string(field.Sign), status.Name, msg)
 		if err != nil {
 			return ret, err
 		}

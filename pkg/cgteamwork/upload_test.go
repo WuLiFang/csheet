@@ -39,7 +39,7 @@ func TestUploadImage(t *testing.T) {
 	t.Run("other-file", func(t *testing.T) {
 		res, err := UploadImageFile(ctx, testutil.CallerRelativePath("testdata/1x1.png"))
 		require.NoError(t, err)
-		assert.Equal(t, "/upload/_temp/min/91e42db1c66c0b276abf6234dc50b2eb.png", res.Max)
+		assert.Equal(t, "/upload/_temp/max/91e42db1c66c0b276abf6234dc50b2eb.png", res.Max)
 		assert.Equal(t, "/upload/_temp/min/91e42db1c66c0b276abf6234dc50b2eb.png", res.Min)
 	})
 }
