@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/tidwall/gjson"
@@ -69,6 +70,7 @@ func (c *Client) callAPI(ctx context.Context, param interface{}) (data gjson.Res
 		return
 	}
 	var logger = logging.For(ctx).Logger("cgteamwork.api").Sugar()
+	var startTime = time.Now()
 	logger.Debugw(
 		"send",
 		"param", param,
@@ -91,8 +93,10 @@ func (c *Client) callAPI(ctx context.Context, param interface{}) (data gjson.Res
 	if err != nil {
 		return
 	}
-	logger.Debugw("recv",
+	logger.Debugw(
+		"recv",
 		"body", string(body),
+		"elapsed", time.Since(startTime),
 	)
 	return parseAPIResult(body)
 }
@@ -103,6 +107,7 @@ func (c *Client) getJSON(ctx context.Context, path string, param *url.Values) (r
 		return
 	}
 	var logger = logging.For(ctx).Logger("cgteamwork.api").Sugar()
+	var startTime = time.Now()
 	logger.Debugw(
 		"get",
 		"path", path,
@@ -112,10 +117,6 @@ func (c *Client) getJSON(ctx context.Context, path string, param *url.Values) (r
 	if param != nil {
 		u.RawQuery = param.Encode()
 	}
-	logger.Debugw(
-		"get",
-		"url", u.String(),
-	)
 	r, err := c.newRequest(ctx, "GET", u.String(), nil)
 	if err != nil {
 		return
@@ -132,6 +133,7 @@ func (c *Client) getJSON(ctx context.Context, path string, param *url.Values) (r
 	logger.Debugw(
 		"recv",
 		"body", string(body),
+		"elapsed", time.Since(startTime),
 	)
 	if !gjson.ValidBytes(body) {
 		err = APIError{Message: "invalid json:" + string(body)}
