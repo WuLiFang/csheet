@@ -14,10 +14,13 @@ func (r *queryResolver) CgteamworkFlows(ctx context.Context, database string, pi
 	var modules = map[string]struct{}{}
 
 	var pipelinesOptions []cgteamwork.PipelinesOption
+	var ret = []cgteamwork.Flow{}
 	var err error
 	if pipeline == nil {
 		modules["asset"] = struct{}{}
 		modules["shot"] = struct{}{}
+	} else if len(pipeline) == 0 {
+		return ret, nil
 	} else {
 		pipelinesOptions = append(pipelinesOptions, cgteamwork.PipelinesOptionFilter(cgteamwork.F("entity_name").In(pipeline)))
 	}
@@ -49,7 +52,6 @@ func (r *queryResolver) CgteamworkFlows(ctx context.Context, database string, pi
 	for _, i := range pipelines {
 		modules[i.Module.Name] = struct{}{}
 	}
-	var ret = []cgteamwork.Flow{}
 	for module := range modules {
 		s := cgteamwork.Select(database, module).WithModuleType("task")
 		flows, err := s.Flows(ctx)
