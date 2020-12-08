@@ -1,8 +1,7 @@
 <template lang="pug">
-  span(:class="staticClass"
-    :style=`{
-      backgroundColor: status ? status.color : undefined,
-    }`
+  span(
+    :class="staticClass"
+    :style=`style`
   ) {{ text }}
 </template>
 
@@ -11,6 +10,8 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import cgteamworkStatusesQuery, {
   CGTeamworkStatus,
 } from '@/graphql/queries/cgteamworkStatuses';
+import parseColor from '@/utils/parseColor';
+import getColorLightness from '@/utils/getColorLightness';
 
 @Component<CGTeamworkTaskStatus>({
   apollo: {
@@ -51,6 +52,19 @@ export default class CGTeamworkTaskStatus extends Vue {
       default:
         return '';
     }
+  }
+
+  get style(): Record<string, string | undefined> {
+    if (!this.status) {
+      return {};
+    }
+    return {
+      backgroundColor: this.status.color,
+      color:
+        getColorLightness(parseColor(this.status.color)) > 0.5
+          ? '#000000'
+          : '#ffffff',
+    };
   }
 }
 </script>
