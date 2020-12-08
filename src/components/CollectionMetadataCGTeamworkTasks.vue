@@ -6,20 +6,13 @@
       thead
         tr
           th(rowspan="2") 流程
-          th(:colspan="stages.length") 阶段
+          th(:colspan="stages.length") 状态
           th(rowspan="2") 制作者
         tr
           th(
             v-for="i in stages"
-            class="cursor-pointer hover:bg-gray-800"
-            @click.stop="preferredStage = i"
-            :class=`{
-              "opacity-75": preferredStage != i,
-            }`
-          ) {{$te(`cgteamwork-stage.${i}`) ? $t(`cgteamwork-stage.${i}`) : i }}
-            p.text-xs.text-gray-500(
-              v-if="preferredStage == i"
-            ) 总览显示
+            class="text-gray-500"
+          ) {{ $te(`cgteamwork-stage.${i}`) ? $t(`cgteamwork-stage.${i}`) : i }}
       tbody
         tr(v-for="i in tasks")
           td {{i.pipeline}}
@@ -42,7 +35,6 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { uniq, sortBy, uniqBy } from 'lodash';
-import db from '@/db';
 import CGTeamworkTaskStatus from './cgteamwork/CGTeamworkTaskStatus.vue';
 import { show } from '@/modal';
 import CGTeamworkFlowFormDrawer from './cgteamwork/CGTeamworkFlowFormDrawer.vue';
@@ -106,15 +98,6 @@ export default class CollectionMetadataCGTeamworkTasks extends Vue {
   }[] {
     return sortBy(JSON.parse(this.value), 'pipeline');
   }
-
-  get preferredStage(): string {
-    return db.preference.get('cgteamworkStage');
-  }
-
-  set preferredStage(v: string) {
-    db.preference.set('cgteamworkStage', v);
-  }
-
 
   get stages(): string[] {
     return uniq([

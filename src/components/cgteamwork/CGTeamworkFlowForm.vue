@@ -73,7 +73,6 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import db from '@/db';
 import client, { CGTeamworkOriginPrefix } from '@/client';
 import { Collection } from '@/graphql/types/Collection';
 import { filePathFormat } from '@/const';
@@ -132,7 +131,7 @@ export default class CGTeamworkFlowForm extends Vue {
   formData = {
     username: '',
     password: '',
-    stage: db.preference.get('cgteamworkStage'),
+    stage: '',
     status: '',
     pipeline: '',
     message: {

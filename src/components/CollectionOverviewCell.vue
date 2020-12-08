@@ -113,9 +113,10 @@ export default class CollectionOverviewCell extends Vue {
       return '';
     }
     for (const i of cast.array(JSON.parse(data))) {
-      const status = i?.status?.[db.preference.get('cgteamworkStage')];
-      if ((statusPriority[status] ?? 0) > (statusPriority[ret] ?? 0)) {
-        ret = status;
+      for (const status of Object.values(i?.status).map(cast.string)) {
+        if ((statusPriority[status] ?? 0) > (statusPriority[ret] ?? 0)) {
+          ret = status;
+        }
       }
     }
     return ret;
