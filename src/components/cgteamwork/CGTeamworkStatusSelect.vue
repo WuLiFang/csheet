@@ -3,6 +3,7 @@
     ref="select"
     v-model="$_value"
     :options="options"
+    :loading="loadingCount > 0"
     v-bind="$attrs"
   )
     template(#default="{ value }")
@@ -62,6 +63,8 @@ export default class CGTeamworkStatusSelect extends Mixins(
 
   cgteamworkFlows?: CGTeamworkFlow[];
   statuses?: CGTeamworkStatus[];
+
+  loadingCount = 0;
 
   get options(): string[] {
     return unionBy(

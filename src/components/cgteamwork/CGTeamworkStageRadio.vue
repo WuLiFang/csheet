@@ -3,6 +3,7 @@
     v-model="$_value"
     :options="options"
     v-bind="$attrs"
+    :loading="loadingCount > 0"
   )
 </template>
 
@@ -55,6 +56,8 @@ export default class CGTeamworkStageRadio extends Mixins(
   variables!: cgteamworkFlowsVariables;
 
   cgteamworkFlows?: CGTeamworkFlow[];
+
+  loadingCount = 0;
 
   get options(): Entry<string>[] {
     return unionBy(
