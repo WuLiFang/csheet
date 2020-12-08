@@ -223,9 +223,11 @@ func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error)
 		return
 	}
 	var fields = []string{
-		keyField, "task.artist", "task.pipeline",
-		"task.image", "task.submit_file_path",
-		"task.leader_status", "task.director_status", "task.client_status",
+		keyField,
+		"task.artist",
+		"task.pipeline",
+		"task.image",
+		"task.submit_file_path",
 	}
 	var statusFieldIDs = map[string]struct{}{}
 	flows, err := s.Flows(ctx)
