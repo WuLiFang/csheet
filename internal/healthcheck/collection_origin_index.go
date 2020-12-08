@@ -14,7 +14,7 @@ import (
 func CollectionOriginIndex() (err error) {
 	logger := logging.Logger("healthcheck").With(zap.String("func", "CollectionOriginIndex"))
 	logger.Info("start")
-	err = db.Update(func(txn *db.Txn) (err error) {
+	err = db.View(func(txn *db.Txn) (err error) {
 		prefix := db.IndexCollectionOrigin.Key()
 		cur := txn.NewIterator(badger.IteratorOptions{
 			Prefix: prefix,
@@ -38,7 +38,7 @@ func CollectionOriginIndex() (err error) {
 				if errors.Is(err, db.ErrKeyNotFound) {
 					logger.Info("unused")
 					deletedCount++
-					return txn.Delete(key)
+					return db.Delete(key)
 				}
 				if err != nil {
 					return
