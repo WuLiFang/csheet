@@ -9,6 +9,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/handler/apollotracing"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/handler/lru"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
@@ -27,7 +28,9 @@ import (
 func apiHandler() gin.HandlerFunc {
 
 	server := handler.New(api.NewExecutableSchema())
-
+	if config.APITracingEnabled {
+		server.Use(apollotracing.Tracer{})
+	}
 	ws := transport.Websocket{}
 	ws.KeepAlivePingInterval = 10 * time.Second
 	ws.Upgrader.CheckOrigin = func(r *http.Request) bool {

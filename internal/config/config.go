@@ -39,5 +39,6 @@ var (
 	CORSHosts                   = strings.Split(getenv.String("CSHEET_CORS_HOSTS", ""), ",")
 	AdminToken                  = getenv.String("CSHEET_ADMIN_TOKEN", "")
 	DisableWebP                 = getenv.Bool("CSHEET_DISABLE_WEBP", false)
+	APITracingEnabled           = getenv.Bool("CSHEET_API_TRACING_ENABLED", false)
 	UseXForwardedFor            = getenv.Bool("USE_X_FORWARDED_FOR", false)
 )

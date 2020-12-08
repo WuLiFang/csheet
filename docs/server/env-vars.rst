@@ -100,6 +100,10 @@ CSHEET_DISABLE_WEBP
 
   禁用 WebP 图像格式，用 PNG 或者 JPG 代替。
 
+CSHEET_API_TRACING_ENABLED
+
+  为 API 启用 `apollo-tracing <https://github.com/apollographql/apollo-tracing>`_
+
 USE_X_FORWARDED_FOR
 
   是否使用 X-Forwarded-For 表头来记录 IP。
