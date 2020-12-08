@@ -12,6 +12,7 @@ import (
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/tidwall/gjson"
+	"go.uber.org/zap"
 )
 
 func encodeAPIPayload(data interface{}) (string, error) {
@@ -69,11 +70,11 @@ func (c *Client) callAPI(ctx context.Context, param interface{}) (data gjson.Res
 		err = ErrNotConfigured
 		return
 	}
-	var logger = logging.For(ctx).Logger("cgteamwork.api").Sugar()
+	var logger = logging.For(ctx).Logger("cgteamwork.api")
 	var startTime = time.Now()
-	logger.Debugw(
+	logger.Debug(
 		"send",
-		"param", param,
+		zap.Any("param", param),
 	)
 	payload, err := encodeAPIPayload(param)
 	if err != nil {
@@ -93,10 +94,10 @@ func (c *Client) callAPI(ctx context.Context, param interface{}) (data gjson.Res
 	if err != nil {
 		return
 	}
-	logger.Debugw(
+	logger.Debug(
 		"recv",
-		"body", string(body),
-		"elapsed", time.Since(startTime),
+		zap.ByteString("body", body),
+		zap.Duration("elapsed", time.Since(startTime)),
 	)
 	return parseAPIResult(body)
 }
@@ -106,12 +107,12 @@ func (c *Client) getJSON(ctx context.Context, path string, param *url.Values) (r
 		err = ErrNotConfigured
 		return
 	}
-	var logger = logging.For(ctx).Logger("cgteamwork.api").Sugar()
+	var logger = logging.For(ctx).Logger("cgteamwork.api")
 	var startTime = time.Now()
-	logger.Debugw(
+	logger.Debug(
 		"get",
-		"path", path,
-		"param", param,
+		zap.String("path", path),
+		zap.Any("param", param),
 	)
 	var u = c.urlWithPath(path)
 	if param != nil {
@@ -130,10 +131,10 @@ func (c *Client) getJSON(ctx context.Context, path string, param *url.Values) (r
 	if err != nil {
 		return
 	}
-	logger.Debugw(
+	logger.Debug(
 		"recv",
-		"body", string(body),
-		"elapsed", time.Since(startTime),
+		zap.ByteString("body", body),
+		zap.Duration("elapsed", time.Since(startTime)),
 	)
 	if !gjson.ValidBytes(body) {
 		err = APIError{Message: "invalid json:" + string(body)}
