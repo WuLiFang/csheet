@@ -36,6 +36,12 @@ import Select from '@/components/global/Select.vue';
       variables() {
         return this.variables;
       },
+      skip() {
+        if (this.variables.pipeline?.length === 0) {
+          return true;
+        }
+        return false;
+      },
     }),
 
     statuses: cgteamworkStatusesQuery({}),

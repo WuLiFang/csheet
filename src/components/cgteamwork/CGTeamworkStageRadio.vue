@@ -23,6 +23,12 @@ import { unionBy } from 'lodash';
       variables() {
         return this.variables;
       },
+      skip() {
+        if (this.variables.pipeline?.length === 0) {
+          return true;
+        }
+        return false;
+      },
     }),
   },
   mounted() {

@@ -34,7 +34,7 @@
       CGTeamworkStageRadio(
         class="w-64"
         v-model="formData.stage"
-        :variables="{ database, pipeline: [formData.pipeline] }"
+        :variables="{ database, pipeline: formData.pipeline ? [formData.pipeline] : [] }"
         required
       )
     fieldset.block(
@@ -56,7 +56,7 @@
         class="w-64"
         v-model="formData.status"
         :stage="formData.stage"
-        :variables="{ database, pipeline: [formData.pipeline] }"
+        :variables="{ database, pipeline: formData.pipeline ? [formData.pipeline] : [] }"
         required
       )
     CGTeamworkMessageEditor(
