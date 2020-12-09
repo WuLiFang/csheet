@@ -173,7 +173,13 @@ import defaults from '@/components/global/defaults';
           }
         },
         blur: () => this.blur(),
-        focus: () => this.focus(),
+        focus: (e: Event) => {
+          this.focus();
+          const el = e.target;
+          if (el instanceof HTMLInputElement) {
+            el.setSelectionRange(0, el.value.length);
+          }
+        },
       },
     };
   },
