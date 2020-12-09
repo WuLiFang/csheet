@@ -9,10 +9,11 @@
     "CHECK": "检查",
     "CLOSE": "关闭",
     "RETAKE": "返修",
-    "UNSET": "默认",
+    "UNSET": "未设置",
     "WAIT": "等待",
     "CHANGE_STATUS": "变更状态",
-    "SUBMIT": "提交"
+    "SUBMIT": "提交",
+    "ACTIVE": "活跃"
   },
   "presentation-metadata": {
     "file-size": "文件大小",

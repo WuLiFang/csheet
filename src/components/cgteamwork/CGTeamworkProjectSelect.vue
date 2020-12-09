@@ -20,10 +20,11 @@
             v-if="location !== 'output'"
           )
             span {{ project.codename }}
-            span(
+            CGTeamworkStatusWidget(
               class="px-1 rounded-sm text-white float-right"
               :class="statusClass(project.status)"
-            ) {{ project.status }}
+              :value="project.status"
+            )
           p {{ project.name }}
         template(v-else-if="loadingCount > 0")
           FaIcon(
@@ -51,11 +52,16 @@ import { orderBy } from 'lodash';
 import Select from '@/components/global/Select.vue';
 import queries from '@/graphql/queries';
 import { CGTeamworkProject } from '@/graphql/queries/cgteamworkProjects';
+import CGTeamworkStatusWidget from '@/components/cgteamwork/CGTeamworkStatusWidget.vue';
 
 const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
 
+
 @Component<CGTeamworkProjectSelect>({
   inheritAttrs: false,
+  components:{
+    CGTeamworkStatusWidget
+  },
   apollo: {
     matchedProjects: queries.vue.cgteamworkProjects<CGTeamworkProjectSelect>({
       variables() {
