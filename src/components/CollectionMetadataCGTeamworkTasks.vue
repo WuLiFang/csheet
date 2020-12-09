@@ -21,9 +21,11 @@
             class="cursor-pointer hover:bg-gray-800 group relative"
             @click="showFlowDrawer(stage, i.pipeline)"
           )
-            CGTeamworkTaskStatus(
-              class="inline-block w-full h-full"
-              :value="i.status[stage]")
+            template(v-if="stage in i.status")
+              CGTeamworkTaskStatus(
+                class="inline-block w-full h-full"
+                :value="i.status[stage]"
+              )
             FaIcon(
               class="hidden group-hover:block absolute object-contain h-full top-0 right-0 p-1"
               name="edit"
