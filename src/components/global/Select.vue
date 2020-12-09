@@ -23,7 +23,6 @@
               .inline-block(
                 :key="i.key"
                 class="border bg-gray-200 pl-1 pr-6 mr-1 rounded relative"
-                class="leading-8"
               )
                 slot(v-bind="entryContext(i, 'output')")
                   span {{ i.label != null ? i.label : i.value }}
@@ -150,16 +149,26 @@ import defaults from '@/components/global/defaults';
           switch (toHotKey(e)) {
             case 'ArrowUp':
               e.preventDefault();
-              this.selectHighlight(-1);
+              this.offsetHighlight(-1);
+              if (!this.multiple) {
+                this.toggle(this.highlight, true);
+              }
               break;
             case 'ArrowDown':
               e.preventDefault();
-              this.selectHighlight(1);
+              this.offsetHighlight(1);
+              if (!this.multiple) {
+                this.toggle(this.highlight, true);
+              }
               break;
             case 'Enter':
               e.preventDefault();
-              this.selectHighlight();
-              this.blur();
+              if (!this.multiple) {
+                this.toggle(this.highlight, true);
+                this.blur();
+              } else {
+                this.toggle(this.highlight);
+              }
               break;
           }
         },
@@ -238,8 +247,8 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
   @Prop({ type: String })
   dropdownClass?: string;
 
-  @Prop({ type: String })
-  outputClass?: string;
+  @Prop({ type: String, default: 'h-full' })
+  outputClass!: string;
 
   @Prop({ type: String, default: () => defaults.select.highlightClass })
   highlightClass!: string;
@@ -267,7 +276,10 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
   }
 
   set values(v: unknown[]) {
-    this.$emit('input', this.multiple ? v : v[0] ?? this.nullValue);
+    this.$emit(
+      'input',
+      this.multiple && v.length > 0 ? v : v[0] ?? this.nullValue
+    );
   }
 
   get optionEntries(): Entry<unknown>[] {
@@ -308,7 +320,7 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
       });
   }
 
-  selectHighlight(offset = 0): void {
+  offsetHighlight(offset: number): void {
     if (!this.optionEntries) {
       return;
     }
@@ -324,7 +336,6 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
     if (!v) {
       return;
     }
-    this.$_value = v.value;
     this.highlight = v.key;
     this.scrollToHighlight();
   }
@@ -398,7 +409,7 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
 
   clear(): void {
     this.selectedKeys = new Set();
-    this.$emit("clear")
+    this.$emit('clear');
   }
 
   protected validateRequired(): void {
