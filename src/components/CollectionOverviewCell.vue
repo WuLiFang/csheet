@@ -36,7 +36,7 @@ import { Collection } from '../graphql/types/Collection';
 import Presentation from './Presentation.vue';
 import * as cast from 'cast-unknown';
 import { sortBy } from 'lodash';
-import CGTeamworkTaskStatus from './cgteamwork/CGTeamworkTaskStatus.vue';
+import CGTeamworkStatusWidget from './cgteamwork/CGTeamworkStatusWidget.vue';
 import db from '@/db';
 import { CreateElement, VNode } from 'vue';
 import {
@@ -46,7 +46,7 @@ import {
 import { filePathFormat } from '@/const';
 
 @Component<CollectionOverviewCell>({
-  components: { Presentation, CGTeamworkTaskStatus },
+  components: { Presentation, CGTeamworkStatusWidget },
   apollo: {
     node: {
       query: require('@/graphql/queries/collectionNode.gql'),
@@ -172,7 +172,7 @@ export default class CollectionOverviewCell extends Vue {
 
   renderTopRight(h: CreateElement): VNode | undefined {
     if (this.cgteamworkTaskStatus) {
-      return h(CGTeamworkTaskStatus, {
+      return h(CGTeamworkStatusWidget, {
         staticClass: 'rounded-sm px-2',
         props: { value: this.cgteamworkTaskStatus },
       });

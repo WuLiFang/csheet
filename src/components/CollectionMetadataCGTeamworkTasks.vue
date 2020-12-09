@@ -22,7 +22,7 @@
             @click="showFlowDrawer(stage, i.pipeline)"
           )
             template(v-if="stage in i.status")
-              CGTeamworkTaskStatus(
+              CGTeamworkStatusWidget(
                 class="inline-block w-full h-full"
                 :value="i.status[stage]"
               )
@@ -37,7 +37,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { uniq, sortBy, uniqBy } from 'lodash';
-import CGTeamworkTaskStatus from './cgteamwork/CGTeamworkTaskStatus.vue';
+import CGTeamworkStatusWidget from './cgteamwork/CGTeamworkStatusWidget.vue';
 import { show } from '@/modal';
 import CGTeamworkFlowFormDrawer from './cgteamwork/CGTeamworkFlowFormDrawer.vue';
 import 'vue-awesome/icons/edit';
@@ -73,7 +73,7 @@ import { CGTeamworkFlow } from '@/graphql/queries/cgteamworkFlows';
     }),
   },
   components: {
-    CGTeamworkTaskStatus,
+    CGTeamworkStatusWidget,
   },
 })
 export default class CollectionMetadataCGTeamworkTasks extends Vue {

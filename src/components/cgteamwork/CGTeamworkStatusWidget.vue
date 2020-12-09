@@ -12,12 +12,12 @@ import parseColor from '@/utils/parseColor';
 import getColorLightness from '@/utils/getColorLightness';
 import queries from '@/graphql/queries';
 
-@Component<CGTeamworkTaskStatus>({
+@Component<CGTeamworkStatusWidget>({
   apollo: {
-    statuses: queries.vue.cgteamworkStatuses<CGTeamworkTaskStatus>({}),
+    statuses: queries.vue.cgteamworkStatuses<CGTeamworkStatusWidget>({}),
   },
 })
-export default class CGTeamworkTaskStatus extends Vue {
+export default class CGTeamworkStatusWidget extends Vue {
   @Prop({ type: String, required: true })
   value!: string;
 

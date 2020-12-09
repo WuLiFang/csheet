@@ -7,7 +7,7 @@
     v-bind="$attrs"
   )
     template(#default="{ value }")
-      CGTeamworkTaskStatus.inline-block(
+      CGTeamworkStatusWidget.inline-block(
         class="w-full text-center"
         :value="value"
       )
@@ -21,7 +21,7 @@ import {
   CGTeamworkFlow,
 } from '@/graphql/queries/cgteamworkFlows';
 import { unionBy } from 'lodash';
-import CGTeamworkTaskStatus from '@/components/cgteamwork/CGTeamworkTaskStatus.vue';
+import CGTeamworkStatusWidget from '@/components/cgteamwork/CGTeamworkStatusWidget.vue';
 import { CGTeamworkStatus } from '@/graphql/queries/cgteamworkStatuses';
 import Select from '@/components/global/Select.vue';
 import queries from '@/graphql/queries';
@@ -29,7 +29,7 @@ import queries from '@/graphql/queries';
 @Component<CGTeamworkStatusSelect>({
   inheritAttrs: false,
   components: {
-    CGTeamworkTaskStatus,
+    CGTeamworkStatusWidget,
   },
   apollo: {
     cgteamworkFlows: queries.vue.cgteamworkFlows<CGTeamworkStatusSelect>({

@@ -8,7 +8,7 @@
         v-show="!hidePipeline"
         class="mx-1"
       ) {{value.pipeline}}
-      CGTeamworkTaskStatus.inline-block(
+      CGTeamworkStatusWidget.inline-block(
         class="px-1 m-1 rounded-sm w-24 text-center"
         :value="value.type"
       )
@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import CGTeamworkTaskStatus from './CGTeamworkTaskStatus.vue';
+import CGTeamworkStatusWidget from './CGTeamworkStatusWidget.vue';
 import DOMPurify from 'dompurify';
 import { show } from '@/modal';
 import 'vue-awesome/icons/trash';
@@ -59,7 +59,7 @@ export interface CGTeamworkNoteListItemValue {
 
 @Component<CGTeamworkNoteListItem>({
   components: {
-    CGTeamworkTaskStatus,
+    CGTeamworkStatusWidget,
   },
 })
 export default class CGTeamworkNoteListItem extends Vue {
