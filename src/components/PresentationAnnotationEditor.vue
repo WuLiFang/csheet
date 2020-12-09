@@ -13,7 +13,6 @@ import { SVGEditor } from '@/svg-editor';
 import PolylinePainter from '@/svg-editor/painters/polyline';
 import RectanglePainter from '@/svg-editor/painters/rectangle';
 import EllipsePainter from '@/svg-editor/painters/ellipse';
-import client from '@/client';
 import { filePathFormat } from '@/const';
 import {
   presentationNodeVariables,
@@ -31,6 +30,7 @@ import iterateHTMLCollection from '@/svg-editor/utils/iterateHTMLCollection';
 import { debounce, DebouncedFunc } from 'lodash';
 import { TextPainter } from '@/svg-editor/painters/text';
 import db from '@/db';
+import mutations from '@/graphql/mutations';
 
 type PainterName =
   | 'null'
@@ -341,7 +341,7 @@ export default class PresentationAnnotationEditor extends Vue {
         return;
       }
 
-      await client.presentation.updateMetadata({
+      await mutations.updatePresentationMetadata({
         input: {
           data: [
             {

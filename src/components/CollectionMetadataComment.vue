@@ -26,8 +26,8 @@
 import { Component, Vue, Prop } from 'vue-property-decorator';
 
 import { Collection } from '../graphql/types/Collection';
-import client from '@/client';
 import { debounce } from 'lodash';
+import mutations from '@/graphql/mutations';
 
 const METADATA_KEY = 'comment';
 
@@ -90,7 +90,7 @@ export default class CollectionMetadataComment extends Vue {
     }
     this.loadingCount += 1;
     try {
-      await client.collection.updateMetadata({
+      await mutations.updateCollectionMetadata({
         input: {
           data: [
             {

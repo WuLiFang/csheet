@@ -16,16 +16,15 @@
 <script lang="ts">
 import { Component, Mixins, Prop } from 'vue-property-decorator';
 import getVModelMixin from '@/mixins/VModelMixinV2';
-import cgteamworkFlowsQuery, {
+import {
   cgteamworkFlowsVariables,
   CGTeamworkFlow,
 } from '@/graphql/queries/cgteamworkFlows';
 import { unionBy } from 'lodash';
 import CGTeamworkTaskStatus from '@/components/cgteamwork/CGTeamworkTaskStatus.vue';
-import cgteamworkStatusesQuery, {
-  CGTeamworkStatus,
-} from '@/graphql/queries/cgteamworkStatuses';
+import { CGTeamworkStatus } from '@/graphql/queries/cgteamworkStatuses';
 import Select from '@/components/global/Select.vue';
+import queries from '@/graphql/queries';
 
 @Component<CGTeamworkStatusSelect>({
   inheritAttrs: false,
@@ -33,7 +32,7 @@ import Select from '@/components/global/Select.vue';
     CGTeamworkTaskStatus,
   },
   apollo: {
-    cgteamworkFlows: cgteamworkFlowsQuery<CGTeamworkStatusSelect>({
+    cgteamworkFlows: queries.vue.cgteamworkFlows<CGTeamworkStatusSelect>({
       variables() {
         return this.variables;
       },
@@ -45,7 +44,7 @@ import Select from '@/components/global/Select.vue';
       },
     }),
 
-    statuses: cgteamworkStatusesQuery({}),
+    statuses: queries.vue.cgteamworkStatuses({}),
   },
 })
 export default class CGTeamworkStatusSelect extends Mixins(

@@ -7,15 +7,14 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import cgteamworkStatusesQuery, {
-  CGTeamworkStatus,
-} from '@/graphql/queries/cgteamworkStatuses';
+import { CGTeamworkStatus } from '@/graphql/queries/cgteamworkStatuses';
 import parseColor from '@/utils/parseColor';
 import getColorLightness from '@/utils/getColorLightness';
+import queries from '@/graphql/queries';
 
 @Component<CGTeamworkTaskStatus>({
   apollo: {
-    statuses: cgteamworkStatusesQuery<CGTeamworkTaskStatus>({}),
+    statuses: queries.vue.cgteamworkStatuses<CGTeamworkTaskStatus>({}),
   },
 })
 export default class CGTeamworkTaskStatus extends Vue {

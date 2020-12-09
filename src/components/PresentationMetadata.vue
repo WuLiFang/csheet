@@ -55,7 +55,7 @@ import formatFileSize from '@/utils/formatFileSize';
 import formatDuration from '@/utils/formatDuration';
 import parseFirstFrame from '@/utils/parseFirstFrame';
 import toDigitGrouped from 'to-digit-grouped';
-import client from '@/client';
+import mutations from "@/graphql/mutations"
 
 @Component<PresentationMetadata>({
   mounted() {
@@ -152,7 +152,7 @@ export default class PresentationMetadata extends Vue {
   }
 
   async submit(): Promise<void> {
-    await client.presentation.updateMetadata({
+    await mutations.updatePresentationMetadata({
       input: {
         data: [
           {

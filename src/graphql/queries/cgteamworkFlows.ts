@@ -1,14 +1,31 @@
 // Code Generated from [base.ts.gotmpl array.gotmpl], DO NOT EDIT.
-
-import { cgteamworkFlows, cgteamworkFlowsVariables } from '@/graphql/types/cgteamworkFlows';
-import { OperationVariables } from 'apollo-client';
+import {
+  cgteamworkFlows,
+  cgteamworkFlowsVariables,
+} from '@/graphql/types/cgteamworkFlows';
+import {
+  OperationVariables,
+  QueryOptions,
+  ApolloQueryResult,
+} from 'apollo-client';
 import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
-import { apolloClient } from "@/client"
+import { apolloClient } from '@/client';
 
 export { cgteamworkFlowsVariables, cgteamworkFlows };
 export type CGTeamworkFlow = NonNullable<cgteamworkFlows['cgteamworkFlows']>[0];
 
-export default function cgteamworkFlowsQuery<V>(
+export async function query(
+  variables: cgteamworkFlowsVariables,
+  options?: Omit<QueryOptions<cgteamworkFlowsVariables>, 'query' | 'variables'>
+): Promise<ApolloQueryResult<cgteamworkFlows>> {
+  return await apolloClient.query<cgteamworkFlows, cgteamworkFlowsVariables>({
+    ...options,
+    query: require('./cgteamworkFlows.gql'),
+    variables,
+  });
+}
+
+export function vueQuery<V>(
   o: Omit<
     VueApolloQueryDefinition<cgteamworkFlows, cgteamworkFlowsVariables>,
     'query' | 'update'
@@ -24,8 +41,13 @@ export default function cgteamworkFlowsQuery<V>(
   } as VueApolloQueryDefinition<cgteamworkFlows, OperationVariables>;
 }
 
-export async function find(variables: cgteamworkFlowsVariables): Promise<CGTeamworkFlow[]> {
-  const { data } = await apolloClient.query<cgteamworkFlows, cgteamworkFlowsVariables>({
+export async function find(
+  variables: cgteamworkFlowsVariables
+): Promise<CGTeamworkFlow[]> {
+  const { data } = await apolloClient.query<
+    cgteamworkFlows,
+    cgteamworkFlowsVariables
+  >({
     query: require('./cgteamworkFlows.gql'),
     variables,
   });

@@ -119,7 +119,7 @@ const linkErrorAfterWare: ApolloLink = onError(
 // https://www.apollographql.com/docs/react/data/fragments/
 const fragmentMatcher: IntrospectionFragmentMatcher = new IntrospectionFragmentMatcher(
   {
-    introspectionQueryResultData: require('@/../fragment-types.json'),
+    introspectionQueryResultData: require('@/graphql/fragment-types.json'),
   }
 );
 

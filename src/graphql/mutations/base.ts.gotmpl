@@ -1,0 +1,36 @@
+{{- /*
+Accept data:
+    Name: operation name.
+*/ -}}
+
+// Code Generated from {{ templateFiles }}, DO NOT EDIT.
+import { {{.Name}}, {{- if not .NoVariables }}{{.Name}}Variables{{end}} } from '@/graphql/types/{{.Name}}';
+import { FetchResult } from "apollo-link"
+import { MutationOptions } from "apollo-client"
+import { apolloClient } from "@/client"
+{{- block "import" . }}{{ end }}
+
+{{- if .NoVariables }}
+type {{.Name}}Variables = never;
+{{- end}}
+
+export { {{.Name}}Variables, {{.Name}} };
+
+{{- block "before" . }}{{ end }}
+
+export async function mutate(
+{{- if not .NoVariables }}
+  variables: {{ .Name }}Variables,
+{{- end}}
+  options?: Omit<MutationOptions<{{.Name}}, {{.Name}}Variables>, 'mutation' | 'variables'>,
+): Promise<FetchResult<{{ .Name }}>> {
+  return await apolloClient.mutate<{{ .Name }}, {{ .Name }}Variables>({
+    ...options,
+    mutation: require('./{{ .Name }}.gql'),
+{{- if not .NoVariables }}
+    variables,
+{{- end}}
+  });
+}
+
+{{- block "after" . }}{{ end }}

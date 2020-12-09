@@ -1,18 +1,37 @@
 // Code Generated from [base.ts.gotmpl node.gotmpl], DO NOT EDIT.
-
-import { collectionNode, collectionNodeVariables } from '@/graphql/types/collectionNode';
-import { OperationVariables } from 'apollo-client';
+import {
+  collectionNode,
+  collectionNodeVariables,
+} from '@/graphql/types/collectionNode';
+import {
+  OperationVariables,
+  QueryOptions,
+  ApolloQueryResult,
+} from 'apollo-client';
 import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
-import { apolloClient } from "@/client"
+import { apolloClient } from '@/client';
 
 export { collectionNodeVariables, collectionNode };
 export type Collection = collectionNode['node'] & { __typename: 'Collection' };
 
-function castNode(node: collectionNode['node'] | null | undefined ): Collection | undefined {
-    return node?.__typename === 'Collection' ? node : undefined;
+function castNode(
+  node: collectionNode['node'] | null | undefined
+): Collection | undefined {
+  return node?.__typename === 'Collection' ? node : undefined;
 }
 
-export default function collectionNodeQuery<V>(
+export async function query(
+  variables: collectionNodeVariables,
+  options?: Omit<QueryOptions<collectionNodeVariables>, 'query' | 'variables'>
+): Promise<ApolloQueryResult<collectionNode>> {
+  return await apolloClient.query<collectionNode, collectionNodeVariables>({
+    ...options,
+    query: require('./collectionNode.gql'),
+    variables,
+  });
+}
+
+export function vueQuery<V>(
   o: Omit<
     VueApolloQueryDefinition<collectionNode, collectionNodeVariables>,
     'query' | 'update'
@@ -32,10 +51,5 @@ export async function findById(id: string): Promise<Collection | undefined> {
   if (!id) {
     return;
   }
-  const { data } = await apolloClient.query<collectionNode, collectionNodeVariables>({
-    query: require('./collectionNode.gql'),
-    variables: { id },
-  });
-
-  return castNode(data.node);
+  return castNode((await query({ id })).data.node);
 }

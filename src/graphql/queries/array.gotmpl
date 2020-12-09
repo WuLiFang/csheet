@@ -2,10 +2,6 @@
 {{- .Item | default (regexReplaceAll "s$" .Name "" | upperFirst) }}
 {{- end }}
 
-{{- define "import" }}
-import { apolloClient } from "@/client"
-{{- end }}
-
 {{- define "before" }}
 export type {{ template "Item" . }} = NonNullable<{{ .Name }}['{{ .Name }}']>[0];
 {{- end }}
@@ -19,10 +15,16 @@ export type {{ template "Item" . }} = NonNullable<{{ .Name }}['{{ .Name }}']>[0]
 
 {{- define "after" }}
 
-export async function find(variables: {{ .Name }}Variables): Promise<{{ template "Item" . }}[]> {
+export async function find(
+{{- if not .NoVariables }}
+  variables: {{ .Name }}Variables,
+{{- end }}
+): Promise<{{ template "Item" . }}[]> {
   const { data } = await apolloClient.query<{{ .Name }}, {{ .Name }}Variables>({
     query: require('./{{ .Name }}.gql'),
+{{- if not .NoVariables }}
     variables,
+{{- end }}
   });
 
   return data.{{ .Name }} ?? [];

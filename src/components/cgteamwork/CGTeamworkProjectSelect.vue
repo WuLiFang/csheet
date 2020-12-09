@@ -47,17 +47,17 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator';
 import getVModelMixin from '../../mixins/VModelMixinV2';
-import { cgteamworkProjects_cgteamworkProjects as Project } from '../../graphql/types/cgteamworkProjects';
 import { orderBy } from 'lodash';
 import Select from '@/components/global/Select.vue';
-import cgteamworkProjectsQuery from '@/graphql/queries/cgteamworkProjects';
+import queries from '@/graphql/queries';
+import { CGTeamworkProject } from '@/graphql/queries/cgteamworkProjects';
 
 const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
 
 @Component<CGTeamworkProjectSelect>({
   inheritAttrs: false,
   apollo: {
-    matchedProjects: cgteamworkProjectsQuery<CGTeamworkProjectSelect>({
+    matchedProjects: queries.vue.cgteamworkProjects<CGTeamworkProjectSelect>({
       variables() {
         return {
           q: this.query || undefined,
@@ -65,7 +65,7 @@ const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
         };
       },
     }),
-    selectedProjects: cgteamworkProjectsQuery<CGTeamworkProjectSelect>({
+    selectedProjects: queries.vue.cgteamworkProjects<CGTeamworkProjectSelect>({
       variables() {
         return {
           database: [this.$_value],
@@ -98,10 +98,10 @@ export default class CGTeamworkProjectSelect extends Mixins(
   query = '';
   loadingCount = 0;
 
-  matchedProjects?: Project[];
-  selectedProjects?: Project[];
+  matchedProjects?: CGTeamworkProject[];
+  selectedProjects?: CGTeamworkProject[];
 
-  get projects(): Project[] {
+  get projects(): CGTeamworkProject[] {
     return [...(this.matchedProjects ?? []), ...(this.selectedProjects ?? [])];
   }
 
@@ -117,7 +117,7 @@ export default class CGTeamworkProjectSelect extends Mixins(
     this.$refs.select?.focus();
   }
 
-  protected getProject(database: string): Project | undefined {
+  protected getProject(database: string): CGTeamworkProject | undefined {
     return this.projects.find(i => i.database === database);
   }
 

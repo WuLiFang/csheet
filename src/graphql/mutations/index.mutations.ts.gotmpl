@@ -1,0 +1,22 @@
+{{- /*
+Accept data:
+    Files: operation file names.
+*/ -}}
+
+// Code Generated from {{ templateFiles }}, DO NOT EDIT.
+
+{{- define "stem" }}
+{{- $name := base . }}
+{{- $ext := ext $name }}
+{{- $name | substr 0 (sub (len $name) (len $ext) | int) }}
+{{- end }}
+
+{{- range .Files }}
+import { mutate as {{ template "stem" . }} } from "./{{ template "stem" . }}";
+{{- end }}
+
+export {
+{{- range .Files }}
+    {{ template "stem" . }},
+{{- end }}
+};

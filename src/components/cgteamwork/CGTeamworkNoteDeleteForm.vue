@@ -28,14 +28,14 @@
     button.form-button(
       class="w-full px-0 bg-red-600 hover:bg-red-500 inline-flex flex-center"
       @click="submit()"
-    ) 
+    )
       FaIcon.mx-1(name="trash")
       span 确定删除
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import client from '@/client';
+import mutations from '@/graphql/mutations';
 
 @Component<CGTeamworkNoteDeleteForm>({})
 export default class CGTeamworkNoteDeleteForm extends Vue {
@@ -48,7 +48,7 @@ export default class CGTeamworkNoteDeleteForm extends Vue {
   };
 
   async submit(): Promise<void> {
-    await client.collection.deleteCGTeamworkNote({
+    await mutations.deleteCGTeamworkNote({
       input: {
         id: [this.id],
         username: this.formData.username,

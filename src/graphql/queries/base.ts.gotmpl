@@ -4,17 +4,36 @@ Accept data:
 */ -}}
 
 // Code Generated from {{ templateFiles }}, DO NOT EDIT.
-
-import { {{.Name}}, {{.Name}}Variables } from '@/graphql/types/{{.Name}}';
-import { OperationVariables } from 'apollo-client';
+import { {{.Name}}, {{- if not .NoVariables }}{{.Name}}Variables{{end}} } from '@/graphql/types/{{.Name}}';
+import { OperationVariables, QueryOptions, ApolloQueryResult } from 'apollo-client';
 import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
+import { apolloClient } from "@/client"
 {{- block "import" . }}{{ end }}
+
+{{- if .NoVariables }}
+type {{.Name}}Variables = never;
+{{- end}}
 
 export { {{.Name}}Variables, {{.Name}} };
 
 {{- block "before" . }}{{ end }}
 
-export default function {{.Name}}Query<V>(
+export async function query(
+{{- if not .NoVariables }}
+  variables: {{ .Name }}Variables,
+{{- end }}
+  options?: Omit<QueryOptions<{{ .Name }}Variables>, 'query' | 'variables'>
+): Promise<ApolloQueryResult<{{ .Name }}>> {
+  return await apolloClient.query<{{ .Name }}, {{ .Name }}Variables>({
+    ...options,
+    query: require('./{{ .Name }}.gql'),
+{{- if not .NoVariables }}
+    variables,
+{{- end }}
+  });
+}
+
+export function vueQuery<V>(
   o: Omit<
     VueApolloQueryDefinition<{{.Name}}, {{.Name}}Variables>,
     'query' | 'update'

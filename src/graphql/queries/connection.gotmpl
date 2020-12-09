@@ -4,7 +4,6 @@
 
 {{- define "import" }}
 import extractNodes, { NodeType } from '@/utils/extractNodes';
-import { apolloClient } from "@/client"
 {{- end }}
 
 {{- define "before" }}
@@ -21,11 +20,6 @@ export type {{ template "Node" . }} = NodeType<{{ .Name }}['{{ .Name }}']>;
 {{- define "after" }}
 
 export async function find(variables: {{ .Name }}Variables): Promise<{{ template "Node" . }}[]> {
-  const { data } = await apolloClient.query<{{ .Name }}, {{ .Name }}Variables>({
-    query: require('./{{ .Name }}.gql'),
-    variables,
-  });
-
-  return extractNodes(data.{{ .Name }});
+  return extractNodes((await query(variables)).data.{{ .Name }});
 }
 {{- end }}

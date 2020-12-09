@@ -1,8 +1,8 @@
-.PHONY: default deploy-docs test run
+.PHONY: default deploy-docs test run src/graphql
 
 export CGO_ENABLED?=0
 
-default: docs/_build/html dist build
+default: src/graphql docs/_build/html dist build
 
 docs/_build/html: docs/_build/html/.git docs/* docs/*/*.rst docs/*/*/*.rst
 	$(MAKE) -C docs
@@ -22,11 +22,8 @@ pkg/api: pkg/api/*/*.gql gqlgen.yml
 	go generate ./pkg/api
 	touch pkg/api
 
-schema.json: pkg/api
-	go run ./scripts/generate-schema
-
-src/graphql/types: src/graphql/*/*.gql schema.json 
-	npm run codegen:graphql
+src/graphql:
+	$(MAKE) -C src/graphql
 
 dist: node_modules src/* src/*/*
 	npm run build

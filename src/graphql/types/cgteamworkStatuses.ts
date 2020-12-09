@@ -17,8 +17,3 @@ export interface cgteamworkStatuses_cgteamworkStatuses {
 export interface cgteamworkStatuses {
   cgteamworkStatuses: cgteamworkStatuses_cgteamworkStatuses[];
 }
-
-export interface cgteamworkStatusesVariables {
-  database: string;
-  pipeline?: string[] | null;
-}

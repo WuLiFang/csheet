@@ -57,7 +57,7 @@ import {
   collectionNode,
 } from '@/graphql/types/collectionNode';
 import CGTeamworkMessageEditor from '@/components/cgteamwork/CGTeamworkMessageEditor.vue';
-import client from '@/client';
+import mutations from '@/graphql/mutations';
 
 @Component<CGTeamworkNoteForm>({
   components: {
@@ -139,7 +139,7 @@ export default class CGTeamworkNoteForm extends Vue {
       return;
     }
     const id = this.id;
-    await client.collection.createCGTeamworkNote({
+    await mutations.createCGTeamworkNote({
       input: {
         username: this.formData.username,
         password: this.formData.password,

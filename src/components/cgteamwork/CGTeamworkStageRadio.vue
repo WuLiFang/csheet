@@ -11,16 +11,17 @@
 import { Component, Mixins, Prop } from 'vue-property-decorator';
 import getVModelMixin from '@/mixins/VModelMixinV2';
 import { Entry } from '@/components/global/entry';
-import cgteamworkFlowsQuery, {
+import {
   cgteamworkFlowsVariables,
   CGTeamworkFlow,
 } from '@/graphql/queries/cgteamworkFlows';
 import { unionBy } from 'lodash';
+import queries from '@/graphql/queries';
 
 @Component<CGTeamworkStageRadio>({
   inheritAttrs: false,
   apollo: {
-    cgteamworkFlows: cgteamworkFlowsQuery<CGTeamworkStageRadio>({
+    cgteamworkFlows: queries.vue.cgteamworkFlows<CGTeamworkStageRadio>({
       variables() {
         return this.variables;
       },

@@ -41,17 +41,14 @@ import CGTeamworkTaskStatus from './cgteamwork/CGTeamworkTaskStatus.vue';
 import { show } from '@/modal';
 import CGTeamworkFlowFormDrawer from './cgteamwork/CGTeamworkFlowFormDrawer.vue';
 import 'vue-awesome/icons/edit';
-import cgteamworkFlowsQuery, {
-  CGTeamworkFlow,
-} from '@/graphql/queries/cgteamworkFlows';
-import collectionNodeQuery, {
-  Collection,
-} from '@/graphql/queries/collectionNode';
 import { CGTeamworkOriginPrefix } from '@/client';
+import queries from '@/graphql/queries';
+import { Collection } from '@/graphql/queries/collectionNode';
+import { CGTeamworkFlow } from '@/graphql/queries/cgteamworkFlows';
 
 @Component<CollectionMetadataCGTeamworkTasks>({
   apollo: {
-    flows: cgteamworkFlowsQuery<CollectionMetadataCGTeamworkTasks>({
+    flows: queries.vue.cgteamworkFlows<CollectionMetadataCGTeamworkTasks>({
       variables() {
         return {
           database: CGTeamworkOriginPrefix.parse(this.collection?.origin ?? '')
@@ -66,7 +63,7 @@ import { CGTeamworkOriginPrefix } from '@/client';
         return !this.collection;
       },
     }),
-    collection: collectionNodeQuery<CollectionMetadataCGTeamworkTasks>({
+    collection: queries.vue.collectionNode<CollectionMetadataCGTeamworkTasks>({
       variables() {
         return { id: this.id ?? '' };
       },

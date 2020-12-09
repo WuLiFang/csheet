@@ -73,7 +73,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import client, { CGTeamworkOriginPrefix } from '@/client';
+import { CGTeamworkOriginPrefix } from '@/client';
 import { Collection } from '@/graphql/types/Collection';
 import { filePathFormat } from '@/const';
 import {
@@ -84,6 +84,7 @@ import getCollectionPipelines from '@/client/utils/getCollectionPipelines';
 import CGTeamworkStageRadio from '@/components/cgteamwork/CGTeamworkStageRadio.vue';
 import CGTeamworkStatusSelect from '@/components/cgteamwork/CGTeamworkStatusSelect.vue';
 import CGTeamworkMessageEditor from '@/components/cgteamwork/CGTeamworkMessageEditor.vue';
+import mutations from '@/graphql/mutations';
 
 @Component<CGTeamworkFlowForm>({
   components: {
@@ -168,7 +169,7 @@ export default class CGTeamworkFlowForm extends Vue {
     }
     this.$el.submit();
     const id = this.id;
-    await client.collection.updateCGTeamworkFlow({
+    await mutations.updateCGTeamworkFlow({
       input: {
         username: this.formData.username,
         password: this.formData.password,
