@@ -32,7 +32,14 @@ type Options struct {
 var errEmptyKey = errors.New("collectionFromTask: empty key")
 
 func findPipelineByName(ctx context.Context, db string, pipeline string) (ret client.Pipeline, err error) {
-	res, err := client.Pipelines(ctx, db, client.PipelinesOptionFilter(client.F("entity_name").Equal(pipeline)))
+	res, err := client.Pipelines(
+		ctx,
+		db,
+		client.PipelinesOptionFilter(
+			client.F("entity_name").Equal(pipeline).
+				And(client.F("module").In([]string{"shot", "asset"})),
+		),
+	)
 	if err != nil {
 		return
 	}
