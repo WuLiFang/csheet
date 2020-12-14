@@ -2,6 +2,9 @@ try {
   if (Object.entries === undefined) {
     throw new Error('Object.entries is not supported');
   }
+  if (Array.prototype.flatMap === undefined) {
+    throw new Error('Array.prototype.flatMap is not supported');
+  }
   if (typeof CSS === 'undefined' || CSS.supports === undefined) {
     throw new Error('CSS.supports is not supported');
   }
