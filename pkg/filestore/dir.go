@@ -26,6 +26,6 @@ func pathByHash(filename string) (ret string, err error) {
 		return
 	}
 	v := hex.EncodeToString(h.Sum(nil))
-	ret = path.Join(v[:2], v[2:4], v[4:], filepath.Base(filename))
+	ret = path.Join("sha256", v[:2], v[2:4], v[4:], filepath.Base(filename))
 	return
 }
