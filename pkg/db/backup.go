@@ -2,12 +2,17 @@ package db
 
 import (
 	"io"
+	"runtime"
 
 	"github.com/WuLiFang/csheet/v6/pkg/db/migrations"
 )
 
 // Backup calls underling db.Backup
 func Backup(w io.Writer, since uint64) (uint64, error) {
+	err := db.Flatten(runtime.NumCPU())
+	if err != nil {
+		return 0, err
+	}
 	return db.Backup(w, since)
 }
 
