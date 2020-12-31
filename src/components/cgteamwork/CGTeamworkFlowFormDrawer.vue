@@ -4,17 +4,7 @@
     @after-enter="() => $refs.form.focus()"
     v-on="$listeners"
   )
-    header(
-      class="flex items-center"
-    )
-      button.form-button(
-        type="button"
-        @click="visible = false"
-      )
-        FaIcon(name="arrow-left")
-      h1.inline-block(
-        class="text-lg sm:text-xl font-semibold mx-2"
-      ) 更改 CGTeamwork 流程状态
+    template(#title) 更改 CGTeamwork 流程状态
     CGTeamworkFlowForm(
       ref="form"
       class="my-2"
@@ -26,7 +16,6 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import CGTeamworkFlowForm from './CGTeamworkFlowForm.vue';
-import 'vue-awesome/icons/arrow-left';
 
 @Component<CGTeamworkFlowFormDrawer>({
   inheritAttrs: false,

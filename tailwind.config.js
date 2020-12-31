@@ -11,6 +11,10 @@ module.exports = {
           close: '#000000',
         },
       },
+      backgroundColor: theme => ({
+        primary: theme('colors.gray.800'),
+        secondary: theme('colors.black'),
+      }),
       screens: {
         '2xl': '1440px',
       },
@@ -24,9 +28,9 @@ module.exports = {
         '128': '32rem',
       },
       cursor: {
-        "zoom-in": "zoom-in",
-        "zoom-out": "zoom-out"
-      }
+        'zoom-in': 'zoom-in',
+        'zoom-out': 'zoom-out',
+      },
     },
     customForms: theme => ({
       default: {
