@@ -11,3 +11,4 @@ deployments
 Dockerfile
 .travis.yml
 /storage
+/build

@@ -1,64 +1,54 @@
-
 FROM node:lts AS web
 
-ARG DEBIAN_FRONTEND=noninteractive
-ENV LANG=C.UTF-8
-RUN set -e
 RUN ping -c 1 google.com ||\
     npm_config_registry=http://registry.npm.taobao.org npx npm-mirror-set -g taobao &&\
     npm -g config list
-ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
 ARG NODEJS_ORG_MIRROR=http://npm.taobao.org/mirrors/node
 
 WORKDIR /app/
-COPY ./package*.json ./
-RUN npm ci
-COPY . .
 ARG RELEASE
 ENV CSHEET_RELEASE=${RELEASE}
-RUN npm run build
+COPY . .
+RUN set -ex\
+    && npm ci\
+    && npm run build\
+    && rm -rf node_modules/
 
-FROM golang:1 AS build
+FROM golang:1 AS server
 
-ARG DEBIAN_FRONTEND=noninteractive
-ENV LANG=C.UTF-8
-RUN set -e
+WORKDIR /app
+ENV GOPROXY=https://goproxy.cn,direct
+ENV GO111MODULES=on
+COPY ./ ./
+RUN set -ex \
+    && go test ./...\
+    && go get -v ./cmd/...\
+    && go clean -cache \
+    && go clean -modcache
+
+FROM debian:stable-slim as release
 
 ARG DEBIAN_MIRROR=http://mirrors.huaweicloud.com/debian
 RUN if [ ! -z $DEBIAN_MIRROR ]; then \
     sed -i "s@http://.\+\.debian\.org/debian@$DEBIAN_MIRROR@g" /etc/apt/sources.list && \
     cat /etc/apt/sources.list; \
     fi
-RUN apt-get update &&\
-    apt-get -y install ffmpeg &&\
-    ffmpeg -version &&\
-    apt-get clean
+RUN set -ex\
+    && apt-get update\
+    && apt-get install -y\
+        ffmpeg\
+    && ffmpeg -version\
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=web /app/dist dist
+COPY --from=server /go/bin/* /usr/bin/
+
+ARG RELEASE
+ENV CSHEET_ENV=production
+ENV CSHEET_RELEASE=${RELEASE}
 ENV TZ=Asia/Shanghai
 
-WORKDIR /app
-ENV GOPROXY=https://goproxy.cn,direct
-ENV GO111MODULES=on
-COPY go.mod .
-COPY go.sum .
-RUN go mod download
-COPY . .
-COPY --from=web /app/dist dist
-RUN go get -v ./cmd/...
-
-FROM build as test
-
-ARG CI=true
-RUN go test ./...
-
-FROM build as release
-
-ENV CSHEET_ENV=production
-RUN set +e
+LABEL release=${RELEASE}
 LABEL author=NateScarlet@Gmail.com
 EXPOSE 80
 CMD ["csheet"]
-
-ARG RELEASE
-ENV CSHEET_RELEASE=${RELEASE}
-LABEL release=${RELEASE}
-
