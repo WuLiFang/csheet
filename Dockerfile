@@ -40,6 +40,7 @@ RUN set -ex\
     && ffmpeg -version\
     && rm -rf /var/lib/apt/lists/*
 
+WORKDIR /app
 COPY --from=web /app/dist dist
 COPY --from=server /go/bin/* /usr/bin/
 
