@@ -1,9 +1,15 @@
 FROM node:lts AS web
 
-RUN ping -c 1 google.com ||\
-    npm_config_registry=http://registry.npm.taobao.org npx npm-mirror-set -g taobao &&\
-    npm -g config list
-ARG NODEJS_ORG_MIRROR=http://npm.taobao.org/mirrors/node
+# Mirror name, example: taobao
+ARG NPM_MIRROR
+# For node-gyp, example: http://npm.taobao.org/mirrors/node
+ARG NODEJS_ORG_MIRROR
+# For npx run, example: http://registry.npm.taobao.org
+ARG npm_config_registry
+RUN if [ -n "${NPM_MIRROR}" ]; then \
+        npx npm-mirror-set -g ${NPM_MIRROR} \
+        && npm -g config list \
+    ; fi
 
 WORKDIR /app/
 ARG RELEASE

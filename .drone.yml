@@ -13,8 +13,9 @@ steps:
       - RELEASE=$(git describe --always --match 'v*.*.*')
       - >-
         docker build
-        --build-arg HTTP_PROXY
-        --build-arg HTTPS_PROXY
+        --build-arg NPM_MIRROR
+        --build-arg NODEJS_ORG_MIRROR
+        --build-arg npm_config_registry
         --build-arg GOPROXY
         --build-arg ALPINE_MIRROR
         --build-arg RELEASE
