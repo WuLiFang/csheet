@@ -28,7 +28,7 @@ ENV GO111MODULES=on
 
 # Example: mirrors.tuna.tsinghua.edu.cn
 ARG ALPINE_MIRROR
-RUN if [ ! -z ${ALPINE_MIRROR} ]; then \
+RUN if [ -n "${ALPINE_MIRROR}" ]; then \
     sed -i "s/dl-cdn.alpinelinux.org/${ALPINE_MIRROR}/g" /etc/apk/repositories && \
     cat /etc/apk/repositories; \
     fi;
@@ -51,10 +51,9 @@ FROM alpine:3 as release
 
 # Example: mirrors.tuna.tsinghua.edu.cn
 ARG ALPINE_MIRROR
-RUN set -ex ;\
-    if [ ! -z ${ALPINE_MIRROR} ]; then \
-        sed -i "s/dl-cdn.alpinelinux.org/${ALPINE_MIRROR}/g" /etc/apk/repositories && \
-        cat /etc/apk/repositories; \
+RUN if [ -n "${ALPINE_MIRROR}" ]; then \
+    sed -i "s/dl-cdn.alpinelinux.org/${ALPINE_MIRROR}/g" /etc/apk/repositories && \
+    cat /etc/apk/repositories; \
     fi;
 
 RUN apk add --no-cache ffmpeg mailcap
