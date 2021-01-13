@@ -87,6 +87,7 @@
         "Warnf",
         "Warningf",
         "Warnw",
+        "webp",
         "werkzeug"
     ],
     "flagWords": []

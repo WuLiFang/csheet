@@ -14,7 +14,7 @@ services:
       - csheet_data:/app/storage/db
       - ./files:/app/storage/files
       - ./backup:/app/storage/backup
-      # - /mnt/z:/z:ro
+      - /mnt/z:/z:ro
     env_file:
       - ./.env
 volumes:

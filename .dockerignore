@@ -12,3 +12,5 @@ Dockerfile
 .travis.yml
 /storage
 /build
+third_party/*
+!third_party/ffmpeg/dist

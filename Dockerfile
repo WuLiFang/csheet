@@ -7,21 +7,25 @@ ARG NODEJS_ORG_MIRROR
 # For npx run, example: http://registry.npm.taobao.org
 ARG npm_config_registry
 RUN if [ -n "${NPM_MIRROR}" ]; then \
-        npx npm-mirror-set -g ${NPM_MIRROR} \
-        && npm -g config list \
+    npx npm-mirror-set -g ${NPM_MIRROR} \
+    && npm -g config list \
     ; fi
 
 WORKDIR /app/
 ARG RELEASE
 ENV CSHEET_RELEASE=${RELEASE}
-COPY . .
+COPY package*.json tsconfig.json *.config.js .graphqlconfig ./
+COPY src/ src/
+COPY public/ public/
 RUN set -ex\
     && npm ci\
     && npm run build\
     && rm -rf node_modules/
 
+
 FROM golang:1-alpine AS server
 
+# Example: https://goproxy.cn,direct
 ARG GOPROXY
 ENV GOPROXY=${GOPROXY}
 ENV GO111MODULES=on
@@ -34,20 +38,27 @@ RUN if [ -n "${ALPINE_MIRROR}" ]; then \
     fi;
 
 WORKDIR /app
-COPY ./ ./
+COPY cmd/ cmd/
+COPY internal/ internal/
+COPY pkg/ pkg/
+COPY go.mod go.sum Makefile ./
+
 RUN set -ex \
     && apk add --no-cache --virtual .build-deps \
-        gcc \
-        musl-dev \
-        make \
-        mailcap \
+    gcc \
+    musl-dev \
+    make \
+    mailcap \
     && make test \
     && make install \
     && apk del .build-deps \
     && go clean -cache \
     && go clean -modcache
 
-FROM alpine:3 as release
+# Not use ffmpeg package from apk repo because we need webp support
+FROM jrottenberg/ffmpeg:4.3-alpine312 AS ffmpeg
+
+FROM alpine:3.12 as release
 
 # Example: mirrors.tuna.tsinghua.edu.cn
 ARG ALPINE_MIRROR
@@ -56,7 +67,14 @@ RUN if [ -n "${ALPINE_MIRROR}" ]; then \
     cat /etc/apk/repositories; \
     fi;
 
-RUN apk add --no-cache ffmpeg mailcap
+COPY --from=ffmpeg /usr/local/ /usr/local/
+
+RUN apk add --no-cache \
+        mailcap \
+        libstdc++ \
+        libgomp \
+        expat \
+    && ffmpeg -version
 
 WORKDIR /app
 COPY --from=web /app/dist/ dist/
