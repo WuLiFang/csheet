@@ -18,7 +18,7 @@ steps:
         --build-arg npm_config_registry
         --build-arg GOPROXY
         --build-arg ALPINE_MIRROR
-        --build-arg RELEASE
+        --build-arg RELEASE="$${RELEASE}"
         --label "repo=${DRONE_REPO}"
         --label "commit-sha=${DRONE_COMMIT_SHA}"
         --tag registry.wlf.com/csheet:${DRONE_COMMIT_SHA}
