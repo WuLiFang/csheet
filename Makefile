@@ -1,4 +1,4 @@
-.PHONY: default deploy-docs test run src/graphql
+.PHONY: default deploy-docs test build install src/graphql
 
 export CGO_ENABLED?=0
 
@@ -32,8 +32,8 @@ node_modules: package.json package-lock.json
 	npm install
 	touch node_modules
 
-run:
-	go run ./cmd/csheet --address localhost:8000
-
-test: all
+test:
 	go test ./pkg/...
+
+install: 
+	go get ./cmd/...

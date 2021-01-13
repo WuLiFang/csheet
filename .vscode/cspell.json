@@ -38,6 +38,7 @@
         "gjson",
         "Gmail",
         "gonic",
+        "GOPROXY",
         "gotmpl",
         "gqlerror",
         "gqlgen",

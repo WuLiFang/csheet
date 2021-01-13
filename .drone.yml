@@ -13,9 +13,11 @@ steps:
       - RELEASE=$(git describe --always --match 'v*.*.*')
       - >-
         docker build
-        --build-arg "HTTP_PROXY=$${HTTP_PROXY}"
-        --build-arg "HTTPS_PROXY=$${HTTPS_PROXY}"
-        --build-arg "RELEASE=$${RELEASE}"
+        --build-arg HTTP_PROXY
+        --build-arg HTTPS_PROXY
+        --build-arg GOPROXY
+        --build-arg ALPINE_MIRROR
+        --build-arg RELEASE
         --label "repo=${DRONE_REPO}"
         --label "commit-sha=${DRONE_COMMIT_SHA}"
         --tag registry.wlf.com/csheet:${DRONE_COMMIT_SHA}

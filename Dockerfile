@@ -14,40 +14,52 @@ RUN set -ex\
     && npm run build\
     && rm -rf node_modules/
 
-FROM golang:1 AS server
+FROM golang:1-alpine AS server
+
+ARG GOPROXY
+ENV GOPROXY=${GOPROXY}
+ENV GO111MODULES=on
+
+# Example: mirrors.tuna.tsinghua.edu.cn
+ARG ALPINE_MIRROR
+RUN if [ ! -z ${ALPINE_MIRROR} ]; then \
+    sed -i "s/dl-cdn.alpinelinux.org/${ALPINE_MIRROR}/g" /etc/apk/repositories && \
+    cat /etc/apk/repositories; \
+    fi;
 
 WORKDIR /app
-ENV GOPROXY=https://goproxy.cn,direct
-ENV GO111MODULES=on
 COPY ./ ./
 RUN set -ex \
-    && go test ./...\
-    && go get -v ./cmd/...\
+    && apk add --no-cache --virtual .build-deps \
+        gcc \
+        musl-dev \
+        make \
+        mailcap \
+    && make test \
+    && make install \
+    && apk del .build-deps \
     && go clean -cache \
     && go clean -modcache
 
-FROM debian:stable-slim as release
+FROM alpine:3 as release
 
-ARG DEBIAN_MIRROR=http://mirrors.huaweicloud.com/debian
-RUN if [ ! -z $DEBIAN_MIRROR ]; then \
-    sed -i "s@http://.\+\.debian\.org/debian@$DEBIAN_MIRROR@g" /etc/apt/sources.list && \
-    cat /etc/apt/sources.list; \
-    fi
-RUN set -ex\
-    && apt-get update\
-    && apt-get install -y\
-        ffmpeg\
-    && ffmpeg -version\
-    && rm -rf /var/lib/apt/lists/*
+# Example: mirrors.tuna.tsinghua.edu.cn
+ARG ALPINE_MIRROR
+RUN set -ex ;\
+    if [ ! -z ${ALPINE_MIRROR} ]; then \
+        sed -i "s/dl-cdn.alpinelinux.org/${ALPINE_MIRROR}/g" /etc/apk/repositories && \
+        cat /etc/apk/repositories; \
+    fi;
+
+RUN apk add --no-cache ffmpeg mailcap
 
 WORKDIR /app
-COPY --from=web /app/dist dist
-COPY --from=server /go/bin/* /usr/bin/
+COPY --from=web /app/dist/ dist/
+COPY --from=server /go/bin/ /usr/local/bin/
 
 ARG RELEASE
 ENV CSHEET_ENV=production
 ENV CSHEET_RELEASE=${RELEASE}
-ENV TZ=Asia/Shanghai
 
 LABEL release=${RELEASE}
 LABEL author=NateScarlet@Gmail.com
