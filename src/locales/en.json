@@ -23,5 +23,6 @@
     "frame-range": "frame range",
     "duration": "duration",
     "pixel-format": "pixel format"
-  }
+  },
+  "deleted": "deleted"
 }

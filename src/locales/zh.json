@@ -24,5 +24,6 @@
     "frame-range": "帧范围",
     "duration": "时长",
     "pixel-format": "像素格式"
-  }
+  },
+  "deleted": "已删除"
 }

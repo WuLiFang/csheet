@@ -21,6 +21,7 @@ interface Option {
 
 interface OptionGroup {
   name: string;
+  class: string;
   children: (Option | OptionGroup)[];
 }
 
@@ -66,7 +67,7 @@ interface OptionGroup {
     };
 
     const renderOptionGroup = (v: OptionGroup): VNode =>
-      h('details', { attrs: { open: true }, key: v.name }, [
+      h('details', { attrs: { open: true }, key: v.name, class: v.class }, [
         h('summary', { staticClass: 'sticky top-0 bg-gray-900' }, v.name),
         h('ol', v.children.map(renderItem)),
       ]);
@@ -100,7 +101,7 @@ export default class PresentationSelect extends Vue {
         modTime: i.raw.modTime ? new Date(i.raw.modTime) : undefined,
       })),
       [
-        i => i.modTime,
+        i => i.modTime ?? 0,
         i => i.basename,
         i => ['video', 'image'].findIndex(j => j === i.type),
         i => i.id,
@@ -112,11 +113,12 @@ export default class PresentationSelect extends Vue {
   get groupedOptions(): OptionGroup[] {
     return Object.entries(
       groupBy(this.sortedOptions, i =>
-        i.modTime ? humanizeTime(i.modTime) : '已删除'
+        i.modTime ? humanizeTime(i.modTime) : this.$t('deleted')
       )
     ).map(([k, v]) => ({
       name: k,
       children: v,
+      class: k === this.$t('deleted') ? 'text-gray-500' : '',
     }));
   }
 
