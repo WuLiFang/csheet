@@ -3,6 +3,10 @@ function iterateHTMLCollection<T extends Element>(
   collection: NodeListOf<T>,
   reverse?: boolean
 ): IterableIterator<T>;
+function iterateHTMLCollection(
+  collection: HTMLCollectionBase,
+  reverse?: boolean
+): IterableIterator<Element>;
 function* iterateHTMLCollection(
   collection: HTMLCollectionBase,
   reverse = false
