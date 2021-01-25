@@ -82,7 +82,7 @@ export default class CGTeamworkNoteListItem extends Vue {
       const src = img.getAttribute('src');
       if (src?.startsWith('img/')) {
         img.setAttribute('src', `/cgteamwork/${src}`);
-        img.classList.add("inline")
+        img.classList.add('inline', 'align-text-bottom');
       }
     }
 
