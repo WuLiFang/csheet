@@ -32,31 +32,30 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import { Collection } from '../graphql/types/Collection';
-import { PageInfo } from '../graphql/types/PageInfo';
-
-import {
-  collectionsVariables,
-  collections,
-  collections_collections as Collections,
-} from '../graphql/types/collections';
-import { extractNodes, extractPageInfo } from '../client/relay';
-import CollectionOverviewCell from './CollectionOverviewCell.vue';
-import { show } from '../modal';
-import CollectionViewer from './CollectionViewer.vue';
-import { ObservableQuery, ApolloQueryResult } from 'apollo-client';
+import { filePathFormat } from '@/const';
+import extractNodes from '@/utils/extractNodes';
+import extractPageInfo from '@/utils/extractPageInfo';
+import { ApolloQueryResult, ObservableQuery } from 'apollo-client';
 import { DollarApollo } from 'vue-apollo/types/vue-apollo';
 import 'vue-awesome/icons/spinner';
-import { presentationUpdatedVariables } from '../graphql/types/presentationUpdated';
-import { filePathFormat } from '@/const';
-import {
-  collectionUpdatedVariables,
-  collectionUpdated,
-} from '../graphql/types/collectionUpdated';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import { OriginPrefix } from '../client';
 import { db } from '../db';
+import { Collection } from '../graphql/types/Collection';
+import {
+  collections,
+  collectionsVariables,
+  collections_collections as Collections,
+} from '../graphql/types/collections';
+import {
+  collectionUpdated,
+  collectionUpdatedVariables,
+} from '../graphql/types/collectionUpdated';
+import { presentationUpdatedVariables } from '../graphql/types/presentationUpdated';
+import { show } from '../modal';
 import { getCommonPrefix } from '../utils/getCommonPrefix';
+import CollectionOverviewCell from './CollectionOverviewCell.vue';
+import CollectionViewer from './CollectionViewer.vue';
 
 @Component<CollectionOverview>({
   components: {

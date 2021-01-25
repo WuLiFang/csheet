@@ -3,6 +3,5 @@ import * as config from './config';
 import * as presentation from './presentation';
 export * from './client';
 export * from './origin-prefix';
-export * from './relay';
 export { config, collection, presentation };
 
