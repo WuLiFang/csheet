@@ -143,6 +143,29 @@ func New() *gin.Engine {
 		GET("").
 		HEAD("").
 		OPTIONS("")
+	r.Group("cgteamwork/img/*_").
+		Use(
+			gin.WrapH(&httputil.ReverseProxy{
+				Director: func(req *http.Request) {
+					req.Host = cgteamwork.DefaultClient.URL.Host
+					req.URL.Scheme = cgteamwork.DefaultClient.URL.Scheme
+					req.URL.Host = cgteamwork.DefaultClient.URL.Host
+					req.URL.Path = req.URL.Path[11:] // remove `/cgteamwork`
+					req.Header.Set("Referer", "")
+					req.Header.Del("Cookie")
+					if _, ok := req.Header["User-Agent"]; !ok {
+						// explicitly disable User-Agent so it's not set to default value
+						req.Header.Set("User-Agent", "")
+					}
+				},
+				ModifyResponse: func(resp *http.Response) error {
+					return nil
+				},
+			}),
+		).
+		GET("").
+		HEAD("").
+		OPTIONS("")
 	if config.Env == "development" {
 		r.GET("debug/pprof/*_", gin.WrapF(http.DefaultServeMux.ServeHTTP))
 	}

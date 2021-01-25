@@ -44,6 +44,7 @@ import { show } from '@/modal';
 import 'vue-awesome/icons/trash';
 import CGTeamworkNoteDeleteFormDrawer from '@/components/cgteamwork/CGTeamworkNoteDeleteFormDrawer.vue';
 import ImageViewer from '@/components/ImageViewer.vue';
+import iterateHTMLCollection from '@/svg-editor/utils/iterateHTMLCollection';
 
 export interface CGTeamworkNoteListItemValue {
   id: string;
@@ -70,9 +71,22 @@ export default class CGTeamworkNoteListItem extends Vue {
   hidePipeline!: boolean;
 
   get safeHTML(): string {
-    return DOMPurify.sanitize(this.value.message.html, {
-      FORBID_ATTR: ["class", "style"]
+    const h = DOMPurify.sanitize(this.value.message.html, {
+      FORBID_ATTR: ['class', 'style'],
     });
+
+    const p = document.createElement('p');
+    p.innerHTML = h;
+    // emoji
+    for (const img of iterateHTMLCollection(p.querySelectorAll('img'))) {
+      const src = img.getAttribute('src');
+      if (src?.startsWith('img/')) {
+        img.setAttribute('src', `/cgteamwork/${src}`);
+        img.classList.add("inline")
+      }
+    }
+
+    return p.innerHTML;
   }
 
   showDeleteFormDrawer(): void {

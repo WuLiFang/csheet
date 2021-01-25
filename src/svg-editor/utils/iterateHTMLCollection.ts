@@ -1,5 +1,9 @@
 /** should not modify collection while iterating */
-export default function* iterateHTMLCollection(
+function iterateHTMLCollection<T extends Element>(
+  collection: NodeListOf<T>,
+  reverse?: boolean
+): IterableIterator<T>;
+function* iterateHTMLCollection(
   collection: HTMLCollectionBase,
   reverse = false
 ): IterableIterator<Element> {
@@ -15,3 +19,5 @@ export default function* iterateHTMLCollection(
     yield el;
   }
 }
+
+export default iterateHTMLCollection

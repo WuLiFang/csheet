@@ -29,6 +29,10 @@ HTTP 路由
 
   使用服务器账号对 cgteamwork 的 `/upload` 路由进行反向代理以提供免登陆上传文件访问。
 
+/cgteamwork/img
+
+  对 cgteamwork 的 `/img` 路由进行反向代理以提供表情文件访问。
+
 /debug/pprof
 
   开发模式下可用，pprof 网页调试端点。
