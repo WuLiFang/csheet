@@ -23,7 +23,7 @@
 import socket
 
 project = vars().get("project", 'csheet')
-copyright = '2018-2020, 北京吾立方数码科技有限公司'
+copyright = '2018-2021, 北京吾立方数码科技有限公司'
 author = '北京吾立方数码科技有限公司'
 
 # The short X.Y version
