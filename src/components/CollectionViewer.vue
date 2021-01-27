@@ -195,7 +195,7 @@ import db from '@/db';
 import * as sentry from '@sentry/browser';
 import toHotKey from '@/utils/toHotKey';
 import { Presentation as PresentationData } from '../graphql/types/Presentation';
-import { throttle } from 'lodash';
+import { throttle, sortBy, uniq } from 'lodash';
 import PresentationAnnotationEditor from './PresentationAnnotationEditor.vue';
 import PresentationAnnotationEditorToolbar from './PresentationAnnotationEditorToolbar.vue';
 import PresentationControls from './PresentationControls.vue';
@@ -483,11 +483,13 @@ export default class CollectionViewer extends Vue {
       if (!i) {
         continue;
       }
-      i.presentations.forEach(j => {
-        ret.push(j.regular?.url || require('@/assets/img/transcoding.svg'));
-      });
+      sortBy(i.presentations, [i => -new Date(i.raw.modTime ?? 0).getTime()])
+        .slice(0, 5)
+        .forEach(j => {
+          ret.push(j.regular?.url || require('@/assets/img/transcoding.svg'));
+        });
     }
-    return ret;
+    return uniq(ret);
   }
 
   get presentation(): PresentationData | undefined {
