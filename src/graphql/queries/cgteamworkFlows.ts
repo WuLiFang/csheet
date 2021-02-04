@@ -13,7 +13,7 @@ import {
 } from 'apollo-client';
 import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
 import { apolloClient } from '@/client';
-import { ref, Ref, watch, onDeactivated } from '@vue/composition-api';
+import { ref, Ref, watch, onUnmounted } from '@vue/composition-api';
 
 export { cgteamworkFlowsVariables, cgteamworkFlows };
 export type CGTeamworkFlow = NonNullable<cgteamworkFlows['cgteamworkFlows']>[0];
@@ -78,7 +78,7 @@ export function useQuery(
   const sub = q.subscribe(value => {
     data.value = value.data;
   });
-  onDeactivated(() => {
+  onUnmounted(() => {
     sub.unsubscribe();
   });
   const query = q;
