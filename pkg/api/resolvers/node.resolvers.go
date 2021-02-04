@@ -23,7 +23,7 @@ func (r *queryResolver) Node(ctx context.Context, id string) (model.Node, error)
 
 	switch index {
 	case db.IndexCollection:
-		return collection.FindByID(id)
+		return collection.FindByID(ctx, id)
 	case db.IndexPresentation:
 		return presentation.FindByID(id)
 	}

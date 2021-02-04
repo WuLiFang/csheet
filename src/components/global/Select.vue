@@ -1,7 +1,5 @@
 <template lang="pug">
-  .select(
-    class="relative text-left inline-block"
-  )
+  Dropdown.select(:visible="dropdownVisible" :dropdown-class="dropdownClass")
     output.inline-block(
       ref="output"
       :tabindex="dropdownVisible || disabled ? undefined : 0"
@@ -55,66 +53,54 @@
           title="清空"
         )
           FaIcon(name="times")
-    transition(
-      enter-active-class="transition ease-out duration-100"
-      enter-class="transform opacity-0 scale-95"
-      enter-to-class="transform opacity-100 scale-100"
-      leave-active-class="transition ease-out duration-75"
-      leave-class="transform opacity-100 scale-100"
-      leave-to-class="transform opacity-0 scale-95"
-    )
-      .container(
-        v-show="dropdownVisible"
-        class="origin-top-right absolute right-0 mt-px z-30 w-full"
-        :class="[dropdownBaseClass, dropdownClass]"
+    template(#dropdown)
+      slot(
+        name="search"
+        :inputListeners="inputListeners"
       )
-        slot(
-          name="search"
-          :inputListeners="inputListeners"
-        )
-        ol(
-          class="max-h-96 overflow-y-auto"
-          aria-orientation="vertical"
-          role="menu"
-        )
-          template(v-for="i in optionEntries")
-            li(
-              ref="option"
-              :key="i.key"
-              :data-key="i.key"
-              class="p-2 cursor-pointer relative"
-              :class=`{
-                [highlightClass]: highlight == i.key,
-                [disabledClass]: i.disabled,
-              }`
-              @mouseenter="highlight = i.key"
-              @click.prevent="handleOptionClick(i)"
-            )
-              slot(
-                v-bind="entryContext(i)"
-                :option="i"
-              )
-                span {{ i.label != null ? i.label : i.value }}
-              slot(
-                name="suffix"
-                v-bind="entryContext(i)"
-                :option="i"
-              )
-                template(v-if="multiple && selectedKeys.has(i.key)")
-                  .flex(
-                    class="absolute top-0 right-0 mr-2 p-2 bottom-0 items-center"
-                    class="text-gray-500"
-                  )
-                    FaIcon(name="check")
-          template(
-            v-if="options.length === 0"
+      ol(
+        class="max-h-96 overflow-y-auto"
+        aria-orientation="vertical"
+        role="menu"
+      )
+        template(v-for="i in optionEntries")
+          li(
+            ref="option"
+            :key="i.key"
+            :data-key="i.key"
+            class="p-2 cursor-pointer relative"
+            :class=`{
+              [highlightClass]: highlight == i.key,
+              [disabledClass]: i.disabled,
+            }`
+            @mouseenter="highlight = i.key"
+            @click.prevent="handleOptionClick(i)"
           )
-            .text-gray-500.text-center.text-md.p-2
-              template(v-if="loading")
-                FaIcon.h-16(name="spinner" spin)
-              template(v-else)
-                slot(name="empty")
-                  span 无匹配
+            slot(
+              v-bind="entryContext(i)"
+              :option="i"
+            )
+              span {{ i.label != null ? i.label : i.value }}
+            slot(
+              name="suffix"
+              v-bind="entryContext(i)"
+              :option="i"
+            )
+              template(v-if="multiple && selectedKeys.has(i.key)")
+                .flex(
+                  class="absolute top-0 right-0 mr-2 p-2 bottom-0 items-center"
+                  class="text-gray-500"
+                )
+                  FaIcon(name="check")
+        template(
+          v-if="options.length === 0"
+        )
+          .text-gray-500.text-center.text-md.p-2
+            template(v-if="loading")
+              FaIcon.h-16(name="spinner" spin)
+            template(v-else)
+              slot(name="empty")
+                span 无匹配
     input(
       tabindex="-1"
       class="opacity-0 absolute inset-0 pointer-events-none w-full h-full"
@@ -243,12 +229,6 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
 
   @Prop({ type: Array, required: true })
   options!: Option<unknown>[];
-
-  @Prop({
-    type: String,
-    default: () => defaults.select.dropdownBaseClass,
-  })
-  dropdownBaseClass?: string;
 
   @Prop({ type: String })
   dropdownClass?: string;

@@ -1,4 +1,5 @@
 // Code Generated from [base.ts.gotmpl node.gotmpl], DO NOT EDIT.
+/* eslint-disable import/no-duplicates */
 import {
   collectionNode,
   collectionNodeVariables,
@@ -6,10 +7,14 @@ import {
 import {
   OperationVariables,
   QueryOptions,
+  WatchQueryOptions,
   ApolloQueryResult,
+  ObservableQuery,
 } from 'apollo-client';
 import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
 import { apolloClient } from '@/client';
+import { ref, Ref, watch, onDeactivated } from '@vue/composition-api';
+import { computed } from '@vue/composition-api';
 
 export { collectionNodeVariables, collectionNode };
 export type Collection = collectionNode['node'] & { __typename: 'Collection' };
@@ -45,6 +50,51 @@ export function vueQuery<V>(
       return castNode(data.node);
     },
   } as VueApolloQueryDefinition<collectionNode, OperationVariables>;
+}
+
+export function useQuery(
+  variables: Ref<collectionNodeVariables>,
+  options?: Ref<
+    Omit<WatchQueryOptions<collectionNodeVariables>, 'query' | 'variables'>
+  >
+): {
+  data: Ref<collectionNode | undefined>;
+  query: ObservableQuery<collectionNode, collectionNodeVariables>;
+  node: Ref<Collection | undefined>;
+} {
+  const data = ref<collectionNode | undefined>();
+  const o = {
+    query: require('./collectionNode.gql'),
+  };
+  const q = apolloClient.watchQuery<collectionNode, collectionNodeVariables>({
+    ...options?.value,
+    ...o,
+    variables: variables.value,
+  });
+  watch(
+    () => variables.value,
+    async n => {
+      await q.setVariables(n);
+    }
+  );
+  watch(
+    () => options?.value,
+    n => {
+      q.setOptions({ ...n, ...o });
+    }
+  );
+  const sub = q.subscribe(value => {
+    data.value = value.data;
+  });
+  onDeactivated(() => {
+    sub.unsubscribe();
+  });
+  const query = q;
+  return {
+    data,
+    query,
+    node: computed(() => castNode(data.value?.node)),
+  };
 }
 
 export async function findById(id: string): Promise<Collection | undefined> {

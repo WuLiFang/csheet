@@ -10,6 +10,7 @@
     Metadata map[string]string
     CollectTime time.Time
     PresentationIDs []string
+    Tags []string
   }
 
 
@@ -17,6 +18,7 @@
 
 每个收藏可有多个不同的展示方式，例如视频方式和图片方式。
 
+用户可编辑收藏标签，在系统收集时也会自动更新部分标签。
 
 结构
 -------------
@@ -41,6 +43,9 @@ PresentationIDs []string
 
   收藏提供的展示 ID。
 
+Tags []string
+
+  收藏的标签
 
 元数据
 -----------------------

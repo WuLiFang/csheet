@@ -30,7 +30,7 @@ func (r *mutationResolver) CreateCGTeamworkNote(ctx context.Context, input model
 
 	updateIDSet := map[string]struct{}{}
 	for _, i := range input.Data {
-		col, err := collection.FindByID(i.ID)
+		col, err := collection.FindByID(ctx, i.ID)
 		if err != nil {
 			return ret, err
 		}
@@ -70,7 +70,7 @@ func (r *mutationResolver) CreateCGTeamworkNote(ctx context.Context, input model
 		ret.CreatedCount++
 		if _, ok := updateIDSet[i.ID]; !ok {
 			updateIDSet[i.ID] = struct{}{}
-			ret.UpdatedCollections = append(ret.UpdatedCollections, col)
+			ret.UpdatedCollections = append(ret.UpdatedCollections, *col)
 		}
 		logger.Info("create",
 			zap.String("origin", col.Origin),

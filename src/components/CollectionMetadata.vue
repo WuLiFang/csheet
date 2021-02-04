@@ -15,6 +15,9 @@
       template(v-else)
         dt {{i.k}}
         dd.pl-4 {{i.v}}
+    dt 标签
+    dd.pl-4
+      CollectionTags(:id="value.id" class="w-full")
     dt(
       @click="() => $refs.comment.focus()"
     ) 留言
@@ -27,11 +30,14 @@ import { Collection } from '../graphql/types/Collection';
 import CollectionMetadataCGTeamworkTasks from './CollectionMetadataCGTeamworkTasks.vue';
 import CollectionMetadataComment from './CollectionMetadataComment.vue';
 import CGTeamworkNoteList from './cgteamwork/CGTeamworkNoteList.vue';
+import CollectionTags from '@/components/CollectionTags.vue';
+
 
 @Component<CollectionMetadata>({
   components: {
     CollectionMetadataCGTeamworkTasks,
     CollectionMetadataComment,
+    CollectionTags,
     CGTeamworkNoteList,
   },
 })

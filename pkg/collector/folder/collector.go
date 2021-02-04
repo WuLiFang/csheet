@@ -52,7 +52,6 @@ func Collect(ctx context.Context, root string) (ret base.CollectResult, err erro
 		t, err := presentation.TypeByMimeType(mt)
 		if err != nil {
 			return nil
-
 		}
 		p, err := presentation.Put(ctx, t, i)
 		if err != nil {
@@ -71,6 +70,8 @@ func Collect(ctx context.Context, root string) (ret base.CollectResult, err erro
 			ret.CreatedCount++
 			err = nil
 		}
+		c.Tags = append(c.Tags, "type:"+string(mt))
+
 		if err != nil {
 			return err
 		}

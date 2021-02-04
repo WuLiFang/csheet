@@ -13,6 +13,7 @@
   "dependencies": {
     "@sentry/browser": "5.19.2",
     "@sentry/integrations": "5.19.2",
+    "@vue/composition-api": "^1.0.0-rc.1",
     "apollo-link-persisted-queries": "0.2.2",
     "apollo-link-ws": "1.0.20",
     "apollo-upload-client": "^14.1.2",

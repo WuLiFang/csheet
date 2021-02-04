@@ -17,7 +17,7 @@ func (r *mutationResolver) UpdateCollectionMetadata(ctx context.Context, input m
 	var ret = new(model.UpdateCollectionMetadataPayload)
 	var err error
 	ret.ClientMutationID = input.ClientMutationID
-	var m = make(map[string]collection.Collection)
+	var m = make(map[string]*collection.Collection)
 
 	for _, i := range input.Data {
 		v, ok := m[i.ID]
@@ -28,7 +28,7 @@ func (r *mutationResolver) UpdateCollectionMetadata(ctx context.Context, input m
 			return ret, fmt.Errorf("value length excess limit (1 MiB): %s", i.Key)
 		}
 		if !ok {
-			v, err = collection.FindByID(i.ID)
+			v, err = collection.FindByID(ctx, i.ID)
 			if err != nil {
 				return ret, err
 			}
@@ -50,7 +50,7 @@ func (r *mutationResolver) UpdateCollectionMetadata(ctx context.Context, input m
 	ret.Updated = make([]collection.Collection, 0, len(m))
 	for _, i := range m {
 		i.Save(ctx)
-		ret.Updated = append(ret.Updated, i)
+		ret.Updated = append(ret.Updated, *i)
 	}
 
 	return ret, err

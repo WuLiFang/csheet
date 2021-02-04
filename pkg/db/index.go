@@ -38,4 +38,7 @@ const (
 	// key: query sha256 hash
 	// value: query
 	IndexGraphQLPersistedQuery
+	// key: tag, collection pk
+	// value: empty
+	IndexCollectionTag
 )

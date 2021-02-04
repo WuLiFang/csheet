@@ -7,6 +7,7 @@ import (
 	"mime"
 	"path"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
@@ -105,6 +106,17 @@ func collectionFromTask(
 			ret.Metadata = map[string]string{}
 		}
 		ret.Metadata["cgteamwork.pipeline"] = o.Pipeline
+		// clear old auto tags
+		if len(ret.Tags) > 0 {
+			var tagSet = stringSet(ret.Tags)
+			for tag := range tagSet {
+				if strings.HasPrefix(tag, "artist:") ||
+					strings.HasPrefix(tag, "status:") {
+					delete(tagSet, tag)
+				}
+			}
+			ret.Tags = stringArrayFromSet(tagSet)
+		}
 	}
 	taskData := ret.Metadata["cgteamwork.tasks"]
 	if taskData == "" || !gjson.Valid(taskData) {
@@ -113,6 +125,7 @@ func collectionFromTask(
 	artists := make([]string, 0, len(task.Artists))
 	for _, i := range task.Artists {
 		artists = append(artists, i.DisplayName)
+		ret.Tags = append(ret.Tags, "artist:"+i.DisplayName)
 	}
 	var taskDataIndex = 0
 	gjson.Parse(taskData).ForEach(func(k, v gjson.Result) bool {
@@ -132,6 +145,9 @@ func collectionFromTask(
 		return
 	}
 	ret.Metadata["cgteamwork.tasks"] = taskData
+	for stage, status := range status {
+		ret.Tags = append(ret.Tags, "status:"+stage+"="+status)
+	}
 
 	presentationIDSet := make(map[string]struct{})
 	for _, i := range ret.PresentationIDs {
@@ -147,6 +163,7 @@ func collectionFromTask(
 
 		if err == nil {
 			presentationIDSet[p.ID()] = struct{}{}
+			ret.Tags = append(ret.Tags, "type:"+string(presentation.TypeImage))
 		} else {
 			logger.Errorw("put presentation failed", "error", err)
 		}
@@ -159,6 +176,7 @@ func collectionFromTask(
 			p, err := presentation.Put(ctx, t, unipath.Auto(i))
 			if err == nil {
 				presentationIDSet[p.ID()] = struct{}{}
+				ret.Tags = append(ret.Tags, "type:"+string(t))
 			} else {
 				logger.Errorw("put presentation failed", "error", err)
 			}

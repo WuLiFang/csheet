@@ -1,4 +1,5 @@
 // Code Generated from [base.ts.gotmpl array.gotmpl], DO NOT EDIT.
+/* eslint-disable import/no-duplicates */
 import {
   cgteamworkProjects,
   cgteamworkProjectsVariables,
@@ -6,10 +7,13 @@ import {
 import {
   OperationVariables,
   QueryOptions,
+  WatchQueryOptions,
   ApolloQueryResult,
+  ObservableQuery,
 } from 'apollo-client';
 import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
 import { apolloClient } from '@/client';
+import { ref, Ref, watch, onDeactivated } from '@vue/composition-api';
 
 export { cgteamworkProjectsVariables, cgteamworkProjects };
 export type CGTeamworkProject = NonNullable<
@@ -48,6 +52,52 @@ export function vueQuery<V>(
       return data.cgteamworkProjects ?? [];
     },
   } as VueApolloQueryDefinition<cgteamworkProjects, OperationVariables>;
+}
+
+export function useQuery(
+  variables: Ref<cgteamworkProjectsVariables>,
+  options?: Ref<
+    Omit<WatchQueryOptions<cgteamworkProjectsVariables>, 'query' | 'variables'>
+  >
+): {
+  data: Ref<cgteamworkProjects | undefined>;
+  query: ObservableQuery<cgteamworkProjects, cgteamworkProjectsVariables>;
+} {
+  const data = ref<cgteamworkProjects | undefined>();
+  const o = {
+    query: require('./cgteamworkProjects.gql'),
+  };
+  const q = apolloClient.watchQuery<
+    cgteamworkProjects,
+    cgteamworkProjectsVariables
+  >({
+    ...options?.value,
+    ...o,
+    variables: variables.value,
+  });
+  watch(
+    () => variables.value,
+    async n => {
+      await q.setVariables(n);
+    }
+  );
+  watch(
+    () => options?.value,
+    n => {
+      q.setOptions({ ...n, ...o });
+    }
+  );
+  const sub = q.subscribe(value => {
+    data.value = value.data;
+  });
+  onDeactivated(() => {
+    sub.unsubscribe();
+  });
+  const query = q;
+  return {
+    data,
+    query,
+  };
 }
 
 export async function find(

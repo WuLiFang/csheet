@@ -4,6 +4,7 @@ default: generate
 
 generate:
 	# Use https://github.com/NateScarlet/gotmpl
+	gotmpl -o updateCollection.gql Model=Collection base.gql.gotmpl dataInput.gotmpl updateCollection.gotmpl
 	gotmpl -o updateCollectionMetadata.gql Model=Collection base.gql.gotmpl dataInput.gotmpl updateMetadata.gotmpl
 	gotmpl -o updatePresentationMetadata.gql Model=Presentation base.gql.gotmpl dataInput.gotmpl updateMetadata.gotmpl
 	gotmpl -o updateCGTeamworkFlow.gql Model=Collection base.gql.gotmpl dataInput.gotmpl updateCGTeamworkFlow.gotmpl

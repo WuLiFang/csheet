@@ -1,6 +1,8 @@
 const defaults = {
+  dropdown: {
+    baseClass: 'border border-gray-700 rounded shadow-lg bg-gray-800',
+  },
   select: {
-    dropdownBaseClass: 'border border-gray-700 rounded shadow-lg bg-gray-800',
     disabledClass: 'text-gray-500 cursor-not-allowed',
     highlightClass: 'bg-blue-500',
   },

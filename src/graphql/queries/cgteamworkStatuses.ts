@@ -1,12 +1,16 @@
 // Code Generated from [base.ts.gotmpl array.gotmpl], DO NOT EDIT.
+/* eslint-disable import/no-duplicates */
 import { cgteamworkStatuses } from '@/graphql/types/cgteamworkStatuses';
 import {
   OperationVariables,
   QueryOptions,
+  WatchQueryOptions,
   ApolloQueryResult,
+  ObservableQuery,
 } from 'apollo-client';
 import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
 import { apolloClient } from '@/client';
+import { ref, Ref, watch, onDeactivated } from '@vue/composition-api';
 type cgteamworkStatusesVariables = never;
 
 export { cgteamworkStatusesVariables, cgteamworkStatuses };
@@ -44,6 +48,44 @@ export function vueQuery<V>(
       return data.cgteamworkStatuses ?? [];
     },
   } as VueApolloQueryDefinition<cgteamworkStatuses, OperationVariables>;
+}
+
+export function useQuery(
+  options?: Ref<
+    Omit<WatchQueryOptions<cgteamworkStatusesVariables>, 'query' | 'variables'>
+  >
+): {
+  data: Ref<cgteamworkStatuses | undefined>;
+  query: ObservableQuery<cgteamworkStatuses, cgteamworkStatusesVariables>;
+} {
+  const data = ref<cgteamworkStatuses | undefined>();
+  const o = {
+    query: require('./cgteamworkStatuses.gql'),
+  };
+  const q = apolloClient.watchQuery<
+    cgteamworkStatuses,
+    cgteamworkStatusesVariables
+  >({
+    ...options?.value,
+    ...o,
+  });
+  watch(
+    () => options?.value,
+    n => {
+      q.setOptions({ ...n, ...o });
+    }
+  );
+  const sub = q.subscribe(value => {
+    data.value = value.data;
+  });
+  onDeactivated(() => {
+    sub.unsubscribe();
+  });
+  const query = q;
+  return {
+    data,
+    query,
+  };
 }
 
 export async function find(): Promise<CGTeamworkStatus[]> {

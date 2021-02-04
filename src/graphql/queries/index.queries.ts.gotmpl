@@ -12,7 +12,11 @@ Accept data:
 {{- end }}
 
 {{- range .Files }}
-import { query as {{ template "stem" . }}, vueQuery as {{ template "stem" . }}Vue } from "./{{ template "stem" . }}";
+import { vueQuery as {{ template "stem" . }}Vue } from "./{{ template "stem" . }}";
+{{- end }}
+
+{{- range .Files }}
+export { query as {{ template "stem" . }}, useQuery as use{{ template "stem" . | upperFirst }} } from "./{{ template "stem" . }}";
 {{- end }}
 
 export const vue = {
@@ -21,8 +25,3 @@ export const vue = {
 {{- end }}
     }
 
-export {
-{{- range .Files }}
-    {{ template "stem" . }},
-{{- end }}
-};

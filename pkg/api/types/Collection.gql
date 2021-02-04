@@ -5,4 +5,5 @@ type Collection implements Node {
   presentations: [Presentation!]!
   metadata: [StringEntry!]!
   collectTime: Time!
+  tags: [String!]!
 }

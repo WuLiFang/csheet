@@ -1,43 +1,58 @@
 // Code Generated from [index.queries.ts.gotmpl], DO NOT EDIT.
-import {
+import { vueQuery as cgteamworkFlowsVue } from './cgteamworkFlows';
+import { vueQuery as cgteamworkPipelinesVue } from './cgteamworkPipelines';
+import { vueQuery as cgteamworkProjectsVue } from './cgteamworkProjects';
+import { vueQuery as cgteamworkStatusesVue } from './cgteamworkStatuses';
+import { vueQuery as clientConfigVue } from './clientConfig';
+import { vueQuery as collectionCGTeamworkNotesVue } from './collectionCGTeamworkNotes';
+import { vueQuery as collectionNodeVue } from './collectionNode';
+import { vueQuery as collectionsVue } from './collections';
+import { vueQuery as collectionTagsVue } from './collectionTags';
+import { vueQuery as folderOriginPrefixVue } from './folderOriginPrefix';
+import { vueQuery as presentationNodeVue } from './presentationNode';
+export {
   query as cgteamworkFlows,
-  vueQuery as cgteamworkFlowsVue,
+  useQuery as useCgteamworkFlows,
 } from './cgteamworkFlows';
-import {
+export {
   query as cgteamworkPipelines,
-  vueQuery as cgteamworkPipelinesVue,
+  useQuery as useCgteamworkPipelines,
 } from './cgteamworkPipelines';
-import {
+export {
   query as cgteamworkProjects,
-  vueQuery as cgteamworkProjectsVue,
+  useQuery as useCgteamworkProjects,
 } from './cgteamworkProjects';
-import {
+export {
   query as cgteamworkStatuses,
-  vueQuery as cgteamworkStatusesVue,
+  useQuery as useCgteamworkStatuses,
 } from './cgteamworkStatuses';
-import {
+export {
   query as clientConfig,
-  vueQuery as clientConfigVue,
+  useQuery as useClientConfig,
 } from './clientConfig';
-import {
+export {
   query as collectionCGTeamworkNotes,
-  vueQuery as collectionCGTeamworkNotesVue,
+  useQuery as useCollectionCGTeamworkNotes,
 } from './collectionCGTeamworkNotes';
-import {
+export {
   query as collectionNode,
-  vueQuery as collectionNodeVue,
+  useQuery as useCollectionNode,
 } from './collectionNode';
-import {
+export {
   query as collections,
-  vueQuery as collectionsVue,
+  useQuery as useCollections,
 } from './collections';
-import {
+export {
+  query as collectionTags,
+  useQuery as useCollectionTags,
+} from './collectionTags';
+export {
   query as folderOriginPrefix,
-  vueQuery as folderOriginPrefixVue,
+  useQuery as useFolderOriginPrefix,
 } from './folderOriginPrefix';
-import {
+export {
   query as presentationNode,
-  vueQuery as presentationNodeVue,
+  useQuery as usePresentationNode,
 } from './presentationNode';
 
 export const vue = {
@@ -49,19 +64,7 @@ export const vue = {
   collectionCGTeamworkNotes: collectionCGTeamworkNotesVue,
   collectionNode: collectionNodeVue,
   collections: collectionsVue,
+  collectionTags: collectionTagsVue,
   folderOriginPrefix: folderOriginPrefixVue,
   presentationNode: presentationNodeVue,
-};
-
-export {
-  cgteamworkFlows,
-  cgteamworkPipelines,
-  cgteamworkProjects,
-  cgteamworkStatuses,
-  clientConfig,
-  collectionCGTeamworkNotes,
-  collectionNode,
-  collections,
-  folderOriginPrefix,
-  presentationNode,
 };

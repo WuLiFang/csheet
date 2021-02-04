@@ -1,5 +1,6 @@
 import App from '@/App.vue';
 import { apolloProvider } from '@/plugins/apollo';
+import '@/plugins/composition-api';
 import { i18n } from '@/plugins/i18n';
 import '@/plugins/moment';
 import '@/plugins/sentry';

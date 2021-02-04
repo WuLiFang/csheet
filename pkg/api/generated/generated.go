@@ -146,6 +146,7 @@ type ComplexityRoot struct {
 		Metadata        func(childComplexity int) int
 		Origin          func(childComplexity int) int
 		Presentations   func(childComplexity int) int
+		Tags            func(childComplexity int) int
 		Title           func(childComplexity int) int
 	}
 
@@ -190,6 +191,7 @@ type ComplexityRoot struct {
 		DeleteCGTeamworkNote       func(childComplexity int, input model.DeleteCGTeamworkNoteInput) int
 		RestoreDatabase            func(childComplexity int, input model.RestoreDatabaseInput) int
 		UpdateCGTeamworkFlow       func(childComplexity int, input model.UpdateCGTeamworkFlowInput) int
+		UpdateCollection           func(childComplexity int, input model.UpdateCollectionInput) int
 		UpdateCollectionMetadata   func(childComplexity int, input model.UpdateCollectionMetadataInput) int
 		UpdatePresentationMetadata func(childComplexity int, input model.UpdatePresentationMetadataInput) int
 	}
@@ -220,7 +222,8 @@ type ComplexityRoot struct {
 		CgteamworkProjects  func(childComplexity int, q *string, name []string, database []string, status []string) int
 		CgteamworkStatuses  func(childComplexity int) int
 		ClientConfig        func(childComplexity int, name string) int
-		Collections         func(childComplexity int, originPrefix *string, presentationCountGt *int, first *int, last *int, before *string, after *string) int
+		CollectionTags      func(childComplexity int, regex *string, first *int, last *int, before *string, after *string) int
+		Collections         func(childComplexity int, originPrefix *string, presentationCountGt *int, tagOr []string, tagAnd []string, first *int, last *int, before *string, after *string) int
 		FolderOriginPrefix  func(childComplexity int, root string) int
 		Node                func(childComplexity int, id string) int
 	}
@@ -229,6 +232,17 @@ type ComplexityRoot struct {
 		Backup           func(childComplexity int) int
 		ClientMutationID func(childComplexity int) int
 		IsDropped        func(childComplexity int) int
+	}
+
+	StringConnection struct {
+		Edges    func(childComplexity int) int
+		Nodes    func(childComplexity int) int
+		PageInfo func(childComplexity int) int
+	}
+
+	StringEdge struct {
+		Cursor func(childComplexity int) int
+		Node   func(childComplexity int) int
 	}
 
 	StringEntry struct {
@@ -247,6 +261,11 @@ type ComplexityRoot struct {
 	}
 
 	UpdateCollectionMetadataPayload struct {
+		ClientMutationID func(childComplexity int) int
+		Updated          func(childComplexity int) int
+	}
+
+	UpdateCollectionPayload struct {
 		ClientMutationID func(childComplexity int) int
 		Updated          func(childComplexity int) int
 	}
@@ -290,6 +309,7 @@ type MutationResolver interface {
 	DeleteCGTeamworkNote(ctx context.Context, input model.DeleteCGTeamworkNoteInput) (*model.DeleteCGTeamworkNotePayload, error)
 	RestoreDatabase(ctx context.Context, input model.RestoreDatabaseInput) (*model.RestoreDatabasePayload, error)
 	UpdateCGTeamworkFlow(ctx context.Context, input model.UpdateCGTeamworkFlowInput) (*model.UpdateCGTeamworkFlowPayload, error)
+	UpdateCollection(ctx context.Context, input model.UpdateCollectionInput) (*model.UpdateCollectionPayload, error)
 	UpdateCollectionMetadata(ctx context.Context, input model.UpdateCollectionMetadataInput) (*model.UpdateCollectionMetadataPayload, error)
 	UpdatePresentationMetadata(ctx context.Context, input model.UpdatePresentationMetadataInput) (*model.UpdatePresentationMetadataPayload, error)
 }
@@ -310,7 +330,8 @@ type QueryResolver interface {
 	CgteamworkProjects(ctx context.Context, q *string, name []string, database []string, status []string) ([]cgteamwork.Project, error)
 	CgteamworkStatuses(ctx context.Context) ([]cgteamwork.Status, error)
 	ClientConfig(ctx context.Context, name string) (*model.ClientConfig, error)
-	Collections(ctx context.Context, originPrefix *string, presentationCountGt *int, first *int, last *int, before *string, after *string) (*model.CollectionConnection, error)
+	CollectionTags(ctx context.Context, regex *string, first *int, last *int, before *string, after *string) (*model.StringConnection, error)
+	Collections(ctx context.Context, originPrefix *string, presentationCountGt *int, tagOr []string, tagAnd []string, first *int, last *int, before *string, after *string) (*model.CollectionConnection, error)
 	FolderOriginPrefix(ctx context.Context, root string) (string, error)
 	Node(ctx context.Context, id string) (model.Node, error)
 }
@@ -680,6 +701,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Collection.Presentations(childComplexity), true
 
+	case "Collection.tags":
+		if e.complexity.Collection.Tags == nil {
+			break
+		}
+
+		return e.complexity.Collection.Tags(childComplexity), true
+
 	case "Collection.title":
 		if e.complexity.Collection.Title == nil {
 			break
@@ -881,6 +909,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateCGTeamworkFlow(childComplexity, args["input"].(model.UpdateCGTeamworkFlowInput)), true
 
+	case "Mutation.updateCollection":
+		if e.complexity.Mutation.UpdateCollection == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateCollection_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateCollection(childComplexity, args["input"].(model.UpdateCollectionInput)), true
+
 	case "Mutation.updateCollectionMetadata":
 		if e.complexity.Mutation.UpdateCollectionMetadata == nil {
 			break
@@ -1058,6 +1098,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.ClientConfig(childComplexity, args["name"].(string)), true
 
+	case "Query.collectionTags":
+		if e.complexity.Query.CollectionTags == nil {
+			break
+		}
+
+		args, err := ec.field_Query_collectionTags_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CollectionTags(childComplexity, args["regex"].(*string), args["first"].(*int), args["last"].(*int), args["before"].(*string), args["after"].(*string)), true
+
 	case "Query.collections":
 		if e.complexity.Query.Collections == nil {
 			break
@@ -1068,7 +1120,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Collections(childComplexity, args["originPrefix"].(*string), args["presentationCountGt"].(*int), args["first"].(*int), args["last"].(*int), args["before"].(*string), args["after"].(*string)), true
+		return e.complexity.Query.Collections(childComplexity, args["originPrefix"].(*string), args["presentationCountGt"].(*int), args["tagOr"].([]string), args["tagAnd"].([]string), args["first"].(*int), args["last"].(*int), args["before"].(*string), args["after"].(*string)), true
 
 	case "Query.folderOriginPrefix":
 		if e.complexity.Query.FolderOriginPrefix == nil {
@@ -1114,6 +1166,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.RestoreDatabasePayload.IsDropped(childComplexity), true
+
+	case "StringConnection.edges":
+		if e.complexity.StringConnection.Edges == nil {
+			break
+		}
+
+		return e.complexity.StringConnection.Edges(childComplexity), true
+
+	case "StringConnection.nodes":
+		if e.complexity.StringConnection.Nodes == nil {
+			break
+		}
+
+		return e.complexity.StringConnection.Nodes(childComplexity), true
+
+	case "StringConnection.pageInfo":
+		if e.complexity.StringConnection.PageInfo == nil {
+			break
+		}
+
+		return e.complexity.StringConnection.PageInfo(childComplexity), true
+
+	case "StringEdge.cursor":
+		if e.complexity.StringEdge.Cursor == nil {
+			break
+		}
+
+		return e.complexity.StringEdge.Cursor(childComplexity), true
+
+	case "StringEdge.node":
+		if e.complexity.StringEdge.Node == nil {
+			break
+		}
+
+		return e.complexity.StringEdge.Node(childComplexity), true
 
 	case "StringEntry.k":
 		if e.complexity.StringEntry.K == nil {
@@ -1180,6 +1267,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.UpdateCollectionMetadataPayload.Updated(childComplexity), true
+
+	case "UpdateCollectionPayload.clientMutationId":
+		if e.complexity.UpdateCollectionPayload.ClientMutationID == nil {
+			break
+		}
+
+		return e.complexity.UpdateCollectionPayload.ClientMutationID(childComplexity), true
+
+	case "UpdateCollectionPayload.updated":
+		if e.complexity.UpdateCollectionPayload.Updated == nil {
+			break
+		}
+
+		return e.complexity.UpdateCollectionPayload.Updated(childComplexity), true
 
 	case "UpdatePresentationMetadataPayload.clientMutationId":
 		if e.complexity.UpdatePresentationMetadataPayload.ClientMutationID == nil {
@@ -1437,7 +1538,7 @@ extend type Mutation {
 input UpdateCGTeamworkFlowInputData {
     id: ID!
     stage: ID!
-    status: String!
+    status: ID!
     "Default to collection pipeline."
     pipeline: String
     "HTML note message"
@@ -1461,6 +1562,29 @@ type UpdateCGTeamworkFlowPayload {
 
 extend type Mutation {
     updateCGTeamworkFlow(input: UpdateCGTeamworkFlowInput!): UpdateCGTeamworkFlowPayload
+}
+`, BuiltIn: false},
+	{Name: "pkg/api/mutations/updateCollection.gql", Input: `# Code generated from [base.gql.gotmpl dataInput.gotmpl updateCollection.gotmpl], DO NOT EDIT.
+
+input UpdateCollectionInputData {
+    id: ID!
+    tags: [String!]
+}
+
+"Autogenerated input type of UpdateCollection"
+input UpdateCollectionInput {
+    data: [UpdateCollectionInputData!]!
+    clientMutationId: String
+}
+
+"Autogenerated return type of UpdateCollection"
+type UpdateCollectionPayload {
+    updated: [Collection!]
+    clientMutationId: String
+}
+
+extend type Mutation {
+    updateCollection(input: UpdateCollectionInput!): UpdateCollectionPayload
 }
 `, BuiltIn: false},
 	{Name: "pkg/api/mutations/updateCollectionMetadata.gql", Input: `# Code generated from [base.gql.gotmpl dataInput.gotmpl updateMetadata.gotmpl], DO NOT EDIT.
@@ -1547,10 +1671,22 @@ extend type Query {
   clientConfig(name: String!): ClientConfig
 }
 `, BuiltIn: false},
+	{Name: "pkg/api/queries/collectionTags.gql", Input: `extend type Query {
+  collectionTags(
+    regex: String
+    first: Int
+    last: Int
+    before: String
+    after: String
+  ): StringConnection!
+}
+`, BuiltIn: false},
 	{Name: "pkg/api/queries/collections.gql", Input: `extend type Query {
   collections(
     originPrefix: String
     presentationCountGt: Int
+    tagOr: [String!]
+    tagAnd: [String!]
     first: Int
     last: Int
     before: String
@@ -1658,6 +1794,7 @@ extend type Collection {
   presentations: [Presentation!]!
   metadata: [StringEntry!]!
   collectTime: Time!
+  tags: [String!]!
 }
 `, BuiltIn: false},
 	{Name: "pkg/api/types/CollectionConnection.gql", Input: `type CollectionEdge {
@@ -1699,6 +1836,28 @@ type CollectionConnection {
   isRegularOutdated: Boolean
   isRegularTranscodeFailed: Boolean
   metadata: [StringEntry!]!
+}
+`, BuiltIn: false},
+	{Name: "pkg/api/types/StringConnection.gql", Input: `# Code generated from [Connection.gql.gotmpl], DO NOT EDIT.
+
+type StringEdge {
+  "The item at the end of the edge."
+  node: String
+
+  "A cursor for use in pagination."
+  cursor: String!
+}
+
+"The connection type for String."
+type StringConnection {
+  "A list of edges."
+  edges: [StringEdge]
+
+  "A list of nodes."
+  nodes: [String]
+
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
 }
 `, BuiltIn: false},
 	{Name: "pkg/api/types/StringEntry.gql", Input: `type StringEntry {
@@ -1926,6 +2085,21 @@ func (ec *executionContext) field_Mutation_updateCollectionMetadata_args(ctx con
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_updateCollection_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.UpdateCollectionInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateCollectionInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_updatePresentationMetadata_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2070,6 +2244,57 @@ func (ec *executionContext) field_Query_clientConfig_args(ctx context.Context, r
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_collectionTags_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["regex"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("regex"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["regex"] = arg0
+	var arg1 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg1, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg2
+	var arg3 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg3, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg3
+	var arg4 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg4
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_collections_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2091,42 +2316,60 @@ func (ec *executionContext) field_Query_collections_args(ctx context.Context, ra
 		}
 	}
 	args["presentationCountGt"] = arg1
-	var arg2 *int
+	var arg2 []string
+	if tmp, ok := rawArgs["tagOr"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tagOr"))
+		arg2, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["tagOr"] = arg2
+	var arg3 []string
+	if tmp, ok := rawArgs["tagAnd"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tagAnd"))
+		arg3, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["tagAnd"] = arg3
+	var arg4 *int
 	if tmp, ok := rawArgs["first"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		arg4, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["first"] = arg2
-	var arg3 *int
+	args["first"] = arg4
+	var arg5 *int
 	if tmp, ok := rawArgs["last"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
-		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		arg5, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["last"] = arg3
-	var arg4 *string
+	args["last"] = arg5
+	var arg6 *string
 	if tmp, ok := rawArgs["before"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
-		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		arg6, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["before"] = arg4
-	var arg5 *string
+	args["before"] = arg6
+	var arg7 *string
 	if tmp, ok := rawArgs["after"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
-		arg5, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		arg7, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["after"] = arg5
+	args["after"] = arg7
 	return args, nil
 }
 
@@ -3915,6 +4158,41 @@ func (ec *executionContext) _Collection_collectTime(ctx context.Context, field g
 	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Collection_tags(ctx context.Context, field graphql.CollectedField, obj *collection.Collection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Collection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Tags, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]string)
+	fc.Result = res
+	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Collection_cgteamworkNotes(ctx context.Context, field graphql.CollectedField, obj *collection.Collection) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4735,6 +5013,45 @@ func (ec *executionContext) _Mutation_updateCGTeamworkFlow(ctx context.Context, 
 	return ec.marshalOUpdateCGTeamworkFlowPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCGTeamworkFlowPayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_updateCollection(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateCollection_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateCollection(rctx, args["input"].(model.UpdateCollectionInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateCollectionPayload)
+	fc.Result = res
+	return ec.marshalOUpdateCollectionPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionPayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_updateCollectionMetadata(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5473,6 +5790,48 @@ func (ec *executionContext) _Query_clientConfig(ctx context.Context, field graph
 	return ec.marshalOClientConfig2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐClientConfig(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_collectionTags(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_collectionTags_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CollectionTags(rctx, args["regex"].(*string), args["first"].(*int), args["last"].(*int), args["before"].(*string), args["after"].(*string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.StringConnection)
+	fc.Result = res
+	return ec.marshalNStringConnection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringConnection(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_collections(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5498,7 +5857,7 @@ func (ec *executionContext) _Query_collections(ctx context.Context, field graphq
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Collections(rctx, args["originPrefix"].(*string), args["presentationCountGt"].(*int), args["first"].(*int), args["last"].(*int), args["before"].(*string), args["after"].(*string))
+		return ec.resolvers.Query().Collections(rctx, args["originPrefix"].(*string), args["presentationCountGt"].(*int), args["tagOr"].([]string), args["tagAnd"].([]string), args["first"].(*int), args["last"].(*int), args["before"].(*string), args["after"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5764,6 +6123,172 @@ func (ec *executionContext) _RestoreDatabasePayload_clientMutationId(ctx context
 	res := resTmp.(*string)
 	fc.Result = res
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _StringConnection_edges(ctx context.Context, field graphql.CollectedField, obj *model.StringConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "StringConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Edges, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.StringEdge)
+	fc.Result = res
+	return ec.marshalOStringEdge2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEdge(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _StringConnection_nodes(ctx context.Context, field graphql.CollectedField, obj *model.StringConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "StringConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Nodes, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*string)
+	fc.Result = res
+	return ec.marshalOString2ᚕᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _StringConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *model.StringConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "StringConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PageInfo, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.PageInfo)
+	fc.Result = res
+	return ec.marshalNPageInfo2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐPageInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _StringEdge_node(ctx context.Context, field graphql.CollectedField, obj *model.StringEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "StringEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Node, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _StringEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *model.StringEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "StringEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Cursor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _StringEntry_k(ctx context.Context, field graphql.CollectedField, obj *model.StringEntry) (ret graphql.Marshaler) {
@@ -6045,6 +6570,70 @@ func (ec *executionContext) _UpdateCollectionMetadataPayload_clientMutationId(ct
 	}()
 	fc := &graphql.FieldContext{
 		Object:     "UpdateCollectionMetadataPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ClientMutationID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateCollectionPayload_updated(ctx context.Context, field graphql.CollectedField, obj *model.UpdateCollectionPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateCollectionPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Updated, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]collection.Collection)
+	fc.Result = res
+	return ec.marshalOCollection2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollectionᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateCollectionPayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *model.UpdateCollectionPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateCollectionPayload",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -7608,7 +8197,7 @@ func (ec *executionContext) unmarshalInputUpdateCGTeamworkFlowInputData(ctx cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
-			it.Status, err = ec.unmarshalNString2string(ctx, v)
+			it.Status, err = ec.unmarshalNID2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -7633,6 +8222,62 @@ func (ec *executionContext) unmarshalInputUpdateCGTeamworkFlowInputData(ctx cont
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("images"))
 			it.Images, err = ec.unmarshalOUpload2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUploadᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateCollectionInput(ctx context.Context, obj interface{}) (model.UpdateCollectionInput, error) {
+	var it model.UpdateCollectionInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "data":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
+			it.Data, err = ec.unmarshalNUpdateCollectionInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionInputDataᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "clientMutationId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clientMutationId"))
+			it.ClientMutationID, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateCollectionInputData(ctx context.Context, obj interface{}) (model.UpdateCollectionInputData, error) {
+	var it model.UpdateCollectionInputData
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "tags":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tags"))
+			it.Tags, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -8374,6 +9019,11 @@ func (ec *executionContext) _Collection(ctx context.Context, sel ast.SelectionSe
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "tags":
+			out.Values[i] = ec._Collection_tags(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "cgteamworkNotes":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -8617,6 +9267,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_restoreDatabase(ctx, field)
 		case "updateCGTeamworkFlow":
 			out.Values[i] = ec._Mutation_updateCGTeamworkFlow(ctx, field)
+		case "updateCollection":
+			out.Values[i] = ec._Mutation_updateCollection(ctx, field)
 		case "updateCollectionMetadata":
 			out.Values[i] = ec._Mutation_updateCollectionMetadata(ctx, field)
 		case "updatePresentationMetadata":
@@ -8879,6 +9531,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				res = ec._Query_clientConfig(ctx, field)
 				return res
 			})
+		case "collectionTags":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_collectionTags(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "collections":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -8953,6 +9619,66 @@ func (ec *executionContext) _RestoreDatabasePayload(ctx context.Context, sel ast
 			}
 		case "clientMutationId":
 			out.Values[i] = ec._RestoreDatabasePayload_clientMutationId(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var stringConnectionImplementors = []string{"StringConnection"}
+
+func (ec *executionContext) _StringConnection(ctx context.Context, sel ast.SelectionSet, obj *model.StringConnection) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, stringConnectionImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("StringConnection")
+		case "edges":
+			out.Values[i] = ec._StringConnection_edges(ctx, field, obj)
+		case "nodes":
+			out.Values[i] = ec._StringConnection_nodes(ctx, field, obj)
+		case "pageInfo":
+			out.Values[i] = ec._StringConnection_pageInfo(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var stringEdgeImplementors = []string{"StringEdge"}
+
+func (ec *executionContext) _StringEdge(ctx context.Context, sel ast.SelectionSet, obj *model.StringEdge) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, stringEdgeImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("StringEdge")
+		case "node":
+			out.Values[i] = ec._StringEdge_node(ctx, field, obj)
+		case "cursor":
+			out.Values[i] = ec._StringEdge_cursor(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -9059,6 +9785,32 @@ func (ec *executionContext) _UpdateCollectionMetadataPayload(ctx context.Context
 			out.Values[i] = ec._UpdateCollectionMetadataPayload_updated(ctx, field, obj)
 		case "clientMutationId":
 			out.Values[i] = ec._UpdateCollectionMetadataPayload_clientMutationId(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateCollectionPayloadImplementors = []string{"UpdateCollectionPayload"}
+
+func (ec *executionContext) _UpdateCollectionPayload(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateCollectionPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateCollectionPayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateCollectionPayload")
+		case "updated":
+			out.Values[i] = ec._UpdateCollectionPayload_updated(ctx, field, obj)
+		case "clientMutationId":
+			out.Values[i] = ec._UpdateCollectionPayload_clientMutationId(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -9832,6 +10584,50 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
+func (ec *executionContext) unmarshalNString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]string, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNString2string(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalNString2string(ctx, sel, v[i])
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNStringConnection2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringConnection(ctx context.Context, sel ast.SelectionSet, v model.StringConnection) graphql.Marshaler {
+	return ec._StringConnection(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNStringConnection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringConnection(ctx context.Context, sel ast.SelectionSet, v *model.StringConnection) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._StringConnection(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNStringEntry2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEntry(ctx context.Context, sel ast.SelectionSet, v model.StringEntry) graphql.Marshaler {
 	return ec._StringEntry(ctx, sel, &v)
 }
@@ -9912,6 +10708,37 @@ func (ec *executionContext) unmarshalNUpdateCGTeamworkFlowInputData2ᚕgithubᚗ
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
 		res[i], err = ec.unmarshalNUpdateCGTeamworkFlowInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCGTeamworkFlowInputData(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalNUpdateCollectionInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionInput(ctx context.Context, v interface{}) (model.UpdateCollectionInput, error) {
+	res, err := ec.unmarshalInputUpdateCollectionInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateCollectionInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionInputData(ctx context.Context, v interface{}) (model.UpdateCollectionInputData, error) {
+	res, err := ec.unmarshalInputUpdateCollectionInputData(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateCollectionInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionInputDataᚄ(ctx context.Context, v interface{}) ([]model.UpdateCollectionInputData, error) {
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]model.UpdateCollectionInputData, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNUpdateCollectionInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionInputData(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -10741,6 +11568,42 @@ func (ec *executionContext) marshalOString2ᚕstringᚄ(ctx context.Context, sel
 	return ret
 }
 
+func (ec *executionContext) unmarshalOString2ᚕᚖstring(ctx context.Context, v interface{}) ([]*string, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]*string, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalOString2ᚖstring(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalOString2ᚕᚖstring(ctx context.Context, sel ast.SelectionSet, v []*string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalOString2ᚖstring(ctx, sel, v[i])
+	}
+
+	return ret
+}
+
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
 	if v == nil {
 		return nil, nil
@@ -10754,6 +11617,53 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 		return graphql.Null
 	}
 	return graphql.MarshalString(*v)
+}
+
+func (ec *executionContext) marshalOStringEdge2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEdge(ctx context.Context, sel ast.SelectionSet, v []*model.StringEdge) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOStringEdge2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEdge(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalOStringEdge2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEdge(ctx context.Context, sel ast.SelectionSet, v *model.StringEdge) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._StringEdge(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOTime2timeᚐTime(ctx context.Context, v interface{}) (time.Time, error) {
@@ -10777,6 +11687,13 @@ func (ec *executionContext) marshalOUpdateCollectionMetadataPayload2ᚖgithubᚗ
 		return graphql.Null
 	}
 	return ec._UpdateCollectionMetadataPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateCollectionPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionPayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdateCollectionPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateCollectionPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUpdatePresentationMetadataPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdatePresentationMetadataPayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdatePresentationMetadataPayload) graphql.Marshaler {

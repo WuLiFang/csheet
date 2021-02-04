@@ -2,7 +2,7 @@
 
 export CGO_ENABLED?=0
 
-default: src/graphql docs/_build/html dist build
+default: build src/graphql docs/_build/html dist
 
 docs/_build/html: docs/_build/html/.git docs/* docs/*/*.rst docs/*/*/*.rst
 	$(MAKE) -C docs

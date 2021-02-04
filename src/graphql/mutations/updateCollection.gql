@@ -1,0 +1,8 @@
+mutation updateCollection($input: UpdateCollectionInput!) {
+  updateCollection(input: $input) {
+    updated {
+      id
+      tags
+    }
+  }
+}

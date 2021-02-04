@@ -69,6 +69,7 @@ export interface collections_collections_nodes {
   metadata: collections_collections_nodes_metadata[];
   presentations: collections_collections_nodes_presentations[];
   collectTime: import('./scalars').Time;
+  tags: string[];
 }
 
 export interface collections_collections_pageInfo {
@@ -97,4 +98,6 @@ export interface collectionsVariables {
   originPrefix?: string | null;
   filePathFormat?: string | null;
   presentationCountGt?: number | null;
+  tagOr?: string[] | null;
+  tagAnd?: string[] | null;
 }

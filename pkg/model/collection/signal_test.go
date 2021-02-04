@@ -5,18 +5,22 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestSignalSubscribe(t *testing.T) {
-
 	ctx := context.Background()
-	c1, unsubscribe1 := SignalSaved.Subscribe(0)
-	c2, unsubscribe2 := SignalSaved.Subscribe(1)
-	assert.Len(t, SignalSaved.m, 2)
+	var signal1 = new(Signal)
+	c1, unsubscribe1 := signal1.Subscribe(0)
+	c2, unsubscribe2 := signal1.Subscribe(1)
+	assert.Len(t, signal1.m, 2)
+	var err error
 	go func() {
-		SignalSaved.Emit(ctx, new(Collection))
+		err = signal1.Emit(ctx, new(Collection))
+		require.NoError(t, err)
 		unsubscribe2()
-		SignalSaved.Emit(ctx, new(Collection))
+		err = signal1.Emit(ctx, new(Collection))
+		require.NoError(t, err)
 		unsubscribe1()
 	}()
 
@@ -32,5 +36,5 @@ func TestSignalSubscribe(t *testing.T) {
 		count2++
 	}
 	assert.Equal(t, count2, 1)
-	assert.Len(t, SignalSaved.m, 0)
+	assert.Len(t, signal1.m, 0)
 }

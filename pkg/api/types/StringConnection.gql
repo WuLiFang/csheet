@@ -1,0 +1,21 @@
+# Code generated from [Connection.gql.gotmpl], DO NOT EDIT.
+
+type StringEdge {
+  "The item at the end of the edge."
+  node: String
+
+  "A cursor for use in pagination."
+  cursor: String!
+}
+
+"The connection type for String."
+type StringConnection {
+  "A list of edges."
+  edges: [StringEdge]
+
+  "A list of nodes."
+  nodes: [String]
+
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+}

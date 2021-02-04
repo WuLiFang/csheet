@@ -4,10 +4,12 @@ Accept data:
 */ -}}
 
 // Code Generated from {{ templateFiles }}, DO NOT EDIT.
+/* eslint-disable import/no-duplicates */
 import { {{.Name}}, {{- if not .NoVariables }}{{.Name}}Variables{{end}} } from '@/graphql/types/{{.Name}}';
-import { OperationVariables, QueryOptions, ApolloQueryResult } from 'apollo-client';
+import { OperationVariables, QueryOptions, WatchQueryOptions, ApolloQueryResult, ObservableQuery } from 'apollo-client';
 import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
 import { apolloClient } from "@/client"
+import { ref, Ref, watch, onDeactivated } from '@vue/composition-api';
 {{- block "import" . }}{{ end }}
 
 {{- if .NoVariables }}
@@ -47,4 +49,54 @@ export function vueQuery<V>(
   } as VueApolloQueryDefinition<{{.Name}}, OperationVariables>;
 }
 
+export function useQuery(
+{{- if not .NoVariables }}
+  variables: Ref<{{ .Name }}Variables>,
+{{- end }}
+  options?: Ref<
+    Omit<WatchQueryOptions<{{ .Name }}Variables>, 'query' | 'variables'>
+  >
+): {
+  data: Ref<{{ .Name }} | undefined>;
+  query: ObservableQuery<{{ .Name }}, {{ .Name }}Variables>;
+  {{- block "extendUseQueryType" . }}{{ end }}
+} {
+  const data = ref<{{ .Name }} | undefined>();
+  const o = {
+    query: require('./{{ .Name }}.gql'),
+  }
+  const q = apolloClient.watchQuery<{{ .Name }}, {{ .Name }}Variables>({
+    ...options?.value,
+    ...o,
+{{- if not .NoVariables }}
+    variables: variables.value,
+{{- end }}
+  });
+{{- if not .NoVariables }}
+  watch(
+    () => variables.value,
+    async n => {
+      await q.setVariables(n);
+    }
+  );
+{{- end }}
+  watch(
+    () => options?.value,
+    n => {
+      q.setOptions({ ...n, ...o });
+    }
+  );
+  const sub = q.subscribe(value => {
+    data.value = value.data;
+  });
+  onDeactivated(() => {
+    sub.unsubscribe()
+  })
+  const query = q
+  return {
+    data,
+    query,
+    {{- block "extendUseQuery" . }}{{ end }}
+  };
+}
 {{- block "after" . }}{{ end }}

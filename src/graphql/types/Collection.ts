@@ -69,4 +69,5 @@ export interface Collection {
   metadata: Collection_metadata[];
   presentations: Collection_presentations[];
   collectTime: import('./scalars').Time;
+  tags: string[];
 }

@@ -50,7 +50,7 @@ func (r *mutationResolver) UpdateCGTeamworkFlow(ctx context.Context, input model
 		return
 	}
 	for _, i := range input.Data {
-		col, err := collection.FindByID(i.ID)
+		col, err := collection.FindByID(ctx, i.ID)
 		if err != nil {
 			return ret, err
 		}
@@ -149,11 +149,11 @@ func (r *mutationResolver) UpdateCGTeamworkFlow(ctx context.Context, input model
 		if _, ok := ids[i.ID]; ok {
 			continue
 		}
-		col, err := collection.FindByID(i.ID)
+		col, err := collection.FindByID(ctx, i.ID)
 		if err != nil {
 			return ret, err
 		}
-		ret.Updated = append(ret.Updated, col)
+		ret.Updated = append(ret.Updated, *col)
 		ids[i.ID] = struct{}{}
 	}
 	return ret, nil

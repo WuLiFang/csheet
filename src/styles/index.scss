@@ -47,6 +47,17 @@ button:focus,
   }
 }
 
+%form-focus {
+  outline: none;
+  @apply shadow-outline;
+  @apply border;
+  @apply border-blue-400;
+}
+
+.form-focus {
+  @extend %form-focus;
+}
+
 .form-button {
   @extend %form-button-common;
   @apply text-white;
@@ -59,10 +70,7 @@ button:focus,
     @apply bg-gray-900;
   }
   &:focus {
-    outline: none;
-    @apply shadow-outline;
-    @apply border;
-    @apply border-blue-400;
+    @extend %form-focus;
   }
 }
 

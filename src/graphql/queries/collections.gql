@@ -9,6 +9,8 @@ query collections(
   $originPrefix: String
   $filePathFormat: String
   $presentationCountGt: Int
+  $tagOr: [String!]
+  $tagAnd: [String!]
 ) {
   collections(
     after: $after
@@ -17,6 +19,8 @@ query collections(
     last: $last
     originPrefix: $originPrefix
     presentationCountGt: $presentationCountGt
+    tagOr: $tagOr
+    tagAnd: $tagAnd
   ) {
     nodes {
       ...Collection

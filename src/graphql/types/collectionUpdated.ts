@@ -69,6 +69,7 @@ export interface collectionUpdated_collectionUpdated {
   metadata: collectionUpdated_collectionUpdated_metadata[];
   presentations: collectionUpdated_collectionUpdated_presentations[];
   collectTime: import('./scalars').Time;
+  tags: string[];
 }
 
 export interface collectionUpdated {

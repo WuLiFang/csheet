@@ -1,0 +1,28 @@
+{{- /*
+Accept data:
+    Typename(Optional): connection node type name.
+*/ -}}
+
+{{- $_ := set . "Typename" (.Typename | default (regexReplaceAll "Connection$" .Name "")) -}}
+
+# Code generated from {{ templateFiles }}, DO NOT EDIT.
+
+type {{.Typename}}Edge {
+  "The item at the end of the edge."
+  node: {{.Typename}}
+
+  "A cursor for use in pagination."
+  cursor: String!
+}
+
+"The connection type for {{.Typename}}."
+type {{.Typename}}Connection {
+  "A list of edges."
+  edges: [{{.Typename}}Edge]
+
+  "A list of nodes."
+  nodes: [{{.Typename}}]
+
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+}

@@ -2,6 +2,10 @@
 {{- .Node | default (regexReplaceAll "Node$" .Name "" | upperFirst) }}
 {{- end }}
 
+{{- define "import" }}
+import { computed } from "@vue/composition-api"
+{{- end }}
+
 {{- define "before" }}
 export type {{ template "Node" . }} = {{ .Name }}['node'] & { __typename: '{{ template "Node" . }}' };
 
@@ -16,6 +20,13 @@ function castNode(node: {{.Name}}['node'] | null | undefined ): {{ template "Nod
     },
 {{- end }}
 
+{{- define "extendUseQueryType" }}
+    node: Ref<{{ template "Node" . }} | undefined>
+{{- end }}
+
+{{- define "extendUseQuery" }}
+    node: computed(() => castNode(data.value?.node))
+{{- end }}
 
 {{- define "after" }}
 

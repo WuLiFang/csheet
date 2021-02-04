@@ -1,4 +1,5 @@
 // Code Generated from [base.ts.gotmpl node.gotmpl], DO NOT EDIT.
+/* eslint-disable import/no-duplicates */
 import {
   collectionCGTeamworkNotes,
   collectionCGTeamworkNotesVariables,
@@ -6,10 +7,14 @@ import {
 import {
   OperationVariables,
   QueryOptions,
+  WatchQueryOptions,
   ApolloQueryResult,
+  ObservableQuery,
 } from 'apollo-client';
 import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
 import { apolloClient } from '@/client';
+import { ref, Ref, watch, onDeactivated } from '@vue/composition-api';
+import { computed } from '@vue/composition-api';
 
 export { collectionCGTeamworkNotesVariables, collectionCGTeamworkNotes };
 export type Collection = collectionCGTeamworkNotes['node'] & {
@@ -57,6 +62,60 @@ export function vueQuery<V>(
       return castNode(data.node);
     },
   } as VueApolloQueryDefinition<collectionCGTeamworkNotes, OperationVariables>;
+}
+
+export function useQuery(
+  variables: Ref<collectionCGTeamworkNotesVariables>,
+  options?: Ref<
+    Omit<
+      WatchQueryOptions<collectionCGTeamworkNotesVariables>,
+      'query' | 'variables'
+    >
+  >
+): {
+  data: Ref<collectionCGTeamworkNotes | undefined>;
+  query: ObservableQuery<
+    collectionCGTeamworkNotes,
+    collectionCGTeamworkNotesVariables
+  >;
+  node: Ref<Collection | undefined>;
+} {
+  const data = ref<collectionCGTeamworkNotes | undefined>();
+  const o = {
+    query: require('./collectionCGTeamworkNotes.gql'),
+  };
+  const q = apolloClient.watchQuery<
+    collectionCGTeamworkNotes,
+    collectionCGTeamworkNotesVariables
+  >({
+    ...options?.value,
+    ...o,
+    variables: variables.value,
+  });
+  watch(
+    () => variables.value,
+    async n => {
+      await q.setVariables(n);
+    }
+  );
+  watch(
+    () => options?.value,
+    n => {
+      q.setOptions({ ...n, ...o });
+    }
+  );
+  const sub = q.subscribe(value => {
+    data.value = value.data;
+  });
+  onDeactivated(() => {
+    sub.unsubscribe();
+  });
+  const query = q;
+  return {
+    data,
+    query,
+    node: computed(() => castNode(data.value?.node)),
+  };
 }
 
 export async function findById(id: string): Promise<Collection | undefined> {

@@ -1,0 +1,9 @@
+extend type Query {
+  collectionTags(
+    regex: String
+    first: Int
+    last: Int
+    before: String
+    after: String
+  ): StringConnection!
+}

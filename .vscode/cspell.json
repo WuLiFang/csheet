@@ -49,6 +49,7 @@
         "isnot",
         "jsonify",
         "localforage",
+        "mongodb",
         "Mutex",
         "noscript",
         "notifyjs",

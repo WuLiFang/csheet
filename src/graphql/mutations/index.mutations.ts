@@ -4,6 +4,7 @@ import { mutate as collectFromFolder } from './collectFromFolder';
 import { mutate as createCGTeamworkNote } from './createCGTeamworkNote';
 import { mutate as deleteCGTeamworkNote } from './deleteCGTeamworkNote';
 import { mutate as updateCGTeamworkFlow } from './updateCGTeamworkFlow';
+import { mutate as updateCollection } from './updateCollection';
 import { mutate as updateCollectionMetadata } from './updateCollectionMetadata';
 import { mutate as updatePresentationMetadata } from './updatePresentationMetadata';
 
@@ -13,6 +14,7 @@ export {
   createCGTeamworkNote,
   deleteCGTeamworkNote,
   updateCGTeamworkFlow,
+  updateCollection,
   updateCollectionMetadata,
   updatePresentationMetadata,
 };

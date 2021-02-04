@@ -1,0 +1,4 @@
+{{- define "before" }}
+type _ = NodeType<never>
+export type {{ template "Node" . }} = string;
+{{- end }}

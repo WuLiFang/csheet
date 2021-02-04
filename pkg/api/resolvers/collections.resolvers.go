@@ -12,7 +12,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, presentationCountGt *int, first *int, last *int, before *string, after *string) (*model.CollectionConnection, error) {
+func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, presentationCountGt *int, tagOr []string, tagAnd []string, first *int, last *int, before *string, after *string) (*model.CollectionConnection, error) {
 	pag, err := paginate(first, last, before, after)
 	if err != nil {
 		return nil, err
@@ -20,12 +20,35 @@ func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, p
 	ret := model.CollectionConnection{PageInfo: &model.PageInfo{}}
 	nodes := []*collection.Collection{}
 
+	// TODO: refactor to collection.Find
 	filter := func(v *collection.Collection) bool {
 		if v == nil {
 			return false
 		}
 		if presentationCountGt != nil && len(v.PresentationIDs) <= *presentationCountGt {
 			return false
+		}
+		if tagAnd != nil || tagOr != nil {
+			var tagSet = stringSet(v.Tags)
+			if tagAnd != nil {
+				for _, i := range tagAnd {
+					if _, ok := tagSet[i]; !ok {
+						return false
+					}
+				}
+			}
+			if tagOr != nil {
+				var match = false
+				for _, i := range tagOr {
+					if _, ok := tagSet[i]; ok {
+						match = true
+						break
+					}
+				}
+				if !match {
+					return false
+				}
+			}
 		}
 
 		return true
@@ -50,7 +73,6 @@ func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, p
 
 		var isAfter = pag.after == ""
 		for cursor.Seek(start); cursor.ValidForPrefix(prefix); cursor.Next() {
-
 			if pag.limit != 0 && len(nodes) >= pag.limit {
 				cursor.Next()
 				ret.PageInfo.HasNextPage = cursor.ValidForPrefix(prefix)

@@ -73,6 +73,7 @@ export interface collectionNode_node_Collection {
   metadata: collectionNode_node_Collection_metadata[];
   presentations: collectionNode_node_Collection_presentations[];
   collectTime: import('./scalars').Time;
+  tags: string[];
 }
 
 export type collectionNode_node = collectionNode_node_Presentation | collectionNode_node_Collection;

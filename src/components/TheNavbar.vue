@@ -105,14 +105,28 @@
           FaIcon(name='spinner' spin)
         template(v-else)
           | 收集
-      label
-        input(
-          type="checkbox"
-          v-model="formData.skipEmptyPresentation"
-          class="form-checkbox text-gray-900"
+      div.inline-block.mr-1.space-x-1
+        span.mr-1 筛选
+        CollectionTagInput(
+          v-model="formData.tagOr" multiple input-class="w-32" placeholder="匹配任一标签" clearable
+          class="max-w-md"
         )
-        span.mx-1 跳过无内容
-      label
+        CollectionTagInput(
+          v-model="formData.tagAnd" multiple input-class="w-32" placeholder="匹配全部标签" clearable
+          class="max-w-md"
+        )
+        label(
+          class="inline-block keep-all"
+        )
+          input(
+            type="checkbox"
+            v-model="formData.skipEmptyPresentation"
+            class="form-checkbox text-gray-900"
+          )
+          span.mx-1 跳过无内容
+      label(
+        class="inline-block keep-all"
+      )
         input(
           type="checkbox"
           v-model="cellOverlayVisible"
@@ -148,6 +162,7 @@ import { info } from '@/message';
 import { clientConfig_clientConfig as Config } from '@/graphql/types/clientConfig';
 import CGTeamworkPipelineRadio from '@/components/cgteamwork/CGTeamworkPipelineRadio.vue';
 import { cgteamworkProjects_cgteamworkProjects as CGTeamworkProject } from '@/graphql/types/cgteamworkProjects';
+import CollectionTagInput from '@/components/CollectionTagInput.vue';
 
 function getResultMessage({
   createdCount,
@@ -164,11 +179,22 @@ function getResultMessage({
   }
   return `更新了 ${updatedCount} 个收藏`;
 }
+function searchParamsSetAll(
+  params: URLSearchParams,
+  name: string,
+  values: string[]
+) {
+  params.delete(name);
+  for (const i of values) {
+    params.append(name, i);
+  }
+}
 
 @Component<TheNavbar>({
   components: {
     CGTeamworkProjectSelect,
     CGTeamworkPipelineRadio,
+    CollectionTagInput,
   },
   apollo: {
     folderOriginPrefix: {
@@ -238,6 +264,8 @@ export default class TheNavbar extends Vue {
     folder: CollectFromFolderInput;
     cgteamwork: CollectFromCGTeamworkInput;
     skipEmptyPresentation: boolean;
+    tagOr: string[];
+    tagAnd: string[];
   } = {
     mode: 'folder',
     folder: {
@@ -248,6 +276,8 @@ export default class TheNavbar extends Vue {
       pipeline: '',
       prefix: '',
     },
+    tagOr: [],
+    tagAnd: [],
     skipEmptyPresentation: false,
   };
 
@@ -301,6 +331,9 @@ export default class TheNavbar extends Vue {
     return {
       originPrefix: this.originPrefix,
       presentationCountGt: this.formData.skipEmptyPresentation ? 0 : undefined,
+      tagOr: this.formData.tagOr.length > 0 ? this.formData.tagOr : undefined,
+      tagAnd:
+        this.formData.tagAnd.length > 0 ? this.formData.tagAnd : undefined,
     };
   }
 
@@ -322,6 +355,9 @@ export default class TheNavbar extends Vue {
         u.searchParams.set('root', this.formData.folder.root);
         break;
     }
+    searchParamsSetAll(u.searchParams, 'tagOr', this.formData.tagOr);
+    searchParamsSetAll(u.searchParams, 'tagAnd', this.formData.tagAnd);
+
     const title = document.title;
     const url = u.toString();
     if (url === location.href) {
@@ -364,6 +400,8 @@ export default class TheNavbar extends Vue {
     if (q.get('skip_empty')) {
       this.formData.skipEmptyPresentation = true;
     }
+    this.formData.tagOr = q.getAll("tagOr")
+    this.formData.tagAnd = q.getAll("tagAnd")
   }
 
   async collectFromCGTeamwork(): Promise<void> {
