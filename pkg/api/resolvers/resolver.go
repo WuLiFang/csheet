@@ -52,8 +52,6 @@ func formatPath(v string, format *string) string {
 	}
 }
 
-// DEPRECATED: use logging.For(ctx) instead
-// TODO: remove this
 func getLogger(ctx context.Context) *zap.Logger {
 	gc := gincontext.FromContext(ctx)
 	var clientIP = ""
