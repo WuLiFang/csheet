@@ -7,30 +7,23 @@ import (
 
 	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
-	"github.com/NateScarlet/zap-sentry/pkg/logging"
-	"go.uber.org/zap"
-	pkg1 "github.com/WuLiFang/csheet/v6/pkg/models/collection"
 )
 
-func resolveCollectionConnection(
+func resolveCollectionTagConnection(
 	ctx context.Context,
 	prefix []byte,
-	filter func(v *pkg1.Collection) (bool, error),
+	filter func(v *string) (bool, error),
 	first, last *int,
 	after, before *string,
-) (ret *models.CollectionConnection, err error) {
+) (ret *models.StringConnection, err error) {
 	pag, err := paginate(first, last, before, after)
 	if err != nil {
 		return nil, err
 	}
 
-	ret = new(models.CollectionConnection)
+	ret = new(models.StringConnection)
 	ret.PageInfo = new(models.PageInfo)
-	index, err := db.UnmarshalKey(prefix)
-	if err != nil {
-		return
-	}
-	var useSecondaryIndex = index != db.IndexCollection
+    var lastNodeValue string
 
 	err = db.View(func(txn *db.Txn) (err error) {
 		opt := db.DefaultIteratorOptions
@@ -50,35 +43,17 @@ func resolveCollectionConnection(
 				break
 			}
 			var item = cur.Item()
-			var node = new(pkg1.Collection)
-			if useSecondaryIndex {
-				var pk string
-				pk, err = txn.PrimaryKey(item.Key())
-				if err != nil {
-					return
-				}
-				err = txn.Get(db.IndexCollection.Key(pk), node)
-				if err == db.ErrKeyNotFound {
-					var logger = logging.For(ctx).Logger("connections").With(
-						zap.String("func", "resolveCollectionConnection"),
-					)
-					var key = item.KeyCopy(nil)
-					logger.Warn(
-						"ignore outdated secondary key",
-						zap.Binary("key", key),
-						zap.Binary("prefix", prefix),
-					)
-					continue
-				}
-			} else {
-				err = cur.Item().Value(func(v []byte) error {
-					return db.UnmarshalValue(v, node)
-				})
-			}
-			if err != nil {
-				return
-			}
-			nodeCursor := node.ID()
+            var nodeValue = ""
+            _, err = db.UnmarshalKey(item.Key(), &nodeValue)
+            if err != nil {
+                return
+            }
+            if nodeValue == lastNodeValue {
+                continue
+            }
+            var node = &nodeValue
+            lastNodeValue = nodeValue
+            nodeCursor := nodeValue
 			if nodeCursor == pag.after {
 				isAfter = true
 				continue
@@ -96,7 +71,7 @@ func resolveCollectionConnection(
 				continue
 			}
 			if isAfter {
-				ret.Edges = append(ret.Edges, &models.CollectionEdge{
+				ret.Edges = append(ret.Edges, &models.StringEdge{
 					Node:   node,
 					Cursor: nodeCursor,
 				})
@@ -123,7 +98,7 @@ func resolveCollectionConnection(
 		ret.PageInfo.StartCursor, ret.PageInfo.EndCursor = ret.PageInfo.EndCursor, ret.PageInfo.StartCursor
 	}
 	if len(ret.Edges) > 0 {
-		ret.Nodes = make([]*pkg1.Collection, 0, len(ret.Edges))
+		ret.Nodes = make([]*string, 0, len(ret.Edges))
 	}
 	for _, edge := range ret.Edges {
 		ret.Nodes = append(ret.Nodes, edge.Node)

@@ -1,0 +1,21 @@
+{{- define "import" }}
+{{- if true }}{{end}}
+{{- end}}
+
+{{- define "beforeTransaction" }}
+    var lastNodeValue string
+{{- end}}
+
+{{- define "loadNode" }}
+            var nodeValue = ""
+            _, err = db.UnmarshalKey(item.Key(), &nodeValue)
+            if err != nil {
+                return
+            }
+            if nodeValue == lastNodeValue {
+                continue
+            }
+            var node = &nodeValue
+            lastNodeValue = nodeValue
+            nodeCursor := nodeValue
+{{- end}}

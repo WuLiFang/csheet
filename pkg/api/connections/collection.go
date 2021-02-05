@@ -10,8 +10,6 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/util"
 )
 
-//go:generate gotmpl -o collection_gen.go resolve.go.gotmpl
-
 // MatchCollection with condition
 func MatchCollection(v *collection.Collection, originPrefix *string, presentationCountGt *int, tagOr, tagAnd []string) (bool, error) {
 	if v == nil {

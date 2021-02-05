@@ -1,6 +1,7 @@
 {{- $_ := .Model | default (trimSuffix "_gen" .Name | camelcase) | set . "Model"}}
 {{- $_ := .Node | default .Model | set . "Node"}}
-{{- $pkg1 := default (printf "github.com/WuLiFang/csheet/v6/pkg/models/%s" (lower .Model)) .ModelPackage -}}
+{{- $_ := .NodeType | default (printf "pkg1.%s" .Model) | set . "NodeType"}}
+{{- $_ := .ModelPackage | default (printf "github.com/WuLiFang/csheet/v6/pkg/models/%s" (lower .Model)) | set . "ModelPackage" -}}
 {{- $modelPtr := printf "pkg1.%s" .Model }}
 {{- if not .ModelIsInterface }}
 	{{- $modelPtr = printf "*%s" $modelPtr }}
@@ -16,16 +17,17 @@ import (
 
 	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
+{{- block "import" . }}
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"go.uber.org/zap"
-	pkg1 "{{$pkg1}}"
-{{- block "import" . }}{{ end }}
+	pkg1 "{{ .ModelPackage }}"
+{{- end }}
 )
 
-func resolve{{.Node}}Connection(
+func resolve{{.Model}}Connection(
 	ctx context.Context,
 	prefix []byte,
-	filter func(v *pkg1.{{.Model}}) (bool, error),
+	filter func(v *{{.NodeType}}) (bool, error),
 	first, last *int,
 	after, before *string,
 ) (ret *models.{{.Node}}Connection, err error) {
@@ -34,34 +36,37 @@ func resolve{{.Node}}Connection(
 		return nil, err
 	}
 
-	var nodes []*pkg1.{{.Node}}
 	ret = new(models.{{.Node}}Connection)
 	ret.PageInfo = new(models.PageInfo)
+
+{{- block "beforeTransaction" . }}
 	index, err := db.UnmarshalKey(prefix)
 	if err != nil {
 		return
 	}
 	var useSecondaryIndex = index != db.Index{{.Model}}
+{{- end }}
 
 	err = db.View(func(txn *db.Txn) (err error) {
 		opt := db.DefaultIteratorOptions
 		opt.Reverse = pag.reverse
-		cursor := txn.NewIterator(opt)
-		defer cursor.Close()
+		cur := txn.NewIterator(opt)
+		defer cur.Close()
 		start := prefix
 		if pag.reverse {
 			start = append(prefix[:], '\xff')
 		}
 
 		var isAfter = pag.after == ""
-		for cursor.Seek(start); cursor.ValidForPrefix(prefix); cursor.Next() {
-			if pag.limit != 0 && len(nodes) >= pag.limit {
-				cursor.Next()
-				ret.PageInfo.HasNextPage = cursor.ValidForPrefix(prefix)
+		for cur.Seek(start); cur.ValidForPrefix(prefix); cur.Next() {
+			if pag.limit != 0 && len(ret.Edges) >= pag.limit {
+				cur.Next()
+				ret.PageInfo.HasNextPage = cur.ValidForPrefix(prefix)
 				break
 			}
-			var item = cursor.Item()
-			node := new(pkg1.{{.Model}})
+			var item = cur.Item()
+{{- block "loadNode" . }}
+			var node = new({{.NodeType}})
 			if useSecondaryIndex {
 				var pk string
 				pk, err = txn.PrimaryKey(item.Key())
@@ -82,19 +87,20 @@ func resolve{{.Node}}Connection(
 					continue
 				}
 			} else {
-				err = cursor.Item().Value(func(v []byte) error {
+				err = cur.Item().Value(func(v []byte) error {
 					return db.UnmarshalValue(v, node)
 				})
 			}
 			if err != nil {
 				return
 			}
-			nid := node.ID()
-			if nid == pag.after {
+			nodeCursor := node.ID()
+{{- end }}
+			if nodeCursor == pag.after {
 				isAfter = true
 				continue
 			}
-			if nid == pag.before {
+			if nodeCursor == pag.before {
 				ret.PageInfo.HasNextPage = true
 				break
 			}
@@ -107,7 +113,10 @@ func resolve{{.Node}}Connection(
 				continue
 			}
 			if isAfter {
-				nodes = append(nodes, node)
+				ret.Edges = append(ret.Edges, &models.{{.Node}}Edge{
+					Node:   node,
+					Cursor: nodeCursor,
+				})
 			} else {
 				ret.PageInfo.HasPreviousPage = true
 			}
@@ -117,29 +126,24 @@ func resolve{{.Node}}Connection(
 	if err != nil {
 		return nil, err
 	}
-	ret.Nodes = nodes
-	for _, i := range ret.Nodes {
-		ret.Edges = append(ret.Edges, &models.CollectionEdge{
-			Node:   i,
-			Cursor: i.ID(),
-		})
-	}
-	if len(nodes) > 0 {
-		var startCursor, endCursor = nodes[0].ID(), nodes[len(nodes)-1].ID()
+	if len(ret.Edges) > 0 {
+		var startCursor, endCursor = ret.Edges[0].Cursor, ret.Edges[len(ret.Edges)-1].Cursor
 		ret.PageInfo.StartCursor = &startCursor
 		ret.PageInfo.EndCursor = &endCursor
 	}
 	if pag.reverse {
-		for i := 0; i < len(ret.Nodes)/2; i++ {
-			j := len(ret.Nodes) - 1 - i
-			ret.Nodes[i], ret.Nodes[j] = ret.Nodes[j], ret.Nodes[i]
-		}
 		for i := 0; i < len(ret.Edges)/2; i++ {
 			j := len(ret.Edges) - 1 - i
 			ret.Edges[i], ret.Edges[j] = ret.Edges[j], ret.Edges[i]
 		}
 		ret.PageInfo.HasNextPage, ret.PageInfo.HasPreviousPage = ret.PageInfo.HasPreviousPage, ret.PageInfo.HasNextPage
 		ret.PageInfo.StartCursor, ret.PageInfo.EndCursor = ret.PageInfo.EndCursor, ret.PageInfo.StartCursor
+	}
+	if len(ret.Edges) > 0 {
+		ret.Nodes = make([]*{{.NodeType}}, 0, len(ret.Edges))
+	}
+	for _, edge := range ret.Edges {
+		ret.Nodes = append(ret.Nodes, edge.Node)
 	}
 
 	return ret, nil
