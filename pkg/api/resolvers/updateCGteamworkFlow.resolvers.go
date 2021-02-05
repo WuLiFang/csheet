@@ -12,7 +12,7 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	cgteamworkCollector "github.com/WuLiFang/csheet/v6/pkg/collector/cgteamwork"
-	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
+	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
 	"github.com/tidwall/gjson"
 	"go.uber.org/zap"
 )

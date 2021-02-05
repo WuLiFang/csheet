@@ -17,9 +17,9 @@ import (
 	"github.com/99designs/gqlgen/graphql/introspection"
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
-	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
-	"github.com/WuLiFang/csheet/v6/pkg/model/file"
-	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
+	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
+	"github.com/WuLiFang/csheet/v6/pkg/models/file"
+	"github.com/WuLiFang/csheet/v6/pkg/models/presentation"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -2541,7 +2541,7 @@ func (ec *executionContext) _BackupDatabasePayload_created(ctx context.Context, 
 	}
 	res := resTmp.(*file.File)
 	fc.Result = res
-	return ec.marshalNDiskFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋfileᚐFile(ctx, field.Selections, res)
+	return ec.marshalNDiskFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋfileᚐFile(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _BackupDatabasePayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *model.BackupDatabasePayload) (ret graphql.Marshaler) {
@@ -4105,7 +4105,7 @@ func (ec *executionContext) _Collection_presentations(ctx context.Context, field
 	}
 	res := resTmp.([]presentation.Presentation)
 	fc.Result = res
-	return ec.marshalNPresentation2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋpresentationᚐPresentationᚄ(ctx, field.Selections, res)
+	return ec.marshalNPresentation2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋpresentationᚐPresentationᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Collection_metadata(ctx context.Context, field graphql.CollectedField, obj *collection.Collection) (ret graphql.Marshaler) {
@@ -4383,7 +4383,7 @@ func (ec *executionContext) _CollectionConnection_nodes(ctx context.Context, fie
 	}
 	res := resTmp.([]*collection.Collection)
 	fc.Result = res
-	return ec.marshalOCollection2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx, field.Selections, res)
+	return ec.marshalOCollection2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CollectionConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *model.CollectionConnection) (ret graphql.Marshaler) {
@@ -4485,7 +4485,7 @@ func (ec *executionContext) _CollectionEdge_node(ctx context.Context, field grap
 	}
 	res := resTmp.(*collection.Collection)
 	fc.Result = res
-	return ec.marshalOCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx, field.Selections, res)
+	return ec.marshalOCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CreateCGTeamworkNotePayload_updatedCollections(ctx context.Context, field graphql.CollectedField, obj *model.CreateCGTeamworkNotePayload) (ret graphql.Marshaler) {
@@ -4517,7 +4517,7 @@ func (ec *executionContext) _CreateCGTeamworkNotePayload_updatedCollections(ctx 
 	}
 	res := resTmp.([]collection.Collection)
 	fc.Result = res
-	return ec.marshalOCollection2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollectionᚄ(ctx, field.Selections, res)
+	return ec.marshalOCollection2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollectionᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CreateCGTeamworkNotePayload_createdCount(ctx context.Context, field graphql.CollectedField, obj *model.CreateCGTeamworkNotePayload) (ret graphql.Marshaler) {
@@ -5386,7 +5386,7 @@ func (ec *executionContext) _Presentation_raw(ctx context.Context, field graphql
 	}
 	res := resTmp.(*file.File)
 	fc.Result = res
-	return ec.marshalNDiskFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋfileᚐFile(ctx, field.Selections, res)
+	return ec.marshalNDiskFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋfileᚐFile(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Presentation_thumb(ctx context.Context, field graphql.CollectedField, obj *presentation.Presentation) (ret graphql.Marshaler) {
@@ -6075,7 +6075,7 @@ func (ec *executionContext) _RestoreDatabasePayload_backup(ctx context.Context, 
 	}
 	res := resTmp.(*file.File)
 	fc.Result = res
-	return ec.marshalODiskFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋfileᚐFile(ctx, field.Selections, res)
+	return ec.marshalODiskFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋfileᚐFile(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _RestoreDatabasePayload_isDropped(ctx context.Context, field graphql.CollectedField, obj *model.RestoreDatabasePayload) (ret graphql.Marshaler) {
@@ -6427,7 +6427,7 @@ func (ec *executionContext) _Subscription_collectionUpdated(ctx context.Context,
 			w.Write([]byte{'{'})
 			graphql.MarshalString(field.Alias).MarshalGQL(w)
 			w.Write([]byte{':'})
-			ec.marshalNCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx, field.Selections, res).MarshalGQL(w)
+			ec.marshalNCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollection(ctx, field.Selections, res).MarshalGQL(w)
 			w.Write([]byte{'}'})
 		})
 	}
@@ -6479,7 +6479,7 @@ func (ec *executionContext) _Subscription_presentationUpdated(ctx context.Contex
 			w.Write([]byte{'{'})
 			graphql.MarshalString(field.Alias).MarshalGQL(w)
 			w.Write([]byte{':'})
-			ec.marshalNPresentation2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋpresentationᚐPresentation(ctx, field.Selections, res).MarshalGQL(w)
+			ec.marshalNPresentation2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋpresentationᚐPresentation(ctx, field.Selections, res).MarshalGQL(w)
 			w.Write([]byte{'}'})
 		})
 	}
@@ -6514,7 +6514,7 @@ func (ec *executionContext) _UpdateCGTeamworkFlowPayload_updated(ctx context.Con
 	}
 	res := resTmp.([]collection.Collection)
 	fc.Result = res
-	return ec.marshalOCollection2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollectionᚄ(ctx, field.Selections, res)
+	return ec.marshalOCollection2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollectionᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _UpdateCGTeamworkFlowPayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *model.UpdateCGTeamworkFlowPayload) (ret graphql.Marshaler) {
@@ -6578,7 +6578,7 @@ func (ec *executionContext) _UpdateCollectionMetadataPayload_updated(ctx context
 	}
 	res := resTmp.([]collection.Collection)
 	fc.Result = res
-	return ec.marshalOCollection2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollectionᚄ(ctx, field.Selections, res)
+	return ec.marshalOCollection2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollectionᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _UpdateCollectionMetadataPayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *model.UpdateCollectionMetadataPayload) (ret graphql.Marshaler) {
@@ -6642,7 +6642,7 @@ func (ec *executionContext) _UpdateCollectionPayload_updated(ctx context.Context
 	}
 	res := resTmp.([]collection.Collection)
 	fc.Result = res
-	return ec.marshalOCollection2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollectionᚄ(ctx, field.Selections, res)
+	return ec.marshalOCollection2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollectionᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _UpdateCollectionPayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *model.UpdateCollectionPayload) (ret graphql.Marshaler) {
@@ -6706,7 +6706,7 @@ func (ec *executionContext) _UpdatePresentationMetadataPayload_updated(ctx conte
 	}
 	res := resTmp.([]presentation.Presentation)
 	fc.Result = res
-	return ec.marshalOPresentation2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋpresentationᚐPresentationᚄ(ctx, field.Selections, res)
+	return ec.marshalOPresentation2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋpresentationᚐPresentationᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _UpdatePresentationMetadataPayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *model.UpdatePresentationMetadataPayload) (ret graphql.Marshaler) {
@@ -10381,11 +10381,11 @@ func (ec *executionContext) marshalNCGTeamworkStatus2ᚕgithubᚗcomᚋWuLiFang�
 	return ret
 }
 
-func (ec *executionContext) marshalNCollection2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v collection.Collection) graphql.Marshaler {
+func (ec *executionContext) marshalNCollection2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v collection.Collection) graphql.Marshaler {
 	return ec._Collection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v *collection.Collection) graphql.Marshaler {
+func (ec *executionContext) marshalNCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v *collection.Collection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -10449,11 +10449,11 @@ func (ec *executionContext) unmarshalNDeleteCGTeamworkNoteInput2githubᚗcomᚋW
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNDiskFile2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋfileᚐFile(ctx context.Context, sel ast.SelectionSet, v file.File) graphql.Marshaler {
+func (ec *executionContext) marshalNDiskFile2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋfileᚐFile(ctx context.Context, sel ast.SelectionSet, v file.File) graphql.Marshaler {
 	return ec._DiskFile(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNDiskFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋfileᚐFile(ctx context.Context, sel ast.SelectionSet, v *file.File) graphql.Marshaler {
+func (ec *executionContext) marshalNDiskFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋfileᚐFile(ctx context.Context, sel ast.SelectionSet, v *file.File) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -10533,11 +10533,11 @@ func (ec *executionContext) marshalNPageInfo2ᚖgithubᚗcomᚋWuLiFangᚋcsheet
 	return ec._PageInfo(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNPresentation2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋpresentationᚐPresentation(ctx context.Context, sel ast.SelectionSet, v presentation.Presentation) graphql.Marshaler {
+func (ec *executionContext) marshalNPresentation2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋpresentationᚐPresentation(ctx context.Context, sel ast.SelectionSet, v presentation.Presentation) graphql.Marshaler {
 	return ec._Presentation(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNPresentation2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋpresentationᚐPresentationᚄ(ctx context.Context, sel ast.SelectionSet, v []presentation.Presentation) graphql.Marshaler {
+func (ec *executionContext) marshalNPresentation2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋpresentationᚐPresentationᚄ(ctx context.Context, sel ast.SelectionSet, v []presentation.Presentation) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -10561,7 +10561,7 @@ func (ec *executionContext) marshalNPresentation2ᚕgithubᚗcomᚋWuLiFangᚋcs
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNPresentation2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋpresentationᚐPresentation(ctx, sel, v[i])
+			ret[i] = ec.marshalNPresentation2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋpresentationᚐPresentation(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -10574,7 +10574,7 @@ func (ec *executionContext) marshalNPresentation2ᚕgithubᚗcomᚋWuLiFangᚋcs
 	return ret
 }
 
-func (ec *executionContext) marshalNPresentation2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋpresentationᚐPresentation(ctx context.Context, sel ast.SelectionSet, v *presentation.Presentation) graphql.Marshaler {
+func (ec *executionContext) marshalNPresentation2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋpresentationᚐPresentation(ctx context.Context, sel ast.SelectionSet, v *presentation.Presentation) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -11234,7 +11234,7 @@ func (ec *executionContext) marshalOCollectFromFolderPayload2ᚖgithubᚗcomᚋW
 	return ec._CollectFromFolderPayload(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOCollection2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollectionᚄ(ctx context.Context, sel ast.SelectionSet, v []collection.Collection) graphql.Marshaler {
+func (ec *executionContext) marshalOCollection2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollectionᚄ(ctx context.Context, sel ast.SelectionSet, v []collection.Collection) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -11261,7 +11261,7 @@ func (ec *executionContext) marshalOCollection2ᚕgithubᚗcomᚋWuLiFangᚋcshe
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNCollection2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx, sel, v[i])
+			ret[i] = ec.marshalNCollection2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollection(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -11274,7 +11274,7 @@ func (ec *executionContext) marshalOCollection2ᚕgithubᚗcomᚋWuLiFangᚋcshe
 	return ret
 }
 
-func (ec *executionContext) marshalOCollection2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v []*collection.Collection) graphql.Marshaler {
+func (ec *executionContext) marshalOCollection2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v []*collection.Collection) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -11301,7 +11301,7 @@ func (ec *executionContext) marshalOCollection2ᚕᚖgithubᚗcomᚋWuLiFangᚋc
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx, sel, v[i])
+			ret[i] = ec.marshalOCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollection(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -11314,7 +11314,7 @@ func (ec *executionContext) marshalOCollection2ᚕᚖgithubᚗcomᚋWuLiFangᚋc
 	return ret
 }
 
-func (ec *executionContext) marshalOCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v *collection.Collection) graphql.Marshaler {
+func (ec *executionContext) marshalOCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollection(ctx context.Context, sel ast.SelectionSet, v *collection.Collection) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -11422,7 +11422,7 @@ func (ec *executionContext) marshalODeleteCGTeamworkNotePayload2ᚖgithubᚗcom�
 	return ec._DeleteCGTeamworkNotePayload(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalODiskFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋfileᚐFile(ctx context.Context, sel ast.SelectionSet, v *file.File) graphql.Marshaler {
+func (ec *executionContext) marshalODiskFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋfileᚐFile(ctx context.Context, sel ast.SelectionSet, v *file.File) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -11496,7 +11496,7 @@ func (ec *executionContext) marshalONode2githubᚗcomᚋWuLiFangᚋcsheetᚋv6�
 	return ec._Node(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOPresentation2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋpresentationᚐPresentationᚄ(ctx context.Context, sel ast.SelectionSet, v []presentation.Presentation) graphql.Marshaler {
+func (ec *executionContext) marshalOPresentation2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋpresentationᚐPresentationᚄ(ctx context.Context, sel ast.SelectionSet, v []presentation.Presentation) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -11523,7 +11523,7 @@ func (ec *executionContext) marshalOPresentation2ᚕgithubᚗcomᚋWuLiFangᚋcs
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNPresentation2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelᚋpresentationᚐPresentation(ctx, sel, v[i])
+			ret[i] = ec.marshalNPresentation2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋpresentationᚐPresentation(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)

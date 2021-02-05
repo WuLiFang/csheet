@@ -6,7 +6,7 @@ package resolvers
 import (
 	"context"
 
-	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
+	"github.com/WuLiFang/csheet/v6/pkg/models/presentation"
 	"go.uber.org/zap"
 )
 

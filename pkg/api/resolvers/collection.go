@@ -3,7 +3,7 @@ package resolvers
 import (
 	"strings"
 
-	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
+	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
 )
 
 func filterCollection(v *collection.Collection, originPrefix *string, presentationCountGt *int, tagAnd, tagOr []string) bool {

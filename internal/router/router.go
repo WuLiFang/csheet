@@ -18,8 +18,8 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/middleware/cors"
 	"github.com/WuLiFang/csheet/v6/pkg/middleware/gincontext"
 	"github.com/WuLiFang/csheet/v6/pkg/middleware/ginsentry"
-	"github.com/WuLiFang/csheet/v6/pkg/model/file"
-	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
+	"github.com/WuLiFang/csheet/v6/pkg/models/file"
+	"github.com/WuLiFang/csheet/v6/pkg/models/presentation"
 	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 )

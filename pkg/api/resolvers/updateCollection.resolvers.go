@@ -7,7 +7,7 @@ import (
 	"context"
 
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
-	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
+	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
 )
 
 func (r *mutationResolver) UpdateCollection(ctx context.Context, input model.UpdateCollectionInput) (*model.UpdateCollectionPayload, error) {

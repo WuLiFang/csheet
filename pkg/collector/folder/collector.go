@@ -12,8 +12,8 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/collector/base"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/filestore"
-	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
-	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
+	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
+	"github.com/WuLiFang/csheet/v6/pkg/models/presentation"
 	"github.com/WuLiFang/csheet/v6/pkg/unipath"
 )
 

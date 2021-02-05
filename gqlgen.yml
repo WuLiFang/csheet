@@ -59,13 +59,13 @@ models:
       - github.com/WuLiFang/csheet/v6/pkg/collector/base.CollectResult
   Collection:
     model:
-      - github.com/WuLiFang/csheet/v6/pkg/model/collection.Collection
+      - github.com/WuLiFang/csheet/v6/pkg/models/collection.Collection
   Presentation:
     model:
-      - github.com/WuLiFang/csheet/v6/pkg/model/presentation.Presentation
+      - github.com/WuLiFang/csheet/v6/pkg/models/presentation.Presentation
   DiskFile:
     model:
-      - github.com/WuLiFang/csheet/v6/pkg/model/file.File
+      - github.com/WuLiFang/csheet/v6/pkg/models/file.File
     fields:
       path:
         resolver: true

@@ -8,7 +8,7 @@ import (
 
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
-	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
+	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
 	"go.uber.org/zap"
 )
 

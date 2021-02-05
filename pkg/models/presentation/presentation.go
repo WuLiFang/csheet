@@ -11,7 +11,7 @@ import (
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
-	"github.com/WuLiFang/csheet/v6/pkg/model/file"
+	"github.com/WuLiFang/csheet/v6/pkg/models/file"
 	"github.com/WuLiFang/csheet/v6/pkg/transcode"
 	"go.uber.org/zap"
 )

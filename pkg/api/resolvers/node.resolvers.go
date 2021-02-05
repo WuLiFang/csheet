@@ -10,8 +10,8 @@ import (
 
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
-	"github.com/WuLiFang/csheet/v6/pkg/model/collection"
-	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
+	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
+	"github.com/WuLiFang/csheet/v6/pkg/models/presentation"
 )
 
 func (r *queryResolver) Node(ctx context.Context, id string) (model.Node, error) {

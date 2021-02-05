@@ -5,7 +5,7 @@ import (
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
-	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
+	"github.com/WuLiFang/csheet/v6/pkg/models/presentation"
 	"github.com/dgraph-io/badger/v2"
 	"go.uber.org/zap"
 )

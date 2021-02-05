@@ -10,8 +10,8 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
-	"github.com/WuLiFang/csheet/v6/pkg/model/file"
-	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
+	"github.com/WuLiFang/csheet/v6/pkg/models/file"
+	"github.com/WuLiFang/csheet/v6/pkg/models/presentation"
 )
 
 func (r *presentationResolver) Type(ctx context.Context, obj *presentation.Presentation) (string, error) {

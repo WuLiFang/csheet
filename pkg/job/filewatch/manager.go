@@ -7,8 +7,8 @@ import (
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
-	"github.com/WuLiFang/csheet/v6/pkg/model/file"
-	"github.com/WuLiFang/csheet/v6/pkg/model/presentation"
+	"github.com/WuLiFang/csheet/v6/pkg/models/file"
+	"github.com/WuLiFang/csheet/v6/pkg/models/presentation"
 	"github.com/WuLiFang/csheet/v6/pkg/onceflight"
 	"go.uber.org/zap"
 	"golang.org/x/time/rate"
