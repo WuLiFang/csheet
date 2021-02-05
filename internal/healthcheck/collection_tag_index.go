@@ -6,6 +6,7 @@ import (
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
+	"github.com/WuLiFang/csheet/v6/pkg/util"
 	"github.com/dgraph-io/badger/v2"
 	"go.uber.org/zap"
 )
@@ -46,7 +47,7 @@ func CollectionTagIndex() (err error) {
 					return
 				}
 
-				var tagSet = stringSet(col.Tags)
+				var tagSet = util.StringSet(col.Tags)
 				if _, ok := tagSet[tag]; !ok {
 					logger.Debug("outdated")
 					deletedCount++

@@ -18,6 +18,7 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
 	"github.com/WuLiFang/csheet/v6/pkg/models/presentation"
 	"github.com/WuLiFang/csheet/v6/pkg/unipath"
+	"github.com/WuLiFang/csheet/v6/pkg/util"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 	"go.uber.org/zap"
@@ -108,14 +109,14 @@ func collectionFromTask(
 		ret.Metadata["cgteamwork.pipeline"] = o.Pipeline
 		// clear old auto tags
 		if len(ret.Tags) > 0 {
-			var tagSet = stringSet(ret.Tags)
+			var tagSet = util.StringSet(ret.Tags)
 			for tag := range tagSet {
 				if strings.HasPrefix(tag, "artist:") ||
 					strings.HasPrefix(tag, "status:") {
 					delete(tagSet, tag)
 				}
 			}
-			ret.Tags = stringArrayFromSet(tagSet)
+			ret.Tags = util.StringSliceFromSet(tagSet)
 		}
 	}
 	taskData := ret.Metadata["cgteamwork.tasks"]
