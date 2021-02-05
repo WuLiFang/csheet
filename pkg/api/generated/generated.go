@@ -294,6 +294,7 @@ type ClientConfigResolver interface {
 	FolderInclude(ctx context.Context, obj *models.ClientConfig, format *string) ([]string, error)
 }
 type CollectionResolver interface {
+	Presentations(ctx context.Context, obj *collection.Collection) ([]presentation.Presentation, error)
 	Metadata(ctx context.Context, obj *collection.Collection) ([]models.StringEntry, error)
 
 	CgteamworkNotes(ctx context.Context, obj *collection.Collection, pipeline []string) ([]models.CollectionCGTeamworkNote, error)
@@ -4085,13 +4086,13 @@ func (ec *executionContext) _Collection_presentations(ctx context.Context, field
 		Field:      field,
 		Args:       nil,
 		IsMethod:   true,
-		IsResolver: false,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Presentations()
+		return ec.resolvers.Collection().Presentations(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9016,10 +9017,19 @@ func (ec *executionContext) _Collection(ctx context.Context, sel ast.SelectionSe
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "presentations":
-			out.Values[i] = ec._Collection_presentations(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Collection_presentations(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "metadata":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
