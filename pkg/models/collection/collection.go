@@ -8,11 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/models/mixins"
-	"github.com/WuLiFang/csheet/v6/pkg/models/presentation"
-	"go.uber.org/zap"
 )
 
 //go:generate gotmpl -o collection_gen.go ../model.go.gotmpl
@@ -26,8 +23,6 @@ type Collection struct {
 	CollectTime     time.Time
 	PresentationIDs []string `bson:",omitempty"`
 	Tags            []string `bson:",omitempty"`
-
-	presentations []presentation.Presentation
 
 	onSaved mixins.DeferredOperations
 }
@@ -54,29 +49,6 @@ func (c *Collection) Validate(ctx context.Context) (err error) {
 	c.Tags = uniqString(c.Tags)
 	sort.Strings(c.Tags)
 	return
-}
-
-// Presentations related to this collection
-// TODO: replace this with presentation.Find
-func (c Collection) Presentations() ([]presentation.Presentation, error) {
-	var logger = logging.Logger("model.collection")
-	if c.presentations == nil {
-		ret := make([]presentation.Presentation, 0, len(c.PresentationIDs))
-		for _, i := range c.PresentationIDs {
-			v, err := presentation.FindByID(i)
-			if err == db.ErrKeyNotFound {
-				logger.Warn("presentation not found", zap.String("id", i))
-				continue
-			}
-			if err != nil {
-				return ret, err
-			}
-			ret = append(ret, v)
-		}
-		c.presentations = ret
-
-	}
-	return c.presentations, nil
 }
 
 // FindByID find id matched collection.
