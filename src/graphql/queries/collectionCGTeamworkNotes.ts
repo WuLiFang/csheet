@@ -70,13 +70,16 @@ export function useQuery(
     Omit<
       WatchQueryOptions<collectionCGTeamworkNotesVariables>,
       'query' | 'variables'
-    >
+    > & { skip?: boolean }
   >
 ): {
   data: Ref<collectionCGTeamworkNotes | undefined>;
-  query: ObservableQuery<
-    collectionCGTeamworkNotes,
-    collectionCGTeamworkNotesVariables
+  query: Ref<
+    | ObservableQuery<
+        collectionCGTeamworkNotes,
+        collectionCGTeamworkNotesVariables
+      >
+    | undefined
   >;
   node: Ref<Collection | undefined>;
 } {
@@ -84,33 +87,69 @@ export function useQuery(
   const o = {
     query: require('./collectionCGTeamworkNotes.gql'),
   };
-  const q = apolloClient.watchQuery<
-    collectionCGTeamworkNotes,
-    collectionCGTeamworkNotesVariables
-  >({
-    ...options?.value,
-    ...o,
-    variables: variables.value,
-  });
+
+  const query = ref<
+    | ObservableQuery<
+        collectionCGTeamworkNotes,
+        collectionCGTeamworkNotesVariables
+      >
+    | undefined
+  >();
+  const cleanup: (() => void)[] = [];
+  const start = () => {
+    if (query.value) {
+      return;
+    }
+    query.value = apolloClient.watchQuery<
+      collectionCGTeamworkNotes,
+      collectionCGTeamworkNotesVariables
+    >({
+      ...options?.value,
+      ...o,
+      variables: variables.value,
+    });
+    const sub = query.value.subscribe(value => {
+      data.value = value.data;
+    });
+    cleanup.push(() => {
+      sub.unsubscribe();
+    });
+  };
+  const stop = () => {
+    if (!query.value) {
+      return;
+    }
+    query.value = undefined;
+    while (cleanup.length > 0) {
+      cleanup.pop()?.();
+    }
+  };
   watch(
     () => variables.value,
-    async n => {
-      await q.setVariables(n);
+    n => {
+      query.value?.setVariables(n);
     }
   );
   watch(
     () => options?.value,
     n => {
-      q.setOptions({ ...n, ...o });
+      query.value?.setOptions({ ...n, ...o });
     }
   );
-  const sub = q.subscribe(value => {
-    data.value = value.data;
-  });
   onUnmounted(() => {
-    sub.unsubscribe();
+    stop();
   });
-  const query = q;
+  watch(
+    () => options?.value.skip,
+    v => {
+      if (v) {
+        stop();
+      } else {
+        start();
+      }
+    },
+    { immediate: true }
+  );
   return {
     data,
     query,

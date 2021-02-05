@@ -47,41 +47,75 @@ export function vueQuery<V>(
 export function useQuery(
   variables: Ref<collectionsVariables>,
   options?: Ref<
-    Omit<WatchQueryOptions<collectionsVariables>, 'query' | 'variables'>
+    Omit<WatchQueryOptions<collectionsVariables>, 'query' | 'variables'> & {
+      skip?: boolean;
+    }
   >
 ): {
   data: Ref<collections | undefined>;
-  query: ObservableQuery<collections, collectionsVariables>;
+  query: Ref<ObservableQuery<collections, collectionsVariables> | undefined>;
   nodes: Ref<Collection[]>;
 } {
   const data = ref<collections | undefined>();
   const o = {
     query: require('./collections.gql'),
   };
-  const q = apolloClient.watchQuery<collections, collectionsVariables>({
-    ...options?.value,
-    ...o,
-    variables: variables.value,
-  });
+
+  const query = ref<
+    ObservableQuery<collections, collectionsVariables> | undefined
+  >();
+  const cleanup: (() => void)[] = [];
+  const start = () => {
+    if (query.value) {
+      return;
+    }
+    query.value = apolloClient.watchQuery<collections, collectionsVariables>({
+      ...options?.value,
+      ...o,
+      variables: variables.value,
+    });
+    const sub = query.value.subscribe(value => {
+      data.value = value.data;
+    });
+    cleanup.push(() => {
+      sub.unsubscribe();
+    });
+  };
+  const stop = () => {
+    if (!query.value) {
+      return;
+    }
+    query.value = undefined;
+    while (cleanup.length > 0) {
+      cleanup.pop()?.();
+    }
+  };
   watch(
     () => variables.value,
-    async n => {
-      await q.setVariables(n);
+    n => {
+      query.value?.setVariables(n);
     }
   );
   watch(
     () => options?.value,
     n => {
-      q.setOptions({ ...n, ...o });
+      query.value?.setOptions({ ...n, ...o });
     }
   );
-  const sub = q.subscribe(value => {
-    data.value = value.data;
-  });
   onUnmounted(() => {
-    sub.unsubscribe();
+    stop();
   });
-  const query = q;
+  watch(
+    () => options?.value.skip,
+    v => {
+      if (v) {
+        stop();
+      } else {
+        start();
+      }
+    },
+    { immediate: true }
+  );
   return {
     data,
     query,

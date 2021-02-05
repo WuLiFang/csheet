@@ -44,40 +44,74 @@ export function vueQuery<V>(
 export function useQuery(
   variables: Ref<clientConfigVariables>,
   options?: Ref<
-    Omit<WatchQueryOptions<clientConfigVariables>, 'query' | 'variables'>
+    Omit<WatchQueryOptions<clientConfigVariables>, 'query' | 'variables'> & {
+      skip?: boolean;
+    }
   >
 ): {
   data: Ref<clientConfig | undefined>;
-  query: ObservableQuery<clientConfig, clientConfigVariables>;
+  query: Ref<ObservableQuery<clientConfig, clientConfigVariables> | undefined>;
 } {
   const data = ref<clientConfig | undefined>();
   const o = {
     query: require('./clientConfig.gql'),
   };
-  const q = apolloClient.watchQuery<clientConfig, clientConfigVariables>({
-    ...options?.value,
-    ...o,
-    variables: variables.value,
-  });
+
+  const query = ref<
+    ObservableQuery<clientConfig, clientConfigVariables> | undefined
+  >();
+  const cleanup: (() => void)[] = [];
+  const start = () => {
+    if (query.value) {
+      return;
+    }
+    query.value = apolloClient.watchQuery<clientConfig, clientConfigVariables>({
+      ...options?.value,
+      ...o,
+      variables: variables.value,
+    });
+    const sub = query.value.subscribe(value => {
+      data.value = value.data;
+    });
+    cleanup.push(() => {
+      sub.unsubscribe();
+    });
+  };
+  const stop = () => {
+    if (!query.value) {
+      return;
+    }
+    query.value = undefined;
+    while (cleanup.length > 0) {
+      cleanup.pop()?.();
+    }
+  };
   watch(
     () => variables.value,
-    async n => {
-      await q.setVariables(n);
+    n => {
+      query.value?.setVariables(n);
     }
   );
   watch(
     () => options?.value,
     n => {
-      q.setOptions({ ...n, ...o });
+      query.value?.setOptions({ ...n, ...o });
     }
   );
-  const sub = q.subscribe(value => {
-    data.value = value.data;
-  });
   onUnmounted(() => {
-    sub.unsubscribe();
+    stop();
   });
-  const query = q;
+  watch(
+    () => options?.value.skip,
+    v => {
+      if (v) {
+        stop();
+      } else {
+        start();
+      }
+    },
+    { immediate: true }
+  );
   return {
     data,
     query,

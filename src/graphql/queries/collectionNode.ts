@@ -55,41 +55,80 @@ export function vueQuery<V>(
 export function useQuery(
   variables: Ref<collectionNodeVariables>,
   options?: Ref<
-    Omit<WatchQueryOptions<collectionNodeVariables>, 'query' | 'variables'>
+    Omit<WatchQueryOptions<collectionNodeVariables>, 'query' | 'variables'> & {
+      skip?: boolean;
+    }
   >
 ): {
   data: Ref<collectionNode | undefined>;
-  query: ObservableQuery<collectionNode, collectionNodeVariables>;
+  query: Ref<
+    ObservableQuery<collectionNode, collectionNodeVariables> | undefined
+  >;
   node: Ref<Collection | undefined>;
 } {
   const data = ref<collectionNode | undefined>();
   const o = {
     query: require('./collectionNode.gql'),
   };
-  const q = apolloClient.watchQuery<collectionNode, collectionNodeVariables>({
-    ...options?.value,
-    ...o,
-    variables: variables.value,
-  });
+
+  const query = ref<
+    ObservableQuery<collectionNode, collectionNodeVariables> | undefined
+  >();
+  const cleanup: (() => void)[] = [];
+  const start = () => {
+    if (query.value) {
+      return;
+    }
+    query.value = apolloClient.watchQuery<
+      collectionNode,
+      collectionNodeVariables
+    >({
+      ...options?.value,
+      ...o,
+      variables: variables.value,
+    });
+    const sub = query.value.subscribe(value => {
+      data.value = value.data;
+    });
+    cleanup.push(() => {
+      sub.unsubscribe();
+    });
+  };
+  const stop = () => {
+    if (!query.value) {
+      return;
+    }
+    query.value = undefined;
+    while (cleanup.length > 0) {
+      cleanup.pop()?.();
+    }
+  };
   watch(
     () => variables.value,
-    async n => {
-      await q.setVariables(n);
+    n => {
+      query.value?.setVariables(n);
     }
   );
   watch(
     () => options?.value,
     n => {
-      q.setOptions({ ...n, ...o });
+      query.value?.setOptions({ ...n, ...o });
     }
   );
-  const sub = q.subscribe(value => {
-    data.value = value.data;
-  });
   onUnmounted(() => {
-    sub.unsubscribe();
+    stop();
   });
-  const query = q;
+  watch(
+    () => options?.value.skip,
+    v => {
+      if (v) {
+        stop();
+      } else {
+        start();
+      }
+    },
+    { immediate: true }
+  );
   return {
     data,
     query,

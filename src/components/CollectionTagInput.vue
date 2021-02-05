@@ -168,6 +168,7 @@ export default defineComponent({
       })),
       computed(() => ({
         fetchPolicy: 'cache-and-network',
+        skip: !formData.value,
       }))
     );
     const matched = computed(() => {

@@ -55,44 +55,75 @@ export function useQuery(
 {{- end }}
   options?: Ref<
     Omit<WatchQueryOptions<{{ .Name }}Variables>, 'query' | 'variables'>
+    & {skip?: boolean}
   >
 ): {
   data: Ref<{{ .Name }} | undefined>;
-  query: ObservableQuery<{{ .Name }}, {{ .Name }}Variables>;
+  query: Ref<ObservableQuery<{{ .Name }}, {{ .Name }}Variables> | undefined>;
   {{- block "extendUseQueryType" . }}{{ end }}
 } {
   const data = ref<{{ .Name }} | undefined>();
   const o = {
     query: require('./{{ .Name }}.gql'),
   }
-  const q = apolloClient.watchQuery<{{ .Name }}, {{ .Name }}Variables>({
-    ...options?.value,
-    ...o,
+  
+  const query = ref<ObservableQuery<{{ .Name }}, {{ .Name }}Variables> | undefined>()
+  const cleanup: (() => void)[] = []
+  const start = () => {
+    if (query.value){
+      return
+    }
+    query.value = apolloClient.watchQuery<{{ .Name }}, {{ .Name }}Variables>({
+      ...options?.value,
+      ...o,
 {{- if not .NoVariables }}
     variables: variables.value,
 {{- end }}
-  });
+    });
+    const sub = query.value.subscribe(value => {
+      data.value = value.data;
+    });
+    cleanup.push(() => {
+      sub.unsubscribe()
+    })
+  };
+  const stop = () => {
+    if (!query.value){
+      return
+    }
+    query.value = undefined
+    while (cleanup.length > 0) {
+      cleanup.pop()?.()
+    }
+  }
+
 {{- if not .NoVariables }}
   watch(
     () => variables.value,
-    async n => {
-      await q.setVariables(n);
+    n => {
+      query.value?.setVariables(n);
     }
   );
 {{- end }}
   watch(
     () => options?.value,
     n => {
-      q.setOptions({ ...n, ...o });
+      query.value?.setOptions({ ...n, ...o });
     }
   );
-  const sub = q.subscribe(value => {
-    data.value = value.data;
-  });
   onUnmounted(() => {
-    sub.unsubscribe()
+    stop()
   })
-  const query = q
+  watch(
+    () => options?.value.skip, 
+    v => {
+      if (v) {
+        stop()
+      } else {
+        start()
+      }
+    }, { immediate: true }
+  );
   return {
     data,
     query,
