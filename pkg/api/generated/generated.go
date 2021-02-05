@@ -251,7 +251,7 @@ type ComplexityRoot struct {
 	}
 
 	Subscription struct {
-		CollectionUpdated   func(childComplexity int, id []string, originPrefix *string, presentationCountGt *int) int
+		CollectionUpdated   func(childComplexity int, id []string, originPrefix *string, presentationCountGt *int, tagOr []string, tagAnd []string) int
 		PresentationUpdated func(childComplexity int, id []string) int
 	}
 
@@ -336,7 +336,7 @@ type QueryResolver interface {
 	Node(ctx context.Context, id string) (model.Node, error)
 }
 type SubscriptionResolver interface {
-	CollectionUpdated(ctx context.Context, id []string, originPrefix *string, presentationCountGt *int) (<-chan *collection.Collection, error)
+	CollectionUpdated(ctx context.Context, id []string, originPrefix *string, presentationCountGt *int, tagOr []string, tagAnd []string) (<-chan *collection.Collection, error)
 	PresentationUpdated(ctx context.Context, id []string) (<-chan *presentation.Presentation, error)
 }
 
@@ -1226,7 +1226,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Subscription.CollectionUpdated(childComplexity, args["id"].([]string), args["originPrefix"].(*string), args["presentationCountGt"].(*int)), true
+		return e.complexity.Subscription.CollectionUpdated(childComplexity, args["id"].([]string), args["originPrefix"].(*string), args["presentationCountGt"].(*int), args["tagOr"].([]string), args["tagAnd"].([]string)), true
 
 	case "Subscription.presentationUpdated":
 		if e.complexity.Subscription.PresentationUpdated == nil {
@@ -1707,6 +1707,8 @@ extend type Query {
     id: [ID!]
     originPrefix: String
     presentationCountGt: Int
+    tagOr: [String!]
+    tagAnd: [String!]
   ): Collection!
 }
 `, BuiltIn: false},
@@ -2433,6 +2435,24 @@ func (ec *executionContext) field_Subscription_collectionUpdated_args(ctx contex
 		}
 	}
 	args["presentationCountGt"] = arg2
+	var arg3 []string
+	if tmp, ok := rawArgs["tagOr"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tagOr"))
+		arg3, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["tagOr"] = arg3
+	var arg4 []string
+	if tmp, ok := rawArgs["tagAnd"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tagAnd"))
+		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["tagAnd"] = arg4
 	return args, nil
 }
 
@@ -6386,7 +6406,7 @@ func (ec *executionContext) _Subscription_collectionUpdated(ctx context.Context,
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Subscription().CollectionUpdated(rctx, args["id"].([]string), args["originPrefix"].(*string), args["presentationCountGt"].(*int))
+		return ec.resolvers.Subscription().CollectionUpdated(rctx, args["id"].([]string), args["originPrefix"].(*string), args["presentationCountGt"].(*int), args["tagOr"].([]string), args["tagAnd"].([]string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

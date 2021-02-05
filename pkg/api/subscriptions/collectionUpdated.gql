@@ -3,5 +3,7 @@ extend type Subscription {
     id: [ID!]
     originPrefix: String
     presentationCountGt: Int
+    tagOr: [String!]
+    tagAnd: [String!]
   ): Collection!
 }

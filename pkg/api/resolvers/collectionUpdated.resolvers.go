@@ -12,7 +12,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (r *subscriptionResolver) CollectionUpdated(ctx context.Context, id []string, originPrefix *string, presentationCountGt *int) (<-chan *collection.Collection, error) {
+func (r *subscriptionResolver) CollectionUpdated(ctx context.Context, id []string, originPrefix *string, presentationCountGt *int, tagOr []string, tagAnd []string) (<-chan *collection.Collection, error) {
 	logger := getLogger(ctx).
 		With(
 			zap.Int("index", subscriptionIndex()),
@@ -48,7 +48,7 @@ func (r *subscriptionResolver) CollectionUpdated(ctx context.Context, id []strin
 					continue
 				}
 			}
-			if presentationCountGt != nil && len(i.PresentationIDs) <= *presentationCountGt {
+			if !filterCollection(&i, originPrefix, presentationCountGt, tagAnd, tagOr) {
 				continue
 			}
 
