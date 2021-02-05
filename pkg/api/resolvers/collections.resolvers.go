@@ -21,38 +21,6 @@ func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, p
 	nodes := []*collection.Collection{}
 
 	// TODO: refactor to collection.Find
-	filter := func(v *collection.Collection) bool {
-		if v == nil {
-			return false
-		}
-		if presentationCountGt != nil && len(v.PresentationIDs) <= *presentationCountGt {
-			return false
-		}
-		if tagAnd != nil || tagOr != nil {
-			var tagSet = stringSet(v.Tags)
-			if tagAnd != nil {
-				for _, i := range tagAnd {
-					if _, ok := tagSet[i]; !ok {
-						return false
-					}
-				}
-			}
-			if tagOr != nil {
-				var match = false
-				for _, i := range tagOr {
-					if _, ok := tagSet[i]; ok {
-						match = true
-						break
-					}
-				}
-				if !match {
-					return false
-				}
-			}
-		}
-
-		return true
-	}
 	err = db.View(func(txn *db.Txn) (err error) {
 		opt := db.DefaultIteratorOptions
 		opt.Reverse = pag.reverse
@@ -125,7 +93,7 @@ func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, p
 				ret.PageInfo.HasNextPage = true
 				break
 			}
-			if isAfter && filter(node) {
+			if isAfter && filterCollection(node, originPrefix, presentationCountGt, tagAnd, tagOr) {
 				nodes = append(nodes, node)
 			} else {
 				ret.PageInfo.HasPreviousPage = true
