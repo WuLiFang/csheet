@@ -4,12 +4,16 @@ subscription collectionUpdated(
   $id: [ID!]
   $originPrefix: String
   $presentationCountGt: Int
+  $tagOr: [String!]
+  $tagAnd: [String!]
   $filePathFormat: String
 ) {
   collectionUpdated(
     id: $id
     originPrefix: $originPrefix
     presentationCountGt: $presentationCountGt
+    tagOr: $tagOr
+    tagAnd: $tagAnd
   ) {
     ...Collection
   }

@@ -45,11 +45,11 @@ import { Collection } from '../graphql/types/Collection';
 import {
   collections,
   collectionsVariables,
-  collections_collections as Collections
+  collections_collections as Collections,
 } from '../graphql/types/collections';
 import {
   collectionUpdated,
-  collectionUpdatedVariables
+  collectionUpdatedVariables,
 } from '../graphql/types/collectionUpdated';
 import { presentationUpdatedVariables } from '../graphql/types/presentationUpdated';
 import { show } from '../modal';
@@ -92,6 +92,8 @@ import CollectionViewer from './CollectionViewer.vue';
           return {
             originPrefix: this.variables.originPrefix,
             presentationCountGt: this.variables.presentationCountGt,
+            tagOr: this.variables.tagOr,
+            tagAnd: this.variables.tagAnd,
             filePathFormat,
           };
         },

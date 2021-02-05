@@ -80,5 +80,7 @@ export interface collectionUpdatedVariables {
   id?: string[] | null;
   originPrefix?: string | null;
   presentationCountGt?: number | null;
+  tagOr?: string[] | null;
+  tagAnd?: string[] | null;
   filePathFormat?: string | null;
 }
