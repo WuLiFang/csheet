@@ -110,9 +110,11 @@ export default defineComponent({
     },
     inputClass: {
       type: String,
+      default: '',
     },
     outputClass: {
       type: String,
+      default: '',
     },
     placeholder: {
       type: String,
