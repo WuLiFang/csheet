@@ -6,6 +6,8 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
 )
 
+// TODO: remove this file
+
 func filterCollection(v *collection.Collection, originPrefix *string, presentationCountGt *int, tagAnd, tagOr []string) bool {
 	if v == nil {
 		return false

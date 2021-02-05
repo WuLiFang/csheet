@@ -1,8 +1,6 @@
-package resolvers
+package connections
 
 import "errors"
-
-// TODO: remove this file
 
 type pagination struct {
 	limit   int
