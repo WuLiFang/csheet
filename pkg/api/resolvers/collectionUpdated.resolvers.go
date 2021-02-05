@@ -7,6 +7,7 @@ import (
 	"context"
 	"strings"
 
+	"github.com/WuLiFang/csheet/v6/pkg/api/connections"
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
 	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
 	"go.uber.org/zap"
@@ -48,7 +49,13 @@ func (r *subscriptionResolver) CollectionUpdated(ctx context.Context, id []strin
 					continue
 				}
 			}
-			if !filterCollection(&i, originPrefix, presentationCountGt, tagAnd, tagOr) {
+			if ok, err := connections.MatchCollection(
+				&i,
+				originPrefix,
+				presentationCountGt,
+				tagOr,
+				tagAnd,
+			); err != nil || !ok {
 				continue
 			}
 
