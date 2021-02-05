@@ -14,8 +14,8 @@ exec:
 
 # Where should any generated models go?
 model:
-  filename: pkg/api/generated/model/model.go
-  package: model
+  filename: pkg/api/models/generated.go
+  package: models
 
 # Where should the resolver implementations go?
 resolver:

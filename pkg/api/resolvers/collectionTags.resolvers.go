@@ -7,16 +7,16 @@ import (
 	"context"
 	"regexp"
 
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 )
 
-func (r *queryResolver) CollectionTags(ctx context.Context, regex *string, first *int, last *int, before *string, after *string) (*model.StringConnection, error) {
+func (r *queryResolver) CollectionTags(ctx context.Context, regex *string, first *int, last *int, before *string, after *string) (*models.StringConnection, error) {
 	pag, err := paginate(first, last, before, after)
 	if err != nil {
 		return nil, err
 	}
-	ret := model.StringConnection{PageInfo: &model.PageInfo{}}
+	ret := models.StringConnection{PageInfo: &models.PageInfo{}}
 	nodes := []*string{}
 
 	var pattern *regexp.Regexp
@@ -88,7 +88,7 @@ func (r *queryResolver) CollectionTags(ctx context.Context, regex *string, first
 	}
 	ret.Nodes = nodes
 	for _, i := range ret.Nodes {
-		ret.Edges = append(ret.Edges, &model.StringEdge{
+		ret.Edges = append(ret.Edges, &models.StringEdge{
 			Node:   i,
 			Cursor: *i,
 		})

@@ -8,13 +8,13 @@ import (
 	"errors"
 	"time"
 
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/collector/cgteamwork"
 )
 
-func (r *mutationResolver) CollectFromCGTeamwork(ctx context.Context, input *model.CollectFromCGTeamworkInput, database *string, prefix *string, pipeline *string) (*model.CollectFromCGTeamworkPayload, error) {
+func (r *mutationResolver) CollectFromCGTeamwork(ctx context.Context, input *models.CollectFromCGTeamworkInput, database *string, prefix *string, pipeline *string) (*models.CollectFromCGTeamworkPayload, error) {
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
-	var ret = new(model.CollectFromCGTeamworkPayload)
+	var ret = new(models.CollectFromCGTeamworkPayload)
 	var err error
 	defer cancel()
 	if input != nil {

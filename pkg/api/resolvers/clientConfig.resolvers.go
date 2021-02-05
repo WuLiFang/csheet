@@ -9,12 +9,12 @@ import (
 
 	"github.com/WuLiFang/csheet/v6/internal/config"
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	"github.com/WuLiFang/csheet/v6/pkg/collector/folder"
 )
 
-func (r *clientConfigResolver) FolderInclude(ctx context.Context, obj *model.ClientConfig, format *string) ([]string, error) {
+func (r *clientConfigResolver) FolderInclude(ctx context.Context, obj *models.ClientConfig, format *string) ([]string, error) {
 	var ret = make([]string, 0, len(obj.FolderInclude))
 	for _, i := range obj.FolderInclude {
 		ret = append(ret, formatPath(i, format))
@@ -22,8 +22,8 @@ func (r *clientConfigResolver) FolderInclude(ctx context.Context, obj *model.Cli
 	return ret, nil
 }
 
-func (r *queryResolver) ClientConfig(ctx context.Context, name string) (*model.ClientConfig, error) {
-	var ret = new(model.ClientConfig)
+func (r *queryResolver) ClientConfig(ctx context.Context, name string) (*models.ClientConfig, error) {
+	var ret = new(models.ClientConfig)
 	ret.EnableCGTeamwork = cgteamwork.DefaultClient != nil
 	if config.IssueTrackerURL != "" {
 		ret.IssueTrackerURL = &config.IssueTrackerURL

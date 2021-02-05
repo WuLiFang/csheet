@@ -8,14 +8,14 @@ import (
 	"sort"
 
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
 )
 
-func (r *collectionResolver) Metadata(ctx context.Context, obj *collection.Collection) ([]model.StringEntry, error) {
-	var ret []model.StringEntry
+func (r *collectionResolver) Metadata(ctx context.Context, obj *collection.Collection) ([]models.StringEntry, error) {
+	var ret []models.StringEntry
 	for k, v := range obj.Metadata {
-		ret = append(ret, model.StringEntry{K: k, V: v})
+		ret = append(ret, models.StringEntry{K: k, V: v})
 	}
 	sort.Slice(ret, func(i, j int) bool {
 		return ret[i].K < ret[j].K

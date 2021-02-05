@@ -8,13 +8,13 @@ import (
 	"encoding/base64"
 	"errors"
 
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
 	"github.com/WuLiFang/csheet/v6/pkg/models/presentation"
 )
 
-func (r *queryResolver) Node(ctx context.Context, id string) (model.Node, error) {
+func (r *queryResolver) Node(ctx context.Context, id string) (models.Node, error) {
 	key, err := base64.RawURLEncoding.DecodeString(id)
 	if err != nil {
 		return nil, err

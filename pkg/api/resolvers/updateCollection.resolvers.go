@@ -6,12 +6,12 @@ package resolvers
 import (
 	"context"
 
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
 )
 
-func (r *mutationResolver) UpdateCollection(ctx context.Context, input model.UpdateCollectionInput) (*model.UpdateCollectionPayload, error) {
-	var ret = new(model.UpdateCollectionPayload)
+func (r *mutationResolver) UpdateCollection(ctx context.Context, input models.UpdateCollectionInput) (*models.UpdateCollectionPayload, error) {
+	var ret = new(models.UpdateCollectionPayload)
 	ret.ClientMutationID = input.ClientMutationID
 	var err error
 

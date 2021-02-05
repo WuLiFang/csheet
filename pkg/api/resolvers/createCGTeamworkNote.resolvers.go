@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"mime"
 
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	cgteamworkCollector "github.com/WuLiFang/csheet/v6/pkg/collector/cgteamwork"
 	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
@@ -16,9 +16,9 @@ import (
 	"go.uber.org/zap"
 )
 
-func (r *mutationResolver) CreateCGTeamworkNote(ctx context.Context, input model.CreateCGTeamworkNoteInput) (*model.CreateCGTeamworkNotePayload, error) {
+func (r *mutationResolver) CreateCGTeamworkNote(ctx context.Context, input models.CreateCGTeamworkNoteInput) (*models.CreateCGTeamworkNotePayload, error) {
 	var logger = getLogger(ctx).With(zap.String("username", input.Username))
-	ret := new(model.CreateCGTeamworkNotePayload)
+	ret := new(models.CreateCGTeamworkNotePayload)
 	ret.ClientMutationID = input.ClientMutationID
 	ret.UpdatedCollections = make([]collection.Collection, 0, len(input.Data))
 

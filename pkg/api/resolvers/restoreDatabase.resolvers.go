@@ -7,12 +7,12 @@ import (
 	"context"
 	"os"
 
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 )
 
-func (r *mutationResolver) RestoreDatabase(ctx context.Context, input model.RestoreDatabaseInput) (*model.RestoreDatabasePayload, error) {
-	ret := new(model.RestoreDatabasePayload)
+func (r *mutationResolver) RestoreDatabase(ctx context.Context, input models.RestoreDatabaseInput) (*models.RestoreDatabasePayload, error) {
+	ret := new(models.RestoreDatabasePayload)
 	ret.ClientMutationID = input.ClientMutationID
 	err := verifyAdminToken(input.AdminToken)
 	if err != nil {
@@ -22,7 +22,7 @@ func (r *mutationResolver) RestoreDatabase(ctx context.Context, input model.Rest
 	if !dereferenceBool(input.SkipBackup) {
 		backupPayload, err := r.BackupDatabase(
 			ctx,
-			model.BackupDatabaseInput{
+			models.BackupDatabaseInput{
 				AdminToken: input.AdminToken,
 			},
 		)

@@ -8,7 +8,7 @@ import (
 	"fmt"
 
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	cgteamworkCollector "github.com/WuLiFang/csheet/v6/pkg/collector/cgteamwork"
 	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
@@ -19,7 +19,7 @@ func (r *cGTeamworkNoteResolver) ID(ctx context.Context, obj *cgteamwork.Note) (
 	return fmt.Sprintf("%s:%s", obj.Database, obj.ID), nil
 }
 
-func (r *collectionResolver) CgteamworkNotes(ctx context.Context, obj *collection.Collection, pipeline []string) ([]model.CollectionCGTeamworkNote, error) {
+func (r *collectionResolver) CgteamworkNotes(ctx context.Context, obj *collection.Collection, pipeline []string) ([]models.CollectionCGTeamworkNote, error) {
 	db, _, _, err := cgteamworkCollector.ParseOrigin(obj.Origin)
 	if err != nil {
 		return nil, nil
@@ -33,7 +33,7 @@ func (r *collectionResolver) CgteamworkNotes(ctx context.Context, obj *collectio
 		}
 	}
 
-	var ret []model.CollectionCGTeamworkNote
+	var ret []models.CollectionCGTeamworkNote
 	var innerError error
 	gjson.Parse(obj.Metadata["cgteamwork.tasks"]).ForEach(
 		func(key, value gjson.Result) bool {
@@ -49,7 +49,7 @@ func (r *collectionResolver) CgteamworkNotes(ctx context.Context, obj *collectio
 				innerError = err
 				return false
 			}
-			ret = append(ret, model.CollectionCGTeamworkNote{
+			ret = append(ret, models.CollectionCGTeamworkNote{
 				Pipeline: value.Get("pipeline").String(),
 				Notes:    notes,
 			})

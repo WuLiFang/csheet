@@ -9,7 +9,7 @@ import (
 	"mime"
 	"strings"
 
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	cgteamworkCollector "github.com/WuLiFang/csheet/v6/pkg/collector/cgteamwork"
 	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
@@ -17,14 +17,14 @@ import (
 	"go.uber.org/zap"
 )
 
-func (r *mutationResolver) UpdateCGTeamworkFlow(ctx context.Context, input model.UpdateCGTeamworkFlowInput) (*model.UpdateCGTeamworkFlowPayload, error) {
+func (r *mutationResolver) UpdateCGTeamworkFlow(ctx context.Context, input models.UpdateCGTeamworkFlowInput) (*models.UpdateCGTeamworkFlowPayload, error) {
 	var logger = getLogger(ctx).With(zap.String("username", input.Username))
 	ctx = cgteamwork.WithClient(ctx, &cgteamwork.Client{
 		URL:      cgteamwork.DefaultClient.URL,
 		Username: input.Username,
 		Password: input.Password,
 	})
-	ret := new(model.UpdateCGTeamworkFlowPayload)
+	ret := new(models.UpdateCGTeamworkFlowPayload)
 	ret.ClientMutationID = input.ClientMutationID
 
 	m := make(map[cgteamworkCollector.Options]struct{})

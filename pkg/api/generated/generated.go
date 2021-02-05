@@ -15,7 +15,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
 	"github.com/WuLiFang/csheet/v6/pkg/models/file"
@@ -184,16 +184,16 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		BackupDatabase             func(childComplexity int, input model.BackupDatabaseInput) int
-		CollectFromCGTeamwork      func(childComplexity int, input *model.CollectFromCGTeamworkInput, database *string, prefix *string, pipeline *string) int
-		CollectFromFolder          func(childComplexity int, input *model.CollectFromFolderInput, root *string) int
-		CreateCGTeamworkNote       func(childComplexity int, input model.CreateCGTeamworkNoteInput) int
-		DeleteCGTeamworkNote       func(childComplexity int, input model.DeleteCGTeamworkNoteInput) int
-		RestoreDatabase            func(childComplexity int, input model.RestoreDatabaseInput) int
-		UpdateCGTeamworkFlow       func(childComplexity int, input model.UpdateCGTeamworkFlowInput) int
-		UpdateCollection           func(childComplexity int, input model.UpdateCollectionInput) int
-		UpdateCollectionMetadata   func(childComplexity int, input model.UpdateCollectionMetadataInput) int
-		UpdatePresentationMetadata func(childComplexity int, input model.UpdatePresentationMetadataInput) int
+		BackupDatabase             func(childComplexity int, input models.BackupDatabaseInput) int
+		CollectFromCGTeamwork      func(childComplexity int, input *models.CollectFromCGTeamworkInput, database *string, prefix *string, pipeline *string) int
+		CollectFromFolder          func(childComplexity int, input *models.CollectFromFolderInput, root *string) int
+		CreateCGTeamworkNote       func(childComplexity int, input models.CreateCGTeamworkNoteInput) int
+		DeleteCGTeamworkNote       func(childComplexity int, input models.DeleteCGTeamworkNoteInput) int
+		RestoreDatabase            func(childComplexity int, input models.RestoreDatabaseInput) int
+		UpdateCGTeamworkFlow       func(childComplexity int, input models.UpdateCGTeamworkFlowInput) int
+		UpdateCollection           func(childComplexity int, input models.UpdateCollectionInput) int
+		UpdateCollectionMetadata   func(childComplexity int, input models.UpdateCollectionMetadataInput) int
+		UpdatePresentationMetadata func(childComplexity int, input models.UpdatePresentationMetadataInput) int
 	}
 
 	PageInfo struct {
@@ -284,56 +284,56 @@ type CGTeamworkFlowStageResolver interface {
 	ID(ctx context.Context, obj *cgteamwork.FlowStage) (string, error)
 }
 type CGTeamworkImageResolver interface {
-	Max(ctx context.Context, obj *cgteamwork.Image) (*model.WebFile, error)
-	Min(ctx context.Context, obj *cgteamwork.Image) (*model.WebFile, error)
+	Max(ctx context.Context, obj *cgteamwork.Image) (*models.WebFile, error)
+	Min(ctx context.Context, obj *cgteamwork.Image) (*models.WebFile, error)
 }
 type CGTeamworkNoteResolver interface {
 	ID(ctx context.Context, obj *cgteamwork.Note) (string, error)
 }
 type ClientConfigResolver interface {
-	FolderInclude(ctx context.Context, obj *model.ClientConfig, format *string) ([]string, error)
+	FolderInclude(ctx context.Context, obj *models.ClientConfig, format *string) ([]string, error)
 }
 type CollectionResolver interface {
-	Metadata(ctx context.Context, obj *collection.Collection) ([]model.StringEntry, error)
+	Metadata(ctx context.Context, obj *collection.Collection) ([]models.StringEntry, error)
 
-	CgteamworkNotes(ctx context.Context, obj *collection.Collection, pipeline []string) ([]model.CollectionCGTeamworkNote, error)
+	CgteamworkNotes(ctx context.Context, obj *collection.Collection, pipeline []string) ([]models.CollectionCGTeamworkNote, error)
 }
 type DiskFileResolver interface {
 	Path(ctx context.Context, obj *file.File, format *string) (string, error)
 }
 type MutationResolver interface {
-	BackupDatabase(ctx context.Context, input model.BackupDatabaseInput) (*model.BackupDatabasePayload, error)
-	CollectFromCGTeamwork(ctx context.Context, input *model.CollectFromCGTeamworkInput, database *string, prefix *string, pipeline *string) (*model.CollectFromCGTeamworkPayload, error)
-	CollectFromFolder(ctx context.Context, input *model.CollectFromFolderInput, root *string) (*model.CollectFromFolderPayload, error)
-	CreateCGTeamworkNote(ctx context.Context, input model.CreateCGTeamworkNoteInput) (*model.CreateCGTeamworkNotePayload, error)
-	DeleteCGTeamworkNote(ctx context.Context, input model.DeleteCGTeamworkNoteInput) (*model.DeleteCGTeamworkNotePayload, error)
-	RestoreDatabase(ctx context.Context, input model.RestoreDatabaseInput) (*model.RestoreDatabasePayload, error)
-	UpdateCGTeamworkFlow(ctx context.Context, input model.UpdateCGTeamworkFlowInput) (*model.UpdateCGTeamworkFlowPayload, error)
-	UpdateCollection(ctx context.Context, input model.UpdateCollectionInput) (*model.UpdateCollectionPayload, error)
-	UpdateCollectionMetadata(ctx context.Context, input model.UpdateCollectionMetadataInput) (*model.UpdateCollectionMetadataPayload, error)
-	UpdatePresentationMetadata(ctx context.Context, input model.UpdatePresentationMetadataInput) (*model.UpdatePresentationMetadataPayload, error)
+	BackupDatabase(ctx context.Context, input models.BackupDatabaseInput) (*models.BackupDatabasePayload, error)
+	CollectFromCGTeamwork(ctx context.Context, input *models.CollectFromCGTeamworkInput, database *string, prefix *string, pipeline *string) (*models.CollectFromCGTeamworkPayload, error)
+	CollectFromFolder(ctx context.Context, input *models.CollectFromFolderInput, root *string) (*models.CollectFromFolderPayload, error)
+	CreateCGTeamworkNote(ctx context.Context, input models.CreateCGTeamworkNoteInput) (*models.CreateCGTeamworkNotePayload, error)
+	DeleteCGTeamworkNote(ctx context.Context, input models.DeleteCGTeamworkNoteInput) (*models.DeleteCGTeamworkNotePayload, error)
+	RestoreDatabase(ctx context.Context, input models.RestoreDatabaseInput) (*models.RestoreDatabasePayload, error)
+	UpdateCGTeamworkFlow(ctx context.Context, input models.UpdateCGTeamworkFlowInput) (*models.UpdateCGTeamworkFlowPayload, error)
+	UpdateCollection(ctx context.Context, input models.UpdateCollectionInput) (*models.UpdateCollectionPayload, error)
+	UpdateCollectionMetadata(ctx context.Context, input models.UpdateCollectionMetadataInput) (*models.UpdateCollectionMetadataPayload, error)
+	UpdatePresentationMetadata(ctx context.Context, input models.UpdatePresentationMetadataInput) (*models.UpdatePresentationMetadataPayload, error)
 }
 type PresentationResolver interface {
 	Type(ctx context.Context, obj *presentation.Presentation) (string, error)
 	Raw(ctx context.Context, obj *presentation.Presentation) (*file.File, error)
-	Thumb(ctx context.Context, obj *presentation.Presentation) (*model.WebFile, error)
+	Thumb(ctx context.Context, obj *presentation.Presentation) (*models.WebFile, error)
 	IsThumbOutdated(ctx context.Context, obj *presentation.Presentation) (*bool, error)
 	IsThumbTranscodeFailed(ctx context.Context, obj *presentation.Presentation) (*bool, error)
-	Regular(ctx context.Context, obj *presentation.Presentation) (*model.WebFile, error)
+	Regular(ctx context.Context, obj *presentation.Presentation) (*models.WebFile, error)
 	IsRegularOutdated(ctx context.Context, obj *presentation.Presentation) (*bool, error)
 	IsRegularTranscodeFailed(ctx context.Context, obj *presentation.Presentation) (*bool, error)
-	Metadata(ctx context.Context, obj *presentation.Presentation) ([]model.StringEntry, error)
+	Metadata(ctx context.Context, obj *presentation.Presentation) ([]models.StringEntry, error)
 }
 type QueryResolver interface {
 	CgteamworkFlows(ctx context.Context, database string, pipeline []string) ([]cgteamwork.Flow, error)
 	CgteamworkPipelines(ctx context.Context, database string, q *string, module []string) ([]cgteamwork.Pipeline, error)
 	CgteamworkProjects(ctx context.Context, q *string, name []string, database []string, status []string) ([]cgteamwork.Project, error)
 	CgteamworkStatuses(ctx context.Context) ([]cgteamwork.Status, error)
-	ClientConfig(ctx context.Context, name string) (*model.ClientConfig, error)
-	CollectionTags(ctx context.Context, regex *string, first *int, last *int, before *string, after *string) (*model.StringConnection, error)
-	Collections(ctx context.Context, originPrefix *string, presentationCountGt *int, tagOr []string, tagAnd []string, first *int, last *int, before *string, after *string) (*model.CollectionConnection, error)
+	ClientConfig(ctx context.Context, name string) (*models.ClientConfig, error)
+	CollectionTags(ctx context.Context, regex *string, first *int, last *int, before *string, after *string) (*models.StringConnection, error)
+	Collections(ctx context.Context, originPrefix *string, presentationCountGt *int, tagOr []string, tagAnd []string, first *int, last *int, before *string, after *string) (*models.CollectionConnection, error)
 	FolderOriginPrefix(ctx context.Context, root string) (string, error)
-	Node(ctx context.Context, id string) (model.Node, error)
+	Node(ctx context.Context, id string) (models.Node, error)
 }
 type SubscriptionResolver interface {
 	CollectionUpdated(ctx context.Context, id []string, originPrefix *string, presentationCountGt *int, tagOr []string, tagAnd []string) (<-chan *collection.Collection, error)
@@ -835,7 +835,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.BackupDatabase(childComplexity, args["input"].(model.BackupDatabaseInput)), true
+		return e.complexity.Mutation.BackupDatabase(childComplexity, args["input"].(models.BackupDatabaseInput)), true
 
 	case "Mutation.collectFromCGTeamwork":
 		if e.complexity.Mutation.CollectFromCGTeamwork == nil {
@@ -847,7 +847,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CollectFromCGTeamwork(childComplexity, args["input"].(*model.CollectFromCGTeamworkInput), args["database"].(*string), args["prefix"].(*string), args["pipeline"].(*string)), true
+		return e.complexity.Mutation.CollectFromCGTeamwork(childComplexity, args["input"].(*models.CollectFromCGTeamworkInput), args["database"].(*string), args["prefix"].(*string), args["pipeline"].(*string)), true
 
 	case "Mutation.collectFromFolder":
 		if e.complexity.Mutation.CollectFromFolder == nil {
@@ -859,7 +859,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CollectFromFolder(childComplexity, args["input"].(*model.CollectFromFolderInput), args["root"].(*string)), true
+		return e.complexity.Mutation.CollectFromFolder(childComplexity, args["input"].(*models.CollectFromFolderInput), args["root"].(*string)), true
 
 	case "Mutation.createCGTeamworkNote":
 		if e.complexity.Mutation.CreateCGTeamworkNote == nil {
@@ -871,7 +871,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateCGTeamworkNote(childComplexity, args["input"].(model.CreateCGTeamworkNoteInput)), true
+		return e.complexity.Mutation.CreateCGTeamworkNote(childComplexity, args["input"].(models.CreateCGTeamworkNoteInput)), true
 
 	case "Mutation.deleteCGTeamworkNote":
 		if e.complexity.Mutation.DeleteCGTeamworkNote == nil {
@@ -883,7 +883,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteCGTeamworkNote(childComplexity, args["input"].(model.DeleteCGTeamworkNoteInput)), true
+		return e.complexity.Mutation.DeleteCGTeamworkNote(childComplexity, args["input"].(models.DeleteCGTeamworkNoteInput)), true
 
 	case "Mutation.restoreDatabase":
 		if e.complexity.Mutation.RestoreDatabase == nil {
@@ -895,7 +895,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.RestoreDatabase(childComplexity, args["input"].(model.RestoreDatabaseInput)), true
+		return e.complexity.Mutation.RestoreDatabase(childComplexity, args["input"].(models.RestoreDatabaseInput)), true
 
 	case "Mutation.updateCGTeamworkFlow":
 		if e.complexity.Mutation.UpdateCGTeamworkFlow == nil {
@@ -907,7 +907,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateCGTeamworkFlow(childComplexity, args["input"].(model.UpdateCGTeamworkFlowInput)), true
+		return e.complexity.Mutation.UpdateCGTeamworkFlow(childComplexity, args["input"].(models.UpdateCGTeamworkFlowInput)), true
 
 	case "Mutation.updateCollection":
 		if e.complexity.Mutation.UpdateCollection == nil {
@@ -919,7 +919,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateCollection(childComplexity, args["input"].(model.UpdateCollectionInput)), true
+		return e.complexity.Mutation.UpdateCollection(childComplexity, args["input"].(models.UpdateCollectionInput)), true
 
 	case "Mutation.updateCollectionMetadata":
 		if e.complexity.Mutation.UpdateCollectionMetadata == nil {
@@ -931,7 +931,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateCollectionMetadata(childComplexity, args["input"].(model.UpdateCollectionMetadataInput)), true
+		return e.complexity.Mutation.UpdateCollectionMetadata(childComplexity, args["input"].(models.UpdateCollectionMetadataInput)), true
 
 	case "Mutation.updatePresentationMetadata":
 		if e.complexity.Mutation.UpdatePresentationMetadata == nil {
@@ -943,7 +943,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdatePresentationMetadata(childComplexity, args["input"].(model.UpdatePresentationMetadataInput)), true
+		return e.complexity.Mutation.UpdatePresentationMetadata(childComplexity, args["input"].(models.UpdatePresentationMetadataInput)), true
 
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
@@ -1934,10 +1934,10 @@ func (ec *executionContext) field_DiskFile_path_args(ctx context.Context, rawArg
 func (ec *executionContext) field_Mutation_backupDatabase_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.BackupDatabaseInput
+	var arg0 models.BackupDatabaseInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNBackupDatabaseInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐBackupDatabaseInput(ctx, tmp)
+		arg0, err = ec.unmarshalNBackupDatabaseInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐBackupDatabaseInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1949,10 +1949,10 @@ func (ec *executionContext) field_Mutation_backupDatabase_args(ctx context.Conte
 func (ec *executionContext) field_Mutation_collectFromCGTeamwork_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.CollectFromCGTeamworkInput
+	var arg0 *models.CollectFromCGTeamworkInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOCollectFromCGTeamworkInput2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectFromCGTeamworkInput(ctx, tmp)
+		arg0, err = ec.unmarshalOCollectFromCGTeamworkInput2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectFromCGTeamworkInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1991,10 +1991,10 @@ func (ec *executionContext) field_Mutation_collectFromCGTeamwork_args(ctx contex
 func (ec *executionContext) field_Mutation_collectFromFolder_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.CollectFromFolderInput
+	var arg0 *models.CollectFromFolderInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOCollectFromFolderInput2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectFromFolderInput(ctx, tmp)
+		arg0, err = ec.unmarshalOCollectFromFolderInput2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectFromFolderInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2015,10 +2015,10 @@ func (ec *executionContext) field_Mutation_collectFromFolder_args(ctx context.Co
 func (ec *executionContext) field_Mutation_createCGTeamworkNote_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.CreateCGTeamworkNoteInput
+	var arg0 models.CreateCGTeamworkNoteInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCreateCGTeamworkNoteInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCreateCGTeamworkNoteInput(ctx, tmp)
+		arg0, err = ec.unmarshalNCreateCGTeamworkNoteInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCreateCGTeamworkNoteInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2030,10 +2030,10 @@ func (ec *executionContext) field_Mutation_createCGTeamworkNote_args(ctx context
 func (ec *executionContext) field_Mutation_deleteCGTeamworkNote_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.DeleteCGTeamworkNoteInput
+	var arg0 models.DeleteCGTeamworkNoteInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNDeleteCGTeamworkNoteInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐDeleteCGTeamworkNoteInput(ctx, tmp)
+		arg0, err = ec.unmarshalNDeleteCGTeamworkNoteInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐDeleteCGTeamworkNoteInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2045,10 +2045,10 @@ func (ec *executionContext) field_Mutation_deleteCGTeamworkNote_args(ctx context
 func (ec *executionContext) field_Mutation_restoreDatabase_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.RestoreDatabaseInput
+	var arg0 models.RestoreDatabaseInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNRestoreDatabaseInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐRestoreDatabaseInput(ctx, tmp)
+		arg0, err = ec.unmarshalNRestoreDatabaseInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐRestoreDatabaseInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2060,10 +2060,10 @@ func (ec *executionContext) field_Mutation_restoreDatabase_args(ctx context.Cont
 func (ec *executionContext) field_Mutation_updateCGTeamworkFlow_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.UpdateCGTeamworkFlowInput
+	var arg0 models.UpdateCGTeamworkFlowInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdateCGTeamworkFlowInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCGTeamworkFlowInput(ctx, tmp)
+		arg0, err = ec.unmarshalNUpdateCGTeamworkFlowInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCGTeamworkFlowInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2075,10 +2075,10 @@ func (ec *executionContext) field_Mutation_updateCGTeamworkFlow_args(ctx context
 func (ec *executionContext) field_Mutation_updateCollectionMetadata_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.UpdateCollectionMetadataInput
+	var arg0 models.UpdateCollectionMetadataInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdateCollectionMetadataInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionMetadataInput(ctx, tmp)
+		arg0, err = ec.unmarshalNUpdateCollectionMetadataInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCollectionMetadataInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2090,10 +2090,10 @@ func (ec *executionContext) field_Mutation_updateCollectionMetadata_args(ctx con
 func (ec *executionContext) field_Mutation_updateCollection_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.UpdateCollectionInput
+	var arg0 models.UpdateCollectionInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdateCollectionInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionInput(ctx, tmp)
+		arg0, err = ec.unmarshalNUpdateCollectionInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCollectionInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2105,10 +2105,10 @@ func (ec *executionContext) field_Mutation_updateCollection_args(ctx context.Con
 func (ec *executionContext) field_Mutation_updatePresentationMetadata_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.UpdatePresentationMetadataInput
+	var arg0 models.UpdatePresentationMetadataInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdatePresentationMetadataInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdatePresentationMetadataInput(ctx, tmp)
+		arg0, err = ec.unmarshalNUpdatePresentationMetadataInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdatePresentationMetadataInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2509,7 +2509,7 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _BackupDatabasePayload_created(ctx context.Context, field graphql.CollectedField, obj *model.BackupDatabasePayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _BackupDatabasePayload_created(ctx context.Context, field graphql.CollectedField, obj *models.BackupDatabasePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2544,7 +2544,7 @@ func (ec *executionContext) _BackupDatabasePayload_created(ctx context.Context, 
 	return ec.marshalNDiskFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋfileᚐFile(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _BackupDatabasePayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *model.BackupDatabasePayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _BackupDatabasePayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *models.BackupDatabasePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2816,9 +2816,9 @@ func (ec *executionContext) _CGTeamworkImage_max(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.WebFile)
+	res := resTmp.(*models.WebFile)
 	fc.Result = res
-	return ec.marshalNWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx, field.Selections, res)
+	return ec.marshalNWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐWebFile(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CGTeamworkImage_min(ctx context.Context, field graphql.CollectedField, obj *cgteamwork.Image) (ret graphql.Marshaler) {
@@ -2851,9 +2851,9 @@ func (ec *executionContext) _CGTeamworkImage_min(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.WebFile)
+	res := resTmp.(*models.WebFile)
 	fc.Result = res
-	return ec.marshalNWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx, field.Selections, res)
+	return ec.marshalNWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐWebFile(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CGTeamworkMessage_html(ctx context.Context, field graphql.CollectedField, obj *cgteamwork.Message) (ret graphql.Marshaler) {
@@ -3556,7 +3556,7 @@ func (ec *executionContext) _CGTeamworkStatus_color(ctx context.Context, field g
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ClientConfig_sentryDSN(ctx context.Context, field graphql.CollectedField, obj *model.ClientConfig) (ret graphql.Marshaler) {
+func (ec *executionContext) _ClientConfig_sentryDSN(ctx context.Context, field graphql.CollectedField, obj *models.ClientConfig) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3588,7 +3588,7 @@ func (ec *executionContext) _ClientConfig_sentryDSN(ctx context.Context, field g
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ClientConfig_issueTrackerURL(ctx context.Context, field graphql.CollectedField, obj *model.ClientConfig) (ret graphql.Marshaler) {
+func (ec *executionContext) _ClientConfig_issueTrackerURL(ctx context.Context, field graphql.CollectedField, obj *models.ClientConfig) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3620,7 +3620,7 @@ func (ec *executionContext) _ClientConfig_issueTrackerURL(ctx context.Context, f
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ClientConfig_enableCGTeamwork(ctx context.Context, field graphql.CollectedField, obj *model.ClientConfig) (ret graphql.Marshaler) {
+func (ec *executionContext) _ClientConfig_enableCGTeamwork(ctx context.Context, field graphql.CollectedField, obj *models.ClientConfig) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3655,7 +3655,7 @@ func (ec *executionContext) _ClientConfig_enableCGTeamwork(ctx context.Context, 
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ClientConfig_folderInclude(ctx context.Context, field graphql.CollectedField, obj *model.ClientConfig) (ret graphql.Marshaler) {
+func (ec *executionContext) _ClientConfig_folderInclude(ctx context.Context, field graphql.CollectedField, obj *models.ClientConfig) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3694,7 +3694,7 @@ func (ec *executionContext) _ClientConfig_folderInclude(ctx context.Context, fie
 	return ec.marshalOString2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectFromCGTeamworkPayload_originPrefix(ctx context.Context, field graphql.CollectedField, obj *model.CollectFromCGTeamworkPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectFromCGTeamworkPayload_originPrefix(ctx context.Context, field graphql.CollectedField, obj *models.CollectFromCGTeamworkPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3729,7 +3729,7 @@ func (ec *executionContext) _CollectFromCGTeamworkPayload_originPrefix(ctx conte
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectFromCGTeamworkPayload_createdCount(ctx context.Context, field graphql.CollectedField, obj *model.CollectFromCGTeamworkPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectFromCGTeamworkPayload_createdCount(ctx context.Context, field graphql.CollectedField, obj *models.CollectFromCGTeamworkPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3764,7 +3764,7 @@ func (ec *executionContext) _CollectFromCGTeamworkPayload_createdCount(ctx conte
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectFromCGTeamworkPayload_updatedCount(ctx context.Context, field graphql.CollectedField, obj *model.CollectFromCGTeamworkPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectFromCGTeamworkPayload_updatedCount(ctx context.Context, field graphql.CollectedField, obj *models.CollectFromCGTeamworkPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3799,7 +3799,7 @@ func (ec *executionContext) _CollectFromCGTeamworkPayload_updatedCount(ctx conte
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectFromCGTeamworkPayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *model.CollectFromCGTeamworkPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectFromCGTeamworkPayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *models.CollectFromCGTeamworkPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3831,7 +3831,7 @@ func (ec *executionContext) _CollectFromCGTeamworkPayload_clientMutationId(ctx c
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectFromFolderPayload_originPrefix(ctx context.Context, field graphql.CollectedField, obj *model.CollectFromFolderPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectFromFolderPayload_originPrefix(ctx context.Context, field graphql.CollectedField, obj *models.CollectFromFolderPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3866,7 +3866,7 @@ func (ec *executionContext) _CollectFromFolderPayload_originPrefix(ctx context.C
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectFromFolderPayload_createdCount(ctx context.Context, field graphql.CollectedField, obj *model.CollectFromFolderPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectFromFolderPayload_createdCount(ctx context.Context, field graphql.CollectedField, obj *models.CollectFromFolderPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3901,7 +3901,7 @@ func (ec *executionContext) _CollectFromFolderPayload_createdCount(ctx context.C
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectFromFolderPayload_updatedCount(ctx context.Context, field graphql.CollectedField, obj *model.CollectFromFolderPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectFromFolderPayload_updatedCount(ctx context.Context, field graphql.CollectedField, obj *models.CollectFromFolderPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3936,7 +3936,7 @@ func (ec *executionContext) _CollectFromFolderPayload_updatedCount(ctx context.C
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectFromFolderPayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *model.CollectFromFolderPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectFromFolderPayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *models.CollectFromFolderPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4138,9 +4138,9 @@ func (ec *executionContext) _Collection_metadata(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]model.StringEntry)
+	res := resTmp.([]models.StringEntry)
 	fc.Result = res
-	return ec.marshalNStringEntry2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEntryᚄ(ctx, field.Selections, res)
+	return ec.marshalNStringEntry2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐStringEntryᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Collection_collectTime(ctx context.Context, field graphql.CollectedField, obj *collection.Collection) (ret graphql.Marshaler) {
@@ -4247,12 +4247,12 @@ func (ec *executionContext) _Collection_cgteamworkNotes(ctx context.Context, fie
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]model.CollectionCGTeamworkNote)
+	res := resTmp.([]models.CollectionCGTeamworkNote)
 	fc.Result = res
-	return ec.marshalOCollectionCGTeamworkNote2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionCGTeamworkNoteᚄ(ctx, field.Selections, res)
+	return ec.marshalOCollectionCGTeamworkNote2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectionCGTeamworkNoteᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectionCGTeamworkNote_pipeline(ctx context.Context, field graphql.CollectedField, obj *model.CollectionCGTeamworkNote) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectionCGTeamworkNote_pipeline(ctx context.Context, field graphql.CollectedField, obj *models.CollectionCGTeamworkNote) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4287,7 +4287,7 @@ func (ec *executionContext) _CollectionCGTeamworkNote_pipeline(ctx context.Conte
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectionCGTeamworkNote_notes(ctx context.Context, field graphql.CollectedField, obj *model.CollectionCGTeamworkNote) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectionCGTeamworkNote_notes(ctx context.Context, field graphql.CollectedField, obj *models.CollectionCGTeamworkNote) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4322,7 +4322,7 @@ func (ec *executionContext) _CollectionCGTeamworkNote_notes(ctx context.Context,
 	return ec.marshalNCGTeamworkNote2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋcgteamworkᚐNoteᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectionConnection_edges(ctx context.Context, field graphql.CollectedField, obj *model.CollectionConnection) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectionConnection_edges(ctx context.Context, field graphql.CollectedField, obj *models.CollectionConnection) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4349,12 +4349,12 @@ func (ec *executionContext) _CollectionConnection_edges(ctx context.Context, fie
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.CollectionEdge)
+	res := resTmp.([]*models.CollectionEdge)
 	fc.Result = res
-	return ec.marshalOCollectionEdge2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionEdge(ctx, field.Selections, res)
+	return ec.marshalOCollectionEdge2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectionEdge(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectionConnection_nodes(ctx context.Context, field graphql.CollectedField, obj *model.CollectionConnection) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectionConnection_nodes(ctx context.Context, field graphql.CollectedField, obj *models.CollectionConnection) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4386,7 +4386,7 @@ func (ec *executionContext) _CollectionConnection_nodes(ctx context.Context, fie
 	return ec.marshalOCollection2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollection(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectionConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *model.CollectionConnection) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectionConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *models.CollectionConnection) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4416,12 +4416,12 @@ func (ec *executionContext) _CollectionConnection_pageInfo(ctx context.Context, 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.PageInfo)
+	res := resTmp.(*models.PageInfo)
 	fc.Result = res
-	return ec.marshalNPageInfo2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐPageInfo(ctx, field.Selections, res)
+	return ec.marshalNPageInfo2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐPageInfo(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectionEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *model.CollectionEdge) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectionEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *models.CollectionEdge) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4456,7 +4456,7 @@ func (ec *executionContext) _CollectionEdge_cursor(ctx context.Context, field gr
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectionEdge_node(ctx context.Context, field graphql.CollectedField, obj *model.CollectionEdge) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectionEdge_node(ctx context.Context, field graphql.CollectedField, obj *models.CollectionEdge) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4488,7 +4488,7 @@ func (ec *executionContext) _CollectionEdge_node(ctx context.Context, field grap
 	return ec.marshalOCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollection(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CreateCGTeamworkNotePayload_updatedCollections(ctx context.Context, field graphql.CollectedField, obj *model.CreateCGTeamworkNotePayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _CreateCGTeamworkNotePayload_updatedCollections(ctx context.Context, field graphql.CollectedField, obj *models.CreateCGTeamworkNotePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4520,7 +4520,7 @@ func (ec *executionContext) _CreateCGTeamworkNotePayload_updatedCollections(ctx 
 	return ec.marshalOCollection2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollectionᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CreateCGTeamworkNotePayload_createdCount(ctx context.Context, field graphql.CollectedField, obj *model.CreateCGTeamworkNotePayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _CreateCGTeamworkNotePayload_createdCount(ctx context.Context, field graphql.CollectedField, obj *models.CreateCGTeamworkNotePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4555,7 +4555,7 @@ func (ec *executionContext) _CreateCGTeamworkNotePayload_createdCount(ctx contex
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CreateCGTeamworkNotePayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *model.CreateCGTeamworkNotePayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _CreateCGTeamworkNotePayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *models.CreateCGTeamworkNotePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4587,7 +4587,7 @@ func (ec *executionContext) _CreateCGTeamworkNotePayload_clientMutationId(ctx co
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _DeleteCGTeamworkNotePayload_deletedCount(ctx context.Context, field graphql.CollectedField, obj *model.DeleteCGTeamworkNotePayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _DeleteCGTeamworkNotePayload_deletedCount(ctx context.Context, field graphql.CollectedField, obj *models.DeleteCGTeamworkNotePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4622,7 +4622,7 @@ func (ec *executionContext) _DeleteCGTeamworkNotePayload_deletedCount(ctx contex
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _DeleteCGTeamworkNotePayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *model.DeleteCGTeamworkNotePayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _DeleteCGTeamworkNotePayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *models.DeleteCGTeamworkNotePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4785,7 +4785,7 @@ func (ec *executionContext) _Mutation_backupDatabase(ctx context.Context, field 
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().BackupDatabase(rctx, args["input"].(model.BackupDatabaseInput))
+		return ec.resolvers.Mutation().BackupDatabase(rctx, args["input"].(models.BackupDatabaseInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4794,9 +4794,9 @@ func (ec *executionContext) _Mutation_backupDatabase(ctx context.Context, field 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.BackupDatabasePayload)
+	res := resTmp.(*models.BackupDatabasePayload)
 	fc.Result = res
-	return ec.marshalOBackupDatabasePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐBackupDatabasePayload(ctx, field.Selections, res)
+	return ec.marshalOBackupDatabasePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐBackupDatabasePayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_collectFromCGTeamwork(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4824,7 +4824,7 @@ func (ec *executionContext) _Mutation_collectFromCGTeamwork(ctx context.Context,
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CollectFromCGTeamwork(rctx, args["input"].(*model.CollectFromCGTeamworkInput), args["database"].(*string), args["prefix"].(*string), args["pipeline"].(*string))
+		return ec.resolvers.Mutation().CollectFromCGTeamwork(rctx, args["input"].(*models.CollectFromCGTeamworkInput), args["database"].(*string), args["prefix"].(*string), args["pipeline"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4833,9 +4833,9 @@ func (ec *executionContext) _Mutation_collectFromCGTeamwork(ctx context.Context,
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.CollectFromCGTeamworkPayload)
+	res := resTmp.(*models.CollectFromCGTeamworkPayload)
 	fc.Result = res
-	return ec.marshalOCollectFromCGTeamworkPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectFromCGTeamworkPayload(ctx, field.Selections, res)
+	return ec.marshalOCollectFromCGTeamworkPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectFromCGTeamworkPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_collectFromFolder(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4863,7 +4863,7 @@ func (ec *executionContext) _Mutation_collectFromFolder(ctx context.Context, fie
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CollectFromFolder(rctx, args["input"].(*model.CollectFromFolderInput), args["root"].(*string))
+		return ec.resolvers.Mutation().CollectFromFolder(rctx, args["input"].(*models.CollectFromFolderInput), args["root"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4872,9 +4872,9 @@ func (ec *executionContext) _Mutation_collectFromFolder(ctx context.Context, fie
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.CollectFromFolderPayload)
+	res := resTmp.(*models.CollectFromFolderPayload)
 	fc.Result = res
-	return ec.marshalOCollectFromFolderPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectFromFolderPayload(ctx, field.Selections, res)
+	return ec.marshalOCollectFromFolderPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectFromFolderPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createCGTeamworkNote(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4902,7 +4902,7 @@ func (ec *executionContext) _Mutation_createCGTeamworkNote(ctx context.Context, 
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateCGTeamworkNote(rctx, args["input"].(model.CreateCGTeamworkNoteInput))
+		return ec.resolvers.Mutation().CreateCGTeamworkNote(rctx, args["input"].(models.CreateCGTeamworkNoteInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4911,9 +4911,9 @@ func (ec *executionContext) _Mutation_createCGTeamworkNote(ctx context.Context, 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.CreateCGTeamworkNotePayload)
+	res := resTmp.(*models.CreateCGTeamworkNotePayload)
 	fc.Result = res
-	return ec.marshalOCreateCGTeamworkNotePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCreateCGTeamworkNotePayload(ctx, field.Selections, res)
+	return ec.marshalOCreateCGTeamworkNotePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCreateCGTeamworkNotePayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_deleteCGTeamworkNote(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4941,7 +4941,7 @@ func (ec *executionContext) _Mutation_deleteCGTeamworkNote(ctx context.Context, 
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteCGTeamworkNote(rctx, args["input"].(model.DeleteCGTeamworkNoteInput))
+		return ec.resolvers.Mutation().DeleteCGTeamworkNote(rctx, args["input"].(models.DeleteCGTeamworkNoteInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4950,9 +4950,9 @@ func (ec *executionContext) _Mutation_deleteCGTeamworkNote(ctx context.Context, 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.DeleteCGTeamworkNotePayload)
+	res := resTmp.(*models.DeleteCGTeamworkNotePayload)
 	fc.Result = res
-	return ec.marshalODeleteCGTeamworkNotePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐDeleteCGTeamworkNotePayload(ctx, field.Selections, res)
+	return ec.marshalODeleteCGTeamworkNotePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐDeleteCGTeamworkNotePayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_restoreDatabase(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4980,7 +4980,7 @@ func (ec *executionContext) _Mutation_restoreDatabase(ctx context.Context, field
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().RestoreDatabase(rctx, args["input"].(model.RestoreDatabaseInput))
+		return ec.resolvers.Mutation().RestoreDatabase(rctx, args["input"].(models.RestoreDatabaseInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4989,9 +4989,9 @@ func (ec *executionContext) _Mutation_restoreDatabase(ctx context.Context, field
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.RestoreDatabasePayload)
+	res := resTmp.(*models.RestoreDatabasePayload)
 	fc.Result = res
-	return ec.marshalORestoreDatabasePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐRestoreDatabasePayload(ctx, field.Selections, res)
+	return ec.marshalORestoreDatabasePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐRestoreDatabasePayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_updateCGTeamworkFlow(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5019,7 +5019,7 @@ func (ec *executionContext) _Mutation_updateCGTeamworkFlow(ctx context.Context, 
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateCGTeamworkFlow(rctx, args["input"].(model.UpdateCGTeamworkFlowInput))
+		return ec.resolvers.Mutation().UpdateCGTeamworkFlow(rctx, args["input"].(models.UpdateCGTeamworkFlowInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5028,9 +5028,9 @@ func (ec *executionContext) _Mutation_updateCGTeamworkFlow(ctx context.Context, 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.UpdateCGTeamworkFlowPayload)
+	res := resTmp.(*models.UpdateCGTeamworkFlowPayload)
 	fc.Result = res
-	return ec.marshalOUpdateCGTeamworkFlowPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCGTeamworkFlowPayload(ctx, field.Selections, res)
+	return ec.marshalOUpdateCGTeamworkFlowPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCGTeamworkFlowPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_updateCollection(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5058,7 +5058,7 @@ func (ec *executionContext) _Mutation_updateCollection(ctx context.Context, fiel
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateCollection(rctx, args["input"].(model.UpdateCollectionInput))
+		return ec.resolvers.Mutation().UpdateCollection(rctx, args["input"].(models.UpdateCollectionInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5067,9 +5067,9 @@ func (ec *executionContext) _Mutation_updateCollection(ctx context.Context, fiel
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.UpdateCollectionPayload)
+	res := resTmp.(*models.UpdateCollectionPayload)
 	fc.Result = res
-	return ec.marshalOUpdateCollectionPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionPayload(ctx, field.Selections, res)
+	return ec.marshalOUpdateCollectionPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCollectionPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_updateCollectionMetadata(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5097,7 +5097,7 @@ func (ec *executionContext) _Mutation_updateCollectionMetadata(ctx context.Conte
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateCollectionMetadata(rctx, args["input"].(model.UpdateCollectionMetadataInput))
+		return ec.resolvers.Mutation().UpdateCollectionMetadata(rctx, args["input"].(models.UpdateCollectionMetadataInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5106,9 +5106,9 @@ func (ec *executionContext) _Mutation_updateCollectionMetadata(ctx context.Conte
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.UpdateCollectionMetadataPayload)
+	res := resTmp.(*models.UpdateCollectionMetadataPayload)
 	fc.Result = res
-	return ec.marshalOUpdateCollectionMetadataPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionMetadataPayload(ctx, field.Selections, res)
+	return ec.marshalOUpdateCollectionMetadataPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCollectionMetadataPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_updatePresentationMetadata(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5136,7 +5136,7 @@ func (ec *executionContext) _Mutation_updatePresentationMetadata(ctx context.Con
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdatePresentationMetadata(rctx, args["input"].(model.UpdatePresentationMetadataInput))
+		return ec.resolvers.Mutation().UpdatePresentationMetadata(rctx, args["input"].(models.UpdatePresentationMetadataInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5145,12 +5145,12 @@ func (ec *executionContext) _Mutation_updatePresentationMetadata(ctx context.Con
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.UpdatePresentationMetadataPayload)
+	res := resTmp.(*models.UpdatePresentationMetadataPayload)
 	fc.Result = res
-	return ec.marshalOUpdatePresentationMetadataPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdatePresentationMetadataPayload(ctx, field.Selections, res)
+	return ec.marshalOUpdatePresentationMetadataPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdatePresentationMetadataPayload(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _PageInfo_startCursor(ctx context.Context, field graphql.CollectedField, obj *model.PageInfo) (ret graphql.Marshaler) {
+func (ec *executionContext) _PageInfo_startCursor(ctx context.Context, field graphql.CollectedField, obj *models.PageInfo) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5182,7 +5182,7 @@ func (ec *executionContext) _PageInfo_startCursor(ctx context.Context, field gra
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _PageInfo_endCursor(ctx context.Context, field graphql.CollectedField, obj *model.PageInfo) (ret graphql.Marshaler) {
+func (ec *executionContext) _PageInfo_endCursor(ctx context.Context, field graphql.CollectedField, obj *models.PageInfo) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5214,7 +5214,7 @@ func (ec *executionContext) _PageInfo_endCursor(ctx context.Context, field graph
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *model.PageInfo) (ret graphql.Marshaler) {
+func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *models.PageInfo) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5249,7 +5249,7 @@ func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field gra
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _PageInfo_hasPreviousPage(ctx context.Context, field graphql.CollectedField, obj *model.PageInfo) (ret graphql.Marshaler) {
+func (ec *executionContext) _PageInfo_hasPreviousPage(ctx context.Context, field graphql.CollectedField, obj *models.PageInfo) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5416,9 +5416,9 @@ func (ec *executionContext) _Presentation_thumb(ctx context.Context, field graph
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.WebFile)
+	res := resTmp.(*models.WebFile)
 	fc.Result = res
-	return ec.marshalOWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx, field.Selections, res)
+	return ec.marshalOWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐWebFile(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Presentation_isThumbOutdated(ctx context.Context, field graphql.CollectedField, obj *presentation.Presentation) (ret graphql.Marshaler) {
@@ -5512,9 +5512,9 @@ func (ec *executionContext) _Presentation_regular(ctx context.Context, field gra
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.WebFile)
+	res := resTmp.(*models.WebFile)
 	fc.Result = res
-	return ec.marshalOWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx, field.Selections, res)
+	return ec.marshalOWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐWebFile(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Presentation_isRegularOutdated(ctx context.Context, field graphql.CollectedField, obj *presentation.Presentation) (ret graphql.Marshaler) {
@@ -5611,9 +5611,9 @@ func (ec *executionContext) _Presentation_metadata(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]model.StringEntry)
+	res := resTmp.([]models.StringEntry)
 	fc.Result = res
-	return ec.marshalNStringEntry2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEntryᚄ(ctx, field.Selections, res)
+	return ec.marshalNStringEntry2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐStringEntryᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_cgteamworkFlows(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5805,9 +5805,9 @@ func (ec *executionContext) _Query_clientConfig(ctx context.Context, field graph
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.ClientConfig)
+	res := resTmp.(*models.ClientConfig)
 	fc.Result = res
-	return ec.marshalOClientConfig2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐClientConfig(ctx, field.Selections, res)
+	return ec.marshalOClientConfig2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐClientConfig(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_collectionTags(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5847,9 +5847,9 @@ func (ec *executionContext) _Query_collectionTags(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.StringConnection)
+	res := resTmp.(*models.StringConnection)
 	fc.Result = res
-	return ec.marshalNStringConnection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringConnection(ctx, field.Selections, res)
+	return ec.marshalNStringConnection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐStringConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_collections(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5889,9 +5889,9 @@ func (ec *executionContext) _Query_collections(ctx context.Context, field graphq
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.CollectionConnection)
+	res := resTmp.(*models.CollectionConnection)
 	fc.Result = res
-	return ec.marshalNCollectionConnection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionConnection(ctx, field.Selections, res)
+	return ec.marshalNCollectionConnection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectionConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_folderOriginPrefix(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5970,9 +5970,9 @@ func (ec *executionContext) _Query_node(ctx context.Context, field graphql.Colle
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(model.Node)
+	res := resTmp.(models.Node)
 	fc.Result = res
-	return ec.marshalONode2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐNode(ctx, field.Selections, res)
+	return ec.marshalONode2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐNode(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -6046,7 +6046,7 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _RestoreDatabasePayload_backup(ctx context.Context, field graphql.CollectedField, obj *model.RestoreDatabasePayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _RestoreDatabasePayload_backup(ctx context.Context, field graphql.CollectedField, obj *models.RestoreDatabasePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6078,7 +6078,7 @@ func (ec *executionContext) _RestoreDatabasePayload_backup(ctx context.Context, 
 	return ec.marshalODiskFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋfileᚐFile(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _RestoreDatabasePayload_isDropped(ctx context.Context, field graphql.CollectedField, obj *model.RestoreDatabasePayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _RestoreDatabasePayload_isDropped(ctx context.Context, field graphql.CollectedField, obj *models.RestoreDatabasePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6113,7 +6113,7 @@ func (ec *executionContext) _RestoreDatabasePayload_isDropped(ctx context.Contex
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _RestoreDatabasePayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *model.RestoreDatabasePayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _RestoreDatabasePayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *models.RestoreDatabasePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6145,7 +6145,7 @@ func (ec *executionContext) _RestoreDatabasePayload_clientMutationId(ctx context
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _StringConnection_edges(ctx context.Context, field graphql.CollectedField, obj *model.StringConnection) (ret graphql.Marshaler) {
+func (ec *executionContext) _StringConnection_edges(ctx context.Context, field graphql.CollectedField, obj *models.StringConnection) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6172,12 +6172,12 @@ func (ec *executionContext) _StringConnection_edges(ctx context.Context, field g
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.StringEdge)
+	res := resTmp.([]*models.StringEdge)
 	fc.Result = res
-	return ec.marshalOStringEdge2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEdge(ctx, field.Selections, res)
+	return ec.marshalOStringEdge2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐStringEdge(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _StringConnection_nodes(ctx context.Context, field graphql.CollectedField, obj *model.StringConnection) (ret graphql.Marshaler) {
+func (ec *executionContext) _StringConnection_nodes(ctx context.Context, field graphql.CollectedField, obj *models.StringConnection) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6209,7 +6209,7 @@ func (ec *executionContext) _StringConnection_nodes(ctx context.Context, field g
 	return ec.marshalOString2ᚕᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _StringConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *model.StringConnection) (ret graphql.Marshaler) {
+func (ec *executionContext) _StringConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *models.StringConnection) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6239,12 +6239,12 @@ func (ec *executionContext) _StringConnection_pageInfo(ctx context.Context, fiel
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.PageInfo)
+	res := resTmp.(*models.PageInfo)
 	fc.Result = res
-	return ec.marshalNPageInfo2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐPageInfo(ctx, field.Selections, res)
+	return ec.marshalNPageInfo2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐPageInfo(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _StringEdge_node(ctx context.Context, field graphql.CollectedField, obj *model.StringEdge) (ret graphql.Marshaler) {
+func (ec *executionContext) _StringEdge_node(ctx context.Context, field graphql.CollectedField, obj *models.StringEdge) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6276,7 +6276,7 @@ func (ec *executionContext) _StringEdge_node(ctx context.Context, field graphql.
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _StringEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *model.StringEdge) (ret graphql.Marshaler) {
+func (ec *executionContext) _StringEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *models.StringEdge) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6311,7 +6311,7 @@ func (ec *executionContext) _StringEdge_cursor(ctx context.Context, field graphq
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _StringEntry_k(ctx context.Context, field graphql.CollectedField, obj *model.StringEntry) (ret graphql.Marshaler) {
+func (ec *executionContext) _StringEntry_k(ctx context.Context, field graphql.CollectedField, obj *models.StringEntry) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6346,7 +6346,7 @@ func (ec *executionContext) _StringEntry_k(ctx context.Context, field graphql.Co
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _StringEntry_v(ctx context.Context, field graphql.CollectedField, obj *model.StringEntry) (ret graphql.Marshaler) {
+func (ec *executionContext) _StringEntry_v(ctx context.Context, field graphql.CollectedField, obj *models.StringEntry) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6485,7 +6485,7 @@ func (ec *executionContext) _Subscription_presentationUpdated(ctx context.Contex
 	}
 }
 
-func (ec *executionContext) _UpdateCGTeamworkFlowPayload_updated(ctx context.Context, field graphql.CollectedField, obj *model.UpdateCGTeamworkFlowPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _UpdateCGTeamworkFlowPayload_updated(ctx context.Context, field graphql.CollectedField, obj *models.UpdateCGTeamworkFlowPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6517,7 +6517,7 @@ func (ec *executionContext) _UpdateCGTeamworkFlowPayload_updated(ctx context.Con
 	return ec.marshalOCollection2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollectionᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _UpdateCGTeamworkFlowPayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *model.UpdateCGTeamworkFlowPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _UpdateCGTeamworkFlowPayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *models.UpdateCGTeamworkFlowPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6549,7 +6549,7 @@ func (ec *executionContext) _UpdateCGTeamworkFlowPayload_clientMutationId(ctx co
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _UpdateCollectionMetadataPayload_updated(ctx context.Context, field graphql.CollectedField, obj *model.UpdateCollectionMetadataPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _UpdateCollectionMetadataPayload_updated(ctx context.Context, field graphql.CollectedField, obj *models.UpdateCollectionMetadataPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6581,7 +6581,7 @@ func (ec *executionContext) _UpdateCollectionMetadataPayload_updated(ctx context
 	return ec.marshalOCollection2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollectionᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _UpdateCollectionMetadataPayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *model.UpdateCollectionMetadataPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _UpdateCollectionMetadataPayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *models.UpdateCollectionMetadataPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6613,7 +6613,7 @@ func (ec *executionContext) _UpdateCollectionMetadataPayload_clientMutationId(ct
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _UpdateCollectionPayload_updated(ctx context.Context, field graphql.CollectedField, obj *model.UpdateCollectionPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _UpdateCollectionPayload_updated(ctx context.Context, field graphql.CollectedField, obj *models.UpdateCollectionPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6645,7 +6645,7 @@ func (ec *executionContext) _UpdateCollectionPayload_updated(ctx context.Context
 	return ec.marshalOCollection2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollectionᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _UpdateCollectionPayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *model.UpdateCollectionPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _UpdateCollectionPayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *models.UpdateCollectionPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6677,7 +6677,7 @@ func (ec *executionContext) _UpdateCollectionPayload_clientMutationId(ctx contex
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _UpdatePresentationMetadataPayload_updated(ctx context.Context, field graphql.CollectedField, obj *model.UpdatePresentationMetadataPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _UpdatePresentationMetadataPayload_updated(ctx context.Context, field graphql.CollectedField, obj *models.UpdatePresentationMetadataPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6709,7 +6709,7 @@ func (ec *executionContext) _UpdatePresentationMetadataPayload_updated(ctx conte
 	return ec.marshalOPresentation2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋpresentationᚐPresentationᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _UpdatePresentationMetadataPayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *model.UpdatePresentationMetadataPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _UpdatePresentationMetadataPayload_clientMutationId(ctx context.Context, field graphql.CollectedField, obj *models.UpdatePresentationMetadataPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6741,7 +6741,7 @@ func (ec *executionContext) _UpdatePresentationMetadataPayload_clientMutationId(
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _WebFile_url(ctx context.Context, field graphql.CollectedField, obj *model.WebFile) (ret graphql.Marshaler) {
+func (ec *executionContext) _WebFile_url(ctx context.Context, field graphql.CollectedField, obj *models.WebFile) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7863,8 +7863,8 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    **************************** input.gotpl *****************************
 
-func (ec *executionContext) unmarshalInputBackupDatabaseInput(ctx context.Context, obj interface{}) (model.BackupDatabaseInput, error) {
-	var it model.BackupDatabaseInput
+func (ec *executionContext) unmarshalInputBackupDatabaseInput(ctx context.Context, obj interface{}) (models.BackupDatabaseInput, error) {
+	var it models.BackupDatabaseInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -7891,8 +7891,8 @@ func (ec *executionContext) unmarshalInputBackupDatabaseInput(ctx context.Contex
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputCollectFromCGTeamworkInput(ctx context.Context, obj interface{}) (model.CollectFromCGTeamworkInput, error) {
-	var it model.CollectFromCGTeamworkInput
+func (ec *executionContext) unmarshalInputCollectFromCGTeamworkInput(ctx context.Context, obj interface{}) (models.CollectFromCGTeamworkInput, error) {
+	var it models.CollectFromCGTeamworkInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -7935,8 +7935,8 @@ func (ec *executionContext) unmarshalInputCollectFromCGTeamworkInput(ctx context
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputCollectFromFolderInput(ctx context.Context, obj interface{}) (model.CollectFromFolderInput, error) {
-	var it model.CollectFromFolderInput
+func (ec *executionContext) unmarshalInputCollectFromFolderInput(ctx context.Context, obj interface{}) (models.CollectFromFolderInput, error) {
+	var it models.CollectFromFolderInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -7963,8 +7963,8 @@ func (ec *executionContext) unmarshalInputCollectFromFolderInput(ctx context.Con
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputCreateCGTeamworkNoteInput(ctx context.Context, obj interface{}) (model.CreateCGTeamworkNoteInput, error) {
-	var it model.CreateCGTeamworkNoteInput
+func (ec *executionContext) unmarshalInputCreateCGTeamworkNoteInput(ctx context.Context, obj interface{}) (models.CreateCGTeamworkNoteInput, error) {
+	var it models.CreateCGTeamworkNoteInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -7973,7 +7973,7 @@ func (ec *executionContext) unmarshalInputCreateCGTeamworkNoteInput(ctx context.
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
-			it.Data, err = ec.unmarshalNCreateCGTeamworkNoteInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCreateCGTeamworkNoteInputDataᚄ(ctx, v)
+			it.Data, err = ec.unmarshalNCreateCGTeamworkNoteInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCreateCGTeamworkNoteInputDataᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -8007,8 +8007,8 @@ func (ec *executionContext) unmarshalInputCreateCGTeamworkNoteInput(ctx context.
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputCreateCGTeamworkNoteInputData(ctx context.Context, obj interface{}) (model.CreateCGTeamworkNoteInputData, error) {
-	var it model.CreateCGTeamworkNoteInputData
+func (ec *executionContext) unmarshalInputCreateCGTeamworkNoteInputData(ctx context.Context, obj interface{}) (models.CreateCGTeamworkNoteInputData, error) {
+	var it models.CreateCGTeamworkNoteInputData
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -8051,8 +8051,8 @@ func (ec *executionContext) unmarshalInputCreateCGTeamworkNoteInputData(ctx cont
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputDeleteCGTeamworkNoteInput(ctx context.Context, obj interface{}) (model.DeleteCGTeamworkNoteInput, error) {
-	var it model.DeleteCGTeamworkNoteInput
+func (ec *executionContext) unmarshalInputDeleteCGTeamworkNoteInput(ctx context.Context, obj interface{}) (models.DeleteCGTeamworkNoteInput, error) {
+	var it models.DeleteCGTeamworkNoteInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -8095,8 +8095,8 @@ func (ec *executionContext) unmarshalInputDeleteCGTeamworkNoteInput(ctx context.
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputRestoreDatabaseInput(ctx context.Context, obj interface{}) (model.RestoreDatabaseInput, error) {
-	var it model.RestoreDatabaseInput
+func (ec *executionContext) unmarshalInputRestoreDatabaseInput(ctx context.Context, obj interface{}) (models.RestoreDatabaseInput, error) {
+	var it models.RestoreDatabaseInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -8147,8 +8147,8 @@ func (ec *executionContext) unmarshalInputRestoreDatabaseInput(ctx context.Conte
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateCGTeamworkFlowInput(ctx context.Context, obj interface{}) (model.UpdateCGTeamworkFlowInput, error) {
-	var it model.UpdateCGTeamworkFlowInput
+func (ec *executionContext) unmarshalInputUpdateCGTeamworkFlowInput(ctx context.Context, obj interface{}) (models.UpdateCGTeamworkFlowInput, error) {
+	var it models.UpdateCGTeamworkFlowInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -8157,7 +8157,7 @@ func (ec *executionContext) unmarshalInputUpdateCGTeamworkFlowInput(ctx context.
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
-			it.Data, err = ec.unmarshalNUpdateCGTeamworkFlowInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCGTeamworkFlowInputDataᚄ(ctx, v)
+			it.Data, err = ec.unmarshalNUpdateCGTeamworkFlowInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCGTeamworkFlowInputDataᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -8191,8 +8191,8 @@ func (ec *executionContext) unmarshalInputUpdateCGTeamworkFlowInput(ctx context.
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateCGTeamworkFlowInputData(ctx context.Context, obj interface{}) (model.UpdateCGTeamworkFlowInputData, error) {
-	var it model.UpdateCGTeamworkFlowInputData
+func (ec *executionContext) unmarshalInputUpdateCGTeamworkFlowInputData(ctx context.Context, obj interface{}) (models.UpdateCGTeamworkFlowInputData, error) {
+	var it models.UpdateCGTeamworkFlowInputData
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -8251,8 +8251,8 @@ func (ec *executionContext) unmarshalInputUpdateCGTeamworkFlowInputData(ctx cont
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateCollectionInput(ctx context.Context, obj interface{}) (model.UpdateCollectionInput, error) {
-	var it model.UpdateCollectionInput
+func (ec *executionContext) unmarshalInputUpdateCollectionInput(ctx context.Context, obj interface{}) (models.UpdateCollectionInput, error) {
+	var it models.UpdateCollectionInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -8261,7 +8261,7 @@ func (ec *executionContext) unmarshalInputUpdateCollectionInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
-			it.Data, err = ec.unmarshalNUpdateCollectionInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionInputDataᚄ(ctx, v)
+			it.Data, err = ec.unmarshalNUpdateCollectionInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCollectionInputDataᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -8279,8 +8279,8 @@ func (ec *executionContext) unmarshalInputUpdateCollectionInput(ctx context.Cont
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateCollectionInputData(ctx context.Context, obj interface{}) (model.UpdateCollectionInputData, error) {
-	var it model.UpdateCollectionInputData
+func (ec *executionContext) unmarshalInputUpdateCollectionInputData(ctx context.Context, obj interface{}) (models.UpdateCollectionInputData, error) {
+	var it models.UpdateCollectionInputData
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -8307,8 +8307,8 @@ func (ec *executionContext) unmarshalInputUpdateCollectionInputData(ctx context.
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateCollectionMetadataInput(ctx context.Context, obj interface{}) (model.UpdateCollectionMetadataInput, error) {
-	var it model.UpdateCollectionMetadataInput
+func (ec *executionContext) unmarshalInputUpdateCollectionMetadataInput(ctx context.Context, obj interface{}) (models.UpdateCollectionMetadataInput, error) {
+	var it models.UpdateCollectionMetadataInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -8317,7 +8317,7 @@ func (ec *executionContext) unmarshalInputUpdateCollectionMetadataInput(ctx cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
-			it.Data, err = ec.unmarshalNUpdateCollectionMetadataInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionMetadataInputDataᚄ(ctx, v)
+			it.Data, err = ec.unmarshalNUpdateCollectionMetadataInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCollectionMetadataInputDataᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -8335,8 +8335,8 @@ func (ec *executionContext) unmarshalInputUpdateCollectionMetadataInput(ctx cont
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateCollectionMetadataInputData(ctx context.Context, obj interface{}) (model.UpdateCollectionMetadataInputData, error) {
-	var it model.UpdateCollectionMetadataInputData
+func (ec *executionContext) unmarshalInputUpdateCollectionMetadataInputData(ctx context.Context, obj interface{}) (models.UpdateCollectionMetadataInputData, error) {
+	var it models.UpdateCollectionMetadataInputData
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -8371,8 +8371,8 @@ func (ec *executionContext) unmarshalInputUpdateCollectionMetadataInputData(ctx 
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdatePresentationMetadataInput(ctx context.Context, obj interface{}) (model.UpdatePresentationMetadataInput, error) {
-	var it model.UpdatePresentationMetadataInput
+func (ec *executionContext) unmarshalInputUpdatePresentationMetadataInput(ctx context.Context, obj interface{}) (models.UpdatePresentationMetadataInput, error) {
+	var it models.UpdatePresentationMetadataInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -8381,7 +8381,7 @@ func (ec *executionContext) unmarshalInputUpdatePresentationMetadataInput(ctx co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
-			it.Data, err = ec.unmarshalNUpdatePresentationMetadataInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdatePresentationMetadataInputDataᚄ(ctx, v)
+			it.Data, err = ec.unmarshalNUpdatePresentationMetadataInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdatePresentationMetadataInputDataᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -8399,8 +8399,8 @@ func (ec *executionContext) unmarshalInputUpdatePresentationMetadataInput(ctx co
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdatePresentationMetadataInputData(ctx context.Context, obj interface{}) (model.UpdatePresentationMetadataInputData, error) {
-	var it model.UpdatePresentationMetadataInputData
+func (ec *executionContext) unmarshalInputUpdatePresentationMetadataInputData(ctx context.Context, obj interface{}) (models.UpdatePresentationMetadataInputData, error) {
+	var it models.UpdatePresentationMetadataInputData
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -8439,7 +8439,7 @@ func (ec *executionContext) unmarshalInputUpdatePresentationMetadataInputData(ct
 
 // region    ************************** interface.gotpl ***************************
 
-func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj model.Node) graphql.Marshaler {
+func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj models.Node) graphql.Marshaler {
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
@@ -8468,7 +8468,7 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 
 var backupDatabasePayloadImplementors = []string{"BackupDatabasePayload"}
 
-func (ec *executionContext) _BackupDatabasePayload(ctx context.Context, sel ast.SelectionSet, obj *model.BackupDatabasePayload) graphql.Marshaler {
+func (ec *executionContext) _BackupDatabasePayload(ctx context.Context, sel ast.SelectionSet, obj *models.BackupDatabasePayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, backupDatabasePayloadImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -8871,7 +8871,7 @@ func (ec *executionContext) _CGTeamworkStatus(ctx context.Context, sel ast.Selec
 
 var clientConfigImplementors = []string{"ClientConfig"}
 
-func (ec *executionContext) _ClientConfig(ctx context.Context, sel ast.SelectionSet, obj *model.ClientConfig) graphql.Marshaler {
+func (ec *executionContext) _ClientConfig(ctx context.Context, sel ast.SelectionSet, obj *models.ClientConfig) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, clientConfigImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -8913,7 +8913,7 @@ func (ec *executionContext) _ClientConfig(ctx context.Context, sel ast.Selection
 
 var collectFromCGTeamworkPayloadImplementors = []string{"CollectFromCGTeamworkPayload"}
 
-func (ec *executionContext) _CollectFromCGTeamworkPayload(ctx context.Context, sel ast.SelectionSet, obj *model.CollectFromCGTeamworkPayload) graphql.Marshaler {
+func (ec *executionContext) _CollectFromCGTeamworkPayload(ctx context.Context, sel ast.SelectionSet, obj *models.CollectFromCGTeamworkPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, collectFromCGTeamworkPayloadImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -8952,7 +8952,7 @@ func (ec *executionContext) _CollectFromCGTeamworkPayload(ctx context.Context, s
 
 var collectFromFolderPayloadImplementors = []string{"CollectFromFolderPayload"}
 
-func (ec *executionContext) _CollectFromFolderPayload(ctx context.Context, sel ast.SelectionSet, obj *model.CollectFromFolderPayload) graphql.Marshaler {
+func (ec *executionContext) _CollectFromFolderPayload(ctx context.Context, sel ast.SelectionSet, obj *models.CollectFromFolderPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, collectFromFolderPayloadImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -9068,7 +9068,7 @@ func (ec *executionContext) _Collection(ctx context.Context, sel ast.SelectionSe
 
 var collectionCGTeamworkNoteImplementors = []string{"CollectionCGTeamworkNote"}
 
-func (ec *executionContext) _CollectionCGTeamworkNote(ctx context.Context, sel ast.SelectionSet, obj *model.CollectionCGTeamworkNote) graphql.Marshaler {
+func (ec *executionContext) _CollectionCGTeamworkNote(ctx context.Context, sel ast.SelectionSet, obj *models.CollectionCGTeamworkNote) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, collectionCGTeamworkNoteImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -9100,7 +9100,7 @@ func (ec *executionContext) _CollectionCGTeamworkNote(ctx context.Context, sel a
 
 var collectionConnectionImplementors = []string{"CollectionConnection"}
 
-func (ec *executionContext) _CollectionConnection(ctx context.Context, sel ast.SelectionSet, obj *model.CollectionConnection) graphql.Marshaler {
+func (ec *executionContext) _CollectionConnection(ctx context.Context, sel ast.SelectionSet, obj *models.CollectionConnection) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, collectionConnectionImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -9131,7 +9131,7 @@ func (ec *executionContext) _CollectionConnection(ctx context.Context, sel ast.S
 
 var collectionEdgeImplementors = []string{"CollectionEdge"}
 
-func (ec *executionContext) _CollectionEdge(ctx context.Context, sel ast.SelectionSet, obj *model.CollectionEdge) graphql.Marshaler {
+func (ec *executionContext) _CollectionEdge(ctx context.Context, sel ast.SelectionSet, obj *models.CollectionEdge) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, collectionEdgeImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -9160,7 +9160,7 @@ func (ec *executionContext) _CollectionEdge(ctx context.Context, sel ast.Selecti
 
 var createCGTeamworkNotePayloadImplementors = []string{"CreateCGTeamworkNotePayload"}
 
-func (ec *executionContext) _CreateCGTeamworkNotePayload(ctx context.Context, sel ast.SelectionSet, obj *model.CreateCGTeamworkNotePayload) graphql.Marshaler {
+func (ec *executionContext) _CreateCGTeamworkNotePayload(ctx context.Context, sel ast.SelectionSet, obj *models.CreateCGTeamworkNotePayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, createCGTeamworkNotePayloadImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -9191,7 +9191,7 @@ func (ec *executionContext) _CreateCGTeamworkNotePayload(ctx context.Context, se
 
 var deleteCGTeamworkNotePayloadImplementors = []string{"DeleteCGTeamworkNotePayload"}
 
-func (ec *executionContext) _DeleteCGTeamworkNotePayload(ctx context.Context, sel ast.SelectionSet, obj *model.DeleteCGTeamworkNotePayload) graphql.Marshaler {
+func (ec *executionContext) _DeleteCGTeamworkNotePayload(ctx context.Context, sel ast.SelectionSet, obj *models.DeleteCGTeamworkNotePayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, deleteCGTeamworkNotePayloadImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -9306,7 +9306,7 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 var pageInfoImplementors = []string{"PageInfo"}
 
-func (ec *executionContext) _PageInfo(ctx context.Context, sel ast.SelectionSet, obj *model.PageInfo) graphql.Marshaler {
+func (ec *executionContext) _PageInfo(ctx context.Context, sel ast.SelectionSet, obj *models.PageInfo) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, pageInfoImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -9621,7 +9621,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 
 var restoreDatabasePayloadImplementors = []string{"RestoreDatabasePayload"}
 
-func (ec *executionContext) _RestoreDatabasePayload(ctx context.Context, sel ast.SelectionSet, obj *model.RestoreDatabasePayload) graphql.Marshaler {
+func (ec *executionContext) _RestoreDatabasePayload(ctx context.Context, sel ast.SelectionSet, obj *models.RestoreDatabasePayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, restoreDatabasePayloadImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -9652,7 +9652,7 @@ func (ec *executionContext) _RestoreDatabasePayload(ctx context.Context, sel ast
 
 var stringConnectionImplementors = []string{"StringConnection"}
 
-func (ec *executionContext) _StringConnection(ctx context.Context, sel ast.SelectionSet, obj *model.StringConnection) graphql.Marshaler {
+func (ec *executionContext) _StringConnection(ctx context.Context, sel ast.SelectionSet, obj *models.StringConnection) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, stringConnectionImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -9683,7 +9683,7 @@ func (ec *executionContext) _StringConnection(ctx context.Context, sel ast.Selec
 
 var stringEdgeImplementors = []string{"StringEdge"}
 
-func (ec *executionContext) _StringEdge(ctx context.Context, sel ast.SelectionSet, obj *model.StringEdge) graphql.Marshaler {
+func (ec *executionContext) _StringEdge(ctx context.Context, sel ast.SelectionSet, obj *models.StringEdge) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, stringEdgeImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -9712,7 +9712,7 @@ func (ec *executionContext) _StringEdge(ctx context.Context, sel ast.SelectionSe
 
 var stringEntryImplementors = []string{"StringEntry"}
 
-func (ec *executionContext) _StringEntry(ctx context.Context, sel ast.SelectionSet, obj *model.StringEntry) graphql.Marshaler {
+func (ec *executionContext) _StringEntry(ctx context.Context, sel ast.SelectionSet, obj *models.StringEntry) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, stringEntryImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -9766,7 +9766,7 @@ func (ec *executionContext) _Subscription(ctx context.Context, sel ast.Selection
 
 var updateCGTeamworkFlowPayloadImplementors = []string{"UpdateCGTeamworkFlowPayload"}
 
-func (ec *executionContext) _UpdateCGTeamworkFlowPayload(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateCGTeamworkFlowPayload) graphql.Marshaler {
+func (ec *executionContext) _UpdateCGTeamworkFlowPayload(ctx context.Context, sel ast.SelectionSet, obj *models.UpdateCGTeamworkFlowPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, updateCGTeamworkFlowPayloadImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -9792,7 +9792,7 @@ func (ec *executionContext) _UpdateCGTeamworkFlowPayload(ctx context.Context, se
 
 var updateCollectionMetadataPayloadImplementors = []string{"UpdateCollectionMetadataPayload"}
 
-func (ec *executionContext) _UpdateCollectionMetadataPayload(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateCollectionMetadataPayload) graphql.Marshaler {
+func (ec *executionContext) _UpdateCollectionMetadataPayload(ctx context.Context, sel ast.SelectionSet, obj *models.UpdateCollectionMetadataPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, updateCollectionMetadataPayloadImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -9818,7 +9818,7 @@ func (ec *executionContext) _UpdateCollectionMetadataPayload(ctx context.Context
 
 var updateCollectionPayloadImplementors = []string{"UpdateCollectionPayload"}
 
-func (ec *executionContext) _UpdateCollectionPayload(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateCollectionPayload) graphql.Marshaler {
+func (ec *executionContext) _UpdateCollectionPayload(ctx context.Context, sel ast.SelectionSet, obj *models.UpdateCollectionPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, updateCollectionPayloadImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -9844,7 +9844,7 @@ func (ec *executionContext) _UpdateCollectionPayload(ctx context.Context, sel as
 
 var updatePresentationMetadataPayloadImplementors = []string{"UpdatePresentationMetadataPayload"}
 
-func (ec *executionContext) _UpdatePresentationMetadataPayload(ctx context.Context, sel ast.SelectionSet, obj *model.UpdatePresentationMetadataPayload) graphql.Marshaler {
+func (ec *executionContext) _UpdatePresentationMetadataPayload(ctx context.Context, sel ast.SelectionSet, obj *models.UpdatePresentationMetadataPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, updatePresentationMetadataPayloadImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -9870,7 +9870,7 @@ func (ec *executionContext) _UpdatePresentationMetadataPayload(ctx context.Conte
 
 var webFileImplementors = []string{"WebFile"}
 
-func (ec *executionContext) _WebFile(ctx context.Context, sel ast.SelectionSet, obj *model.WebFile) graphql.Marshaler {
+func (ec *executionContext) _WebFile(ctx context.Context, sel ast.SelectionSet, obj *models.WebFile) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, webFileImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -10140,7 +10140,7 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) unmarshalNBackupDatabaseInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐBackupDatabaseInput(ctx context.Context, v interface{}) (model.BackupDatabaseInput, error) {
+func (ec *executionContext) unmarshalNBackupDatabaseInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐBackupDatabaseInput(ctx context.Context, v interface{}) (models.BackupDatabaseInput, error) {
 	res, err := ec.unmarshalInputBackupDatabaseInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
@@ -10395,15 +10395,15 @@ func (ec *executionContext) marshalNCollection2ᚖgithubᚗcomᚋWuLiFangᚋcshe
 	return ec._Collection(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNCollectionCGTeamworkNote2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionCGTeamworkNote(ctx context.Context, sel ast.SelectionSet, v model.CollectionCGTeamworkNote) graphql.Marshaler {
+func (ec *executionContext) marshalNCollectionCGTeamworkNote2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectionCGTeamworkNote(ctx context.Context, sel ast.SelectionSet, v models.CollectionCGTeamworkNote) graphql.Marshaler {
 	return ec._CollectionCGTeamworkNote(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNCollectionConnection2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionConnection(ctx context.Context, sel ast.SelectionSet, v model.CollectionConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNCollectionConnection2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectionConnection(ctx context.Context, sel ast.SelectionSet, v models.CollectionConnection) graphql.Marshaler {
 	return ec._CollectionConnection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNCollectionConnection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionConnection(ctx context.Context, sel ast.SelectionSet, v *model.CollectionConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNCollectionConnection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectionConnection(ctx context.Context, sel ast.SelectionSet, v *models.CollectionConnection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -10413,17 +10413,17 @@ func (ec *executionContext) marshalNCollectionConnection2ᚖgithubᚗcomᚋWuLiF
 	return ec._CollectionConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNCreateCGTeamworkNoteInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCreateCGTeamworkNoteInput(ctx context.Context, v interface{}) (model.CreateCGTeamworkNoteInput, error) {
+func (ec *executionContext) unmarshalNCreateCGTeamworkNoteInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCreateCGTeamworkNoteInput(ctx context.Context, v interface{}) (models.CreateCGTeamworkNoteInput, error) {
 	res, err := ec.unmarshalInputCreateCGTeamworkNoteInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCreateCGTeamworkNoteInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCreateCGTeamworkNoteInputData(ctx context.Context, v interface{}) (model.CreateCGTeamworkNoteInputData, error) {
+func (ec *executionContext) unmarshalNCreateCGTeamworkNoteInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCreateCGTeamworkNoteInputData(ctx context.Context, v interface{}) (models.CreateCGTeamworkNoteInputData, error) {
 	res, err := ec.unmarshalInputCreateCGTeamworkNoteInputData(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCreateCGTeamworkNoteInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCreateCGTeamworkNoteInputDataᚄ(ctx context.Context, v interface{}) ([]model.CreateCGTeamworkNoteInputData, error) {
+func (ec *executionContext) unmarshalNCreateCGTeamworkNoteInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCreateCGTeamworkNoteInputDataᚄ(ctx context.Context, v interface{}) ([]models.CreateCGTeamworkNoteInputData, error) {
 	var vSlice []interface{}
 	if v != nil {
 		if tmp1, ok := v.([]interface{}); ok {
@@ -10433,10 +10433,10 @@ func (ec *executionContext) unmarshalNCreateCGTeamworkNoteInputData2ᚕgithubᚗ
 		}
 	}
 	var err error
-	res := make([]model.CreateCGTeamworkNoteInputData, len(vSlice))
+	res := make([]models.CreateCGTeamworkNoteInputData, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNCreateCGTeamworkNoteInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCreateCGTeamworkNoteInputData(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNCreateCGTeamworkNoteInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCreateCGTeamworkNoteInputData(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -10444,7 +10444,7 @@ func (ec *executionContext) unmarshalNCreateCGTeamworkNoteInputData2ᚕgithubᚗ
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalNDeleteCGTeamworkNoteInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐDeleteCGTeamworkNoteInput(ctx context.Context, v interface{}) (model.DeleteCGTeamworkNoteInput, error) {
+func (ec *executionContext) unmarshalNDeleteCGTeamworkNoteInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐDeleteCGTeamworkNoteInput(ctx context.Context, v interface{}) (models.DeleteCGTeamworkNoteInput, error) {
 	res, err := ec.unmarshalInputDeleteCGTeamworkNoteInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
@@ -10523,7 +10523,7 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) marshalNPageInfo2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v *model.PageInfo) graphql.Marshaler {
+func (ec *executionContext) marshalNPageInfo2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v *models.PageInfo) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -10584,7 +10584,7 @@ func (ec *executionContext) marshalNPresentation2ᚖgithubᚗcomᚋWuLiFangᚋcs
 	return ec._Presentation(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNRestoreDatabaseInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐRestoreDatabaseInput(ctx context.Context, v interface{}) (model.RestoreDatabaseInput, error) {
+func (ec *executionContext) unmarshalNRestoreDatabaseInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐRestoreDatabaseInput(ctx context.Context, v interface{}) (models.RestoreDatabaseInput, error) {
 	res, err := ec.unmarshalInputRestoreDatabaseInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
@@ -10634,11 +10634,11 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 	return ret
 }
 
-func (ec *executionContext) marshalNStringConnection2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringConnection(ctx context.Context, sel ast.SelectionSet, v model.StringConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNStringConnection2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐStringConnection(ctx context.Context, sel ast.SelectionSet, v models.StringConnection) graphql.Marshaler {
 	return ec._StringConnection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNStringConnection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringConnection(ctx context.Context, sel ast.SelectionSet, v *model.StringConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNStringConnection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐStringConnection(ctx context.Context, sel ast.SelectionSet, v *models.StringConnection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -10648,11 +10648,11 @@ func (ec *executionContext) marshalNStringConnection2ᚖgithubᚗcomᚋWuLiFang�
 	return ec._StringConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNStringEntry2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEntry(ctx context.Context, sel ast.SelectionSet, v model.StringEntry) graphql.Marshaler {
+func (ec *executionContext) marshalNStringEntry2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐStringEntry(ctx context.Context, sel ast.SelectionSet, v models.StringEntry) graphql.Marshaler {
 	return ec._StringEntry(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNStringEntry2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEntryᚄ(ctx context.Context, sel ast.SelectionSet, v []model.StringEntry) graphql.Marshaler {
+func (ec *executionContext) marshalNStringEntry2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐStringEntryᚄ(ctx context.Context, sel ast.SelectionSet, v []models.StringEntry) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -10676,7 +10676,7 @@ func (ec *executionContext) marshalNStringEntry2ᚕgithubᚗcomᚋWuLiFangᚋcsh
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNStringEntry2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEntry(ctx, sel, v[i])
+			ret[i] = ec.marshalNStringEntry2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐStringEntry(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -10704,17 +10704,17 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 	return res
 }
 
-func (ec *executionContext) unmarshalNUpdateCGTeamworkFlowInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCGTeamworkFlowInput(ctx context.Context, v interface{}) (model.UpdateCGTeamworkFlowInput, error) {
+func (ec *executionContext) unmarshalNUpdateCGTeamworkFlowInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCGTeamworkFlowInput(ctx context.Context, v interface{}) (models.UpdateCGTeamworkFlowInput, error) {
 	res, err := ec.unmarshalInputUpdateCGTeamworkFlowInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdateCGTeamworkFlowInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCGTeamworkFlowInputData(ctx context.Context, v interface{}) (model.UpdateCGTeamworkFlowInputData, error) {
+func (ec *executionContext) unmarshalNUpdateCGTeamworkFlowInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCGTeamworkFlowInputData(ctx context.Context, v interface{}) (models.UpdateCGTeamworkFlowInputData, error) {
 	res, err := ec.unmarshalInputUpdateCGTeamworkFlowInputData(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdateCGTeamworkFlowInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCGTeamworkFlowInputDataᚄ(ctx context.Context, v interface{}) ([]model.UpdateCGTeamworkFlowInputData, error) {
+func (ec *executionContext) unmarshalNUpdateCGTeamworkFlowInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCGTeamworkFlowInputDataᚄ(ctx context.Context, v interface{}) ([]models.UpdateCGTeamworkFlowInputData, error) {
 	var vSlice []interface{}
 	if v != nil {
 		if tmp1, ok := v.([]interface{}); ok {
@@ -10724,10 +10724,10 @@ func (ec *executionContext) unmarshalNUpdateCGTeamworkFlowInputData2ᚕgithubᚗ
 		}
 	}
 	var err error
-	res := make([]model.UpdateCGTeamworkFlowInputData, len(vSlice))
+	res := make([]models.UpdateCGTeamworkFlowInputData, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNUpdateCGTeamworkFlowInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCGTeamworkFlowInputData(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNUpdateCGTeamworkFlowInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCGTeamworkFlowInputData(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -10735,17 +10735,17 @@ func (ec *executionContext) unmarshalNUpdateCGTeamworkFlowInputData2ᚕgithubᚗ
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalNUpdateCollectionInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionInput(ctx context.Context, v interface{}) (model.UpdateCollectionInput, error) {
+func (ec *executionContext) unmarshalNUpdateCollectionInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCollectionInput(ctx context.Context, v interface{}) (models.UpdateCollectionInput, error) {
 	res, err := ec.unmarshalInputUpdateCollectionInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdateCollectionInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionInputData(ctx context.Context, v interface{}) (model.UpdateCollectionInputData, error) {
+func (ec *executionContext) unmarshalNUpdateCollectionInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCollectionInputData(ctx context.Context, v interface{}) (models.UpdateCollectionInputData, error) {
 	res, err := ec.unmarshalInputUpdateCollectionInputData(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdateCollectionInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionInputDataᚄ(ctx context.Context, v interface{}) ([]model.UpdateCollectionInputData, error) {
+func (ec *executionContext) unmarshalNUpdateCollectionInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCollectionInputDataᚄ(ctx context.Context, v interface{}) ([]models.UpdateCollectionInputData, error) {
 	var vSlice []interface{}
 	if v != nil {
 		if tmp1, ok := v.([]interface{}); ok {
@@ -10755,10 +10755,10 @@ func (ec *executionContext) unmarshalNUpdateCollectionInputData2ᚕgithubᚗcom�
 		}
 	}
 	var err error
-	res := make([]model.UpdateCollectionInputData, len(vSlice))
+	res := make([]models.UpdateCollectionInputData, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNUpdateCollectionInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionInputData(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNUpdateCollectionInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCollectionInputData(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -10766,17 +10766,17 @@ func (ec *executionContext) unmarshalNUpdateCollectionInputData2ᚕgithubᚗcom�
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalNUpdateCollectionMetadataInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionMetadataInput(ctx context.Context, v interface{}) (model.UpdateCollectionMetadataInput, error) {
+func (ec *executionContext) unmarshalNUpdateCollectionMetadataInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCollectionMetadataInput(ctx context.Context, v interface{}) (models.UpdateCollectionMetadataInput, error) {
 	res, err := ec.unmarshalInputUpdateCollectionMetadataInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdateCollectionMetadataInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionMetadataInputData(ctx context.Context, v interface{}) (model.UpdateCollectionMetadataInputData, error) {
+func (ec *executionContext) unmarshalNUpdateCollectionMetadataInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCollectionMetadataInputData(ctx context.Context, v interface{}) (models.UpdateCollectionMetadataInputData, error) {
 	res, err := ec.unmarshalInputUpdateCollectionMetadataInputData(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdateCollectionMetadataInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionMetadataInputDataᚄ(ctx context.Context, v interface{}) ([]model.UpdateCollectionMetadataInputData, error) {
+func (ec *executionContext) unmarshalNUpdateCollectionMetadataInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCollectionMetadataInputDataᚄ(ctx context.Context, v interface{}) ([]models.UpdateCollectionMetadataInputData, error) {
 	var vSlice []interface{}
 	if v != nil {
 		if tmp1, ok := v.([]interface{}); ok {
@@ -10786,10 +10786,10 @@ func (ec *executionContext) unmarshalNUpdateCollectionMetadataInputData2ᚕgithu
 		}
 	}
 	var err error
-	res := make([]model.UpdateCollectionMetadataInputData, len(vSlice))
+	res := make([]models.UpdateCollectionMetadataInputData, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNUpdateCollectionMetadataInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionMetadataInputData(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNUpdateCollectionMetadataInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCollectionMetadataInputData(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -10797,17 +10797,17 @@ func (ec *executionContext) unmarshalNUpdateCollectionMetadataInputData2ᚕgithu
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalNUpdatePresentationMetadataInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdatePresentationMetadataInput(ctx context.Context, v interface{}) (model.UpdatePresentationMetadataInput, error) {
+func (ec *executionContext) unmarshalNUpdatePresentationMetadataInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdatePresentationMetadataInput(ctx context.Context, v interface{}) (models.UpdatePresentationMetadataInput, error) {
 	res, err := ec.unmarshalInputUpdatePresentationMetadataInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdatePresentationMetadataInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdatePresentationMetadataInputData(ctx context.Context, v interface{}) (model.UpdatePresentationMetadataInputData, error) {
+func (ec *executionContext) unmarshalNUpdatePresentationMetadataInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdatePresentationMetadataInputData(ctx context.Context, v interface{}) (models.UpdatePresentationMetadataInputData, error) {
 	res, err := ec.unmarshalInputUpdatePresentationMetadataInputData(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdatePresentationMetadataInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdatePresentationMetadataInputDataᚄ(ctx context.Context, v interface{}) ([]model.UpdatePresentationMetadataInputData, error) {
+func (ec *executionContext) unmarshalNUpdatePresentationMetadataInputData2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdatePresentationMetadataInputDataᚄ(ctx context.Context, v interface{}) ([]models.UpdatePresentationMetadataInputData, error) {
 	var vSlice []interface{}
 	if v != nil {
 		if tmp1, ok := v.([]interface{}); ok {
@@ -10817,10 +10817,10 @@ func (ec *executionContext) unmarshalNUpdatePresentationMetadataInputData2ᚕgit
 		}
 	}
 	var err error
-	res := make([]model.UpdatePresentationMetadataInputData, len(vSlice))
+	res := make([]models.UpdatePresentationMetadataInputData, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNUpdatePresentationMetadataInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdatePresentationMetadataInputData(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNUpdatePresentationMetadataInputData2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdatePresentationMetadataInputData(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -10843,11 +10843,11 @@ func (ec *executionContext) marshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋg
 	return res
 }
 
-func (ec *executionContext) marshalNWebFile2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx context.Context, sel ast.SelectionSet, v model.WebFile) graphql.Marshaler {
+func (ec *executionContext) marshalNWebFile2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐWebFile(ctx context.Context, sel ast.SelectionSet, v models.WebFile) graphql.Marshaler {
 	return ec._WebFile(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx context.Context, sel ast.SelectionSet, v *model.WebFile) graphql.Marshaler {
+func (ec *executionContext) marshalNWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐWebFile(ctx context.Context, sel ast.SelectionSet, v *models.WebFile) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -11086,7 +11086,7 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) marshalOBackupDatabasePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐBackupDatabasePayload(ctx context.Context, sel ast.SelectionSet, v *model.BackupDatabasePayload) graphql.Marshaler {
+func (ec *executionContext) marshalOBackupDatabasePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐBackupDatabasePayload(ctx context.Context, sel ast.SelectionSet, v *models.BackupDatabasePayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -11197,14 +11197,14 @@ func (ec *executionContext) marshalOCGTeamworkProject2ᚕgithubᚗcomᚋWuLiFang
 	return ret
 }
 
-func (ec *executionContext) marshalOClientConfig2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐClientConfig(ctx context.Context, sel ast.SelectionSet, v *model.ClientConfig) graphql.Marshaler {
+func (ec *executionContext) marshalOClientConfig2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐClientConfig(ctx context.Context, sel ast.SelectionSet, v *models.ClientConfig) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._ClientConfig(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOCollectFromCGTeamworkInput2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectFromCGTeamworkInput(ctx context.Context, v interface{}) (*model.CollectFromCGTeamworkInput, error) {
+func (ec *executionContext) unmarshalOCollectFromCGTeamworkInput2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectFromCGTeamworkInput(ctx context.Context, v interface{}) (*models.CollectFromCGTeamworkInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -11212,14 +11212,14 @@ func (ec *executionContext) unmarshalOCollectFromCGTeamworkInput2ᚖgithubᚗcom
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOCollectFromCGTeamworkPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectFromCGTeamworkPayload(ctx context.Context, sel ast.SelectionSet, v *model.CollectFromCGTeamworkPayload) graphql.Marshaler {
+func (ec *executionContext) marshalOCollectFromCGTeamworkPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectFromCGTeamworkPayload(ctx context.Context, sel ast.SelectionSet, v *models.CollectFromCGTeamworkPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._CollectFromCGTeamworkPayload(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOCollectFromFolderInput2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectFromFolderInput(ctx context.Context, v interface{}) (*model.CollectFromFolderInput, error) {
+func (ec *executionContext) unmarshalOCollectFromFolderInput2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectFromFolderInput(ctx context.Context, v interface{}) (*models.CollectFromFolderInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -11227,7 +11227,7 @@ func (ec *executionContext) unmarshalOCollectFromFolderInput2ᚖgithubᚗcomᚋW
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOCollectFromFolderPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectFromFolderPayload(ctx context.Context, sel ast.SelectionSet, v *model.CollectFromFolderPayload) graphql.Marshaler {
+func (ec *executionContext) marshalOCollectFromFolderPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectFromFolderPayload(ctx context.Context, sel ast.SelectionSet, v *models.CollectFromFolderPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -11321,7 +11321,7 @@ func (ec *executionContext) marshalOCollection2ᚖgithubᚗcomᚋWuLiFangᚋcshe
 	return ec._Collection(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOCollectionCGTeamworkNote2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionCGTeamworkNoteᚄ(ctx context.Context, sel ast.SelectionSet, v []model.CollectionCGTeamworkNote) graphql.Marshaler {
+func (ec *executionContext) marshalOCollectionCGTeamworkNote2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectionCGTeamworkNoteᚄ(ctx context.Context, sel ast.SelectionSet, v []models.CollectionCGTeamworkNote) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -11348,7 +11348,7 @@ func (ec *executionContext) marshalOCollectionCGTeamworkNote2ᚕgithubᚗcomᚋW
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNCollectionCGTeamworkNote2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionCGTeamworkNote(ctx, sel, v[i])
+			ret[i] = ec.marshalNCollectionCGTeamworkNote2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectionCGTeamworkNote(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -11361,7 +11361,7 @@ func (ec *executionContext) marshalOCollectionCGTeamworkNote2ᚕgithubᚗcomᚋW
 	return ret
 }
 
-func (ec *executionContext) marshalOCollectionEdge2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionEdge(ctx context.Context, sel ast.SelectionSet, v []*model.CollectionEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOCollectionEdge2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectionEdge(ctx context.Context, sel ast.SelectionSet, v []*models.CollectionEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -11388,7 +11388,7 @@ func (ec *executionContext) marshalOCollectionEdge2ᚕᚖgithubᚗcomᚋWuLiFang
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOCollectionEdge2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionEdge(ctx, sel, v[i])
+			ret[i] = ec.marshalOCollectionEdge2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectionEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -11401,21 +11401,21 @@ func (ec *executionContext) marshalOCollectionEdge2ᚕᚖgithubᚗcomᚋWuLiFang
 	return ret
 }
 
-func (ec *executionContext) marshalOCollectionEdge2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCollectionEdge(ctx context.Context, sel ast.SelectionSet, v *model.CollectionEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOCollectionEdge2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectionEdge(ctx context.Context, sel ast.SelectionSet, v *models.CollectionEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._CollectionEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOCreateCGTeamworkNotePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐCreateCGTeamworkNotePayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateCGTeamworkNotePayload) graphql.Marshaler {
+func (ec *executionContext) marshalOCreateCGTeamworkNotePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCreateCGTeamworkNotePayload(ctx context.Context, sel ast.SelectionSet, v *models.CreateCGTeamworkNotePayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._CreateCGTeamworkNotePayload(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalODeleteCGTeamworkNotePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐDeleteCGTeamworkNotePayload(ctx context.Context, sel ast.SelectionSet, v *model.DeleteCGTeamworkNotePayload) graphql.Marshaler {
+func (ec *executionContext) marshalODeleteCGTeamworkNotePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐDeleteCGTeamworkNotePayload(ctx context.Context, sel ast.SelectionSet, v *models.DeleteCGTeamworkNotePayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -11489,7 +11489,7 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	return graphql.MarshalInt(*v)
 }
 
-func (ec *executionContext) marshalONode2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐNode(ctx context.Context, sel ast.SelectionSet, v model.Node) graphql.Marshaler {
+func (ec *executionContext) marshalONode2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐNode(ctx context.Context, sel ast.SelectionSet, v models.Node) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -11536,7 +11536,7 @@ func (ec *executionContext) marshalOPresentation2ᚕgithubᚗcomᚋWuLiFangᚋcs
 	return ret
 }
 
-func (ec *executionContext) marshalORestoreDatabasePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐRestoreDatabasePayload(ctx context.Context, sel ast.SelectionSet, v *model.RestoreDatabasePayload) graphql.Marshaler {
+func (ec *executionContext) marshalORestoreDatabasePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐRestoreDatabasePayload(ctx context.Context, sel ast.SelectionSet, v *models.RestoreDatabasePayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -11639,7 +11639,7 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return graphql.MarshalString(*v)
 }
 
-func (ec *executionContext) marshalOStringEdge2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEdge(ctx context.Context, sel ast.SelectionSet, v []*model.StringEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOStringEdge2ᚕᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐStringEdge(ctx context.Context, sel ast.SelectionSet, v []*models.StringEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -11666,7 +11666,7 @@ func (ec *executionContext) marshalOStringEdge2ᚕᚖgithubᚗcomᚋWuLiFangᚋc
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOStringEdge2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEdge(ctx, sel, v[i])
+			ret[i] = ec.marshalOStringEdge2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐStringEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -11679,7 +11679,7 @@ func (ec *executionContext) marshalOStringEdge2ᚕᚖgithubᚗcomᚋWuLiFangᚋc
 	return ret
 }
 
-func (ec *executionContext) marshalOStringEdge2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐStringEdge(ctx context.Context, sel ast.SelectionSet, v *model.StringEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOStringEdge2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐStringEdge(ctx context.Context, sel ast.SelectionSet, v *models.StringEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -11695,28 +11695,28 @@ func (ec *executionContext) marshalOTime2timeᚐTime(ctx context.Context, sel as
 	return graphql.MarshalTime(v)
 }
 
-func (ec *executionContext) marshalOUpdateCGTeamworkFlowPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCGTeamworkFlowPayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdateCGTeamworkFlowPayload) graphql.Marshaler {
+func (ec *executionContext) marshalOUpdateCGTeamworkFlowPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCGTeamworkFlowPayload(ctx context.Context, sel ast.SelectionSet, v *models.UpdateCGTeamworkFlowPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._UpdateCGTeamworkFlowPayload(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOUpdateCollectionMetadataPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionMetadataPayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdateCollectionMetadataPayload) graphql.Marshaler {
+func (ec *executionContext) marshalOUpdateCollectionMetadataPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCollectionMetadataPayload(ctx context.Context, sel ast.SelectionSet, v *models.UpdateCollectionMetadataPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._UpdateCollectionMetadataPayload(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOUpdateCollectionPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdateCollectionPayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdateCollectionPayload) graphql.Marshaler {
+func (ec *executionContext) marshalOUpdateCollectionPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdateCollectionPayload(ctx context.Context, sel ast.SelectionSet, v *models.UpdateCollectionPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._UpdateCollectionPayload(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOUpdatePresentationMetadataPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐUpdatePresentationMetadataPayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdatePresentationMetadataPayload) graphql.Marshaler {
+func (ec *executionContext) marshalOUpdatePresentationMetadataPayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐUpdatePresentationMetadataPayload(ctx context.Context, sel ast.SelectionSet, v *models.UpdatePresentationMetadataPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -11759,7 +11759,7 @@ func (ec *executionContext) marshalOUpload2ᚕgithubᚗcomᚋ99designsᚋgqlgen�
 	return ret
 }
 
-func (ec *executionContext) marshalOWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋgeneratedᚋmodelᚐWebFile(ctx context.Context, sel ast.SelectionSet, v *model.WebFile) graphql.Marshaler {
+func (ec *executionContext) marshalOWebFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐWebFile(ctx context.Context, sel ast.SelectionSet, v *models.WebFile) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

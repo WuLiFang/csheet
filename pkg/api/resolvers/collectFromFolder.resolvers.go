@@ -8,13 +8,13 @@ import (
 	"errors"
 	"time"
 
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	collect "github.com/WuLiFang/csheet/v6/pkg/collector/base"
 	"github.com/WuLiFang/csheet/v6/pkg/collector/folder"
 )
 
-func (r *mutationResolver) CollectFromFolder(ctx context.Context, input *model.CollectFromFolderInput, root *string) (*model.CollectFromFolderPayload, error) {
-	var ret = new(model.CollectFromFolderPayload)
+func (r *mutationResolver) CollectFromFolder(ctx context.Context, input *models.CollectFromFolderInput, root *string) (*models.CollectFromFolderPayload, error) {
+	var ret = new(models.CollectFromFolderPayload)
 	var err error
 
 	ctx, cancel := context.WithTimeout(ctx, 60*time.Second)

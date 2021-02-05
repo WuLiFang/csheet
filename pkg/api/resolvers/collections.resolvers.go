@@ -6,18 +6,18 @@ package resolvers
 import (
 	"context"
 
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
 	"go.uber.org/zap"
 )
 
-func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, presentationCountGt *int, tagOr []string, tagAnd []string, first *int, last *int, before *string, after *string) (*model.CollectionConnection, error) {
+func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, presentationCountGt *int, tagOr []string, tagAnd []string, first *int, last *int, before *string, after *string) (*models.CollectionConnection, error) {
 	pag, err := paginate(first, last, before, after)
 	if err != nil {
 		return nil, err
 	}
-	ret := model.CollectionConnection{PageInfo: &model.PageInfo{}}
+	ret := models.CollectionConnection{PageInfo: &models.PageInfo{}}
 	nodes := []*collection.Collection{}
 
 	// TODO: refactor to collection.Find
@@ -106,7 +106,7 @@ func (r *queryResolver) Collections(ctx context.Context, originPrefix *string, p
 	}
 	ret.Nodes = nodes
 	for _, i := range ret.Nodes {
-		ret.Edges = append(ret.Edges, &model.CollectionEdge{
+		ret.Edges = append(ret.Edges, &models.CollectionEdge{
 			Node:   i,
 			Cursor: i.ID(),
 		})

@@ -11,13 +11,13 @@ import (
 
 	"github.com/WuLiFang/csheet/v6/internal/config"
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/models/file"
 )
 
-func (r *mutationResolver) BackupDatabase(ctx context.Context, input model.BackupDatabaseInput) (*model.BackupDatabasePayload, error) {
-	ret := new(model.BackupDatabasePayload)
+func (r *mutationResolver) BackupDatabase(ctx context.Context, input models.BackupDatabaseInput) (*models.BackupDatabasePayload, error) {
+	ret := new(models.BackupDatabasePayload)
 	ret.ClientMutationID = input.ClientMutationID
 	err := verifyAdminToken(input.AdminToken)
 	if err != nil {

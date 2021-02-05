@@ -7,14 +7,14 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
 	"go.uber.org/zap"
 )
 
-func (r *mutationResolver) UpdateCollectionMetadata(ctx context.Context, input model.UpdateCollectionMetadataInput) (*model.UpdateCollectionMetadataPayload, error) {
+func (r *mutationResolver) UpdateCollectionMetadata(ctx context.Context, input models.UpdateCollectionMetadataInput) (*models.UpdateCollectionMetadataPayload, error) {
 	var logger = getLogger(ctx)
-	var ret = new(model.UpdateCollectionMetadataPayload)
+	var ret = new(models.UpdateCollectionMetadataPayload)
 	var err error
 	ret.ClientMutationID = input.ClientMutationID
 	var m = make(map[string]*collection.Collection)

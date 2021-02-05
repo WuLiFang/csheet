@@ -7,18 +7,18 @@ import (
 	"context"
 
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 )
 
-func (r *cGTeamworkImageResolver) Max(ctx context.Context, obj *cgteamwork.Image) (*model.WebFile, error) {
-	return &model.WebFile{
+func (r *cGTeamworkImageResolver) Max(ctx context.Context, obj *cgteamwork.Image) (*models.WebFile, error) {
+	return &models.WebFile{
 		URL: "/cgteamwork" + obj.Max,
 	}, nil
 }
 
-func (r *cGTeamworkImageResolver) Min(ctx context.Context, obj *cgteamwork.Image) (*model.WebFile, error) {
-	return &model.WebFile{
+func (r *cGTeamworkImageResolver) Min(ctx context.Context, obj *cgteamwork.Image) (*models.WebFile, error) {
+	return &models.WebFile{
 		URL: "/cgteamwork" + obj.Min,
 	}, nil
 }

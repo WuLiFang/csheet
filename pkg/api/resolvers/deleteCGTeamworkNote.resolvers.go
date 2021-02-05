@@ -8,14 +8,14 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	"go.uber.org/zap"
 )
 
-func (r *mutationResolver) DeleteCGTeamworkNote(ctx context.Context, input model.DeleteCGTeamworkNoteInput) (*model.DeleteCGTeamworkNotePayload, error) {
+func (r *mutationResolver) DeleteCGTeamworkNote(ctx context.Context, input models.DeleteCGTeamworkNoteInput) (*models.DeleteCGTeamworkNotePayload, error) {
 	var logger = getLogger(ctx).With(zap.String("username", input.Username))
-	ret := new(model.DeleteCGTeamworkNotePayload)
+	ret := new(models.DeleteCGTeamworkNotePayload)
 	ret.ClientMutationID = input.ClientMutationID
 
 	ctx = cgteamwork.WithClient(ctx, &cgteamwork.Client{

@@ -8,7 +8,7 @@ import (
 	"sort"
 
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
-	"github.com/WuLiFang/csheet/v6/pkg/api/generated/model"
+	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/models/file"
 	"github.com/WuLiFang/csheet/v6/pkg/models/presentation"
@@ -28,11 +28,11 @@ func (r *presentationResolver) Raw(ctx context.Context, obj *presentation.Presen
 	return &v, err
 }
 
-func (r *presentationResolver) Thumb(ctx context.Context, obj *presentation.Presentation) (*model.WebFile, error) {
+func (r *presentationResolver) Thumb(ctx context.Context, obj *presentation.Presentation) (*models.WebFile, error) {
 	if obj.Thumb == "" {
 		return nil, nil
 	}
-	return &model.WebFile{
+	return &models.WebFile{
 		URL: "/files/" + obj.Thumb,
 	}, nil
 }
@@ -53,11 +53,11 @@ func (r *presentationResolver) IsThumbTranscodeFailed(ctx context.Context, obj *
 	return &v, nil
 }
 
-func (r *presentationResolver) Regular(ctx context.Context, obj *presentation.Presentation) (*model.WebFile, error) {
+func (r *presentationResolver) Regular(ctx context.Context, obj *presentation.Presentation) (*models.WebFile, error) {
 	if obj.Regular == "" {
 		return nil, nil
 	}
-	return &model.WebFile{
+	return &models.WebFile{
 		URL: "/files/" + obj.Regular,
 	}, nil
 }
@@ -78,10 +78,10 @@ func (r *presentationResolver) IsRegularTranscodeFailed(ctx context.Context, obj
 	return &v, nil
 }
 
-func (r *presentationResolver) Metadata(ctx context.Context, obj *presentation.Presentation) ([]model.StringEntry, error) {
-	var ret []model.StringEntry
+func (r *presentationResolver) Metadata(ctx context.Context, obj *presentation.Presentation) ([]models.StringEntry, error) {
+	var ret []models.StringEntry
 	for k, v := range obj.Metadata {
-		ret = append(ret, model.StringEntry{K: k, V: v})
+		ret = append(ret, models.StringEntry{K: k, V: v})
 	}
 	sort.Slice(ret, func(i, j int) bool {
 		return ret[i].K < ret[j].K
