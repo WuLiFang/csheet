@@ -296,7 +296,9 @@ func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error)
 		}
 		var status = map[string]string{}
 		for _, field := range statusFields {
-			status[field.Label] = data[string(field.Sign)]
+			if v := data[string(field.Sign)]; v != "" {
+				status[field.Label] = v
+			}
 		}
 		statuses[index] = status
 		return nil
