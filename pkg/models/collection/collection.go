@@ -10,6 +10,7 @@ import (
 
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/models/mixins"
+	"github.com/WuLiFang/csheet/v6/pkg/util"
 )
 
 //go:generate gotmpl -o collection_gen.go ../model.go.gotmpl
@@ -45,8 +46,8 @@ func (c Collection) Key() ([]byte, error) {
 
 // Validate and clean up data
 func (c *Collection) Validate(ctx context.Context) (err error) {
-	c.PresentationIDs = uniqString(c.PresentationIDs)
-	c.Tags = uniqString(c.Tags)
+	c.PresentationIDs = util.StringUniq(c.PresentationIDs)
+	c.Tags = util.StringUniq(c.Tags)
 	sort.Strings(c.Tags)
 	return
 }
@@ -67,21 +68,6 @@ func FindByID(ctx context.Context, id string) (ret *Collection, err error) {
 		return
 	})
 	return
-}
-
-func uniqString(v []string) []string {
-	if len(v) == 0 {
-		return nil
-	}
-	m := make(map[string]struct{})
-	for _, i := range v {
-		m[i] = struct{}{}
-	}
-	ret := make([]string, 0, len(m))
-	for i := range m {
-		ret = append(ret, i)
-	}
-	return ret
 }
 
 var deferUntilSavedSetupOnce = new(sync.Once)
