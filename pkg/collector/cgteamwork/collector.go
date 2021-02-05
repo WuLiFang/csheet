@@ -146,7 +146,7 @@ func collectionFromTask(
 	}
 	ret.Metadata["cgteamwork.tasks"] = taskData
 	for stage, status := range status {
-		ret.Tags = append(ret.Tags, "status:"+stage+"="+status)
+		ret.Tags = append(ret.Tags, "status:"+stage+":"+status)
 	}
 
 	presentationIDSet := make(map[string]struct{})
