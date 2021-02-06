@@ -12,6 +12,7 @@ import (
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/apperror"
+	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	client "github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	"github.com/WuLiFang/csheet/v6/pkg/collector/base"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
@@ -66,6 +67,7 @@ func collectionFromTask(
 	task client.Task,
 	o Options,
 	status map[string]string,
+	checkboxData map[string]string,
 ) (created bool, err error) {
 	var logger = logging.For(ctx).Logger("collector.cgteamwork").Sugar()
 
@@ -112,11 +114,17 @@ func collectionFromTask(
 			var tagSet = util.StringSet(ret.Tags)
 			for tag := range tagSet {
 				if strings.HasPrefix(tag, "artist:") ||
-					strings.HasPrefix(tag, "status:") {
+					strings.HasPrefix(tag, "status:") ||
+					strings.HasPrefix(tag, "cgteamwork:") {
 					delete(tagSet, tag)
 				}
 			}
 			ret.Tags = util.StringSliceFromSet(tagSet)
+		}
+	}
+	for k, v := range checkboxData {
+		if v == "Y" {
+			ret.Tags = append(ret.Tags, "cgteamwork:"+k)
 		}
 	}
 	taskData := ret.Metadata["cgteamwork.tasks"]
@@ -262,7 +270,6 @@ func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error)
 	}
 	for _, flow := range flows {
 		if _, ok := pipelineMap[flow.Pipeline.Name]; !ok {
-			continue
 		}
 		for _, stage := range flow.Stages {
 			statusFieldIDs[stage.Field.ID] = struct{}{}
@@ -278,6 +285,18 @@ func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error)
 		statusFields[f.Sign] = f
 		fields = append(fields, string(f.Sign))
 	}
+	checkboxFields, err := cgteamwork.Fields(
+		ctx, o.Database, cgteamwork.FieldOptionFilter(
+			cgteamwork.F("module").Equal(pipeline.Module.Name).And(cgteamwork.F("type").Equal("checkbox")),
+		),
+		cgteamwork.FieldOptionFields([]string{"field_str", "sign"}),
+	)
+	if err != nil {
+		return
+	}
+	for _, i := range checkboxFields {
+		fields = append(fields, string(i.Sign))
+	}
 
 	switch pipeline.Module.Name {
 	case "asset":
@@ -290,6 +309,7 @@ func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error)
 	rs.SetDefault("task.module", pipeline.Module.Name)
 	tasks := make([]client.Task, rs.Count())
 	statuses := make([]map[string]string, len(tasks))
+	checkboxData := make([]map[string]string, len(tasks))
 	err = rs.ForEach(func(index int, data map[string]string) error {
 		err = tasks[index].UnmarshalCGTeamworkRecord(data)
 		if err != nil {
@@ -301,7 +321,14 @@ func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error)
 				status[field.Label] = v
 			}
 		}
+		var checkboxDataItem = map[string]string{}
+		for _, field := range checkboxFields {
+			if v := data[string(field.Sign)]; v != "" {
+				checkboxDataItem[field.Label] = v
+			}
+		}
 		statuses[index] = status
+		checkboxData[index] = checkboxDataItem
 		return nil
 	})
 	if err != nil {
@@ -311,7 +338,7 @@ func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error)
 	colM := map[string]collection.Collection{}
 	for index, v := range tasks {
 		var created bool
-		created, err = collectionFromTask(ctx, colM, v, o, statuses[index])
+		created, err = collectionFromTask(ctx, colM, v, o, statuses[index], checkboxData[index])
 		if err != nil {
 			return
 		}
