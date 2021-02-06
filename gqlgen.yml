@@ -34,8 +34,8 @@ skip_validation: true
 
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
-# autobind:
-#   - 'github.com/WuLiFang/csheet/model'
+autobind:
+  - github.com/WuLiFang/csheet/v6/pkg/api/models
 
 # This section declares type mapping between the GraphQL and go type systems
 #

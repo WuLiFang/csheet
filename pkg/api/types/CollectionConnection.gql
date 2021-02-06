@@ -1,10 +1,21 @@
+# Code generated from [Connection.gql.gotmpl], DO NOT EDIT.
+
 type CollectionEdge {
-  cursor: String!
+  "The item at the end of the edge."
   node: Collection
+
+  "A cursor for use in pagination."
+  cursor: String!
 }
 
+"The connection type for Collection."
 type CollectionConnection {
+  "A list of edges."
   edges: [CollectionEdge]
+
+  "A list of nodes."
   nodes: [Collection]
+
+  "Information to aid in pagination."
   pageInfo: PageInfo!
 }

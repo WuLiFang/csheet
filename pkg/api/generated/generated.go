@@ -156,14 +156,21 @@ type ComplexityRoot struct {
 	}
 
 	CollectionConnection struct {
-		Edges    func(childComplexity int) int
-		Nodes    func(childComplexity int) int
-		PageInfo func(childComplexity int) int
+		Edges      func(childComplexity int) int
+		Nodes      func(childComplexity int) int
+		PageInfo   func(childComplexity int) int
+		TagCount   func(childComplexity int) int
+		TotalCount func(childComplexity int) int
 	}
 
 	CollectionEdge struct {
 		Cursor func(childComplexity int) int
 		Node   func(childComplexity int) int
+	}
+
+	CollectionTagCount struct {
+		Count func(childComplexity int) int
+		Tag   func(childComplexity int) int
 	}
 
 	CreateCGTeamworkNotePayload struct {
@@ -751,6 +758,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CollectionConnection.PageInfo(childComplexity), true
 
+	case "CollectionConnection.tagCount":
+		if e.complexity.CollectionConnection.TagCount == nil {
+			break
+		}
+
+		return e.complexity.CollectionConnection.TagCount(childComplexity), true
+
+	case "CollectionConnection.totalCount":
+		if e.complexity.CollectionConnection.TotalCount == nil {
+			break
+		}
+
+		return e.complexity.CollectionConnection.TotalCount(childComplexity), true
+
 	case "CollectionEdge.cursor":
 		if e.complexity.CollectionEdge.Cursor == nil {
 			break
@@ -764,6 +785,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CollectionEdge.Node(childComplexity), true
+
+	case "CollectionTagCount.count":
+		if e.complexity.CollectionTagCount.Count == nil {
+			break
+		}
+
+		return e.complexity.CollectionTagCount.Count(childComplexity), true
+
+	case "CollectionTagCount.tag":
+		if e.complexity.CollectionTagCount.Tag == nil {
+			break
+		}
+
+		return e.complexity.CollectionTagCount.Tag(childComplexity), true
 
 	case "CreateCGTeamworkNotePayload.clientMutationId":
 		if e.complexity.CreateCGTeamworkNotePayload.ClientMutationID == nil {
@@ -1800,14 +1835,35 @@ extend type Collection {
   tags: [String!]!
 }
 `, BuiltIn: false},
-	{Name: "pkg/api/types/CollectionConnection.gql", Input: `type CollectionEdge {
-  cursor: String!
-  node: Collection
+	{Name: "pkg/api/types/CollectionConnection.extend.gql", Input: `type CollectionTagCount {
+  tag: String!
+  count: Int!
 }
 
+extend type CollectionConnection {
+  totalCount: Int
+  tagCount: [CollectionTagCount!]
+}
+`, BuiltIn: false},
+	{Name: "pkg/api/types/CollectionConnection.gql", Input: `# Code generated from [Connection.gql.gotmpl], DO NOT EDIT.
+
+type CollectionEdge {
+  "The item at the end of the edge."
+  node: Collection
+
+  "A cursor for use in pagination."
+  cursor: String!
+}
+
+"The connection type for Collection."
 type CollectionConnection {
+  "A list of edges."
   edges: [CollectionEdge]
+
+  "A list of nodes."
   nodes: [Collection]
+
+  "Information to aid in pagination."
   pageInfo: PageInfo!
 }
 `, BuiltIn: false},
@@ -4422,6 +4478,102 @@ func (ec *executionContext) _CollectionConnection_pageInfo(ctx context.Context, 
 	return ec.marshalNPageInfo2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐPageInfo(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _CollectionConnection_totalCount(ctx context.Context, field graphql.CollectedField, obj *models.CollectionConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CollectionConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalCount(ctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalOInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CollectionConnection_tagCount(ctx context.Context, field graphql.CollectedField, obj *models.CollectionConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CollectionConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TagCount(ctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]models.CollectionTagCount)
+	fc.Result = res
+	return ec.marshalOCollectionTagCount2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectionTagCountᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CollectionEdge_node(ctx context.Context, field graphql.CollectedField, obj *models.CollectionEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CollectionEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Node, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*collection.Collection)
+	fc.Result = res
+	return ec.marshalOCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollection(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _CollectionEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *models.CollectionEdge) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4457,7 +4609,7 @@ func (ec *executionContext) _CollectionEdge_cursor(ctx context.Context, field gr
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CollectionEdge_node(ctx context.Context, field graphql.CollectedField, obj *models.CollectionEdge) (ret graphql.Marshaler) {
+func (ec *executionContext) _CollectionTagCount_tag(ctx context.Context, field graphql.CollectedField, obj *models.CollectionTagCount) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4465,7 +4617,7 @@ func (ec *executionContext) _CollectionEdge_node(ctx context.Context, field grap
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "CollectionEdge",
+		Object:     "CollectionTagCount",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -4475,18 +4627,56 @@ func (ec *executionContext) _CollectionEdge_node(ctx context.Context, field grap
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Node, nil
+		return obj.Tag, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*collection.Collection)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOCollection2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋmodelsᚋcollectionᚐCollection(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CollectionTagCount_count(ctx context.Context, field graphql.CollectedField, obj *models.CollectionTagCount) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CollectionTagCount",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Count, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CreateCGTeamworkNotePayload_updatedCollections(ctx context.Context, field graphql.CollectedField, obj *models.CreateCGTeamworkNotePayload) (ret graphql.Marshaler) {
@@ -9126,8 +9316,30 @@ func (ec *executionContext) _CollectionConnection(ctx context.Context, sel ast.S
 		case "pageInfo":
 			out.Values[i] = ec._CollectionConnection_pageInfo(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
+		case "totalCount":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CollectionConnection_totalCount(ctx, field, obj)
+				return res
+			})
+		case "tagCount":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CollectionConnection_tagCount(ctx, field, obj)
+				return res
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -9150,13 +9362,45 @@ func (ec *executionContext) _CollectionEdge(ctx context.Context, sel ast.Selecti
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("CollectionEdge")
+		case "node":
+			out.Values[i] = ec._CollectionEdge_node(ctx, field, obj)
 		case "cursor":
 			out.Values[i] = ec._CollectionEdge_cursor(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "node":
-			out.Values[i] = ec._CollectionEdge_node(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var collectionTagCountImplementors = []string{"CollectionTagCount"}
+
+func (ec *executionContext) _CollectionTagCount(ctx context.Context, sel ast.SelectionSet, obj *models.CollectionTagCount) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, collectionTagCountImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CollectionTagCount")
+		case "tag":
+			out.Values[i] = ec._CollectionTagCount_tag(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "count":
+			out.Values[i] = ec._CollectionTagCount_count(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -10423,6 +10667,10 @@ func (ec *executionContext) marshalNCollectionConnection2ᚖgithubᚗcomᚋWuLiF
 	return ec._CollectionConnection(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNCollectionTagCount2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectionTagCount(ctx context.Context, sel ast.SelectionSet, v models.CollectionTagCount) graphql.Marshaler {
+	return ec._CollectionTagCount(ctx, sel, &v)
+}
+
 func (ec *executionContext) unmarshalNCreateCGTeamworkNoteInput2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCreateCGTeamworkNoteInput(ctx context.Context, v interface{}) (models.CreateCGTeamworkNoteInput, error) {
 	res, err := ec.unmarshalInputCreateCGTeamworkNoteInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -11418,6 +11666,46 @@ func (ec *executionContext) marshalOCollectionEdge2ᚖgithubᚗcomᚋWuLiFangᚋ
 	return ec._CollectionEdge(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOCollectionTagCount2ᚕgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectionTagCountᚄ(ctx context.Context, sel ast.SelectionSet, v []models.CollectionTagCount) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCollectionTagCount2githubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCollectionTagCount(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
 func (ec *executionContext) marshalOCreateCGTeamworkNotePayload2ᚖgithubᚗcomᚋWuLiFangᚋcsheetᚋv6ᚋpkgᚋapiᚋmodelsᚐCreateCGTeamworkNotePayload(ctx context.Context, sel ast.SelectionSet, v *models.CreateCGTeamworkNotePayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -11473,6 +11761,15 @@ func (ec *executionContext) marshalOID2ᚕstringᚄ(ctx context.Context, sel ast
 	}
 
 	return ret
+}
+
+func (ec *executionContext) unmarshalOInt2int(ctx context.Context, v interface{}) (int, error) {
+	res, err := graphql.UnmarshalInt(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
+	return graphql.MarshalInt(v)
 }
 
 func (ec *executionContext) unmarshalOInt2int64(ctx context.Context, v interface{}) (int64, error) {

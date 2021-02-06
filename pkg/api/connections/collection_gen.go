@@ -44,7 +44,7 @@ func resolveCollectionConnection(
 
 		var isAfter = pag.after == ""
 		for cur.Seek(start); cur.ValidForPrefix(prefix); cur.Next() {
-			if pag.limit != 0 && len(ret.Edges) >= pag.limit {
+			if len(ret.Edges) >= pag.limit {
 				cur.Next()
 				ret.PageInfo.HasNextPage = cur.ValidForPrefix(prefix)
 				break

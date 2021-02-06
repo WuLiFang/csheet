@@ -82,7 +82,13 @@ export interface collections_collections_pageInfo {
 
 export interface collections_collections {
   __typename: "CollectionConnection";
+  /**
+   * A list of nodes.
+   */
   nodes: (collections_collections_nodes | null)[] | null;
+  /**
+   * Information to aid in pagination.
+   */
   pageInfo: collections_collections_pageInfo;
 }
 

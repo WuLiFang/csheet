@@ -1,0 +1,9 @@
+type CollectionTagCount {
+  tag: String!
+  count: Int!
+}
+
+extend type CollectionConnection {
+  totalCount: Int
+  tagCount: [CollectionTagCount!]
+}

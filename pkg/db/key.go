@@ -88,8 +88,8 @@ func (index Index) Exists() (ret bool, err error) {
 
 // UnmarshalKey to index and parts.
 func UnmarshalKey(v []byte, parts ...*string) (index Index, err error) {
-	if len(v) <= 3 {
-		err = errors.New("invalid key")
+	if len(v) < 2 {
+		err = errors.New("db: UnmarshalKey: invalid key")
 		return
 	}
 	index = Index(binary.BigEndian.Uint16(v[:2]))

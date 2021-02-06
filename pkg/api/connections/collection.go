@@ -48,7 +48,17 @@ func MatchCollection(v *collection.Collection, originPrefix *string, presentatio
 }
 
 // Collection connection from db.
-func Collection(ctx context.Context, originPrefix *string, presentationCountGt *int, tagOr []string, tagAnd []string, first *int, last *int, before *string, after *string) (*models.CollectionConnection, error) {
+func Collection(
+	ctx context.Context,
+	originPrefix *string,
+	presentationCountGt *int,
+	tagOr []string,
+	tagAnd []string,
+	first *int,
+	last *int,
+	before *string,
+	after *string,
+) (ret *models.CollectionConnection, err error) {
 	var prefix []byte
 	if originPrefix != nil {
 		prefix = db.IndexCollectionOrigin.Key(*originPrefix)
@@ -59,7 +69,14 @@ func Collection(ctx context.Context, originPrefix *string, presentationCountGt *
 	} else {
 		prefix = db.IndexCollection.Key()
 	}
-	return resolveCollectionConnection(ctx, prefix, func(v *collection.Collection) (bool, error) {
+	var filter = func(v *collection.Collection) (bool, error) {
 		return MatchCollection(v, originPrefix, presentationCountGt, tagOr, tagAnd)
-	}, first, last, after, before)
+	}
+	ret, err = resolveCollectionConnection(ctx, prefix, filter, first, last, after, before)
+	if err != nil {
+		return
+	}
+	ret.Prefix = prefix
+	ret.Filter = filter
+	return
 }
