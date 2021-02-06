@@ -14,6 +14,7 @@ export default function usePresentationMetadata(
   lastFrame: Ref<number>;
   pixelFormat: Ref<string>;
   width: Ref<number>;
+  extra: Ref<Record<string, string>>;
 } {
   const annotation = ref('');
   const duration = ref(0);
@@ -24,6 +25,7 @@ export default function usePresentationMetadata(
   const lastFrame = ref(0);
   const pixelFormat = ref('');
   const width = ref(0);
+  const extra = ref<Record<string, string>>({});
 
   watch(
     () => p.value?.metadata ?? [],
@@ -36,6 +38,7 @@ export default function usePresentationMetadata(
       lastFrame.value = NaN;
       pixelFormat.value = '';
       width.value = 1920;
+      extra.value = {};
       for (const i of n) {
         switch (i.k) {
           case 'annotation':
@@ -46,6 +49,9 @@ export default function usePresentationMetadata(
             break;
           case 'width':
             width.value = parseFloat(i.v) || width.value;
+            break;
+          case 'duration':
+            duration.value = parseFloat(i.v) || duration.value;
             break;
           case 'frame-count':
             frameCount.value = parseFloat(i.v) || frameCount.value;
@@ -62,6 +68,8 @@ export default function usePresentationMetadata(
           case 'pixel-format':
             pixelFormat.value = i.v;
             break;
+          default:
+            extra.value[i.k] = i.v;
         }
       }
       if (!isFinite(firstFrame.value)) {
@@ -84,5 +92,6 @@ export default function usePresentationMetadata(
     lastFrame,
     pixelFormat,
     width,
+    extra,
   };
 }

@@ -1,178 +1,216 @@
-<template lang="pug">
-  dl
-    template(v-if="value.raw.size")
-      dt {{ $t('presentation-metadata.file-size') }}
-      dd.pl-4
-        span {{ fileSizeText }}
-        span.mx-2.text-gray-500.whitespace-no-wrap （{{ fileSizeExactText }}）
-    template(v-if="value.raw.modTime")
-      dt {{ $t('presentation-metadata.modified-time') }}
-      dd.pl-4
-        TimeWidget(:value="value.raw.modTime" format="llll")
-    template(v-if="metadata.width && metadata.height")
-      dt {{ $t('presentation-metadata.resolution') }}
-      dd.pl-4 {{metadata.width}}x{{metadata.height}}
-    template(v-if="metadata.frameCount > 0")
-      dt {{ $t('presentation-metadata.frame-range') }}
-      dd.pl-4.flex.items-center
-        input.form-input(
+<template>
+  <dl>
+    <template v-if="value.raw.size">
+      <dt>{{ $t('presentation-metadata.file-size') }}</dt>
+      <dd class="pl-4">
+        <span>{{ fileSizeText }}</span
+        ><span class="mx-2 text-gray-500 whitespace-no-wrap"
+          >（{{ fileSizeExactText }}）</span
+        >
+      </dd>
+    </template>
+    <template v-if="value.raw.modTime">
+      <dt>{{ $t('presentation-metadata.modified-time') }}</dt>
+      <dd class="pl-4">
+        <TimeWidget :value="value.raw.modTime" format="llll"></TimeWidget>
+      </dd>
+    </template>
+    <template v-if="width && height">
+      <dt>{{ $t('presentation-metadata.resolution') }}</dt>
+      <dd class="pl-4">{{ width }}x{{ height }}</dd>
+    </template>
+    <template v-if="frameCount > 0">
+      <dt>{{ $t('presentation-metadata.frame-range') }}</dt>
+      <dd class="pl-4 flex items-center">
+        <input
           v-model.number="formData.firstFrame"
-          class="h-8 w-12 text-center flex-auto spin-button-none"
+          class="form-input h-8 w-12 text-center flex-auto spin-button-none"
           type="number"
-          @focus="hasFocus = true; $event.target.select()"
+          @focus="
+            hasFocus = true;
+            $event.target.select();
+          "
           @keyup.enter="$event.target.blur()"
           @blur="blur()"
-        )
-        span.mx-1 -
-        input.form-input(
+        /><span class="mx-1">-</span>
+        <input
           v-model.number="formData.lastFrame"
-          class="h-8 w-12 text-center flex-auto spin-button-none"
+          class="form-input h-8 w-12 text-center flex-auto spin-button-none"
           type="number"
-          @focus="hasFocus = true; $event.target.select()"
+          @focus="
+            hasFocus = true;
+            $event.target.select();
+          "
           @keyup.enter="$event.target.blur()"
           @blur="blur()"
-        )
-    template(v-if="metadata.duration")
-      dt {{ $t('presentation-metadata.duration') }}
-      dd.pl-4 {{durationText}}
-    template(v-for="{k, v} in value.metadata")
-      template(v-if="k === 'width'")
-      template(v-else-if="k === 'height'")
-      template(v-else-if="k === 'duration'")
-      template(v-else-if="k === 'first-frame'")
-      template(v-else-if="k === 'last-frame'")
-      template(v-else-if="k === 'annotation'")
-      template(v-else)
-        dt {{ $te(`presentation-metadata.${k}`) ? $t(`presentation-metadata.${k}`) : k }}
-        dd.pl-4 {{v}}
+        />
+      </dd>
+    </template>
+    <template v-if="duration">
+      <dt>{{ $t('presentation-metadata.duration') }}</dt>
+      <dd class="pl-4">{{ durationText }}</dd>
+    </template>
+    <template v-if="pixelFormat">
+      <dt>{{ $t('presentation-metadata.pixel-format') }}</dt>
+      <dd class="pl-4">{{ pixelFormat }}</dd>
+    </template>
+    <template v-for="{ k, v } in extra">
+      <dt :key="k + '-key'">
+        {{
+          $te(`presentation-metadata.${k}`)
+            ? $t(`presentation-metadata.${k}`)
+            : k
+        }}
+      </dt>
+      <dd :key="k + '-value'" class="pl-4">{{ v }}</dd>
+    </template>
+  </dl>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import usePresentationMetadata from '@/composables/usePresentationMetadata';
+import mutations from '@/graphql/mutations';
 import { Presentation } from '@/graphql/types/Presentation';
-import { camelCase } from 'lodash';
-import formatFileSize from '@/utils/formatFileSize';
+import { info } from '@/message';
 import formatDuration from '@/utils/formatDuration';
-import parseFirstFrame from '@/utils/parseFirstFrame';
+import formatFileSize from '@/utils/formatFileSize';
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  PropType,
+  reactive,
+  ref,
+  toRefs,
+  watch,
+} from '@vue/composition-api';
 import toDigitGrouped from 'to-digit-grouped';
-import mutations from "@/graphql/mutations"
 
-@Component<PresentationMetadata>({
-  mounted() {
-    this.$watch(
-      () => [this.firstFrame, this.lastFrame],
-      ([first, last]) => {
-        this.setTimeRange(first, last);
-      },
-      { immediate: true }
-    );
-    this.$watch(
-      () => this.formData.firstFrame,
-      v => {
-        this.setTimeRange(v);
-      },
-      { immediate: true }
-    );
-    this.$watch(
-      () => this.formData.lastFrame,
-      v => {
-        this.setTimeRange(undefined, v);
-      },
-      { immediate: true }
-    );
+export default defineComponent({
+  name: 'PresentationMetadata',
+  props: {
+    value: {
+      type: Object as PropType<Presentation>,
+      required: true,
+    },
   },
-})
-export default class PresentationMetadata extends Vue {
-  @Prop({ type: Object, required: true })
-  value!: Presentation;
+  setup: (props) => {
+    const { value } = toRefs(props);
+    const {
+      firstFrame,
+      lastFrame,
+      duration,
+      frameCount,
+      frameRate,
+      height,
+      pixelFormat,
+      width,
+      extra,
+    } = usePresentationMetadata(value);
 
-  formData = {
-    firstFrame: 1,
-    lastFrame: 1,
-  };
-
-  hasFocus = false;
-
-  get metadata(): Record<string, string | undefined> {
-    return Object.fromEntries(
-      this.value.metadata.map(({ k, v }) => [camelCase(k), v])
-    );
-  }
-
-  get fileSizeText(): string {
-    const size = this.value.raw?.size ?? 0;
-    return formatFileSize(size);
-  }
-
-  get fileSizeExactText(): string {
-    const size = this.value.raw?.size ?? 0;
-    return `${toDigitGrouped(size)} 字节`;
-  }
-
-  get durationText(): string {
-    const duration = parseFloat(this.metadata.duration ?? '');
-    if (!isFinite(duration)) {
-      return this.metadata.duration ?? '';
-    }
-    return formatDuration(duration * 1e3);
-  }
-
-  get frameCount(): number {
-    return parseInt(this.metadata.frameCount ?? '') || 0;
-  }
-
-  get firstFrame(): number {
-    return parseFirstFrame(this.metadata.firstFrame ?? '');
-  }
-
-  set firstFrame(v: number) {
-    this.setTimeRange(v);
-  }
-
-  get lastFrame(): number {
-    return parseInt(this.metadata.lastFrame ?? '') || 0;
-  }
-
-  set lastFrame(v: number) {
-    this.setTimeRange(undefined, v);
-  }
-
-  setTimeRange(first?: number, last?: number): void {
-    if (first != null && last != null) {
-      last = first + (this.frameCount - 1);
-    } else if (first != null) {
-      last = first + (this.frameCount - 1);
-    } else if (last != null) {
-      first = last - (this.frameCount - 1);
-    } else {
-      return;
-    }
-    this.formData.firstFrame = first;
-    this.formData.lastFrame = last;
-  }
-
-  async submit(): Promise<void> {
-    await mutations.updatePresentationMetadata({
-      input: {
-        data: [
-          {
-            id: this.value.id,
-            key: 'first-frame',
-            value: this.formData.firstFrame.toString(),
-          },
-          {
-            id: this.value.id,
-            key: 'last-frame',
-            value: this.formData.lastFrame.toString(),
-          },
-        ],
-      },
+    const formData = reactive({
+      firstFrame: 1,
+      lastFrame: 1,
     });
-  }
 
-  blur(): void {
-    this.hasFocus = false;
-    this.submit();
-  }
-}
+    const hasFocus = ref(false);
+
+    const fileSizeText = computed(() => {
+      const size = value.value.raw?.size ?? 0;
+      return formatFileSize(size);
+    });
+
+    const fileSizeExactText = computed(() => {
+      const size = value.value.raw?.size ?? 0;
+      return `${toDigitGrouped(size)} 字节`;
+    });
+
+    const durationText = computed(() => {
+      return formatDuration(duration.value * 1e3);
+    });
+
+    const setTimeRange = (first?: number, last?: number) => {
+      if (first != null && last != null) {
+        last = first + (frameCount.value - 1);
+      } else if (first != null) {
+        last = first + (frameCount.value - 1);
+      } else if (last != null) {
+        first = last - (frameCount.value - 1);
+      } else {
+        return;
+      }
+      formData.firstFrame = first;
+      formData.lastFrame = last;
+    };
+
+    const submit = async () => {
+      await mutations.updatePresentationMetadata({
+        input: {
+          data: [
+            {
+              id: value.value.id,
+              key: 'first-frame',
+              value: formData.firstFrame.toString(),
+            },
+            {
+              id: value.value.id,
+              key: 'last-frame',
+              value: formData.lastFrame.toString(),
+            },
+          ],
+        },
+      });
+      info('帧范围已更新');
+    };
+
+    const blur = () => {
+      hasFocus.value = false;
+      submit();
+    };
+
+    onMounted(() => {
+      watch(
+        [firstFrame, lastFrame],
+        ([first, last]) => {
+          setTimeRange(first, last);
+        },
+        { immediate: true }
+      );
+      watch(
+        () => formData.firstFrame,
+        (v) => {
+          setTimeRange(v);
+        },
+        { immediate: true }
+      );
+      watch(
+        () => formData.lastFrame,
+        (v) => {
+          setTimeRange(undefined, v);
+        },
+        { immediate: true }
+      );
+    });
+
+    return {
+      firstFrame,
+      lastFrame,
+      duration,
+      frameCount,
+      frameRate,
+      height,
+      pixelFormat,
+      width,
+      extra,
+      formData,
+      hasFocus,
+      fileSizeText,
+      fileSizeExactText,
+      durationText,
+      setTimeRange,
+      submit,
+      blur,
+    };
+  },
+});
 </script>
