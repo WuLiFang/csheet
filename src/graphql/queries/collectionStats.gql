@@ -1,0 +1,20 @@
+query collectionStats(
+  $originPrefix: String
+  $presentationCountGt: Int
+  $tagOr: [String!]
+  $tagAnd: [String!]
+) {
+  collections(
+    first: 0
+    originPrefix: $originPrefix
+    presentationCountGt: $presentationCountGt
+    tagOr: $tagOr
+    tagAnd: $tagAnd
+  ) {
+    totalCount
+    tagCount {
+      tag
+      count
+    }
+  }
+}

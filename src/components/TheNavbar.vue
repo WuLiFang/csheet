@@ -133,6 +133,13 @@
           class="form-checkbox text-gray-900"
         )
         span.mx-1 信息显示
+      button.form-button(
+        class="ml-1"
+        type="button"
+        title="统计"
+        @click="showStats()"
+      )
+        FaIcon(name="chart-pie")
 </template>
 
 <script lang="ts">
@@ -163,6 +170,9 @@ import { clientConfig_clientConfig as Config } from '@/graphql/types/clientConfi
 import CGTeamworkPipelineRadio from '@/components/cgteamwork/CGTeamworkPipelineRadio.vue';
 import { cgteamworkProjects_cgteamworkProjects as CGTeamworkProject } from '@/graphql/types/cgteamworkProjects';
 import CollectionTagInput from '@/components/CollectionTagInput.vue';
+import { show } from '@/modal';
+import CollectionStatsDrawerVue from '@/components/CollectionStatsDrawer.vue';
+import 'vue-awesome/icons/chart-pie';
 
 function getResultMessage({
   createdCount,
@@ -228,7 +238,7 @@ function searchParamsSetAll(
     this.loadState();
     this.$watch(
       () => this.title,
-      v => {
+      (v) => {
         document.title = v;
       }
     );
@@ -248,7 +258,7 @@ function searchParamsSetAll(
 
     this.$watch(
       () => this.variables,
-      v => {
+      (v) => {
         this.$emit('update:variables', v);
       },
       { immediate: true }
@@ -316,7 +326,7 @@ export default class TheNavbar extends Vue {
         break;
     }
     parts.push('色板');
-    return parts.filter(i => !!i).join(' - ');
+    return parts.filter((i) => !!i).join(' - ');
   }
 
   get cellOverlayVisible(): boolean {
@@ -400,8 +410,8 @@ export default class TheNavbar extends Vue {
     if (q.get('skip_empty')) {
       this.formData.skipEmptyPresentation = true;
     }
-    this.formData.tagOr = q.getAll("tagOr")
-    this.formData.tagAnd = q.getAll("tagAnd")
+    this.formData.tagOr = q.getAll('tagOr');
+    this.formData.tagAnd = q.getAll('tagAnd');
   }
 
   async collectFromCGTeamwork(): Promise<void> {
@@ -489,8 +499,8 @@ export default class TheNavbar extends Vue {
       ...db.recentOriginPrefix
         .get()
         .filter((i): i is FolderOriginPrefix => i instanceof FolderOriginPrefix)
-        .filter(i => i.root !== this.formData.folder.root)
-        .map(i => i.root),
+        .filter((i) => i.root !== this.formData.folder.root)
+        .map((i) => i.root),
       ...(this.config.folderInclude ?? []),
     ]);
   }
@@ -504,12 +514,20 @@ export default class TheNavbar extends Vue {
             i instanceof CGTeamworkOriginPrefix
         )
         .filter(
-          i =>
+          (i) =>
             i.database === this.formData.cgteamwork.database &&
             i.prefix !== this.formData.cgteamwork.prefix
         )
-        .map(i => i.prefix)
+        .map((i) => i.prefix)
     );
+  }
+
+  showStats(): void {
+    show(CollectionStatsDrawerVue, {
+      props: {
+        defaultVariables: this.variables,
+      },
+    });
   }
 }
 </script>

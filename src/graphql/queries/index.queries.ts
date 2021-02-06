@@ -7,6 +7,7 @@ import { vueQuery as clientConfigVue } from './clientConfig';
 import { vueQuery as collectionCGTeamworkNotesVue } from './collectionCGTeamworkNotes';
 import { vueQuery as collectionNodeVue } from './collectionNode';
 import { vueQuery as collectionsVue } from './collections';
+import { vueQuery as collectionStatsVue } from './collectionStats';
 import { vueQuery as collectionTagsVue } from './collectionTags';
 import { vueQuery as folderOriginPrefixVue } from './folderOriginPrefix';
 import { vueQuery as presentationNodeVue } from './presentationNode';
@@ -43,6 +44,10 @@ export {
   useQuery as useCollections,
 } from './collections';
 export {
+  query as collectionStats,
+  useQuery as useCollectionStats,
+} from './collectionStats';
+export {
   query as collectionTags,
   useQuery as useCollectionTags,
 } from './collectionTags';
@@ -64,6 +69,7 @@ export const vue = {
   collectionCGTeamworkNotes: collectionCGTeamworkNotesVue,
   collectionNode: collectionNodeVue,
   collections: collectionsVue,
+  collectionStats: collectionStatsVue,
   collectionTags: collectionTagsVue,
   folderOriginPrefix: folderOriginPrefixVue,
   presentationNode: presentationNodeVue,

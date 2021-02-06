@@ -10,6 +10,7 @@ build:
 	gotmpl -o collectionCGTeamworkNotes.ts base.ts.gotmpl node.gotmpl Node=Collection
 	gotmpl -o collectionNode.ts base.ts.gotmpl node.gotmpl
 	gotmpl -o collectionTags.ts base.ts.gotmpl connection.gotmpl StringConnection.gotmpl
+	gotmpl -o collectionStats.ts base.ts.gotmpl
 	gotmpl -o collections.ts base.ts.gotmpl connection.gotmpl
 	gotmpl -o folderOriginPrefix.ts base.ts.gotmpl
 	gotmpl -o presentationNode.ts base.ts.gotmpl node.gotmpl
