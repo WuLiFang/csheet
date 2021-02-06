@@ -1,14 +1,22 @@
 <template>
-  <div>
+  <div
+    :class="{
+      'text-gray-500': loadingCount > 0,
+    }"
+  >
     <section>
       <h2 class="font-bold text-lg">总计</h2>
       <dl class="ml-2">
         <div>
-          <dd class="inline-block w-16 mr-2 text-right">{{ totalCount }}</dd>
+          <dd class="inline-block w-16 mr-2 text-right">
+            {{ loadingCount > 0 ? totalCount || '...' : totalCount }}
+          </dd>
           <dt class="inline-block">收藏</dt>
         </div>
         <div>
-          <dd class="inline-block w-16 mr-2 text-right">{{ totalTagCount }}</dd>
+          <dd class="inline-block w-16 mr-2 text-right">
+            {{ loadingCount > 0 ? totalTagCount || '...' : totalTagCount }}
+          </dd>
           <dt class="inline-block">标签</dt>
         </div>
       </dl>
@@ -40,10 +48,10 @@ import {
   defineComponent,
   PropType,
   toRefs,
+  ref,
 } from '@vue/composition-api';
 import { groupBy, sortBy } from 'lodash';
 
-// TODO: add form to change variables
 export default defineComponent({
   name: 'CollectionStats',
   props: {
@@ -54,10 +62,12 @@ export default defineComponent({
   },
   setup: (props) => {
     const { variables } = toRefs(props);
+    const loadingCount = ref(0);
     const { data } = queries.useCollectionStats(
       variables,
       computed(() => ({
         fetchPolicy: 'cache-and-network',
+        loadingCount,
       }))
     );
     const groupedData = computed(() => {
@@ -104,11 +114,11 @@ export default defineComponent({
           .reduce((a, b) => a + b, 0) ?? 0
     );
     return {
-      variables,
       data,
       groupedData,
       totalCount,
       totalTagCount,
+      loadingCount,
     };
   },
 });

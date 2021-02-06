@@ -55,7 +55,7 @@ export function useQuery(
     Omit<
       WatchQueryOptions<cgteamworkStatusesVariables>,
       'query' | 'variables'
-    > & { skip?: boolean }
+    > & { skip?: boolean; loadingCount?: Ref<number> }
   >
 ): {
   data: Ref<cgteamworkStatuses | undefined>;
@@ -85,6 +85,9 @@ export function useQuery(
     });
     const sub = query.value.subscribe((value) => {
       data.value = value.data;
+      if (options?.value.loadingCount != null) {
+        options.value.loadingCount.value += value.loading ? 1 : -1;
+      }
     });
     cleanup.push(() => {
       sub.unsubscribe();

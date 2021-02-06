@@ -55,7 +55,7 @@ export function useQuery(
 {{- end }}
   options?: Ref<
     Omit<WatchQueryOptions<{{ .Name }}Variables>, 'query' | 'variables'>
-    & {skip?: boolean}
+    & {skip?: boolean, loadingCount?: Ref<number> }
   >
 ): {
   data: Ref<{{ .Name }} | undefined>;
@@ -82,6 +82,9 @@ export function useQuery(
     });
     const sub = query.value.subscribe(value => {
       data.value = value.data;
+      if (options?.value.loadingCount != null) {
+        options.value.loadingCount.value += value.loading ? 1 : -1
+      }
     });
     cleanup.push(() => {
       sub.unsubscribe()

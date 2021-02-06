@@ -50,6 +50,7 @@ export function useQuery(
   options?: Ref<
     Omit<WatchQueryOptions<cgteamworkFlowsVariables>, 'query' | 'variables'> & {
       skip?: boolean;
+      loadingCount?: Ref<number>;
     }
   >
 ): {
@@ -81,6 +82,9 @@ export function useQuery(
     });
     const sub = query.value.subscribe((value) => {
       data.value = value.data;
+      if (options?.value.loadingCount != null) {
+        options.value.loadingCount.value += value.loading ? 1 : -1;
+      }
     });
     cleanup.push(() => {
       sub.unsubscribe();

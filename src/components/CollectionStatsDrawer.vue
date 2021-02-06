@@ -10,6 +10,7 @@ import { defineComponent, ref, PropType } from '@vue/composition-api';
 import CollectionStats from '@/components/CollectionStats.vue';
 import { collectionStatsVariables } from '@/graphql/types/collectionStats';
 
+// TODO: add form to change variables
 export default defineComponent({
   name: 'CollectionStatsDrawer',
   inheritAttrs: false,
