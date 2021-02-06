@@ -101,7 +101,7 @@ export default defineComponent({
       () =>
         data.value?.collections.tagCount
           ?.map((i) => i.count)
-          .reduce((a, b) => a + b) ?? 0
+          .reduce((a, b) => a + b, 0) ?? 0
     );
     return {
       variables,
