@@ -4,11 +4,11 @@
       <h2 class="font-bold text-lg">总计</h2>
       <dl class="ml-2">
         <div>
-          <dd class="inline-block w-8 mr-2 text-right">{{ totalCount }}</dd>
+          <dd class="inline-block w-16 mr-2 text-right">{{ totalCount }}</dd>
           <dt class="inline-block">收藏</dt>
         </div>
         <div>
-          <dd class="inline-block w-8 mr-2 text-right">{{ totalTagCount }}</dd>
+          <dd class="inline-block w-16 mr-2 text-right">{{ totalTagCount }}</dd>
           <dt class="inline-block">标签</dt>
         </div>
       </dl>
@@ -22,7 +22,7 @@
           </h3>
           <dl class="ml-1">
             <div v-for="v in i.values" :key="v.name">
-              <dd class="inline-block text-right w-8 mr-2">{{ v.count }}</dd>
+              <dd class="inline-block text-right w-16 mr-2">{{ v.count }}</dd>
               <dt class="inline-block">{{ v.name }}</dt>
             </div>
           </dl>
@@ -43,6 +43,7 @@ import {
 } from '@vue/composition-api';
 import { groupBy, sortBy } from 'lodash';
 
+// TODO: add form to change variables
 export default defineComponent({
   name: 'CollectionStats',
   props: {
