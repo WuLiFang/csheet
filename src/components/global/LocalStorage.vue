@@ -1,6 +1,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import { RenderlessMixin } from '@/mixins/RenderlessMixin';
+// TODO: replace this with useStorage(localStorage, name)
+
 export default Vue.extend({
   name: 'LocalStorage',
   mixins: [RenderlessMixin],
