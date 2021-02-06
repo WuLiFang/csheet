@@ -1,0 +1,28 @@
+{
+  "$Field": {
+    "Database": "proj_sdktest",
+    "ID": "",
+    "IsEditable": false,
+    "IsLocked": false,
+    "IsRequired": false,
+    "IsSystem": false,
+    "Label": "导演状态",
+    "Module": {
+      "$Module": {
+        "Name": "",
+        "Type": ""
+      }
+    },
+    "Order": "",
+    "ReadPermission": [
+      ""
+    ],
+    "Sign": {
+      "$FieldSign": ""
+    },
+    "Type": "",
+    "WritePermission": [
+      ""
+    ]
+  }
+}

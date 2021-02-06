@@ -10,13 +10,25 @@ import (
 
 func TestFieldFetch(t *testing.T) {
 	ctx := WithClient(context.Background(), NewTestClient(t))
-	f := Field{
-		Database: "proj_sdktest",
-		ID:       "2920928F-68D2-2441-21CF-00CFF17AC97C",
-	}
-	err := f.Fetch(ctx)
-	require.NoError(t, err)
-	snapshot.MatchJSON(t, f)
+
+	t.Run("simple", func(t *testing.T) {
+		f := Field{
+			Database: "proj_sdktest",
+			ID:       "2920928F-68D2-2441-21CF-00CFF17AC97C",
+		}
+		err := f.Fetch(ctx)
+		require.NoError(t, err)
+		snapshot.MatchJSON(t, f)
+	})
+	t.Run("fields", func(t *testing.T) {
+		f := Field{
+			Database: "proj_sdktest",
+			ID:       "2920928F-68D2-2441-21CF-00CFF17AC97C",
+		}
+		err := f.Fetch(ctx, FieldOptionFields([]string{"field_str"}))
+		require.NoError(t, err)
+		snapshot.MatchJSON(t, f)
+	})
 }
 
 func TestFields(t *testing.T) {
