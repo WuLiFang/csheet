@@ -287,7 +287,9 @@ func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error)
 	}
 	checkboxFields, err := cgteamwork.Fields(
 		ctx, o.Database, cgteamwork.FieldOptionFilter(
-			cgteamwork.F("module").Equal(pipeline.Module.Name).And(cgteamwork.F("type").Equal("checkbox")),
+			cgteamwork.F("module").In(
+				[]string{pipeline.Module.Name, "task"},
+			).And(cgteamwork.F("type").Equal("checkbox")),
 		),
 		cgteamwork.FieldOptionFields([]string{"field_str", "sign"}),
 	)
