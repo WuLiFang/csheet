@@ -89,7 +89,7 @@ export function useQuery(
       ...o,
       variables: variables.value,
     });
-    const sub = query.value.subscribe(value => {
+    const sub = query.value.subscribe((value) => {
       data.value = value.data;
     });
     cleanup.push(() => {
@@ -107,13 +107,13 @@ export function useQuery(
   };
   watch(
     () => variables.value,
-    n => {
+    (n) => {
       query.value?.setVariables(n);
     }
   );
   watch(
     () => options?.value,
-    n => {
+    (n) => {
       query.value?.setOptions({ ...n, ...o });
     }
   );
@@ -122,7 +122,7 @@ export function useQuery(
   });
   watch(
     () => options?.value.skip,
-    v => {
+    (v) => {
       if (v) {
         stop();
       } else {
