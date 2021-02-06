@@ -1,36 +1,14 @@
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import { Presentation as Data } from '../graphql/types/Presentation';
-import {
-  presentationNodeVariables,
-  presentationNode,
-} from '@/graphql/types/presentationNode';
-import { filePathFormat } from '../const';
-import parseFrameRate from '@/utils/parseFrameRate';
-import parseFirstFrame from '@/utils/parseFirstFrame';
+import usePresentationMetadata from '@/composables/usePresentationMetadata';
+import queries from '@/graphql/queries';
 import clamp from '@/utils/clamp';
 import getPathBasename from '@/utils/getPathBasename';
+import { computed } from '@vue/composition-api';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { filePathFormat } from '../const';
+import { Presentation as Data } from '../graphql/types/Presentation';
 
 @Component<Presentation>({
-  apollo: {
-    node: {
-      query: require('@/graphql/queries/presentationNode.gql'),
-      variables(): presentationNodeVariables {
-        return { id: this.id ?? '', filePathFormat };
-      },
-      skip(): boolean {
-        return !this.id;
-      },
-      update(v: presentationNode): Data | undefined {
-        this.isLoadFailed = false;
-        return v.node?.__typename === 'Presentation' ? v.node : undefined;
-      },
-      result() {
-        this.version += 1;
-        this.isLoadFailed = false;
-      },
-    },
-  },
   render(h) {
     const src = this.src;
     const version = this.version;
@@ -43,6 +21,7 @@ import getPathBasename from '@/utils/getPathBasename';
           alt: getPathBasename(src),
           draggable: this.draggable,
         },
+        staticClass: 'object-contain w-full h-full',
         style: {
           filter: this.imageFilter(this),
         },
@@ -59,6 +38,7 @@ import getPathBasename from '@/utils/getPathBasename';
     };
     const renderVideo = () => {
       return h('video', {
+        staticClass: 'object-contain w-full h-full',
         domProps: {
           src,
           alt: getPathBasename(src),
@@ -128,6 +108,31 @@ import getPathBasename from '@/utils/getPathBasename';
       { immediate: true }
     );
   },
+  setup: (props: Pick<Presentation, 'id'>) => {
+    const { node } = queries.usePresentationNode(
+      computed(() => ({ id: props.id ?? '', filePathFormat })),
+      computed(() => ({
+        skip: !props.id,
+      }))
+    );
+    const {
+      height,
+      width,
+      frameRate,
+      frameCount,
+      firstFrame,
+      lastFrame,
+    } = usePresentationMetadata(node);
+    return {
+      node,
+      height,
+      width,
+      frameRate,
+      frameCount,
+      firstFrame,
+      lastFrame,
+    };
+  },
 })
 export default class Presentation extends Vue {
   @Prop()
@@ -153,6 +158,12 @@ export default class Presentation extends Vue {
 
   $el!: HTMLVideoElement | HTMLImageElement;
   node?: Data;
+  frameCount!: number;
+  frameRate!: number;
+  firstFrame!: number;
+  lastFrame!: number;
+  width!: number;
+  height!: number;
 
   isLoadFailed = false;
   paused = true;
@@ -201,35 +212,6 @@ export default class Presentation extends Vue {
       return;
     }
     e.dataTransfer?.setData('text/plain', this.node.raw.path);
-  }
-
-  get frameCount(): number {
-    return (
-      parseInt(
-        this.node?.metadata?.find(i => i.k === 'frame-count')?.v ?? ''
-      ) || 0
-    );
-  }
-
-  get frameRate(): number {
-    return (
-      parseFrameRate(
-        this.node?.metadata?.find(i => i.k === 'frame-rate')?.v ?? ''
-      ) || 0
-    );
-  }
-
-  get firstFrame(): number {
-    return parseFirstFrame(
-      this.node?.metadata.find(i => i.k === 'first-frame')?.v ?? ''
-    );
-  }
-
-  get lastFrame(): number {
-    return (
-      parseInt(this.node?.metadata.find(i => i.k === 'last-frame')?.v ?? '') ||
-      this.firstFrame + this.frameCount
-    );
   }
 
   get currentFrame(): number {
