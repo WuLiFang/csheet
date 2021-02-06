@@ -278,7 +278,7 @@ func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error)
 	var statusFields = map[client.FieldSign]client.Field{}
 	for id := range statusFieldIDs {
 		var f = client.Field{Database: o.Database, ID: id}
-		err = f.Fetch(ctx)
+		err = f.Fetch(ctx, cgteamwork.FieldOptionFields([]string{"sign", "field_str"}))
 		if err != nil {
 			return
 		}

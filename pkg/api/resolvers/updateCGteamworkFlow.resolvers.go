@@ -102,7 +102,7 @@ func (r *mutationResolver) UpdateCGTeamworkFlow(ctx context.Context, input model
 			}
 			field.Database = db
 			field.ID = parts[1]
-			err = field.Fetch(ctx)
+			err = field.Fetch(ctx, cgteamwork.FieldOptionFields([]string{"sign"}))
 			if err != nil {
 				return ret, err
 			}

@@ -57,6 +57,7 @@ func FieldOptionFilter(f Filter) FieldOption {
 }
 
 // TODO: use spread args
+
 // FieldOptionFields to select wanted fields.
 func FieldOptionFields(v []string) FieldOption {
 	return func(opts *FieldOptions) {
