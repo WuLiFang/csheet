@@ -1,0 +1,4564 @@
+[
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "8A783F42-43DF-9AE3-3789-CB7CF0983884",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "表情_状态",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0014",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.pid_WWT"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "D1C31344-57F7-E0A4-B303-DF02F4970FCC",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "Lo模_状态",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0017",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.pid_WVV"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "1F49C2AF-5E94-854A-9BEA-AFC76090390F",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "制作者账号",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0043",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.account"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "47783721-9AA5-C2FB-F8C0-3819C6AC57AB",
+      "IsEditable": true,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "提交文件名",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0006",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.submit_file"
+      },
+      "Type": "file",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "47A6B613-3B42-1D16-2519-10186F28C05F",
+      "IsEditable": true,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "最后提交时间",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0008",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.last_submit_time"
+      },
+      "Type": "datetime",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "E023525E-F478-BC3A-9953-55494461B5DB",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "cache",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0051",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117"
+      ],
+      "Sign": {
+        "$FieldSign": "task.cache"
+      },
+      "Type": "status",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "B5FC1D39-533B-1E66-EAA9-486406D700F7",
+      "IsEditable": true,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "客户状态",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0016",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.client_status"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "595A159B-3096-C42F-868E-0A0164242E07",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "总工时",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0032",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.total_use_time"
+      },
+      "Type": "defined",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "6C5AEF0D-F0D4-11AF-1C41-E2FADCF72E18",
+      "IsEditable": true,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "分配时间",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0007",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.assign_time"
+      },
+      "Type": "datetime",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "81FCC7D3-AF38-98BA-36D9-2A66B669B144",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "组长状态",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0014",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.leader_status"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "9E7A6CD3-896C-F264-06F3-BC9FC497D900",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "Note数量",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0022",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.note_num"
+      },
+      "Type": "int",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "9050E993-F7E9-DE9B-1616-D6C1ECAEE738",
+      "IsEditable": true,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "任务完成时间",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0004",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.finish_time"
+      },
+      "Type": "datetime",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "92BA9953-87B8-A979-E509-B9E27E000F4B",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "剩余天数",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0042",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.remaining_day"
+      },
+      "Type": "defined",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "941B0C83-92E9-C99C-D402-0BD242E16672",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "制作者ID",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0011",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.account_id"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "DFFCCD57-698B-1381-34EF-E8AA6FD51ED8",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "eps_task_id",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0007",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.id"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "D108DB0C-564C-1227-59C2-506403457A59",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "_set_pipeline_id",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0009",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.set_pipeline_id"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "CC3ADCA0-DA09-5E18-C207-AFCE660B1192",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "模块",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0044",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.module"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "04DBA866-43C2-EAC0-BE9D-3560FC1989CC",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "Link Shot",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0015",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.link_shot_asset"
+      },
+      "Type": "many2many",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "5A104CA4-2474-E09C-5DD0-4F25001E0DD5",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "link_module_id",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0023",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.link_module_id"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "96558A0D-65D9-6242-AFDD-6CC9AC9D9BA1",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "Link Asset",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0042",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.link_shot_asset"
+      },
+      "Type": "many2many",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "FC950275-A6EB-F457-8DBD-EF3691E3CF61",
+      "IsEditable": true,
+      "IsLocked": true,
+      "IsRequired": true,
+      "IsSystem": true,
+      "Label": "制作者",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0012",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.artist"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "01906ECF-E9DC-28F8-09BE-515B20FD5A05",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "中文名",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0002",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.cn_name"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "182D9F5E-717A-ACCB-4ABF-15A6CC8CFFA8",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "创建人员",
+      "Module": {
+        "$Module": {
+          "Name": "eps",
+          "Type": ""
+        }
+      },
+      "Order": "0006",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "eps.create_by"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "1345A91C-EF2B-4480-65CF-6590FA5BA93E",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "最新编辑人员",
+      "Module": {
+        "$Module": {
+          "Name": "eps",
+          "Type": ""
+        }
+      },
+      "Order": "0008",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "eps.last_update_by"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "0C80198B-B65E-FBE7-F89A-1147AE15237F",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "提交次数",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0024",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.submit_count"
+      },
+      "Type": "int",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "52809F42-CB6F-2D47-5D50-AA609FC23458",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "创建人员",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0008",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.create_by"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "47BD05DB-A7B3-0460-952B-D1AEFAB3BF0A",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "最新编辑时间",
+      "Module": {
+        "$Module": {
+          "Name": "eps",
+          "Type": ""
+        }
+      },
+      "Order": "0007",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "eps.last_update_time"
+      },
+      "Type": "datetime",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "C972848B-AFF0-4A3A-58D8-725A7A4F0A1F",
+      "IsEditable": true,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "流程ID",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0018",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.flow_id"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "672F78F5-7BB5-66A7-10C3-DB77FD8AF458",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "最新编辑时间",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0035",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.last_update_time"
+      },
+      "Type": "datetime",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "FC257E34-2E5B-C2EA-1168-05770D00131B",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": true,
+      "IsSystem": false,
+      "Label": "场次",
+      "Module": {
+        "$Module": {
+          "Name": "eps",
+          "Type": ""
+        }
+      },
+      "Order": "0009",
+      "ReadPermission": [
+        "all"
+      ],
+      "Sign": {
+        "$FieldSign": "eps.changci"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "all"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "67E73DB5-9DAE-08F3-94FE-C79FFA449F0A",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "难易度",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0023",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.difficulty_level"
+      },
+      "Type": "list",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "C29BD1C1-83D9-FAAC-817D-5DAF2F9A1AD5",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": true,
+      "IsSystem": true,
+      "Label": "资产名称",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0000",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.asset_name"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "9A395738-05F0-58EE-9BD0-A2745714F722",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "asset_id",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0003",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.id"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "CFB474DC-5D44-99CB-84AA-CFE6216FF732",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "素材名",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0025",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.source"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "932686E9-C3C5-F82C-5333-6BB340A59139",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "eps_id",
+      "Module": {
+        "$Module": {
+          "Name": "eps",
+          "Type": ""
+        }
+      },
+      "Order": "0002",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "eps.id"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "D9F1546D-D4F5-5C05-8B4D-B39F61E96407",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "任务名称",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0006",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.task_name"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "D202FAEC-CF3F-6A8B-E1D6-2E41D2CD484A",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "已经分配阶段",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0005",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.assign_pipeline"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "D75E5F64-0700-49FA-1892-8690DF5B5D86",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "最新编辑人员",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0010",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.last_update_by"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "D8A90EA5-4AE6-0C00-A62B-EA1406199429",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "flow_finish_id",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0010",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.flow_finish_id"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "D0CEA6F7-8FDC-B48F-71DB-3A7F51FBD110",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "最新编辑人员",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0036",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.last_update_by"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "DAD53B75-034F-0E98-0333-8BAF405987E4",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "集数",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0004",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.eps_name"
+      },
+      "Type": "one2one",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "DD162B23-6B3D-304B-6328-E533CDDA5D41",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": true,
+      "IsSystem": true,
+      "Label": "集数",
+      "Module": {
+        "$Module": {
+          "Name": "eps",
+          "Type": ""
+        }
+      },
+      "Order": "0001",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "eps.eps_name"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "E7F7DAC7-BB3E-4763-3ACF-0D9DC06401C8",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "已经分配阶段",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0026",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.assign_pipeline"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "E69DB88C-7E6F-37ED-1C6C-D95F870209EA",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "最新编辑人员",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0040",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.last_update_by"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "C45F27B0-CF66-ABEB-5338-AEF66F73556D",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "最新编辑时间",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0009",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.last_update_time"
+      },
+      "Type": "datetime",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "EB5263CC-9C6E-72A3-E6D4-79BF928F89FC",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "项目描述",
+      "Module": {
+        "$Module": {
+          "Name": "eps",
+          "Type": ""
+        }
+      },
+      "Order": "0004",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "eps.project_description"
+      },
+      "Type": "defined",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "EB2BE650-5044-AB56-B53D-DB10AF74AAAD",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "shot_id",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0019",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.id"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "95E39FE1-7740-3141-45DB-FB87FE1F10E2",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "创建时间",
+      "Module": {
+        "$Module": {
+          "Name": "eps",
+          "Type": ""
+        }
+      },
+      "Order": "0005",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "eps.create_time"
+      },
+      "Type": "datetime",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "61EB9F96-7C9D-C341-E5A3-7B66AC4DDF73",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "信息缩略图",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0003",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.image"
+      },
+      "Type": "image",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "F8674843-FBB3-29D5-C8F6-186C6954FB1E",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "创建时间",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0007",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.create_time"
+      },
+      "Type": "datetime",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "DC5A6688-B4D5-03BC-160A-788968504035",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": true,
+      "IsSystem": true,
+      "Label": "集数",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0003",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.eps_name"
+      },
+      "Type": "one2one",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "442827B2-6A52-F607-324E-B4EA6961ACAA",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "开始工作时间",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0041",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.start_work_time"
+      },
+      "Type": "datetime",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "88C6A783-0398-FA21-8FE7-65E85CA6C8C3",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": true,
+      "IsSystem": true,
+      "Label": "类型",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0001",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.type_name"
+      },
+      "Type": "one2one",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "B219FB73-8A6A-5B33-0AD2-EB4C424A8BC3",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "提交文件路径",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0013",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.submit_file_path"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "CEA83648-F9E5-79D9-CF94-D7A39DC0572B",
+      "IsEditable": true,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "check_field_id",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0019",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.check_field_id"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "B6CE3D8C-0F79-BB9C-EAF1-F919F72EB172",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "等级",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0006",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.define_jbg"
+      },
+      "Type": "checkbox",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "F372424E-D834-50E4-54D4-488079E0DCD0",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "集数",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0009",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.define_jbf"
+      },
+      "Type": "checkbox",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "975F72C6-E96A-706E-F090-CBE5F5028D97",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "引用集数",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0010",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.define_jbd"
+      },
+      "Type": "textedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "32ACC11F-E0B8-D936-FB94-715FFDBB7DCD",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "描述",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0011",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.remark"
+      },
+      "Type": "textedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "94057A73-C315-DF53-2DBD-183D8F014E51",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "资产应用详情",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0007",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.define_iij"
+      },
+      "Type": "int",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "2079A351-53A2-52C9-D07A-7450DD2E8BBB",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "资产路径",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0008",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.define_ija"
+      },
+      "Type": "url",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "E087EFD0-69CE-E032-CD19-38581A207245",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "描述",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0029",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.remark"
+      },
+      "Type": "textedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "2693A75D-8CF6-1692-34BF-7449DF467753",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "镜头号",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0034",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.shot"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "8B7AD386-4533-1710-F13F-57AE6C41BB28",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "道具",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0032",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.the_props"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "CD80A11A-967A-C83F-4924-2BDE86C91691",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "优先卡",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0028",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.define_gjb"
+      },
+      "Type": "list",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "677187EC-2520-CE17-8333-1609B568BF73",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "AIA",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0029",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.define_jba"
+      },
+      "Type": "status",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "84997CCB-3023-ED8B-F4FB-F5108177FE89",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "种类",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0002",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.zhonglei"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "21C6E90B-6256-16EC-97FA-2AB03404E49A",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "动画等级",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0036",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.animation_level"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "969F74F0-9732-8DA4-2F17-A2B84EE34E78",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "提交总监时间",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0030",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.submit_d_time"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "F7F7897A-78B5-5725-6FE1-6A07B0856897",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "绑定_状态",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0012",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.pid_WVQ"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "7E8667CB-1667-9942-74F4-487721E19FEE",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "绑定Lo模_状态",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0013",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.pid_WVW"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "3F3A426C-B2C8-2D5F-6F9D-EA5E05D5AE52",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "材质_状态",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0015",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.pid_WUX"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "6AF4BA7C-1CA1-DB1F-02FA-C79D02E61F52",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "分镜镜号",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0038",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.fenjingjinghao"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "4C79B1F4-FCBA-06A6-3813-EA944791B85C",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "返修4",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0039",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.fanxiusi"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "7D796A72-81F5-874B-9007-2F16306C0471",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "项目",
+      "Module": {
+        "$Module": {
+          "Name": "eps",
+          "Type": ""
+        }
+      },
+      "Order": "0003",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "eps.project_code"
+      },
+      "Type": "defined",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "285ADABD-4035-BAE2-3D49-E6A04DFD92DB",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "动画_状态",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0040",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.pid_WOV"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "6C39F19B-D856-0942-6CC8-363A70C769F7",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "绘景_状态",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0041",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.pid_WOX"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "C873317A-EB9B-08C9-11B1-F71ABA306E20",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "灯光_状态",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0042",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.pid_WPO"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "3D9B8878-FA32-D490-848B-4A1C14EFBD05",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "link_module_id",
+      "Module": {
+        "$Module": {
+          "Name": "eps",
+          "Type": ""
+        }
+      },
+      "Order": "0005",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "eps.link_module_id"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "DEA7B463-1702-1A65-6521-A1C787A64235",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "模型_状态",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0016",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.pid_WUU"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "9358D720-40EE-DBB1-BEFB-DEAC26C58606",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "布料预设_状态",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0018",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.pid_WVX"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "65F9C104-0652-851A-B315-7A14B63142DA",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "Layout_状态",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0046",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.pid_WXCETCXF_WXBW_BERS_ADXR_UXFWUQEOTXUW"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "B882058E-0EE7-DC84-2BEF-3D795CC790BE",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "二维设计_状态",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0019",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.pid_WWQ"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "A9C082DD-4F8D-E46E-AD7F-95E8DECAD89B",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "总计返修耗时",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0046",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.total_retake_cost"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "0FE7D2F5-EBCB-9BF8-032E-6FB189DE2D10",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "上次返修时间",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0042",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.last_retake_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "5CFF5146-8C92-556C-E04F-039A0C93C517",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "link_module_id",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0020",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.link_module_id"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "E5BF329E-8EF2-1038-DE59-AE0030274A45",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": true,
+      "IsSystem": true,
+      "Label": "镜头号",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0000",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.shot"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "DDD61F7F-172D-D602-904D-E52C3EB1C6F1",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "帧数",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0001",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.frame"
+      },
+      "Type": "int",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "B0C81552-8909-B77B-1754-8741FCAF0293",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "返修6",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0048",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.fanxiu"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "E73028C5-510E-A2EB-1D5A-7AB18798EEB8",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "特效内容",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0024",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.vfx_note"
+      },
+      "Type": "textedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "DC729282-2EBF-2D4D-229D-5ED3A783899B",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "场次",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0025",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.seq"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "D1F55A1A-5B45-C279-2D31-92001F41BA08",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "信息缩略图",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0002",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.image"
+      },
+      "Type": "image",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "2F3A4E37-2030-E683-1B58-1508F89E9317",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "FX Note",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0026",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.define_fig"
+      },
+      "Type": "textedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "88C59EC8-059A-FA58-5A74-81D50CFC257C",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "是否VFX",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0027",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.define_gaa"
+      },
+      "Type": "checkbox",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "7C78CDAC-DB1D-7F7F-31B9-A8CD5553E8E1",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "优先级",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0028",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.define_gei"
+      },
+      "Type": "list",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "9095DB60-C074-0572-41EC-10018EC02297",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "场景",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0031",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.scenario"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "DB551BA9-DB24-0CBF-13E6-C72B4AE940ED",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "创建时间",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0033",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.create_time"
+      },
+      "Type": "datetime",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "DB94C43C-9141-BDD4-00F3-B9738A1B056E",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "创建人员",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0034",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.create_by"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "2C7EF475-BD12-F384-1530-B1F0F90A4084",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "分镜镜号",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0034",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.the_lens_number"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "D003F35E-547E-78E3-589F-E7A02ED556C1",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "layout等级",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0035",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.layout_level"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "D34937B8-DD5C-DFA1-8315-126C368E986D",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "角色",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0037",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.role"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "17F65354-A169-CD15-5AEF-1D80EE80E880",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "备注",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0038",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.zengjiajingtou"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "1DE968FF-4F3E-EF2C-1B5C-2FA7747B285D",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "动态分镜_状态",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0039",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.pid_PAPUUXTQ_FABR_DXDT_BAXC_UXUORTQQFAPV"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "28DC136F-BA5F-8106-9E66-D6215B88A30B",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "特效_状态",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0043",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.pid_WPP"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "150657D9-4AE0-FA6E-26EE-F4D86D2C6653",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "解算_状态",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0044",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.pid_WWR"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "B36DCD72-EE50-C9FA-3CF4-C0989A80CF2E",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "合成_状态",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0045",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.pid_WWS"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "B09D713D-B09D-B4F3-E5CA-7642D9C6BEA0",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "开始时间",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0047",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.time"
+      },
+      "Type": "datetime",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "3CDD4ED9-5288-A7C0-F7A7-56A8ECD3CC18",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "规定完成日期",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0003",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.dead_line"
+      },
+      "Type": "datetime",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "593913ED-892E-548E-CB16-A1B9586BBC07",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "优先卡",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0010",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.define_gij"
+      },
+      "Type": "list",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "2FD90EB6-6E67-344E-B63D-6FDE208FDC4F",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "组员提交",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0012",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.define_jag"
+      },
+      "Type": "status",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "3A30103E-7788-53C3-62D5-C690AA880797",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "制作阶段序号",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0020",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.pipeline_sort_id"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "73973ABF-2FF8-D1FF-01E5-A719F405D300",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "Days",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0024",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.days"
+      },
+      "Type": "decimal",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "8C24B5DD-C6B2-6846-D6D5-231F956CC63B",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "组员状态",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0032",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.zhizuohzuangtai"
+      },
+      "Type": "status",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "738A7E1C-59D3-F70B-C4FF-C9026C6C41AC",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "返修3",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0037",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.fanxiu_three"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "0B1BA325-0122-A0F7-F921-24DF0D9CCD02",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "创建时间",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0037",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.create_time"
+      },
+      "Type": "datetime",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "1C58AC5A-E71F-A3A0-A686-EF47E5A9551B",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "预计开始日期",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0001",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.start_date"
+      },
+      "Type": "datetime",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "08EE71D8-479F-6701-25A6-B40141A58F9E",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "返修记录",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0041",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.retake_record"
+      },
+      "Type": "textedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "A273F59E-B4F8-CB6A-4980-024862037162",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "预计完成日期",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0002",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.end_date"
+      },
+      "Type": "datetime",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "D5220550-68A7-7FF9-2882-F7DF6AE4BAFC",
+      "IsEditable": true,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "任务状态",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0003",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.status"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "664B66A9-1A23-BD71-9375-9241C20E3D74",
+      "IsEditable": true,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "首次提交时间",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0005",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.first_submit_time"
+      },
+      "Type": "datetime",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "04805259-76C2-A15D-1D0C-F00E88DB7314",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "制作阶段",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0008",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.pipeline"
+      },
+      "Type": "one2one",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "B30A4F09-86EA-8735-1035-56E1FACF7831",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "AIA",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0011",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.define_iic"
+      },
+      "Type": "status",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "3DD44CBC-6648-71A9-84F6-CEF27D4213AE",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "关键镜头",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0048",
+      "ReadPermission": [
+        "all"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.keyshot"
+      },
+      "Type": "checkbox",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "7DEE00F1-31B4-5703-D9D9-64F1B972204E",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "分类",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0013",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.fenlei"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "2920928F-68D2-2441-21CF-00CFF17AC97C",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "导演状态",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0015",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.director_status"
+      },
+      "Type": "status",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "26CB84D5-2C74-F4DA-B76F-B32F58927150",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "分配人员",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0025",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.assign_artist"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "893B7802-C840-372A-B188-A4DF082662A8",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "导演状态",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0027",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.manage"
+      },
+      "Type": "status",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "4DC55284-F393-F802-C2DE-A88F60999999",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "流程名",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0027",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.flow_name"
+      },
+      "Type": "defined",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "A4862D15-05C9-BDC7-79A8-06C7B61B77E2",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "提交导演时间",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0031",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.submit_m_time"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "AD051059-E146-965F-4AF2-80F923A2A2C4",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "备注",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0033",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.tianjiajingtou"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "98B40488-6658-DE87-5C29-8229462F5712",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "返修1",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0035",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.fanxiu_once"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "C8997897-380B-9394-B26C-DD53E079DE05",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "返修2",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0036",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.fanxiu_two"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "F217B13F-ED0D-074C-B901-29CB938D717A",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "创建人员",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0038",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.create_by"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "62C9AEF9-61AD-E329-C1B2-6D178BF49DDE",
+      "IsEditable": false,
+      "IsLocked": true,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "最新编辑时间",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0039",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.last_update_time"
+      },
+      "Type": "datetime",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "F015ADB3-6CB3-00F3-32AE-8042BC84F674",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "返修5",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0040",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.fanxiufive"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "B1966E72-1378-63C7-AE05-06F5740CA9DA",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "上次返修耗时",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0043",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.last_retake_cost"
+      },
+      "Type": "lineedit",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "69A7C533-EE80-6F8F-A185-D5910D3632F1",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "首次返修时间",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0045",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.first_retake_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "2E986543-B159-0FF5-37B7-4385A3C78334",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "客户返修次数",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0047",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "task.client_retake_count"
+      },
+      "Type": "int",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "B2BA785A-28D8-C8DA-F4FE-1321F004E59D",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "组长返修次数",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0049",
+      "ReadPermission": [
+        "all"
+      ],
+      "Sign": {
+        "$FieldSign": "task.leader_retake_count"
+      },
+      "Type": "int",
+      "WritePermission": [
+        "all"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "59BE5BB7-4B85-9F1A-4BA7-1AEC51A38A57",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "导演返修次数",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0050",
+      "ReadPermission": [
+        "all"
+      ],
+      "Sign": {
+        "$FieldSign": "task.director_retake_count"
+      },
+      "Type": "int",
+      "WritePermission": [
+        "all"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "55659130-6CBE-6487-B821-C9D7BD4B903C",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": true,
+      "Label": "缩略图",
+      "Module": {
+        "$Module": {
+          "Name": "task",
+          "Type": ""
+        }
+      },
+      "Order": "0000",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117"
+      ],
+      "Sign": {
+        "$FieldSign": "task.image"
+      },
+      "Type": "image",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117"
+      ]
+    }
+  }
+]

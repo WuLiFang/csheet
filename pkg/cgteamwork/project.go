@@ -21,6 +21,8 @@ func (i *Project) UnmarshalCGTeamworkRecord(v map[string]string) error {
 	return nil
 }
 
+// TODO: refactor to Projects with options pattern
+
 // ListProjects with filter.
 func ListProjects(ctx context.Context, filter func(Selection) Selection) ([]Project, error) {
 	s := Select("public", "project")

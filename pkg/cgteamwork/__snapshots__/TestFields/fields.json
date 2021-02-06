@@ -1,0 +1,3950 @@
+[
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.pid_WWT"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.pid_WVV"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.account"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.submit_file"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.last_submit_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.cache"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.client_status"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.total_use_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.assign_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.leader_status"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.note_num"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.finish_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.remaining_day"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.account_id"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.id"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.set_pipeline_id"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.module"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.link_shot_asset"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.link_module_id"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.link_shot_asset"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.artist"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.cn_name"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "eps.create_by"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "eps.last_update_by"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.submit_count"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.create_by"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "eps.last_update_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.flow_id"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.last_update_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "eps.changci"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.difficulty_level"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.asset_name"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.id"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.source"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "eps.id"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.task_name"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.assign_pipeline"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.last_update_by"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.flow_finish_id"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.last_update_by"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.eps_name"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "eps.eps_name"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.assign_pipeline"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.last_update_by"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.last_update_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "eps.project_description"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.id"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "eps.create_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.image"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.create_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.eps_name"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.start_work_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.type_name"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.submit_file_path"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.check_field_id"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.define_jbg"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.define_jbf"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.define_jbd"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.remark"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.define_iij"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.define_ija"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.remark"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.shot"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.the_props"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.define_gjb"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.define_jba"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.zhonglei"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.animation_level"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.submit_d_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.pid_WVQ"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.pid_WVW"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.pid_WUX"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.fenjingjinghao"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.fanxiusi"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "eps.project_code"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.pid_WOV"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.pid_WOX"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.pid_WPO"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "eps.link_module_id"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.pid_WUU"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.pid_WVX"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.pid_WXCETCXF_WXBW_BERS_ADXR_UXFWUQEOTXUW"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.pid_WWQ"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.total_retake_cost"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.last_retake_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "asset.link_module_id"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.shot"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.frame"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.fanxiu"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.vfx_note"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.seq"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.image"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.define_fig"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.define_gaa"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.define_gei"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.scenario"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.create_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.create_by"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.the_lens_number"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.layout_level"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.role"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.zengjiajingtou"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.pid_PAPUUXTQ_FABR_DXDT_BAXC_UXUORTQQFAPV"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.pid_WPP"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.pid_WWR"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.pid_WWS"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.time"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.dead_line"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.define_gij"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.define_jag"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.pipeline_sort_id"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.days"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.zhizuohzuangtai"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.fanxiu_three"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.create_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.start_date"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.retake_record"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.end_date"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.status"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.first_submit_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.pipeline"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.define_iic"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "shot.keyshot"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.fenlei"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.director_status"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.assign_artist"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.manage"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.flow_name"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.submit_m_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.tianjiajingtou"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.fanxiu_once"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.fanxiu_two"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.create_by"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.last_update_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.fanxiufive"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.last_retake_cost"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.first_retake_time"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.client_retake_count"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.leader_retake_count"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.director_retake_count"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "",
+      "Module": {
+        "$Module": {
+          "Name": "",
+          "Type": ""
+        }
+      },
+      "Order": "",
+      "ReadPermission": [
+        ""
+      ],
+      "Sign": {
+        "$FieldSign": "task.image"
+      },
+      "Type": "",
+      "WritePermission": [
+        ""
+      ]
+    }
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "B6CE3D8C-0F79-BB9C-EAF1-F919F72EB172",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "等级",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0006",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.define_jbg"
+      },
+      "Type": "checkbox",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "F372424E-D834-50E4-54D4-488079E0DCD0",
+      "IsEditable": false,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "集数",
+      "Module": {
+        "$Module": {
+          "Name": "asset",
+          "Type": ""
+        }
+      },
+      "Order": "0009",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "asset.define_jbf"
+      },
+      "Type": "checkbox",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "88C59EC8-059A-FA58-5A74-81D50CFC257C",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "是否VFX",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0027",
+      "ReadPermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.define_gaa"
+      },
+      "Type": "checkbox",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "03D4531F-D62A-BA9E-EE59-10039B1BE117",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  },
+  {
+    "$Field": {
+      "Database": "proj_sdktest",
+      "ID": "3DD44CBC-6648-71A9-84F6-CEF27D4213AE",
+      "IsEditable": true,
+      "IsLocked": false,
+      "IsRequired": false,
+      "IsSystem": false,
+      "Label": "关键镜头",
+      "Module": {
+        "$Module": {
+          "Name": "shot",
+          "Type": ""
+        }
+      },
+      "Order": "0048",
+      "ReadPermission": [
+        "all"
+      ],
+      "Sign": {
+        "$FieldSign": "shot.keyshot"
+      },
+      "Type": "checkbox",
+      "WritePermission": [
+        "AEA1D0BE-63DA-45A2-5F45-C2683F4B8D8F",
+        "5273E2A4-F9FF-53A2-4D9F-350F37E3D1D2",
+        "79973C7B-CACC-48E1-50BB-C4761433551E"
+      ]
+    }
+  }
+]

@@ -18,3 +18,22 @@ func TestFieldFetch(t *testing.T) {
 	require.NoError(t, err)
 	snapshot.MatchJSON(t, f)
 }
+
+func TestFields(t *testing.T) {
+	ctx := WithClient(context.Background(), NewTestClient(t))
+	t.Run("simple", func(t *testing.T) {
+		result, err := Fields(ctx, "proj_sdktest")
+		require.NoError(t, err)
+		snapshot.MatchJSON(t, result)
+	})
+	t.Run("filter", func(t *testing.T) {
+		result, err := Fields(ctx, "proj_sdktest", FieldOptionFilter(F("type").Equal("checkbox")))
+		require.NoError(t, err)
+		snapshot.MatchJSON(t, result)
+	})
+	t.Run("fields", func(t *testing.T) {
+		result, err := Fields(ctx, "proj_sdktest", FieldOptionFields([]string{"sign"}))
+		require.NoError(t, err)
+		snapshot.MatchJSON(t, result)
+	})
+}
