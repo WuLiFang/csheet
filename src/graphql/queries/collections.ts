@@ -55,12 +55,14 @@ export function useQuery(
 ): {
   data: Ref<collections | undefined>;
   query: Ref<ObservableQuery<collections, collectionsVariables> | undefined>;
+  version: Ref<number>;
   nodes: Ref<Collection[]>;
 } {
   const data = ref<collections | undefined>();
   const o = {
     query: require('./collections.gql'),
   };
+  const version = ref(0);
 
   const query = ref<
     ObservableQuery<collections, collectionsVariables> | undefined
@@ -80,6 +82,7 @@ export function useQuery(
       if (options?.value.loadingCount != null) {
         options.value.loadingCount.value += value.loading ? 1 : -1;
       }
+      version.value += 1;
     });
     cleanup.push(() => {
       sub.unsubscribe();
@@ -123,6 +126,7 @@ export function useQuery(
   return {
     data,
     query,
+    version,
     nodes: computed(() => extractNodes(data.value?.collections)),
   };
 }

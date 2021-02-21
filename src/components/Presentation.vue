@@ -3,7 +3,7 @@ import usePresentationMetadata from '@/composables/usePresentationMetadata';
 import queries from '@/graphql/queries';
 import clamp from '@/utils/clamp';
 import getPathBasename from '@/utils/getPathBasename';
-import { computed } from '@vue/composition-api';
+import { computed, ref, watch } from '@vue/composition-api';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { filePathFormat } from '../const';
 import { Presentation as Data } from '../graphql/types/Presentation';
@@ -87,7 +87,7 @@ import { Presentation as Data } from '../graphql/types/Presentation';
   mounted() {
     this.$watch(
       () => this.id,
-      v => {
+      (v) => {
         if (!v) {
           this.node = undefined;
         }
@@ -95,21 +95,21 @@ import { Presentation as Data } from '../graphql/types/Presentation';
     );
     this.$watch(
       () => this.currentTime,
-      v => {
+      (v) => {
         this.$emit('timeUpdate', v);
       },
       { immediate: true }
     );
     this.$watch(
       () => this.currentFrame,
-      v => {
+      (v) => {
         this.$emit('frameUpdate', v);
       },
       { immediate: true }
     );
   },
   setup: (props: Pick<Presentation, 'id'>) => {
-    const { node } = queries.usePresentationNode(
+    const { node, version } = queries.usePresentationNode(
       computed(() => ({ id: props.id ?? '', filePathFormat })),
       computed(() => ({
         skip: !props.id,
@@ -123,6 +123,10 @@ import { Presentation as Data } from '../graphql/types/Presentation';
       firstFrame,
       lastFrame,
     } = usePresentationMetadata(node);
+    const isLoadFailed = ref(false);
+    watch(version, () => {
+      isLoadFailed.value = false;
+    });
     return {
       node,
       height,
@@ -131,6 +135,8 @@ import { Presentation as Data } from '../graphql/types/Presentation';
       frameCount,
       firstFrame,
       lastFrame,
+      version,
+      isLoadFailed,
     };
   },
 })
@@ -164,11 +170,11 @@ export default class Presentation extends Vue {
   lastFrame!: number;
   width!: number;
   height!: number;
+  version!: number;
+  isLoadFailed!: boolean;
 
-  isLoadFailed = false;
   paused = true;
   currentTime = 0;
-  version = 0;
 
   get type(): string {
     return this.node?.type ?? '';

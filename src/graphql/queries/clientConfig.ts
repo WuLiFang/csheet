@@ -52,11 +52,13 @@ export function useQuery(
 ): {
   data: Ref<clientConfig | undefined>;
   query: Ref<ObservableQuery<clientConfig, clientConfigVariables> | undefined>;
+  version: Ref<number>;
 } {
   const data = ref<clientConfig | undefined>();
   const o = {
     query: require('./clientConfig.gql'),
   };
+  const version = ref(0);
 
   const query = ref<
     ObservableQuery<clientConfig, clientConfigVariables> | undefined
@@ -76,6 +78,7 @@ export function useQuery(
       if (options?.value.loadingCount != null) {
         options.value.loadingCount.value += value.loading ? 1 : -1;
       }
+      version.value += 1;
     });
     cleanup.push(() => {
       sub.unsubscribe();
@@ -119,5 +122,6 @@ export function useQuery(
   return {
     data,
     query,
+    version,
   };
 }

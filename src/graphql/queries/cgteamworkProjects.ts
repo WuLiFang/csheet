@@ -67,11 +67,13 @@ export function useQuery(
   query: Ref<
     ObservableQuery<cgteamworkProjects, cgteamworkProjectsVariables> | undefined
   >;
+  version: Ref<number>;
 } {
   const data = ref<cgteamworkProjects | undefined>();
   const o = {
     query: require('./cgteamworkProjects.gql'),
   };
+  const version = ref(0);
 
   const query = ref<
     ObservableQuery<cgteamworkProjects, cgteamworkProjectsVariables> | undefined
@@ -94,6 +96,7 @@ export function useQuery(
       if (options?.value.loadingCount != null) {
         options.value.loadingCount.value += value.loading ? 1 : -1;
       }
+      version.value += 1;
     });
     cleanup.push(() => {
       sub.unsubscribe();
@@ -137,6 +140,7 @@ export function useQuery(
   return {
     data,
     query,
+    version,
   };
 }
 

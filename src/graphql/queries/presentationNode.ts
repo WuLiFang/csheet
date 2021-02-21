@@ -68,12 +68,14 @@ export function useQuery(
   query: Ref<
     ObservableQuery<presentationNode, presentationNodeVariables> | undefined
   >;
+  version: Ref<number>;
   node: Ref<Presentation | undefined>;
 } {
   const data = ref<presentationNode | undefined>();
   const o = {
     query: require('./presentationNode.gql'),
   };
+  const version = ref(0);
 
   const query = ref<
     ObservableQuery<presentationNode, presentationNodeVariables> | undefined
@@ -96,6 +98,7 @@ export function useQuery(
       if (options?.value.loadingCount != null) {
         options.value.loadingCount.value += value.loading ? 1 : -1;
       }
+      version.value += 1;
     });
     cleanup.push(() => {
       sub.unsubscribe();
@@ -139,6 +142,7 @@ export function useQuery(
   return {
     data,
     query,
+    version,
     node: computed(() => castNode(data.value?.node)),
   };
 }

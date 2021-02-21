@@ -61,11 +61,13 @@ export function useQuery(
   query: Ref<
     ObservableQuery<folderOriginPrefix, folderOriginPrefixVariables> | undefined
   >;
+  version: Ref<number>;
 } {
   const data = ref<folderOriginPrefix | undefined>();
   const o = {
     query: require('./folderOriginPrefix.gql'),
   };
+  const version = ref(0);
 
   const query = ref<
     ObservableQuery<folderOriginPrefix, folderOriginPrefixVariables> | undefined
@@ -88,6 +90,7 @@ export function useQuery(
       if (options?.value.loadingCount != null) {
         options.value.loadingCount.value += value.loading ? 1 : -1;
       }
+      version.value += 1;
     });
     cleanup.push(() => {
       sub.unsubscribe();
@@ -131,5 +134,6 @@ export function useQuery(
   return {
     data,
     query,
+    version,
   };
 }

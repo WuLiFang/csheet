@@ -60,12 +60,14 @@ export function useQuery(
 ): {
   data: Ref<{{ .Name }} | undefined>;
   query: Ref<ObservableQuery<{{ .Name }}, {{ .Name }}Variables> | undefined>;
+  version: Ref<number>;
   {{- block "extendUseQueryType" . }}{{ end }}
 } {
   const data = ref<{{ .Name }} | undefined>();
   const o = {
     query: require('./{{ .Name }}.gql'),
   }
+  const version = ref(0);
   
   const query = ref<ObservableQuery<{{ .Name }}, {{ .Name }}Variables> | undefined>()
   const cleanup: (() => void)[] = []
@@ -85,6 +87,7 @@ export function useQuery(
       if (options?.value.loadingCount != null) {
         options.value.loadingCount.value += value.loading ? 1 : -1
       }
+      version.value += 1;
     });
     cleanup.push(() => {
       sub.unsubscribe()
@@ -130,6 +133,7 @@ export function useQuery(
   return {
     data,
     query,
+    version,
     {{- block "extendUseQuery" . }}{{ end }}
   };
 }

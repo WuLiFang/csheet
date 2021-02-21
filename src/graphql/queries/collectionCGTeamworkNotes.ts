@@ -81,12 +81,14 @@ export function useQuery(
       >
     | undefined
   >;
+  version: Ref<number>;
   node: Ref<Collection | undefined>;
 } {
   const data = ref<collectionCGTeamworkNotes | undefined>();
   const o = {
     query: require('./collectionCGTeamworkNotes.gql'),
   };
+  const version = ref(0);
 
   const query = ref<
     | ObservableQuery<
@@ -113,6 +115,7 @@ export function useQuery(
       if (options?.value.loadingCount != null) {
         options.value.loadingCount.value += value.loading ? 1 : -1;
       }
+      version.value += 1;
     });
     cleanup.push(() => {
       sub.unsubscribe();
@@ -156,6 +159,7 @@ export function useQuery(
   return {
     data,
     query,
+    version,
     node: computed(() => castNode(data.value?.node)),
   };
 }

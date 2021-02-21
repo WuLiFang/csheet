@@ -61,12 +61,14 @@ export function useQuery(
   query: Ref<
     ObservableQuery<collectionTags, collectionTagsVariables> | undefined
   >;
+  version: Ref<number>;
   nodes: Ref<CollectionTag[]>;
 } {
   const data = ref<collectionTags | undefined>();
   const o = {
     query: require('./collectionTags.gql'),
   };
+  const version = ref(0);
 
   const query = ref<
     ObservableQuery<collectionTags, collectionTagsVariables> | undefined
@@ -89,6 +91,7 @@ export function useQuery(
       if (options?.value.loadingCount != null) {
         options.value.loadingCount.value += value.loading ? 1 : -1;
       }
+      version.value += 1;
     });
     cleanup.push(() => {
       sub.unsubscribe();
@@ -132,6 +135,7 @@ export function useQuery(
   return {
     data,
     query,
+    version,
     nodes: computed(() => extractNodes(data.value?.collectionTags)),
   };
 }
