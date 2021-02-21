@@ -24,7 +24,7 @@
       @after-enter="$emit('after-enter')"
     )
       .container(
-        class="z-10 absolute m-auto bg-primary h-screen max-w-xl right-0"
+        class="z-10 absolute m-auto bg-primary h-screen right-0"
         class="sm:px-4 overflow-y-auto overflow-x-hidden"
         :class="containerClass"
         v-if="visible"
@@ -55,7 +55,7 @@ export default class Drawer extends Vue {
   @Prop({ type: Boolean, required: true })
   visible!: boolean;
 
-  @Prop({ type: String })
+  @Prop({ type: String, default: "max-w-xl" })
   containerClass?: string;
 }
 </script>

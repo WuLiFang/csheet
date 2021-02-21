@@ -1,5 +1,5 @@
 <template>
-  <Drawer :visible.sync="visible" v-on="$listeners">
+  <Drawer :visible.sync="visible" container-class="w-full" v-on="$listeners">
     <template #title>收藏统计</template>
     <CollectionStats :variables="variables" />
   </Drawer>

@@ -23,6 +23,7 @@
     </section>
     <section>
       <h2 class="font-bold text-lg">标签</h2>
+      <CollectionTagTreemap :variables="variables" />
       <div class="ml-1">
         <div v-for="i in groupedData" :key="i.group" open>
           <h3 class="text-lg">
@@ -51,6 +52,7 @@ import {
   ref,
 } from '@vue/composition-api';
 import { groupBy, sortBy } from 'lodash';
+import CollectionTagTreemap from '@/components/CollectionTagTreemap.vue';
 
 export default defineComponent({
   name: 'CollectionStats',
@@ -59,6 +61,9 @@ export default defineComponent({
       type: Object as PropType<collectionStatsVariables>,
       default: () => ({}),
     },
+  },
+  components: {
+    CollectionTagTreemap,
   },
   setup: (props) => {
     const { variables } = toRefs(props);
