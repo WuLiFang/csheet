@@ -12,6 +12,19 @@ import { Presentation as Data } from '../graphql/types/Presentation';
   render(h) {
     const src = this.src;
     const version = this.version;
+    const handleError = () => {
+      const v = this.version;
+      if (v !== version) {
+        return;
+      }
+      this.isLoadFailed = true;
+      setTimeout(() => {
+        if (v !== this.version) {
+          return;
+        }
+        this.isLoadFailed = false;
+      }, 1e3);
+    };
     const renderImage = () => {
       this.currentTime = 0;
       this.paused = true;
@@ -26,12 +39,7 @@ import { Presentation as Data } from '../graphql/types/Presentation';
           filter: this.imageFilter(this),
         },
         on: {
-          error: () => {
-            if (this.version !== version) {
-              return;
-            }
-            this.isLoadFailed = true;
-          },
+          error: handleError,
           dragstart: this.handleDrag.bind(this),
         },
       });
@@ -49,12 +57,7 @@ import { Presentation as Data } from '../graphql/types/Presentation';
           playbackRate: clamp(this.playbackRate, 0.1, 10),
         },
         on: {
-          error: () => {
-            if (this.version !== version) {
-              return;
-            }
-            this.isLoadFailed = true;
-          },
+          error: handleError,
           timeupdate: (e: Event & { target: HTMLVideoElement }) => {
             this.currentTime = e.target.currentTime;
           },
