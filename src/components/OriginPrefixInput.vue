@@ -52,14 +52,14 @@
       ></span>
       <label class="mr-1 lg:mr-2 inline-block"
         ><span class="lg:mr-1">前缀</span>
-        <datalist id="navbar-cgteamwork-prefix">
+        <datalist :id="idPrefix + 'cgteamwork-prefix'">
           <option v-for="i in recentCGTeamworkPrefix" :key="i">{{ i }}</option>
         </datalist>
         <input
           ref="cgteamworkPrefixInput"
           v-model="formData.cgteamwork.prefix"
           class="form-input"
-          list="navbar-cgteamwork-prefix"
+          :list="idPrefix + 'cgteamwork-prefix'"
           @keydown.enter="$refs.form.submit()"
           @input="$event.target.setCustomValidity('')"
         />
@@ -68,14 +68,14 @@
     <template v-else-if="formData.mode == 'folder'">
       <label class="mr-1 lg:mr-2"
         ><span class="lg:mr-1">路径</span>
-        <datalist id="navbar-folder-root">
+        <datalist :id="idPrefix + 'folder-root'">
           <option v-for="i in recentFolderRoot" :key="i">{{ i }}</option>
         </datalist>
         <input
           v-model="formData.folder.root"
           class="form-input"
           required
-          list="navbar-folder-root"
+          :list="idPrefix + 'folder-root'"
           @keydown.enter="$refs.form.submit()"
         />
       </label>
@@ -97,7 +97,7 @@ import {
   ref,
   watch,
 } from '@vue/composition-api';
-import { uniq } from 'lodash';
+import { uniq, uniqueId } from 'lodash';
 
 export default defineComponent({
   name: 'OriginPrefixInput',
@@ -209,7 +209,10 @@ export default defineComponent({
       }
     });
 
+    const idPrefix = uniqueId('origin-prefix-input-') + '-';
+
     return {
+      idPrefix,
       config,
       formData,
       recentFolderRoot,
