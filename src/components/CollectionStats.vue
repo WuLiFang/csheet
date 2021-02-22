@@ -24,19 +24,21 @@
     <section>
       <h2 class="font-bold text-lg">标签</h2>
       <CollectionTagTreemap :variables="variables" />
-      <div class="ml-1">
-        <div v-for="i in groupedData" :key="i.group" open>
-          <h3 class="text-lg">
-            {{ i.group }}
-          </h3>
-          <dl class="ml-1">
-            <div v-for="v in i.values" :key="v.name">
-              <dd class="inline-block text-right w-16 mr-2">{{ v.count }}</dd>
-              <dt class="inline-block">{{ v.name }}</dt>
-            </div>
-          </dl>
+      <details>
+        <div class="ml-1">
+          <div v-for="i in groupedData" :key="i.group" open>
+            <h3 class="text-lg">
+              {{ i.group }}
+            </h3>
+            <dl class="ml-1">
+              <div v-for="v in i.values" :key="v.name">
+                <dd class="inline-block text-right w-16 mr-2">{{ v.count }}</dd>
+                <dt class="inline-block">{{ v.name }}</dt>
+              </div>
+            </dl>
+          </div>
         </div>
-      </div>
+      </details>
     </section>
   </div>
 </template>
