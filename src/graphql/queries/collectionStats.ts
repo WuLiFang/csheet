@@ -70,7 +70,7 @@ export function useQuery(
     if (query.value) {
       return;
     }
-    query.value = apolloClient.watchQuery<
+    const q = apolloClient.watchQuery<
       collectionStats,
       collectionStatsVariables
     >({
@@ -78,12 +78,20 @@ export function useQuery(
       ...o,
       variables: variables.value,
     });
-    const sub = query.value.subscribe((value) => {
+    query.value = q;
+    const sub = q.subscribe((value) => {
       data.value = value.data;
-      if (options?.value.loadingCount != null) {
-        options.value.loadingCount.value += value.loading ? 1 : -1;
+      if (value.loading) {
+        const loadingCount = options?.value.loadingCount;
+        if (loadingCount != null) {
+          loadingCount.value += 1;
+          q.result().finally(() => {
+            loadingCount.value -= 1;
+          });
+        }
+      } else {
+        version.value += 1;
       }
-      version.value += 1;
     });
     cleanup.push(() => {
       sub.unsubscribe();
@@ -114,16 +122,18 @@ export function useQuery(
     { immediate: true }
   );
   watch(
-    () => variables.value,
+    variables,
     (n) => {
       query.value?.refetch(n);
-    }
+    },
+    { deep: true }
   );
   watch(
     () => options?.value,
     (n) => {
       query.value?.setOptions({ ...n, ...o });
-    }
+    },
+    { deep: true }
   );
   return {
     data,
