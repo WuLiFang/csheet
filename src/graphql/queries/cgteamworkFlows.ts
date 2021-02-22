@@ -105,7 +105,7 @@ export function useQuery(
   watch(
     () => variables.value,
     (n) => {
-      query.value?.setVariables(n);
+      query.value?.refetch(n);
     }
   );
   watch(
