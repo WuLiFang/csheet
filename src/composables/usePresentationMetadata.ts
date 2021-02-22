@@ -1,6 +1,6 @@
 import { Presentation } from '@/graphql/queries/presentationNode';
 import parseFrameRate from '@/utils/parseFrameRate';
-import { ref, Ref, watch } from '@vue/composition-api';
+import { computed, ref, Ref, watch } from '@vue/composition-api';
 
 export default function usePresentationMetadata(
   p: Ref<Presentation | undefined>
@@ -10,17 +10,25 @@ export default function usePresentationMetadata(
   firstFrame: Ref<number>;
   frameCount: Ref<number>;
   frameRate: Ref<number>;
+  frameRateText: Ref<string>;
   height: Ref<number>;
   lastFrame: Ref<number>;
   pixelFormat: Ref<string>;
   width: Ref<number>;
+  // extra metadata that not defined in docs.
   extra: Ref<Record<string, string>>;
 } {
   const annotation = ref('');
   const duration = ref(0);
   const firstFrame = ref(0);
   const frameCount = ref(0);
-  const frameRate = ref(0);
+  const frameRateText = ref('');
+  const frameRate = computed(() => {
+    if (!frameRateText.value) {
+      return 0;
+    }
+    return parseFrameRate(frameRateText.value);
+  });
   const height = ref(0);
   const lastFrame = ref(0);
   const pixelFormat = ref('');
@@ -29,11 +37,10 @@ export default function usePresentationMetadata(
 
   watch(
     () => p.value?.metadata ?? [],
-    n => {
+    (n) => {
       annotation.value = '';
       firstFrame.value = NaN;
       frameCount.value = 0;
-      frameRate.value = 0;
       height.value = 1080;
       lastFrame.value = NaN;
       pixelFormat.value = '';
@@ -57,8 +64,7 @@ export default function usePresentationMetadata(
             frameCount.value = parseFloat(i.v) || frameCount.value;
             break;
           case 'frame-rate':
-            frameRate.value = parseFrameRate(i.v);
-            extra.value[i.k] = i.v
+            frameRateText.value = i.v;
             break;
           case 'first-frame':
             firstFrame.value = parseInt(i.v);
@@ -89,6 +95,7 @@ export default function usePresentationMetadata(
     firstFrame,
     frameCount,
     frameRate,
+    frameRateText,
     height,
     lastFrame,
     pixelFormat,

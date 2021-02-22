@@ -50,6 +50,10 @@
       <dt>{{ $t('presentation-metadata.duration') }}</dt>
       <dd class="pl-4">{{ durationText }}</dd>
     </template>
+    <template v-if="frameRateText">
+      <dt>{{ $t('presentation-metadata.frame-rate') }}</dt>
+      <dd class="pl-4">{{ frameRateText }}</dd>
+    </template>
     <template v-if="pixelFormat">
       <dt>{{ $t('presentation-metadata.pixel-format') }}</dt>
       <dd class="pl-4">{{ pixelFormat }}</dd>
@@ -102,6 +106,7 @@ export default defineComponent({
       duration,
       frameCount,
       frameRate,
+      frameRateText,
       height,
       pixelFormat,
       width,
@@ -198,6 +203,7 @@ export default defineComponent({
       duration,
       frameCount,
       frameRate,
+      frameRateText,
       height,
       pixelFormat,
       width,
