@@ -1,0 +1,22 @@
+{{- define "import" }}
+import { computed } from "@vue/composition-api"
+{{- end }}
+
+{{- define "before" }}
+    export type Config = NonNullable<{{.Name}}["{{.Name}}"]>
+    const defaultConfig: Config = {
+        __typename: 'ClientConfig',
+        sentryDSN: null,
+        issueTrackerURL: null,
+        enableCGTeamwork: false,
+        folderInclude: [],
+    }
+{{- end }}
+
+{{- define "extendUseQueryType" }}
+    config: Ref<Config>
+{{- end }}
+
+{{- define "extendUseQuery" }}
+    config: computed(() => data.value?.clientConfig ?? defaultConfig),
+{{- end }}

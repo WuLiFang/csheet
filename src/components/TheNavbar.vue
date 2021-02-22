@@ -6,105 +6,25 @@
       @submit="collect()"
     )
       div(
-        class="mr-1 lg:mr-2 inline-flex items-center"
+        class="mr-1 lg:mr-2 inline-block"
       )
-        span(
-          class="lg:mr-1"
-        ) 模式
-        Radio(
-          v-model="formData.mode"
-          label-class="text-sm block"
-          :options=`[
-          {
-            key: 'cgteamwork',
-            value: 'cgteamwork',
-            disabled: !config.enableCGTeamwork,
-            label: 'CGTeamwork',
-          },
-          {
-            key: 'folder',
-            value: 'folder',
-            label: '文件夹',
-          },
-          ]`
+        OriginPrefixInput(
+          ref="originPrefixInput"
+          class=""
+          v-model="formData.originPrefix"
+          @change:mode="isHistoryStateChanged = true"
+          @change:cgteamwork:database="isHistoryStateChanged = true"
         )
-      template(v-if="formData.mode == 'cgteamwork'")
-        span(
-          class="mr-1 lg:mr-2 inline-block"
+        button.form-button(
+          ref="collectButton"
+          class="mr-1 w-24"
+          type="submit"
+          :disabled="loadingCount > 0"
         )
-          label(
-            class="lg:mr-1"
-            @click="() => $refs.cgteamworkProjectSelect.focus()"
-          ) 项目
-          CGTeamworkProjectSelect(
-            ref="cgteamworkProjectSelect"
-            v-model="formData.cgteamwork.database"
-            @change="formData.cgteamwork.prefix = ''"
-            @update:project="cgteamworkProject = $event"
-            required
-          )
-        span(
-          class="mr-1 lg:mr-2 inline-flex items-center"
-        )
-          label(
-            class="lg:mr-1"
-            @click="() => $refs.cgteamworkPipelineSelect.focus()"
-          ) 流程
-          CGTeamworkPipelineRadio(
-            ref="cgteamworkPipelineSelect"
-            v-model="formData.cgteamwork.pipeline"
-            :database="formData.cgteamwork.database"
-            required
-            clearable
-            null-value=""
-            @clear="formData.cgteamwork.pipeline = ''; formData.cgteamwork.prefix = '';"
-          )
-        label(
-          class="mr-1 lg:mr-2 inline-block"
-        )
-          span(
-            class="lg:mr-1"
-          ) 前缀
-          datalist#navbar-cgteamwork-prefix
-            option(
-              v-for="i in recentCGTeamworkPrefix"
-            ) {{i}}
-          input(
-            ref="cgteamworkPrefixInput"
-            v-model="formData.cgteamwork.prefix"
-            class="form-input"
-            @keydown.enter="$refs.form.submit()"
-            @input="$event.target.setCustomValidity('')"
-            list="navbar-cgteamwork-prefix"
-          )
-      template(v-else-if="formData.mode == 'folder'")
-        label(
-          class="mr-1 lg:mr-2"
-        )
-          span(
-            class="lg:mr-1"
-          ) 路径
-          datalist#navbar-folder-root
-            option(
-              v-for="i in recentFolderRoot"
-            ) {{i}}
-          input(
-            v-model="formData.folder.root"
-            class="form-input"
-            required
-            @keydown.enter="$refs.form.submit()"
-            list="navbar-folder-root"
-          )
-      button.form-button(
-        ref="collectButton"
-        class="mr-1 w-24"
-        type="submit"
-        :disabled="loadingCount > 0"
-      )
-        template(v-if="loadingCount > 0 ")
-          FaIcon(name='spinner' spin)
-        template(v-else)
-          | 收集
+          template(v-if="loadingCount > 0 ")
+            FaIcon(name='spinner' spin)
+          template(v-else)
+            | 收集
       div.inline-block.mr-1.space-x-1
         span.mr-1 筛选
         CollectionTagInput(
@@ -143,36 +63,29 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator';
-import {
-  collectFromCGTeamworkVariables,
-  collectFromCGTeamwork,
-} from '../graphql/types/collectFromCGTeamwork';
-import CGTeamworkProjectSelect from './cgteamwork/CGTeamworkProjectSelect.vue';
-import {
-  collectFromFolderVariables,
-  collectFromFolder,
-} from '../graphql/types/collectFromFolder';
-import {
-  folderOriginPrefixVariables,
-  folderOriginPrefix,
-} from '../graphql/types/folderOriginPrefix';
-import {
-  CollectFromCGTeamworkInput,
-  CollectFromFolderInput,
-} from '@/graphql/types/global';
-import { collectionsVariables } from '../graphql/types/collections';
-import db from '@/db';
-import client, { CGTeamworkOriginPrefix, FolderOriginPrefix } from '../client';
-import { uniq } from 'lodash';
-import { info } from '@/message';
-import { clientConfig_clientConfig as Config } from '@/graphql/types/clientConfig';
-import CGTeamworkPipelineRadio from '@/components/cgteamwork/CGTeamworkPipelineRadio.vue';
-import { cgteamworkProjects_cgteamworkProjects as CGTeamworkProject } from '@/graphql/types/cgteamworkProjects';
-import CollectionTagInput from '@/components/CollectionTagInput.vue';
-import { show } from '@/modal';
 import CollectionStatsDrawerVue from '@/components/CollectionStatsDrawer.vue';
+import CollectionTagInput from '@/components/CollectionTagInput.vue';
+import OriginPrefixInput from '@/components/OriginPrefixInput.vue';
+import db from '@/db';
+import mutations from '@/graphql/mutations';
+import queries from '@/graphql/queries';
+import { info } from '@/message';
+import { show } from '@/modal';
+import {
+  computed,
+  onUnmounted,
+  reactive,
+  ref,
+  watch,
+} from '@vue/composition-api';
 import 'vue-awesome/icons/chart-pie';
+import { Component, Vue } from 'vue-property-decorator';
+import client from '../client';
+import {
+  collectFromFolder,
+  collectFromFolderVariables,
+} from '../graphql/types/collectFromFolder';
+import { collectionsVariables } from '../graphql/types/collections';
 
 function getResultMessage({
   createdCount,
@@ -202,132 +115,152 @@ function searchParamsSetAll(
 
 @Component<TheNavbar>({
   components: {
-    CGTeamworkProjectSelect,
-    CGTeamworkPipelineRadio,
+    OriginPrefixInput,
     CollectionTagInput,
   },
-  apollo: {
-    folderOriginPrefix: {
-      query: require('@/graphql/queries/folderOriginPrefix.gql'),
-      variables(): folderOriginPrefixVariables {
-        return { root: this.formData.folder.root };
-      },
-      update(v: folderOriginPrefix): string {
-        return v.folderOriginPrefix;
-      },
-      skip(): boolean {
-        return this.formData.mode !== 'folder';
-      },
-    },
-  },
-  data() {
-    // make undefined field reactive.
-    return {
-      cgteamworkProject: undefined,
-    };
-  },
-  async mounted() {
-    const config = await client.config.get();
-    if (config) {
-      this.config = config;
-      if (this.config.enableCGTeamwork) {
-        this.formData.mode = 'cgteamwork';
-      }
-    }
+  setup: (props, ctx) => {
+    const formData = reactive({
+      originPrefix: '',
+      tagOr: [] as string[],
+      tagAnd: [] as string[],
+      skipEmptyPresentation: false,
+    });
 
-    this.loadState();
-    this.$watch(
-      () => this.title,
-      (v) => {
-        document.title = v;
-      }
-    );
-    this.$watch(
-      () => [this.formData.mode, this.formData.cgteamwork.database],
-      () => {
-        this.isHistoryStateChanged = true;
-      }
-    );
-    const popstateListener = () => {
-      this.loadState();
-    };
-    window.addEventListener('popstate', popstateListener);
-    this.$once('destoryed', () =>
-      window.removeEventListener('popstate', popstateListener)
+    const originPrefix = computed(() =>
+      client.OriginPrefix.parse(formData.originPrefix)
     );
 
-    this.$watch(
-      () => this.variables,
+    const variables = computed<collectionsVariables>(() => {
+      return {
+        originPrefix: formData.originPrefix,
+        presentationCountGt: formData.skipEmptyPresentation ? 0 : undefined,
+        tagOr: formData.tagOr.length > 0 ? formData.tagOr : undefined,
+        tagAnd: formData.tagAnd.length > 0 ? formData.tagAnd : undefined,
+      };
+    });
+    watch(
+      variables,
       (v) => {
-        this.$emit('update:variables', v);
+        ctx.emit('update:variables', v);
       },
       { immediate: true }
     );
-  },
-  destroyed() {
-    this.$emit('destoryed');
+
+    const isHistoryStateChanged = ref(false);
+
+    const loadState = () => {
+      const q = new URLSearchParams(location.search);
+      switch (q.get('mode')) {
+        case 'cgteamwork':
+          formData.originPrefix = new client.CGTeamworkOriginPrefix(
+            q.get('db') ?? '',
+            q.get('pipeline') ?? '',
+            q.get('prefix') ?? ''
+          ).toString();
+          break;
+        case 'folder':
+          formData.originPrefix = new client.FolderOriginPrefix(
+            q.get('root') ?? ''
+          ).toString();
+          break;
+        default: {
+          const latest = db.recentOriginPrefix.get()[0];
+          formData.originPrefix = latest.toString();
+        }
+      }
+      if (q.get('skip_empty')) {
+        formData.skipEmptyPresentation = true;
+      }
+      formData.tagOr = q.getAll('tagOr');
+      formData.tagAnd = q.getAll('tagAnd');
+    };
+    loadState();
+    window.addEventListener('popstate', loadState);
+    onUnmounted(() => window.removeEventListener('popstate', loadState));
+
+    const saveState = async () => {
+      const u = new URL(location.href);
+      u.search = '';
+      const originPrefix = client.OriginPrefix.parse(formData.originPrefix);
+      if (originPrefix instanceof client.CGTeamworkOriginPrefix) {
+        u.searchParams.set('mode', 'cgteamwork');
+        u.searchParams.set('db', originPrefix.database);
+        u.searchParams.set('pipeline', originPrefix.pipeline);
+        u.searchParams.set('prefix', originPrefix.prefix);
+      } else if (originPrefix instanceof client.FolderOriginPrefix) {
+        u.searchParams.set('mode', 'folder');
+        u.searchParams.set('root', originPrefix.root);
+      }
+      if (formData.skipEmptyPresentation) {
+        u.searchParams.set('skip_empty', '1');
+      }
+      searchParamsSetAll(u.searchParams, 'tagOr', formData.tagOr);
+      searchParamsSetAll(u.searchParams, 'tagAnd', formData.tagAnd);
+
+      const url = u.toString();
+      if (url === location.href) {
+        return;
+      }
+
+      const parts: string[] = [];
+      if (originPrefix instanceof client.CGTeamworkOriginPrefix) {
+        const project =
+          (
+            await queries.cgteamworkProjects({
+              database: [originPrefix.database],
+            })
+          ).data.cgteamworkProjects?.[0]?.name ?? originPrefix.database;
+        parts.push(originPrefix.prefix, project, originPrefix.pipeline);
+      }
+      if (originPrefix instanceof client.FolderOriginPrefix) {
+        parts.push(originPrefix.root);
+      }
+      parts.push('色板');
+      document.title = parts.filter((i) => !!i).join(' - ');
+      if (isHistoryStateChanged.value) {
+        history.pushState(null, document.title, url);
+      } else {
+        history.replaceState(null, document.title, url);
+      }
+      isHistoryStateChanged.value = false;
+    };
+    watch(
+      formData,
+      () => {
+        saveState();
+      },
+      { deep: true, immediate: true }
+    );
+
+    const showStats = (): void => {
+      show(CollectionStatsDrawerVue, {
+        props: {
+          defaultVariables: variables.value,
+        },
+      });
+    };
+
+    return { formData, originPrefix, showStats, isHistoryStateChanged };
   },
 })
 export default class TheNavbar extends Vue {
-  formData: {
-    mode: 'cgteamwork' | 'folder';
-    folder: CollectFromFolderInput;
-    cgteamwork: CollectFromCGTeamworkInput;
+  formData!: {
+    originPrefix: string;
     skipEmptyPresentation: boolean;
     tagOr: string[];
     tagAnd: string[];
-  } = {
-    mode: 'folder',
-    folder: {
-      root: '',
-    },
-    cgteamwork: {
-      database: '',
-      pipeline: '',
-      prefix: '',
-    },
-    tagOr: [],
-    tagAnd: [],
-    skipEmptyPresentation: false,
-  };
-
-  config: Omit<Config, '__typename'> = {
-    sentryDSN: null,
-    issueTrackerURL: null,
-    enableCGTeamwork: false,
-    folderInclude: [],
   };
 
   loadingCount = 0;
   $refs!: {
     form: HTMLFormElement;
-    cgteamworkPrefixInput: HTMLInputElement;
-    cgteamworkProjectSelect: CGTeamworkProjectSelect;
-    cgteamworkPipelineSelect: CGTeamworkPipelineRadio;
+    originPrefixInput: InstanceType<typeof OriginPrefixInput>;
     collectButton: HTMLButtonElement;
   };
 
-  folderOriginPrefix = 'folder:';
-  cgteamworkProject?: CGTeamworkProject;
-  isHistoryStateChanged = false;
+  originPrefix?: client.OriginPrefix;
 
-  get title(): string {
-    const parts: string[] = [];
-    switch (this.formData.mode) {
-      case 'cgteamwork':
-        parts.push(
-          this.formData.cgteamwork.prefix,
-          this.cgteamworkProject?.name ?? this.formData.cgteamwork.database,
-          this.formData.cgteamwork.pipeline
-        );
-        break;
-      case 'folder':
-        parts.push(this.formData.folder.root);
-        break;
-    }
-    parts.push('色板');
-    return parts.filter((i) => !!i).join(' - ');
-  }
+  isHistoryStateChanged!: boolean;
 
   get cellOverlayVisible(): boolean {
     return db.preference.get('cellOverlayVisible');
@@ -337,197 +270,57 @@ export default class TheNavbar extends Vue {
     db.preference.set('cellOverlayVisible', v);
   }
 
-  get variables(): collectionsVariables {
-    return {
-      originPrefix: this.originPrefix,
-      presentationCountGt: this.formData.skipEmptyPresentation ? 0 : undefined,
-      tagOr: this.formData.tagOr.length > 0 ? this.formData.tagOr : undefined,
-      tagAnd:
-        this.formData.tagAnd.length > 0 ? this.formData.tagAnd : undefined,
-    };
-  }
-
-  @Watch('formData', { deep: true })
-  saveState(): void {
-    const u = new URL(location.href);
-    u.search = '';
-    u.searchParams.set('mode', this.formData.mode);
-    if (this.formData.skipEmptyPresentation) {
-      u.searchParams.set('skip_empty', '1');
-    }
-    switch (this.formData.mode) {
-      case 'cgteamwork':
-        u.searchParams.set('db', this.formData.cgteamwork.database);
-        u.searchParams.set('pipeline', this.formData.cgteamwork.pipeline);
-        u.searchParams.set('prefix', this.formData.cgteamwork.prefix);
-        break;
-      case 'folder':
-        u.searchParams.set('root', this.formData.folder.root);
-        break;
-    }
-    searchParamsSetAll(u.searchParams, 'tagOr', this.formData.tagOr);
-    searchParamsSetAll(u.searchParams, 'tagAnd', this.formData.tagAnd);
-
-    const title = document.title;
-    const url = u.toString();
-    if (url === location.href) {
-      return;
-    }
-    if (this.isHistoryStateChanged) {
-      history.pushState(null, title, url);
-    } else {
-      history.replaceState(null, title, url);
-    }
-    this.isHistoryStateChanged = false;
-  }
-
-  loadState(): void {
-    const q = new URLSearchParams(location.search);
-    switch (q.get('mode')) {
-      case 'cgteamwork':
-        this.formData.mode = 'cgteamwork';
-        this.formData.cgteamwork.database = q.get('db') ?? '';
-        this.formData.cgteamwork.pipeline = q.get('pipeline') ?? '';
-        this.formData.cgteamwork.prefix = q.get('prefix') ?? '';
-        break;
-      case 'folder':
-        this.formData.mode = 'folder';
-        this.formData.folder.root = q.get('root') ?? '';
-        break;
-      default: {
-        const latest = db.recentOriginPrefix.get()[0];
-        if (latest instanceof CGTeamworkOriginPrefix) {
-          this.formData.mode = 'cgteamwork';
-          this.formData.cgteamwork.database = latest.database;
-          this.formData.cgteamwork.pipeline = latest.pipeline;
-          this.formData.cgteamwork.prefix = latest.prefix;
-        } else if (latest instanceof FolderOriginPrefix) {
-          this.formData.mode = 'folder';
-          this.formData.folder.root = latest.root;
-        }
-      }
-    }
-    if (q.get('skip_empty')) {
-      this.formData.skipEmptyPresentation = true;
-    }
-    this.formData.tagOr = q.getAll('tagOr');
-    this.formData.tagAnd = q.getAll('tagAnd');
-  }
-
-  async collectFromCGTeamwork(): Promise<void> {
-    if (this.loadingCount > 0) {
-      return;
-    }
-    this.loadingCount += 1;
-    try {
-      const { data, errors } = await this.$apollo.mutate<
-        collectFromCGTeamwork,
-        collectFromCGTeamworkVariables
-      >({
-        mutation: require('@/graphql/mutations/collectFromCGTeamwork.gql'),
-        variables: { input: this.formData.cgteamwork },
-        errorPolicy: 'all',
-      });
-      for (const err of errors ?? []) {
-        switch (err.extensions?.code) {
-          case 'CGTEAMWORK_COLLECT_OVER_TASK_LIMIT':
-            this.$refs.cgteamworkPrefixInput?.setCustomValidity(
-              '请使用更精确的前缀匹配来匹配更少的任务，如一集或一场。'
-            );
-            break;
-          default:
-            throw err;
-        }
-        this.$refs.form?.reportValidity();
-        return;
-      }
-      this.$emit('collect');
-      info(getResultMessage(data?.collectFromCGTeamwork ?? {}));
-    } finally {
-      this.loadingCount -= 1;
-    }
-  }
-
-  async collectFromFolder(): Promise<void> {
-    if (this.loadingCount > 0) {
-      return;
-    }
-    this.loadingCount += 1;
-    try {
-      const { data } = await this.$apollo.mutate<
-        collectFromFolder,
-        collectFromFolderVariables
-      >({
-        mutation: require('@/graphql/mutations/collectFromFolder.gql'),
-        variables: { input: this.formData.folder },
-      });
-      this.$emit('collect');
-      info(getResultMessage(data?.collectFromFolder ?? {}));
-    } finally {
-      this.loadingCount -= 1;
-    }
-  }
-
   async collect(): Promise<void> {
     this.isHistoryStateChanged = true;
-    switch (this.formData.mode) {
-      case 'cgteamwork':
-        await this.collectFromCGTeamwork();
-        break;
-      case 'folder':
-        await this.collectFromFolder();
-        break;
+    if (this.loadingCount > 0) {
+      return;
     }
-  }
-
-  get originPrefix(): string {
-    let ret = '';
-    switch (this.formData.mode) {
-      case 'cgteamwork':
-        ret = `cgteamwork:${this.formData.cgteamwork.database}:${this.formData.cgteamwork.pipeline}:${this.formData.cgteamwork.prefix}`;
-        ret = ret.replace(/:+$/, ':');
-        break;
-      case 'folder':
-        ret = this.folderOriginPrefix;
-        break;
+    this.loadingCount += 1;
+    try {
+      if (this.originPrefix instanceof client.CGTeamworkOriginPrefix) {
+        const { data, errors } = await mutations.collectFromCGTeamwork(
+          {
+            input: {
+              database: this.originPrefix.database,
+              prefix: this.originPrefix.prefix,
+              pipeline: this.originPrefix.pipeline,
+            },
+          },
+          { errorPolicy: 'all' }
+        );
+        for (const err of errors ?? []) {
+          switch (err.extensions?.code) {
+            case 'CGTEAMWORK_COLLECT_OVER_TASK_LIMIT':
+              this.$refs.originPrefixInput?.cgteamworkPrefixInput?.setCustomValidity(
+                '请使用更精确的前缀匹配来匹配更少的任务，如一集或一场。'
+              );
+              break;
+            default:
+              throw err;
+          }
+          this.$refs.form?.reportValidity();
+          return;
+        }
+        this.$emit('collect');
+        info(getResultMessage(data?.collectFromCGTeamwork ?? {}));
+      } else if (this.originPrefix instanceof client.FolderOriginPrefix) {
+        const { data } = await this.$apollo.mutate<
+          collectFromFolder,
+          collectFromFolderVariables
+        >({
+          mutation: require('@/graphql/mutations/collectFromFolder.gql'),
+          variables: {
+            input: {
+              root: this.originPrefix.root,
+            },
+          },
+        });
+        this.$emit('collect');
+        info(getResultMessage(data?.collectFromFolder ?? {}));
+      }
+    } finally {
+      this.loadingCount -= 1;
     }
-    return ret;
-  }
-
-  get recentFolderRoot(): string[] {
-    return uniq([
-      ...db.recentOriginPrefix
-        .get()
-        .filter((i): i is FolderOriginPrefix => i instanceof FolderOriginPrefix)
-        .filter((i) => i.root !== this.formData.folder.root)
-        .map((i) => i.root),
-      ...(this.config.folderInclude ?? []),
-    ]);
-  }
-
-  get recentCGTeamworkPrefix(): string[] {
-    return uniq(
-      db.recentOriginPrefix
-        .get()
-        .filter(
-          (i): i is CGTeamworkOriginPrefix =>
-            i instanceof CGTeamworkOriginPrefix
-        )
-        .filter(
-          (i) =>
-            i.database === this.formData.cgteamwork.database &&
-            i.prefix !== this.formData.cgteamwork.prefix
-        )
-        .map((i) => i.prefix)
-    );
-  }
-
-  showStats(): void {
-    show(CollectionStatsDrawerVue, {
-      props: {
-        defaultVariables: this.variables,
-      },
-    });
   }
 }
 </script>

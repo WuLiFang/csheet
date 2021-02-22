@@ -1,4 +1,4 @@
-// Code Generated from [base.ts.gotmpl], DO NOT EDIT.
+// Code Generated from [base.ts.gotmpl clientConfig.gotmpl], DO NOT EDIT.
 /* eslint-disable import/no-duplicates */
 import {
   clientConfig,
@@ -14,8 +14,17 @@ import {
 import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
 import { apolloClient } from '@/client';
 import { ref, Ref, watch, onUnmounted } from '@vue/composition-api';
+import { computed } from '@vue/composition-api';
 
 export { clientConfigVariables, clientConfig };
+export type Config = NonNullable<clientConfig['clientConfig']>;
+const defaultConfig: Config = {
+  __typename: 'ClientConfig',
+  sentryDSN: null,
+  issueTrackerURL: null,
+  enableCGTeamwork: false,
+  folderInclude: [],
+};
 
 export async function query(
   variables: clientConfigVariables,
@@ -53,6 +62,7 @@ export function useQuery(
   data: Ref<clientConfig | undefined>;
   query: Ref<ObservableQuery<clientConfig, clientConfigVariables> | undefined>;
   version: Ref<number>;
+  config: Ref<Config>;
 } {
   const data = ref<clientConfig | undefined>();
   const o = {
@@ -123,5 +133,6 @@ export function useQuery(
     data,
     query,
     version,
+    config: computed(() => data.value?.clientConfig ?? defaultConfig),
   };
 }

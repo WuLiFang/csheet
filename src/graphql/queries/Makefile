@@ -6,7 +6,7 @@ build:
 	gotmpl -o cgteamworkPipelines.ts base.ts.gotmpl array.gotmpl Item=CGTeamworkPipeline
 	gotmpl -o cgteamworkProjects.ts base.ts.gotmpl array.gotmpl Item=CGTeamworkProject
 	gotmpl -o cgteamworkStatuses.ts base.ts.gotmpl array.gotmpl Item=CGTeamworkStatus NoVariables=true
-	gotmpl -o clientConfig.ts base.ts.gotmpl
+	gotmpl -o clientConfig.ts base.ts.gotmpl clientConfig.gotmpl
 	gotmpl -o collectionCGTeamworkNotes.ts base.ts.gotmpl node.gotmpl Node=Collection
 	gotmpl -o collectionNode.ts base.ts.gotmpl node.gotmpl
 	gotmpl -o collectionTags.ts base.ts.gotmpl connection.gotmpl StringConnection.gotmpl
