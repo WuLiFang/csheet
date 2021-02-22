@@ -23,7 +23,7 @@ import { Presentation as Data } from '../graphql/types/Presentation';
           return;
         }
         this.isLoadFailed = false;
-      }, 1e3);
+      }, 2 ** this.retryCount * 1000);
     };
     const renderImage = () => {
       this.currentTime = 0;
@@ -92,13 +92,13 @@ import { Presentation as Data } from '../graphql/types/Presentation';
       () => this.currentTime,
       (v) => {
         this.$emit('timeUpdate', v);
-      },
+      }
     );
     this.$watch(
       () => this.currentFrame,
       (v) => {
         this.$emit('frameUpdate', v);
-      },
+      }
     );
   },
   setup: (props: Pick<Presentation, 'id'>) => {
@@ -117,7 +117,9 @@ import { Presentation as Data } from '../graphql/types/Presentation';
       lastFrame,
     } = usePresentationMetadata(node);
     const isLoadFailed = ref(false);
+    const retryCount = ref(0);
     watch(version, () => {
+      retryCount.value = 0;
       isLoadFailed.value = false;
     });
     return {
@@ -130,6 +132,7 @@ import { Presentation as Data } from '../graphql/types/Presentation';
       lastFrame,
       version,
       isLoadFailed,
+      retryCount,
     };
   },
 })
@@ -165,6 +168,7 @@ export default class Presentation extends Vue {
   height!: number;
   version!: number;
   isLoadFailed!: boolean;
+  retryCount!: number;
 
   paused = true;
   currentTime = 0;
