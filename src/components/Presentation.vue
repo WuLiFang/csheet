@@ -89,26 +89,16 @@ import { Presentation as Data } from '../graphql/types/Presentation';
   },
   mounted() {
     this.$watch(
-      () => this.id,
-      (v) => {
-        if (!v) {
-          this.node = undefined;
-        }
-      }
-    );
-    this.$watch(
       () => this.currentTime,
       (v) => {
         this.$emit('timeUpdate', v);
       },
-      { immediate: true }
     );
     this.$watch(
       () => this.currentFrame,
       (v) => {
         this.$emit('frameUpdate', v);
       },
-      { immediate: true }
     );
   },
   setup: (props: Pick<Presentation, 'id'>) => {
