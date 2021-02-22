@@ -103,6 +103,19 @@ export function useQuery(
     }
   }
 
+  onUnmounted(() => {
+    stop()
+  })
+  watch(
+    () => options?.value.skip, 
+    v => {
+      if (v) {
+        stop()
+      } else {
+        start()
+      }
+    }, { immediate: true }
+  );
 {{- if not .NoVariables }}
   watch(
     () => variables.value,
@@ -116,19 +129,6 @@ export function useQuery(
     n => {
       query.value?.setOptions({ ...n, ...o });
     }
-  );
-  onUnmounted(() => {
-    stop()
-  })
-  watch(
-    () => options?.value.skip, 
-    v => {
-      if (v) {
-        stop()
-      } else {
-        start()
-      }
-    }, { immediate: true }
   );
   return {
     data,

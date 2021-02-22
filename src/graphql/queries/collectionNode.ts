@@ -110,18 +110,7 @@ export function useQuery(
       cleanup.pop()?.();
     }
   };
-  watch(
-    () => variables.value,
-    (n) => {
-      query.value?.refetch(n);
-    }
-  );
-  watch(
-    () => options?.value,
-    (n) => {
-      query.value?.setOptions({ ...n, ...o });
-    }
-  );
+
   onUnmounted(() => {
     stop();
   });
@@ -135,6 +124,18 @@ export function useQuery(
       }
     },
     { immediate: true }
+  );
+  watch(
+    () => variables.value,
+    (n) => {
+      query.value?.refetch(n);
+    }
+  );
+  watch(
+    () => options?.value,
+    (n) => {
+      query.value?.setOptions({ ...n, ...o });
+    }
   );
   return {
     data,
