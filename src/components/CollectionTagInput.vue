@@ -102,7 +102,6 @@ export default defineComponent({
   props: {
     value: {
       type: [String, Array] as PropType<string | string[]>,
-      required: true,
     },
     multiple: {
       type: Boolean,
@@ -127,9 +126,10 @@ export default defineComponent({
   },
   setup: (props, ctx) => {
     const { multiple } = toRefs(props);
+    const defaultValue = computed(() => (multiple.value ? [] : ''));
     const value = computed({
       get() {
-        return props.value;
+        return props.value ?? defaultValue.value;
       },
       set(v: string | string[]) {
         ctx.emit('input', v);
@@ -175,7 +175,7 @@ export default defineComponent({
       if (!formData.value && recentTags.value.length > 0) {
         return recentTags.value;
       }
-      return nodes.value.filter(i => !values.value.includes(i));
+      return nodes.value.filter((i) => !values.value.includes(i));
     });
     const { selected: highlight, selectedIndex: highlightIndex } = useSelect(
       matched
@@ -216,7 +216,7 @@ export default defineComponent({
   },
   methods: {
     removeValue(v: string) {
-      this.values = this.values.filter(i => i !== v);
+      this.values = this.values.filter((i) => i !== v);
     },
     _handleDeleteButtonClick(value: string) {
       this.removeValue(value);

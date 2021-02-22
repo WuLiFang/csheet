@@ -19,7 +19,7 @@ import {
   PropType,
   ref,
   toRefs,
-  watchEffect,
+  watch,
 } from '@vue/composition-api';
 import * as d3 from 'd3';
 import { uniqueId } from 'lodash';
@@ -104,6 +104,7 @@ export default defineComponent({
 
     const color = d3.scaleOrdinal(d3.schemeTableau10);
     const draw = () => {
+      // TODO: add transition
       if (!svg.value) {
         return;
       }
@@ -200,10 +201,13 @@ export default defineComponent({
       const stop = addResizeListener(el.value, (e) => {
         width.value = e.contentRect.width;
       });
+      width.value = el.value.clientWidth
       onUnmounted(stop);
       draw();
     });
-    watchEffect(draw);
+    watch(data, () => {
+      draw();
+    });
 
     return {
       svg,

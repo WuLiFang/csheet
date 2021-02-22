@@ -44,17 +44,17 @@
 </template>
 
 <script lang="ts">
+import CollectionTagTreemap from '@/components/CollectionTagTreemap.vue';
 import queries from '@/graphql/queries';
 import { collectionStatsVariables } from '@/graphql/types/collectionStats';
 import {
   computed,
   defineComponent,
   PropType,
-  toRefs,
   ref,
+  toRefs,
 } from '@vue/composition-api';
 import { groupBy, sortBy } from 'lodash';
-import CollectionTagTreemap from '@/components/CollectionTagTreemap.vue';
 
 export default defineComponent({
   name: 'CollectionStats',
