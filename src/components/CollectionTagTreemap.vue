@@ -172,31 +172,23 @@ export default defineComponent({
         .attr('width', (d) => d.x1 - d.x0)
         .attr('height', (d) => d.y1 - d.y0);
 
-      leaf.select('text').each((d, index, nodes) => {
-        const text = nodes[index];
-        if (!(text instanceof SVGTextElement)) {
-          throw new Error(`CollectionTagTreemap: should be text element`);
+      leaf.select<SVGTextElement>('text').each(function (d) {
+        const name = this.querySelector<SVGTSpanElement>('tspan.name');
+        const value = this.querySelector<SVGTSpanElement>('tspan.value');
+        if (!(name && value)) {
+          throw new Error('CollctionTagTreemap: missing tspan element');
         }
-        const name = text.querySelector('tspan.name');
-        if (!(name instanceof SVGTSpanElement)) {
-          throw new Error(`CollectionTagTreemap: should be tspan element`);
-        }
-        const value = text.querySelector('tspan.value');
-        if (!(value instanceof SVGTSpanElement)) {
-          throw new Error(`CollectionTagTreemap: should be tspan element`);
-        }
-
         name.textContent = d.data.name;
         name.setAttribute('x', '4');
         name.setAttribute('y', '20');
+        const { x, width } = name.getBBox();
         value.textContent = (d.value ?? 0).toString();
-        const textLength = name.getComputedTextLength();
-        if (textLength < d.x1 - d.x0 - 40) {
-          value.setAttribute('x', `${textLength + 8}`);
+        if (x + width < d.x1 - d.x0 - 40) {
+          value.setAttribute('dx', '4');
           value.setAttribute('y', '20');
         } else {
           value.setAttribute('x', `4`);
-          value.setAttribute('y', `40`);
+          value.setAttribute('dy', `20`);
         }
       });
     };
