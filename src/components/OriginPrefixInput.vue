@@ -60,7 +60,6 @@
           v-model="formData.cgteamwork.prefix"
           class="form-input"
           :list="idPrefix + 'cgteamwork-prefix'"
-          @keydown.enter="$refs.form.submit()"
           @input="$event.target.setCustomValidity('')"
         />
       </label>
@@ -76,7 +75,6 @@
           class="form-input"
           required
           :list="idPrefix + 'folder-root'"
-          @keydown.enter="$refs.form.submit()"
         />
       </label>
     </template>
