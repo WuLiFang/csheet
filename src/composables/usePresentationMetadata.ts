@@ -58,6 +58,7 @@ export default function usePresentationMetadata(
             break;
           case 'frame-rate':
             frameRate.value = parseFrameRate(i.v);
+            extra.value[i.k] = i.v
             break;
           case 'first-frame':
             firstFrame.value = parseInt(i.v);

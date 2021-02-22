@@ -54,7 +54,7 @@
       <dt>{{ $t('presentation-metadata.pixel-format') }}</dt>
       <dd class="pl-4">{{ pixelFormat }}</dd>
     </template>
-    <template v-for="{ k, v } in extra">
+    <template v-for="(v, k) in extra">
       <dt :key="k + '-key'">
         {{
           $te(`presentation-metadata.${k}`)
