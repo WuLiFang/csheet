@@ -22,6 +22,7 @@ import { Presentation as Data } from '../graphql/types/Presentation';
         if (v !== this.version) {
           return;
         }
+        this.retryCount += 1;
         this.isLoadFailed = false;
       }, 2 ** this.retryCount * 1000);
     };
@@ -196,6 +197,9 @@ export default class Presentation extends Vue {
     }
     if (this.isLoadFailed) {
       return require('@/assets/img/load_failed.svg');
+    }
+    if (this.retryCount > 0){
+      return this.url + `?t=${Date.now()}`
     }
     return this.url || require('@/assets/img/transcoding.svg');
   }
