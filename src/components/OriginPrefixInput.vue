@@ -1,5 +1,5 @@
 <template>
-  <div class="inline-flex items-center">
+  <div class="inline-flex items-center justify-center flex-wrap">
     <span class="lg:mr-1">模式</span>
     <Radio
       v-model="formData.mode"
