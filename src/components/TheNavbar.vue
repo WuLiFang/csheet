@@ -165,7 +165,9 @@ function searchParamsSetAll(
           break;
         default: {
           const latest = db.recentOriginPrefix.get()[0];
-          formData.originPrefix = latest.toString();
+          if (latest) {
+            formData.originPrefix = latest.toString();
+          }
         }
       }
       if (q.get('skip_empty')) {
