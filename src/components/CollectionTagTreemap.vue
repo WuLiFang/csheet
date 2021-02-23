@@ -220,7 +220,7 @@ export default defineComponent({
             .transition()
             .textTween(function () {
               const tween = d3.interpolateNumber(
-                parseInt(value.textContent ?? '0') || 0,
+                parseInt((value.textContent ?? '0').split(' ').join('')) || 0,
                 d.value ?? 0
               );
 
