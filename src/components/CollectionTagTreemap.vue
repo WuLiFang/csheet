@@ -1,6 +1,6 @@
 <template>
   <div ref="el">
-    <svg ref="svg" :viewBox="`0 0 ${width} ${height}`" class="w-full"></svg>
+    <svg ref="svg" :viewBox="`0 0 ${width} ${height}`"></svg>
   </div>
 </template>
 
@@ -19,10 +19,10 @@ import {
   PropType,
   ref,
   toRefs,
-  watch,
+  watchEffect,
 } from '@vue/composition-api';
 import * as d3 from 'd3';
-import { uniqueId } from 'lodash';
+import { uniqueId, throttle } from 'lodash';
 import toDigitGrouped from 'to-digit-grouped';
 
 export default defineComponent({
@@ -51,6 +51,7 @@ export default defineComponent({
     const idPrefix = uniqueId('collection-tag-treemap-') + '-';
     interface treeNode {
       name: string;
+      key: string;
       data?: TagCount;
       children: Record<string, treeNode>;
     }
@@ -58,6 +59,7 @@ export default defineComponent({
       const tagCount = data.value?.collections.tagCount ?? [];
       const root: treeNode = {
         name: '总计',
+        key: '',
         children: {},
       };
       const addNode = (item: TagCount) => {
@@ -70,12 +72,17 @@ export default defineComponent({
         let parent = root;
         for (const p of path.slice(0, -1)) {
           if (!parent.children[p]) {
-            parent.children[p] = { name: p, children: {} };
+            parent.children[p] = {
+              name: p,
+              key: `${parent.key}:${p}`,
+              children: {},
+            };
           }
           parent = parent.children[p];
         }
         parent.children[name] = {
           name,
+          key: `${parent.key}:${name}`,
           data: item,
           children: {},
         };
@@ -104,7 +111,6 @@ export default defineComponent({
 
     const color = d3.scaleOrdinal(d3.schemeTableau10);
     const draw = () => {
-      // TODO: add transition
       if (!svg.value) {
         return;
       }
@@ -125,30 +131,53 @@ export default defineComponent({
 
       const leaf = d3
         .select(svg.value)
-        .selectAll('g')
-        .data(treemap(tree.value))
-        .join((enter) => {
-          const g = enter.append('g');
-          g.append('title');
-          g.append('rect');
-          g.append('clipPath')
-            .attr('id', clipId)
-            .append('use')
-            .attr('href', (d, index) => '#' + rectId(d, index));
-          const text = g
-            .append('text')
-            .attr('fill', 'white')
-            .attr('clip-path', (d, index) => `url(#${clipId(d, index)})`);
-          text.append('tspan').attr('class', 'name');
-          text
-            .append('tspan')
-            .attr('class', 'value')
-            .attr('fill-opacity', '0.75');
+        .selectAll<SVGGElement, undefined>('g')
+        .data<d3.HierarchyRectangularNode<treeNode>>(
+          treemap(tree.value),
+          (d, index) => {
+            return d?.data.key ?? index;
+          }
+        )
+        .join(
+          (enter) => {
+            const g = enter
+              .append('g')
+              .attr('opacity', '0')
+              .attr('transform', (d) => `translate(${d.x0},${d.y0}),scale(0)`);
+            g.append('title');
+            g.append('rect');
+            g.append('clipPath').append('use');
+            const text = g.append('text').attr('fill', 'white');
 
-          return g;
-        })
+            text.append('tspan').attr('class', 'name');
+            text
+              .append('tspan')
+              .attr('class', 'value')
+              .attr('fill-opacity', '0.75');
+
+            return g;
+          },
+          undefined,
+          (exit) => {
+            exit
+              .style('opacity', '1')
+              .transition()
+              .style('opacity', '0')
+              .attr('transform', (d) => `translate(${d.x1},${d.y1}),scale(0)`)
+              .remove();
+          }
+        );
+
+      leaf
+        .transition()
+        .attr('opacity', '1')
         .attr('transform', (d) => `translate(${d.x0},${d.y0})`);
 
+      leaf
+        .select('clipPath')
+        .attr('id', clipId)
+        .select('use')
+        .attr('href', (d, index) => '#' + rectId(d, index));
       leaf.select('title').text(
         (d) =>
           `${
@@ -170,44 +199,49 @@ export default defineComponent({
           return color(d.data.name);
         })
         .attr('fill-opacity', '0.5')
+        .transition()
         .attr('width', (d) => d.x1 - d.x0)
         .attr('height', (d) => d.y1 - d.y0);
 
-      leaf.select<SVGTextElement>('text').each(function (d) {
-        const name = this.querySelector<SVGTSpanElement>('tspan.name');
-        const value = this.querySelector<SVGTSpanElement>('tspan.value');
-        if (!(name && value)) {
-          throw new Error('CollctionTagTreemap: missing tspan element');
-        }
-        name.textContent = d.data.name;
-        name.setAttribute('x', '4');
-        name.setAttribute('y', '20');
-        const { x, width } = name.getBBox();
-        value.textContent = (d.value ?? 0).toString();
-        if (x + width < d.x1 - d.x0 - 40) {
-          value.setAttribute('dx', '4');
-          value.setAttribute('y', '20');
-        } else {
-          value.setAttribute('x', `4`);
-          value.setAttribute('dy', `20`);
-        }
-      });
+      leaf
+        .select<SVGTextElement>('text')
+        .attr('clip-path', (d, index) => `url(#${clipId(d, index)})`)
+        .each(function (d) {
+          const name = this.querySelector<SVGTSpanElement>('tspan.name');
+          const value = this.querySelector<SVGTSpanElement>('tspan.value');
+          if (!(name && value)) {
+            throw new Error('CollctionTagTreemap: missing tspan element');
+          }
+          name.textContent = d.data.name;
+          name.setAttribute('x', '4');
+          name.setAttribute('y', '20');
+          const { x, width } = name.getBBox();
+          value.textContent = (d.value ?? 0).toString();
+          if (d.height > 0 || x + width < d.x1 - d.x0 - 40) {
+            value.setAttribute('dx', '4');
+            value.setAttribute('y', '20');
+          } else {
+            value.setAttribute('x', `4`);
+            value.setAttribute('dy', `20`);
+          }
+        });
     };
 
     onMounted(() => {
       if (!el.value) {
         throw new Error(`CollectionTagTreemap: missing element`);
       }
-      const stop = addResizeListener(el.value, (e) => {
-        width.value = e.contentRect.width;
-      });
-      width.value = el.value.clientWidth
+      const stop = addResizeListener(
+        el.value,
+        throttle((e) => {
+          width.value = e.contentRect.width - 40;
+        }, 100)
+      );
+      width.value = el.value.clientWidth;
       onUnmounted(stop);
       draw();
     });
-    watch(data, () => {
-      draw();
-    });
+    watchEffect(draw);
 
     return {
       svg,
@@ -215,6 +249,7 @@ export default defineComponent({
       width,
       height,
       el,
+      tree,
     };
   },
 });
