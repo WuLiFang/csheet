@@ -216,7 +216,8 @@ export default defineComponent({
           name.setAttribute('x', '4');
           name.setAttribute('y', '20');
           const { x, width } = name.getBBox();
-          d3.select(value)
+          const $value = d3
+            .select(value)
             .transition()
             .textTween(function () {
               const tween = d3.interpolateNumber(
@@ -229,11 +230,15 @@ export default defineComponent({
               };
             });
           if (d.height > 0 || x + width < d.x1 - d.x0 - 40) {
-            value.setAttribute('dx', '4');
-            value.setAttribute('y', '20');
+            $value.attr('x', null);
+            $value.attr('y', '20');
+            $value.attr('dx', '4');
+            $value.attr('dy', null);
           } else {
-            value.setAttribute('x', `4`);
-            value.setAttribute('dy', `20`);
+            $value.attr('x', `4`);
+            $value.attr('y', null);
+            $value.attr('dx', null);
+            $value.attr('dy', `20`);
           }
         });
     };
