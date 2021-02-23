@@ -216,7 +216,18 @@ export default defineComponent({
           name.setAttribute('x', '4');
           name.setAttribute('y', '20');
           const { x, width } = name.getBBox();
-          value.textContent = (d.value ?? 0).toString();
+          d3.select(value)
+            .transition()
+            .textTween(function () {
+              const tween = d3.interpolateNumber(
+                parseInt(value.textContent ?? '0') || 0,
+                d.value ?? 0
+              );
+
+              return (t) => {
+                return toDigitGrouped(tween(t).toFixed());
+              };
+            });
           if (d.height > 0 || x + width < d.x1 - d.x0 - 40) {
             value.setAttribute('dx', '4');
             value.setAttribute('y', '20');
