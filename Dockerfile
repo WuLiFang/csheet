@@ -58,7 +58,7 @@ RUN set -ex \
 # Not use ffmpeg package from apk repo because we need webp support
 FROM jrottenberg/ffmpeg:4.3-alpine312 AS ffmpeg
 
-FROM alpine:3.12 as release
+FROM alpine:3.13 as release
 
 # Example: mirrors.tuna.tsinghua.edu.cn
 ARG ALPINE_MIRROR
