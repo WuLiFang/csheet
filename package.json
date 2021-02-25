@@ -72,7 +72,7 @@
     "moment-locales-webpack-plugin": "^1.2.0",
     "pug": "2.0.4",
     "pug-plain-loader": "1.0.0",
-    "sass": "1.26.5",
+    "sass": "1.32.8",
     "sass-loader": "8.0.2",
     "tailwindcss": "1.8.4",
     "ts-node": "^9.1.0",
