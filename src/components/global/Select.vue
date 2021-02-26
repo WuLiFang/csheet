@@ -113,19 +113,19 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Mixins } from 'vue-property-decorator';
+import defaults from '@/components/global/defaults';
 import getVModelMixin from '@/mixins/VModelMixinV2';
-import 'vue-awesome/icons/spinner';
-import 'vue-awesome/icons/check';
-import 'vue-awesome/icons/times';
-import 'vue-awesome/icons/times-circle';
-import cast from 'cast-unknown';
-import { uniqBy } from 'lodash';
+import containsDeepChildNode from '@/utils/containsDeepChildNode';
 import equalSet from '@/utils/equalSet';
 import toHotKey from '@/utils/toHotKey';
-import containsDeepChildNode from '@/utils/containsDeepChildNode';
+import cast from 'cast-unknown';
+import { uniqBy } from 'lodash';
+import 'vue-awesome/icons/check';
+import 'vue-awesome/icons/spinner';
+import 'vue-awesome/icons/times';
+import 'vue-awesome/icons/times-circle';
+import { Component, Mixins, Prop } from 'vue-property-decorator';
 import { Entry, Option, optionEntries } from './entry';
-import defaults from '@/components/global/defaults';
 
 @Component<Select>({
   data() {
@@ -172,12 +172,8 @@ import defaults from '@/components/global/defaults';
   mounted() {
     this.$watch(
       () => this.value,
-      (n, o) => {
+      () => {
         this.validateRequired();
-        if (o) {
-          this.$emit('change');
-        }
-
         this.updateSelectedKeys();
       },
       { immediate: true }
@@ -196,8 +192,10 @@ import defaults from '@/components/global/defaults';
     );
     this.$watch(
       () => this.selectedKeys,
-      v => {
-        this.values = this.entries.filter(i => v.has(i.key)).map(i => i.value);
+      (n) => {
+        this.values = this.entries
+          .filter((i) => n.has(i.key))
+          .map((i) => i.value);
       }
     );
   },
@@ -257,7 +255,7 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
 
   get values(): unknown[] {
     return (this.multiple ? cast.array(this.value) : [this.value]).filter(
-      i => i !== '' && i != null
+      (i) => i !== '' && i != null
     );
   }
 
@@ -275,7 +273,7 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
   get valueEntries(): Entry<unknown>[] {
     return this.values.map(
       (i, index) =>
-        this.optionEntries.find(o => o.value === i) ?? {
+        this.optionEntries.find((o) => o.value === i) ?? {
           key: `${this.inputKeyPrefix}${index}`,
           value: i,
         }
@@ -283,11 +281,11 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
   }
 
   get entries(): Entry<unknown>[] {
-    return uniqBy([...this.optionEntries, ...this.valueEntries], i => i.key);
+    return uniqBy([...this.optionEntries, ...this.valueEntries], (i) => i.key);
   }
 
   get selected(): Entry<unknown>[] {
-    return this.entries.filter(i => this.selectedKeys.has(i.key));
+    return this.entries.filter((i) => this.selectedKeys.has(i.key));
   }
 
   get clearButtonVisible(): boolean {
@@ -300,7 +298,7 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
 
   scrollToHighlight(): void {
     this.$refs.option
-      ?.find(i => i.dataset.key === this.highlight)
+      ?.find((i) => i.dataset.key === this.highlight)
       ?.scrollIntoView({
         block: 'nearest',
       });
@@ -310,7 +308,7 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
     if (!this.optionEntries) {
       return;
     }
-    let index = this.optionEntries.findIndex(i => i.key === this.highlight);
+    let index = this.optionEntries.findIndex((i) => i.key === this.highlight);
     index += offset;
     if (index < 0) {
       index = 0;
@@ -373,24 +371,26 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
     this.$refs.transparentInput?.setCustomValidity(v);
   }
 
-  toggle(key: string, force?: boolean): void {
+  toggle(
+    key: string,
+    force?: boolean,
+    onchange?: (newKeys: Set<string>, oldKeys: Set<string>) => void
+  ): void {
     const selected = this.selectedKeys.has(key);
     const wanted = force ?? !selected;
     if (wanted === selected) {
       return;
     }
 
-    if (!this.multiple) {
-      this.selectedKeys.clear();
-    }
+    const keys = new Set(this.multiple ? this.selectedKeys : undefined);
     if (wanted === true) {
-      this.selectedKeys.add(key);
+      keys.add(key);
     } else if (wanted === false) {
-      this.selectedKeys.delete(key);
+      keys.delete(key);
     }
-    // reactive set is not supportted until vue 3.
-    // so we trigger update manually.
-    this.selectedKeys = new Set(this.selectedKeys);
+    const oldKeys = this.selectedKeys;
+    this.selectedKeys = keys;
+    onchange?.(keys, oldKeys);
   }
 
   clear(): void {
@@ -410,11 +410,14 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
     if (v.disabled) {
       return;
     }
+    const onchange = () => {
+      this.$emit('change');
+    };
     if (this.multiple) {
-      this.toggle(v.key);
+      this.toggle(v.key, false, onchange);
       this.focus();
     } else {
-      this.toggle(v.key, true);
+      this.toggle(v.key, true, onchange);
     }
   }
 
@@ -446,7 +449,7 @@ export default class Select extends Mixins(getVModelMixin<unknown>()) {
   }
 
   protected updateSelectedKeys(): void {
-    const keys = new Set(this.valueEntries.map(i => i.key));
+    const keys = new Set(this.valueEntries.map((i) => i.key));
     if (!equalSet(this.selectedKeys, keys)) {
       this.selectedKeys = keys;
     }
