@@ -5,7 +5,7 @@ go 1.14
 require (
 	github.com/99designs/gqlgen v0.13.0
 	github.com/NateScarlet/snapshot v0.4.0
-	github.com/NateScarlet/zap-sentry v0.1.0
+	github.com/NateScarlet/zap-sentry v0.1.1
 	github.com/dgraph-io/badger/v2 v2.0.3
 	github.com/getsentry/sentry-go v0.8.0
 	github.com/gin-gonic/gin v1.6.3
