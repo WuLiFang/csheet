@@ -114,7 +114,6 @@
 
 <script lang="ts">
 import defaults from '@/components/global/defaults';
-import getVModelMixin from '@/mixins/VModelMixinV2';
 import containsDeepChildNode from '@/utils/containsDeepChildNode';
 import equalSet from '@/utils/equalSet';
 import toHotKey from '@/utils/toHotKey';
@@ -124,7 +123,7 @@ import 'vue-awesome/icons/check';
 import 'vue-awesome/icons/spinner';
 import 'vue-awesome/icons/times';
 import 'vue-awesome/icons/times-circle';
-import { Component, Mixins, Prop } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Entry, Option, optionEntries } from './entry';
 
 @Component<Select>({
@@ -200,7 +199,10 @@ import { Entry, Option, optionEntries } from './entry';
     );
   },
 })
-export default class Select extends Mixins(getVModelMixin<unknown>()) {
+export default class Select extends Vue {
+  @Prop()
+  value!: unknown
+
   @Prop({ type: Boolean, default: false })
   required!: boolean;
 
