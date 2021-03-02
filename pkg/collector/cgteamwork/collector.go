@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"mime"
 	"path"
-	"strconv"
 	"strings"
 	"time"
 
@@ -68,6 +67,7 @@ func collectionFromTask(
 	o Options,
 	status map[string]string,
 	checkboxData map[string]string,
+	taskIds map[string]struct{},
 ) (created bool, err error) {
 	var logger = logging.For(ctx).Logger("collector.cgteamwork").Sugar()
 
@@ -127,24 +127,32 @@ func collectionFromTask(
 			ret.Tags = append(ret.Tags, "cgteamwork:"+k)
 		}
 	}
-	taskData := ret.Metadata["cgteamwork.tasks"]
-	if taskData == "" || !gjson.Valid(taskData) {
-		taskData = "[]"
+
+	taskData := "[]"
+	gjson.Parse(ret.Metadata["cgteamwork.tasks"]).ForEach(func(k, v gjson.Result) bool {
+		var id = v.Get("id").String()
+		if id == task.ID {
+			return true
+		}
+		if _, ok := taskIds[id]; !ok {
+			// task is deleted on cgteamwork
+			return true
+		}
+		taskData, err = sjson.SetRaw(taskData, "-1", v.Raw)
+		if err != nil {
+			return false
+		}
+		return true
+	})
+	if err != nil {
+		return
 	}
 	artists := make([]string, 0, len(task.Artists))
 	for _, i := range task.Artists {
 		artists = append(artists, i.DisplayName)
 		ret.Tags = append(ret.Tags, "artist:"+i.DisplayName)
 	}
-	var taskDataIndex = 0
-	gjson.Parse(taskData).ForEach(func(k, v gjson.Result) bool {
-		if v.Get("id").String() == task.ID {
-			return false
-		}
-		taskDataIndex++
-		return true
-	})
-	taskData, err = sjson.Set(taskData, strconv.Itoa(taskDataIndex), map[string]interface{}{
+	taskData, err = sjson.Set(taskData, "-1", map[string]interface{}{
 		"id":       task.ID,
 		"pipeline": task.Pipeline.Name,
 		"artists":  artists,
@@ -312,6 +320,7 @@ func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error)
 	tasks := make([]client.Task, rs.Count())
 	statuses := make([]map[string]string, len(tasks))
 	checkboxData := make([]map[string]string, len(tasks))
+	taskIds := make(map[string]struct{})
 	err = rs.ForEach(func(index int, data map[string]string) error {
 		err = tasks[index].UnmarshalCGTeamworkRecord(data)
 		if err != nil {
@@ -331,6 +340,7 @@ func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error)
 		}
 		statuses[index] = status
 		checkboxData[index] = checkboxDataItem
+		taskIds[tasks[index].ID] = struct{}{}
 		return nil
 	})
 	if err != nil {
@@ -340,7 +350,7 @@ func Collect(ctx context.Context, o Options) (ret base.CollectResult, err error)
 	colM := map[string]collection.Collection{}
 	for index, v := range tasks {
 		var created bool
-		created, err = collectionFromTask(ctx, colM, v, o, statuses[index], checkboxData[index])
+		created, err = collectionFromTask(ctx, colM, v, o, statuses[index], checkboxData[index], taskIds)
 		if err != nil {
 			return
 		}
