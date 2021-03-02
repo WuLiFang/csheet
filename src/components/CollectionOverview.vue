@@ -99,6 +99,7 @@ import CollectionViewer from './CollectionViewer.vue';
         },
         updateQuery(prev: collections, o) {
           const nodes = prev.collections.nodes ?? [];
+          prev.collections.nodes = nodes
           const {
             collectionUpdated,
           }: collectionUpdated = o.subscriptionData.data;
