@@ -4,7 +4,7 @@
     v-bind="$attrs"
     v-on="$listeners"
     class="w-48"
-    v-model="$_value"
+    :value="value"
     :options="options"
     required-message="请选择项目"
     :loading="loadingCount > 0"
@@ -46,13 +46,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator';
-import getVModelMixin from '../../mixins/VModelMixinV2';
-import { orderBy } from 'lodash';
+import CGTeamworkStatusWidget from '@/components/cgteamwork/CGTeamworkStatusWidget.vue';
 import Select from '@/components/global/Select.vue';
 import queries from '@/graphql/queries';
 import { CGTeamworkProject } from '@/graphql/queries/cgteamworkProjects';
-import CGTeamworkStatusWidget from '@/components/cgteamwork/CGTeamworkStatusWidget.vue';
+import { orderBy } from 'lodash';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
 
@@ -74,17 +73,17 @@ const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
     selectedProjects: queries.vue.cgteamworkProjects<CGTeamworkProjectSelect>({
       variables() {
         return {
-          database: [this.$_value],
+          database: [this.value],
         };
       },
       skip(): boolean {
-        return !this.$_value;
+        return !this.value;
       },
     }),
   },
   mounted() {
     this.$watch(
-      () => this.getProject(this.$_value),
+      () => this.getProject(this.value),
       v => {
         this.$emit('update:project', v);
       },
@@ -92,9 +91,10 @@ const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
     );
   },
 })
-export default class CGTeamworkProjectSelect extends Mixins(
-  getVModelMixin<string>()
-) {
+export default class CGTeamworkProjectSelect extends Vue {
+  @Prop()
+  value!: string
+
   $el!: HTMLDivElement;
 
   $refs!: {

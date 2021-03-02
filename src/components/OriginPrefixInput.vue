@@ -125,8 +125,9 @@ export default defineComponent({
         prefix: '',
       },
     });
-    const loadValue = () => {
-      const p = client.OriginPrefix.parse(props.value);
+
+    const loadValue = (v: string) => {
+      const p = client.OriginPrefix.parse(v);
       if (p instanceof client.FolderOriginPrefix) {
         formData.mode = 'folder';
         formData.folder.root = p.root;
@@ -137,7 +138,13 @@ export default defineComponent({
         formData.cgteamwork.prefix = p.prefix;
       }
     };
-    loadValue();
+    watch(
+      () => props.value,
+      (n) => {
+        loadValue(n);
+      },
+      { immediate: true }
+    );
 
     const recentFolderRoot = computed(() => {
       return uniq([
