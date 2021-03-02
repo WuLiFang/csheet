@@ -95,7 +95,7 @@ import {
   ref,
   watch,
 } from '@vue/composition-api';
-import { uniq, uniqueId } from 'lodash';
+import { uniq, uniqueId, debounce } from 'lodash';
 
 export default defineComponent({
   name: 'OriginPrefixInput',
@@ -208,11 +208,14 @@ export default defineComponent({
       }
       return ret;
     });
-    watch(originPrefix, (n) => {
-      if (props.value !== n) {
-        ctx.emit('input', n);
-      }
-    });
+    watch(
+      originPrefix,
+      debounce((n: string) => {
+        if (props.value !== n) {
+          ctx.emit('input', n);
+        }
+      })
+    );
 
     const idPrefix = uniqueId('origin-prefix-input-') + '-';
 
