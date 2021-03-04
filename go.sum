@@ -28,6 +28,7 @@ github.com/Joker/hpp v1.0.0/go.mod h1:8x5n+M1Hp5hC0g8okX3sR3vFQwynaX/UgSOM9MeBKz
 github.com/Joker/jade v1.0.1-0.20190614124447-d475f43051e7/go.mod h1:6E6s8o2AE4KhCrqr6GRJjdC/gNfTdxkIXvuGZZda2VM=
 github.com/NateScarlet/snapshot v0.4.0 h1:eiRYEls/Re9diVX6gISnjm3XJzfX8AGgA8ccsVPHMJQ=
 github.com/NateScarlet/snapshot v0.4.0/go.mod h1:7zQLD0EQgpUFUcioDVHTDnOXL4i9WmapyN73bHNV0nw=
+github.com/NateScarlet/snapshot v0.5.2/go.mod h1:7zQLD0EQgpUFUcioDVHTDnOXL4i9WmapyN73bHNV0nw=
 github.com/NateScarlet/zap-sentry v0.1.1 h1:1yuyIT+e7IsuFoNESlL4NmcFQbIhOm1pHuKnc1YcX64=
 github.com/NateScarlet/zap-sentry v0.1.1/go.mod h1:7aMYYLgbKg5+COswMZG1YnKGtawCmgaHSdmT+Dc1uoA=
 github.com/OneOfOne/xxhash v1.2.2 h1:KMrpdQIwFcEqXDklaen+P1axHaj9BSKzvpUUfnHldSE=
