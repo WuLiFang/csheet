@@ -68,7 +68,8 @@
             'bg-blue-500': i === highlight,
           }"
           @click.prevent="_handleOptionClick(i)"
-          @mouseenter="highlight = i"
+          @pointerdown.prevent
+          @pointerenter="highlight = i"
         >
           {{ i }}
         </li>
@@ -87,7 +88,6 @@ import containsDeepChildNode from '@/utils/containsDeepChildNode';
 import {
   computed,
   defineComponent,
-  nextTick,
   PropType,
   reactive,
   ref,
@@ -182,9 +182,7 @@ export default defineComponent({
     );
     const { hasFocus, blur, focus } = useDelayedBlur({
       onDelayedFocus: () => {
-        nextTick(() => {
-          input.value?.focus();
-        });
+        input.value?.focus();
         ctx.emit('focus');
       },
       onDelayedBlur: () => {

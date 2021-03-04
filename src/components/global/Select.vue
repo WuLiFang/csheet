@@ -1,5 +1,8 @@
 <template lang="pug">
-  Dropdown.select(:visible="dropdownVisible" :dropdown-class="dropdownClass")
+  Dropdown.select(
+    :visible="dropdownVisible"
+    :dropdown-class="dropdownClass"
+  )
     output.inline-block(
       ref="output"
       :tabindex="dropdownVisible || disabled ? undefined : 0"
@@ -73,7 +76,8 @@
               [highlightClass]: highlight == i.key,
               [disabledClass]: i.disabled,
             }`
-            @mouseenter="highlight = i.key"
+            @pointerenter="highlight = i.key"
+            @pointerdown.prevent
             @click.prevent="handleOptionClick(i)"
           )
             slot(
@@ -201,7 +205,7 @@ import { Entry, Option, optionEntries } from './entry';
 })
 export default class Select extends Vue {
   @Prop()
-  value!: unknown
+  value!: unknown;
 
   @Prop({ type: Boolean, default: false })
   required!: boolean;
@@ -351,22 +355,15 @@ export default class Select extends Vue {
     if (!this.hasFocus) {
       return;
     }
+    if (
+      document.activeElement instanceof HTMLElement &&
+      containsDeepChildNode(this.$el, document.activeElement)
+    ) {
+      document.activeElement.blur();
+    }
     this.hasFocus = false;
-
-    // handle swtich focus between children.
-    setTimeout(() => {
-      if (this.hasFocus) {
-        return;
-      }
-      if (
-        document.activeElement instanceof HTMLElement &&
-        containsDeepChildNode(this.$el, document.activeElement)
-      ) {
-        document.activeElement.blur();
-      }
-      this.dropdownVisible = false;
-      this.$emit('blur');
-    }, 100);
+    this.dropdownVisible = false;
+    this.$emit('blur');
   }
 
   setCustomValidity(v: string): void {
@@ -417,9 +414,9 @@ export default class Select extends Vue {
     };
     if (this.multiple) {
       this.toggle(v.key, false, onchange);
-      this.focus();
     } else {
       this.toggle(v.key, true, onchange);
+      this.blur();
     }
   }
 
