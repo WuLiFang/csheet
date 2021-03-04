@@ -177,10 +177,13 @@ export default defineComponent({
       }))
     );
     const matched = computed(() => {
-      if (!formData.value && recentTags.value.length > 0) {
-        return recentTags.value;
-      }
-      return nodes.value.filter((i) => !values.value.includes(i));
+      const options = (() => {
+        if (!formData.value && recentTags.value.length > 0) {
+          return recentTags.value;
+        }
+        return nodes.value;
+      })();
+      return options.filter((i) => !values.value.includes(i));
     });
     const { selected: highlight, selectedIndex: highlightIndex } = useSelect(
       matched
