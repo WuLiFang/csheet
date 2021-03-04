@@ -1,4 +1,10 @@
 {
-  "extends": ["config:js-app", ":automergeMinor", ":pinSkipCi"],
-  "packageRules": [{ "packageNames": ["flask-socketio"], "automerge": false }]
+  "extends": [
+    "config:js-app",
+    ":automergeMinor",
+    ":pinSkipCi"
+  ],
+  "ignoreDeps": [
+    "dgraph-io/badger/v2"
+  ]
 }
