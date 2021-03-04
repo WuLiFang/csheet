@@ -6,6 +6,7 @@
     input-class="text-sm"
     v-bind="$attrs"
     type="text"
+    allow-create
     @input="submit()"
   />
 </template>

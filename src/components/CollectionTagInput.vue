@@ -124,6 +124,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    allowCreate: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup: (props, ctx) => {
     const { multiple } = toRefs(props);
@@ -230,7 +234,7 @@ export default defineComponent({
     _handleInputEnter() {
       if (this.highlight) {
         this.addValue(this.highlight);
-      } else if (this.formData.value) {
+      } else if (this.formData.value && this.allowCreate) {
         this.addValue(this.formData.value);
         this.formData.value = '';
       } else if (!this.multiple) {
