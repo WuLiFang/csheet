@@ -79,7 +79,7 @@
 </template>
 
 <script lang="ts">
-import useDelayedBlur from '@/composables/useDelayedBlur';
+import useDebounced from '@/composables/useDebounced';
 import useNormalizedValues from '@/composables/useNormalizedValues';
 import useSelect from '@/composables/useSelect';
 import useStorage from '@/composables/useStorage';
@@ -92,6 +92,7 @@ import {
   reactive,
   ref,
   toRefs,
+  watch,
 } from '@vue/composition-api';
 import { escapeRegExp, uniq } from 'lodash';
 import 'vue-awesome/icons/times';
@@ -180,12 +181,12 @@ export default defineComponent({
     const { selected: highlight, selectedIndex: highlightIndex } = useSelect(
       matched
     );
-    const { hasFocus, blur, focus } = useDelayedBlur({
-      onDelayedFocus: () => {
+    const hasFocus = ref(false);
+    watch(hasFocus, (v) => {
+      if (v) {
         input.value?.focus();
         ctx.emit('focus');
-      },
-      onDelayedBlur: () => {
+      } else {
         if (
           output.value &&
           document.activeElement instanceof HTMLElement &&
@@ -195,9 +196,15 @@ export default defineComponent({
         }
         formData.value = '';
         ctx.emit('blur');
-      },
+      }
     });
-
+    const debouncedHasFocus = useDebounced(hasFocus);
+    const focus = () => {
+      debouncedHasFocus.value = true;
+    };
+    const blur = () => {
+      debouncedHasFocus.value = false;
+    };
     return {
       matched,
       input,
