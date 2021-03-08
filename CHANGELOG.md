@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.2.0](https://github.com/WuLiFang/csheet/compare/v6.1.0...v6.2.0) (2021-03-08)
+
+
+### Features
+
+* hide selected option in collection tag input ([ba2f783](https://github.com/WuLiFang/csheet/commit/ba2f783bac22cf76d269ecdbb033aa6244609a99))
+* not allow create tag in collection filter ([049a558](https://github.com/WuLiFang/csheet/commit/049a558f178b920f588a063f845ded08d69c563e))
+
+
+### Bug Fixes
+
+* long click in dropdown not work ([7a4b913](https://github.com/WuLiFang/csheet/commit/7a4b913c086021f97f981e5996a6e99cd988432a))
+
 ## [6.1.0](https://github.com/WuLiFang/csheet/compare/v6.0.0...v6.1.0) (2021-03-02)
 
 
