@@ -34,6 +34,10 @@ CSHEET_WATCH_WORKERS
 
   文件监控并发数量，默认为 8。
 
+CSHEET_COLLECT_IGNORE
+
+  收集文件路径正则表达式忽略规则，多个值用换行符分割。
+
 CSHEET_CGTEAMWORK_MAX_TASK_PER_COLLECT
 
   每次从 CGTeamwork 收集时的最大任务数量。默认：1000。

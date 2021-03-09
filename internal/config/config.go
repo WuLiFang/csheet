@@ -24,6 +24,7 @@ var (
 	WatchRate                   = getenv.Int("CSHEET_WATCH_RATE", 50)
 	FileLife                    = getenv.Duration("CSHEET_FILE_LIFE", 240*time.Hour)
 	TempLife                    = getenv.Duration("CSHEET_TEMP_LIFE", time.Hour)
+	CollectIgnore               = getenv.String("CSHEET_COLLECT_IGNORE", "")
 	FolderInclude               = getenv.String("CSHEET_FOLDER_INCLUDE", "*")
 	FolderExclude               = getenv.String("CSHEET_FOLDER_EXCLUDE", "")
 	CGTeamworkMaxTaskPerCollect = getenv.Int("CSHEET_CGTEAMWORK_MAX_TASK_PER_COLLECT", 1000)

@@ -2,8 +2,11 @@ package config
 
 import (
 	"os"
+	"regexp"
+	"strings"
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
+	collector "github.com/WuLiFang/csheet/v6/pkg/collector/base"
 	"github.com/WuLiFang/csheet/v6/pkg/collector/cgteamwork"
 	"github.com/WuLiFang/csheet/v6/pkg/collector/folder"
 	"github.com/WuLiFang/csheet/v6/pkg/filestore"
@@ -57,4 +60,16 @@ func Load() {
 	transcode.ImageRegularWeight = TranscodeImageRegularWeight
 	transcode.VideoRegularWeight = TranscodeVideoRegularWeight
 	transcode.DisableWebP = DisableWebP
+
+	collector.IgnoreRegex = nil
+	for _, i := range strings.Split(CollectIgnore, "\n") {
+		if i == "" {
+			return
+		}
+		p, err := regexp.Compile(i)
+		if err != nil {
+			logger.Error("invalid CSHEET_COLLECT_IGNORE regex", zap.Error(err))
+		}
+		collector.IgnoreRegex = append(collector.IgnoreRegex, *p)
+	}
 }

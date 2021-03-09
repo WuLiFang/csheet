@@ -170,27 +170,16 @@ func collectionFromTask(
 	for _, i := range ret.PresentationIDs {
 		presentationIDSet[i] = struct{}{}
 	}
-	if task.ImageFile != "" {
-		logger.Debugw("collect task image file", "task", task.Shot, "path", task.ImageFile)
-		p, err := presentation.Put(
-			ctx,
-			presentation.TypeImage,
-			unipath.Auto(task.ImageFile),
-		)
-
-		if err == nil {
-			presentationIDSet[p.ID()] = struct{}{}
-			ret.Tags = append(ret.Tags, "type:"+string(presentation.TypeImage))
-		} else {
-			logger.Errorw("put presentation failed", "error", err)
+	var put = func(i string) {
+		i = unipath.Auto(i)
+		if base.ShouldIgnore(i) {
+			logger.Desugar().Debug("ignore", zap.String("path", i))
+			return
 		}
-	}
-	for _, i := range task.SubmitFile {
-		logger.Debugw("collect task submit file", "task", task.Shot, "path", i)
 		mt := mime.TypeByExtension(path.Ext(i))
 		t, err := presentation.TypeByMimeType(mt)
 		if err == nil {
-			p, err := presentation.Put(ctx, t, unipath.Auto(i))
+			p, err := presentation.Put(ctx, t, i)
 			if err == nil {
 				presentationIDSet[p.ID()] = struct{}{}
 				ret.Tags = append(ret.Tags, "type:"+string(t))
@@ -198,6 +187,14 @@ func collectionFromTask(
 				logger.Errorw("put presentation failed", "error", err)
 			}
 		}
+	}
+	if task.ImageFile != "" {
+		logger.Debugw("collect task image file", "task", task.Shot, "path", task.ImageFile)
+		put(task.ImageFile)
+	}
+	for _, i := range task.SubmitFile {
+		logger.Debugw("collect task submit file", "task", task.Shot, "path", i)
+		put(i)
 	}
 	ret.PresentationIDs = make([]string, 0, len(presentationIDSet))
 	for i := range presentationIDSet {

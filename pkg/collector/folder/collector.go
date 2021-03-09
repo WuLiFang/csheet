@@ -9,12 +9,14 @@ import (
 	"strings"
 	"time"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/collector/base"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/filestore"
 	"github.com/WuLiFang/csheet/v6/pkg/models/collection"
 	"github.com/WuLiFang/csheet/v6/pkg/models/presentation"
 	"github.com/WuLiFang/csheet/v6/pkg/unipath"
+	"go.uber.org/zap"
 )
 
 func validRoot(p string) error {
@@ -47,6 +49,10 @@ func Collect(ctx context.Context, root string) (ret base.CollectResult, err erro
 			return nil
 		}
 
+		if base.ShouldIgnore(i) {
+			logging.For(ctx).Logger("collector.folder").Debug("ignore", zap.String("path", i))
+			return nil
+		}
 		ext := filepath.Ext(i)
 		mt := mime.TypeByExtension(ext)
 		t, err := presentation.TypeByMimeType(mt)
