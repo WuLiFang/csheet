@@ -35,8 +35,9 @@
             
   <div class="section" id="id1">
 <h1>收藏<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
-<img alt="../../_images/93eb4c6532d4d7116f76411100c1264dbb71a88cf115c03903cf877110b32f18.svg" class="align-center" src="../../_images/93eb4c6532d4d7116f76411100c1264dbb71a88cf115c03903cf877110b32f18.svg" /><p>收藏是通过不同渠道获取到的色板单元。</p>
+<img alt="../../_images/1890eef59b5f72f9ca10c953f7f434cf48c9e623e2a39c6406c122422d71e677.svg" class="align-center" src="../../_images/1890eef59b5f72f9ca10c953f7f434cf48c9e623e2a39c6406c122422d71e677.svg" /><p>收藏是通过不同渠道获取到的色板单元。</p>
 <p>每个收藏可有多个不同的展示方式，例如视频方式和图片方式。</p>
+<p>用户可编辑收藏标签，在系统收集时也会自动更新部分标签。</p>
 <div class="section" id="id2">
 <h2>结构<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
 <p>Origin string</p>
@@ -58,6 +59,10 @@
 <p>PresentationIDs []string</p>
 <blockquote>
 <div><p>收藏提供的展示 ID。</p>
+</div></blockquote>
+<p>Tags []string</p>
+<blockquote>
+<div><p>收藏的标签</p>
 </div></blockquote>
 </div>
 <div class="section" id="id3">
@@ -178,7 +183,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2018-2020, 北京吾立方数码科技有限公司.
+      &copy;2018-2021, 北京吾立方数码科技有限公司.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>

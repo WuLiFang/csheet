@@ -45,7 +45,7 @@ CSHEET_CGTEAMWORK_PIPELINE_OVERWRITE
 CSHEET_FOLDER_INCLUDE
 
   从文件夹收集允许的文件夹，使用 ``*`` 代表允许任何文件夹。
- 
+
   多个路径用逗号分隔。
 
 CSHEET_FOLDER_EXCLUDE
@@ -89,6 +89,24 @@ CSHEET_CORS_HOSTS
   逗号分隔的主机 CORS 域名列表，例：``example.com,example.org``
 
   使用非标准端口时要添加端口号。
+
+CSHEET_ADMIN_TOKEN
+
+  调用 API 管理相关字段时使用的令牌。
+
+  必须设置且调用时提供相同令牌才能执行相关字段。
+
+CSHEET_DISABLE_WEBP
+
+  禁用 WebP 图像格式，用 PNG 或者 JPG 代替。
+
+CSHEET_API_TRACING_ENABLED
+
+  为 API 启用 `apollo-tracing <https://github.com/apollographql/apollo-tracing>`_
+
+USE_X_FORWARDED_FOR
+
+  是否使用 X-Forwarded-For 表头来记录 IP。
 
 CGTEAMWORK_URL
 

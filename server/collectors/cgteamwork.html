@@ -48,6 +48,16 @@
 <p>默认查询 CGTeamwork 相同名称的流程，但可通过 <a class="reference internal" href="../env-vars.html"><span class="doc">环境变量</span></a> 设置覆盖。</p>
 <p>比如为灯光流程同时收集灯光和渲染流程的文件，收集到的文件将属于同一个收集。</p>
 </div>
+<div class="section" id="id3">
+<h2>自动标签<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>会自动更新以下标签，并移除旧的匹配标签：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">type:{文件类型}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">artist:{制作者显示名称}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">status:{阶段名称}:{阶段状态}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cgteamwork:{值为Y的复选框字段}</span></code></p></li>
+</ul>
+</div>
 </div>
 
 
@@ -142,7 +152,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2018-2020, 北京吾立方数码科技有限公司.
+      &copy;2018-2021, 北京吾立方数码科技有限公司.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>

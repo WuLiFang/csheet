@@ -47,7 +47,7 @@
 <div class="section" id="id3">
 <h2>(0) 元数据<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
 <p>存储数据库元数据。</p>
-<p>migrationVersion</p>
+<p>migration-version</p>
 <blockquote>
 <div><p>类型 uint64</p>
 <p>数据库迁移版本</p>
@@ -65,23 +65,23 @@
 </div>
 <div class="section" id="id6">
 <h2>(3) 收集<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
-<p>键: ID，自增数字序列值。</p>
+<p>键: 收集主键，base64 编码的递增数字。</p>
 <p>值: BSON 编码 <a class="reference internal" href="models/collection.html"><span class="doc">收藏</span></a>。</p>
 </div>
 <div class="section" id="id7">
 <h2>(4) 收集来源<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h2>
 <p>键: 收集来源字符串。</p>
-<p>值: 收集ID。</p>
+<p>值: 收集主键。</p>
 </div>
 <div class="section" id="id8">
 <h2>(5) 展示<a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h2>
-<p>键: ID，自增数字序列值。</p>
+<p>键: 展示主键，base64 编码的递增数字。</p>
 <p>值: BSON 编码 <a class="reference internal" href="models/presentation.html"><span class="doc">展示</span></a></p>
 </div>
 <div class="section" id="id9">
 <h2>(6) 展示摘要<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h2>
 <p>键: 类型和原始路径生成的 sha256 信息摘要。</p>
-<p>值: 展示 ID。</p>
+<p>值: 展示主键。</p>
 </div>
 <div class="section" id="id10">
 <h2>(7) 文件<a class="headerlink" href="#id10" title="永久链接至标题">¶</a></h2>
@@ -91,13 +91,13 @@
 <div class="section" id="id11">
 <h2>(8) 展示文件<a class="headerlink" href="#id11" title="永久链接至标题">¶</a></h2>
 <p>用于快速查询文件对应的展示。</p>
-<p>键: 文件路径，展示 ID。</p>
+<p>键: 文件路径，展示主键。</p>
 <p>值: 空</p>
 </div>
 <div class="section" id="id12">
 <h2>(9) 过期的展示<a class="headerlink" href="#id12" title="永久链接至标题">¶</a></h2>
 <p>用于记录待转码的展示。</p>
-<p>键: 展示 ID。</p>
+<p>键: 展示主键。</p>
 <p>值: 空</p>
 </div>
 <div class="section" id="graphql">
@@ -106,6 +106,11 @@
 <p>键: 查询文本的 sha256 摘要。</p>
 <p>值: 查询文本</p>
 <p>键值对 24 小时未使用自动删除。</p>
+</div>
+<div class="section" id="id13">
+<h2>(11) 收藏标签<a class="headerlink" href="#id13" title="永久链接至标题">¶</a></h2>
+<p>键：标签，收藏主键</p>
+<p>值：空</p>
 </div>
 </div>
 
@@ -199,7 +204,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2018-2020, 北京吾立方数码科技有限公司.
+      &copy;2018-2021, 北京吾立方数码科技有限公司.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>

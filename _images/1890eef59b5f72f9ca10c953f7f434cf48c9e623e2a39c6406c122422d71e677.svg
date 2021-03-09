@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="174px" preserveAspectRatio="none" style="width:212px;height:174px;" version="1.1" viewBox="0 0 212 174" width="212px" zoomAndPan="magnify"><defs/><g><!--MD5=[c160724f8e3bb89ca8141a12554ac2e3]
+class Collection--><rect fill="#E3F2FD" height="156.375" id="Collection" style="stroke: #64B5F6; stroke-width: 1.0;" width="194" x="7" y="7"/><ellipse cx="66" cy="28.2969" fill="#ADD1B2" rx="10" ry="10" style="stroke: #64B5F6; stroke-width: 1.0;"/><path d="M68.3281,32.9375 Q67.8125,33.2188 67.25,33.3594 Q66.7031,33.5 66.0781,33.5 Q64.125,33.5 63.0313,32.1094 Q61.9531,30.7188 61.9531,28.2031 Q61.9531,25.7031 63.0313,24.3125 Q64.125,22.9063 66.0781,22.9063 Q66.7031,22.9063 67.25,23.0469 Q67.8125,23.1875 68.3281,23.4688 L68.3281,24.875 Q67.8281,24.4688 67.25,24.25 Q66.6719,24.0313 66.0781,24.0313 Q64.7344,24.0313 64.0625,25.0781 Q63.3906,26.1094 63.3906,28.2031 Q63.3906,30.2969 64.0625,31.3438 Q64.7344,32.375 66.0781,32.375 Q66.6875,32.375 67.2656,32.1563 Q67.8438,31.9375 68.3281,31.5156 L68.3281,32.9375 Z "/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="68" x="85" y="24.9951">Collection</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="105" y="41.292">收藏</text><line style="stroke: #64B5F6; stroke-width: 1.0;" x1="8" x2="200" y1="49.5938" y2="49.5938"/><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="79" x="13" y="66.5889">Origin string</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="68" x="13" y="82.8857">Title string</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="182" x="13" y="99.1826">Metadata map[string]string</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="149" x="13" y="115.4795">CollectTime time.Time</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="159" x="13" y="131.7764">PresentationIDs []string</text><text fill="#222222" font-family="&quot;Arial&quot;,&quot;Microsoft YaHei&quot;,&quot;黑体&quot;,&quot;宋体&quot;,sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="83" x="13" y="148.0732">Tags []string</text><line style="stroke: #64B5F6; stroke-width: 1.0;" x1="8" x2="200" y1="155.375" y2="155.375"/><!--MD5=[5f373c11300ff118cee3bce836899fa3]
+@startuml
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam maxMessageSize 150
+skinparam ComponentStyle uml2
+skinparam Shadowing false
+
+skinparam Default {
+    FontName "Arial","Microsoft YaHei","黑体","宋体",sans-serif
+    FontColor #222222
+    FontSize  14
+    FontStyle plain
+    Shadowing false
+    TextAlignment center
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Title {
+    FontSize 20
+    FontStyle bold
+}
+
+skinparam Note {
+    BackgroundColor #90A4AE
+    BorderColor #90A4AE
+    BorderThickness 1
+    FontColor White
+    Shadowing false
+    TextAlignment left
+}
+
+skinparam Note<<quit>> {
+
+    BackgroundColor #F9A825
+    BorderColor #F9A825
+}
+
+skinparam Sequence {
+    ActorBorderThickness 1
+    LifeLineBorderColor GREEN
+    ParticipantBorderThickness 0
+    Shadowing false
+
+
+    GroupBorderThickness 1
+    GroupBorderColor #1565C0
+    GroupBackgroundColor #BBDEFB
+}
+
+skinparam Activity {
+
+    StartColor #37A77C
+    EndColor #F6363F
+    AttributeFontColor white
+    AttributeFontSize  15
+    AttributeFontname  Droid Sans Mono
+
+    BackgroundColor #BBDEFB
+    BorderColor #90CAF9
+    BorderThickness 1
+
+    ArrowThickness 1
+
+
+    BarColor   #0D47A1
+
+
+    DiamondBackgroundColor   #FFE0B2
+    DiamondBorderColor    #FFCC80
+
+
+}
+
+skinparam Class {
+    BackgroundColor #E3F2FD
+    BorderColor #64B5F6
+    BorderThickness 1
+
+
+    StereotypeFontColor #589DF6
+    StereotypeFontSize 14
+}
+
+
+
+skinparam Interface {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+    FontSize 14
+
+
+    StereotypeFontColor #589DF6
+    StereotypeFontSize 1
+}
+
+
+
+skinparam Participant {
+    BackgroundColor #1565C0
+    BorderColor #1565C0
+    FontColor White
+    Shadowing false
+}
+
+skinparam Actor {
+    BackgroundColor #1565C0
+    BorderColor #1565C0
+    Shadowing false
+}
+
+skinparam UseCase {
+    BackgroundColor #64B5F6
+    BorderColor #64B5F6
+    Shadowing false
+    ArrowThickness 1
+    ArrowColor #1565C0
+
+    ActorBackgroundColor #1565C0
+    ActorBorderColor #0D47A1
+    ActorShadowing false
+ 
+}
+
+
+skinparam State {
+    FontSize           17
+
+    AttributeFontSize  14
+    
+    BackgroundColor    #BBDEFB
+    BorderColor        #90CAF9
+    StartColor #37A77C
+    EndColor #F6363F
+}
+
+skinparam Partition {
+    BorderColor #424242
+    BorderStyle dashed
+
+    BorderThickness 1
+}
+
+skinparam rectangle {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam database {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam Queue {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Agent {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Artifact {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Boundary {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Card {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Cloud {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Component {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Control {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Database {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Entity {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam File {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Folder {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+   
+}
+skinparam Frame {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Node {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+
+skinparam Package {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Stack {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Rectangle {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Storage {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam rectangle<<usercase>> {
+    Shadowing false
+    StereotypeFontSize 0
+    FontColor #424242
+    BorderColor #424242
+    BorderStyle dashed
+    BackgroundColor White
+}
+
+
+
+
+
+
+
+
+
+
+
+
+class "Collection\n收藏" as Collection {
+  Origin string
+  Title string
+  Metadata map[string]string
+  CollectTime time.Time
+  PresentationIDs []string
+  Tags []string
+}
+@enduml
+
+PlantUML version 1.2020.02(Sun Mar 01 10:22:07 UTC 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 1.8.0_242-b08
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>
