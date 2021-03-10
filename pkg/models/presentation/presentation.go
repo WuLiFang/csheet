@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -155,6 +156,7 @@ func FindByID(id string) (ret Presentation, err error) {
 func (p *Presentation) Probe() (changed bool, err error) {
 	info, err := transcode.Probe(p.Raw)
 	if err != nil {
+		err = fmt.Errorf("presentation: Probe: %w", err)
 		return
 	}
 	switch p.Type {

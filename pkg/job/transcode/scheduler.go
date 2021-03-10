@@ -129,7 +129,21 @@ func (s *scheduler) Start() {
 						return
 					}
 					if err != nil {
-						logger.Error("schedule task failed", zap.Error(err))
+						l := logger.With(zap.Any("presentation", p))
+						l.Error("schedule task failed", zap.Error(err))
+						err = p.Load(ctx)
+						if err != nil {
+							l.Error("load presentation failed", zap.Error(err))
+							continue
+						}
+						rawTag := p.RawTag()
+						p.RegularErrorTag = rawTag
+						p.ThumbErrorTag = rawTag
+						err = p.Save(ctx)
+						if err != nil {
+							l.Error("save presentation failed", zap.Error(err))
+							continue
+						}
 					}
 				}
 			}()
