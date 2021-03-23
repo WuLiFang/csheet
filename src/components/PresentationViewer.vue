@@ -216,7 +216,7 @@ export default defineComponent({
     );
 
     const presentationClass = computed(() => {
-      if (viewportObjectContainRate.value > 0.382) {
+      if (!node.value || viewportObjectContainRate.value > 0.382) {
         return 'object-contain w-full h-full';
       } else if (width.value > height.value) {
         return 'object-cover h-full max-w-none';
