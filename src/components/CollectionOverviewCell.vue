@@ -1,6 +1,7 @@
 <template lang="pug">
   figure.collection-overview-cell.inline-block.relative(
-    class="cursor-pointer flex items-center"
+    ref="el"
+    class="cursor-pointer flex items-center max-h-64 overflow-hidden"
     @click="$emit('click', $event)"
     :title="node && node.title"
     :class=`{[backgroundClass]: true}`
@@ -24,8 +25,9 @@
           class="absolute text-center w-full bottom-0 text-gray-400 text-sm break-all p-1"
         ) {{node && node.title}}
     Presentation.w-full(
-      ref="presentation"
+      ref="presentationVue"
       :id="presentation"
+      :class="presentationClass"
       :image-filter=`imageFilter`
     )
 </template>
@@ -44,6 +46,10 @@ import {
   collectionNode,
 } from '@/graphql/types/collectionNode';
 import { filePathFormat } from '@/const';
+import { ref, computed } from '@vue/composition-api';
+import useElementSize from '@/composables/useElementSize';
+import usePresentationMetadata from '@/composables/usePresentationMetadata';
+import useObjectContainRate from '@/composables/useObjectContainRate';
 
 @Component<CollectionOverviewCell>({
   components: { Presentation, CGTeamworkStatusWidget },
@@ -61,6 +67,37 @@ import { filePathFormat } from '@/const';
       },
     },
   },
+
+  setup() {
+    const el = ref<HTMLElement | undefined>();
+    const presentationVue = ref<Presentation | undefined>();
+    const { width: outerWidth, height: outerHeight } = useElementSize(el);
+    const { width: innerWidth, height: innerHeight } = usePresentationMetadata(
+      computed(() => presentationVue.value?.node)
+    );
+    const objectContainRate = useObjectContainRate(
+      outerWidth,
+      outerHeight,
+      innerWidth,
+      innerHeight
+    );
+
+    const presentationClass = computed(() => {
+      if (objectContainRate.value > 0.618) {
+        return '';
+      } else if (innerWidth < innerHeight) {
+        return 'object-cover w-full max-h-64';
+      } else {
+        return 'object-cover h-full max-w-full';
+      }
+    });
+
+    return {
+      el,
+      presentationVue,
+      presentationClass,
+    };
+  },
 })
 export default class CollectionOverviewCell extends Vue {
   @Prop({ type: String, required: true })
@@ -69,7 +106,7 @@ export default class CollectionOverviewCell extends Vue {
   node?: Collection;
 
   $refs!: {
-    presentation: Presentation;
+    presentationVue: Presentation;
   };
 
   get overlayVisible(): boolean {

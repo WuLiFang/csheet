@@ -23,7 +23,8 @@
       预览已过期
     </p>
     <div
-      class="viewport relative text-center flex-auto z-10"
+      ref="viewport"
+      class="relative text-center flex-auto z-10 overflow-auto"
       :class="{ [backgroundClass]: true }"
     >
       <transition
@@ -36,7 +37,8 @@
           :id="id"
           ref="presentation"
           :key="id"
-          class="object-contain w-full h-full absolute inset-0"
+          :class="presentationClass"
+          class="absolute inset-0"
           size="regular"
           autoplay="autoplay"
           :controls="annotation && annotation.currentPainter === 'null'"
@@ -70,6 +72,9 @@
 </template>
 
 <script lang="ts">
+import useElementSize from '@/composables/useElementSize';
+import useObjectContainRate from '@/composables/useObjectContainRate';
+import usePresentationMetadata from '@/composables/usePresentationMetadata';
 import db from '@/db';
 import { usePresentationNode } from '@/graphql/queries/index.queries';
 import { computed, defineComponent, ref } from '@vue/composition-api';
@@ -98,6 +103,7 @@ export default defineComponent({
       computed(() => ({ id: props.id ?? '' })),
       computed(() => ({ skip: !props.id }))
     );
+    const viewport = ref<HTMLDivElement | undefined>();
     const presentation = ref<Presentation | undefined>();
     const annotation = ref<PresentationAnnotationEditor | undefined>();
     const controls = ref<PresentationControls | undefined>();
@@ -197,8 +203,31 @@ export default defineComponent({
     const currentFrame = ref(0);
     const playbackRate = ref(1);
 
+    const { width: viewportWidth, height: viewportHeight } = useElementSize(
+      viewport
+    );
+    const { width, height } = usePresentationMetadata(node);
+
+    const viewportObjectContainRate = useObjectContainRate(
+      viewportWidth,
+      viewportHeight,
+      width,
+      height
+    );
+
+    const presentationClass = computed(() => {
+      if (viewportObjectContainRate.value > 0.382) {
+        return 'object-contain w-full h-full';
+      } else if (width.value > height.value) {
+        return 'object-cover h-full max-w-none';
+      } else {
+        return 'object-cover w-full max-h-none';
+      }
+    });
+
     return {
       node,
+      viewport,
       presentation,
       annotation,
       controls,
@@ -208,6 +237,7 @@ export default defineComponent({
       currentFrame,
       preferredPainter,
       playbackRate,
+      presentationClass,
     };
   },
 });

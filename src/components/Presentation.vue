@@ -35,7 +35,6 @@ import { Presentation as Data } from '../graphql/types/Presentation';
           alt: getPathBasename(src),
           draggable: this.draggable,
         },
-        staticClass: 'object-contain w-full h-full',
         style: {
           filter: this.imageFilter(this),
         },
@@ -47,7 +46,6 @@ import { Presentation as Data } from '../graphql/types/Presentation';
     };
     const renderVideo = () => {
       return h('video', {
-        staticClass: 'object-contain w-full h-full',
         domProps: {
           src,
           alt: getPathBasename(src),
@@ -91,13 +89,13 @@ import { Presentation as Data } from '../graphql/types/Presentation';
   mounted() {
     this.$watch(
       () => this.currentTime,
-      (v) => {
+      v => {
         this.$emit('timeUpdate', v);
       }
     );
     this.$watch(
       () => this.currentFrame,
-      (v) => {
+      v => {
         this.$emit('frameUpdate', v);
       }
     );
@@ -198,8 +196,8 @@ export default class Presentation extends Vue {
     if (this.isLoadFailed) {
       return require('@/assets/img/load_failed.svg');
     }
-    if (this.retryCount > 0){
-      return this.url + `?t=${Date.now()}`
+    if (this.retryCount > 0) {
+      return this.url + `?t=${Date.now()}`;
     }
     return this.url || require('@/assets/img/transcoding.svg');
   }
