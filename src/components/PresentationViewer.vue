@@ -55,7 +55,8 @@
       <PresentationAnnotationEditor
         :id="id"
         ref="annotation"
-        class="object-contain w-full h-full absolute inset-0"
+        :class="presentationClass"
+        class="absolute inset-0"
         :frame="currentFrame"
         :painter.sync="preferredPainter"
         @draw-start="presentation.pause()"
