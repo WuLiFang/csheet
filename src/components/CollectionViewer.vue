@@ -52,76 +52,11 @@
       main(
         class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden"
       )
-        .player(
+        PresentationViewer(
+          :id="presentationID"
+          ref="presentationViewer"
           class="flex-none relative text-center lg:w-2/3 lg:h-full flex flex-col"
         )
-          PresentationAnnotationEditorToolbar(
-            v-if="$refs.annotation"
-            :parent="$refs.annotation"
-            v-show="presentationID"
-          )
-            template(#right)
-              button.form-button(
-                class="h-8 m-px"
-                class="inline-flex flex-center"
-                type="button"
-                @click="saveScreenshot()"
-                title="保存截图"
-              )
-                FaIcon(name="camera")
-          template(v-for="i in prefetchURLs")
-            link(rel="prefetch" :href="i")
-          p(
-            v-if="presentation && presentation.isRegularTranscodeFailed"
-            class="bg-red-500 w-full"
-          ) 预览转码失败，重新收集以重试
-          p(
-            v-else-if="presentation && presentation.isRegularOutdated"
-            class="bg-orange-500 w-full"
-          ) 预览已过期
-          .viewport(
-            class="relative text-center flex-auto z-10"
-            :class=`{[backgroundClass]: true}`
-          )
-            transition(
-              enter-class="opacity-0"
-              leave-to-class="opacity-0"
-              enter-active-class="transition-all duration-500 ease-in"
-              leave-active-class="transition-all duration-500 ease-out"
-            )
-              Presentation(
-                ref="presentation"
-                :key="value.id"
-                class="object-contain w-full h-full absolute inset-0"
-                :id="presentationID"
-                size="regular"
-                autoplay
-                :controls="$refs.annotation && $refs.annotation.currentPainter === 'null'"
-                :playbackRate="playbackRate"
-                @frameUpdate="currentFrame = $event"
-                @timeUpdate="currentTime = $event"
-              )
-            //- placeholder for small screen
-            Presentation(
-              class="object-contain w-full h-full invisible lg:hidden"
-              :id="presentationID"
-              size="thumb"
-            )
-            PresentationAnnotationEditor(
-              ref="annotation"
-              :id="presentationID"
-              :frame="currentFrame"
-              :painter.sync="preferredPainter"
-              class="object-contain w-full h-full absolute inset-0"
-              @draw-start="$refs.presentation.pause()"
-            )
-          PresentationControls(
-            ref="presentationControls"
-            v-if="$refs.presentation && $refs.presentation.type === 'video'"
-            class="flex flex-col sm:flex-row overflow-x-hidden flex-wrap justify-center items-center z-0"
-            :parent="$refs.presentation"
-            :playbackRate.sync="playbackRate"
-          )
         aside(
           class="flex-auto bg-gray-900 lg:flex-initial lg:w-1/3 lg:overflow-auto"
         )
@@ -165,50 +100,49 @@
                 { key: "black", value: "black", label: "纯黑" },
               ]`
             )
+      template(v-for="i in prefetchURLs")
+        link(rel="prefetch" :href="i")
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import Presentation from './Presentation.vue';
-import { Collection } from '../graphql/types/Collection';
-import 'vue-awesome/icons/window-close';
-import 'vue-awesome/icons/caret-square-up';
-import 'vue-awesome/icons/caret-square-down';
-import 'vue-awesome/icons/forward';
-import 'vue-awesome/icons/backward';
-import 'vue-awesome/icons/step-forward';
-import 'vue-awesome/icons/step-backward';
-import 'vue-awesome/icons/fast-forward';
-import 'vue-awesome/icons/fast-backward';
-import 'vue-awesome/icons/pause';
-import 'vue-awesome/icons/play';
-import 'vue-awesome/icons/camera';
-import PresentationSelect from './PresentationSelect.vue';
-import {
-  collectionNode,
-  collectionNodeVariables,
-} from '../graphql/types/collectionNode';
-import CollectionMetadata from './CollectionMetadata.vue';
-import PresentationMetadata from './PresentationMetadata.vue';
-import { filePathFormat } from '../const';
+import PresentationViewer from '@/components/PresentationViewer.vue';
 import db from '@/db';
-import * as sentry from '@sentry/browser';
-import toHotKey from '@/utils/toHotKey';
-import { Presentation as PresentationData } from '../graphql/types/Presentation';
-import { throttle, sortBy, uniq } from 'lodash';
-import PresentationAnnotationEditor from './PresentationAnnotationEditor.vue';
-import PresentationAnnotationEditorToolbar from './PresentationAnnotationEditorToolbar.vue';
-import PresentationControls from './PresentationControls.vue';
-import { saveAs } from 'file-saver';
-import { info } from '@/message';
 import {
   collectFromCGTeamwork,
   collectFromCGTeamworkVariables,
 } from '@/graphql/types/collectFromCGTeamwork';
 import {
-  collectFromFolderVariables,
   collectFromFolder,
+  collectFromFolderVariables,
 } from '@/graphql/types/collectFromFolder';
+import { info } from '@/message';
+import toHotKey from '@/utils/toHotKey';
+import * as sentry from '@sentry/browser';
+import { sortBy, throttle, uniq } from 'lodash';
+import 'vue-awesome/icons/backward';
+import 'vue-awesome/icons/camera';
+import 'vue-awesome/icons/caret-square-down';
+import 'vue-awesome/icons/caret-square-up';
+import 'vue-awesome/icons/fast-backward';
+import 'vue-awesome/icons/fast-forward';
+import 'vue-awesome/icons/forward';
+import 'vue-awesome/icons/pause';
+import 'vue-awesome/icons/play';
+import 'vue-awesome/icons/step-backward';
+import 'vue-awesome/icons/step-forward';
+import 'vue-awesome/icons/window-close';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { filePathFormat } from '../const';
+import { Collection } from '../graphql/types/Collection';
+import {
+  collectionNode,
+  collectionNodeVariables,
+} from '../graphql/types/collectionNode';
+import { Presentation as PresentationData } from '../graphql/types/Presentation';
+import CollectionMetadata from './CollectionMetadata.vue';
+import Presentation from './Presentation.vue';
+import PresentationMetadata from './PresentationMetadata.vue';
+import PresentationSelect from './PresentationSelect.vue';
 
 @Component<CollectionViewer>({
   components: {
@@ -216,9 +150,7 @@ import {
     PresentationSelect,
     CollectionMetadata,
     PresentationMetadata,
-    PresentationAnnotationEditor,
-    PresentationAnnotationEditorToolbar,
-    PresentationControls,
+    PresentationViewer,
   },
   mounted() {
     sentry.addBreadcrumb({
@@ -240,10 +172,10 @@ import {
         !(
           e.target === document.body ||
           e.target instanceof HTMLButtonElement ||
-          e.target === this.$refs.presentation?.$el ||
+          e.target === this.$refs.presentationViewer?.$el ||
           e.target === this.$refs.prev ||
           e.target === this.$refs.next ||
-          e.target === this.$refs.annotation?.$el
+          e.target === this.$refs.presentationViewer?.annotation?.$el
         )
       ) {
         return;
@@ -255,10 +187,10 @@ import {
           break;
         case ' ':
           e.preventDefault();
-          if (this.$refs.presentation?.paused) {
-            this.$refs.presentation?.play();
+          if (this.$refs.presentationViewer?.presentation?.paused) {
+            this.$refs.presentationViewer?.presentation?.play();
           } else {
-            this.$refs.presentation?.pause();
+            this.$refs.presentationViewer?.presentation?.pause();
           }
           break;
         case 'ArrowUp':
@@ -276,104 +208,110 @@ import {
         case 'ArrowLeft':
           e.preventDefault();
           throttleRepeatSeek(() => {
-            this.$refs.presentation?.seekFrameOffset(-1, true);
+            this.$refs.presentationViewer?.presentation?.seekFrameOffset(
+              -1,
+              true
+            );
           });
           break;
         case 'ArrowRight':
           e.preventDefault();
           throttleRepeatSeek(() => {
-            this.$refs.presentation?.seekFrameOffset(1, true);
+            this.$refs.presentationViewer?.presentation?.seekFrameOffset(
+              1,
+              true
+            );
           });
           break;
         case '+ArrowLeft':
           e.preventDefault();
           throttleRepeatSeek(() => {
-            this.$refs.presentationControls?.skipFrameBackward();
+            this.$refs.presentationViewer?.controls?.skipFrameBackward();
           });
           break;
         case '+ArrowRight':
           e.preventDefault();
           throttleRepeatSeek(() => {
-            this.$refs.presentationControls?.skipFrameForward();
+            this.$refs.presentationViewer?.controls?.skipFrameForward();
           });
           break;
         case 'Home':
           e.preventDefault();
-          this.$refs.presentation?.seekFrame(
-            this.$refs.presentation?.firstFrame,
+          this.$refs.presentationViewer?.presentation?.seekFrame(
+            this.$refs.presentationViewer?.presentation?.firstFrame,
             true
           );
           break;
         case 'End':
           e.preventDefault();
-          this.$refs.presentation?.seekFrame(
-            this.$refs.presentation?.lastFrame,
+          this.$refs.presentationViewer?.presentation?.seekFrame(
+            this.$refs.presentationViewer?.presentation?.lastFrame,
             true
           );
           break;
         case 'g': {
           e.preventDefault();
-          this.$refs.presentationControls?.$refs.timeInput?.$el.select();
+          this.$refs.presentationViewer?.controls?.$refs.timeInput?.$el.select();
           break;
         }
         case 'f': {
           e.preventDefault();
-          this.$refs.presentationControls?.$refs.frameInput?.$el.select();
+          this.$refs.presentationViewer?.controls?.$refs.frameInput?.$el.select();
           break;
         }
         case 'j': {
           e.preventDefault();
-          this.$refs.presentationControls?.offsetPlaybackRateIndex(-1);
+          this.$refs.presentationViewer?.controls?.offsetPlaybackRateIndex(-1);
           break;
         }
         case 'k': {
           e.preventDefault();
-          this.$refs.presentationControls?.setPlaybackRate(1);
+          this.$refs.presentationViewer?.controls?.setPlaybackRate(1);
           break;
         }
         case 'l': {
           e.preventDefault();
-          this.$refs.presentationControls?.offsetPlaybackRateIndex(1);
+          this.$refs.presentationViewer?.controls?.offsetPlaybackRateIndex(1);
           break;
         }
         case '^z': {
           e.preventDefault();
-          this.$refs.annotation?.editor.undo();
+          this.$refs.presentationViewer?.annotation?.editor.undo();
           break;
         }
         case '^y': {
           e.preventDefault();
-          this.$refs.annotation?.editor.redo();
+          this.$refs.presentationViewer?.annotation?.editor.redo();
           break;
         }
         case 'q': {
           e.preventDefault();
-          this.$refs.annotation?.setPainter('null');
+          this.$refs.presentationViewer?.annotation?.setPainter('null');
           break;
         }
         case 'w': {
           e.preventDefault();
-          this.$refs.annotation?.setPainter('select');
+          this.$refs.presentationViewer?.annotation?.setPainter('select');
           break;
         }
         case 'e': {
           e.preventDefault();
-          this.$refs.annotation?.setPainter('polyline');
+          this.$refs.presentationViewer?.annotation?.setPainter('polyline');
           break;
         }
         case 'r': {
           e.preventDefault();
-          this.$refs.annotation?.setPainter('rectangle');
+          this.$refs.presentationViewer?.annotation?.setPainter('rectangle');
           break;
         }
         case 't': {
           e.preventDefault();
-          this.$refs.annotation?.setPainter('ellipse');
+          this.$refs.presentationViewer?.annotation?.setPainter('ellipse');
           break;
         }
         case 'y': {
           e.preventDefault();
-          this.$refs.annotation?.setPainter('text');
+          this.$refs.presentationViewer?.annotation?.setPainter('text');
           break;
         }
       }
@@ -386,7 +324,7 @@ import {
     });
 
     const screenshotListener = async (cb: (v: Blob) => void) => {
-      const data = await this.screenshot();
+      const data = await this.$refs.presentationViewer?.screenshot();
       if (data) {
         cb(data);
       }
@@ -428,18 +366,13 @@ export default class CollectionViewer extends Vue {
   $refs!: {
     prev: HTMLButtonElement;
     next: HTMLButtonElement;
-    presentation: Presentation;
-    presentationControls: PresentationControls;
-    annotation: PresentationAnnotationEditor;
+    presentationViewer: InstanceType<typeof PresentationViewer>;
   };
 
   visible = true;
   presentationID = '';
   loadingCount = 0;
   recollectingCount = 0;
-  currentTime = 0;
-  currentFrame = 0;
-  playbackRate = 1;
 
   jumpPrev(): void {
     if (this.prev) {
@@ -508,27 +441,6 @@ export default class CollectionViewer extends Vue {
     db.preference.set('viewerBackground', v);
   }
 
-  get preferredPainter(): string {
-    return db.preference.get('viewerAnnotationPainter');
-  }
-
-  set preferredPainter(v: string) {
-    db.preference.set('viewerAnnotationPainter', v);
-  }
-
-  get backgroundClass(): string {
-    switch (this.preferredBackground) {
-      case 'checkboard':
-        return 'bg-checkboard';
-      case 'checkboard-sm':
-        return 'bg-checkboard-sm';
-      case 'white':
-        return 'bg-white';
-      default:
-        return 'bg-black';
-    }
-  }
-
   async recollect(): Promise<void> {
     sentry.addBreadcrumb({
       category: 'collection-viewer',
@@ -590,70 +502,6 @@ export default class CollectionViewer extends Vue {
       return 1080;
     }
     return v;
-  }
-
-  async screenshot(type = 'image/jpeg', quality = 1): Promise<Blob | null> {
-    if (!this.presentation) {
-      return null;
-    }
-    const bg = this.$refs.presentation.$el;
-    const canvas = document.createElement('canvas');
-    let w = bg.width;
-    let h = bg.height;
-    if (bg instanceof HTMLVideoElement) {
-      w = bg.videoWidth;
-      h = bg.videoHeight;
-    } else if (bg instanceof HTMLImageElement) {
-      w = bg.naturalWidth;
-      h = bg.naturalHeight;
-    }
-    canvas.width = w;
-    canvas.height = h;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      throw new Error('2d context not supported ');
-    }
-
-    ctx.drawImage(bg, 0, 0, w, h);
-    if (this.$refs.annotation.painter !== 'null') {
-      const el = this.$refs.annotation.$el;
-      await new Promise(resolve => {
-        const svg = new Blob([new XMLSerializer().serializeToString(el)], {
-          type: 'image/svg+xml',
-        });
-        const src = URL.createObjectURL(svg);
-        const img = document.createElement('img');
-        img.onload = () => {
-          ctx.drawImage(img, 0, 0, w, h);
-          URL.revokeObjectURL(src);
-          resolve();
-        };
-        img.src = src;
-      });
-    }
-
-    return new Promise(resolve => {
-      canvas.toBlob(
-        v => {
-          resolve(v);
-        },
-        type,
-        quality
-      );
-    });
-  }
-
-  async saveScreenshot(): Promise<void> {
-    const data = await this.screenshot('image/jpeg');
-    if (!data) {
-      return;
-    }
-    saveAs(
-      data,
-      this.presentation?.type === 'video'
-        ? `${this.value.origin}.${this.$refs.presentation.currentFrame}.jpg`
-        : `${this.value.origin}.jpg`
-    );
   }
 }
 </script>
