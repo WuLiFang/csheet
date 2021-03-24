@@ -20,6 +20,10 @@
       <dd class="pl-4">{{ width }}x{{ height }}</dd>
     </template>
     <template v-if="frameCount > 0">
+      <dt>{{ $t('presentation-metadata.frame-count') }}</dt>
+      <dd class="pl-4">{{ frameCount }}</dd>
+    </template>
+    <template v-if="frameCount > 0">
       <dt>{{ $t('presentation-metadata.frame-range') }}</dt>
       <dd class="pl-4 flex items-center">
         <input
