@@ -76,7 +76,7 @@
     "sass-loader": "8.0.2",
     "tailwindcss": "1.9.6",
     "ts-node": "^9.1.0",
-    "typescript": "3.9.7",
+    "typescript": "3.9.9",
     "vue-class-component": "7.2.6",
     "vue-cli-plugin-apollo": "0.22.2",
     "vue-cli-plugin-i18n": "0.6.1",
