@@ -49,7 +49,7 @@
       )
         input(
           type="checkbox"
-          v-model="cellOverlayVisible"
+          v-model="isCellOverlayVisible"
           class="form-checkbox text-gray-900"
         )
         span.mx-1 信息显示
@@ -103,6 +103,7 @@ import {
 } from '../graphql/types/collectFromFolder';
 import { collectionsVariables } from '../graphql/types/collections';
 import { filePathFormat } from '@/const';
+import { isCellOverlayVisible } from '@/preference';
 
 function getResultMessage({
   createdCount,
@@ -274,6 +275,7 @@ function getResultMessage({
       showStats,
       isHistoryStateChanged,
       archiveURL,
+      isCellOverlayVisible,
     };
   },
 })
@@ -295,14 +297,6 @@ export default class TheNavbar extends Vue {
   originPrefix?: OriginPrefix;
 
   isHistoryStateChanged!: boolean;
-
-  get cellOverlayVisible(): boolean {
-    return db.preference.get('cellOverlayVisible');
-  }
-
-  set cellOverlayVisible(v: boolean) {
-    db.preference.set('cellOverlayVisible', v);
-  }
 
   async collect(): Promise<void> {
     this.isHistoryStateChanged = true;

@@ -37,7 +37,6 @@
 import { Component, Vue } from 'vue-property-decorator';
 import TheNavbar from './components/TheNavbar.vue';
 import CollectionOverview from './components/CollectionOverview.vue';
-import db from '@/db';
 import {
   clientConfig,
   clientConfig_clientConfig as Config,
@@ -64,9 +63,6 @@ import { filePathFormat } from '@/const';
         return { filePathFormat };
       },
     },
-  },
-  mounted() {
-    db.preference.load();
   },
 })
 export default class App extends Vue {

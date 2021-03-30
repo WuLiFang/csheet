@@ -76,8 +76,8 @@
 import useElementSize from '@/composables/useElementSize';
 import useObjectContainRate from '@/composables/useObjectContainRate';
 import usePresentationMetadata from '@/composables/usePresentationMetadata';
-import db from '@/db';
 import { usePresentationNode } from '@/graphql/queries/index.queries';
+import { viewerAnnotationPainter, viewerBackground } from '@/preference';
 import { computed, defineComponent, ref } from '@vue/composition-api';
 import { saveAs } from 'file-saver';
 import { basename, extname } from 'path';
@@ -99,7 +99,7 @@ export default defineComponent({
     PresentationAnnotationEditor,
     PresentationControls,
   },
-  setup: props => {
+  setup: (props) => {
     const { node } = usePresentationNode(
       computed(() => ({ id: props.id ?? '' })),
       computed(() => ({ skip: !props.id }))
@@ -137,7 +137,7 @@ export default defineComponent({
       ctx.drawImage(bg, 0, 0, w, h);
       if (annotation.value && annotation.value.painter !== 'null') {
         const el = annotation.value.$el;
-        await new Promise(resolve => {
+        await new Promise((resolve) => {
           const svg = new Blob([new XMLSerializer().serializeToString(el)], {
             type: 'image/svg+xml',
           });
@@ -152,9 +152,9 @@ export default defineComponent({
         });
       }
 
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         canvas.toBlob(
-          v => {
+          (v) => {
             resolve(v);
           },
           type,
@@ -180,7 +180,7 @@ export default defineComponent({
     };
 
     const backgroundClass = computed(() => {
-      switch (db.preference.get('viewerBackground')) {
+      switch (viewerBackground.value) {
         case 'checkboard':
           return 'bg-checkboard';
         case 'checkboard-sm':
@@ -192,14 +192,7 @@ export default defineComponent({
       }
     });
 
-    const preferredPainter = computed({
-      get() {
-        return db.preference.get('viewerAnnotationPainter');
-      },
-      set(v: string) {
-        db.preference.set('viewerAnnotationPainter', v);
-      },
-    });
+    const preferredPainter = viewerAnnotationPainter;
 
     const currentFrame = ref(0);
     const playbackRate = ref(1);

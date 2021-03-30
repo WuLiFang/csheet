@@ -1,14 +1,14 @@
 <script lang="ts">
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
-import { Presentation } from '../graphql/types/Presentation';
-import 'vue-awesome/icons/image';
-import 'vue-awesome/icons/video';
-import { sortBy, groupBy, orderBy } from 'lodash';
-import db from '@/db';
-import humanizeTime from '@/utils/humanizeTime';
+import { viewerPresentationType } from '@/preference';
 import basename from '@/utils/getPathBasename';
 import dirname from '@/utils/getPathDirname';
+import humanizeTime from '@/utils/humanizeTime';
+import { groupBy, orderBy, sortBy } from 'lodash';
 import { VNode } from 'vue';
+import 'vue-awesome/icons/image';
+import 'vue-awesome/icons/video';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Presentation } from '../graphql/types/Presentation';
 
 interface Option {
   id: string;
@@ -92,7 +92,7 @@ export default class PresentationSelect extends Vue {
 
   get sortedOptions(): Option[] {
     return orderBy(
-      this.options.map(i => ({
+      this.options.map((i) => ({
         id: i.id,
         type: i.type,
         path: i.raw.path,
@@ -101,10 +101,10 @@ export default class PresentationSelect extends Vue {
         modTime: i.raw.modTime ? new Date(i.raw.modTime) : undefined,
       })),
       [
-        i => i.modTime ?? 0,
-        i => i.basename,
-        i => ['video', 'image'].findIndex(j => j === i.type),
-        i => i.id,
+        (i) => i.modTime ?? 0,
+        (i) => i.basename,
+        (i) => ['video', 'image'].findIndex((j) => j === i.type),
+        (i) => i.id,
       ],
       ['desc', 'asc', 'asc', 'asc']
     );
@@ -112,7 +112,7 @@ export default class PresentationSelect extends Vue {
 
   get groupedOptions(): OptionGroup[] {
     return Object.entries(
-      groupBy(this.sortedOptions, i =>
+      groupBy(this.sortedOptions, (i) =>
         i.modTime ? humanizeTime(i.modTime) : this.$t('deleted')
       )
     ).map(([k, v]) => ({
@@ -128,18 +128,18 @@ export default class PresentationSelect extends Vue {
       this.$emit('input', undefined);
       return;
     }
-    if (this.options.some(i => i.id === this.value)) {
+    if (this.options.some((i) => i.id === this.value)) {
       return;
     }
     this.$emit(
       'input',
       sortBy(this.options, [
-        i =>
-          [db.preference.get('presentationType'), 'video', 'image'].findIndex(
-            j => j === i.type
+        (i) =>
+          [viewerPresentationType.value, 'video', 'image'].findIndex(
+            (j) => j === i.type
           ),
-        i => -new Date(i.raw.modTime || 0).getTime(),
-        i => i.id,
+        (i) => -new Date(i.raw.modTime || 0).getTime(),
+        (i) => i.id,
       ])[0]?.id
     );
   }
@@ -148,10 +148,10 @@ export default class PresentationSelect extends Vue {
     if (this.value === v) {
       return;
     }
-    const match = this.options.find(i => i.id === v);
+    const match = this.options.find((i) => i.id === v);
     this.$emit('input', v);
     if (match) {
-      db.preference.set('presentationType', match.type);
+      viewerPresentationType.value = match.type;
     }
   }
 }

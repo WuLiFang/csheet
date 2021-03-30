@@ -41,14 +41,16 @@
 
 <script lang="ts">
 import CGTeamworkStatusWidget from '@/components/cgteamwork/CGTeamworkStatusWidget.static.vue';
+import {
+  backgroundClass,
+  imageFilter,
+  usePresentationClass,
+} from '@/components/CollectionOverviewCell';
 import useCollectionCGTeamworkArtists from '@/composables/useCollectionCGTeamworkArtists';
 import useCollectionCGTeamworkTaskStatus from '@/composables/useCollectionCGTeamworkTaskStatus';
-import useElementSize from '@/composables/useElementSize';
-import useObjectContainRate from '@/composables/useObjectContainRate';
-import usePresentationMetadata from '@/composables/usePresentationMetadata';
 import type { Collection } from '@/graphql/types/Collection';
 import type { Presentation } from '@/graphql/types/Presentation';
-import { isCellOverlayVisible, viewerBackground } from '@/preference';
+import { isCellOverlayVisible } from '@/preference';
 import { computed, defineComponent, PropType, ref } from '@vue/composition-api';
 import { sortBy } from 'lodash';
 import { CreateElement, VNode } from 'vue';
@@ -75,38 +77,10 @@ export default defineComponent({
       ])[0];
     });
     const presentationVue = ref<PresentationVue | undefined>();
-    const { width: outerWidth, height: outerHeight } = useElementSize(el);
-    const { width: innerWidth, height: innerHeight } = usePresentationMetadata(
+    const presentationClass = usePresentationClass(
+      el,
       computed(() => presentationVue.value?.node)
     );
-    const objectContainRate = useObjectContainRate(
-      outerWidth,
-      outerHeight,
-      innerWidth,
-      innerHeight
-    );
-
-    const presentationClass = computed(() => {
-      if (objectContainRate.value > 0.618) {
-        return '';
-      } else if (innerWidth < innerHeight) {
-        return 'object-cover w-full max-h-64';
-      } else {
-        return 'object-cover h-full max-w-full';
-      }
-    });
-    const backgroundClass = computed((): string => {
-      switch (viewerBackground.value) {
-        case 'checkboard':
-          return 'bg-checkboard-sm';
-        case 'checkboard-sm':
-          return 'bg-checkboard-xs';
-        case 'white':
-          return 'bg-white';
-        default:
-          return 'bg-black';
-      }
-    });
 
     const cgteamworkTaskStatus = useCollectionCGTeamworkTaskStatus(
       computed(() => props.value)
@@ -131,23 +105,6 @@ export default defineComponent({
         });
       }
     };
-    const imageFilter = (p: PresentationVue): string => {
-      if (p.isLoadFailed || p.isTranscodeFailed || !p.value) {
-        switch (p.size) {
-          case 'regular':
-            return '';
-          case 'thumb':
-          default:
-            switch (viewerBackground.value) {
-              case 'white':
-                return '';
-              default:
-                return 'brightness(0.3)';
-            }
-        }
-      }
-      return '';
-    };
 
     return {
       el,
@@ -158,7 +115,7 @@ export default defineComponent({
       backgroundClass,
       renderTopLeft,
       renderTopRight,
-      imageFilter,
+      imageFilter: (p: PresentationVue) => imageFilter(p),
     };
   },
 });

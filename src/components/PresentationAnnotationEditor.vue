@@ -8,29 +8,27 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { filePathFormat } from '@/const';
+import mutations from '@/graphql/mutations';
+import { Presentation } from '@/graphql/types/Presentation';
+import { presentationNode, presentationNodeVariables } from '@/graphql/types/presentationNode';
+import { viewerAnnotationConfig } from '@/preference';
 import { SVGEditor } from '@/svg-editor';
+import { Painter } from '@/svg-editor/painter';
+import EllipsePainter from '@/svg-editor/painters/ellipse';
+import NullPainter from '@/svg-editor/painters/null';
 import PolylinePainter from '@/svg-editor/painters/polyline';
 import RectanglePainter from '@/svg-editor/painters/rectangle';
-import EllipsePainter from '@/svg-editor/painters/ellipse';
-import { filePathFormat } from '@/const';
-import {
-  presentationNodeVariables,
-  presentationNode,
-} from '@/graphql/types/presentationNode';
-import { Presentation } from '@/graphql/types/Presentation';
-import NullPainter from '@/svg-editor/painters/null';
 import SelectPainter from '@/svg-editor/painters/select';
-import { Painter } from '@/svg-editor/painter';
+import { TextPainter } from '@/svg-editor/painters/text';
+import createSVGElement from '@/svg-editor/utils/createSVGElement';
+import iterateHTMLCollection from '@/svg-editor/utils/iterateHTMLCollection';
 import formatFileSize from '@/utils/formatFileSize';
 import parseOptionalFloat from '@/utils/parseOptionalFloat';
 import setDOMStringMap from '@/utils/setDOMStringMap';
-import createSVGElement from '@/svg-editor/utils/createSVGElement';
-import iterateHTMLCollection from '@/svg-editor/utils/iterateHTMLCollection';
+import { UnwrapRef } from '@vue/composition-api';
 import { debounce, DebouncedFunc } from 'lodash';
-import { TextPainter } from '@/svg-editor/painters/text';
-import db from '@/db';
-import mutations from '@/graphql/mutations';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 type PainterName =
   | 'null'
@@ -91,13 +89,13 @@ ellipse {
         clearHistory: () => {
           this.canRedo = this.editor.canRedo();
         },
-        drawStart: el => {
+        drawStart: (el) => {
           const [first, last] = this.frameRange;
           setDOMStringMap(el.dataset, 'firstFrame', first?.toString());
           setDOMStringMap(el.dataset, 'lastFrame', last?.toString());
           this.$emit('draw-start');
         },
-        renderOperation: el => {
+        renderOperation: (el) => {
           if (this.frame == null) {
             el.classList.toggle('invisible', false);
             return;
@@ -114,14 +112,14 @@ ellipse {
     });
     this.$watch(
       () => this.painter,
-      v => {
+      (v) => {
         this.setPainter(v);
       },
       { immediate: true }
     );
     this.$watch(
       () => this.id,
-      async v => {
+      async (v) => {
         if (!v) {
           this.presentation = undefined;
         }
@@ -154,20 +152,11 @@ ellipse {
       },
       { immediate: true }
     );
-    this.$watch(
-      () => db.preference.get('viewerAnnotationConfig'),
-      v => {
-        Object.assign(this.config, v);
-      },
-      { immediate: true }
-    );
-    this.$watch(
-      () => this.config,
-      v => {
-        db.preference.set('viewerAnnotationConfig', v);
-      },
-      { deep: true }
-    );
+  },
+  setup: () => {
+    return {
+      config: viewerAnnotationConfig,
+    };
   },
 })
 export default class PresentationAnnotationEditor extends Vue {
@@ -195,16 +184,7 @@ export default class PresentationAnnotationEditor extends Vue {
   canRedo = false;
   loadingCount = 0;
 
-  config = {
-    strokeWidth: 8,
-    color: '#ff0000',
-    cornerRadius: 0,
-    firstFrame: undefined as number | undefined,
-    lastFrame: undefined as number | undefined,
-    frameRangeMode: 'NULL',
-    fontSize: 24,
-    backgroundColor: '#000000',
-  };
+  config!: UnwrapRef<typeof viewerAnnotationConfig>;
 
   selected = -1;
 
@@ -215,7 +195,9 @@ export default class PresentationAnnotationEditor extends Vue {
   debouncedSubmit!: DebouncedFunc<() => Promise<void>>;
 
   get value(): string {
-    return this.presentation?.metadata.find(i => i.k === 'annotation')?.v ?? '';
+    return (
+      this.presentation?.metadata.find((i) => i.k === 'annotation')?.v ?? ''
+    );
   }
 
   get frameRange(): [number | undefined, number | undefined] {
@@ -243,7 +225,7 @@ export default class PresentationAnnotationEditor extends Vue {
       case 'select': {
         const ret = new SelectPainter(this.editor);
         let frameRangeChangeIgnore = -1;
-        ret.onSelect = v => {
+        ret.onSelect = (v) => {
           this.selected = v;
           const el = this.editor.operation(v);
           if (el) {
@@ -295,7 +277,7 @@ export default class PresentationAnnotationEditor extends Vue {
       }
       case 'text': {
         const painter = new TextPainter(this.editor);
-        painter.customRenderPopup = el => {
+        painter.customRenderPopup = (el) => {
           painter.defaultRenderPopup(el);
           const textarea = el.querySelector('textarea');
           if (!textarea) {
@@ -333,7 +315,7 @@ export default class PresentationAnnotationEditor extends Vue {
       const g = createSVGElement('g');
       g.innerHTML = rawValue;
       for (const i of iterateHTMLCollection(g.children)) {
-        i.classList.forEach(c => i.classList.remove(c));
+        i.classList.forEach((c) => i.classList.remove(c));
       }
       const value = g.innerHTML;
       if (value === this.value) {
@@ -361,7 +343,7 @@ export default class PresentationAnnotationEditor extends Vue {
 
   get width(): number {
     const v = parseFloat(
-      this.presentation?.metadata.find(i => i.k === 'width')?.v ?? ''
+      this.presentation?.metadata.find((i) => i.k === 'width')?.v ?? ''
     );
     if (!isFinite(v)) {
       return 1920;
@@ -371,7 +353,7 @@ export default class PresentationAnnotationEditor extends Vue {
 
   get height(): number {
     const v = parseFloat(
-      this.presentation?.metadata.find(i => i.k === 'height')?.v ?? ''
+      this.presentation?.metadata.find((i) => i.k === 'height')?.v ?? ''
     );
     if (!isFinite(v)) {
       return 1080;

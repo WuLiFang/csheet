@@ -89,13 +89,13 @@ import { Presentation as Data } from '../graphql/types/Presentation';
   mounted() {
     this.$watch(
       () => this.currentTime,
-      v => {
+      (v) => {
         this.$emit('timeUpdate', v);
       }
     );
     this.$watch(
       () => this.currentFrame,
-      v => {
+      (v) => {
         this.$emit('frameUpdate', v);
       }
     );
@@ -158,7 +158,7 @@ export default class Presentation extends Vue {
   imageFilter!: (v: Presentation) => string;
 
   $el!: HTMLVideoElement | HTMLImageElement;
-  node?: Data;
+  node: Data | undefined;
   frameCount!: number;
   frameRate!: number;
   firstFrame!: number;

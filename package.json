@@ -24,7 +24,6 @@
     "d3": "^6.5.0",
     "dompurify": "^2.1.1",
     "file-saver": "^2.0.2",
-    "localforage": "1.8.1",
     "lodash-es": "^4.17.15",
     "moment": "2.24.0",
     "to-digit-grouped": "^1.0.1",

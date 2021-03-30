@@ -14,7 +14,7 @@
     )
       .overlay(
         class="absolute inset-0 pointer-events-none"
-        v-show="overlayVisible"
+        v-show="isCellOverlayVisible"
       )
         header(
           class="flex justify-between opacity-75 p-1"
@@ -33,26 +33,28 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import { Collection } from '../graphql/types/Collection';
-import Presentation from './Presentation.vue';
+import { filePathFormat } from '@/const';
+import {
+  collectionNode,
+  collectionNodeVariables,
+} from '@/graphql/types/collectionNode';
+import { isCellOverlayVisible } from '@/preference';
+import { computed, ref } from '@vue/composition-api';
 import * as cast from 'cast-unknown';
 import { sortBy } from 'lodash';
-import CGTeamworkStatusWidget from './cgteamwork/CGTeamworkStatusWidget.vue';
-import db from '@/db';
 import { CreateElement, VNode } from 'vue';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Collection } from '../graphql/types/Collection';
+import CGTeamworkStatusWidget from './cgteamwork/CGTeamworkStatusWidget.vue';
 import {
-  collectionNodeVariables,
-  collectionNode,
-} from '@/graphql/types/collectionNode';
-import { filePathFormat } from '@/const';
-import { ref, computed } from '@vue/composition-api';
-import useElementSize from '@/composables/useElementSize';
-import usePresentationMetadata from '@/composables/usePresentationMetadata';
-import useObjectContainRate from '@/composables/useObjectContainRate';
+  backgroundClass,
+  imageFilter,
+  usePresentationClass,
+} from './CollectionOverviewCell';
+import PresentationVue from './Presentation.vue';
 
 @Component<CollectionOverviewCell>({
-  components: { Presentation, CGTeamworkStatusWidget },
+  components: { Presentation: PresentationVue, CGTeamworkStatusWidget },
   apollo: {
     node: {
       query: require('@/graphql/queries/collectionNode.gql'),
@@ -70,32 +72,19 @@ import useObjectContainRate from '@/composables/useObjectContainRate';
 
   setup() {
     const el = ref<HTMLElement | undefined>();
-    const presentationVue = ref<Presentation | undefined>();
-    const { width: outerWidth, height: outerHeight } = useElementSize(el);
-    const { width: innerWidth, height: innerHeight } = usePresentationMetadata(
+    const presentationVue = ref<PresentationVue | undefined>();
+    const presentationClass = usePresentationClass(
+      el,
       computed(() => presentationVue.value?.node)
     );
-    const objectContainRate = useObjectContainRate(
-      outerWidth,
-      outerHeight,
-      innerWidth,
-      innerHeight
-    );
-
-    const presentationClass = computed(() => {
-      if (objectContainRate.value > 0.618) {
-        return '';
-      } else if (innerWidth < innerHeight) {
-        return 'object-cover w-full max-h-64';
-      } else {
-        return 'object-cover h-full max-w-full';
-      }
-    });
 
     return {
       el,
+      isCellOverlayVisible,
+      backgroundClass,
       presentationVue,
       presentationClass,
+      imageFilter: (p: PresentationVue) => imageFilter(p),
     };
   },
 })
@@ -106,16 +95,12 @@ export default class CollectionOverviewCell extends Vue {
   node?: Collection;
 
   $refs!: {
-    presentationVue: Presentation;
+    presentationVue: PresentationVue;
   };
-
-  get overlayVisible(): boolean {
-    return db.preference.get('cellOverlayVisible');
-  }
 
   get cgteamworkArtists(): string[] {
     const pipeline = this.node?.metadata.find(
-      i => i.k === 'cgteamwork.pipeline'
+      (i) => i.k === 'cgteamwork.pipeline'
     )?.v;
     if (!pipeline) {
       return [];
@@ -126,8 +111,8 @@ export default class CollectionOverviewCell extends Vue {
           return cast
             .array(JSON.parse(v))
             .map(cast.object)
-            .filter(i => cast.string(i.pipeline) === pipeline)
-            .flatMap(i => cast.array(i.artists).map(cast.string));
+            .filter((i) => cast.string(i.pipeline) === pipeline)
+            .flatMap((i) => cast.array(i.artists).map(cast.string));
       }
     }
     return [];
@@ -141,9 +126,9 @@ export default class CollectionOverviewCell extends Vue {
       Retake: 4,
       Close: 5,
     };
-    const data = this.node?.metadata.find(i => i.k === 'cgteamwork.tasks')?.v;
+    const data = this.node?.metadata.find((i) => i.k === 'cgteamwork.tasks')?.v;
     const pipeline = this.node?.metadata.find(
-      i => i.k === 'cgteamwork.pipeline'
+      (i) => i.k === 'cgteamwork.pipeline'
     )?.v;
     let ret = '';
     if (!(data && pipeline)) {
@@ -161,47 +146,16 @@ export default class CollectionOverviewCell extends Vue {
 
   get presentation(): string {
     return sortBy(this.node?.presentations ?? [], [
-      i => !i.thumb,
-      i => -new Date(i.raw.modTime || 0).getTime(),
-      i => i.id,
+      (i) => !i.thumb,
+      (i) => -new Date(i.raw.modTime || 0).getTime(),
+      (i) => i.id,
     ])[0]?.id;
-  }
-
-  get backgroundClass(): string {
-    switch (db.preference.get('viewerBackground')) {
-      case 'checkboard':
-        return 'bg-checkboard-sm';
-      case 'checkboard-sm':
-        return 'bg-checkboard-xs';
-      case 'white':
-        return 'bg-white';
-      default:
-        return 'bg-black';
-    }
-  }
-
-  imageFilter(p: Presentation): string {
-    if (p.isLoadFailed || p.isTranscodeFailed || !p.id) {
-      switch (p.size) {
-        case 'regular':
-          return '';
-        case 'thumb':
-        default:
-          switch (db.preference.get('viewerBackground')) {
-            case 'white':
-              return '';
-            default:
-              return 'brightness(0.3)';
-          }
-      }
-    }
-    return '';
   }
 
   renderTopLeft(h: CreateElement): VNode {
     return h(
       'div',
-      this.cgteamworkArtists.map(i =>
+      this.cgteamworkArtists.map((i) =>
         h('span', { staticClass: 'artist mr-1' }, i)
       )
     );

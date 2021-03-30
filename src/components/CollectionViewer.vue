@@ -91,7 +91,7 @@
           .block(class="lg:mx-1")
             span 查看器背景
             Radio(
-              v-model="preferredBackground"
+              v-model="viewerBackground"
               class="inline-block py-1 ml-1"
               :options=`[
                 { key: "checkboard", value: "checkboard", label: "棋盘格", },
@@ -106,7 +106,6 @@
 
 <script lang="ts">
 import PresentationViewer from '@/components/PresentationViewer.vue';
-import db from '@/db';
 import {
   collectFromCGTeamwork,
   collectFromCGTeamworkVariables,
@@ -116,6 +115,7 @@ import {
   collectFromFolderVariables,
 } from '@/graphql/types/collectFromFolder';
 import { info } from '@/message';
+import { viewerBackground } from '@/preference';
 import toHotKey from '@/utils/toHotKey';
 import * as sentry from '@sentry/browser';
 import { sortBy, throttle, uniq } from 'lodash';
@@ -352,6 +352,11 @@ import PresentationSelect from './PresentationSelect.vue';
       },
     },
   },
+  setup: () => {
+    return {
+      viewerBackground: viewerBackground,
+    };
+  },
 })
 export default class CollectionViewer extends Vue {
   @Prop({ type: Object, required: true })
@@ -416,9 +421,9 @@ export default class CollectionViewer extends Vue {
       if (!i) {
         continue;
       }
-      sortBy(i.presentations, [i => -new Date(i.raw.modTime ?? 0).getTime()])
+      sortBy(i.presentations, [(i) => -new Date(i.raw.modTime ?? 0).getTime()])
         .slice(0, 5)
-        .forEach(j => {
+        .forEach((j) => {
           ret.push(j.regular?.url || require('@/assets/img/transcoding.svg'));
         });
     }
@@ -426,19 +431,11 @@ export default class CollectionViewer extends Vue {
   }
 
   get presentation(): PresentationData | undefined {
-    return this.value.presentations.find(i => i.id === this.presentationID);
+    return this.value.presentations.find((i) => i.id === this.presentationID);
   }
 
   async refetch(): Promise<void> {
     await this.$apollo.queries.node.refetch();
-  }
-
-  get preferredBackground(): string {
-    return db.preference.get('viewerBackground');
-  }
-
-  set preferredBackground(v: string) {
-    db.preference.set('viewerBackground', v);
   }
 
   async recollect(): Promise<void> {
@@ -486,7 +483,7 @@ export default class CollectionViewer extends Vue {
 
   get width(): number {
     const v = parseFloat(
-      this.presentation?.metadata.find(i => i.k === 'width')?.v ?? ''
+      this.presentation?.metadata.find((i) => i.k === 'width')?.v ?? ''
     );
     if (!isFinite(v)) {
       return 1920;
@@ -496,7 +493,7 @@ export default class CollectionViewer extends Vue {
 
   get height(): number {
     const v = parseFloat(
-      this.presentation?.metadata.find(i => i.k === 'height')?.v ?? ''
+      this.presentation?.metadata.find((i) => i.k === 'height')?.v ?? ''
     );
     if (!isFinite(v)) {
       return 1080;
