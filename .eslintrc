@@ -46,6 +46,12 @@
     {
       "files": ["*.spec.ts"],
       "rules": { "@typescript-eslint/explicit-function-return-type": "off" }
+    },
+    {
+      "files": ["PresentationAnnotationEditor.static.vue"],
+      "rules": {
+        "vue/no-v-html": "off"
+      }
     }
   ]
 }

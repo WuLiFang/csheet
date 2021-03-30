@@ -108,6 +108,10 @@ CSHEET_API_TRACING_ENABLED
 
   为 API 启用 `apollo-tracing <https://github.com/apollographql/apollo-tracing>`_
 
+CSHEET_ARCHIVE_COLLECTION_LIMIT
+
+  限制归档打包的收藏数量，默认为 1000。
+
 USE_X_FORWARDED_FOR
 
   是否使用 X-Forwarded-For 表头来记录 IP。

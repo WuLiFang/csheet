@@ -41,5 +41,6 @@ var (
 	AdminToken                  = getenv.String("CSHEET_ADMIN_TOKEN", "")
 	DisableWebP                 = getenv.Bool("CSHEET_DISABLE_WEBP", false)
 	APITracingEnabled           = getenv.Bool("CSHEET_API_TRACING_ENABLED", false)
+	ArchiveCollectionLimit      = getenv.Int("CSHEET_ARCHIVE_COLLECTION_LIMIT", 1000)
 	UseXForwardedFor            = getenv.Bool("USE_X_FORWARDED_FOR", false)
 )

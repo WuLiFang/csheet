@@ -41,7 +41,7 @@ import CGTeamworkStatusWidget from './cgteamwork/CGTeamworkStatusWidget.vue';
 import { show } from '@/modal';
 import CGTeamworkFlowFormDrawer from './cgteamwork/CGTeamworkFlowFormDrawer.vue';
 import 'vue-awesome/icons/edit';
-import { CGTeamworkOriginPrefix } from '@/client';
+import { CGTeamworkOriginPrefix } from '@/client/origin-prefix';
 import queries from '@/graphql/queries';
 import { Collection } from '@/graphql/queries/collectionNode';
 import { CGTeamworkFlow } from '@/graphql/queries/cgteamworkFlows';

@@ -5,9 +5,8 @@
 </template>
 
 <script lang="ts">
-import queries from '@/graphql/queries';
 import {
-  collectionStatsVariables,
+  collectionStats,
   collectionStats_collections_tagCount as TagCount,
 } from '@/graphql/types/collectionStats';
 import addResizeListener from '@/utils/addResizeListener';
@@ -18,19 +17,17 @@ import {
   onUnmounted,
   PropType,
   ref,
-  toRefs,
   watchEffect,
 } from '@vue/composition-api';
 import * as d3 from 'd3';
-import { uniqueId, throttle } from 'lodash';
+import { throttle, uniqueId } from 'lodash';
 import toDigitGrouped from 'to-digit-grouped';
 
 export default defineComponent({
   name: 'CollectionTagTreemap',
   props: {
-    variables: {
-      type: Object as PropType<collectionStatsVariables>,
-      required: true,
+    value: {
+      type: Object as PropType<collectionStats>,
     },
     scale: {
       type: Number,
@@ -38,16 +35,10 @@ export default defineComponent({
     },
   },
   setup: (props) => {
-    const { variables } = toRefs(props);
     const el = ref<HTMLDivElement | undefined>();
     const svg = ref<SVGSVGElement | undefined>();
     const width = ref(800);
-    const { data } = queries.useCollectionStats(
-      variables,
-      computed(() => ({
-        fetchPolicy: 'cache-and-network',
-      }))
-    );
+    const data = computed(() => props.value);
     const idPrefix = uniqueId('collection-tag-treemap-') + '-';
     interface treeNode {
       name: string;

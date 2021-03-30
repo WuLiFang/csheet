@@ -115,6 +115,7 @@ func New() *gin.Engine {
 			}()
 		}
 	}).Static("", filestore.Dir)
+	r.GET("archive", archiveHandler())
 	r.Group("cgteamwork/upload/*_").
 		Use(
 			gin.WrapH(&httputil.ReverseProxy{

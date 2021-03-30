@@ -9,7 +9,6 @@ import (
 	"path"
 	"time"
 
-	"github.com/WuLiFang/csheet/v6/internal/config"
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
 	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/db"
@@ -24,7 +23,7 @@ func (r *mutationResolver) BackupDatabase(ctx context.Context, input models.Back
 		return ret, err
 	}
 
-	var fullpath = path.Join(config.Storage, "backup", time.Now().Format("csheet-20060102-150405.bak"))
+	var fullpath = path.Join(DataPath, "backup", time.Now().Format("csheet-20060102-150405.bak"))
 	err = os.MkdirAll(path.Dir(fullpath), 0700)
 	if err != nil {
 		return ret, err

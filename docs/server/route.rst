@@ -33,6 +33,11 @@ HTTP 路由
 
   对 cgteamwork 的 `/img` 路由进行反向代理以提供表情文件访问。
 
+/archive
+
+  供 :doc:`archive` 使用
+    
+
 /debug/pprof
 
   开发模式下可用，pprof 网页调试端点。

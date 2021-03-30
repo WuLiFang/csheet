@@ -1,4 +1,4 @@
-import { OriginPrefix } from '@/client';
+import { OriginPrefix } from '@/client/origin-prefix';
 import { State } from '@/db/core';
 import * as cast from 'cast-unknown';
 
@@ -8,7 +8,7 @@ export class RecentOriginPrefix extends State<OriginPrefix[]> {
 
   constructor(initialStage: OriginPrefix[]) {
     super(initialStage);
-    window.addEventListener('storage', e => {
+    window.addEventListener('storage', (e) => {
       if (e.key !== RecentOriginPrefix.key) {
         return;
       }
@@ -20,7 +20,7 @@ export class RecentOriginPrefix extends State<OriginPrefix[]> {
     localStorage.setItem(
       RecentOriginPrefix.key,
       JSON.stringify(
-        state.slice(0, RecentOriginPrefix.capacity).map(i => i.toString())
+        state.slice(0, RecentOriginPrefix.capacity).map((i) => i.toString())
       )
     );
   }
@@ -54,6 +54,6 @@ export class RecentOriginPrefix extends State<OriginPrefix[]> {
     if (data.length > 0 && data[0].equals(v)) {
       return;
     }
-    this.set([v, ...data.filter(i => !i.equals(v))]);
+    this.set([v, ...data.filter((i) => !i.equals(v))]);
   }
 }

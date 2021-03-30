@@ -60,9 +60,24 @@
         @click="showStats()"
       )
         FaIcon(name="chart-pie")
+      a(
+        download
+        :href="archiveURL"
+      )
+        button.form-button(
+          class="ml-1"
+          type="button"
+          title="归档打包"
+        )
+          FaIcon(name="archive")
 </template>
 
 <script lang="ts">
+import {
+  CGTeamworkOriginPrefix,
+  FolderOriginPrefix,
+  OriginPrefix,
+} from '@/client/origin-prefix';
 import CollectionStatsDrawerVue from '@/components/CollectionStatsDrawer.vue';
 import CollectionTagInput from '@/components/CollectionTagInput.vue';
 import OriginPrefixInput from '@/components/OriginPrefixInput.vue';
@@ -71,6 +86,7 @@ import mutations from '@/graphql/mutations';
 import queries from '@/graphql/queries';
 import { info } from '@/message';
 import { show } from '@/modal';
+import searchParamsSetAll from '@/utils/searchParamSetAll';
 import {
   computed,
   onUnmounted,
@@ -79,13 +95,14 @@ import {
   watch,
 } from '@vue/composition-api';
 import 'vue-awesome/icons/chart-pie';
+import 'vue-awesome/icons/archive';
 import { Component, Vue } from 'vue-property-decorator';
-import client from '../client';
 import {
   collectFromFolder,
   collectFromFolderVariables,
 } from '../graphql/types/collectFromFolder';
 import { collectionsVariables } from '../graphql/types/collections';
+import { filePathFormat } from '@/const';
 
 function getResultMessage({
   createdCount,
@@ -102,16 +119,6 @@ function getResultMessage({
   }
   return `更新了 ${updatedCount} 个收藏`;
 }
-function searchParamsSetAll(
-  params: URLSearchParams,
-  name: string,
-  values: string[]
-) {
-  params.delete(name);
-  for (const i of values) {
-    params.append(name, i);
-  }
-}
 
 @Component<TheNavbar>({
   components: {
@@ -127,7 +134,7 @@ function searchParamsSetAll(
     });
 
     const originPrefix = computed(() =>
-      client.OriginPrefix.parse(formData.originPrefix)
+      OriginPrefix.parse(formData.originPrefix)
     );
 
     const variables = computed<collectionsVariables>(() => {
@@ -152,14 +159,14 @@ function searchParamsSetAll(
       const q = new URLSearchParams(location.search);
       switch (q.get('mode')) {
         case 'cgteamwork':
-          formData.originPrefix = new client.CGTeamworkOriginPrefix(
+          formData.originPrefix = new CGTeamworkOriginPrefix(
             q.get('db') ?? '',
             q.get('pipeline') ?? '',
             q.get('prefix') ?? ''
           ).toString();
           break;
         case 'folder':
-          formData.originPrefix = new client.FolderOriginPrefix(
+          formData.originPrefix = new FolderOriginPrefix(
             q.get('root') ?? ''
           ).toString();
           break;
@@ -183,13 +190,13 @@ function searchParamsSetAll(
     const saveState = async () => {
       const u = new URL(location.href);
       u.search = '';
-      const originPrefix = client.OriginPrefix.parse(formData.originPrefix);
-      if (originPrefix instanceof client.CGTeamworkOriginPrefix) {
+      const originPrefix = OriginPrefix.parse(formData.originPrefix);
+      if (originPrefix instanceof CGTeamworkOriginPrefix) {
         u.searchParams.set('mode', 'cgteamwork');
         u.searchParams.set('db', originPrefix.database);
         u.searchParams.set('pipeline', originPrefix.pipeline);
         u.searchParams.set('prefix', originPrefix.prefix);
-      } else if (originPrefix instanceof client.FolderOriginPrefix) {
+      } else if (originPrefix instanceof FolderOriginPrefix) {
         u.searchParams.set('mode', 'folder');
         u.searchParams.set('root', originPrefix.root);
       }
@@ -205,7 +212,7 @@ function searchParamsSetAll(
       }
 
       const parts: string[] = [];
-      if (originPrefix instanceof client.CGTeamworkOriginPrefix) {
+      if (originPrefix instanceof CGTeamworkOriginPrefix) {
         const project =
           (
             await queries.cgteamworkProjects({
@@ -214,7 +221,7 @@ function searchParamsSetAll(
           ).data.cgteamworkProjects?.[0]?.name ?? originPrefix.database;
         parts.push(originPrefix.prefix, project, originPrefix.pipeline);
       }
-      if (originPrefix instanceof client.FolderOriginPrefix) {
+      if (originPrefix instanceof FolderOriginPrefix) {
         parts.push(originPrefix.root);
       }
       parts.push('色板');
@@ -242,7 +249,32 @@ function searchParamsSetAll(
       });
     };
 
-    return { formData, originPrefix, showStats, isHistoryStateChanged };
+    const archiveURL = computed(() => {
+      const u = new URL(location.href);
+      u.search = '';
+      u.pathname = '/archive';
+      if (formData.originPrefix) {
+        u.searchParams.set('origin_prefix', formData.originPrefix);
+      }
+      if (formData.skipEmptyPresentation) {
+        u.searchParams.set('presentation_count_gt', '0');
+      }
+      searchParamsSetAll(u.searchParams, 'tag_or', formData.tagOr);
+      searchParamsSetAll(u.searchParams, 'tag_and', formData.tagAnd);
+      u.searchParams.set('title', document.title);
+      if (filePathFormat) {
+        u.searchParams.set('file_path_format', filePathFormat);
+      }
+      return u;
+    });
+
+    return {
+      formData,
+      originPrefix,
+      showStats,
+      isHistoryStateChanged,
+      archiveURL,
+    };
   },
 })
 export default class TheNavbar extends Vue {
@@ -260,7 +292,7 @@ export default class TheNavbar extends Vue {
     collectButton: HTMLButtonElement;
   };
 
-  originPrefix?: client.OriginPrefix;
+  originPrefix?: OriginPrefix;
 
   isHistoryStateChanged!: boolean;
 
@@ -279,7 +311,7 @@ export default class TheNavbar extends Vue {
     }
     this.loadingCount += 1;
     try {
-      if (this.originPrefix instanceof client.CGTeamworkOriginPrefix) {
+      if (this.originPrefix instanceof CGTeamworkOriginPrefix) {
         const { data, errors } = await mutations.collectFromCGTeamwork(
           {
             input: {
@@ -305,7 +337,7 @@ export default class TheNavbar extends Vue {
         }
         this.$emit('collect');
         info(getResultMessage(data?.collectFromCGTeamwork ?? {}));
-      } else if (this.originPrefix instanceof client.FolderOriginPrefix) {
+      } else if (this.originPrefix instanceof FolderOriginPrefix) {
         const { data } = await this.$apollo.mutate<
           collectFromFolder,
           collectFromFolderVariables

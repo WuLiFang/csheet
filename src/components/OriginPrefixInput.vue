@@ -82,7 +82,11 @@
 </template>
 
 <script lang="ts">
-import client, { CGTeamworkOriginPrefix, FolderOriginPrefix } from '@/client';
+import {
+  CGTeamworkOriginPrefix,
+  FolderOriginPrefix,
+  OriginPrefix,
+} from '@/client/origin-prefix';
 import CGTeamworkPipelineRadio from '@/components/cgteamwork/CGTeamworkPipelineRadio.vue';
 import CGTeamworkProjectSelect from '@/components/cgteamwork/CGTeamworkProjectSelect.vue';
 import { filePathFormat } from '@/const';
@@ -95,7 +99,7 @@ import {
   ref,
   watch,
 } from '@vue/composition-api';
-import { uniq, uniqueId, debounce } from 'lodash';
+import { debounce, uniq, uniqueId } from 'lodash';
 
 export default defineComponent({
   name: 'OriginPrefixInput',
@@ -127,11 +131,11 @@ export default defineComponent({
     });
 
     const loadValue = (v: string) => {
-      const p = client.OriginPrefix.parse(v);
-      if (p instanceof client.FolderOriginPrefix) {
+      const p = OriginPrefix.parse(v);
+      if (p instanceof FolderOriginPrefix) {
         formData.mode = 'folder';
         formData.folder.root = p.root;
-      } else if (p instanceof client.CGTeamworkOriginPrefix) {
+      } else if (p instanceof CGTeamworkOriginPrefix) {
         formData.mode = 'cgteamwork';
         formData.cgteamwork.database = p.database;
         formData.cgteamwork.pipeline = p.pipeline;
@@ -196,7 +200,7 @@ export default defineComponent({
       let ret = '';
       switch (formData.mode) {
         case 'cgteamwork':
-          ret = new client.CGTeamworkOriginPrefix(
+          ret = new CGTeamworkOriginPrefix(
             formData.cgteamwork.database,
             formData.cgteamwork.pipeline,
             formData.cgteamwork.prefix

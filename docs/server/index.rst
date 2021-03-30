@@ -40,6 +40,7 @@
   transcode
   file-store
   file-watch
+  archive
   db
   route
   api

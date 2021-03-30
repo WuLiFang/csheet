@@ -6,6 +6,8 @@ import (
 	"strings"
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
+	"github.com/WuLiFang/csheet/v6/pkg/api/resolvers"
+	"github.com/WuLiFang/csheet/v6/pkg/archive"
 	collector "github.com/WuLiFang/csheet/v6/pkg/collector/base"
 	"github.com/WuLiFang/csheet/v6/pkg/collector/cgteamwork"
 	"github.com/WuLiFang/csheet/v6/pkg/collector/folder"
@@ -72,4 +74,10 @@ func Load() {
 		}
 		collector.IgnoreRegex = append(collector.IgnoreRegex, *p)
 	}
+
+	resolvers.AdminToken = AdminToken
+	resolvers.DataPath = Storage
+	resolvers.IssueTrackerURL = IssueTrackerURL
+
+	archive.CollectionLimit = ArchiveCollectionLimit
 }

@@ -7,7 +7,6 @@ import (
 	"context"
 	"os"
 
-	"github.com/WuLiFang/csheet/v6/internal/config"
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
 	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
@@ -25,8 +24,8 @@ func (r *clientConfigResolver) FolderInclude(ctx context.Context, obj *models.Cl
 func (r *queryResolver) ClientConfig(ctx context.Context, name string) (*models.ClientConfig, error) {
 	var ret = new(models.ClientConfig)
 	ret.EnableCGTeamwork = cgteamwork.DefaultClient != nil
-	if config.IssueTrackerURL != "" {
-		ret.IssueTrackerURL = &config.IssueTrackerURL
+	if IssueTrackerURL != "" {
+		ret.IssueTrackerURL = &IssueTrackerURL
 	}
 	ret.FolderInclude = make([]string, 0, len(folder.WalkInclude))
 	for _, i := range folder.WalkInclude {

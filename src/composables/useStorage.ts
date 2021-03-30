@@ -1,9 +1,10 @@
 import {
+  getCurrentInstance,
   onUnmounted,
   ref,
   Ref,
   UnwrapRef,
-  watch
+  watch,
 } from '@vue/composition-api';
 
 export type StorageLike = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
@@ -33,12 +34,14 @@ function useStorage<T>(
     load();
   };
   window.addEventListener('storage', onStorage);
-  onUnmounted(() => {
-    window.removeEventListener('storage', onStorage);
-  });
+  if (getCurrentInstance()) {
+    onUnmounted(() => {
+      window.removeEventListener('storage', onStorage);
+    });
+  }
   watch(
     ret,
-    v => {
+    (v) => {
       if (v == null) {
         storage.removeItem(key);
       } else {

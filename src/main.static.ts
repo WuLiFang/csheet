@@ -1,5 +1,5 @@
 import { withBrowserCheck } from '@/browser-check';
 
 withBrowserCheck(() => {
-  require('./app');
+  require('./app.static');
 });

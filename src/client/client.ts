@@ -3,7 +3,7 @@ import { locale } from '@/plugins/i18n';
 import {
   IdGetterObj,
   InMemoryCache,
-  IntrospectionFragmentMatcher
+  IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { ApolloLink, split } from 'apollo-link';
@@ -14,11 +14,19 @@ import { createUploadLink } from 'apollo-upload-client';
 import { getMainDefinition } from 'apollo-utilities';
 import { GraphQLError } from 'graphql';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
+
+if (process.env.NODE_ENV === 'development') {
+  if (location.pathname === '/index.static.html') {
+    throw new Error(
+      'should not import client/client.ts in static version, this is a side-effect module'
+    );
+  }
+}
+
 function getErrorMessage(e: GraphQLError): string {
   const msg = e.extensions?.locales?.[locale] ?? e.message;
   return msg;
 }
-
 const httpLink = createUploadLink({
   uri: '/api',
 });

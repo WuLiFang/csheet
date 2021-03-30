@@ -32,6 +32,7 @@
 </template>
 
 <script lang="ts">
+import { OriginPrefix } from '@/client/origin-prefix';
 import { filePathFormat } from '@/const';
 import extractNodes from '@/utils/extractNodes';
 import extractPageInfo from '@/utils/extractPageInfo';
@@ -39,7 +40,6 @@ import { ApolloQueryResult, ObservableQuery } from 'apollo-client';
 import { DollarApollo } from 'vue-apollo/types/vue-apollo';
 import 'vue-awesome/icons/spinner';
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { OriginPrefix } from '../client';
 import { db } from '../db';
 import { Collection } from '../graphql/types/Collection';
 import {
@@ -78,7 +78,7 @@ import CollectionViewer from './CollectionViewer.vue';
       result({ data }: ApolloQueryResult<collections>) {
         const commonPrefix = getCommonPrefix(
           data?.collections?.nodes
-            ?.map(i => i?.origin)
+            ?.map((i) => i?.origin)
             .filter((i): i is string => typeof i === 'string') || []
         );
         const prefix = OriginPrefix.parse(commonPrefix);
@@ -99,16 +99,16 @@ import CollectionViewer from './CollectionViewer.vue';
         },
         updateQuery(prev: collections, o) {
           const nodes = prev.collections.nodes ?? [];
-          prev.collections.nodes = nodes
+          prev.collections.nodes = nodes;
           const {
             collectionUpdated,
           }: collectionUpdated = o.subscriptionData.data;
 
-          if (nodes.some(i => i?.id === collectionUpdated.id)) {
+          if (nodes.some((i) => i?.id === collectionUpdated.id)) {
             return;
           }
           let index = nodes.findIndex(
-            i => i && collectionUpdated.origin < i.origin
+            (i) => i && collectionUpdated.origin < i.origin
           );
 
           if (index < 0) {
@@ -156,7 +156,7 @@ export default class CollectionOverview extends Vue {
   }
 
   get presentationIDs(): string[] {
-    return this.nodes.flatMap(i => i.presentations.map(j => j.id));
+    return this.nodes.flatMap((i) => i.presentations.map((j) => j.id));
   }
 
   get pageInfo(): Relay.PageInfo {
@@ -183,7 +183,7 @@ export default class CollectionOverview extends Vue {
         }
         ret.collections.nodes = (ret.collections.nodes ?? [])
           .concat(fetchMoreResult.collections.nodes)
-          .filter(i => !!i);
+          .filter((i) => !!i);
         ret.collections.pageInfo.hasNextPage =
           fetchMoreResult.collections.pageInfo.hasNextPage;
         ret.collections.pageInfo.endCursor =
@@ -205,7 +205,7 @@ export default class CollectionOverview extends Vue {
       next: undefined,
     });
     const setValue = async (v: Collection) => {
-      const index = this.nodes.findIndex(i => i.id === v.id);
+      const index = this.nodes.findIndex((i) => i.id === v.id);
       if (index === this.nodes.length - 1 && this.pageInfo.hasNextPage) {
         await this.fetchMore();
       }

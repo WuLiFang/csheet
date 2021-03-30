@@ -100,12 +100,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import Presentation from './Presentation.vue';
-import DurationInput from './DurationInput.vue';
-import moment from 'moment';
 import clamp from '@/utils/clamp';
-import InputNumber from './global/InputNumber.vue';
+import moment from 'moment';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import DurationInput from './DurationInput.vue';
+import type InputNumber from './global/InputNumber.vue';
+import type Presentation from './Presentation.vue';
 
 @Component<PresentationControls>({
   components: {
@@ -114,14 +114,14 @@ import InputNumber from './global/InputNumber.vue';
   mounted() {
     this.$watch(
       () => this.formData.playbackRate,
-      v => {
+      (v) => {
         this.$emit('update:playbackRate', v);
       },
       { immediate: true }
     );
     this.$watch(
       () => this.playbackRate,
-      v => {
+      (v) => {
         this.formData.playbackRate = v;
       },
       { immediate: true }

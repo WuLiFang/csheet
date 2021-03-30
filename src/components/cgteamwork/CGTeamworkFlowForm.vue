@@ -72,19 +72,19 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import { CGTeamworkOriginPrefix } from '@/client';
-import { Collection } from '@/graphql/types/Collection';
-import { filePathFormat } from '@/const';
-import {
-  collectionNodeVariables,
-  collectionNode,
-} from '@/graphql/types/collectionNode';
+import { CGTeamworkOriginPrefix } from '@/client/origin-prefix';
 import getCollectionPipelines from '@/client/utils/getCollectionPipelines';
+import CGTeamworkMessageEditor from '@/components/cgteamwork/CGTeamworkMessageEditor.vue';
 import CGTeamworkStageRadio from '@/components/cgteamwork/CGTeamworkStageRadio.vue';
 import CGTeamworkStatusSelect from '@/components/cgteamwork/CGTeamworkStatusSelect.vue';
-import CGTeamworkMessageEditor from '@/components/cgteamwork/CGTeamworkMessageEditor.vue';
+import { filePathFormat } from '@/const';
 import mutations from '@/graphql/mutations';
+import { Collection } from '@/graphql/types/Collection';
+import {
+  collectionNode,
+  collectionNodeVariables,
+} from '@/graphql/types/collectionNode';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component<CGTeamworkFlowForm>({
   components: {
@@ -106,13 +106,13 @@ import mutations from '@/graphql/mutations';
   mounted() {
     this.$watch(
       () => this.collection,
-      v => {
+      (v) => {
         Object.assign(
           this.formData,
           {
             pipeline:
               (this.formData.pipeline ||
-                v?.metadata.find(i => i.k === 'cgteamwork.pipeline')?.v) ??
+                v?.metadata.find((i) => i.k === 'cgteamwork.pipeline')?.v) ??
               this.formData.pipeline,
           },
           this.default
