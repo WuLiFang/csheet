@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.3.0](https://github.com/WuLiFang/csheet/compare/v6.2.0...v6.3.0) (2021-03-30)
+
+
+### Features
+
+* support page archive download ([8d3911a](https://github.com/WuLiFang/csheet/commit/8d3911a956c6ec9785d7b8d3e84f9c75ae1f4b33))
+* **style:** show scroll bar for long media ([002043e](https://github.com/WuLiFang/csheet/commit/002043e662763b4e1a0bf9a6181c3fb21d17d472))
+* support collect ignore ([43b00ec](https://github.com/WuLiFang/csheet/commit/43b00ec670b280b2f472bf8b132efff24ca58f28))
+
+
+### Bug Fixes
+
+* missing frame count metatata in viewer ([bc88387](https://github.com/WuLiFang/csheet/commit/bc883874ecc2be3a00148452b2adc19a8e3b8cb9))
+* **deps:** go mod tidy ([fbd94c0](https://github.com/WuLiFang/csheet/commit/fbd94c03dabb98d653e4cb46101f374853de5498))
+* **style:** annonation not work for long media ([9c53f84](https://github.com/WuLiFang/csheet/commit/9c53f843cf170cf24087d3c0fe8b1cbe74fb2ca4))
+* **style:** should not show presentation scroll bar during loading ([73c0885](https://github.com/WuLiFang/csheet/commit/73c0885ab0c7b465c9aa923ad1992f3e3e002e2f))
+* handle broken files that can not probe ([b69d394](https://github.com/WuLiFang/csheet/commit/b69d3946c27fe8afd36529bb443a5486c63c14e9))
+* **deps:** update dependency vue-i18n to v8.24.0 ([8a20386](https://github.com/WuLiFang/csheet/commit/8a20386daa9d254979d79b49115735f428e56875))
+
 ## [6.2.0](https://github.com/WuLiFang/csheet/compare/v6.1.0...v6.2.0) (2021-03-08)
 
 
