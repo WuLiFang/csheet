@@ -62,10 +62,18 @@ func archiveHandler() gin.HandlerFunc {
 		c.Header("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, filename))
 		c.Writer.Flush()
 
+		var logger = logging.For(ctx).Logger("router").With(
+			zap.Any("query", c.Request.URL.Query()),
+			zap.String("clientIP", c.ClientIP()),
+			zap.String("userAgent", c.Request.UserAgent()),
+		)
+		var startTime = time.Now()
+		logger.Info("archive start")
 		err := archive.Zip(ctx, c.Writer, opts...)
 		if err != nil {
-			logging.For(ctx).Logger("router").Error("archive failed", zap.Error(err))
+			logger.Error("archive failed", zap.Error(err))
 			return
 		}
+		logger.Info("archive done", zap.Duration("elapsed", time.Since(startTime)))
 	}
 }
