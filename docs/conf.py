@@ -27,9 +27,9 @@ copyright = '2018-2021, 北京吾立方数码科技有限公司'
 author = '北京吾立方数码科技有限公司'
 
 # The short X.Y version
-version = '6.0.0'
+version = '6.3.0'
 # The full version, including alpha/beta/rc tags
-release = '6.0.0'
+release = '6.3.0'
 
 
 # -- General configuration ---------------------------------------------------
