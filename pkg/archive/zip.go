@@ -66,11 +66,11 @@ func zipFiles(zw *zip.Writer, pageData json.RawMessage) (err error) {
 			return
 		}
 
-		var name = strings.TrimPrefix(url, "/files/")
 		if _, ok := addedURLs[url]; ok {
 			return
 		}
 
+		var name = strings.TrimPrefix(url, "/files/")
 		r, err := os.Open(path.Join(filestore.Dir, name))
 		if errors.Is(err, os.ErrNotExist) {
 			err = nil
