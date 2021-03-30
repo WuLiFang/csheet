@@ -56,6 +56,7 @@ func zipAssets(zw *zip.Writer) (err error) {
 }
 
 func zipFiles(zw *zip.Writer, pageData json.RawMessage) (err error) {
+	var addedURLs = map[string]struct{}{}
 	var addFile = func(url string) (err error) {
 		if url == "" {
 			return
@@ -64,7 +65,11 @@ func zipFiles(zw *zip.Writer, pageData json.RawMessage) (err error) {
 			err = fmt.Errorf("unsupported file url: %s", url)
 			return
 		}
+
 		var name = strings.TrimPrefix(url, "/files/")
+		if _, ok := addedURLs[url]; ok {
+			return
+		}
 
 		r, err := os.Open(path.Join(filestore.Dir, name))
 		if errors.Is(err, os.ErrNotExist) {
@@ -85,6 +90,8 @@ func zipFiles(zw *zip.Writer, pageData json.RawMessage) (err error) {
 		if err != nil {
 			return
 		}
+
+		addedURLs[url] = struct{}{}
 		return
 	}
 
