@@ -10,9 +10,9 @@ CSHEET_ADDRESS
 
   服务运行地址。默认：localhost:80
 
-CSHEET_STORAGE
+CSHEET_DATA_PATH
 
-  :doc:`file-store` 文件夹路径。
+  :doc:`file-store` 文件夹路径，默认为工作目录下 storage 文件夹。
 
 CSHEET_FILE_LIFE
 

@@ -19,10 +19,15 @@ func ParseFlag() {
 		Address,
 		"bind address")
 	fs.StringVar(
-		&Storage,
+		&DataPath,
 		"storage",
-		Storage,
-		"data storage path")
+		DataPath,
+		"data storage path. \nDEPRECATED: use --data-path instead")
+	fs.StringVar(
+		&DataPath,
+		"data-path",
+		DataPath,
+		"data storage path.")
 	fs.IntVar(
 		&WatchRate,
 		"watch-rate",

@@ -17,10 +17,11 @@ func newStringSet(v []string) (ret map[string]struct{}) {
 }
 
 // Config entries
+// TODO: change default data path to `data` and drop old config support, this will be a breaking change
 var (
 	Env                         = getenv.String("CSHEET_ENV", "development")
 	Address                     = getenv.String("CSHEET_ADDRESS", "0.0.0.0:80")
-	Storage                     = getenv.String("CSHEET_STORAGE", "storage")
+	DataPath                    = getenv.StringCoalesce("CSHEET_DATA_PATH", "CSHEET_STORAGE", "storage")
 	WatchRate                   = getenv.Int("CSHEET_WATCH_RATE", 50)
 	FileLife                    = getenv.Duration("CSHEET_FILE_LIFE", 240*time.Hour)
 	TempLife                    = getenv.Duration("CSHEET_TEMP_LIFE", time.Hour)

@@ -73,3 +73,14 @@ func Bool(key string, d bool) bool {
 	}
 	return d
 }
+
+// StringCoalesce returns first non-empty environment value
+func StringCoalesce(names ...string) string {
+	for _, i := range names {
+		v := os.Getenv(i)
+		if v != "" {
+			return v
+		}
+	}
+	return ""
+}
