@@ -34,6 +34,10 @@ CSHEET_WATCH_WORKERS
 
   文件监控并发数量，默认为 8。
 
+CSHEET_COLLECT_IGNORE
+
+  收集文件路径正则表达式忽略规则，多个值用换行符分割。
+
 CSHEET_CGTEAMWORK_MAX_TASK_PER_COLLECT
 
   每次从 CGTeamwork 收集时的最大任务数量。默认：1000。
@@ -103,6 +107,10 @@ CSHEET_DISABLE_WEBP
 CSHEET_API_TRACING_ENABLED
 
   为 API 启用 `apollo-tracing <https://github.com/apollographql/apollo-tracing>`_
+
+CSHEET_ARCHIVE_COLLECTION_LIMIT
+
+  限制归档打包的收藏数量，默认为 1000。
 
 USE_X_FORWARDED_FOR
 

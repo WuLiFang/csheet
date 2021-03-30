@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
   <head>
     <meta charset="utf-8" />
-    <title>数据模型 &#8212; csheet 6.0.0 文档</title>
+    <title>归档打包 &#8212; csheet 6.0.0 文档</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -15,8 +15,8 @@
     <script src="../_static/translations.js"></script>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
-    <link rel="next" title="收藏" href="models/collection.html" />
-    <link rel="prev" title="文件夹" href="collectors/folder.html" />
+    <link rel="next" title="数据库" href="db.html" />
+    <link rel="prev" title="文件监控" href="file-watch.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -34,25 +34,38 @@
           <div class="body" role="main">
             
   <div class="section" id="id1">
-<h1>数据模型<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
-<img alt="../_images/414be021cf44bb6cd6458beb826321943c26badcbfa6cd4b5f13f974f7083133.svg" class="align-center" src="../_images/414be021cf44bb6cd6458beb826321943c26badcbfa6cd4b5f13f974f7083133.svg" /><div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="models/collection.html">收藏</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="models/collection.html#id2">结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="models/collection.html#id3">元数据</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="models/file.html">文件</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="models/file.html#id2">结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="models/file.html#id3">内容标签</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="models/presentation.html">展示</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="models/presentation.html#id2">结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="models/presentation.html#id3">元数据</a></li>
-</ul>
-</li>
-</ul>
+<h1>归档打包<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>支持将色板打包为离线网页应用供无法访问色板服务器的用户查看。</p>
+<p>离线应用为当前收藏数据的快照，仅包含转码后的图像供查看，不包含原始文件。</p>
+<p>所有涉及写入服务器数据库的操作均在离线版中无法使用，并且不支持实时更新。</p>
+<p>访问服务器地址 <code class="docutils literal notranslate"><span class="pre">/archive</span></code> 端点即可下载压缩包。</p>
+<div class="section" id="id2">
+<h2>路径参数<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>通过网址查询参数指定要下载的收藏，支持以下参数：</p>
+<p>tag_or?: string[]</p>
+<blockquote>
+<div><p>匹配任意标签</p>
+</div></blockquote>
+<p>tag_and?: string[]</p>
+<blockquote>
+<div><p>匹配所有标签</p>
+</div></blockquote>
+<p>origin_prefix?: string</p>
+<blockquote>
+<div><p>匹配来源前缀</p>
+</div></blockquote>
+<p>presentation_count_gt?: number</p>
+<blockquote>
+<div><p>匹配包含的展示数量大于此值的收藏</p>
+</div></blockquote>
+<p>title?: string</p>
+<blockquote>
+<div><p>生成的色板标题，用于文件名和文档标题。不填则通过当前时间生成。</p>
+</div></blockquote>
+<p>file_path_format?: string</p>
+<blockquote>
+<div><p>文件路径格式。 windows 或 unix，默认和服务器使用相同格式。</p>
+</div></blockquote>
 </div>
 </div>
 
@@ -100,11 +113,11 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">服务端文档</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="glossary.html">术语表</a></li>
 <li class="toctree-l2"><a class="reference internal" href="collectors.html">收集模式</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">数据模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">数据模型</a></li>
 <li class="toctree-l2"><a class="reference internal" href="transcode.html">转码</a></li>
 <li class="toctree-l2"><a class="reference internal" href="file-store.html">文件存储</a></li>
 <li class="toctree-l2"><a class="reference internal" href="file-watch.html">文件监控</a></li>
-<li class="toctree-l2"><a class="reference internal" href="archive.html">归档打包</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">归档打包</a></li>
 <li class="toctree-l2"><a class="reference internal" href="db.html">数据库</a></li>
 <li class="toctree-l2"><a class="reference internal" href="route.html">HTTP 路由</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html">GraphQL API</a></li>
@@ -118,8 +131,8 @@
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
   <li><a href="index.html">吾立方色板服务系统 文档</a><ul>
-      <li>Previous: <a href="collectors/folder.html" title="上一章">文件夹</a></li>
-      <li>Next: <a href="models/collection.html" title="下一章">收藏</a></li>
+      <li>Previous: <a href="file-watch.html" title="上一章">文件监控</a></li>
+      <li>Next: <a href="db.html" title="下一章">数据库</a></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -154,7 +167,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../_sources/server/models.rst.txt"
+      <a href="../_sources/server/archive.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 
