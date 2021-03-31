@@ -77,6 +77,7 @@ import {
 import CollectionStatsDrawerVue from '@/components/CollectionStatsDrawer.vue';
 import CollectionTagInput from '@/components/CollectionTagInput.vue';
 import OriginPrefixInput from '@/components/OriginPrefixInput.vue';
+import useLocation from '@/composables/useLocation';
 import { filePathFormat } from '@/const';
 import db from '@/db';
 import mutations from '@/graphql/mutations';
@@ -88,7 +89,6 @@ import searchParamsSetAll from '@/utils/searchParamSetAll';
 import {
   computed,
   defineComponent,
-  onUnmounted,
   reactive,
   ref,
   watch,
@@ -120,6 +120,7 @@ export default defineComponent({
     CollectionTagInput,
   },
   setup: (props, ctx) => {
+    const location = useLocation();
     const originPrefixInput = ref<InstanceType<typeof OriginPrefixInput>>();
     const form = ref<HTMLFormElement>();
     const formData = reactive({
@@ -151,88 +152,100 @@ export default defineComponent({
 
     const isHistoryStateChanged = ref(false);
 
-    const loadState = () => {
-      const q = new URLSearchParams(location.search);
-      switch (q.get('mode')) {
-        case 'cgteamwork':
-          formData.originPrefix = new CGTeamworkOriginPrefix(
-            q.get('db') ?? '',
-            q.get('pipeline') ?? '',
-            q.get('prefix') ?? ''
-          ).toString();
-          break;
-        case 'folder':
-          formData.originPrefix = new FolderOriginPrefix(
-            q.get('root') ?? ''
-          ).toString();
-          break;
-        default: {
-          const latest = db.recentOriginPrefix.get()[0];
-          if (latest) {
-            formData.originPrefix = latest.toString();
+    // load state
+    watch(
+      location,
+      () => {
+        const q = new URLSearchParams(location.value.search);
+        switch (q.get('mode')) {
+          case 'cgteamwork':
+            formData.originPrefix = new CGTeamworkOriginPrefix(
+              q.get('db') ?? '',
+              q.get('pipeline') ?? '',
+              q.get('prefix') ?? ''
+            ).toString();
+            break;
+          case 'folder':
+            formData.originPrefix = new FolderOriginPrefix(
+              q.get('root') ?? ''
+            ).toString();
+            break;
+          default: {
+            const latest = db.recentOriginPrefix.get()[0];
+            if (latest) {
+              formData.originPrefix = latest.toString();
+            }
           }
         }
-      }
-      if (q.get('skip_empty')) {
-        formData.skipEmptyPresentation = true;
-      }
-      formData.tagOr = q.getAll('tagOr');
-      formData.tagAnd = q.getAll('tagAnd');
-    };
-    loadState();
-    window.addEventListener('popstate', loadState);
-    onUnmounted(() => window.removeEventListener('popstate', loadState));
+        if (q.get('skip_empty')) {
+          formData.skipEmptyPresentation = true;
+        }
+        formData.tagOr = q.getAll('tagOr');
+        formData.tagAnd = q.getAll('tagAnd');
+      },
+      { immediate: true }
+    );
 
-    const saveState = async () => {
-      const u = new URL(location.href);
-      u.search = '';
-      const originPrefix = OriginPrefix.parse(formData.originPrefix);
-      if (originPrefix instanceof CGTeamworkOriginPrefix) {
-        u.searchParams.set('mode', 'cgteamwork');
-        u.searchParams.set('db', originPrefix.database);
-        u.searchParams.set('pipeline', originPrefix.pipeline);
-        u.searchParams.set('prefix', originPrefix.prefix);
-      } else if (originPrefix instanceof FolderOriginPrefix) {
-        u.searchParams.set('mode', 'folder');
-        u.searchParams.set('root', originPrefix.root);
-      }
-      if (formData.skipEmptyPresentation) {
-        u.searchParams.set('skip_empty', '1');
-      }
-      searchParamsSetAll(u.searchParams, 'tagOr', formData.tagOr);
-      searchParamsSetAll(u.searchParams, 'tagAnd', formData.tagAnd);
+    // update title
+    watch(
+      originPrefix,
+      async () => {
+        const parts: string[] = [];
+        if (originPrefix.value instanceof CGTeamworkOriginPrefix) {
+          const project =
+            (
+              await queries.cgteamworkProjects({
+                database: [originPrefix.value.database],
+              })
+            ).data.cgteamworkProjects?.[0]?.name ?? originPrefix.value.database;
+          parts.push(
+            originPrefix.value.prefix,
+            project,
+            originPrefix.value.pipeline
+          );
+        }
+        if (originPrefix.value instanceof FolderOriginPrefix) {
+          parts.push(originPrefix.value.root);
+        }
+        parts.push('色板');
+        document.title = parts.filter((i) => !!i).join(' - ');
+      },
+      { immediate: true }
+    );
 
-      const url = u.toString();
-      if (url === location.href) {
-        return;
-      }
-
-      const parts: string[] = [];
-      if (originPrefix instanceof CGTeamworkOriginPrefix) {
-        const project =
-          (
-            await queries.cgteamworkProjects({
-              database: [originPrefix.database],
-            })
-          ).data.cgteamworkProjects?.[0]?.name ?? originPrefix.database;
-        parts.push(originPrefix.prefix, project, originPrefix.pipeline);
-      }
-      if (originPrefix instanceof FolderOriginPrefix) {
-        parts.push(originPrefix.root);
-      }
-      parts.push('色板');
-      document.title = parts.filter((i) => !!i).join(' - ');
-      if (isHistoryStateChanged.value) {
-        history.pushState(null, document.title, url);
-      } else {
-        history.replaceState(null, document.title, url);
-      }
-      isHistoryStateChanged.value = false;
-    };
+    // save state
     watch(
       formData,
       () => {
-        saveState();
+        const u = new URL(location.value.href);
+        u.search = '';
+        const originPrefix = OriginPrefix.parse(formData.originPrefix);
+        if (originPrefix instanceof CGTeamworkOriginPrefix) {
+          u.searchParams.set('mode', 'cgteamwork');
+          u.searchParams.set('db', originPrefix.database);
+          u.searchParams.set('pipeline', originPrefix.pipeline);
+          u.searchParams.set('prefix', originPrefix.prefix);
+        } else if (originPrefix instanceof FolderOriginPrefix) {
+          u.searchParams.set('mode', 'folder');
+          u.searchParams.set('root', originPrefix.root);
+        }
+        if (formData.skipEmptyPresentation) {
+          u.searchParams.set('skip_empty', '1');
+        }
+        searchParamsSetAll(u.searchParams, 'tagOr', formData.tagOr);
+        searchParamsSetAll(u.searchParams, 'tagAnd', formData.tagAnd);
+
+        const url = u.toString();
+        if (url === location.value.href) {
+          return;
+        }
+
+        if (isHistoryStateChanged.value) {
+          history.pushState(null, document.title, url);
+        } else {
+          history.replaceState(null, document.title, url);
+        }
+        isHistoryStateChanged.value = false;
       },
       { deep: true, immediate: true }
     );
@@ -246,7 +259,7 @@ export default defineComponent({
     };
 
     const archiveURL = computed(() => {
-      const u = new URL(location.href);
+      const u = new URL(location.value.href);
       u.search = '';
       u.pathname = '/archive';
       if (formData.originPrefix) {
