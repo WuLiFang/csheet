@@ -24,7 +24,7 @@ func main() {
 
 	var err error
 
-	err = db.Open(config.Storage + "/db")
+	err = db.Open(config.DataPath + "/db")
 	if err != nil {
 		log.Fatal(err)
 	}
