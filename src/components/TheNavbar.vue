@@ -219,15 +219,14 @@ export default defineComponent({
       () => {
         const u = new URL(location.value.href);
         u.search = '';
-        const originPrefix = OriginPrefix.parse(formData.originPrefix);
-        if (originPrefix instanceof CGTeamworkOriginPrefix) {
+        if (originPrefix.value instanceof CGTeamworkOriginPrefix) {
           u.searchParams.set('mode', 'cgteamwork');
-          u.searchParams.set('db', originPrefix.database);
-          u.searchParams.set('pipeline', originPrefix.pipeline);
-          u.searchParams.set('prefix', originPrefix.prefix);
-        } else if (originPrefix instanceof FolderOriginPrefix) {
+          u.searchParams.set('db', originPrefix.value.database);
+          u.searchParams.set('pipeline', originPrefix.value.pipeline);
+          u.searchParams.set('prefix', originPrefix.value.prefix);
+        } else if (originPrefix.value instanceof FolderOriginPrefix) {
           u.searchParams.set('mode', 'folder');
-          u.searchParams.set('root', originPrefix.root);
+          u.searchParams.set('root', originPrefix.value.root);
         }
         if (formData.skipEmptyPresentation) {
           u.searchParams.set('skip_empty', '1');
