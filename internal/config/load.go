@@ -30,9 +30,9 @@ func Load() {
 			"use CSHEET_FOLDER_INCLUDE to limit allowed folder.")
 	}
 
-	os.MkdirAll(Storage, 0700)
-	filestore.Dir = Storage + "/files"
-	filestore.TempDir = Storage + "/temp"
+	os.MkdirAll(DataPath, 0700)
+	filestore.Dir = DataPath + "/files"
+	filestore.TempDir = DataPath + "/temp"
 
 	filewatch.Manager.SetRateLimit(WatchRate)
 
@@ -76,7 +76,7 @@ func Load() {
 	}
 
 	resolvers.AdminToken = AdminToken
-	resolvers.DataPath = Storage
+	resolvers.DataPath = DataPath
 	resolvers.IssueTrackerURL = IssueTrackerURL
 
 	archive.CollectionLimit = ArchiveCollectionLimit
