@@ -1,75 +1,71 @@
-<template lang="pug">
-  nav#navbar
-    form(
-      ref="form"
-      action="javascript:void(0)"
-      @submit="collect()"
-    )
-      div(
-        class="mr-1 lg:mr-2 inline-block"
-      )
-        OriginPrefixInput(
+<template>
+  <nav id="navbar">
+    <form ref="form" action="javascript:void(0)" @submit="collect()">
+      <div class="mr-1 lg:mr-2 inline-block">
+        <OriginPrefixInput
           ref="originPrefixInput"
-          class=""
           v-model="formData.originPrefix"
           @change:mode="isHistoryStateChanged = true"
           @change:cgteamwork:database="isHistoryStateChanged = true"
-        )
-        button.form-button(
+        ></OriginPrefixInput>
+        <button
           ref="collectButton"
-          class="mr-1 w-24"
+          class="form-button mr-1 w-24"
           type="submit"
           :disabled="loadingCount > 0"
-        )
-          template(v-if="loadingCount > 0 ")
-            FaIcon(name='spinner' spin)
-          template(v-else)
-            | 收集
-      div.inline-block.mr-1.space-x-1
-        span.mr-1 筛选
-        CollectionTagInput(
-          v-model="formData.tagOr" multiple input-class="w-32" placeholder="匹配任一标签" clearable
+        >
+          <template v-if="loadingCount > 0">
+            <FaIcon name="spinner" spin="spin"></FaIcon>
+          </template>
+          <template v-else>收集</template>
+        </button>
+      </div>
+      <div class="inline-block mr-1 space-x-1">
+        <span class="mr-1">筛选</span>
+        <CollectionTagInput
+          v-model="formData.tagOr"
           class="max-w-md"
-        )
-        CollectionTagInput(
-          v-model="formData.tagAnd" multiple input-class="w-32" placeholder="匹配全部标签" clearable
+          multiple="multiple"
+          input-class="w-32"
+          placeholder="匹配任一标签"
+          clearable="clearable"
+        ></CollectionTagInput>
+        <CollectionTagInput
+          v-model="formData.tagAnd"
           class="max-w-md"
-        )
-        label(
-          class="inline-block keep-all"
-        )
-          input(
-            type="checkbox"
+          multiple="multiple"
+          input-class="w-32"
+          placeholder="匹配全部标签"
+          clearable="clearable"
+        ></CollectionTagInput>
+        <label class="inline-block keep-all">
+          <input
             v-model="formData.skipEmptyPresentation"
             class="form-checkbox text-gray-900"
-          )
-          span.mx-1 跳过无内容
-      label(
-        class="inline-block keep-all"
-      )
-        input(
-          type="checkbox"
+            type="checkbox"
+          /><span class="mx-1">跳过无内容</span>
+        </label>
+      </div>
+      <label class="inline-block keep-all">
+        <input
           v-model="isCellOverlayVisible"
           class="form-checkbox text-gray-900"
-        )
-        span.mx-1 信息显示
-      button.form-button(
-        class="ml-1"
+          type="checkbox"
+        /><span class="mx-1">信息显示</span>
+      </label>
+      <button
+        class="form-button ml-1"
         type="button"
         title="统计"
         @click="showStats()"
-      )
-        FaIcon(name="chart-pie")
-      a(
-        download
-        :href="archiveURL"
-      )
-        button.form-button(
-          class="ml-1"
-          type="button"
-          title="归档打包"
-        )
-          FaIcon(name="archive")
+      >
+        <FaIcon name="chart-pie"></FaIcon></button
+      ><a download="download" :href="archiveURL">
+        <button class="form-button ml-1" type="button" title="归档打包">
+          <FaIcon name="archive"></FaIcon></button
+      ></a>
+    </form>
+  </nav>
 </template>
 
 <script lang="ts">
@@ -81,29 +77,25 @@ import {
 import CollectionStatsDrawerVue from '@/components/CollectionStatsDrawer.vue';
 import CollectionTagInput from '@/components/CollectionTagInput.vue';
 import OriginPrefixInput from '@/components/OriginPrefixInput.vue';
+import { filePathFormat } from '@/const';
 import db from '@/db';
 import mutations from '@/graphql/mutations';
 import queries from '@/graphql/queries';
 import { info } from '@/message';
 import { show } from '@/modal';
+import { isCellOverlayVisible } from '@/preference';
 import searchParamsSetAll from '@/utils/searchParamSetAll';
 import {
   computed,
+  defineComponent,
   onUnmounted,
   reactive,
   ref,
   watch,
 } from '@vue/composition-api';
-import 'vue-awesome/icons/chart-pie';
 import 'vue-awesome/icons/archive';
-import { Component, Vue } from 'vue-property-decorator';
-import {
-  collectFromFolder,
-  collectFromFolderVariables,
-} from '../graphql/types/collectFromFolder';
+import 'vue-awesome/icons/chart-pie';
 import { collectionsVariables } from '../graphql/types/collections';
-import { filePathFormat } from '@/const';
-import { isCellOverlayVisible } from '@/preference';
 
 function getResultMessage({
   createdCount,
@@ -121,12 +113,15 @@ function getResultMessage({
   return `更新了 ${updatedCount} 个收藏`;
 }
 
-@Component<TheNavbar>({
+export default defineComponent({
+  name: 'TheNavbar',
   components: {
     OriginPrefixInput,
     CollectionTagInput,
   },
   setup: (props, ctx) => {
+    const originPrefixInput = ref<InstanceType<typeof OriginPrefixInput>>();
+    const form = ref<HTMLFormElement>();
     const formData = reactive({
       originPrefix: '',
       tagOr: [] as string[],
@@ -269,6 +264,54 @@ function getResultMessage({
       return u;
     });
 
+    const loadingCount = ref(0);
+    const collect = async (): Promise<void> => {
+      isHistoryStateChanged.value = true;
+      if (loadingCount.value > 0) {
+        return;
+      }
+      loadingCount.value += 1;
+      try {
+        if (originPrefix.value instanceof CGTeamworkOriginPrefix) {
+          const { data, errors } = await mutations.collectFromCGTeamwork(
+            {
+              input: {
+                database: originPrefix.value.database,
+                prefix: originPrefix.value.prefix,
+                pipeline: originPrefix.value.pipeline,
+              },
+            },
+            { errorPolicy: 'all' }
+          );
+          for (const err of errors ?? []) {
+            switch (err.extensions?.code) {
+              case 'CGTEAMWORK_COLLECT_OVER_TASK_LIMIT':
+                originPrefixInput.value?.cgteamworkPrefixInput?.setCustomValidity(
+                  '请使用更精确的前缀匹配来匹配更少的任务，如一集或一场。'
+                );
+                break;
+              default:
+                throw err;
+            }
+            form.value?.reportValidity();
+            return;
+          }
+          ctx.emit('collect');
+          info(getResultMessage(data?.collectFromCGTeamwork ?? {}));
+        } else if (originPrefix.value instanceof FolderOriginPrefix) {
+          const { data } = await mutations.collectFromFolder({
+            input: {
+              root: originPrefix.value.root,
+            },
+          });
+          ctx.emit('collect');
+          info(getResultMessage(data?.collectFromFolder ?? {}));
+        }
+      } finally {
+        loadingCount.value -= 1;
+      }
+    };
+
     return {
       formData,
       originPrefix,
@@ -276,79 +319,11 @@ function getResultMessage({
       isHistoryStateChanged,
       archiveURL,
       isCellOverlayVisible,
+      collect,
+      originPrefixInput,
+      form,
+      loadingCount,
     };
   },
-})
-export default class TheNavbar extends Vue {
-  formData!: {
-    originPrefix: string;
-    skipEmptyPresentation: boolean;
-    tagOr: string[];
-    tagAnd: string[];
-  };
-
-  loadingCount = 0;
-  $refs!: {
-    form: HTMLFormElement;
-    originPrefixInput: InstanceType<typeof OriginPrefixInput>;
-    collectButton: HTMLButtonElement;
-  };
-
-  originPrefix?: OriginPrefix;
-
-  isHistoryStateChanged!: boolean;
-
-  async collect(): Promise<void> {
-    this.isHistoryStateChanged = true;
-    if (this.loadingCount > 0) {
-      return;
-    }
-    this.loadingCount += 1;
-    try {
-      if (this.originPrefix instanceof CGTeamworkOriginPrefix) {
-        const { data, errors } = await mutations.collectFromCGTeamwork(
-          {
-            input: {
-              database: this.originPrefix.database,
-              prefix: this.originPrefix.prefix,
-              pipeline: this.originPrefix.pipeline,
-            },
-          },
-          { errorPolicy: 'all' }
-        );
-        for (const err of errors ?? []) {
-          switch (err.extensions?.code) {
-            case 'CGTEAMWORK_COLLECT_OVER_TASK_LIMIT':
-              this.$refs.originPrefixInput?.cgteamworkPrefixInput?.setCustomValidity(
-                '请使用更精确的前缀匹配来匹配更少的任务，如一集或一场。'
-              );
-              break;
-            default:
-              throw err;
-          }
-          this.$refs.form?.reportValidity();
-          return;
-        }
-        this.$emit('collect');
-        info(getResultMessage(data?.collectFromCGTeamwork ?? {}));
-      } else if (this.originPrefix instanceof FolderOriginPrefix) {
-        const { data } = await this.$apollo.mutate<
-          collectFromFolder,
-          collectFromFolderVariables
-        >({
-          mutation: require('@/graphql/mutations/collectFromFolder.gql'),
-          variables: {
-            input: {
-              root: this.originPrefix.root,
-            },
-          },
-        });
-        this.$emit('collect');
-        info(getResultMessage(data?.collectFromFolder ?? {}));
-      }
-    } finally {
-      this.loadingCount -= 1;
-    }
-  }
-}
+});
 </script>
