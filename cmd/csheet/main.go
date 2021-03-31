@@ -14,13 +14,21 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/job/transcode"
 	_ "github.com/WuLiFang/csheet/v6/pkg/mime"
 	"github.com/getsentry/sentry-go"
+	"go.uber.org/zap"
 )
 
 func main() {
 	defer logging.Sync()
+	var logger = logging.Logger("main")
 
 	config.ParseFlag()
 	config.Load()
+
+	logger.Info("config",
+		zap.String("env", config.Env),
+		zap.String("address", config.Address),
+		zap.String("dataPath", config.DataPath),
+	)
 
 	var err error
 

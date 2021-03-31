@@ -21,7 +21,7 @@ func newStringSet(v []string) (ret map[string]struct{}) {
 var (
 	Env                         = getenv.String("CSHEET_ENV", "development")
 	Address                     = getenv.String("CSHEET_ADDRESS", "0.0.0.0:80")
-	DataPath                    = getenv.StringCoalesce("CSHEET_DATA_PATH", "CSHEET_STORAGE", "storage")
+	DataPath                    = getenv.StringCoalesce([]string{"CSHEET_DATA_PATH", "CSHEET_STORAGE"}, "storage")
 	WatchRate                   = getenv.Int("CSHEET_WATCH_RATE", 50)
 	FileLife                    = getenv.Duration("CSHEET_FILE_LIFE", 240*time.Hour)
 	TempLife                    = getenv.Duration("CSHEET_TEMP_LIFE", time.Hour)
