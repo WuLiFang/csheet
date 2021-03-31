@@ -31,6 +31,7 @@
     </transition>
     <Presentation
       ref="presentationVue"
+      draggable
       :value="presentation"
       class="w-full"
       :class="presentationClass"

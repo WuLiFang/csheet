@@ -26,6 +26,7 @@
         ) {{node && node.title}}
     Presentation.w-full(
       ref="presentationVue"
+      draggable
       :id="presentation"
       :class="presentationClass"
       :image-filter=`imageFilter`

@@ -40,7 +40,8 @@
           :class="presentationClass"
           class="absolute inset-0"
           size="regular"
-          autoplay="autoplay"
+          autoplay
+          draggable
           :controls="annotation && annotation.currentPainter === 'null'"
           :playback-rate="playbackRate"
           @frameUpdate="currentFrame = $event"
