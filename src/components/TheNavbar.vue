@@ -78,6 +78,7 @@ import CollectionStatsDrawerVue from '@/components/CollectionStatsDrawer.vue';
 import CollectionTagInput from '@/components/CollectionTagInput.vue';
 import OriginPrefixInput from '@/components/OriginPrefixInput.vue';
 import useLocation from '@/composables/useLocation';
+import usePromise from '@/composables/usePromise';
 import { filePathFormat } from '@/const';
 import db from '@/db';
 import mutations from '@/graphql/mutations';
@@ -92,6 +93,7 @@ import {
   reactive,
   ref,
   watch,
+  watchEffect,
 } from '@vue/composition-api';
 import 'vue-awesome/icons/archive';
 import 'vue-awesome/icons/chart-pie';
@@ -186,10 +188,8 @@ export default defineComponent({
       { immediate: true }
     );
 
-    // update title
-    watch(
-      originPrefix,
-      async () => {
+    const title = usePromise(
+      computed(async () => {
         const parts: string[] = [];
         if (originPrefix.value instanceof CGTeamworkOriginPrefix) {
           const project =
@@ -208,10 +208,13 @@ export default defineComponent({
           parts.push(originPrefix.value.root);
         }
         parts.push('色板');
-        document.title = parts.filter((i) => !!i).join(' - ');
-      },
-      { immediate: true }
+        return parts.filter((i) => !!i).join(' - ');
+      }),
+      ref('色板')
     );
+    watchEffect(() => {
+      document.title = title.value;
+    });
 
     // save state
     watch(
@@ -240,9 +243,9 @@ export default defineComponent({
         }
 
         if (isHistoryStateChanged.value) {
-          history.pushState(null, document.title, url);
+          history.pushState(null, title.value, url);
         } else {
-          history.replaceState(null, document.title, url);
+          history.replaceState(null, title.value, url);
         }
         isHistoryStateChanged.value = false;
       },
@@ -269,7 +272,7 @@ export default defineComponent({
       }
       searchParamsSetAll(u.searchParams, 'tag_or', formData.tagOr);
       searchParamsSetAll(u.searchParams, 'tag_and', formData.tagAnd);
-      u.searchParams.set('title', document.title);
+      u.searchParams.set('title', title.value);
       if (filePathFormat) {
         u.searchParams.set('file_path_format', filePathFormat);
       }
