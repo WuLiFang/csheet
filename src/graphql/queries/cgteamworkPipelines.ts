@@ -93,17 +93,22 @@ export function useQuery(
       ...o,
       variables: variables.value,
     });
+    const updateLoadingCount = () => {
+      const loadingCount = options?.value.loadingCount;
+      if (loadingCount == null) {
+        return;
+      }
+      loadingCount.value += 1;
+      q.result().finally(() => {
+        loadingCount.value -= 1;
+      });
+    };
+    updateLoadingCount();
     query.value = q;
     const sub = q.subscribe((value) => {
       data.value = value.data;
       if (value.loading) {
-        const loadingCount = options?.value.loadingCount;
-        if (loadingCount != null) {
-          loadingCount.value += 1;
-          q.result().finally(() => {
-            loadingCount.value -= 1;
-          });
-        }
+        updateLoadingCount();
       } else {
         version.value += 1;
       }
