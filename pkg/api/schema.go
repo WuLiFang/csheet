@@ -35,13 +35,11 @@ func defaultValue(ctx context.Context) (ret interface{}, err error) {
 	if !tp.NonNull {
 		return
 	}
-	var name = tp.Name()
-	if tp.Elem != nil {
-		switch name {
-		case "CGTeamworkStatus":
-			ret = []cgteamwork.Status{}
-			return
-		}
+	var name = tp.String()
+	switch name {
+	case "[CGTeamworkStatus!]!":
+		ret = []cgteamwork.Status{}
+		return
 	}
 
 	err = fmt.Errorf("api: defaultValue: no default value for %s", name)
