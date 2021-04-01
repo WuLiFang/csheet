@@ -67,9 +67,9 @@ func apiHandler() gin.HandlerFunc {
 		},
 	)
 	server.SetErrorPresenter(func(ctx context.Context, err error) *gqlerror.Error {
-		var e = new(apperror.AppError)
-		if apperror.As(err, e) {
-			return e
+		var e *apperror.AppError
+		if apperror.As(err, &e) {
+			return e.GQLError()
 		}
 		return graphql.DefaultErrorPresenter(ctx, err)
 	})

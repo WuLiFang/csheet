@@ -8,29 +8,29 @@ import (
 )
 
 // As try convert any error to target, return true if converted.
-func As(err error, target *AppError) bool {
+func As(err error, target **AppError) bool {
 	if errors.Is(err, context.DeadlineExceeded) {
-		*target = *ErrTimeout
+		*target = ErrTimeout
 		return true
 	}
 
 	var apiError = new(cgteamwork.APIError)
 	if errors.As(err, apiError) {
 		if apiError.IsLoginFailed() {
-			*target = *ErrCGTeamworkLoginFailed
+			*target = ErrCGTeamworkLoginFailed
 			return true
 		}
 		if apiError.IsUnauthenticated() {
-			*target = *ErrCGTeamworkUnauthenticated
+			*target = ErrCGTeamworkUnauthenticated
 			return true
 		}
 		if apiError.IsUnauthorized() {
-			*target = *ErrCGTeamworkUnauthorized
+			*target = ErrCGTeamworkUnauthorized
 			return true
 		}
 	}
 	if errors.Is(err, cgteamwork.ErrNotConfigured) {
-		*target = *ErrCGTeamworkNotConfigured
+		*target = ErrCGTeamworkNotConfigured
 		return true
 	}
 

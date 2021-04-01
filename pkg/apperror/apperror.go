@@ -2,22 +2,44 @@
 package apperror
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 
-// AppError is a alias to gqlerror.Error
-type AppError = gqlerror.Error
+// AppError that defined in application scope.
+type AppError struct {
+	Code       string
+	Message    string
+	Locales    map[string]string
+	Extensions map[string]interface{}
+}
+
+func (e *AppError) Error() string {
+	return e.Message
+}
+
+// GQLError from app error
+func (e AppError) GQLError() *gqlerror.Error {
+	var extensions = make(map[string]interface{})
+	for k, v := range e.Extensions {
+		extensions[k] = v
+	}
+	extensions["locales"] = e.Locales
+	extensions["code"] = e.Code
+	return &gqlerror.Error{
+		Message:    e.Message,
+		Extensions: extensions,
+	}
+}
 
 // ErrTimeout when request timeout.
 var ErrTimeout = &AppError{
 	Message: "request timeout",
-	Extensions: map[string]interface{}{
-		"code": "TIMEOUT",
-		"locales": map[string]string{
-			"zh": "请求超时",
-		},
+	Code:    "TIMEOUT",
+	Locales: map[string]string{
+		"zh": "请求超时",
 	},
 }
 
@@ -25,11 +47,9 @@ var ErrTimeout = &AppError{
 func NewErrCGTeamworkCollectOverTaskLimit(current, max int) error {
 	return &AppError{
 		Message: fmt.Sprintf("select match %d tasks, max allowed value is %d", current, max),
-		Extensions: map[string]interface{}{
-			"code": "CGTEAMWORK_COLLECT_OVER_TASK_LIMIT",
-			"locales": map[string]string{
-				"zh": fmt.Sprintf("所选条件匹配 %d 任务, 允许的最大值为 %d", current, max),
-			},
+		Code:    "CGTEAMWORK_COLLECT_OVER_TASK_LIMIT",
+		Locales: map[string]string{
+			"zh": fmt.Sprintf("所选条件匹配 %d 任务, 允许的最大值为 %d", current, max),
 		},
 	}
 }
@@ -38,11 +58,9 @@ func NewErrCGTeamworkCollectOverTaskLimit(current, max int) error {
 func NewErrCGTeamworkPipelineNotFound(name string) error {
 	return &AppError{
 		Message: fmt.Sprintf("pipeline not found: %s", name),
-		Extensions: map[string]interface{}{
-			"code": "CGTEAMWORK_PIPELINE_NOT_FOUND",
-			"locales": map[string]string{
-				"zh": fmt.Sprintf("找不到流程: %s", name),
-			},
+		Code:    "CGTEAMWORK_PIPELINE_NOT_FOUND",
+		Locales: map[string]string{
+			"zh": fmt.Sprintf("找不到流程: %s", name),
 		},
 	}
 }
@@ -50,43 +68,52 @@ func NewErrCGTeamworkPipelineNotFound(name string) error {
 // ErrCGTeamworkLoginFailed when cgteamwork login failed
 var ErrCGTeamworkLoginFailed = &AppError{
 	Message: "cgteamwork login failed",
-	Extensions: map[string]interface{}{
-		"code": "CGTEAMWORK_LOGIN_FAILED",
-		"locales": map[string]string{
-			"zh": fmt.Sprintf("CGTeamwork 登录失败"),
-		},
+	Code:    "CGTEAMWORK_LOGIN_FAILED",
+	Locales: map[string]string{
+		"zh": fmt.Sprintf("CGTeamwork 登录失败"),
 	},
 }
 
 // ErrCGTeamworkUnauthenticated when cgteamwork login required
 var ErrCGTeamworkUnauthenticated = &AppError{
 	Message: "cgteamwork unauthenticated",
-	Extensions: map[string]interface{}{
-		"code": "CGTEAMWORK_UNAUTHENTICATED",
-		"locales": map[string]string{
-			"zh": fmt.Sprintf("CGTeamwork 未登录"),
-		},
+	Code:    "CGTEAMWORK_UNAUTHENTICATED",
+	Locales: map[string]string{
+		"zh": fmt.Sprintf("CGTeamwork 未登录"),
 	},
 }
 
 // ErrCGTeamworkUnauthorized when cgteamwork permission required
 var ErrCGTeamworkUnauthorized = &AppError{
 	Message: "cgteamwork unauthorized",
-	Extensions: map[string]interface{}{
-		"code": "CGTEAMWORK_UNAUTHORIZED",
-		"locales": map[string]string{
-			"zh": fmt.Sprintf("CGTeamwork 未授权"),
-		},
+	Code:    "CGTEAMWORK_UNAUTHORIZED",
+	Locales: map[string]string{
+		"zh": fmt.Sprintf("CGTeamwork 未授权"),
 	},
 }
 
 // ErrCGTeamworkNotConfigured when cgteamwork not configured
 var ErrCGTeamworkNotConfigured = &AppError{
 	Message: "cgteamwork not configured",
-	Extensions: map[string]interface{}{
-		"code": "CGTEAMWORK_NOT_CONFIGURED",
-		"locales": map[string]string{
-			"zh": fmt.Sprintf("CGTeamwork 未配置"),
-		},
+	Code:    "CGTEAMWORK_NOT_CONFIGURED",
+	Locales: map[string]string{
+		"zh": fmt.Sprintf("CGTeamwork 未配置"),
 	},
+}
+
+// ErrCode returns code for error, empty string when not found.
+func ErrCode(err error) string {
+	var appErr *AppError
+	if As(err, &appErr) {
+		return appErr.Code
+	}
+	var gqlErr *gqlerror.Error
+	if errors.As(err, &gqlErr) {
+		if code, ok := gqlErr.Extensions["code"]; ok {
+			if v, ok := code.(string); ok {
+				return v
+			}
+		}
+	}
+	return ""
 }
