@@ -20,7 +20,6 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/middleware/ginsentry"
 	"github.com/WuLiFang/csheet/v6/pkg/models/file"
 	"github.com/WuLiFang/csheet/v6/pkg/models/presentation"
-	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 )
 
@@ -37,13 +36,6 @@ func New() *gin.Engine {
 	r.ForwardedByClientIP = config.UseXForwardedFor
 	r.Use(
 		ginsentry.Middleware(),
-		func(ctx *gin.Context) {
-			var hub = logging.For(ctx)
-			hub.Scope().SetUser(sentry.User{
-				IPAddress: ctx.ClientIP(),
-			})
-			ctx.Next()
-		},
 		cors.Middleware(config.CORSHosts),
 	)
 	r.Any("api", gincontext.Middleware(), apiHandler())

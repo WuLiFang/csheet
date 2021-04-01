@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/NateScarlet/zap-sentry/pkg/logging"
+	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,6 +19,9 @@ func Middleware() gin.HandlerFunc {
 		defer hub.PopScope()
 		c.Request = c.Request.WithContext(ctx)
 		scope.SetRequest(c.Request)
+		scope.SetUser(sentry.User{
+			IPAddress: c.ClientIP(),
+		})
 		c.Next()
 
 		defer func() {
