@@ -3,16 +3,16 @@ import { computed, Ref } from '@vue/composition-api';
 import cast from 'cast-unknown';
 
 export default function useCollectionCGTeamworkArtists(
-  collection: Ref<Collection>
+  collection: Ref<Collection | undefined>
 ): Ref<string[]> {
   return computed((): string[] => {
-    const pipeline = collection.value.metadata.find(
+    const pipeline = collection.value?.metadata.find(
       (i) => i.k === 'cgteamwork.pipeline'
     )?.v;
     if (!pipeline) {
       return [];
     }
-    for (const { k, v } of collection.value.metadata ?? []) {
+    for (const { k, v } of collection.value?.metadata ?? []) {
       switch (k) {
         case 'cgteamwork.tasks':
           return cast

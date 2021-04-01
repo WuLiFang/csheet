@@ -11,10 +11,10 @@ const statusPriority: Record<string, number | undefined> = {
 };
 
 export default function useCGTeamworkTaskStatus(
-  collection: Ref<Collection>
+  collection: Ref<Collection | undefined>
 ): Ref<string> {
   return computed(() => {
-    const data = collection.value.metadata.find(
+    const data = collection.value?.metadata.find(
       (i) => i.k === 'cgteamwork.tasks'
     )?.v;
     let ret = '';

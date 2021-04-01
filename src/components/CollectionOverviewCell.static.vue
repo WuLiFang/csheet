@@ -14,7 +14,7 @@
     >
       <div
         v-show="isCellOverlayVisible"
-        class="overlay absolute inset-0 pointer-events-none"
+        class="bg-gradient-overlay absolute inset-0 pointer-events-none"
       >
         <header class="flex justify-between opacity-75 p-1">
           <FunctionalComponent :render="renderTopLeft"></FunctionalComponent>
@@ -30,7 +30,6 @@
       </div>
     </transition>
     <Presentation
-      ref="presentationVue"
       draggable
       :value="presentation"
       class="w-full"
@@ -42,20 +41,13 @@
 
 <script lang="ts">
 import CGTeamworkStatusWidget from '@/components/cgteamwork/CGTeamworkStatusWidget.static.vue';
-import {
-  backgroundClass,
-  imageFilter,
-  usePresentationClass,
-} from '@/components/CollectionOverviewCell';
-import useCollectionCGTeamworkArtists from '@/composables/useCollectionCGTeamworkArtists';
-import useCollectionCGTeamworkTaskStatus from '@/composables/useCollectionCGTeamworkTaskStatus';
+import { imageFilter, setupCommon } from '@/components/CollectionOverviewCell';
 import type { Collection } from '@/graphql/types/Collection';
-import type { Presentation } from '@/graphql/types/Presentation';
 import { isCellOverlayVisible } from '@/preference';
-import { computed, defineComponent, PropType, ref } from '@vue/composition-api';
-import { sortBy } from 'lodash';
+import { defineComponent, PropType, ref, toRefs } from '@vue/composition-api';
 import { CreateElement, VNode } from 'vue';
 import PresentationVue from './Presentation.static.vue';
+
 export default defineComponent({
   name: 'CollectionOverviewCell',
   components: {
@@ -69,26 +61,15 @@ export default defineComponent({
   },
   setup: (props) => {
     const el = ref<HTMLElement | undefined>();
+    const { value } = toRefs(props);
+    const {
+      backgroundClass,
+      cgteamworkArtists,
+      cgteamworkTaskStatus,
+      presentation,
+      presentationClass,
+    } = setupCommon(el, value);
 
-    const presentation = computed((): Presentation | undefined => {
-      return sortBy(props.value.presentations ?? [], [
-        (i) => !i.thumb,
-        (i) => -new Date(i.raw.modTime || 0).getTime(),
-        (i) => i.id,
-      ])[0];
-    });
-    const presentationVue = ref<PresentationVue | undefined>();
-    const presentationClass = usePresentationClass(
-      el,
-      computed(() => presentationVue.value?.node)
-    );
-
-    const cgteamworkTaskStatus = useCollectionCGTeamworkTaskStatus(
-      computed(() => props.value)
-    );
-    const cgteamworkArtists = useCollectionCGTeamworkArtists(
-      computed(() => props.value)
-    );
     const renderTopLeft = (h: CreateElement): VNode => {
       return h(
         'div',
@@ -110,7 +91,6 @@ export default defineComponent({
     return {
       el,
       presentation,
-      presentationVue,
       presentationClass,
       isCellOverlayVisible,
       backgroundClass,
@@ -121,19 +101,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.collection-overview-cell {
-  .overlay {
-    background: linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.5) 0%,
-      rgba(0, 0, 0, 0.1) 20%,
-      rgba(0, 0, 0, 0) 30%,
-      rgba(0, 0, 0, 0) 70%,
-      rgba(0, 0, 0, 0.1) 80%,
-      rgba(0, 0, 0, 0.5) 100%
-    );
-  }
-}
-</style>

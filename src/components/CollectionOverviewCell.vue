@@ -1,190 +1,109 @@
-<template lang="pug">
-  figure.collection-overview-cell.inline-block.relative(
+<template>
+  <figure
     ref="el"
-    class="cursor-pointer flex items-center max-h-64 overflow-hidden"
-    @click="$emit('click', $event)"
+    class="collection-overview-cell inline-block relative cursor-pointer flex items-center max-h-64 overflow-hidden"
     :title="node && node.title"
-    :class=`{[backgroundClass]: true}`
-  )
-    transition(
+    :class="{ [backgroundClass]: true }"
+    @click="$emit('click', $event)"
+  >
+    <transition
       enter-class="opacity-0"
       leave-to-class="opacity-0"
       enter-active-class="transition-all duration-500 ease-in-out"
       leave-active-class="transition-all duration-500 ease-in-out"
-    )
-      .overlay(
-        class="absolute inset-0 pointer-events-none"
+    >
+      <div
         v-show="isCellOverlayVisible"
-      )
-        header(
-          class="flex justify-between opacity-75 p-1"
-        )
-          FunctionalComponent(:render="renderTopLeft")
-          FunctionalComponent(:render="renderTopRight")
-        caption(
+        class="bg-gradient-overlay absolute inset-0 pointer-events-none"
+      >
+        <header class="flex justify-between opacity-75 p-1">
+          <FunctionalComponent :render="renderTopLeft"></FunctionalComponent>
+          <FunctionalComponent :render="renderTopRight"></FunctionalComponent>
+        </header>
+        <caption
           class="absolute text-center w-full bottom-0 text-gray-400 text-sm break-all p-1"
-        ) {{node && node.title}}
-    Presentation.w-full(
-      ref="presentationVue"
+        >
+          {{
+            node && node.title
+          }}
+        </caption>
+      </div>
+    </transition>
+    <Presentation
       draggable
-      :id="presentation"
+      :value="presentation"
+      class="w-full"
       :class="presentationClass"
-      :image-filter=`imageFilter`
-    )
+      :image-filter="imageFilter"
+    ></Presentation>
+  </figure>
 </template>
 
 <script lang="ts">
+import CGTeamworkStatusWidget from '@/components/cgteamwork/CGTeamworkStatusWidget.vue';
+import { imageFilter, setupCommon } from '@/components/CollectionOverviewCell';
 import { filePathFormat } from '@/const';
-import {
-  collectionNode,
-  collectionNodeVariables,
-} from '@/graphql/types/collectionNode';
+import { useCollectionNode } from '@/graphql/queries/index.queries';
 import { isCellOverlayVisible } from '@/preference';
-import { computed, ref } from '@vue/composition-api';
-import * as cast from 'cast-unknown';
-import { sortBy } from 'lodash';
+import { computed, defineComponent, ref } from '@vue/composition-api';
 import { CreateElement, VNode } from 'vue';
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { Collection } from '../graphql/types/Collection';
-import CGTeamworkStatusWidget from './cgteamwork/CGTeamworkStatusWidget.vue';
-import {
-  backgroundClass,
-  imageFilter,
-  usePresentationClass,
-} from './CollectionOverviewCell';
-import PresentationVue from './Presentation.vue';
+import PresentationVue from './Presentation.static.vue';
 
-@Component<CollectionOverviewCell>({
-  components: { Presentation: PresentationVue, CGTeamworkStatusWidget },
-  apollo: {
-    node: {
-      query: require('@/graphql/queries/collectionNode.gql'),
-      variables(): collectionNodeVariables {
-        return { id: this.id, filePathFormat };
-      },
-      skip(): boolean {
-        return !this.id;
-      },
-      update(v: collectionNode): Collection | undefined {
-        return v.node?.__typename === 'Collection' ? v.node : undefined;
-      },
+export default defineComponent({
+  name: 'CollectionOverviewCell',
+  components: {
+    Presentation: PresentationVue,
+  },
+  props: {
+    id: {
+      type: String,
+      required: true,
     },
   },
-
-  setup() {
+  setup: (props) => {
     const el = ref<HTMLElement | undefined>();
-    const presentationVue = ref<PresentationVue | undefined>();
-    const presentationClass = usePresentationClass(
-      el,
-      computed(() => presentationVue.value?.node)
+    const { node } = useCollectionNode(
+      computed(() => ({
+        id: props.id,
+        filePathFormat,
+      }))
     );
+    const {
+      backgroundClass,
+      cgteamworkArtists,
+      cgteamworkTaskStatus,
+      presentation,
+      presentationClass,
+    } = setupCommon(el, node);
+    const renderTopLeft = (h: CreateElement): VNode => {
+      return h(
+        'div',
+        cgteamworkArtists.value.map((i) =>
+          h('span', { staticClass: 'artist mr-1' }, i)
+        )
+      );
+    };
+
+    const renderTopRight = (h: CreateElement): VNode | undefined => {
+      if (cgteamworkTaskStatus.value) {
+        return h(CGTeamworkStatusWidget, {
+          staticClass: 'rounded-sm px-2',
+          props: { value: cgteamworkTaskStatus.value },
+        });
+      }
+    };
 
     return {
       el,
+      presentation,
+      presentationClass,
       isCellOverlayVisible,
       backgroundClass,
-      presentationVue,
-      presentationClass,
+      renderTopLeft,
+      renderTopRight,
+      node,
       imageFilter: (p: PresentationVue) => imageFilter(p),
     };
   },
-})
-export default class CollectionOverviewCell extends Vue {
-  @Prop({ type: String, required: true })
-  id!: string;
-
-  node?: Collection;
-
-  $refs!: {
-    presentationVue: PresentationVue;
-  };
-
-  get cgteamworkArtists(): string[] {
-    const pipeline = this.node?.metadata.find(
-      (i) => i.k === 'cgteamwork.pipeline'
-    )?.v;
-    if (!pipeline) {
-      return [];
-    }
-    for (const { k, v } of this.node?.metadata ?? []) {
-      switch (k) {
-        case 'cgteamwork.tasks':
-          return cast
-            .array(JSON.parse(v))
-            .map(cast.object)
-            .filter((i) => cast.string(i.pipeline) === pipeline)
-            .flatMap((i) => cast.array(i.artists).map(cast.string));
-      }
-    }
-    return [];
-  }
-
-  get cgteamworkTaskStatus(): string {
-    const statusPriority: Record<string, number | undefined> = {
-      Approve: 1,
-      Wait: 2,
-      Check: 3,
-      Retake: 4,
-      Close: 5,
-    };
-    const data = this.node?.metadata.find((i) => i.k === 'cgteamwork.tasks')?.v;
-    const pipeline = this.node?.metadata.find(
-      (i) => i.k === 'cgteamwork.pipeline'
-    )?.v;
-    let ret = '';
-    if (!(data && pipeline)) {
-      return '';
-    }
-    for (const i of cast.array(JSON.parse(data))) {
-      for (const status of Object.values(i?.status).map(cast.string)) {
-        if ((statusPriority[status] ?? 0) > (statusPriority[ret] ?? 0)) {
-          ret = status;
-        }
-      }
-    }
-    return ret;
-  }
-
-  get presentation(): string {
-    return sortBy(this.node?.presentations ?? [], [
-      (i) => !i.thumb,
-      (i) => -new Date(i.raw.modTime || 0).getTime(),
-      (i) => i.id,
-    ])[0]?.id;
-  }
-
-  renderTopLeft(h: CreateElement): VNode {
-    return h(
-      'div',
-      this.cgteamworkArtists.map((i) =>
-        h('span', { staticClass: 'artist mr-1' }, i)
-      )
-    );
-  }
-
-  renderTopRight(h: CreateElement): VNode | undefined {
-    if (this.cgteamworkTaskStatus) {
-      return h(CGTeamworkStatusWidget, {
-        staticClass: 'rounded-sm px-2',
-        props: { value: this.cgteamworkTaskStatus },
-      });
-    }
-  }
-}
+});
 </script>
-
-<style lang="scss" scoped>
-.collection-overview-cell {
-  .overlay {
-    background: linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.5) 0%,
-      rgba(0, 0, 0, 0.1) 20%,
-      rgba(0, 0, 0, 0) 30%,
-      rgba(0, 0, 0, 0) 70%,
-      rgba(0, 0, 0, 0.1) 80%,
-      rgba(0, 0, 0, 0.5) 100%
-    );
-  }
-}
-</style>

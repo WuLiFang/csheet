@@ -1,9 +1,13 @@
+import useCollectionCGTeamworkArtists from '@/composables/useCollectionCGTeamworkArtists';
+import useCollectionCGTeamworkTaskStatus from '@/composables/useCollectionCGTeamworkTaskStatus';
+import useElementSize from '@/composables/useElementSize';
+import useObjectContainRate from '@/composables/useObjectContainRate';
+import usePresentationMetadata from '@/composables/usePresentationMetadata';
+import { Collection } from '@/graphql/types/Collection';
 import { Presentation } from '@/graphql/types/Presentation';
 import { viewerBackground } from '@/preference';
 import { computed, Ref } from '@vue/composition-api';
-import useElementSize from '@/composables/useElementSize';
-import usePresentationMetadata from '@/composables/usePresentationMetadata';
-import useObjectContainRate from '@/composables/useObjectContainRate';
+import { sortBy } from 'lodash';
 
 export const backgroundClass = computed((): string => {
   switch (viewerBackground.value) {
@@ -66,4 +70,35 @@ export function usePresentationClass(
     }
   });
   return presentationClass;
+}
+
+export function setupCommon(
+  el: Ref<HTMLElement | undefined>,
+  collection: Ref<Collection | undefined>
+): {
+  presentation: Ref<Presentation | undefined>;
+  presentationClass: Ref<string>;
+  backgroundClass: Ref<string>;
+  cgteamworkTaskStatus: Ref<string>;
+  cgteamworkArtists: Ref<string[]>;
+} {
+  const presentation = computed((): Presentation | undefined => {
+    return sortBy(collection.value?.presentations ?? [], [
+      (i) => !i.thumb,
+      (i) => -new Date(i.raw.modTime || 0).getTime(),
+      (i) => i.id,
+    ])[0];
+  });
+  const presentationClass = usePresentationClass(el, presentation);
+
+  const cgteamworkTaskStatus = useCollectionCGTeamworkTaskStatus(collection);
+  const cgteamworkArtists = useCollectionCGTeamworkArtists(collection);
+
+  return {
+    presentation,
+    presentationClass,
+    backgroundClass,
+    cgteamworkTaskStatus,
+    cgteamworkArtists,
+  };
 }
