@@ -17,25 +17,7 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 
-func isFieldNullable(ctx context.Context) bool {
-
-	var fc = graphql.GetFieldContext(ctx)
-	if fc == nil {
-		return false
-	}
-	var fd = fc.Field.Definition
-	if fd == nil {
-		return false
-	}
-	var tp = fd.Type
-	if tp == nil {
-		return false
-	}
-	return !tp.NonNull
-}
-
 func defaultValue(ctx context.Context) (ret interface{}, err error) {
-
 	var fc = graphql.GetFieldContext(ctx)
 	if fc == nil {
 		return
