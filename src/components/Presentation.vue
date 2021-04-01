@@ -3,7 +3,12 @@ import usePresentationMetadata from '@/composables/usePresentationMetadata';
 import queries from '@/graphql/queries';
 import clamp from '@/utils/clamp';
 import getPathBasename from '@/utils/getPathBasename';
-import { computed, ref, toRefs, watch } from '@vue/composition-api';
+import {
+  computed,
+  ref,
+  toRefs,
+  watch
+} from '@vue/composition-api';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { filePathFormat } from '../const';
 import { Presentation as Data } from '../graphql/types/Presentation';
@@ -11,7 +16,7 @@ import {
   useCurrentFrame,
   useFrameControl,
   usePresentationDrag,
-  usePresentationFile,
+  usePresentationFile
 } from './Presentation';
 
 @Component<Presentation>({
@@ -101,10 +106,12 @@ import {
         size: string;
       }
     );
+    const loadingCount = ref(0);
     const { node, version } = queries.usePresentationNode(
       computed(() => ({ id: id.value ?? '', filePathFormat })),
       computed(() => ({
         skip: !id.value,
+        loadingCount,
       }))
     );
     const {
@@ -147,6 +154,7 @@ import {
       size,
       isLoadFailed,
       retryCount,
+      isLoading: computed(() => loadingCount.value > 0),
     });
 
     const _handleDrag = usePresentationDrag(node);

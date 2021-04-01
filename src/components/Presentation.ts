@@ -1,6 +1,9 @@
-import clamp from '@/utils/clamp';
-import { Ref, computed, ComputedRef } from '@vue/composition-api';
 import { Presentation } from '@/graphql/types/Presentation';
+import clamp from '@/utils/clamp';
+import {
+  computed,
+  ComputedRef, Ref
+} from '@vue/composition-api';
 
 export function useCurrentFrame({
   firstFrame,
@@ -88,11 +91,18 @@ export function usePresentationFile(
   {
     size,
     isLoadFailed,
+    isLoading,
     retryCount,
-  }: { size: Ref<string>; isLoadFailed: Ref<boolean>; retryCount?: Ref<number> }
+  }: {
+    size: Ref<string>;
+    isLoading?: Ref<boolean>;
+    isLoadFailed: Ref<boolean>;
+    retryCount?: Ref<number>;
+  }
 ): {
   url: Ref<string | undefined>;
   isTranscodeFailed: Ref<boolean>;
+  isTranscoding: Ref<boolean>;
   src: Ref<string>;
 } {
   const ret = computed(() => {
@@ -100,6 +110,8 @@ export function usePresentationFile(
       case 'regular':
         return {
           url: presentation.value?.regular?.url,
+          isTranscoding:
+            presentation.value != null && presentation.value.regular == null,
           isTranscodeFailed:
             presentation.value?.isRegularTranscodeFailed ?? false,
         };
@@ -107,6 +119,8 @@ export function usePresentationFile(
       default:
         return {
           url: presentation.value?.thumb?.url,
+          isTranscoding:
+            presentation.value != null && presentation.value.thumb == null,
           isTranscodeFailed:
             presentation.value?.isThumbTranscodeFailed ?? false,
         };
@@ -115,9 +129,13 @@ export function usePresentationFile(
 
   const url = computed(() => ret.value.url);
   const isTranscodeFailed = computed(() => ret.value.isTranscodeFailed);
+  const isTranscoding = computed(() => ret.value.isTranscoding);
   const src = computed((): string => {
-    if (!presentation.value) {
-      return require('@/assets/img/default.svg');
+    if (isTranscoding?.value) {
+      return require('@/assets/img/transcoding.svg');
+    }
+    if (isLoading?.value) {
+      return require('@/assets/img/loading.svg');
     }
     if (isTranscodeFailed.value) {
       return require('@/assets/img/transcode_failed.svg');
@@ -125,14 +143,19 @@ export function usePresentationFile(
     if (isLoadFailed.value) {
       return require('@/assets/img/load_failed.svg');
     }
+    if (!url.value) {
+      return require('@/assets/img/default.svg');
+    }
     if ((retryCount?.value ?? 0) > 0) {
       return url.value + `?t=${Date.now()}`;
     }
-    return url.value || require('@/assets/img/transcoding.svg');
+    return url.value;
   });
+
   return {
     url,
     isTranscodeFailed,
+    isTranscoding,
     src,
   };
 }
