@@ -6,7 +6,7 @@ Vue.use(VueI18n);
 const locales = require.context('@/locales', true, /[A-Za-z0-9-_,\s]+\.json$/i);
 
 const messages: LocaleMessages = Object.fromEntries(
-  locales.keys().map(i => {
+  locales.keys().map((i) => {
     const match = i.match(/([\w_-]+)\./);
     return [(match && match[1]) || i, locales(i)];
   })
@@ -34,3 +34,10 @@ export const i18n: VueI18n = new VueI18n({
   messages,
   locale,
 });
+
+export function tr(key: string, d?: string): string {
+  if (d != null) {
+    return i18n.te(key) ? i18n.t(key).toString() : d;
+  }
+  return i18n.t(key).toString();
+}

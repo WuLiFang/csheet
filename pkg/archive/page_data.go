@@ -140,6 +140,12 @@ query staticPageData(
 			hasNextPage
 		}
 	}
+	cgteamworkStatuses @ignoreError(code: ["CGTEAMWORK_NOT_CONFIGURED"]) {
+		__typename
+		id
+		name
+		color
+	}
 }
 `,
 		},

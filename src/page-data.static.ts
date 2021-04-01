@@ -27,7 +27,9 @@ export function isPageData(v: unknown): v is PageData {
   return (
     o.__typename === 'StaticPageData' &&
     'collections' in o &&
-    'clientConfig' in o
+    'clientConfig' in o &&
+    'cgteamworkStatuses' in o &&
+    'title' in o
   );
 }
 
@@ -45,6 +47,7 @@ export function getPageDataFromElement(
         hasNextPage: false,
       },
     },
+    cgteamworkStatuses: [],
     title: '色板 - 数据载入出错',
   };
   if (!el?.textContent) {
@@ -148,6 +151,12 @@ query staticPageData(
       __typename
       hasNextPage
     }
+  }
+  cgteamworkStatuses @ignoreError(code: ["CGTEAMWORK_NOT_CONFIGURED"]) {
+    __typename
+    id
+    name
+    color
   }
 }`,
         variables: {
