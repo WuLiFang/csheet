@@ -1,0 +1,10 @@
+"""
+Ignore specified errors.
+
+return data will be null if field is nullable
+or empty array for some array fields.
+"""
+directive @ignoreError(
+  "Error code to ignore."
+  code: [String!]!
+) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT

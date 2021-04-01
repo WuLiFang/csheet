@@ -4,6 +4,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"reflect"
 	"time"
 
@@ -11,14 +12,80 @@ import (
 	"github.com/99designs/gqlgen/graphql/executor"
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
 	"github.com/WuLiFang/csheet/v6/pkg/api/resolvers"
+	"github.com/WuLiFang/csheet/v6/pkg/apperror"
+	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 )
+
+func isFieldNullable(ctx context.Context) bool {
+
+	var fc = graphql.GetFieldContext(ctx)
+	if fc == nil {
+		return false
+	}
+	var fd = fc.Field.Definition
+	if fd == nil {
+		return false
+	}
+	var tp = fd.Type
+	if tp == nil {
+		return false
+	}
+	return !tp.NonNull
+}
+
+func defaultValue(ctx context.Context) (ret interface{}, err error) {
+
+	var fc = graphql.GetFieldContext(ctx)
+	if fc == nil {
+		return
+	}
+	var fd = fc.Field.Definition
+	if fd == nil {
+		err = fmt.Errorf("api: defaultValue: field definition is nil")
+		return
+	}
+	var tp = fd.Type
+	if tp == nil {
+		err = fmt.Errorf("api: defaultValue: field type is nil")
+		return
+	}
+	if !tp.NonNull {
+		return
+	}
+	var name = tp.Name()
+	if tp.Elem != nil {
+		switch name {
+		case "CGTeamworkStatus":
+			ret = []cgteamwork.Status{}
+			return
+		}
+	}
+
+	err = fmt.Errorf("api: defaultValue: no default value for %s", name)
+	return
+}
 
 // NewExecutableSchema create new graphql schema
 func NewExecutableSchema() graphql.ExecutableSchema {
 	return generated.NewExecutableSchema(
 		generated.Config{
 			Resolvers: &resolvers.Resolver{},
+			Directives: generated.DirectiveRoot{
+				IgnoreError: func(ctx context.Context, obj interface{}, next graphql.Resolver, code []string) (res interface{}, err error) {
+					res, err = next(ctx)
+					if err == nil {
+						return
+					}
+					var errCode = apperror.ErrCode(err)
+					for _, i := range code {
+						if i == errCode {
+							return defaultValue(ctx)
+						}
+					}
+					return
+				},
+			},
 		},
 	)
 }

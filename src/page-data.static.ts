@@ -1,4 +1,5 @@
 import type { Config } from '@/graphql/queries/clientConfig';
+import { cgteamworkStatuses } from '@/graphql/types/cgteamworkStatuses';
 import type { collections } from '@/graphql/types/collections';
 import '@/plugins/composition-api';
 import { ref, watchEffect } from '@vue/composition-api';
@@ -14,6 +15,7 @@ export interface PageData {
       'hasNextPage' | '__typename'
     >;
   };
+  cgteamworkStatuses: cgteamworkStatuses['cgteamworkStatuses'];
   title: string;
 }
 
