@@ -3,8 +3,10 @@ import { computed, Ref } from '@vue/composition-api';
 import cast from 'cast-unknown';
 
 const statusPriority: Record<string, number | undefined> = {
-  Approve: 1,
-  Wait: 2,
+  '': -100,
+  Approve: -2,
+  Wait: -1,
+  Active: 2,
   Check: 3,
   Retake: 4,
   Close: 5,
