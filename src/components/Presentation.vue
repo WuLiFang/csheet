@@ -10,8 +10,8 @@ import { Presentation as Data } from '../graphql/types/Presentation';
 import {
   useCurrentFrame,
   useFrameControl,
-  usePresentationFile,
   usePresentationDrag,
+  usePresentationFile,
 } from './Presentation';
 
 @Component<Presentation>({
@@ -213,7 +213,11 @@ export default class Presentation extends Vue {
   currentFrame!: number;
   currentTime!: number;
   src!: string;
-
+  play!: () => void;
+  pause!: () => void;
+  seek!: (time: number, pause?: boolean) => void;
+  seekFrame!: (frame: number, pause?: boolean) => void;
+  seekFrameOffset!: (frame: number, pause?: boolean) => void;
   paused = true;
 
   _handleDrag!: (e: DragEvent) => void;

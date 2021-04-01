@@ -105,6 +105,7 @@ import moment from 'moment';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import DurationInput from './DurationInput.vue';
 import type InputNumber from './global/InputNumber.vue';
+import type PresentationStatic from './Presentation.static.vue';
 import type Presentation from './Presentation.vue';
 
 @Component<PresentationControls>({
@@ -130,7 +131,7 @@ import type Presentation from './Presentation.vue';
 })
 export default class PresentationControls extends Vue {
   @Prop({ required: true })
-  parent!: Presentation;
+  parent!: Presentation | PresentationStatic;
 
   @Prop({ type: Number, default: 1 })
   playbackRate!: number;

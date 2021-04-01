@@ -193,6 +193,11 @@ export default class Presentation extends Vue {
   isTranscodeFailed!: boolean;
   currentTime!: number;
   currentFrame!: number;
+  play!: () => void;
+  pause!: () => void;
+  seek!: (time: number, pause?: boolean) => void;
+  seekFrame!: (frame: number, pause?: boolean) => void;
+  seekFrameOffset!: (frame: number, pause?: boolean) => void;
   src!: string;
 
   paused = true;
