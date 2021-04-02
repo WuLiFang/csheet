@@ -1,5 +1,6 @@
 <template>
   <svg
+  ref="el"
     :viewBox="`0 0 ${width} ${height}`"
     :width="width"
     :height="height"
@@ -10,7 +11,7 @@
 <script lang="ts">
 import usePresentationMetadata from '@/composables/usePresentationMetadata';
 import { Presentation } from '@/graphql/types/Presentation';
-import { computed, defineComponent, PropType } from '@vue/composition-api';
+import { computed, defineComponent, PropType, ref } from '@vue/composition-api';
 import DOMPurify from 'dompurify';
 
 export default defineComponent({
@@ -21,6 +22,7 @@ export default defineComponent({
     },
   },
   setup: (props) => {
+    const el = ref<SVGSVGElement>()
     const { height, width } = usePresentationMetadata(
       computed(() => props.value)
     );
@@ -49,6 +51,7 @@ ellipse {
     );
 
     return {
+      el,
       height,
       width,
       safeHTML,

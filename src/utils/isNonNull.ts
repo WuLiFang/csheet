@@ -1,5 +1,3 @@
-export default function isNonNull<T>(
-  v: T
-): v is T extends null | undefined ? never : T {
+export default function isNonNull<T>(v: T): v is NonNullable<T> {
   return v != null;
 }
