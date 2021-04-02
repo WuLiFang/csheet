@@ -57,6 +57,22 @@
           ref="presentationViewer"
           class="flex-none relative text-center lg:w-2/3 lg:h-full flex flex-col"
         )
+          template(#fullscreenToolbar)
+            p.mx-1 {{value.title}}
+            button.form-button(
+              class="h-8 m-px inline-flex flex-center"
+              :disabled="!prev"
+              @click="jumpPrev()"
+              title="上一个（快捷键：↑）"
+            )
+              FaIcon.h-full(name="caret-up")
+            button.form-button(
+              class="h-8 m-px inline-flex flex-center"
+              :disabled="!next"
+              title="下一个（快捷键：↓）"
+              @click="jumpNext()"
+            )
+              FaIcon.h-full(name="caret-down")
         aside(
           class="flex-auto bg-gray-900 lg:flex-initial lg:w-1/3 lg:overflow-auto"
         )
@@ -123,6 +139,8 @@ import 'vue-awesome/icons/backward';
 import 'vue-awesome/icons/camera';
 import 'vue-awesome/icons/caret-square-down';
 import 'vue-awesome/icons/caret-square-up';
+import 'vue-awesome/icons/caret-up';
+import 'vue-awesome/icons/caret-down';
 import 'vue-awesome/icons/fast-backward';
 import 'vue-awesome/icons/fast-forward';
 import 'vue-awesome/icons/forward';

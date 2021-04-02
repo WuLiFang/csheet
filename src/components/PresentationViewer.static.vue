@@ -1,18 +1,34 @@
 <template>
-  <div>
-    <PresentationAnnotationEditorToolbar v-if="annotation" v-show="node">
-      <template #right>
-        <button
-          v-if="supportsScreenshot"
-          class="form-button h-8 m-px inline-flex flex-center"
-          type="button"
-          title="保存截图"
-          @click="saveScreenshot()"
-        >
-          <FaIcon name="camera"></FaIcon>
-        </button>
-      </template>
-    </PresentationAnnotationEditorToolbar>
+  <div ref="el">
+    <div v-show="node || isFullscreen" class="flex items-center">
+      <PresentationAnnotationEditorToolbar
+        v-if="annotation"
+        class="flex-auto"
+        :class="{
+          invisible: !node,
+        }"
+        :parent="annotation"
+      >
+      </PresentationAnnotationEditorToolbar>
+      <button
+        v-if="supportsScreenshot"
+        class="form-button h-8 m-px inline-flex flex-center"
+        type="button"
+        title="保存截图"
+        @click="saveScreenshot()"
+      >
+        <FaIcon name="camera"></FaIcon>
+      </button>
+      <slot v-if="isFullscreen" name="fullscreenToolbar"> </slot>
+      <button
+        class="form-button h-8 m-px inline-flex flex-center"
+        type="button"
+        title="全屏"
+        @click="toggleFullscreen()"
+      >
+        <FaIcon :name="isFullscreen ? 'compress' : 'expand'"></FaIcon>
+      </button>
+    </div>
     <p v-if="node && node.isRegularTranscodeFailed" class="bg-red-500 w-full">
       预览转码失败，重新收集以重试
     </p>
@@ -70,9 +86,13 @@
 
 <script lang="ts">
 import { setupCommon } from '@/components/PresentationViewer';
+import useElementFullscreen from '@/composables/useElementFullscreen';
 import { Presentation } from '@/graphql/types/Presentation';
 import { isPresentationAnnotationVisible } from '@/preference';
 import { computed, defineComponent, PropType, ref } from '@vue/composition-api';
+import 'vue-awesome/icons/camera';
+import 'vue-awesome/icons/compress';
+import 'vue-awesome/icons/expand';
 import PresentationVue from './Presentation.static.vue';
 import PresentationAnnotationEditor from './PresentationAnnotationEditor.static.vue';
 import PresentationAnnotationEditorToolbar from './PresentationAnnotationEditorToolbar.static.vue';
@@ -92,6 +112,7 @@ export default defineComponent({
     PresentationControls,
   },
   setup: (props) => {
+    const el = ref<HTMLElement>();
     const node = computed(() => props.value);
     const viewport = ref<HTMLDivElement | undefined>();
     const presentation = ref<PresentationVue | undefined>();
@@ -103,6 +124,8 @@ export default defineComponent({
 
     const currentFrame = ref(0);
     const playbackRate = ref(1);
+
+    const { toggleFullscreen, isFullscreen } = useElementFullscreen(el);
 
     const {
       backgroundClass,
@@ -119,6 +142,7 @@ export default defineComponent({
     );
 
     return {
+      el,
       node,
       viewport,
       presentation,
@@ -132,6 +156,8 @@ export default defineComponent({
       presentationClass,
       isAnnotationVisible: isPresentationAnnotationVisible,
       supportsScreenshot,
+      isFullscreen,
+      toggleFullscreen,
     };
   },
 });

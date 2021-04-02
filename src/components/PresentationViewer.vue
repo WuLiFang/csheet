@@ -1,21 +1,33 @@
 <template>
-  <div>
-    <PresentationAnnotationEditorToolbar
-      v-if="annotation"
-      v-show="id"
-      :parent="annotation"
-    >
-      <template #right>
-        <button
-          class="form-button h-8 m-px inline-flex flex-center"
-          type="button"
-          title="保存截图"
-          @click="saveScreenshot()"
-        >
-          <FaIcon name="camera"></FaIcon>
-        </button>
-      </template>
-    </PresentationAnnotationEditorToolbar>
+  <div ref="el">
+    <div v-show="id || isFullscreen" class="flex items-center">
+      <PresentationAnnotationEditorToolbar
+        v-if="annotation"
+        class="flex-auto"
+        :class="{
+          invisible: !id,
+        }"
+        :parent="annotation"
+      >
+      </PresentationAnnotationEditorToolbar>
+      <button
+        class="form-button h-8 m-px inline-flex flex-center"
+        type="button"
+        title="保存截图"
+        @click="saveScreenshot()"
+      >
+        <FaIcon name="camera"></FaIcon>
+      </button>
+      <slot v-if="isFullscreen" name="fullscreenToolbar"> </slot>
+      <button
+        class="form-button h-8 m-px inline-flex flex-center"
+        type="button"
+        title="全屏"
+        @click="toggleFullscreen()"
+      >
+        <FaIcon :name="isFullscreen ? 'compress' : 'expand'"></FaIcon>
+      </button>
+    </div>
     <p v-if="node && node.isRegularTranscodeFailed" class="bg-red-500 w-full">
       预览转码失败，重新收集以重试
     </p>
@@ -82,6 +94,11 @@ import PresentationAnnotationEditor from './PresentationAnnotationEditor.vue';
 import PresentationAnnotationEditorToolbar from './PresentationAnnotationEditorToolbar.vue';
 import PresentationControls from './PresentationControls.vue';
 import { setupCommon } from './PresentationViewer';
+import useElementFullscreen from '@/composables/useElementFullscreen';
+
+import 'vue-awesome/icons/camera';
+import 'vue-awesome/icons/expand';
+import 'vue-awesome/icons/compress';
 
 export default defineComponent({
   name: 'PresentationViewer',
@@ -101,6 +118,7 @@ export default defineComponent({
       computed(() => ({ id: props.id ?? '' })),
       computed(() => ({ skip: !props.id }))
     );
+    const el = ref<HTMLDivElement>();
     const viewport = ref<HTMLDivElement | undefined>();
     const presentation = ref<Presentation | undefined>();
     const annotation = ref<PresentationAnnotationEditor | undefined>();
@@ -111,6 +129,7 @@ export default defineComponent({
     const currentFrame = ref(0);
     const playbackRate = ref(1);
 
+    const { toggleFullscreen, isFullscreen } = useElementFullscreen(el);
     const {
       backgroundClass,
       presentationClass,
@@ -126,6 +145,7 @@ export default defineComponent({
     );
 
     return {
+      el,
       node,
       viewport,
       presentation,
@@ -138,6 +158,9 @@ export default defineComponent({
       preferredPainter,
       playbackRate,
       presentationClass,
+
+      isFullscreen,
+      toggleFullscreen,
     };
   },
 });

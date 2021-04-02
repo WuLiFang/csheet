@@ -55,7 +55,27 @@
           ref="presentationViewer"
           :value="presentation"
           class="flex-none relative text-center lg:w-2/3 lg:h-full flex flex-col"
-        ></PresentationViewer>
+        >
+          <template #fullscreenToolbar>
+            <p class="mx-1">{{ value.title }}</p>
+            <button
+              class="form-button h-8 m-px inline-flex flex-center"
+              :disabled="!prev"
+              title="上一个（快捷键：↑）"
+              @click="jumpPrev()"
+            >
+              <FaIcon class="h-full" name="caret-up"></FaIcon>
+            </button>
+            <button
+              class="form-button h-8 m-px inline-flex flex-center"
+              :disabled="!next"
+              title="下一个（快捷键：↓）"
+              @click="jumpNext()"
+            >
+              <FaIcon class="h-full" name="caret-down"></FaIcon>
+            </button>
+          </template>
+        </PresentationViewer>
         <aside
           class="flex-auto bg-gray-900 lg:flex-initial lg:w-1/3 lg:overflow-auto"
         >
@@ -110,6 +130,8 @@ import 'vue-awesome/icons/backward';
 import 'vue-awesome/icons/camera';
 import 'vue-awesome/icons/caret-square-down';
 import 'vue-awesome/icons/caret-square-up';
+import 'vue-awesome/icons/caret-down';
+import 'vue-awesome/icons/caret-up';
 import 'vue-awesome/icons/fast-backward';
 import 'vue-awesome/icons/fast-forward';
 import 'vue-awesome/icons/forward';
