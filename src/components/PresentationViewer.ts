@@ -49,9 +49,9 @@ export function setupCommon(
     if (!presentation.value || viewportObjectContainRate.value > 0.382) {
       return 'object-contain w-full h-full';
     } else if (width.value > height.value) {
-      return 'object-cover h-full max-w-none';
+      return 'object-cover h-full w-auto max-w-none';
     } else {
-      return 'object-cover w-full max-h-none';
+      return 'object-cover w-full w-auto max-h-none';
     }
   });
 
