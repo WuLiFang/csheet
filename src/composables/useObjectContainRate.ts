@@ -13,11 +13,10 @@ export default function useObjectContainRate(
     // inner size
     let iw = innerWidth.value;
     let ih = innerHeight.value;
+
     // apply object contain
-    if (iw > ow) {
-      ih = (ow / iw) * ih;
-      iw = ow;
-    }
+    ih = (ow / iw) * ih;
+    iw = ow;
     if (ih > oh) {
       iw = (oh / ih) * iw;
       ih = oh;
