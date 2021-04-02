@@ -58,7 +58,7 @@
           class="flex-none relative text-center lg:w-2/3 lg:h-full flex flex-col"
         )
           template(#fullscreenToolbar)
-            p.mx-1 {{value.title}}
+            span.mx-1 {{value.title}}
             button.form-button(
               class="h-8 m-px inline-flex flex-center"
               :disabled="!prev"

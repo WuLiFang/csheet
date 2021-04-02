@@ -1,6 +1,9 @@
 <template>
   <div ref="el">
-    <div v-show="id || isFullscreen" class="flex items-center">
+    <div
+      v-show="id || isFullscreen"
+      class="flex flex-center flex-wrap"
+    >
       <PresentationAnnotationEditorToolbar
         v-if="annotation"
         class="flex-auto"
@@ -10,23 +13,25 @@
         :parent="annotation"
       >
       </PresentationAnnotationEditorToolbar>
-      <button
-        class="form-button h-8 m-px inline-flex flex-center"
-        type="button"
-        title="保存截图"
-        @click="saveScreenshot()"
-      >
-        <FaIcon name="camera"></FaIcon>
-      </button>
-      <slot v-if="isFullscreen" name="fullscreenToolbar"> </slot>
-      <button
-        class="form-button h-8 m-px inline-flex flex-center"
-        type="button"
-        title="全屏"
-        @click="toggleFullscreen()"
-      >
-        <FaIcon :name="isFullscreen ? 'compress' : 'expand'"></FaIcon>
-      </button>
+      <div>
+        <button
+          class="form-button h-8 w-12 px-0 m-px inline-flex flex-center"
+          type="button"
+          title="保存截图"
+          @click="saveScreenshot()"
+        >
+          <FaIcon name="camera"></FaIcon>
+        </button>
+        <slot v-if="isFullscreen" name="fullscreenToolbar"> </slot>
+        <button
+          class="form-button h-8 w-12 px-0 m-px inline-flex flex-center"
+          type="button"
+          title="全屏"
+          @click="toggleFullscreen()"
+        >
+          <FaIcon :name="isFullscreen ? 'compress' : 'expand'"></FaIcon>
+        </button>
+      </div>
     </div>
     <p v-if="node && node.isRegularTranscodeFailed" class="bg-red-500 w-full">
       预览转码失败，重新收集以重试
