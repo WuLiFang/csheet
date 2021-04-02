@@ -1,9 +1,6 @@
 import { Presentation } from '@/graphql/types/Presentation';
 import clamp from '@/utils/clamp';
-import {
-  computed,
-  ComputedRef, Ref
-} from '@vue/composition-api';
+import { computed, ComputedRef, Ref } from '@vue/composition-api';
 
 export function useCurrentFrame({
   firstFrame,
@@ -110,7 +107,7 @@ export function usePresentationFile(
       case 'regular':
         return {
           url: presentation.value?.regular?.url,
-          isTranscoding:
+          isNeedTranscode:
             presentation.value != null && presentation.value.regular == null,
           isTranscodeFailed:
             presentation.value?.isRegularTranscodeFailed ?? false,
@@ -119,7 +116,7 @@ export function usePresentationFile(
       default:
         return {
           url: presentation.value?.thumb?.url,
-          isTranscoding:
+          isNeedTranscode:
             presentation.value != null && presentation.value.thumb == null,
           isTranscodeFailed:
             presentation.value?.isThumbTranscodeFailed ?? false,
@@ -129,7 +126,9 @@ export function usePresentationFile(
 
   const url = computed(() => ret.value.url);
   const isTranscodeFailed = computed(() => ret.value.isTranscodeFailed);
-  const isTranscoding = computed(() => ret.value.isTranscoding);
+  const isTranscoding = computed(
+    () => ret.value.isNeedTranscode && !isTranscodeFailed.value
+  );
   const src = computed((): string => {
     if (isTranscoding?.value) {
       return require('@/assets/img/transcoding.svg');
