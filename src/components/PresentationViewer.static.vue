@@ -75,7 +75,7 @@
       ></PresentationAnnotationEditor>
     </div>
     <PresentationControls
-      v-if="node && node.type === 'video'"
+      v-if="presentation && node && node.type === 'video'"
       ref="controls"
       class="flex flex-col sm:flex-row overflow-x-hidden flex-wrap justify-center items-center z-0"
       :parent="presentation"
