@@ -129,7 +129,7 @@ func (r *mutationResolver) UpdateCGTeamworkFlow(ctx context.Context, input model
 		}] = struct{}{}
 		logger.Info("update",
 			zap.String("origin", col.Origin),
-			zap.String("pipeline", pipeline),
+			zap.String("pipeline", taskPipeline),
 			zap.String("stage", i.Stage),
 			zap.String("status", i.Status),
 			zap.Int("htmlLength", len(msg.HTML)),
