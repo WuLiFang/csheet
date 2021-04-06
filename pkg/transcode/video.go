@@ -3,6 +3,7 @@ package transcode
 import (
 	"fmt"
 	"os/exec"
+	"runtime"
 	"strconv"
 	"time"
 )
@@ -56,6 +57,29 @@ func MP4(src string, dst string, o *VideoOptions) *exec.Cmd {
 		"-crf", "18",
 		"-pix_fmt", "yuv420p",
 		"-f", "mp4",
+		dst,
+	)
+
+	c := exec.Command(ffmpeg, args...)
+	niceCommand(c, 19)
+	return c
+}
+
+// WebM command to trancode src to dst.
+func WebM(src string, dst string, o *VideoOptions) *exec.Cmd {
+	var args = ffmpegOptions()
+	args = append(args, "-i", src)
+	if o != nil {
+		args = append(args, o.outputOptions()...)
+	}
+	// https://trac.ffmpeg.org/wiki/Encode/VP9
+	args = append(args,
+		"-codec:v", "libvpx-vp9",
+		"-crf", "18",
+		"-b:v", "0",
+		"-f", "webm",
+		"-row-mt", "1",
+		"-threads", strconv.Itoa(runtime.NumCPU()),
 		dst,
 	)
 

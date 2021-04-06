@@ -14,6 +14,7 @@ import (
 	"github.com/WuLiFang/csheet/v6/pkg/db"
 	"github.com/WuLiFang/csheet/v6/pkg/models/file"
 	"github.com/WuLiFang/csheet/v6/pkg/transcode"
+	"github.com/WuLiFang/csheet/v6/pkg/util"
 	"go.uber.org/zap"
 )
 
@@ -50,6 +51,18 @@ func (p Presentation) Hash() (ret string, err error) {
 
 // Validate and clean up data
 func (p *Presentation) Validate(ctx context.Context) (err error) {
+	if p.Type == TypeVideo && p.RegularSuccessTag != "" && strings.HasSuffix(p.Regular, ".mp4") {
+		var fps = util.ParseFrameRate(p.Metadata["frame-rate"])
+		if fps > 120 {
+			logging.For(ctx).Logger("models/presentation").Info(
+				"mark high fps mp4 as outdated",
+				zap.Float64("fps", fps),
+				zap.String("raw", p.Raw),
+				zap.String("regular", p.Regular),
+			)
+			p.RegularSuccessTag += "~"
+		}
+	}
 	return
 }
 

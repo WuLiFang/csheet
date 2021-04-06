@@ -13,12 +13,12 @@ import (
 func transcodeVideoRegular(ctx context.Context, p presentation.Presentation) error {
 	var logger = logging.Logger("job.transcode").Sugar()
 	return filestore.WithTempDir("video-regular-", func(dir string) (err error) {
-		dst := filepath.Join(dir, replaceExt(filepath.Base(p.Raw), ".mp4"))
+		dst := filepath.Join(dir, replaceExt(filepath.Base(p.Raw), extByFrameRate(p.Metadata["frame-rate"])))
 		if err != nil {
 			return
 		}
 
-		cmd := transcode.MP4(p.Raw, dst, &transcode.VideoOptions{
+		cmd := transcodeVideo(p.Raw, dst, &transcode.VideoOptions{
 			Width:     1920,
 			SizeLimit: 256 << 20,
 		})
