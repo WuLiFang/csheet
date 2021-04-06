@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.4.0](https://github.com/WuLiFang/csheet/compare/v6.3.0...v6.4.0) (2021-04-06)
+
+
+### Features
+
+* support viewer fullscreen ([c38a1eb](https://github.com/WuLiFang/csheet/commit/c38a1eb8405d02186037fcc8c14c4a46e2ddd9fc))
+* **api:** add directive `ignoreError` ([dda2938](https://github.com/WuLiFang/csheet/commit/dda2938d3a0f839d7154e93edf643b08dbdbbb11))
+* **archive:** include cgteamwork status color ([6f48421](https://github.com/WuLiFang/csheet/commit/6f484216ebe9f268e85c1a9c69c69df86c81d400))
+
+
+### Bug Fixes
+
+* presentation controls should not initialize before parent ([18a4403](https://github.com/WuLiFang/csheet/commit/18a440390b45497bb9a8a0765334afaecd75cf40))
+* **style:** wrong annotation width for long media ([cbc6112](https://github.com/WuLiFang/csheet/commit/cbc611273a4579773593c8973d52ebc0ad270cfc))
+* data path env var not work ([260b885](https://github.com/WuLiFang/csheet/commit/260b885e4ebe7835f83521ccc4e0e84b5d65a1cf))
+* presentation should be draggable ([fa040f5](https://github.com/WuLiFang/csheet/commit/fa040f5ee29d6a32f223d8cfa4f8198bb947b5c1))
+* wrong object contain rate when inner size is smaller ([e4e4311](https://github.com/WuLiFang/csheet/commit/e4e4311a19364b17cef951ffb6ff3cb369ffc043))
+* **style:** wrong button icon size in small screen ([98cd54d](https://github.com/WuLiFang/csheet/commit/98cd54d09cbf7bb872a795e99e7b97a6b5756826))
+* should not archive same file twice ([afb314e](https://github.com/WuLiFang/csheet/commit/afb314e4f1f3fb4964df4de2b50d9ae330da945a))
+* should not show transcoding message when data not loaded ([b78b1cd](https://github.com/WuLiFang/csheet/commit/b78b1cd76c52a9b93a43bae4c3fab3cbd73af8e2))
+* should not show transcoding when transcode failed ([c37712f](https://github.com/WuLiFang/csheet/commit/c37712f2ea469305b2f552b9e8ec55b1cc6711f5))
+* should update document title on state load ([625b5ad](https://github.com/WuLiFang/csheet/commit/625b5ada57f313a7113e866df66f5cafefc7cc0b))
+* should update loading count for initial loading ([152ca22](https://github.com/WuLiFang/csheet/commit/152ca2263ea21bb43417df7530be9ddaa971efe4))
+* type error in PresentationControls.vue ([7f4a1a7](https://github.com/WuLiFang/csheet/commit/7f4a1a79fb2274bd208daa8f9bf5faf2c5f05dba))
+* unknown task status should has higher priority than Approve/Wait ([cd01d39](https://github.com/WuLiFang/csheet/commit/cd01d39f9a4ef21cb6a91a56475a17a95dc1333c))
+* wrong archive title ([246f068](https://github.com/WuLiFang/csheet/commit/246f06894c581af80316898cac71639e20ac805b))
+* wrong user ip in sentry event ([cbbf683](https://github.com/WuLiFang/csheet/commit/cbbf6836288d849e4f512a7a36b124dc492ed9c2))
+
 ## [6.3.0](https://github.com/WuLiFang/csheet/compare/v6.2.0...v6.3.0) (2021-03-30)
 
 ### Features
