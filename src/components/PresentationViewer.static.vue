@@ -119,7 +119,9 @@ export default defineComponent({
     const annotation = ref<
       InstanceType<typeof PresentationAnnotationEditor> | undefined
     >();
-    const controls = ref<PresentationControls | undefined>();
+    const controls = ref<
+      InstanceType<typeof PresentationControls> | undefined
+    >();
     const supportsScreenshot = location.protocol !== 'file:';
 
     const currentFrame = ref(0);
@@ -140,6 +142,7 @@ export default defineComponent({
       isPresentationAnnotationVisible,
       currentFrame
     );
+    
 
     return {
       el,

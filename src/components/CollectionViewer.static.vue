@@ -249,12 +249,12 @@ import PresentationSelect from './PresentationSelect.vue';
           break;
         case 'g': {
           e.preventDefault();
-          this.$refs.presentationViewer?.controls?.$refs.timeInput?.$el.select();
+          this.$refs.presentationViewer?.controls?.timeInput?.$el.select();
           break;
         }
         case 'f': {
           e.preventDefault();
-          this.$refs.presentationViewer?.controls?.$refs.frameInput?.$el.select();
+          this.$refs.presentationViewer?.controls?.frameInput?.$el.select();
           break;
         }
         case 'j': {

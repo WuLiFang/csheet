@@ -124,7 +124,9 @@ export default defineComponent({
     const viewport = ref<HTMLDivElement | undefined>();
     const presentation = ref<Presentation | undefined>();
     const annotation = ref<PresentationAnnotationEditor | undefined>();
-    const controls = ref<PresentationControls | undefined>();
+    const controls = ref<
+      InstanceType<typeof PresentationControls> | undefined
+    >();
 
     const preferredPainter = viewerAnnotationPainter;
 

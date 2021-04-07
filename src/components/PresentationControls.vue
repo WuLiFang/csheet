@@ -1,187 +1,211 @@
-<template lang="pug">
-  .presentation-controls
-    .inline-flex(
+<template>
+  <div class="presentation-controls">
+    <div
       v-if="parent.frameRate > 0"
-      class="sm:order-2 flex-wrap justify-center my-px sm:mx-1"
-    )
-      button.form-button(
+      class="inline-flex sm:order-2 flex-wrap justify-center my-px sm:mx-1"
+    >
+      <button
+        class="form-button flex-none p-0 w-12 h-8 m-px flex justify-center items-center"
         type="button"
-        class="flex-none p-0 w-12 h-8 m-px"
-        class="flex justify-center items-center"
         title="至起始帧（快捷键：Home）"
         @click="() => parent.seekFrame(parent.firstFrame, true)"
-      ) 
-        FaIcon(name="fast-backward")
-      button.form-button(
+      >
+        <FaIcon name="fast-backward"></FaIcon>
+      </button>
+      <button
+        class="form-button flex-none p-0 w-12 h-8 m-px flex justify-center items-center"
         type="button"
-        class="flex-none p-0 w-12 h-8 m-px"
-        class="flex justify-center items-center"
         title="上一帧（快捷键：←）"
         @click="() => parent.seekFrameOffset(-1, true)"
-      ) 
-        FaIcon(name="step-backward")
-      InputNumber.form-input(
+      >
+        <FaIcon name="step-backward"></FaIcon>
+      </button>
+      <InputNumber
         ref="frameInput"
-        class="flex-auto w-24 h-8 z-10 m-px"
         v-model="currentFrameProxy"
+        class="form-input flex-auto w-24 h-8 z-10 m-px"
         title="当前帧（快捷键：f）"
-      )
-      button.form-button(
+      ></InputNumber>
+      <button
+        class="form-button flex-none p-0 w-12 h-8 m-px flex justify-center items-center"
         type="button"
-        class="flex-none p-0 w-12 h-8 m-px"
-        class="flex justify-center items-center"
         title="下一帧（快捷键：→）"
         @click="() => parent.seekFrameOffset(1, true)"
-      ) 
-        FaIcon(name="step-forward")
-      button.form-button(
+      >
+        <FaIcon name="step-forward"></FaIcon>
+      </button>
+      <button
+        class="form-button flex-none p-0 w-12 h-8 m-px flex justify-center items-center"
         type="button"
-        class="flex-none p-0 w-12 h-8 m-px"
-        class="flex justify-center items-center"
         title="至结束帧（快捷键：End）"
         @click="() => parent.seekFrame(parent.lastFrame, true)"
-      ) 
-        FaIcon(name="fast-forward")
-    .inline-flex.items-center(
-      class="flex-wrap sm:order-3 my-px sm:mx-1"
-    )
-      DurationInput(
+      >
+        <FaIcon name="fast-forward"></FaIcon>
+      </button>
+    </div>
+    <div class="inline-flex items-center flex-wrap sm:order-3 my-px sm:mx-1">
+      <DurationInput
         ref="timeInput"
         v-model="currentTimeProxy"
         class="h-8 w-32 m-px text-center"
         title="当前时间（快捷键：g）"
-      )
-      button.form-button(
+      ></DurationInput>
+      <button
+        class="form-button flex-initial p-0 w-24 h-8 m-px flex justify-center items-center"
         type="button"
-        class="flex-initial p-0 w-24 h-8 m-px"
-        class="flex justify-center items-center"
         title="播放/暂停（快捷键：空格）"
-        @click="() => parent.paused ? parent.play(): parent.pause()"
-      ) 
-        FaIcon(:name="parent.paused ? 'play' : 'pause'")
-      select.form-select(
+        @click="() => (parent.paused ? parent.play() : parent.pause())"
+      >
+        <FaIcon :name="parent.paused ? 'play' : 'pause'"></FaIcon>
+      </button>
+      <select
         ref="playbackRateSelect"
-        class="flex-initial p-0 pl-2 w-20 h-8  m-px"
         v-model="formData.playbackRate"
+        class="form-select flex-initial p-0 pl-2 w-20 h-8 m-px"
         title="播放倍速 （快捷键：j/k/l）"
-      )
-        option(
-          v-for="i in playbackRateOptions"
-          :value="i"
-        ) ×{{i.toFixed(1)}}
-    .inline-flex.items-center(
+      >
+        <option v-for="i in playbackRateOptions" :key="i" :value="i">
+          ×{{ i.toFixed(1) }}
+        </option>
+      </select>
+    </div>
+    <div
       v-if="parent.frameRate > 0"
-      class="sm:order-1 my-px sm:mx-1"
-    )
-      button.form-button(
+      class="inline-flex items-center sm:order-1 my-px sm:mx-1"
+    >
+      <button
+        class="form-button flex-none p-0 w-10 h-6 m-px flex justify-center items-center"
         type="button"
-        class="flex-none p-0 w-10 h-6 m-px"
-        class="flex justify-center items-center"
         title="向前跳帧（快捷键：Shift + ←）"
         @click="skipFrameBackward()"
-      ) 
-        FaIcon.object-center(name="backward")
-      input.form-input(
-        type="number"
-        class="flex-auto p-0 w-12 h-6 spin-button-none z-10 text-center"
+      >
+        <FaIcon class="object-center" name="backward"></FaIcon>
+      </button>
+      <input
         v-model.number="formData.frameSkip"
+        class="form-input flex-auto p-0 w-12 h-6 spin-button-none z-10 text-center"
+        type="number"
+        title="跳帧的帧数"
         @keyup.enter="$event.target.blur()"
         @focus="$event.target.select()"
-        title="跳帧的帧数"
-      )
-      button.form-button(
+      />
+      <button
+        class="form-button flex-none p-0 w-10 h-6 m-px flex justify-center items-center"
         type="button"
-        class="flex-none p-0 w-10 h-6 m-px"
-        class="flex justify-center items-center"
         title="向后跳帧（快捷键：Shift + →）"
         @click="skipFrameForward()"
-      ) 
-        FaIcon(name="forward")
+      >
+        <FaIcon name="forward"></FaIcon>
+      </button>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import clamp from '@/utils/clamp';
+import {
+  computed,
+  defineComponent,
+  PropType,
+  reactive,
+  watch,
+  ref,
+} from '@vue/composition-api';
 import moment from 'moment';
-import { Component, Prop, Vue } from 'vue-property-decorator';
 import DurationInput from './DurationInput.vue';
-import type InputNumber from './global/InputNumber.vue';
 import type PresentationStatic from './Presentation.static.vue';
 import type Presentation from './Presentation.vue';
+import InputNumber from '@/components/global/InputNumber.vue';
 
-@Component<PresentationControls>({
+export default defineComponent({
+  name: 'PresentationControls',
   components: {
     DurationInput,
   },
-  mounted() {
-    this.$watch(
-      () => this.formData.playbackRate,
-      (v) => {
-        this.$emit('update:playbackRate', v);
-      },
-      { immediate: true }
-    );
-    this.$watch(
-      () => this.playbackRate,
-      (v) => {
-        this.formData.playbackRate = v;
-      },
-      { immediate: true }
-    );
+  props: {
+    parent: {
+      type: Object as PropType<Presentation | PresentationStatic>,
+      required: true,
+    },
+
+    playbackRate: {
+      type: Number,
+      default: 1,
+    },
   },
-})
-export default class PresentationControls extends Vue {
-  @Prop({ required: true })
-  parent!: Presentation | PresentationStatic;
+  setup: (props, ctx) => {
+    const frameInput = ref<InputNumber>();
+    const timeInput = ref<DurationInput>();
+    const playbackRateSelect = ref<HTMLSelectElement>();
+    const formData = reactive({
+      currentFrame: 0,
+      frameSkip: 10,
+      playbackRate: 1,
+    });
+    watch(
+      () => formData.playbackRate,
+      (v) => {
+        ctx.emit('update:playbackRate', v);
+      },
+      { immediate: true }
+    );
+    watch(
+      () => props.playbackRate,
+      (v) => {
+        formData.playbackRate = v;
+      },
+      { immediate: true }
+    );
+    const currentTimeProxy = computed({
+      get(): string {
+        return moment.duration(props.parent.currentTime * 1e3).toISOString();
+      },
+      set(s: string) {
+        const v = moment.duration(s).asSeconds();
+        props.parent.seek(v, true);
+      },
+    });
 
-  @Prop({ type: Number, default: 1 })
-  playbackRate!: number;
+    const currentFrameProxy = computed({
+      get(): number {
+        return props.parent.currentFrame;
+      },
+      set(v: number) {
+        props.parent.seekFrame(v, true);
+      },
+    });
+    const playbackRateOptions = [0.1, 0.2, 0.5, 1, 2, 4, 8];
+    const setPlaybackRate = (v: number): void => {
+      formData.playbackRate = v;
+    };
 
-  $refs!: {
-    frameInput: InputNumber;
-    playbackRateSelect: HTMLSelectElement;
-    timeInput: DurationInput;
-  };
+    const offsetPlaybackRateIndex = (offset: number): void => {
+      const o = playbackRateOptions;
+      formData.playbackRate =
+        o[clamp(o.indexOf(formData.playbackRate) + offset, 0, o.length - 1)];
+    };
 
-  playbackRateOptions = [0.1, 0.2, 0.5, 1, 2, 4, 8];
-  formData = {
-    currentFrame: 0,
-    frameSkip: 10,
-    playbackRate: 1,
-  };
+    const skipFrameForward = (): void => {
+      props.parent.seekFrameOffset(formData.frameSkip, true);
+    };
 
-  get currentTimeProxy(): string {
-    return moment.duration(this.parent.currentTime * 1e3).toISOString();
-  }
+    const skipFrameBackward = (): void => {
+      props.parent.seekFrameOffset(-formData.frameSkip, true);
+    };
 
-  set currentTimeProxy(s: string) {
-    const v = moment.duration(s).asSeconds();
-    this.parent.seek(v, true);
-  }
-
-  get currentFrameProxy(): number {
-    return this.parent.currentFrame;
-  }
-
-  set currentFrameProxy(v: number) {
-    this.parent.seekFrame(v, true);
-  }
-
-  setPlaybackRate(v: number): void {
-    this.formData.playbackRate = v;
-  }
-
-  offsetPlaybackRateIndex(offset: number): void {
-    const o = this.playbackRateOptions;
-    this.formData.playbackRate =
-      o[clamp(o.indexOf(this.formData.playbackRate) + offset, 0, o.length - 1)];
-  }
-
-  skipFrameForward(): void {
-    this.parent.seekFrameOffset(this.formData.frameSkip, true);
-  }
-
-  skipFrameBackward(): void {
-    this.parent.seekFrameOffset(-this.formData.frameSkip, true);
-  }
-}
+    return {
+      currentFrameProxy,
+      currentTimeProxy,
+      formData,
+      frameInput,
+      offsetPlaybackRateIndex,
+      playbackRateOptions,
+      playbackRateSelect,
+      setPlaybackRate,
+      skipFrameBackward,
+      skipFrameForward,
+      timeInput,
+    };
+  },
+});
 </script>
