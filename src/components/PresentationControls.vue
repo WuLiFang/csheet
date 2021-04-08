@@ -68,6 +68,9 @@
           ×{{ i.toFixed(1) }}
         </option>
       </select>
+      <span :class="currentFrameRateClass" class="w-20 text-right"
+        >{{ currentFrameRateText }} fps</span
+      >
     </div>
     <div
       v-if="parent.frameRate > 0"
@@ -102,21 +105,25 @@
 </template>
 
 <script lang="ts">
+import InputNumber from '@/components/global/InputNumber.vue';
+import useNumberChangeRate from '@/composables/useNumberChangeRate';
+import useObservable from '@/composables/useObservable';
+import useVideoCurrentTime from '@/composables/useVideoCurrentTime';
 import clamp from '@/utils/clamp';
+import observableFromRef from '@/utils/observableFromRef';
 import {
   computed,
   defineComponent,
   PropType,
   reactive,
-  watch,
   ref,
+  watch,
 } from '@vue/composition-api';
 import moment from 'moment';
+import { filter, throttleTime } from 'rxjs/operators';
 import DurationInput from './DurationInput.vue';
 import type PresentationStatic from './Presentation.static.vue';
 import type Presentation from './Presentation.vue';
-import InputNumber from '@/components/global/InputNumber.vue';
-
 export default defineComponent({
   name: 'PresentationControls',
   components: {
@@ -193,6 +200,47 @@ export default defineComponent({
       props.parent.seekFrameOffset(-formData.frameSkip, true);
     };
 
+    const video = computed(() => {
+      if (props.parent.el instanceof HTMLVideoElement) {
+        return props.parent.el;
+      }
+    });
+    const currentTime = useVideoCurrentTime(video);
+
+    const currentTimeRate = useNumberChangeRate(currentTime);
+
+    const frameRate = computed(() => props.parent.frameRate);
+    const currentFrameRate = computed(
+      () => currentTimeRate.value * frameRate.value
+    );
+    const currentFrameRateText = ref('');
+    watch(
+      useObservable(
+        observableFromRef(currentTimeRate).pipe(
+          filter((v) => v >= 0), // ignore loop end
+          throttleTime(50)
+        ),
+        0
+      ),
+      () => {
+        currentFrameRateText.value = currentFrameRate.value.toFixed(1);
+      },
+      { immediate: true }
+    );
+    const currentFrameRateClass = computed(() => {
+      if (props.parent.paused) {
+        return 'text-gray-500';
+      }
+      const dropframe =
+        frameRate.value * props.playbackRate - currentFrameRate.value;
+      if (dropframe > 5) {
+        return 'text-red-500';
+      } else if (dropframe > 2) {
+        return 'text-red-300';
+      }
+      return '';
+    });
+
     return {
       currentFrameProxy,
       currentTimeProxy,
@@ -205,6 +253,8 @@ export default defineComponent({
       skipFrameBackward,
       skipFrameForward,
       timeInput,
+      currentFrameRateText,
+      currentFrameRateClass,
     };
   },
 });

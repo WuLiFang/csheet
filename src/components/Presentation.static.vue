@@ -181,6 +181,7 @@ export default class Presentation extends Vue {
   imageFilter!: (v: Presentation) => string;
 
   $el!: HTMLVideoElement | HTMLImageElement;
+  el?: HTMLVideoElement | HTMLImageElement;
   node: Data | undefined;
   frameCount!: number;
   frameRate!: number;
