@@ -88,19 +88,24 @@
 </template>
 
 <script lang="ts">
+import useElementFullscreen from '@/composables/useElementFullscreen';
 import { usePresentationNode } from '@/graphql/queries/index.queries';
 import { viewerAnnotationPainter } from '@/preference';
-import { computed, defineComponent, ref } from '@vue/composition-api';
+import * as sentry from '@sentry/browser';
+import {
+  computed,
+  defineComponent,
+  ref,
+  watchEffect,
+} from '@vue/composition-api';
+import 'vue-awesome/icons/camera';
+import 'vue-awesome/icons/compress';
+import 'vue-awesome/icons/expand';
 import Presentation from './Presentation.vue';
 import PresentationAnnotationEditor from './PresentationAnnotationEditor.vue';
 import PresentationAnnotationEditorToolbar from './PresentationAnnotationEditorToolbar.vue';
 import PresentationControls from './PresentationControls.vue';
 import { setupCommon } from './PresentationViewer';
-import useElementFullscreen from '@/composables/useElementFullscreen';
-
-import 'vue-awesome/icons/camera';
-import 'vue-awesome/icons/expand';
-import 'vue-awesome/icons/compress';
 
 export default defineComponent({
   name: 'PresentationViewer',
@@ -120,6 +125,15 @@ export default defineComponent({
       computed(() => ({ id: props.id ?? '' })),
       computed(() => ({ skip: !props.id }))
     );
+
+    watchEffect(() => {
+      sentry.addBreadcrumb({
+        category: 'presentation-viewer',
+        message: 'load',
+        level: sentry.Severity.Info,
+        data: { value: node.value },
+      });
+    });
     const el = ref<HTMLDivElement>();
     const viewport = ref<HTMLDivElement | undefined>();
     const presentation = ref<Presentation | undefined>();
