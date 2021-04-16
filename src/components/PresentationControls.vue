@@ -145,7 +145,6 @@ export default defineComponent({
     const timeInput = ref<DurationInput>();
     const playbackRateSelect = ref<HTMLSelectElement>();
     const formData = reactive({
-      currentFrame: 0,
       frameSkip: 10,
       playbackRate: 1,
     });
