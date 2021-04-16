@@ -1,4 +1,6 @@
 import Vue, { CreateElement, VNode } from 'vue';
+import * as sentry from "@sentry/browser"
+
 
 const listData = Vue.observable({
   messages: [] as {
@@ -60,6 +62,11 @@ export function message(render: (h: CreateElement) => VNode): () => void {
 }
 
 export function info(text: string, duration = 3000 + 200 * text.length): void {
+  sentry.addBreadcrumb({
+    category:"message.info",
+    level: sentry.Severity.Info,
+    message: text,
+  })
   const close = message(h =>
     h(
       'li',
@@ -73,6 +80,11 @@ export function info(text: string, duration = 3000 + 200 * text.length): void {
 }
 
 export function error(text: string, duration = 3000 + 200 * text.length): void {
+  sentry.addBreadcrumb({
+    category:"message.error",
+    level: sentry.Severity.Error,
+    message: text,
+  })
   const close = message(h =>
     h(
       'li',
