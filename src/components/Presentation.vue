@@ -4,7 +4,16 @@ import queries from '@/graphql/queries';
 import clamp from '@/utils/clamp';
 import getPathBasename from '@/utils/getPathBasename';
 import * as sentry from '@sentry/browser';
-import { computed, ref, toRefs, watch } from '@vue/composition-api';
+import {
+  computed,
+
+
+
+
+  onMounted, ref,
+  toRefs,
+  watch
+} from '@vue/composition-api';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { filePathFormat } from '../const';
 import { Presentation as Data } from '../graphql/types/Presentation';
@@ -12,7 +21,7 @@ import {
   useCurrentFrame,
   useFrameControl,
   usePresentationDrag,
-  usePresentationFile,
+  usePresentationFile
 } from './Presentation';
 
 @Component<Presentation>({
@@ -109,6 +118,15 @@ import {
       }
     );
     const loadingCount = ref(0);
+
+    // show loading instead default while data cached but image need loading.
+    onMounted(() => {
+      loadingCount.value += 1;
+      requestAnimationFrame(() => {
+        loadingCount.value -= 1;
+      });
+    });
+
     const { node, version } = queries.usePresentationNode(
       computed(() => ({ id: id.value ?? '', filePathFormat })),
       computed(() => ({

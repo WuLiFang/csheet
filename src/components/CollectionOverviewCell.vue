@@ -30,8 +30,8 @@
       </div>
     </transition>
     <Presentation
+      :id="presentation && presentation.id"
       draggable
-      :value="presentation"
       class="w-full"
       :class="presentationClass"
       :image-filter="imageFilter"
@@ -47,7 +47,7 @@ import { useCollectionNode } from '@/graphql/queries/index.queries';
 import { isCellOverlayVisible } from '@/preference';
 import { computed, defineComponent, ref } from '@vue/composition-api';
 import { CreateElement, VNode } from 'vue';
-import PresentationVue from './Presentation.static.vue';
+import PresentationVue from './Presentation.vue';
 
 export default defineComponent({
   name: 'CollectionOverviewCell',
