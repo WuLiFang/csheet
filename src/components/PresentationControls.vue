@@ -60,7 +60,7 @@
       </button>
       <select
         ref="playbackRateSelect"
-        v-model="formData.playbackRate"
+        v-model="playbackRate"
         class="form-select flex-initial p-0 pl-2 w-20 h-8 m-px"
         title="播放倍速 （快捷键：j/k/l）"
       >
@@ -85,7 +85,7 @@
         <FaIcon class="object-center" name="backward"></FaIcon>
       </button>
       <input
-        v-model.number="formData.frameSkip"
+        v-model.number="frameSkipSize"
         class="form-input flex-auto p-0 w-12 h-6 spin-button-none z-10 text-center"
         type="number"
         title="跳帧的帧数"
@@ -115,7 +115,6 @@ import {
   computed,
   defineComponent,
   PropType,
-  reactive,
   ref,
   watch,
 } from '@vue/composition-api';
@@ -144,24 +143,15 @@ export default defineComponent({
     const frameInput = ref<InputNumber>();
     const timeInput = ref<DurationInput>();
     const playbackRateSelect = ref<HTMLSelectElement>();
-    const formData = reactive({
-      frameSkip: 10,
-      playbackRate: 1,
-    });
-    watch(
-      () => formData.playbackRate,
-      (v) => {
+    const frameSkipSize = ref(10);
+    const playbackRate = computed({
+      get() {
+        return props.playbackRate;
+      },
+      set(v: number) {
         ctx.emit('update:playbackRate', v);
       },
-      { immediate: true }
-    );
-    watch(
-      () => props.playbackRate,
-      (v) => {
-        formData.playbackRate = v;
-      },
-      { immediate: true }
-    );
+    });
     const currentTimeProxy = computed({
       get(): string {
         return moment.duration(props.parent.currentTime * 1e3).toISOString();
@@ -182,21 +172,21 @@ export default defineComponent({
     });
     const playbackRateOptions = [0.1, 0.2, 0.5, 1, 2, 4, 8];
     const setPlaybackRate = (v: number): void => {
-      formData.playbackRate = v;
+      playbackRate.value = v;
     };
 
     const offsetPlaybackRateIndex = (offset: number): void => {
       const o = playbackRateOptions;
-      formData.playbackRate =
-        o[clamp(o.indexOf(formData.playbackRate) + offset, 0, o.length - 1)];
+      playbackRate.value =
+        o[clamp(o.indexOf(playbackRate.value) + offset, 0, o.length - 1)];
     };
 
     const skipFrameForward = (): void => {
-      props.parent.seekFrameOffset(formData.frameSkip, true);
+      props.parent.seekFrameOffset(frameSkipSize.value, true);
     };
 
     const skipFrameBackward = (): void => {
-      props.parent.seekFrameOffset(-formData.frameSkip, true);
+      props.parent.seekFrameOffset(-frameSkipSize.value, true);
     };
 
     const video = computed(() => {
@@ -242,18 +232,19 @@ export default defineComponent({
 
     return {
       currentFrameProxy,
+      currentFrameRateClass,
+      currentFrameRateText,
       currentTimeProxy,
-      formData,
       frameInput,
+      frameSkipSize,
       offsetPlaybackRateIndex,
+      playbackRate,
       playbackRateOptions,
       playbackRateSelect,
       setPlaybackRate,
       skipFrameBackward,
       skipFrameForward,
       timeInput,
-      currentFrameRateText,
-      currentFrameRateClass,
     };
   },
 });
