@@ -1,12 +1,20 @@
 import { error } from '@/message';
 import { locale } from '@/plugins/i18n';
+import * as sentry from '@sentry/browser';
 import {
   IdGetterObj,
   InMemoryCache,
   IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
-import { ApolloLink, split } from 'apollo-link';
+import {
+  ApolloLink,
+  FetchResult,
+  NextLink,
+  Observable,
+  Operation,
+  split,
+} from 'apollo-link';
 import { ErrorResponse, onError } from 'apollo-link-error';
 import { createPersistedQueryLink } from 'apollo-link-persisted-queries';
 import { WebSocketLink } from 'apollo-link-ws';
@@ -27,6 +35,7 @@ function getErrorMessage(e: GraphQLError): string {
   const msg = e.extensions?.locales?.[locale] ?? e.message;
   return msg;
 }
+
 const httpLink = createUploadLink({
   uri: '/api',
 });
@@ -84,9 +93,26 @@ patchSubscriptionClient(wsClient);
 const wsLink = new WebSocketLink(wsClient);
 const apqLink = createPersistedQueryLink();
 
+class SentryLink extends ApolloLink {
+  request(
+    operation: Operation,
+    forward?: NextLink
+  ): Observable<FetchResult> | null {
+    sentry.addBreadcrumb({
+      category: 'graphql',
+      message: operation.operationName,
+      data: {
+        variables: operation.variables,
+        extensions: operation.extensions,
+      },
+    });
+    return forward?.(operation) ?? null;
+  }
+}
+
 // using the ability to split links, you can send data to each link
 // depending on what kind of operation is being sent
-const link = split(
+const splitLink = split(
   // split based on operation type
   ({ query }) => {
     const definition = getMainDefinition(query);
@@ -98,7 +124,7 @@ const link = split(
   apqLink.concat(wsLink),
   apqLink.concat((httpLink as unknown) as ApolloLink)
 );
-const linkErrorAfterWare: ApolloLink = onError(
+const messageLink: ApolloLink = onError(
   ({ graphQLErrors, networkError, operation }: ErrorResponse): void => {
     if (graphQLErrors) {
       for (const i of graphQLErrors) {
@@ -153,5 +179,5 @@ const cache: InMemoryCache = new InMemoryCache({
 
 export const apolloClient: ApolloClient<unknown> = new ApolloClient({
   cache,
-  link: linkErrorAfterWare.concat(link),
+  link: ApolloLink.from([new SentryLink(), messageLink, splitLink]),
 });
