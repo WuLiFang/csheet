@@ -4,25 +4,11 @@ import queries from '@/graphql/queries';
 import clamp from '@/utils/clamp';
 import getPathBasename from '@/utils/getPathBasename';
 import * as sentry from '@sentry/browser';
-import {
-  computed,
-
-
-
-
-  onMounted, ref,
-  toRefs,
-  watch
-} from '@vue/composition-api';
+import { computed, ref, toRefs, watch } from '@vue/composition-api';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { filePathFormat } from '../const';
 import { Presentation as Data } from '../graphql/types/Presentation';
-import {
-  useCurrentFrame,
-  useFrameControl,
-  usePresentationDrag,
-  usePresentationFile
-} from './Presentation';
+import { setupCommon } from './Presentation';
 
 @Component<Presentation>({
   render(h) {
@@ -119,14 +105,6 @@ import {
     );
     const loadingCount = ref(0);
 
-    // show loading instead default while data cached but image need loading.
-    onMounted(() => {
-      loadingCount.value += 1;
-      requestAnimationFrame(() => {
-        loadingCount.value -= 1;
-      });
-    });
-
     const { node, version } = queries.usePresentationNode(
       computed(() => ({ id: id.value ?? '', filePathFormat })),
       computed(() => ({
@@ -151,34 +129,28 @@ import {
     });
 
     const el = ref<HTMLElement>();
-    const currentTime = ref(0);
-    const currentFrame = useCurrentFrame({
-      firstFrame,
-      currentTime,
-      frameRate,
-    });
-    watch(currentTime, (v) => {
-      ctx.emit('timeUpdate', v);
-    });
-    watch(currentFrame, (v) => {
-      ctx.emit('frameUpdate', v);
-    });
 
-    const { play, pause, seek, seekFrame, seekFrameOffset } = useFrameControl({
+    const {
+      currentTime,
+      currentFrame,
+      play,
+      pause,
+      seek,
+      seekFrame,
+      seekFrameOffset,
+      src,
+      url,
+      isTranscodeFailed,
+      _handleDrag,
+    } = setupCommon(ctx, node, {
       el,
       firstFrame,
-      currentFrame,
       frameRate,
-    });
-
-    const { src, url, isTranscodeFailed } = usePresentationFile(node, {
       size,
       isLoadFailed,
       retryCount,
-      isLoading: computed(() => loadingCount.value > 0),
+      loadingCount,
     });
-
-    const _handleDrag = usePresentationDrag(node);
     return {
       currentFrame,
       currentTime,

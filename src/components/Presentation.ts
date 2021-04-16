@@ -1,6 +1,14 @@
 import { Presentation } from '@/graphql/types/Presentation';
 import clamp from '@/utils/clamp';
-import { computed, ComputedRef, Ref } from '@vue/composition-api';
+import {
+  computed,
+  ComputedRef,
+  onMounted,
+  Ref,
+  ref,
+  SetupContext,
+  watch,
+} from '@vue/composition-api';
 
 export function useCurrentFrame({
   firstFrame,
@@ -167,5 +175,74 @@ export function usePresentationDrag(
       return;
     }
     e.dataTransfer?.setData('text/plain', presentation.value.raw.path);
+  };
+}
+
+export function setupCommon(
+  ctx: SetupContext,
+  presentation: Ref<Presentation | undefined>,
+  {
+    size,
+    isLoadFailed,
+    retryCount,
+    el,
+    firstFrame,
+    frameRate,
+    loadingCount,
+  }: {
+    size: Ref<string>;
+    isLoadFailed: Ref<boolean>;
+    retryCount?: Ref<number>;
+    el: Ref<HTMLElement | undefined>;
+    firstFrame: Ref<number>;
+    frameRate: Ref<number>;
+    loadingCount: Ref<number>;
+  }
+): {
+  url: Ref<string | undefined>;
+  currentTime: Ref<number>;
+  currentFrame: Ref<number>;
+  isTranscodeFailed: Ref<boolean>;
+  isTranscoding: Ref<boolean>;
+  src: Ref<string>;
+  play: () => void;
+  pause: () => void;
+  seek: (time: number, pause?: boolean) => void;
+  seekFrame: (frame: number, pause?: boolean) => void;
+  seekFrameOffset: (frame: number, pause?: boolean) => void;
+  _handleDrag: (e: DragEvent) => void;
+} {
+  // show loading instead default while data cached but image need loading.
+  onMounted(() => {
+    loadingCount.value += 1;
+    requestAnimationFrame(() => {
+      loadingCount.value -= 1;
+    });
+  });
+
+  const currentTime = ref(0);
+  const currentFrame = useCurrentFrame({
+    firstFrame,
+    currentTime,
+    frameRate,
+  });
+  watch(currentTime, (v) => {
+    ctx.emit('timeUpdate', v);
+  });
+  watch(currentFrame, (v) => {
+    ctx.emit('frameUpdate', v);
+  });
+
+  return {
+    currentFrame,
+    currentTime,
+    ...useFrameControl({ el, currentFrame, firstFrame, frameRate }),
+    ...usePresentationFile(presentation, {
+      size,
+      isLoadFailed,
+      isLoading: computed(() => loadingCount.value > 0),
+      retryCount,
+    }),
+    _handleDrag: usePresentationDrag(presentation),
   };
 }

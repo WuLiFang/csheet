@@ -1,15 +1,10 @@
 <script lang="ts">
-import {
-  useCurrentFrame,
-  useFrameControl,
-  usePresentationDrag,
-  usePresentationFile,
-} from '@/components/Presentation';
+import { setupCommon } from '@/components/Presentation';
 import usePresentationMetadata from '@/composables/usePresentationMetadata';
 import clamp from '@/utils/clamp';
 import getPathBasename from '@/utils/getPathBasename';
 import relativeURL from '@/utils/relativeURL';
-import { PropType, ref, toRefs, watch } from '@vue/composition-api';
+import { PropType, ref, toRefs } from '@vue/composition-api';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Presentation as Data } from '../graphql/types/Presentation';
 
@@ -108,32 +103,27 @@ import { Presentation as Data } from '../graphql/types/Presentation';
     } = usePresentationMetadata(node);
     const isLoadFailed = ref(false);
     const el = ref<HTMLElement>();
-    const currentTime = ref(0);
-    const currentFrame = useCurrentFrame({
-      firstFrame,
+    const loadingCount = ref(0);
+    const {
       currentTime,
-      frameRate,
-    });
-    watch(currentTime, (v) => {
-      ctx.emit('timeUpdate', v);
-    });
-    watch(currentFrame, (v) => {
-      ctx.emit('frameUpdate', v);
-    });
-
-    const { play, pause, seek, seekFrame, seekFrameOffset } = useFrameControl({
+      currentFrame,
+      play,
+      pause,
+      seek,
+      seekFrame,
+      seekFrameOffset,
+      src,
+      url,
+      isTranscodeFailed,
+      _handleDrag,
+    } = setupCommon(ctx, node, {
       el,
       firstFrame,
-      currentFrame,
       frameRate,
-    });
-
-    const { src, url, isTranscodeFailed } = usePresentationFile(node, {
       size,
       isLoadFailed,
+      loadingCount,
     });
-
-    const _handleDrag = usePresentationDrag(node);
     return {
       currentFrame,
       currentTime,
