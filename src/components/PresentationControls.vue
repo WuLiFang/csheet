@@ -108,7 +108,7 @@
 import InputNumber from '@/components/global/InputNumber.vue';
 import useNumberChangeRate from '@/composables/useNumberChangeRate';
 import useObservable from '@/composables/useObservable';
-import useVideoCurrentTime from '@/composables/useVideoCurrentTime';
+import useProperty from '@/composables/useProperty';
 import clamp from '@/utils/clamp';
 import observableFromRef from '@/utils/observableFromRef';
 import {
@@ -194,7 +194,7 @@ export default defineComponent({
         return props.parent.el;
       }
     });
-    const currentTime = useVideoCurrentTime(video);
+    const currentTime = useProperty(video, "currentTime", 0);
 
     const currentTimeRate = useNumberChangeRate(currentTime);
 
