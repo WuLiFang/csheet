@@ -1,7 +1,7 @@
 <template>
   <figure
     ref="el"
-    class="collection-overview-cell inline-block relative cursor-pointer flex items-center max-h-64 overflow-hidden"
+    class="collection-overview-cell relative cursor-pointer flex items-center max-h-64 overflow-hidden"
     :title="node && node.title"
     :class="{ [backgroundClass]: true }"
     @click="$emit('click', $event)"
