@@ -12,3 +12,4 @@ Dockerfile
 .travis.yml
 /storage
 /build
+*.local
