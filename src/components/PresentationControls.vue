@@ -60,7 +60,7 @@
       </button>
       <select
         ref="playbackRateSelect"
-        v-model="playbackRate"
+        v-model="playbackRateProxy"
         class="form-select flex-initial p-0 pl-2 w-20 h-8 m-px"
         title="播放倍速 （快捷键：j/k/l）"
       >
@@ -144,7 +144,7 @@ export default defineComponent({
     const timeInput = ref<DurationInput>();
     const playbackRateSelect = ref<HTMLSelectElement>();
     const frameSkipSize = ref(10);
-    const playbackRate = computed({
+    const playbackRateProxy = computed({
       get() {
         return props.playbackRate;
       },
@@ -172,13 +172,13 @@ export default defineComponent({
     });
     const playbackRateOptions = [0.1, 0.2, 0.5, 1, 2, 4, 8];
     const setPlaybackRate = (v: number): void => {
-      playbackRate.value = v;
+      playbackRateProxy.value = v;
     };
 
     const offsetPlaybackRateIndex = (offset: number): void => {
       const o = playbackRateOptions;
-      playbackRate.value =
-        o[clamp(o.indexOf(playbackRate.value) + offset, 0, o.length - 1)];
+      playbackRateProxy.value =
+        o[clamp(o.indexOf(playbackRateProxy.value) + offset, 0, o.length - 1)];
     };
 
     const skipFrameForward = (): void => {
@@ -194,7 +194,7 @@ export default defineComponent({
         return props.parent.el;
       }
     });
-    const currentTime = useProperty(video, "currentTime", 0);
+    const currentTime = useProperty(video, 'currentTime', 0);
 
     const currentTimeRate = useNumberChangeRate(currentTime);
 
@@ -238,7 +238,7 @@ export default defineComponent({
       frameInput,
       frameSkipSize,
       offsetPlaybackRateIndex,
-      playbackRate,
+      playbackRateProxy,
       playbackRateOptions,
       playbackRateSelect,
       setPlaybackRate,
