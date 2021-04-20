@@ -31,12 +31,12 @@ export function useProperty<T, K extends keyof T>(
     if (canceled) {
       return;
     }
+    requestAnimationFrame(update);
     if (obj.value == null) {
       ret.value = ref(defaultValue).value;
       return;
     }
     ret.value = ref(obj.value[name]).value;
-    requestAnimationFrame(() => update());
   };
   update();
   if (getCurrentInstance()) {
