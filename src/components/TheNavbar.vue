@@ -306,7 +306,7 @@ export default defineComponent({
                 );
                 break;
               default:
-                throw err;
+              // other error handled in onError middleware
             }
             form.value?.reportValidity();
             return;
