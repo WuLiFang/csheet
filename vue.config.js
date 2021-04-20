@@ -99,6 +99,19 @@ module.exports = {
     );
 
     config.resolve.alias.set('lodash', 'lodash-es');
+
+    config.module
+      .rule('gql')
+      .test(/\.(gql|graphql)$/)
+      .use('cache-loader')
+      .loader('cache-loader')
+      .end()
+      .use('thread-loader')
+      .loader('thread-loader')
+      .end()
+      .use('gql-loader')
+      .loader('graphql-tag/loader')
+      .end();
   },
   transpileDependencies: ['strip-ansi', 'ansi-regex'],
 
@@ -119,9 +132,6 @@ module.exports = {
       fallbackLocale: 'zh',
       localeDir: 'locales',
       enableInSFC: false,
-    },
-    apollo: {
-      lintGQL: true,
     },
   },
 };

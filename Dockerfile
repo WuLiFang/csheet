@@ -14,14 +14,13 @@ RUN if [ -n "${NPM_MIRROR}" ]; then \
 WORKDIR /app/
 ARG RELEASE
 ENV CSHEET_RELEASE=${RELEASE}
-COPY package*.json tsconfig.json *.config.js .graphqlconfig ./
+COPY package*.json tsconfig.json *.config.js .graphqlconfig .npmrc .pnpmfile.cjs ./
 COPY src/ src/
 COPY public/ public/
-RUN set -ex\
-    && npm ci\
-    && npm run build\
-    && rm -rf node_modules/
-
+RUN set -ex &&\
+    npx pnpm --store-dir .pnpm_store/ i &&\
+    npm run build &&\
+    rm -rf .pnpm_store/ node_modules/
 
 FROM golang:1-alpine AS server
 

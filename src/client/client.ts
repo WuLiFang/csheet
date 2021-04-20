@@ -122,7 +122,7 @@ const splitLink = split(
     );
   },
   apqLink.concat(wsLink),
-  apqLink.concat((httpLink as unknown) as ApolloLink)
+  apqLink.concat(httpLink)
 );
 const messageLink: ApolloLink = onError(
   ({ graphQLErrors, networkError, operation }: ErrorResponse): void => {
