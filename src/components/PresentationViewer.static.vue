@@ -57,8 +57,6 @@
           draggable
           :controls="annotation && annotation.currentPainter === 'null'"
           :playback-rate="playbackRate"
-          @frameUpdate="currentFrame = $event"
-          @timeUpdate="currentTime = $event"
         ></Presentation>
       </transition>
       <Presentation
@@ -124,7 +122,7 @@ export default defineComponent({
     >();
     const supportsScreenshot = location.protocol !== 'file:';
 
-    const currentFrame = ref(0);
+    const currentFrame = computed(() => controls.value?.currentFrameProxy ?? 0);
     const playbackRate = ref(1);
 
     const { toggleFullscreen, isFullscreen } = useElementFullscreen(el);
@@ -142,7 +140,6 @@ export default defineComponent({
       isPresentationAnnotationVisible,
       currentFrame
     );
-    
 
     return {
       el,
@@ -154,7 +151,6 @@ export default defineComponent({
       screenshot,
       saveScreenshot,
       backgroundClass,
-      currentFrame,
       playbackRate,
       presentationClass,
       isAnnotationVisible: isPresentationAnnotationVisible,

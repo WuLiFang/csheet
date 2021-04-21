@@ -8,7 +8,7 @@
         class="form-button flex-none p-0 w-12 h-8 m-px flex justify-center items-center"
         type="button"
         title="至起始帧（快捷键：Home）"
-        @click="() => parent.seekFrame(parent.firstFrame, true)"
+        @click="() => seekFrame(parent.firstFrame, true)"
       >
         <FaIcon name="fast-backward"></FaIcon>
       </button>
@@ -16,7 +16,7 @@
         class="form-button flex-none p-0 w-12 h-8 m-px flex justify-center items-center"
         type="button"
         title="上一帧（快捷键：←）"
-        @click="() => parent.seekFrameOffset(-1, true)"
+        @click="() => seekFrameOffset(-1, true)"
       >
         <FaIcon name="step-backward"></FaIcon>
       </button>
@@ -30,7 +30,7 @@
         class="form-button flex-none p-0 w-12 h-8 m-px flex justify-center items-center"
         type="button"
         title="下一帧（快捷键：→）"
-        @click="() => parent.seekFrameOffset(1, true)"
+        @click="() => seekFrameOffset(1, true)"
       >
         <FaIcon name="step-forward"></FaIcon>
       </button>
@@ -38,7 +38,7 @@
         class="form-button flex-none p-0 w-12 h-8 m-px flex justify-center items-center"
         type="button"
         title="至结束帧（快捷键：End）"
-        @click="() => parent.seekFrame(parent.lastFrame, true)"
+        @click="() => seekFrame(parent.lastFrame, true)"
       >
         <FaIcon name="fast-forward"></FaIcon>
       </button>
@@ -54,9 +54,9 @@
         class="form-button flex-initial p-0 w-24 h-8 m-px flex justify-center items-center"
         type="button"
         title="播放/暂停（快捷键：空格）"
-        @click="() => (parent.paused ? parent.play() : parent.pause())"
+        @click="() => (paused ? play() : pause())"
       >
-        <FaIcon :name="parent.paused ? 'play' : 'pause'"></FaIcon>
+        <FaIcon :name="paused ? 'play' : 'pause'"></FaIcon>
       </button>
       <select
         ref="playbackRateSelect"
@@ -108,6 +108,7 @@
 import InputNumber from '@/components/global/InputNumber.vue';
 import useNumberChangeRate from '@/composables/useNumberChangeRate';
 import useObservable from '@/composables/useObservable';
+import useFrameControl from '@/composables/useFrameControl';
 import useProperty from '@/composables/useProperty';
 import clamp from '@/utils/clamp';
 import observableFromRef from '@/utils/observableFromRef';
@@ -163,31 +164,19 @@ export default defineComponent({
       playbackRateProxy.value =
         o[clamp(o.indexOf(playbackRateProxy.value) + offset, 0, o.length - 1)];
     };
-
-    const skipFrameForward = (): void => {
-      props.parent.seekFrameOffset(frameSkipSize.value, true);
-    };
-
-    const skipFrameBackward = (): void => {
-      props.parent.seekFrameOffset(-frameSkipSize.value, true);
-    };
-
     const video = computed(() => {
       if (props.parent.el instanceof HTMLVideoElement) {
         return props.parent.el;
       }
     });
     const currentTime = useProperty(video, 'currentTime', 0);
-    const currentTimeProxy = computed({
-      get(): string {
-        return moment.duration(currentTime.value * 1e3).toISOString();
-      },
-      set(s: string) {
-        const v = moment.duration(s).asSeconds();
-        props.parent.seek(v, true);
-      },
-    });
+
     const frameRate = computed(() => props.parent.frameRate);
+
+    const firstFrame = computed(() => props.parent.firstFrame);
+    const currentFrame = computed(() => {
+      return firstFrame.value + Math.round(currentTime.value * frameRate.value);
+    });
     const currentFrameProxy = computed({
       get(): number {
         return (
@@ -196,9 +185,41 @@ export default defineComponent({
         );
       },
       set(v: number) {
-        props.parent.seekFrame(v, true);
+        seekFrame(v, true);
       },
     });
+    const {
+      seek,
+      seekFrame,
+      seekFrameOffset,
+      play,
+      pause,
+      paused,
+    } = useFrameControl({
+      el: video,
+      firstFrame,
+      currentFrame,
+      frameRate,
+    });
+
+    const skipFrameForward = (): void => {
+      seekFrameOffset(frameSkipSize.value, true);
+    };
+
+    const skipFrameBackward = (): void => {
+      seekFrameOffset(-frameSkipSize.value, true);
+    };
+
+    const currentTimeProxy = computed({
+      get(): string {
+        return moment.duration(currentTime.value * 1e3).toISOString();
+      },
+      set(s: string) {
+        const v = moment.duration(s).asSeconds();
+        seek(v, true);
+      },
+    });
+
     const currentTimeRate = useNumberChangeRate(currentTime);
 
     const currentFrameRate = computed(
@@ -219,7 +240,7 @@ export default defineComponent({
       { immediate: true }
     );
     const currentFrameRateClass = computed(() => {
-      if (props.parent.paused) {
+      if (paused.value) {
         return 'text-gray-500';
       }
       const dropframe =
@@ -240,9 +261,15 @@ export default defineComponent({
       frameInput,
       frameSkipSize,
       offsetPlaybackRateIndex,
-      playbackRateProxy,
+      pause,
+      paused,
+      play,
       playbackRateOptions,
+      playbackRateProxy,
       playbackRateSelect,
+      seek,
+      seekFrame,
+      seekFrameOffset,
       setPlaybackRate,
       skipFrameBackward,
       skipFrameForward,

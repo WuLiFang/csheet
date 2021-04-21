@@ -185,10 +185,10 @@ import PresentationSelect from './PresentationSelect.vue';
           break;
         case ' ':
           e.preventDefault();
-          if (this.$refs.presentationViewer?.presentation?.paused) {
-            this.$refs.presentationViewer?.presentation?.play();
+          if (this.$refs.presentationViewer?.controls?.paused) {
+            this.$refs.presentationViewer?.controls?.play();
           } else {
-            this.$refs.presentationViewer?.presentation?.pause();
+            this.$refs.presentationViewer?.controls?.pause();
           }
           break;
         case 'ArrowUp':
@@ -206,19 +206,13 @@ import PresentationSelect from './PresentationSelect.vue';
         case 'ArrowLeft':
           e.preventDefault();
           throttleRepeatSeek(() => {
-            this.$refs.presentationViewer?.presentation?.seekFrameOffset(
-              -1,
-              true
-            );
+            this.$refs.presentationViewer?.controls?.seekFrameOffset(-1, true);
           });
           break;
         case 'ArrowRight':
           e.preventDefault();
           throttleRepeatSeek(() => {
-            this.$refs.presentationViewer?.presentation?.seekFrameOffset(
-              1,
-              true
-            );
+            this.$refs.presentationViewer?.controls?.seekFrameOffset(1, true);
           });
           break;
         case '+ArrowLeft':
@@ -235,15 +229,15 @@ import PresentationSelect from './PresentationSelect.vue';
           break;
         case 'Home':
           e.preventDefault();
-          this.$refs.presentationViewer?.presentation?.seekFrame(
-            this.$refs.presentationViewer?.presentation?.firstFrame,
+          this.$refs.presentationViewer?.controls?.seekFrame(
+            this.$refs.presentationViewer?.presentation?.firstFrame ?? 0,
             true
           );
           break;
         case 'End':
           e.preventDefault();
-          this.$refs.presentationViewer?.presentation?.seekFrame(
-            this.$refs.presentationViewer?.presentation?.lastFrame,
+          this.$refs.presentationViewer?.controls?.seekFrame(
+            this.$refs.presentationViewer?.presentation?.lastFrame ?? 0,
             true
           );
           break;

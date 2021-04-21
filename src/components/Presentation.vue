@@ -35,8 +35,6 @@ import { setupCommon } from './Presentation';
       }, 2 ** this.retryCount * 1000);
     };
     const renderImage = () => {
-      this.currentTime = 0;
-      this.paused = true;
       return h('img', {
         ref: 'el',
         domProps: {
@@ -67,15 +65,6 @@ import { setupCommon } from './Presentation';
         },
         on: {
           error: handleError,
-          timeupdate: (e: Event & { target: HTMLVideoElement }) => {
-            this.currentTime = e.target.currentTime;
-          },
-          play: () => {
-            this.paused = false;
-          },
-          pause: () => {
-            this.paused = true;
-          },
           dragstart: this._handleDrag,
         },
       });
@@ -130,30 +119,17 @@ import { setupCommon } from './Presentation';
 
     const el = ref<HTMLElement>();
 
-    const {
-      currentTime,
-      currentFrame,
-      play,
-      pause,
-      seek,
-      seekFrame,
-      seekFrameOffset,
-      src,
-      url,
-      isTranscodeFailed,
-      _handleDrag,
-    } = setupCommon(ctx, node, {
-      el,
-      firstFrame,
-      frameRate,
-      size,
-      isLoadFailed,
-      retryCount,
-      loadingCount,
-    });
+    const { src, url, isTranscodeFailed, _handleDrag } = setupCommon(
+      ctx,
+      node,
+      {
+        size,
+        isLoadFailed,
+        retryCount,
+        loadingCount,
+      }
+    );
     return {
-      currentFrame,
-      currentTime,
       el,
       firstFrame,
       frameCount,
@@ -163,12 +139,7 @@ import { setupCommon } from './Presentation';
       isTranscodeFailed,
       lastFrame,
       node,
-      pause,
-      play,
       retryCount,
-      seek,
-      seekFrame,
-      seekFrameOffset,
       src,
       url,
       version,
@@ -212,15 +183,7 @@ export default class Presentation extends Vue {
   isLoadFailed!: boolean;
   isTranscodeFailed!: boolean;
   retryCount!: number;
-  currentFrame!: number;
-  currentTime!: number;
   src!: string;
-  play!: () => void;
-  pause!: () => void;
-  seek!: (time: number, pause?: boolean) => void;
-  seekFrame!: (frame: number, pause?: boolean) => void;
-  seekFrameOffset!: (frame: number, pause?: boolean) => void;
-  paused = true;
 
   _handleDrag!: (e: DragEvent) => void;
 }
