@@ -36,6 +36,7 @@ import { OriginPrefix } from '@/client/origin-prefix';
 import { filePathFormat } from '@/const';
 import extractNodes from '@/utils/extractNodes';
 import extractPageInfo from '@/utils/extractPageInfo';
+import fetchMore from '@/utils/fetchMore';
 import { ApolloQueryResult, ObservableQuery } from 'apollo-client';
 import { DollarApollo } from 'vue-apollo/types/vue-apollo';
 import 'vue-awesome/icons/spinner';
@@ -45,11 +46,11 @@ import { Collection } from '../graphql/types/Collection';
 import {
   collections,
   collectionsVariables,
-  collections_collections as Collections,
+  collections_collections as Collections
 } from '../graphql/types/collections';
 import {
   collectionUpdated,
-  collectionUpdatedVariables,
+  collectionUpdatedVariables
 } from '../graphql/types/collectionUpdated';
 import { presentationUpdatedVariables } from '../graphql/types/presentationUpdated';
 import { show } from '../modal';
@@ -164,34 +165,7 @@ export default class CollectionOverview extends Vue {
   }
 
   async fetchMore(): Promise<void> {
-    if (!this.pageInfo.hasNextPage) {
-      return;
-    }
-    await this.$apollo.queries.collections.fetchMore({
-      variables: {
-        before: undefined,
-        last: undefined,
-        originPrefix: undefined,
-        ...this.variables,
-        after: this.pageInfo.endCursor,
-        first: this.size,
-      },
-      updateQuery: (previousResult, { fetchMoreResult }) => {
-        const ret = { ...previousResult };
-        if (!fetchMoreResult) {
-          return ret;
-        }
-        ret.collections.nodes = (ret.collections.nodes ?? [])
-          .concat(fetchMoreResult.collections.nodes)
-          .filter((i) => !!i);
-        ret.collections.pageInfo.hasNextPage =
-          fetchMoreResult.collections.pageInfo.hasNextPage;
-        ret.collections.pageInfo.endCursor =
-          fetchMoreResult.collections.pageInfo.endCursor;
-
-        return ret;
-      },
-    });
+    await fetchMore(this.$apollo.queries.collections, this.pageInfo, this.size);
   }
 
   async showViewer(value: Collection): Promise<void> {
@@ -209,6 +183,7 @@ export default class CollectionOverview extends Vue {
       if (index === this.nodes.length - 1 && this.pageInfo.hasNextPage) {
         await this.fetchMore();
       }
+
       props.value = this.nodes[index];
       props.prev = index <= 0 ? undefined : this.nodes[index - 1];
       props.next =
