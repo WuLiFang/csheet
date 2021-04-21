@@ -10,6 +10,7 @@ import { OperationVariables, QueryOptions, WatchQueryOptions, ApolloQueryResult,
 import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
 import { apolloClient } from "@/client"
 import { ref, Ref, watch, onUnmounted } from '@vue/composition-api';
+import useCleanup from '@/composables/useCleanup';
 {{- block "import" . }}{{ end }}
 
 {{- if .NoVariables }}
@@ -70,7 +71,7 @@ export function useQuery(
   const version = ref(0);
   
   const query = ref<ObservableQuery<{{ .Name }}, {{ .Name }}Variables> | undefined>()
-  const cleanup: (() => void)[] = []
+  const { cleanup, addCleanup } = useCleanup();
   const start = () => {
     if (query.value){
       return
@@ -102,19 +103,17 @@ export function useQuery(
         version.value += 1;
       }
     });
-    cleanup.push(() => {
-      sub.unsubscribe()
-    })
+    addCleanup(() => {
+      sub.unsubscribe();
+    });
   };
   const stop = () => {
     if (!query.value){
       return
     }
-    query.value = undefined
-    while (cleanup.length > 0) {
-      cleanup.pop()?.()
-    }
-  }
+    query.value = undefined;
+    cleanup();
+  };
 
   onUnmounted(() => {
     stop()

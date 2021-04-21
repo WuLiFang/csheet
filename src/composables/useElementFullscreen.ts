@@ -1,10 +1,5 @@
-import {
-  getCurrentInstance,
-  onUnmounted,
-  Ref,
-  ref,
-  watch,
-} from '@vue/composition-api';
+import useCleanup from '@/composables/useCleanup';
+import { Ref, ref, watch } from '@vue/composition-api';
 
 export default function useElementFullscreen(
   el: Ref<HTMLElement | undefined>
@@ -36,32 +31,23 @@ export default function useElementFullscreen(
     }
   };
 
-  const cleanup: (() => void)[] = [];
-  const doCleanup = () => {
-    while (cleanup.length > 0) {
-      cleanup.pop()?.();
-    }
-  };
+  const { cleanup, addCleanup } = useCleanup();
 
   watch(
     el,
     (n) => {
-      doCleanup();
+      cleanup();
       if (!n) {
         return;
       }
       updateFullscreen();
       n.addEventListener('fullscreenchange', updateFullscreen);
-      cleanup.push(() =>
+      addCleanup(() =>
         n.removeEventListener('fullscreenchange', updateFullscreen)
       );
     },
     { immediate: true }
   );
-
-  if (getCurrentInstance()) {
-    onUnmounted(doCleanup);
-  }
 
   return {
     requestFullscreen,

@@ -11,6 +11,7 @@ import {
 import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
 import { apolloClient } from '@/client';
 import { ref, Ref, watch, onUnmounted } from '@vue/composition-api';
+import useCleanup from '@/composables/useCleanup';
 import extractNodes, { NodeType } from '@/utils/extractNodes';
 import { computed } from '@vue/composition-api';
 
@@ -67,7 +68,7 @@ export function useQuery(
   const query = ref<
     ObservableQuery<collections, collectionsVariables> | undefined
   >();
-  const cleanup: (() => void)[] = [];
+  const { cleanup, addCleanup } = useCleanup();
   const start = () => {
     if (query.value) {
       return;
@@ -97,7 +98,7 @@ export function useQuery(
         version.value += 1;
       }
     });
-    cleanup.push(() => {
+    addCleanup(() => {
       sub.unsubscribe();
     });
   };
@@ -106,9 +107,7 @@ export function useQuery(
       return;
     }
     query.value = undefined;
-    while (cleanup.length > 0) {
-      cleanup.pop()?.();
-    }
+    cleanup();
   };
 
   onUnmounted(() => {
