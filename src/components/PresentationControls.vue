@@ -152,24 +152,7 @@ export default defineComponent({
         ctx.emit('update:playbackRate', v);
       },
     });
-    const currentTimeProxy = computed({
-      get(): string {
-        return moment.duration(props.parent.currentTime * 1e3).toISOString();
-      },
-      set(s: string) {
-        const v = moment.duration(s).asSeconds();
-        props.parent.seek(v, true);
-      },
-    });
 
-    const currentFrameProxy = computed({
-      get(): number {
-        return props.parent.currentFrame;
-      },
-      set(v: number) {
-        props.parent.seekFrame(v, true);
-      },
-    });
     const playbackRateOptions = [0.1, 0.2, 0.5, 1, 2, 4, 8];
     const setPlaybackRate = (v: number): void => {
       playbackRateProxy.value = v;
@@ -195,10 +178,29 @@ export default defineComponent({
       }
     });
     const currentTime = useProperty(video, 'currentTime', 0);
-
+    const currentTimeProxy = computed({
+      get(): string {
+        return moment.duration(currentTime.value * 1e3).toISOString();
+      },
+      set(s: string) {
+        const v = moment.duration(s).asSeconds();
+        props.parent.seek(v, true);
+      },
+    });
+    const frameRate = computed(() => props.parent.frameRate);
+    const currentFrameProxy = computed({
+      get(): number {
+        return (
+          props.parent.firstFrame +
+          Math.round(currentTime.value * frameRate.value)
+        );
+      },
+      set(v: number) {
+        props.parent.seekFrame(v, true);
+      },
+    });
     const currentTimeRate = useNumberChangeRate(currentTime);
 
-    const frameRate = computed(() => props.parent.frameRate);
     const currentFrameRate = computed(
       () => currentTimeRate.value * frameRate.value
     );
