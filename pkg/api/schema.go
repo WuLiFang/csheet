@@ -89,6 +89,28 @@ func normalizeVariableValue(v interface{}) interface{} {
 
 }
 
+// Issue1369Fix https://github.com/99designs/gqlgen/issues/1369
+type Issue1369Fix struct{}
+
+func (Issue1369Fix) ExtensionName() string {
+	return "Issue1369Fix"
+}
+func (Issue1369Fix) Validate(schema graphql.ExecutableSchema) error {
+	return nil
+}
+
+func (Issue1369Fix) MutateOperationContext(ctx context.Context, rc *graphql.OperationContext) *gqlerror.Error {
+	for k, v := range rc.Variables {
+		rc.Variables[k] = normalizeVariableValue(v)
+	}
+	return nil
+}
+
+var _ interface {
+	graphql.OperationContextMutator
+	graphql.HandlerExtension
+} = Issue1369Fix{}
+
 // Do graphql operation.
 func Do(ctx context.Context, params *graphql.RawParams) (resp *graphql.Response, err error) {
 	schema := NewExecutableSchema()

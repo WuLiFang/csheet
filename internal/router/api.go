@@ -60,6 +60,7 @@ func apiHandler() gin.HandlerFunc {
 
 	server.SetQueryCache(lru.New(1000))
 
+	server.Use(api.Issue1369Fix{})
 	server.Use(extension.Introspection{})
 	server.Use(
 		extension.AutomaticPersistedQuery{
