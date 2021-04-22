@@ -109,7 +109,7 @@ import InputNumber from '@/components/global/InputNumber.vue';
 import useNumberChangeRate from '@/composables/useNumberChangeRate';
 import useObservable from '@/composables/useObservable';
 import useFrameControl from '@/composables/useFrameControl';
-import useProperty from '@/composables/useProperty';
+import usePolling from '@/composables/usePolling';
 import clamp from '@/utils/clamp';
 import observableFromRef from '@/utils/observableFromRef';
 import {
@@ -169,7 +169,8 @@ export default defineComponent({
         return props.parent.el;
       }
     });
-    const currentTime = useProperty(video, 'currentTime', 0);
+    const currentTime = ref(0);
+    usePolling(currentTime, () => video.value?.currentTime ?? 0);
 
     const frameRate = computed(() => props.parent.frameRate);
 
