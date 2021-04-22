@@ -1,11 +1,5 @@
-import {
-  getCurrentInstance,
-  onUnmounted,
-  ref,
-  Ref,
-  UnwrapRef,
-  watch,
-} from '@vue/composition-api';
+import useCleanup from '@/composables/useCleanup';
+import { ref, Ref, UnwrapRef, watch } from '@vue/composition-api';
 
 export type StorageLike = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
 
@@ -19,6 +13,7 @@ function useStorage<T>(
   key: string,
   default_?: T
 ): Ref<UnwrapRef<T> | undefined> {
+  const { addCleanup } = useCleanup();
   const ret = ref<T | undefined>(default_);
   const load = () => {
     const value = storage.getItem(key);
@@ -33,12 +28,8 @@ function useStorage<T>(
     }
     load();
   };
-  window.addEventListener('storage', onStorage);
-  if (getCurrentInstance()) {
-    onUnmounted(() => {
-      window.removeEventListener('storage', onStorage);
-    });
-  }
+  addEventListener('storage', onStorage);
+  addCleanup(() => removeEventListener('storage', onStorage));
   watch(
     ret,
     (v) => {

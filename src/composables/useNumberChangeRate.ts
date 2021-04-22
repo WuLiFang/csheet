@@ -1,15 +1,12 @@
-import {
-  getCurrentInstance,
-  onUnmounted,
-  Ref,
-  ref,
-  watch,
-} from '@vue/composition-api';
+import useCleanup from '@/composables/useCleanup';
+import { Ref, ref, watch } from '@vue/composition-api';
 
 export default function useNumberChangeRate(
   v: Ref<number>,
   sampleInterval = 100
 ): Ref<number> {
+  const { addCleanup, cleanup } = useCleanup();
+
   const rate = ref(0);
   let lastValue = v.value;
   let lastUpdateTime = Date.now();
@@ -20,16 +17,12 @@ export default function useNumberChangeRate(
     lastUpdateTime = now;
   };
 
-  let timeoutId: number | undefined;
-  const cancelPendingUpdate = (): void => window.clearTimeout(timeoutId);
   watch(v, () => {
+    cleanup();
     update();
-    cancelPendingUpdate();
-    timeoutId = window.setTimeout(update, sampleInterval);
+    const timeoutId = setTimeout(update, sampleInterval);
+    addCleanup(() => clearTimeout(timeoutId));
   });
 
-  if (getCurrentInstance()) {
-    onUnmounted(cancelPendingUpdate);
-  }
   return rate;
 }

@@ -13,7 +13,7 @@ import {
 } from 'apollo-client';
 import { VueApolloQueryDefinition } from 'vue-apollo/types/options';
 import { apolloClient } from '@/client';
-import { ref, Ref, watch, onUnmounted } from '@vue/composition-api';
+import { ref, Ref, watch } from '@vue/composition-api';
 import useCleanup from '@/composables/useCleanup';
 
 export { collectionStatsVariables, collectionStats };
@@ -104,16 +104,10 @@ export function useQuery(
     });
   };
   const stop = () => {
-    if (!query.value) {
-      return;
-    }
-    query.value = undefined;
     cleanup();
+    query.value = undefined;
   };
 
-  onUnmounted(() => {
-    stop();
-  });
   watch(
     () => options?.value.skip,
     (v) => {
