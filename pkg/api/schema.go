@@ -71,6 +71,9 @@ func NewExecutableSchema() graphql.ExecutableSchema {
 }
 
 func normalizeVariableValue(v interface{}) interface{} {
+	if v == nil {
+		return nil
+	}
 	var rv = reflect.ValueOf(v)
 	switch rv.Type().Kind() {
 	case reflect.Array:
