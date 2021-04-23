@@ -1,9 +1,25 @@
-#!/usr/bin/env -S npx ts-node-script
+#!/usr/bin/env ts-node-script
 
-import { spawnSync } from 'child_process';
+import { spawn } from 'child_process';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 const { readFile, utimes, readdir, unlink, stat } = fs;
+
+async function run(cmd: string, args?: string[]): Promise<void> {
+  const process = spawn(cmd, args, {
+    shell: true,
+    stdio: 'inherit',
+  });
+  return new Promise((resolve, reject) => {
+    process.on('close', (code) => {
+      if (code == 0) {
+        resolve();
+      } else {
+        reject(new Error(`exit code ${code}: ${cmd} ${args}`));
+      }
+    });
+  });
+}
 
 async function isGeneratedFile(path: string): Promise<boolean> {
   if (!path.endsWith('.ts')) {
@@ -18,25 +34,18 @@ async function isGeneratedFile(path: string): Promise<boolean> {
   const startTime = new Date();
   const dir = 'src/graphql/types';
 
-  spawnSync(
-    'apollo',
-    [
-      'client:codegen',
-      '--passthroughCustomScalars ',
-      '--customScalarsPrefix',
-      "import('./scalars').",
-      '--target',
-      'typescript',
-      '--globalTypesFile',
-      path.join(dir, 'global.ts'),
-      '--outputFlat',
-      dir,
-    ],
-    {
-      shell: true,
-      stdio: 'inherit',
-    }
-  );
+  await run('apollo', [
+    'client:codegen',
+    '--passthroughCustomScalars ',
+    '--customScalarsPrefix',
+    '"import(\'./scalars\')."',
+    '--target',
+    'typescript',
+    '--globalTypesFile',
+    path.join(dir, 'global.ts'),
+    '--outputFlat',
+    dir,
+  ]);
 
   // cleanup unused files
   for (const i of await readdir(dir)) {
@@ -57,7 +66,7 @@ async function isGeneratedFile(path: string): Promise<boolean> {
   }
 
   await utimes(dir, new Date(), new Date());
-})().catch(err => {
+})().catch((err) => {
   console.error(err);
   process.exit(1);
 });
