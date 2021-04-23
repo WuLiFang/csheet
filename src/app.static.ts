@@ -3,9 +3,9 @@ import '@/plugins/composition-api';
 import { i18n } from '@/plugins/i18n';
 import '@/plugins/moment';
 import '@/plugins/vue-awesome';
+import '@/plugins/browser-warning';
 import '@/styles/index.scss';
 import Vue from 'vue';
-
 
 // Global components
 (() => {

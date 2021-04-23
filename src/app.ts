@@ -1,5 +1,6 @@
 import App from '@/App.vue';
 import { apolloProvider } from '@/plugins/apollo';
+import '@/plugins/browser-warning';
 import '@/plugins/composition-api';
 import { i18n } from '@/plugins/i18n';
 import '@/plugins/moment';
@@ -25,5 +26,5 @@ import Vue from 'vue';
 export const app = new Vue({
   apolloProvider,
   i18n,
-  render: h => h(App),
+  render: (h) => h(App),
 }).$mount('#app');
