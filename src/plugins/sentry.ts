@@ -9,7 +9,7 @@ import Vue from 'vue';
     return;
   }
   // https://github.com/getsentry/sentry-javascript/issues/3388
-  const isAffectByIssue3388 = navigator.userAgent.includes('Chrome/74.0.3729');
+  const isAffectedByIssue3388 = navigator.userAgent.includes('Chrome/74.0.3729');
   sentry.init({
     environment: process.env.NODE_ENV,
     dsn: config.sentryDSN,
@@ -19,7 +19,8 @@ import Vue from 'vue';
       new sentry.Integrations.InboundFilters(),
       new sentry.Integrations.FunctionToString(),
       new sentry.Integrations.TryCatch({
-        requestAnimationFrame: !isAffectByIssue3388,
+        requestAnimationFrame: !isAffectedByIssue3388,
+        eventTarget: !isAffectedByIssue3388,
       }),
       new sentry.Integrations.Breadcrumbs(),
       new sentry.Integrations.GlobalHandlers(),
