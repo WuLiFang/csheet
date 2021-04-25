@@ -71,7 +71,7 @@
         :class="presentationClass"
         class="absolute inset-0"
         :painter.sync="preferredPainter"
-        @draw-start="presentation.pause()"
+        @draw-start="controls && controls.pause()"
       ></PresentationAnnotationEditor>
     </div>
     <PresentationControls
