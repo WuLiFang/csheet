@@ -6,7 +6,7 @@
     output.inline-block(
       ref="output"
       :tabindex="dropdownVisible || disabled ? undefined : 0"
-      class="form-select cursor-pointer w-full relative"
+      class="form-select cursor-pointer w-full relative whitespace-no-wrap"
       :class=`{
         'bg-none': clearButtonVisible,
         [outputClass]: true,
@@ -413,7 +413,7 @@ export default class Select extends Vue {
       this.$emit('change');
     };
     if (this.multiple) {
-      this.toggle(v.key, false, onchange);
+      this.toggle(v.key, undefined, onchange);
     } else {
       this.toggle(v.key, true, onchange);
       this.blur();
