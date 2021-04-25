@@ -112,6 +112,9 @@ function getResultMessage({
   if (createdCount) {
     return `创建了 ${createdCount} 个收藏`;
   }
+  if (updatedCount === 0) {
+    return `更新了 ${updatedCount} 个收藏，请检查参数`;
+  }
   return `更新了 ${updatedCount} 个收藏`;
 }
 
@@ -326,6 +329,11 @@ export default defineComponent({
         loadingCount.value -= 1;
       }
     };
+
+    ctx.root.$on('collect', async (cb?: () => void) => {
+      await collect();
+      cb?.();
+    });
 
     return {
       formData,

@@ -4,12 +4,21 @@
   )
     template(v-if="nodes.length === 0 ")
       .block(
-        class="text-center h-32 font-bold pt-8 text-gray-600 col-span-6"
+        class="text-left m-auto h-32 font-bold pt-8 text-gray-600 col-span-6"
       ) 
         template(v-if="loadingCount > 0 ")
           FaIcon.h-32(name="spinner" spin)
         template(v-else)
-          p 没有匹配的收藏，请检查选项后重试收集。
+          h1(
+            class="text-xl leading-loose"
+          ) 没有匹配的收藏
+          p 本应用仅监控已有路径，不会自动添加新文件
+          p 
+            | 如有新文件请
+            button.form-button.m-2(
+              type="button"
+              @click="collect()"
+            ) 收集
     template(v-for="i in nodes")
       CollectionOverviewCell(
         class="min-h-32"
@@ -46,11 +55,11 @@ import { Collection } from '../graphql/types/Collection';
 import {
   collections,
   collectionsVariables,
-  collections_collections as Collections
+  collections_collections as Collections,
 } from '../graphql/types/collections';
 import {
   collectionUpdated,
-  collectionUpdatedVariables
+  collectionUpdatedVariables,
 } from '../graphql/types/collectionUpdated';
 import { presentationUpdatedVariables } from '../graphql/types/presentationUpdated';
 import { show } from '../modal';
@@ -200,6 +209,17 @@ export default class CollectionOverview extends Vue {
 
   async refetch(): Promise<void> {
     await this.$apollo.queries.collections.refetch();
+  }
+
+  async collect(): Promise<void> {
+    this.loadingCount += 1;
+    try {
+      await new Promise((resolve) => {
+        this.$root.$emit('collect', resolve);
+      });
+    } finally {
+      this.loadingCount -= 1;
+    }
   }
 }
 </script>
