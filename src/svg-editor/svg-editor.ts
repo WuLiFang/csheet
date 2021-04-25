@@ -80,7 +80,7 @@ export class SVGEditor {
     el: SVGSVGElement,
     {
       hooks = {},
-      sanitize = v => DOMPurify.sanitize(v),
+      sanitize = (v) => DOMPurify.sanitize(v, { USE_PROFILES: { svg: true } }),
       style = `\
 polyline {
   stroke-linecap: round;
@@ -103,13 +103,13 @@ ellipse {
     el.appendChild(this.valueContainer);
     this.editContainer = createSVGElement('g');
     el.appendChild(this.editContainer);
-    el.addEventListener('click', e => this.painter.onClick(e));
-    el.addEventListener('pointerdown', e => this.painter.onPointerDown(e));
-    el.addEventListener('pointermove', e => this.painter.onPointerMove(e));
-    el.addEventListener('pointerup', e => this.painter.onPointerUp(e));
-    el.addEventListener('pointerover', e => this.painter.onPointerOver(e));
-    el.addEventListener('pointerenter', e => this.painter.onPointerEnter(e));
-    el.addEventListener('pointerleave', e => this.painter.onPointerLeave(e));
+    el.addEventListener('click', (e) => this.painter.onClick(e));
+    el.addEventListener('pointerdown', (e) => this.painter.onPointerDown(e));
+    el.addEventListener('pointermove', (e) => this.painter.onPointerMove(e));
+    el.addEventListener('pointerup', (e) => this.painter.onPointerUp(e));
+    el.addEventListener('pointerover', (e) => this.painter.onPointerOver(e));
+    el.addEventListener('pointerenter', (e) => this.painter.onPointerEnter(e));
+    el.addEventListener('pointerleave', (e) => this.painter.onPointerLeave(e));
 
     this._painter = new NullPainter(this);
   }
@@ -141,7 +141,7 @@ ellipse {
       }
       removeTargets.push(i);
     }
-    removeTargets.map(i => i.remove());
+    removeTargets.map((i) => i.remove());
     this.hooks.discardChanges?.();
   }
 
@@ -153,7 +153,7 @@ ellipse {
         removeTargets.push(i);
       }
     }
-    removeTargets.map(i => i.remove());
+    removeTargets.map((i) => i.remove());
     this.hooks.clearHistory?.();
   }
 
