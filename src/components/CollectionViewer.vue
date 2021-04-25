@@ -91,7 +91,7 @@
                 type="button"
                 :disabled="recollectingCount > 0"
                 @click="recollect()"
-                class="ml-1"
+                class="ml-1 w-24"
               )
                 template(v-if="recollectingCount > 0 ")
                   FaIcon.h-full(name="spinner" spin)

@@ -15,7 +15,7 @@
           p 本应用仅监控已有路径，不会自动添加新文件
           p 
             | 如有新文件请
-            button.form-button.m-2(
+            button.form-button.m-2.w-24(
               type="button"
               @click="collect()"
             ) 收集
