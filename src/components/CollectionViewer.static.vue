@@ -16,22 +16,20 @@
       >
         <div class="inline-block float-right h-16">
           <button
-            ref="prev"
+            ref="prevButton"
             class="h-full text-gray-400 hover:text-gray-200 disabled:text-gray-600 outline-none"
             :disabled="!prev"
             title="上一个（快捷键：↑）"
             @click="jumpPrev()"
-            @animationend="$event.target.classList.remove('button-click-anim')"
           >
             <FaIcon class="h-full" name="caret-square-up"></FaIcon>
           </button>
           <button
-            ref="next"
+            ref="nextButton"
             class="h-full text-gray-400 ml-1 hover:text-gray-200 disabled:text-gray-600 outline-none"
             :disabled="!next"
             title="下一个（快捷键：↓）"
             @click="jumpNext()"
-            @animationend="$event.target.classList.remove('button-click-anim')"
           >
             <FaIcon class="h-full" name="caret-square-down"></FaIcon>
           </button>
@@ -124,13 +122,12 @@
 import PresentationViewer from '@/components/PresentationViewer.static.vue';
 import { viewerBackground } from '@/preference';
 import relativeURL from '@/utils/relativeURL';
-import toHotKey from '@/utils/toHotKey';
-import { sortBy, throttle, uniq } from 'lodash';
+import { computed, defineComponent, PropType, ref } from '@vue/composition-api';
 import 'vue-awesome/icons/backward';
 import 'vue-awesome/icons/camera';
+import 'vue-awesome/icons/caret-down';
 import 'vue-awesome/icons/caret-square-down';
 import 'vue-awesome/icons/caret-square-up';
-import 'vue-awesome/icons/caret-down';
 import 'vue-awesome/icons/caret-up';
 import 'vue-awesome/icons/fast-backward';
 import 'vue-awesome/icons/fast-forward';
@@ -140,15 +137,27 @@ import 'vue-awesome/icons/play';
 import 'vue-awesome/icons/step-backward';
 import 'vue-awesome/icons/step-forward';
 import 'vue-awesome/icons/window-close';
-import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Collection } from '../graphql/types/Collection';
-import { Presentation as PresentationData } from '../graphql/types/Presentation';
 import CollectionMetadata from './CollectionMetadata.static.vue';
+import { setupCommon, setupKeyboardShortcut } from './CollectionViewer';
 import Presentation from './Presentation.static.vue';
 import PresentationMetadata from './PresentationMetadata.static.vue';
 import PresentationSelect from './PresentationSelect.vue';
 
-@Component<CollectionViewer>({
+export default defineComponent({
+  name: 'CollectionViewer',
+  props: {
+    value: {
+      type: Object as PropType<Collection>,
+      required: true,
+    },
+    prev: {
+      type: Object as PropType<Collection>,
+    },
+    next: {
+      type: Object as PropType<Collection>,
+    },
+  },
   components: {
     Presentation,
     PresentationSelect,
@@ -156,242 +165,66 @@ import PresentationSelect from './PresentationSelect.vue';
     PresentationMetadata,
     PresentationViewer,
   },
-  mounted() {
-    const throttleJump = throttle((fn: () => void) => fn(), 800);
-    const throttleSeek = throttle((fn: () => void) => fn(), 100);
-    const keyupListener = (e: KeyboardEvent) => {
-      const throttleRepeatJump = e.repeat
-        ? throttleJump
-        : (fn: () => void) => fn();
-      const throttleRepeatSeek = e.repeat
-        ? throttleSeek
-        : (fn: () => void) => fn();
-      if (
+  setup(props, ctx) {
+    const value = computed(() => props.value);
+    const prev = computed(() => props.prev);
+    const next = computed(() => props.next);
+
+    const prevButton = ref<HTMLButtonElement>();
+    const nextButton = ref<HTMLButtonElement>();
+    const presentationViewer = ref<InstanceType<typeof PresentationViewer>>();
+    const {
+      jumpNext,
+      jumpPrev,
+      visible,
+      close,
+      prefetchURLs: _prefetchURLs,
+      presentationID,
+      presentation,
+    } = setupCommon(ctx, {
+      value,
+      prev,
+      next,
+      prevButton,
+      nextButton,
+    });
+    const prefetchURLs = computed(() =>
+      _prefetchURLs.value.map((i) => relativeURL(i))
+    );
+
+    setupKeyboardShortcut({
+      skipEvent: (e) =>
         !(
           e.target === document.body ||
           e.target instanceof HTMLButtonElement ||
-          e.target === this.$refs.presentationViewer?.$el ||
-          e.target === this.$refs.prev ||
-          e.target === this.$refs.next ||
-          e.target === this.$refs.presentationViewer?.annotation?.$el
-        )
-      ) {
-        return;
-      }
-      switch (toHotKey(e)) {
-        case 'Escape':
-          e.preventDefault();
-          this.close();
-          break;
-        case ' ':
-          e.preventDefault();
-          if (this.$refs.presentationViewer?.controls?.paused) {
-            this.$refs.presentationViewer?.controls?.play();
-          } else {
-            this.$refs.presentationViewer?.controls?.pause();
-          }
-          break;
-        case 'ArrowUp':
-          e.preventDefault();
-          throttleRepeatJump(() => {
-            this.jumpPrev();
-          });
-          break;
-        case 'ArrowDown':
-          e.preventDefault();
-          throttleRepeatJump(() => {
-            this.jumpNext();
-          });
-          break;
-        case 'ArrowLeft':
-          e.preventDefault();
-          throttleRepeatSeek(() => {
-            this.$refs.presentationViewer?.controls?.seekFrameOffset(-1, true);
-          });
-          break;
-        case 'ArrowRight':
-          e.preventDefault();
-          throttleRepeatSeek(() => {
-            this.$refs.presentationViewer?.controls?.seekFrameOffset(1, true);
-          });
-          break;
-        case '+ArrowLeft':
-          e.preventDefault();
-          throttleRepeatSeek(() => {
-            this.$refs.presentationViewer?.controls?.skipFrameBackward();
-          });
-          break;
-        case '+ArrowRight':
-          e.preventDefault();
-          throttleRepeatSeek(() => {
-            this.$refs.presentationViewer?.controls?.skipFrameForward();
-          });
-          break;
-        case 'Home':
-          e.preventDefault();
-          this.$refs.presentationViewer?.controls?.seekFrame(
-            this.$refs.presentationViewer?.presentation?.firstFrame ?? 0,
-            true
-          );
-          break;
-        case 'End':
-          e.preventDefault();
-          this.$refs.presentationViewer?.controls?.seekFrame(
-            this.$refs.presentationViewer?.presentation?.lastFrame ?? 0,
-            true
-          );
-          break;
-        case 'g': {
-          e.preventDefault();
-          this.$refs.presentationViewer?.controls?.timeInput?.$el.select();
-          break;
-        }
-        case 'f': {
-          e.preventDefault();
-          this.$refs.presentationViewer?.controls?.frameInput?.$el.select();
-          break;
-        }
-        case 'j': {
-          e.preventDefault();
-          this.$refs.presentationViewer?.controls?.offsetPlaybackRateIndex(-1);
-          break;
-        }
-        case 'k': {
-          e.preventDefault();
-          this.$refs.presentationViewer?.controls?.setPlaybackRate(1);
-          break;
-        }
-        case 'l': {
-          e.preventDefault();
-          this.$refs.presentationViewer?.controls?.offsetPlaybackRateIndex(1);
-          break;
-        }
-      }
-    };
-    document.body.addEventListener('keydown', keyupListener, { capture: true });
-    this.$once('destroyed', () => {
-      document.body.removeEventListener('keydown', keyupListener, {
-        capture: true,
-      });
+          e.target === presentationViewer.value?.$el ||
+          e.target === presentationViewer.value?.annotation?.$el
+        ),
+      firstFrame: computed(
+        () => presentationViewer.value?.presentation?.firstFrame ?? 0
+      ),
+      lastFrame: computed(
+        () => presentationViewer.value?.presentation?.lastFrame ?? 0
+      ),
+      jumpPrev,
+      jumpNext,
+      presentationControls: computed(() => presentationViewer.value?.controls),
+      close,
     });
 
-    const screenshotListener = async (cb: (v: Blob) => void) => {
-      const data = await this.$refs.presentationViewer?.screenshot();
-      if (data) {
-        cb(data);
-      }
-    };
-
-    this.$root.$on('viewer-screenshot', screenshotListener);
-    this.$once('destroyed', () => {
-      this.$root.$off('viewer-screenshot', screenshotListener);
-    });
-  },
-  destroyed() {
-    this.$emit('destroyed');
-  },
-  setup() {
     return {
+      presentationID,
+      close,
+      jumpNext,
+      jumpPrev,
+      nextButton,
+      prefetchURLs,
+      presentation,
+      presentationViewer,
+      prevButton,
       viewerBackground,
+      visible,
     };
   },
-})
-export default class CollectionViewer extends Vue {
-  @Prop({ type: Object, required: true })
-  value!: Collection;
-
-  @Prop({ type: Object })
-  prev?: Collection;
-
-  @Prop({ type: Object })
-  next?: Collection;
-
-  $refs!: {
-    prev: HTMLButtonElement;
-    next: HTMLButtonElement;
-    presentationViewer: InstanceType<typeof PresentationViewer>;
-  };
-
-  visible = true;
-  presentationID = '';
-  loadingCount = 0;
-  recollectingCount = 0;
-
-  jumpPrev(): void {
-    if (this.prev) {
-      this.$refs.prev.classList.add('button-click-anim');
-      this.$emit('update:value', this.prev);
-    }
-  }
-
-  jumpNext(): void {
-    if (this.next) {
-      this.$refs.next.classList.add('button-click-anim');
-      this.$emit('update:value', this.next);
-    }
-  }
-
-  close(): void {
-    this.visible = false;
-  }
-
-  get prefetchURLs(): string[] {
-    const ret: string[] = [];
-    for (const i of [this.next, this.value, this.prev]) {
-      if (!i) {
-        continue;
-      }
-      sortBy(i.presentations, [(i) => -new Date(i.raw.modTime ?? 0).getTime()])
-        .slice(0, 5)
-        .forEach((j) => {
-          ret.push(
-            relativeURL(
-              j.regular?.url || require('@/assets/img/transcoding.svg')
-            )
-          );
-        });
-    }
-    return uniq(ret);
-  }
-
-  get presentation(): PresentationData | undefined {
-    return this.value.presentations.find((i) => i.id === this.presentationID);
-  }
-
-  async refetch(): Promise<void> {
-    await this.$apollo.queries.node.refetch();
-  }
-
-  get width(): number {
-    const v = parseFloat(
-      this.presentation?.metadata.find((i) => i.k === 'width')?.v ?? ''
-    );
-    if (!isFinite(v)) {
-      return 1920;
-    }
-    return v;
-  }
-
-  get height(): number {
-    const v = parseFloat(
-      this.presentation?.metadata.find((i) => i.k === 'height')?.v ?? ''
-    );
-    if (!isFinite(v)) {
-      return 1080;
-    }
-    return v;
-  }
-}
+});
 </script>
-
-<style lang="scss" scoped>
-.button-click-anim {
-  animation: button-click 500ms ease-in-out;
-}
-
-@keyframes button-click {
-  30% {
-    @apply opacity-25;
-  }
-}
-</style>

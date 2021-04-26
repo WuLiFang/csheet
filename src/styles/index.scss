@@ -151,4 +151,14 @@ button:focus,
       rgba(0, 0, 0, 0.5) 100%
     );
   }
+
+  .animate-button-click {
+    animation: button-click 500ms ease-in-out;
+  }
+
+  @keyframes button-click {
+    30% {
+      @apply opacity-25;
+    }
+  }
 }

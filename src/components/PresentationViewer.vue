@@ -117,7 +117,7 @@ export default defineComponent({
     PresentationAnnotationEditor,
     PresentationControls,
   },
-  setup: (props) => {
+  setup: (props, ctx) => {
     const { node } = usePresentationNode(
       computed(() => ({ id: props.id ?? '' })),
       computed(() => ({ skip: !props.id }))
@@ -151,6 +151,7 @@ export default defineComponent({
       screenshot,
       saveScreenshot,
     } = setupCommon(
+      ctx,
       node,
       viewport,
       computed(() => presentation.value?.$el),

@@ -109,7 +109,7 @@ export default defineComponent({
     PresentationAnnotationEditor,
     PresentationControls,
   },
-  setup: (props) => {
+  setup: (props, ctx) => {
     const el = ref<HTMLElement>();
     const node = computed(() => props.value);
     const viewport = ref<HTMLDivElement | undefined>();
@@ -133,6 +133,7 @@ export default defineComponent({
       screenshot,
       saveScreenshot,
     } = setupCommon(
+      ctx,
       node,
       viewport,
       computed(() => presentation.value?.$el),

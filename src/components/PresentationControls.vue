@@ -275,6 +275,13 @@ export default defineComponent({
       skipFrameBackward,
       skipFrameForward,
       timeInput,
+      // Implement interface for CollectionViewer.ts
+      focusTimeInput: () => {
+        timeInput.value?.$el.select();
+      },
+      focusFrameInput: () => {
+        frameInput.value?.$el.select();
+      },
     };
   },
 });

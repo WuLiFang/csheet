@@ -11,7 +11,10 @@
 import { filePathFormat } from '@/const';
 import mutations from '@/graphql/mutations';
 import { Presentation } from '@/graphql/types/Presentation';
-import { presentationNode, presentationNodeVariables } from '@/graphql/types/presentationNode';
+import {
+  presentationNode,
+  presentationNodeVariables,
+} from '@/graphql/types/presentationNode';
 import { viewerAnnotationConfig } from '@/preference';
 import { SVGEditor } from '@/svg-editor';
 import { Painter } from '@/svg-editor/painter';
@@ -29,14 +32,7 @@ import setDOMStringMap from '@/utils/setDOMStringMap';
 import { UnwrapRef } from '@vue/composition-api';
 import { debounce, DebouncedFunc } from 'lodash';
 import { Component, Prop, Vue } from 'vue-property-decorator';
-
-type PainterName =
-  | 'null'
-  | 'select'
-  | 'polyline'
-  | 'rectangle'
-  | 'ellipse'
-  | 'text';
+import { PainterName } from './PresentationAnnotationEditor';
 
 @Component<PresentationAnnotationEditor>({
   apollo: {

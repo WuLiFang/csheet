@@ -4,10 +4,11 @@ import usePresentationMetadata from '@/composables/usePresentationMetadata';
 import { Presentation } from '@/graphql/types/Presentation';
 import { viewerBackground } from '@/preference';
 import isNonNull from '@/utils/isNonNull';
-import { computed, Ref } from '@vue/composition-api';
+import { computed, Ref, SetupContext } from '@vue/composition-api';
 import { saveAs } from 'file-saver';
 import { basename, extname } from 'path';
 import screenshotElements from '@/utils/screenshotElements';
+import useCleanup from '@/composables/useCleanup';
 
 const backgroundClass = computed(() => {
   switch (viewerBackground.value) {
@@ -23,6 +24,7 @@ const backgroundClass = computed(() => {
 });
 
 export function setupCommon(
+  ctx: SetupContext,
   presentation: Ref<Presentation | undefined>,
   viewport: Ref<HTMLDivElement | undefined>,
   media: Ref<HTMLVideoElement | HTMLImageElement | undefined>,
@@ -87,6 +89,16 @@ export function setupCommon(
         : `${name}.jpg`
     );
   };
+
+  const { addCleanup } = useCleanup();
+  const screenshotListener = async (cb: (v: Blob) => void) => {
+    const data = await screenshot();
+    if (data) {
+      cb(data);
+    }
+  };
+  ctx.root.$on('viewer-screenshot', screenshotListener);
+  addCleanup(() => ctx.root.$off('viewer-screenshot', screenshotListener));
 
   return { presentationClass, backgroundClass, screenshot, saveScreenshot };
 }

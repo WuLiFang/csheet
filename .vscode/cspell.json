@@ -59,6 +59,7 @@
         "pipenv",
         "polyline",
         "posix",
+        "prefetch",
         "printf",
         "psutil",
         "purgecss",
