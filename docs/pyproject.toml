@@ -16,7 +16,7 @@ plantweb = {path = "vendor/plantweb-1.2.1-py3-none-any.whl"}
 
 [tool.poetry.dev-dependencies]
 rstcheck = "3.3.1"
-autopep8 = "==1.5.5"
+autopep8 = "==1.5.6"
 
 [[tool.poetry.source]]
 # Required for use mirror, see https://github.com/python-poetry/poetry/issues/1632
