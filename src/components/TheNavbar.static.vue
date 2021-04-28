@@ -40,7 +40,9 @@
         title="统计"
         @click="showStats()"
       >
-        <FaIcon name="chart-pie"></FaIcon>
+        <svg class="fill-current h-6 inline-block" viewBox="0 0 24 24">
+          <path :d="mdiChartTree" />
+        </svg>
       </button>
     </form>
   </nav>
@@ -51,8 +53,10 @@ import CollectionStatsDrawerVue from '@/components/CollectionStatsDrawer.static.
 import CollectionTagInput from '@/components/CollectionTagInput.static.vue';
 import { collectionsVariables } from '@/graphql/types/collections';
 import { show } from '@/modal';
+import { PAGE_DATA } from '@/page-data.static';
 import { isCellOverlayVisible } from '@/preference';
 import searchParamsSetAll from '@/utils/searchParamSetAll';
+import { mdiChartTree } from '@mdi/js';
 import {
   computed,
   defineComponent,
@@ -60,13 +64,14 @@ import {
   reactive,
   watch,
 } from '@vue/composition-api';
-import 'vue-awesome/icons/chart-pie';
-import { PAGE_DATA } from '@/page-data.static';
 
 export default defineComponent({
   name: 'TheNavbar',
   components: {
     CollectionTagInput,
+  },
+  data() {
+    return { mdiChartTree };
   },
   setup: (props, ctx) => {
     const formData = reactive({

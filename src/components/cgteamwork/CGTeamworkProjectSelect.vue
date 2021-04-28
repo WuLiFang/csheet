@@ -27,10 +27,11 @@
             )
           p {{ project.name }}
         template(v-else-if="loadingCount > 0")
-          FaIcon(
-            class="text-center w-full"
-            name="spinner" spin
+          svg(
+            class="fill-current inline-block w-full h-6 animate-spin"
+            viewBox="0 0 24 24"
           )
+            path(:d="mdiLoading")
         template(v-else)
           p {{ value }}
     template(#search="{ inputListeners }")
@@ -52,14 +53,17 @@ import queries from '@/graphql/queries';
 import { CGTeamworkProject } from '@/graphql/queries/cgteamworkProjects';
 import { orderBy } from 'lodash';
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { mdiLoading } from '@mdi/js';
 
 const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
 
-
 @Component<CGTeamworkProjectSelect>({
   inheritAttrs: false,
-  components:{
-    CGTeamworkStatusWidget
+  data() {
+    return { mdiLoading };
+  },
+  components: {
+    CGTeamworkStatusWidget,
   },
   apollo: {
     matchedProjects: queries.vue.cgteamworkProjects<CGTeamworkProjectSelect>({
@@ -84,7 +88,7 @@ const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
   mounted() {
     this.$watch(
       () => this.getProject(this.value),
-      v => {
+      (v) => {
         this.$emit('update:project', v);
       },
       { immediate: true }
@@ -93,7 +97,7 @@ const statusOrder = ['CLOSE', 'APPROVE', 'WORK', 'ACTIVE'];
 })
 export default class CGTeamworkProjectSelect extends Vue {
   @Prop()
-  value!: string
+  value!: string;
 
   $el!: HTMLDivElement;
 
@@ -114,9 +118,9 @@ export default class CGTeamworkProjectSelect extends Vue {
   get options(): string[] {
     return orderBy(
       this.matchedProjects ?? [],
-      [i => statusOrder.indexOf(i.status.toUpperCase()), i => i.name],
+      [(i) => statusOrder.indexOf(i.status.toUpperCase()), (i) => i.name],
       ['desc', 'asc']
-    ).map(i => i.database);
+    ).map((i) => i.database);
   }
 
   focus(): void {
@@ -124,7 +128,7 @@ export default class CGTeamworkProjectSelect extends Vue {
   }
 
   protected getProject(database: string): CGTeamworkProject | undefined {
-    return this.projects.find(i => i.database === database);
+    return this.projects.find((i) => i.database === database);
   }
 
   protected statusClass(v: string): string {

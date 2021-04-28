@@ -26,10 +26,11 @@
                 class="inline-block w-full h-full"
                 :value="i.status[stage]"
               )
-            FaIcon(
-              class="hidden group-hover:block absolute object-contain h-full top-0 right-0 p-1"
-              name="edit"
+            svg.fill-current.text-white(
+              class="hidden group-hover:block absolute h-full top-0 right-0 p-1"
+              viewBox="0 0 24 24"
             )
+              path(:d="mdiSquareEditOutline")
           td
             span.artist.mx-1(v-for="j in i.artists") {{j}}
 </template>
@@ -40,11 +41,11 @@ import { uniq, sortBy, uniqBy } from 'lodash';
 import CGTeamworkStatusWidget from './cgteamwork/CGTeamworkStatusWidget.vue';
 import { show } from '@/modal';
 import CGTeamworkFlowFormDrawer from './cgteamwork/CGTeamworkFlowFormDrawer.vue';
-import 'vue-awesome/icons/edit';
 import { CGTeamworkOriginPrefix } from '@/client/origin-prefix';
 import queries from '@/graphql/queries';
 import { Collection } from '@/graphql/queries/collectionNode';
 import { CGTeamworkFlow } from '@/graphql/queries/cgteamworkFlows';
+import { mdiSquareEditOutline } from '@mdi/js';
 
 @Component<CollectionMetadataCGTeamworkTasks>({
   apollo: {
@@ -54,8 +55,8 @@ import { CGTeamworkFlow } from '@/graphql/queries/cgteamworkFlows';
           database: CGTeamworkOriginPrefix.parse(this.collection?.origin ?? '')
             .database,
           pipeline: uniqBy(
-            this.tasks.map(i => i.pipeline),
-            i => i
+            this.tasks.map((i) => i.pipeline),
+            (i) => i
           ),
         };
       },
@@ -74,6 +75,9 @@ import { CGTeamworkFlow } from '@/graphql/queries/cgteamworkFlows';
   },
   components: {
     CGTeamworkStatusWidget,
+  },
+  data() {
+    return { mdiSquareEditOutline };
   },
 })
 export default class CollectionMetadataCGTeamworkTasks extends Vue {
@@ -100,8 +104,8 @@ export default class CollectionMetadataCGTeamworkTasks extends Vue {
 
   get stages(): string[] {
     return uniq([
-      ...(this.flows?.flatMap(i => i.stages.map(i => i.name)) ?? []),
-      ...this.tasks.flatMap(i => Object.keys(i.status)),
+      ...(this.flows?.flatMap((i) => i.stages.map((i) => i.name)) ?? []),
+      ...this.tasks.flatMap((i) => Object.keys(i.status)),
     ]);
   }
 

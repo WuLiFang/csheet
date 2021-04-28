@@ -1,15 +1,21 @@
+import useCleanup from '@/composables/useCleanup';
 import useElementSize from '@/composables/useElementSize';
 import useObjectContainRate from '@/composables/useObjectContainRate';
 import usePresentationMetadata from '@/composables/usePresentationMetadata';
 import { Presentation } from '@/graphql/types/Presentation';
 import { viewerBackground } from '@/preference';
 import isNonNull from '@/utils/isNonNull';
+import screenshotElements from '@/utils/screenshotElements';
+import { mdiCamera, mdiFullscreen, mdiFullscreenExit } from '@mdi/js';
 import { computed, Ref, SetupContext } from '@vue/composition-api';
 import { saveAs } from 'file-saver';
 import { basename, extname } from 'path';
-import screenshotElements from '@/utils/screenshotElements';
-import useCleanup from '@/composables/useCleanup';
 
+export const icons = {
+  mdiCamera,
+  mdiFullscreen,
+  mdiFullscreenExit,
+};
 const backgroundClass = computed(() => {
   switch (viewerBackground.value) {
     case 'checkboard':

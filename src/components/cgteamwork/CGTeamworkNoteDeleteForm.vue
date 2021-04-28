@@ -29,15 +29,24 @@
       class="w-full px-0 bg-red-600 hover:bg-red-500 inline-flex flex-center"
       @click="submit()"
     )
-      FaIcon.mx-1(name="trash")
+      svg(
+        class="fill-current h-6"
+        viewBox="0 0 24 24"
+      )
+        path(:d="mdiDelete")
       span 确定删除
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import mutations from '@/graphql/mutations';
+import { mdiDelete } from '@mdi/js';
 
-@Component<CGTeamworkNoteDeleteForm>({})
+@Component<CGTeamworkNoteDeleteForm>({
+  data() {
+    return { mdiDelete };
+  },
+})
 export default class CGTeamworkNoteDeleteForm extends Vue {
   @Prop({ type: String, required: true })
   id!: string;

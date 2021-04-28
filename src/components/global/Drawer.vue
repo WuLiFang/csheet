@@ -37,7 +37,10 @@
               type="button"
               @click="$emit('update:visible', false)"
             )
-              FaIcon(name="arrow-left")
+              svg.fill-current.w-6(
+                viewBox="0 0 24 24"
+              )
+                path(:d="mdiArrowLeft")
             h1.inline-block(
               class="text-lg sm:text-xl font-semibold mx-2"
             )
@@ -47,15 +50,20 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import "vue-awesome/icons/arrow-left";
+import { mdiArrowLeft } from '@mdi/js';
 
-
-@Component<Drawer>({})
+@Component<Drawer>({
+  data() {
+    return {
+      mdiArrowLeft,
+    };
+  },
+})
 export default class Drawer extends Vue {
   @Prop({ type: Boolean, required: true })
   visible!: boolean;
 
-  @Prop({ type: String, default: "max-w-xl" })
+  @Prop({ type: String, default: 'max-w-xl' })
   containerClass?: string;
 }
 </script>

@@ -6,6 +6,15 @@ import toHotKey from '@/utils/toHotKey';
 import { computed, Ref, ref, SetupContext } from '@vue/composition-api';
 import { sortBy, throttle, uniq } from 'lodash';
 
+import { mdiMenuUp, mdiMenuDown, mdiClose, mdiAutorenew } from '@mdi/js';
+
+export const icons = {
+  mdiMenuUp,
+  mdiMenuDown,
+  mdiClose,
+  mdiAutorenew,
+};
+
 export interface PresentationControls {
   paused: boolean;
   seekFrame: (value: number, pause?: boolean) => void;

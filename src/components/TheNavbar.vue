@@ -10,14 +10,24 @@
         ></OriginPrefixInput>
         <button
           ref="collectButton"
-          class="form-button mr-1 w-24"
+          class="form-button mr-1"
           type="submit"
+          title="收集"
           :disabled="loadingCount > 0"
         >
           <template v-if="loadingCount > 0">
-            <FaIcon name="spinner" spin="spin"></FaIcon>
+            <svg
+              class="fill-current inline-block h-6 animate-spin"
+              viewBox="0 0 24 24"
+            >
+              <path :d="mdiLoading" />
+            </svg>
           </template>
-          <template v-else>收集</template>
+          <template v-else>
+            <svg class="fill-current h-6 inline-block" viewBox="0 0 24 24">
+              <path :d="mdiAutorenew" />
+            </svg>
+          </template>
         </button>
       </div>
       <div class="inline-block mr-1 space-x-1">
@@ -59,10 +69,15 @@
         title="统计"
         @click="showStats()"
       >
-        <FaIcon name="chart-pie"></FaIcon></button
-      ><a download="download" :href="archiveURL">
+        <svg class="fill-current h-6 inline-block" viewBox="0 0 24 24">
+          <path :d="mdiChartTree" />
+        </svg>
+      </button>
+      <a download="download" :href="archiveURL">
         <button class="form-button ml-1" type="button" title="归档打包">
-          <FaIcon name="archive"></FaIcon></button
+          <svg class="fill-current h-6 inline-block" viewBox="0 0 24 24">
+            <path :d="mdiPackageDown" />
+          </svg></button
       ></a>
     </form>
   </nav>
@@ -77,6 +92,7 @@ import {
 import CollectionStatsDrawerVue from '@/components/CollectionStatsDrawer.vue';
 import CollectionTagInput from '@/components/CollectionTagInput.vue';
 import OriginPrefixInput from '@/components/OriginPrefixInput.vue';
+import useCleanup from '@/composables/useCleanup';
 import useLocation from '@/composables/useLocation';
 import usePromise from '@/composables/usePromise';
 import { filePathFormat } from '@/const';
@@ -88,6 +104,12 @@ import { show } from '@/modal';
 import { isCellOverlayVisible } from '@/preference';
 import searchParamsSetAll from '@/utils/searchParamSetAll';
 import {
+  mdiAutorenew,
+  mdiChartTree,
+  mdiLoading,
+  mdiPackageDown,
+} from '@mdi/js';
+import {
   computed,
   defineComponent,
   reactive,
@@ -95,8 +117,6 @@ import {
   watch,
   watchEffect,
 } from '@vue/composition-api';
-import 'vue-awesome/icons/archive';
-import 'vue-awesome/icons/chart-pie';
 import { collectionsVariables } from '../graphql/types/collections';
 
 function getResultMessage({
@@ -123,6 +143,14 @@ export default defineComponent({
   components: {
     OriginPrefixInput,
     CollectionTagInput,
+  },
+  data() {
+    return {
+      mdiChartTree,
+      mdiLoading,
+      mdiAutorenew,
+      mdiPackageDown,
+    };
   },
   setup: (props, ctx) => {
     const location = useLocation();
@@ -330,22 +358,25 @@ export default defineComponent({
       }
     };
 
-    ctx.root.$on('collect', async (cb?: () => void) => {
+    const { addCleanup } = useCleanup();
+    const handleCollect = async (cb?: () => void) => {
       await collect();
       cb?.();
-    });
+    };
+    ctx.root.$on('collect', handleCollect);
+    addCleanup(() => ctx.root.$off('collect', handleCollect));
 
     return {
-      formData,
-      originPrefix,
-      showStats,
-      isHistoryStateChanged,
       archiveURL,
-      isCellOverlayVisible,
       collect,
-      originPrefixInput,
       form,
+      formData,
+      isCellOverlayVisible,
+      isHistoryStateChanged,
       loadingCount,
+      originPrefix,
+      originPrefixInput,
+      showStats,
     };
   },
 });

@@ -9,7 +9,11 @@
         class="inline-flex flex-center"
         @click="showFormDrawer()"
       )
-        FaIcon(name="plus")
+        svg(
+          class="fill-current h-6"
+          viewBox="0 0 24 24"
+        )
+          path(:d="mdiPlus")
       span.mx-1.text-gray-600.text-sm
         span 于
         TimeWidget.mx-1(:value="fetched" format="HH:mm:ss")
@@ -23,8 +27,12 @@
             v-model="emptyNoteVisible"
           )
           span 显示空备注
-    template(v-if="loadingCount > 0 ")
-      FaIcon(name="spinner" spin class="w-full inline-block h-8 text-gray-500")
+    template(v-if="loadingCount > 0")
+      svg(
+        class="w-full fill-current h-8 text-gray-500 animate-spin"
+        viewBox="0 0 24 24"
+      )
+        path(:d="mdiLoading")
     template(v-else-if="values.length === 0")
       p.text-gray-600.text-center 无备注
     template(v-else)
@@ -43,30 +51,35 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import CGTeamworkNoteFormDrawer from '@/components/cgteamwork/CGTeamworkNoteFormDrawer.vue';
+import { filePathFormat } from '@/const';
+import { Collection } from '@/graphql/types/Collection';
+import {
+  collectionCGTeamworkNotes,
+  collectionCGTeamworkNotesVariables,
+} from '@/graphql/types/collectionCGTeamworkNotes';
+import {
+  collectionNode,
+  collectionNodeVariables,
+} from '@/graphql/types/collectionNode';
+import { show } from '@/modal';
+import { mdiLoading, mdiPlus } from '@mdi/js';
+import cast from 'cast-unknown';
+import { orderBy } from 'lodash';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import CGTeamworkNoteListItem, {
   CGTeamworkNoteListItemValue,
 } from './CGTeamworkNoteListItem.vue';
-import {
-  collectionNodeVariables,
-  collectionNode,
-} from '@/graphql/types/collectionNode';
-import {
-  collectionCGTeamworkNotesVariables,
-  collectionCGTeamworkNotes,
-} from '@/graphql/types/collectionCGTeamworkNotes';
-import { filePathFormat } from '@/const';
-import { Collection } from '@/graphql/types/Collection';
-import cast from 'cast-unknown';
-import { orderBy } from 'lodash';
-import 'vue-awesome/icons/sync';
-import 'vue-awesome/icons/plus';
-import { show } from '@/modal';
-import CGTeamworkNoteFormDrawer from '@/components/cgteamwork/CGTeamworkNoteFormDrawer.vue';
 
 @Component<CGTeamworkNoteList>({
   components: {
     CGTeamworkNoteListItem,
+  },
+  data() {
+    return {
+      mdiLoading,
+      mdiPlus,
+    };
   },
   apollo: {
     node: {
@@ -88,14 +101,14 @@ import CGTeamworkNoteFormDrawer from '@/components/cgteamwork/CGTeamworkNoteForm
           (v.node?.__typename === 'Collection'
             ? v.node.cgteamworkNotes ?? []
             : []
-          ).flatMap(i =>
-            i.notes.map(j => ({
+          ).flatMap((i) =>
+            i.notes.map((j) => ({
               ...j,
               pipeline: i.pipeline,
               created: cast.date(j.created),
             }))
           ),
-          i => i.created,
+          (i) => i.created,
           'desc'
         );
       },
@@ -137,10 +150,10 @@ export default class CGTeamworkNoteList extends Vue {
     return cast
       .array(
         JSON.parse(
-          this.node?.metadata.find(i => i.k === 'cgteamwork.tasks')?.v ?? ''
+          this.node?.metadata.find((i) => i.k === 'cgteamwork.tasks')?.v ?? ''
         )
       )
-      .map(i => cast.string(i.pipeline));
+      .map((i) => cast.string(i.pipeline));
   }
 
   async refetch(): Promise<void> {

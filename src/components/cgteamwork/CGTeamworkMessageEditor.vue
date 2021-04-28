@@ -21,7 +21,11 @@
         class="h-16 w-16 border border-dashed cursor-pointer"
         class="inline-flex flex-center rounded"
       )
-        FaIcon(name="plus" class="h-4")
+        svg(
+          class="fill-current h-8"
+          viewBox="0 0 24 24"
+        )
+          path(:d="mdiPlus")
         input(type="file" accept="image/*" hidden @input="handleFileInput")
 </template>
 
@@ -30,6 +34,7 @@ import { Component, Mixins } from 'vue-property-decorator';
 import getVModelMixin from '@/mixins/VModelMixinV2';
 import { debounce } from 'lodash';
 import CGteamworkEditorImagePreview from '@/components/cgteamwork/CGTeamworkMessageEditorImagePreview.vue';
+import { mdiPlus } from '@mdi/js';
 
 export interface CGTeamworkMessageEditorValue {
   html: string;
@@ -41,13 +46,16 @@ export interface CGTeamworkMessageEditorValue {
   components: {
     CGteamworkEditorImagePreview,
   },
+  data() {
+    return { mdiPlus };
+  },
   mounted() {
     this.$root.$emit('viewer-screenshot', (v: Blob) => {
       this.images.push(v);
     });
     this.$watch(
       () => this.$_value,
-      v => {
+      (v) => {
         this.text = v.html.replace(/<br>/g, '\n');
         this.images = v.images;
       },

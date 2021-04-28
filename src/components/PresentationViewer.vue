@@ -10,25 +10,28 @@
         :parent="annotation"
       >
       </PresentationAnnotationEditorToolbar>
-      <div>
-        <button
-          class="form-button h-8 w-12 px-0 m-px inline-flex flex-center"
-          type="button"
-          title="保存截图"
-          @click="saveScreenshot()"
-        >
-          <FaIcon name="camera"></FaIcon>
-        </button>
-        <slot v-if="isFullscreen" name="fullscreenToolbar"> </slot>
-        <button
-          class="form-button h-8 w-12 px-0 m-px inline-flex flex-center"
-          type="button"
-          title="全屏"
-          @click="toggleFullscreen()"
-        >
-          <FaIcon :name="isFullscreen ? 'compress' : 'expand'"></FaIcon>
-        </button>
-      </div>
+
+      <button
+        class="form-button h-8 w-12 p-0 m-px"
+        type="button"
+        title="保存截图"
+        @click="saveScreenshot()"
+      >
+        <svg class="fill-current inline-block h-6" viewBox="0 0 24 24">
+          <path :d="mdiCamera" />
+        </svg>
+      </button>
+      <slot v-if="isFullscreen" name="fullscreenToolbar"> </slot>
+      <button
+        class="form-button h-8 w-12 p-0 m-px"
+        type="button"
+        title="全屏"
+        @click="toggleFullscreen()"
+      >
+        <svg class="fill-current inline-block h-6" viewBox="0 0 24 24">
+          <path :d="isFullscreen ? mdiFullscreenExit : mdiFullscreen" />
+        </svg>
+      </button>
     </div>
     <p v-if="node && node.isRegularTranscodeFailed" class="bg-red-500 w-full">
       预览转码失败，重新收集以重试
@@ -95,14 +98,11 @@ import {
   ref,
   watchEffect,
 } from '@vue/composition-api';
-import 'vue-awesome/icons/camera';
-import 'vue-awesome/icons/compress';
-import 'vue-awesome/icons/expand';
 import Presentation from './Presentation.vue';
 import PresentationAnnotationEditor from './PresentationAnnotationEditor.vue';
 import PresentationAnnotationEditorToolbar from './PresentationAnnotationEditorToolbar.vue';
 import PresentationControls from './PresentationControls.vue';
-import { setupCommon } from './PresentationViewer';
+import { icons, setupCommon } from './PresentationViewer';
 
 export default defineComponent({
   name: 'PresentationViewer',
@@ -116,6 +116,11 @@ export default defineComponent({
     PresentationAnnotationEditorToolbar,
     PresentationAnnotationEditor,
     PresentationControls,
+  },
+  data() {
+    return {
+      ...icons,
+    };
   },
   setup: (props, ctx) => {
     const { node } = usePresentationNode(

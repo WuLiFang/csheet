@@ -41,7 +41,6 @@ import {
   PropType,
   reactive,
 } from '@vue/composition-api';
-import 'vue-awesome/icons/spinner';
 import { Collection } from '../graphql/types/Collection';
 import CollectionOverviewCell from './CollectionOverviewCell.static.vue';
 

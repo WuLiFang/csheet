@@ -10,23 +10,27 @@
         :parent="annotation"
       >
       </PresentationAnnotationEditorToolbar>
+
       <button
-        v-if="supportsScreenshot"
-        class="form-button h-8 m-px inline-flex flex-center"
+        class="form-button h-8 w-12 p-0 m-px"
         type="button"
         title="保存截图"
         @click="saveScreenshot()"
       >
-        <FaIcon name="camera"></FaIcon>
+        <svg class="fill-current inline-block h-6" viewBox="0 0 24 24">
+          <path :d="mdiCamera" />
+        </svg>
       </button>
       <slot v-if="isFullscreen" name="fullscreenToolbar"> </slot>
       <button
-        class="form-button h-8 m-px inline-flex flex-center"
+        class="form-button h-8 w-12 p-0 m-px"
         type="button"
         title="全屏"
         @click="toggleFullscreen()"
       >
-        <FaIcon :name="isFullscreen ? 'compress' : 'expand'"></FaIcon>
+        <svg class="fill-current inline-block h-6" viewBox="0 0 24 24">
+          <path :d="isFullscreen ? mdiFullscreenExit : mdiFullscreen" />
+        </svg>
       </button>
     </div>
     <p v-if="node && node.isRegularTranscodeFailed" class="bg-red-500 w-full">
@@ -83,14 +87,11 @@
 </template>
 
 <script lang="ts">
-import { setupCommon } from '@/components/PresentationViewer';
+import { icons, setupCommon } from '@/components/PresentationViewer';
 import useElementFullscreen from '@/composables/useElementFullscreen';
 import { Presentation } from '@/graphql/types/Presentation';
 import { isPresentationAnnotationVisible } from '@/preference';
 import { computed, defineComponent, PropType, ref } from '@vue/composition-api';
-import 'vue-awesome/icons/camera';
-import 'vue-awesome/icons/compress';
-import 'vue-awesome/icons/expand';
 import PresentationVue from './Presentation.static.vue';
 import PresentationAnnotationEditor from './PresentationAnnotationEditor.static.vue';
 import PresentationAnnotationEditorToolbar from './PresentationAnnotationEditorToolbar.static.vue';
@@ -108,6 +109,11 @@ export default defineComponent({
     PresentationAnnotationEditorToolbar,
     PresentationAnnotationEditor,
     PresentationControls,
+  },
+  data() {
+    return {
+      ...icons,
+    };
   },
   setup: (props, ctx) => {
     const el = ref<HTMLElement>();

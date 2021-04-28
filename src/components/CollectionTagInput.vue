@@ -95,7 +95,6 @@ import {
   watch,
 } from '@vue/composition-api';
 import { escapeRegExp, uniq } from 'lodash';
-import 'vue-awesome/icons/times';
 
 export default defineComponent({
   name: 'CollectionTagInput',

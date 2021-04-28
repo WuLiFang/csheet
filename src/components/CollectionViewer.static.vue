@@ -17,28 +17,34 @@
         <div class="inline-block float-right h-16">
           <button
             ref="prevButton"
-            class="h-full text-gray-400 hover:text-gray-200 disabled:text-gray-600 outline-none"
+            class="form-button h-full text-gray-400 hover:text-gray-200 disabled:text-gray-600 outline-none"
             :disabled="!prev"
             title="上一个（快捷键：↑）"
             @click="jumpPrev()"
           >
-            <FaIcon class="h-full" name="caret-square-up"></FaIcon>
+            <svg class="fill-current h-full" viewBox="4 4 16 16">
+              <path :d="mdiMenuUp" />
+            </svg>
           </button>
           <button
             ref="nextButton"
-            class="h-full text-gray-400 ml-1 hover:text-gray-200 disabled:text-gray-600 outline-none"
+            class="form-button h-full text-gray-400 ml-1 hover:text-gray-200 disabled:text-gray-600 outline-none"
             :disabled="!next"
             title="下一个（快捷键：↓）"
             @click="jumpNext()"
           >
-            <FaIcon class="h-full" name="caret-square-down"></FaIcon>
+            <svg class="fill-current h-full" viewBox="4 4 16 16">
+              <path :d="mdiMenuDown" />
+            </svg>
           </button>
           <button
-            class="h-full text-gray-400 ml-1 hover:text-gray-200 outline-none"
+            class="form-button h-full text-gray-400 ml-1 hover:text-gray-200 outline-none"
             title="关闭（快捷键：Esc）"
             @click="close()"
           >
-            <FaIcon class="h-full" name="window-close"></FaIcon>
+            <svg class="fill-current h-full" viewBox="0 0 24 24">
+              <path :d="mdiClose" />
+            </svg>
           </button>
         </div>
         <h1 class="text-2xl text-gray-400 break-all">{{ value.title }}</h1>
@@ -62,7 +68,9 @@
               title="上一个（快捷键：↑）"
               @click="jumpPrev()"
             >
-              <FaIcon class="h-full" name="caret-up"></FaIcon>
+              <svg class="fill-current h-full" viewBox="4 4 16 16">
+                <path :d="mdiMenuUp" />
+              </svg>
             </button>
             <button
               class="form-button h-8 m-px inline-flex flex-center"
@@ -70,7 +78,9 @@
               title="下一个（快捷键：↓）"
               @click="jumpNext()"
             >
-              <FaIcon class="h-full" name="caret-down"></FaIcon>
+              <svg class="fill-current h-full" viewBox="4 4 16 16">
+                <path :d="mdiMenuDown" />
+              </svg>
             </button>
           </template>
         </PresentationViewer>
@@ -123,23 +133,9 @@ import PresentationViewer from '@/components/PresentationViewer.static.vue';
 import { viewerBackground } from '@/preference';
 import relativeURL from '@/utils/relativeURL';
 import { computed, defineComponent, PropType, ref } from '@vue/composition-api';
-import 'vue-awesome/icons/backward';
-import 'vue-awesome/icons/camera';
-import 'vue-awesome/icons/caret-down';
-import 'vue-awesome/icons/caret-square-down';
-import 'vue-awesome/icons/caret-square-up';
-import 'vue-awesome/icons/caret-up';
-import 'vue-awesome/icons/fast-backward';
-import 'vue-awesome/icons/fast-forward';
-import 'vue-awesome/icons/forward';
-import 'vue-awesome/icons/pause';
-import 'vue-awesome/icons/play';
-import 'vue-awesome/icons/step-backward';
-import 'vue-awesome/icons/step-forward';
-import 'vue-awesome/icons/window-close';
 import { Collection } from '../graphql/types/Collection';
 import CollectionMetadata from './CollectionMetadata.static.vue';
-import { setupCommon, setupKeyboardShortcut } from './CollectionViewer';
+import { icons, setupCommon, setupKeyboardShortcut } from './CollectionViewer';
 import Presentation from './Presentation.static.vue';
 import PresentationMetadata from './PresentationMetadata.static.vue';
 import PresentationSelect from './PresentationSelect.vue';
@@ -157,6 +153,11 @@ export default defineComponent({
     next: {
       type: Object as PropType<Collection>,
     },
+  },
+  data() {
+    return {
+      ...icons,
+    };
   },
   components: {
     Presentation,

@@ -2,12 +2,15 @@
   .collection-overview(
     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
   )
-    template(v-if="nodes.length === 0 ")
+    template(v-if="nodes.length === 0")
       .block(
-        class="text-left m-auto h-32 font-bold pt-8 text-gray-600 col-span-6"
+        class="text-left m-auto font-bold py-6 text-gray-600 col-span-6"
       ) 
-        template(v-if="loadingCount > 0 ")
-          FaIcon.h-32(name="spinner" spin)
+        template(v-if="loadingCount > 0")
+          svg.fill-current.animate-spin.h-32(
+            viewBox="0 0 24 24"
+          )
+            path(:d="mdiLoading")
         template(v-else)
           h1(
             class="text-xl leading-loose"
@@ -15,10 +18,15 @@
           p 本应用仅监控已有路径，不会自动添加新文件
           p 
             | 如有新文件请
-            button.form-button.m-2.w-24(
+            button.form-button.m-2(
               type="button"
               @click="collect()"
-            ) 收集
+            ) 
+              svg(
+                class="fill-current h-6 inline-block"
+                viewBox="0 0 24 24"
+              )
+                path(:d="mdiAutorenew")
     template(v-for="i in nodes")
       CollectionOverviewCell(
         class="min-h-32"
@@ -34,8 +42,12 @@
         @click="fetchMore()"
         :disabled="loadingCount > 0"
       )
-        template(v-if="loadingCount > 0 ")
-          FaIcon.h-full(name="spinner" spin)
+        template(v-if="loadingCount > 0")
+          svg.fill-current.animate-spin.h-full(
+            class="inline-block"
+            viewBox="0 0 24 24"
+          )
+            path(:d="mdiLoading")
         template(v-else)
           span 加载更多
 </template>
@@ -48,7 +60,6 @@ import extractPageInfo from '@/utils/extractPageInfo';
 import fetchMore from '@/utils/fetchMore';
 import { ApolloQueryResult, ObservableQuery } from 'apollo-client';
 import { DollarApollo } from 'vue-apollo/types/vue-apollo';
-import 'vue-awesome/icons/spinner';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { db } from '../db';
 import { Collection } from '../graphql/types/Collection';
@@ -66,10 +77,14 @@ import { show } from '../modal';
 import { getCommonPrefix } from '../utils/getCommonPrefix';
 import CollectionOverviewCell from './CollectionOverviewCell.vue';
 import CollectionViewer from './CollectionViewer.vue';
+import { mdiLoading, mdiAutorenew } from '@mdi/js';
 
 @Component<CollectionOverview>({
   components: {
     CollectionOverviewCell,
+  },
+  data() {
+    return { mdiAutorenew, mdiLoading };
   },
   apollo: {
     collections: {

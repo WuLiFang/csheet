@@ -10,7 +10,9 @@
         title="至起始帧（快捷键：Home）"
         @click="() => seekFrame(parent.firstFrame, true)"
       >
-        <FaIcon name="fast-backward"></FaIcon>
+        <svg class="fill-current inline-block h-6" viewBox="0 0 24 24">
+          <path :d="mdiSkipBackward" />
+        </svg>
       </button>
       <button
         class="form-button flex-none p-0 w-12 h-8 m-px flex justify-center items-center"
@@ -18,7 +20,9 @@
         title="上一帧（快捷键：←）"
         @click="() => seekFrameOffset(-1, true)"
       >
-        <FaIcon name="step-backward"></FaIcon>
+        <svg class="fill-current inline-block h-6" viewBox="0 0 24 24">
+          <path :d="mdiSkipPrevious" />
+        </svg>
       </button>
       <InputNumber
         ref="frameInput"
@@ -32,7 +36,9 @@
         title="下一帧（快捷键：→）"
         @click="() => seekFrameOffset(1, true)"
       >
-        <FaIcon name="step-forward"></FaIcon>
+        <svg class="fill-current inline-block h-6" viewBox="0 0 24 24">
+          <path :d="mdiSkipNext" />
+        </svg>
       </button>
       <button
         class="form-button flex-none p-0 w-12 h-8 m-px flex justify-center items-center"
@@ -40,7 +46,9 @@
         title="至结束帧（快捷键：End）"
         @click="() => seekFrame(parent.lastFrame, true)"
       >
-        <FaIcon name="fast-forward"></FaIcon>
+        <svg class="fill-current inline-block h-6" viewBox="0 0 24 24">
+          <path :d="mdiSkipForward" />
+        </svg>
       </button>
     </div>
     <div class="inline-flex items-center flex-wrap sm:order-3 my-px sm:mx-1">
@@ -56,7 +64,9 @@
         title="播放/暂停（快捷键：空格）"
         @click="() => (paused ? play() : pause())"
       >
-        <FaIcon :name="paused ? 'play' : 'pause'"></FaIcon>
+        <svg class="fill-current inline-block h-6" viewBox="0 0 24 24">
+          <path :d="paused ? mdiPlay : mdiPause" />
+        </svg>
       </button>
       <select
         ref="playbackRateSelect"
@@ -82,7 +92,9 @@
         title="向前跳帧（快捷键：Shift + ←）"
         @click="skipFrameBackward()"
       >
-        <FaIcon class="object-center" name="backward"></FaIcon>
+        <svg class="fill-current inline-block h-6" viewBox="0 0 24 24">
+          <path :d="mdiRewind" />
+        </svg>
       </button>
       <input
         v-model.number="frameSkipSize"
@@ -98,7 +110,9 @@
         title="向后跳帧（快捷键：Shift + →）"
         @click="skipFrameForward()"
       >
-        <FaIcon name="forward"></FaIcon>
+        <svg class="fill-current inline-block h-6" viewBox="0 0 24 24">
+          <path :d="mdiFastForward" />
+        </svg>
       </button>
     </div>
   </div>
@@ -106,12 +120,22 @@
 
 <script lang="ts">
 import InputNumber from '@/components/global/InputNumber.vue';
+import useFrameControl from '@/composables/useFrameControl';
 import useNumberChangeRate from '@/composables/useNumberChangeRate';
 import useObservable from '@/composables/useObservable';
-import useFrameControl from '@/composables/useFrameControl';
 import usePolling from '@/composables/usePolling';
 import clamp from '@/utils/clamp';
 import observableFromRef from '@/utils/observableFromRef';
+import {
+  mdiFastForward,
+  mdiPause,
+  mdiPlay,
+  mdiRewind,
+  mdiSkipBackward,
+  mdiSkipForward,
+  mdiSkipNext,
+  mdiSkipPrevious,
+} from '@mdi/js';
 import {
   computed,
   defineComponent,
@@ -124,6 +148,7 @@ import { filter, throttleTime } from 'rxjs/operators';
 import DurationInput from './DurationInput.vue';
 import type PresentationStatic from './Presentation.static.vue';
 import type Presentation from './Presentation.vue';
+
 export default defineComponent({
   name: 'PresentationControls',
   components: {
@@ -139,6 +164,18 @@ export default defineComponent({
       type: Number,
       default: 1,
     },
+  },
+  data() {
+    return {
+      mdiFastForward,
+      mdiPause,
+      mdiPlay,
+      mdiRewind,
+      mdiSkipBackward,
+      mdiSkipForward,
+      mdiSkipNext,
+      mdiSkipPrevious,
+    };
   },
   setup: (props, ctx) => {
     const frameInput = ref<InputNumber>();

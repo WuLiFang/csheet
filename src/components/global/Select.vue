@@ -33,11 +33,11 @@
                   class="text-gray-400 outline-none"
                   type="button"
                 )
-                  FaIcon(
-                    class="flex flex-center"
-                    name="times-circle"
+                  svg.w-4.fill-current(
+                    viewBox="0 0 24 24"
                     @click="toggle(i.key, false)"
                   )
+                    path(:d="mdiCloseCircle")
             template(v-else)
               slot(v-bind="entryContext(i, 'output')")
                 span {{ i.label != null ? i.label : i.value }}
@@ -48,14 +48,17 @@
         button.block(
           type="button"
           tabindex="-1"
-          class="absolute top-0 bottom-0 right-0 mr-2 px-2"
+          class="absolute top-0 bottom-0 right-0 px-2"
           class="cursor-pointer text-gray-500"
           class="flex items-center"
           class="outline-none"
           @click.prevent="clear(); blur();"
           title="清空"
         )
-          FaIcon(name="times")
+          svg.w-6.fill-current(
+            viewBox="0 0 24 24"
+          )
+            path(:d="mdiClose")
     template(#dropdown)
       slot(
         name="search"
@@ -92,16 +95,23 @@
             )
               template(v-if="multiple && selectedKeys.has(i.key)")
                 .flex(
-                  class="absolute top-0 right-0 mr-2 p-2 bottom-0 items-center"
+                  class="absolute top-0 right-0 p-2 bottom-0 items-center"
                   class="text-gray-500"
                 )
-                  FaIcon(name="check")
+                  svg.w-6.fill-current(
+                    viewBox="0 0 24 24"
+                  )
+                    path(:d="mdiCheck")
         template(
           v-if="options.length === 0"
         )
           .text-gray-500.text-center.text-md.p-2
             template(v-if="loading")
-              FaIcon.h-16(name="spinner" spin)
+              svg.w-16.h-16.animate-spin.fill-current(
+                class="inline-block"
+                viewBox="0 0 24 24"
+              )
+                path(:d="mdiLoading")
             template(v-else)
               slot(name="empty")
                 span 无匹配
@@ -123,16 +133,20 @@ import equalSet from '@/utils/equalSet';
 import toHotKey from '@/utils/toHotKey';
 import cast from 'cast-unknown';
 import { uniqBy } from 'lodash';
-import 'vue-awesome/icons/check';
-import 'vue-awesome/icons/spinner';
-import 'vue-awesome/icons/times';
-import 'vue-awesome/icons/times-circle';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Entry, Option, optionEntries } from './entry';
+import {
+  mdiLoading,
+  mdiCheck,
+  mdiClose,
+  mdiCloseCircle,
+  mdiChevronDown,
+} from '@mdi/js';
 
 @Component<Select>({
   data() {
     return {
+      mdiChevronDown,
       inputListeners: {
         keydown: (e: KeyboardEvent) => {
           switch (toHotKey(e)) {
@@ -170,6 +184,10 @@ import { Entry, Option, optionEntries } from './entry';
           }
         },
       },
+      mdiLoading,
+      mdiCheck,
+      mdiClose,
+      mdiCloseCircle,
     };
   },
   mounted() {

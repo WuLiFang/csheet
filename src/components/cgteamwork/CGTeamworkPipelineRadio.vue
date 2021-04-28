@@ -23,11 +23,11 @@
             class="text-xs text-gray-500"
           ) {{ pipeline.description }}
         template(v-else-if="loadingCount > 0")
-          FaIcon(
-            class="text-center w-full"
-            name="spinner"
-            spin
+          svg(
+            class="fill-current inline-block w-full h-6 animate-spin"
+            viewBox="0 0 24 24"
           )
+            path(:d="mdiLoading")
         template(v-else)
           p {{ value }}
     template(#placeholder)
@@ -65,10 +65,15 @@ import {
 } from '../../graphql/types/cgteamworkPipelines';
 import { orderBy } from 'lodash';
 import Select from '@/components/global/Select.vue';
+import { mdiLoading } from '@mdi/js';
 
+// TODO: rename this to `CGTeamworkPipelineSelect`
 
 @Component<CGTeamworkPipelineRadio>({
   inheritAttrs: false,
+  data() {
+    return { mdiLoading };
+  },
   apollo: {
     matchedPipelines: {
       query: require('@/graphql/queries/cgteamworkPipelines.gql'),
@@ -108,17 +113,17 @@ export default class CGTeamworkPipelineRadio extends Mixins(
   get pipelines(): Pipeline[] {
     return orderBy(
       this.matchedPipelines ?? [],
-      [i => i.order, i => i.name],
+      [(i) => i.order, (i) => i.name],
       ['desc', 'asc']
     );
   }
 
   getPipeline(name: string): Pipeline | undefined {
-    return this.pipelines.find(i => i.name === name);
+    return this.pipelines.find((i) => i.name === name);
   }
 
   get options(): string[] {
-    return this.pipelines.map(i => i.name);
+    return this.pipelines.map((i) => i.name);
   }
 
   focus(): void {

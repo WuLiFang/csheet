@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@fullhuman/postcss-purgecss': 2.3.0
   '@juggle/resize-observer': ^3.2.0
+  '@mdi/js': ^5.9.55
   '@sentry/browser': 6.3.0
   '@sentry/integrations': 6.3.0
   '@tailwindcss/custom-forms': 0.2.1
@@ -69,7 +70,6 @@ specifiers:
   typescript: 3.9.9
   vue: 2.6.12
   vue-apollo: ^3.0.4
-  vue-awesome: 4.0.2
   vue-class-component: 7.2.6
   vue-cli-plugin-i18n: 0.6.1
   vue-i18n: 8.24.0
@@ -78,6 +78,7 @@ specifiers:
 
 dependencies:
   '@juggle/resize-observer': 3.3.0
+  '@mdi/js': 5.9.55
   '@sentry/browser': 6.3.0
   '@sentry/integrations': 6.3.0
   '@vue/composition-api': 1.0.0-rc.7_vue@2.6.12
@@ -100,7 +101,6 @@ dependencies:
   to-digit-grouped: 1.0.1
   vue: 2.6.12
   vue-apollo: 3.0.7_graphql-tag@2.10.4
-  vue-awesome: 4.0.2_vue@2.6.12
   vue-i18n: 8.24.0
 
 devDependencies:
@@ -1496,6 +1496,10 @@ packages:
 
   /@juggle/resize-observer/3.3.0:
     resolution: {integrity: sha512-P1v2nvK7z2gOLVM/bveIRLG9L99uEahTGgTltyF03zixZAjI9YmKLj5Z9MpS9wBIUt5WDoQORT2lXvLOIF89iA==}
+    dev: false
+
+  /@mdi/js/5.9.55:
+    resolution: {integrity: sha512-BbeHMgeK2/vjdJIRnx12wvQ6s8xAYfvMmEAVsUx9b+7GiQGQ9Za8jpwp17dMKr9CgKRvemlAM4S7S3QOtEbp4A==}
     dev: false
 
   /@mrmlnc/readdir-enhanced/2.2.1:
@@ -9050,10 +9054,6 @@ packages:
     dev: true
     optional: true
 
-  /nanoid/2.1.11:
-    resolution: {integrity: sha512-s/snB+WGm6uwi0WjsZdaVcuf3KJXlfGl2LcxgwkEwJF0D/BWzVWAZW/XY4bFaiR7s0Jk3FPvlnepg1H1b1UwlA==}
-    dev: false
-
   /nanomatch/1.2.13:
     resolution: {integrity: sha512-fpoe2T0RbHwBTBUOftAfBPaDEi06ufaUai0mE6Yn1kacc3SnTErfb/h+X94VXzI64rKFHYImXSvdwGGCmwOqCA==}
     engines: {node: '>=0.10.0'}
@@ -12511,16 +12511,6 @@ packages:
       graphql-tag: 2.10.4_graphql@14.7.0
       serialize-javascript: 4.0.0
       throttle-debounce: 2.3.0
-    dev: false
-
-  /vue-awesome/4.0.2_vue@2.6.12:
-    resolution: {integrity: sha512-TE9hVwyVrGnBetO/MJwZ/7qLO6Vgr/WrDtIA7vwNryoLdA2jfRcKRw29KacpU5xj3wzZhHfYJ2xJLxfirhmH5Q==}
-    engines: {node: '>= 4.0.0', npm: '>= 3.0.0'}
-    peerDependencies:
-      vue: ^2.4.0
-    dependencies:
-      nanoid: 2.1.11
-      vue: 2.6.12
     dev: false
 
   /vue-class-component/7.2.6_vue@2.6.12:

@@ -5,10 +5,9 @@ import dirname from '@/utils/getPathDirname';
 import humanizeTime from '@/utils/humanizeTime';
 import { groupBy, orderBy, sortBy } from 'lodash';
 import { VNode } from 'vue';
-import 'vue-awesome/icons/image';
-import 'vue-awesome/icons/video';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Presentation } from '../graphql/types/Presentation';
+import { mdiImage, mdiVideo } from '@mdi/js';
 
 interface Option {
   id: string;
@@ -48,15 +47,27 @@ interface OptionGroup {
           ((): VNode => {
             switch (v.type) {
               case 'image':
-                return h('FaIcon', {
-                  staticClass: 'inline-flex flex-center',
-                  props: { name: 'image' },
-                });
+                return h(
+                  'svg',
+                  {
+                    staticClass: 'inline fill-current h-6',
+                    attrs: {
+                      viewBox: '0 0 24 24',
+                    },
+                  },
+                  [h('path', { attrs: { d: mdiImage } })]
+                );
               case 'video':
-                return h('FaIcon', {
-                  staticClass: 'inline-flex flex-center',
-                  props: { name: 'video' },
-                });
+                return h(
+                  'svg',
+                  {
+                    staticClass: 'inline fill-current h-6',
+                    attrs: {
+                      viewBox: '0 0 24 24',
+                    },
+                  },
+                  [h('path', { attrs: { d: mdiVideo } })]
+                );
               default:
                 return h('span', [v.type]);
             }

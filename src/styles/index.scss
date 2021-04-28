@@ -66,8 +66,8 @@ button:focus,
     @apply bg-gray-600;
   }
   &:disabled {
-    @apply text-gray-700;
-    @apply bg-gray-900;
+    @apply text-gray-600;
+    @apply bg-gray-800;
   }
   &:focus {
     @extend %form-focus;

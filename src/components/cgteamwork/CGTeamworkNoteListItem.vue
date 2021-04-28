@@ -22,7 +22,11 @@
         @click="showDeleteFormDrawer()"
         title="删除备注"
       )
-        FaIcon.h-4(name="trash")
+        svg(
+          class="fill-current h-5"
+          viewBox="0 0 24 24"
+        )
+          path(:d="mdiDelete")
     .ml-2.clear-both(
       class="overflow-hidden"
     )
@@ -41,10 +45,10 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import CGTeamworkStatusWidget from './CGTeamworkStatusWidget.vue';
 import DOMPurify from 'dompurify';
 import { show } from '@/modal';
-import 'vue-awesome/icons/trash';
 import CGTeamworkNoteDeleteFormDrawer from '@/components/cgteamwork/CGTeamworkNoteDeleteFormDrawer.vue';
 import ImageViewer from '@/components/ImageViewer.vue';
 import iterateHTMLCollection from '@/svg-editor/utils/iterateHTMLCollection';
+import { mdiDelete } from '@mdi/js';
 
 export interface CGTeamworkNoteListItemValue {
   id: string;
@@ -59,6 +63,9 @@ export interface CGTeamworkNoteListItemValue {
 }
 
 @Component<CGTeamworkNoteListItem>({
+  data() {
+    return { mdiDelete };
+  },
   components: {
     CGTeamworkStatusWidget,
   },

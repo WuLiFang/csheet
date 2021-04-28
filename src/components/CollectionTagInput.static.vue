@@ -94,7 +94,6 @@ import {
   watch,
 } from '@vue/composition-api';
 import { uniq } from 'lodash';
-import 'vue-awesome/icons/times';
 import { PAGE_DATA } from '@/page-data.static';
 import extractNodes from '@/utils/extractNodes';
 

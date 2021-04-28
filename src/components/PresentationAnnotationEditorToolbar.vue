@@ -15,7 +15,8 @@
         @click="parent.setPainter('null')"
         title='隐藏标注（快捷键：q）'
       )
-        FaIcon(name="eye-slash")
+        svg(class="inline-block fill-current h-6" viewBox="0 0 24 24")
+          path(:d="mdiEyeOff")
       button.form-button(
         type="button"
         class="h-8 w-12 px-0 m-px"
@@ -26,7 +27,8 @@
         @click="parent.setPainter('select')"
         title='选择工具（快捷键：w）'
       )
-        FaIcon(name="mouse-pointer")
+        svg(class="inline-block fill-current h-6" viewBox="0 0 24 24")
+          path(:d="mdiCursorDefault")
       button.form-button(
         type="button"
         class="h-8 w-12 px-0 m-px"
@@ -37,7 +39,8 @@
         @click="parent.setPainter('polyline')"
         title='铅笔工具（快捷键：e）'
       )
-        FaIcon(name="pen")
+        svg(class="inline-block fill-current h-6" viewBox="0 0 24 24")
+          path(:d="mdiPencil")
       button.form-button(
         type="button"
         class="h-8 w-12 px-0 m-px"
@@ -48,7 +51,8 @@
         @click="parent.setPainter('rectangle')"
         title='矩形工具（快捷键：r）'
       )
-        FaIcon(name="regular/square")
+        svg(class="inline-block fill-current h-6" viewBox="0 0 24 24")
+          path(:d="mdiSquareOutline")
       button.form-button(
         type="button"
         class="h-8 w-12 px-0 m-px"
@@ -59,7 +63,8 @@
         @click="parent.setPainter('ellipse')"
         title='椭圆工具（快捷键：t）'
       ) 
-        FaIcon(name="regular/circle")
+        svg(class="inline-block fill-current h-6" viewBox="0 0 24 24")
+          path(:d="mdiCircleOutline")
       button.form-button(
         type="button"
         class="h-8 w-12 px-0 m-px"
@@ -69,7 +74,9 @@
         }`
         @click="parent.setPainter('text')"
         title='文本工具（快捷键：y）'
-      ) T
+      )
+        svg(class="inline-block fill-current h-6" viewBox="0 0 24 24")
+          path(:d="mdiFormatText")
     div(
       class="inline-flex flex-wrap"
       class="flex-auto mx-1 my-px text-left"
@@ -120,9 +127,8 @@
         label(
           class="inline-flex items-center m-px"
         )
-          FaIcon(name="circle"
-            class="h-4 algin-top"
-          )
+          svg(class="inline-block fill-current h-6" viewBox="0 0 24 24")
+            path(:d="mdiCircle")
           InputNumber.form-input(
             class="w-20 h-8 text-center"
             v-model="parent.config.strokeWidth"
@@ -133,9 +139,8 @@
         label(
           class="inline-flex items-center m-px"
         )
-          FaIcon(name="text-height"
-            class="h-4 algin-top"
-          )
+          svg(class="inline-block fill-current h-6" viewBox="0 0 24 24")
+            path(:d="mdiFormatSize")
           InputNumber.form-input(
             class="h-8 w-20"
             v-model="parent.config.fontSize"
@@ -150,51 +155,75 @@
           @click='removeSelected()'
           title="删除所选"
         ) 
-          FaIcon(name="trash-alt")
+          svg(class="inline-block fill-current h-6" viewBox="0 0 24 24")
+            path(:d="mdiDelete")
     div(
       v-show="parent.currentPainter !== 'null'"
-      class="inline-flex justify-end m-px"
+      class="inline-flex justify-end m-px items-center"
     )
-      span(v-if="parent.loadingCount > 0")
-        FaIcon.h-full(name="spinner" spin)
+      template(v-if="parent.loadingCount > 0")
+        svg(class="inline fill-current h-8 animate-spin" viewBox="0 0 24 24")
+          path(:d="mdiLoading")
       button.form-button(
         type="button"
-        class="h-8 m-px"
+        class="h-8 m-px px-0 w-12"
         class="inline-flex flex-center"
         @click="parent.editor.undo()"
         :disabled="parent.loadingCount > 0 || !parent.canUndo"
         title="撤销（快捷键：Ctrl + z）"
       )
-        FaIcon(name="undo")
+        svg(class="inline-block fill-current h-6" viewBox="0 0 24 24")
+          path(:d="mdiUndo")
       button.form-button(
         type="button"
-        class="h-8 m-px"
+        class="h-8 m-px px-0 w-12"
         class="inline-flex flex-center"
         :disabled="parent.loadingCount > 0 || !parent.canRedo"
         @click="parent.editor.redo()"
         title="重做（快捷键：Ctrl + y）"
       )
-        FaIcon(name="redo")
+        svg(class="inline-block fill-current h-6" viewBox="0 0 24 24")
+          path(:d="mdiRedo")
     slot(name="right")
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import PresentationAnnotationEditor from './PresentationAnnotationEditor.vue';
-import 'vue-awesome/icons/undo';
-import 'vue-awesome/icons/redo';
-import 'vue-awesome/icons/mouse-pointer';
-import 'vue-awesome/icons/pen';
-import 'vue-awesome/icons/eraser';
-import 'vue-awesome/icons/eye-slash';
-import 'vue-awesome/icons/regular/square';
-import 'vue-awesome/icons/regular/circle';
-import 'vue-awesome/icons/circle';
-import 'vue-awesome/icons/text-height';
-import 'vue-awesome/icons/trash-alt';
 import SelectPainter from '@/svg-editor/painters/select';
+import {
+  mdiCircle,
+  mdiCircleOutline,
+  mdiCursorDefault,
+  mdiDelete,
+  mdiEyeOff,
+  mdiFormatSize,
+  mdiFormatText,
+  mdiLoading,
+  mdiPencil,
+  mdiRedo,
+  mdiSquareOutline,
+  mdiUndo,
+} from '@mdi/js';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import PresentationAnnotationEditor from './PresentationAnnotationEditor.vue';
 
-@Component<PresentationAnnotationEditorToolbar>({})
+@Component<PresentationAnnotationEditorToolbar>({
+  data() {
+    return {
+      mdiCircleOutline,
+      mdiCursorDefault,
+      mdiEyeOff,
+      mdiFormatText,
+      mdiCircle,
+      mdiPencil,
+      mdiSquareOutline,
+      mdiFormatSize,
+      mdiDelete,
+      mdiLoading,
+      mdiUndo,
+      mdiRedo,
+    };
+  },
+})
 export default class PresentationAnnotationEditorToolbar extends Vue {
   @Prop({ type: Object, required: true })
   parent!: PresentationAnnotationEditor;
