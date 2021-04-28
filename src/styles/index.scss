@@ -117,6 +117,7 @@ button:focus,
   .flex-center {
     @apply justify-center;
     @apply items-center;
+    @apply align-middle;
   }
 
   .bg-checkboard {
