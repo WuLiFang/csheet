@@ -56,9 +56,11 @@ CSHEET_FOLDER_EXCLUDE
 
   扫描文件夹时的前缀排除模式，用逗号分隔。
 
-CSHEET_WEB_SENTRY_DSN
+CSHEET_CLIENT_SENTRY_DSN
 
-  网页端 Sentry DSN。
+  客户端 Sentry 配置。
+
+  后缀添加 _{客户端类型大写} 可对特定客户端指定覆盖值。
 
 CSHEET_SERVER_SENTRY_DSN
 

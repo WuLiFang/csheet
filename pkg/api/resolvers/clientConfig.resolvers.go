@@ -5,12 +5,13 @@ package resolvers
 
 import (
 	"context"
-	"os"
+	"strings"
 
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
 	"github.com/WuLiFang/csheet/v6/pkg/api/models"
 	"github.com/WuLiFang/csheet/v6/pkg/cgteamwork"
 	"github.com/WuLiFang/csheet/v6/pkg/collector/folder"
+	"github.com/WuLiFang/csheet/v6/pkg/getenv"
 )
 
 func (r *clientConfigResolver) FolderInclude(ctx context.Context, obj *models.ClientConfig, format *string) ([]string, error) {
@@ -31,12 +32,16 @@ func (r *queryResolver) ClientConfig(ctx context.Context, name string) (*models.
 	for _, i := range folder.WalkInclude {
 		ret.FolderInclude = append(ret.FolderInclude, i)
 	}
+	var upperName = strings.ToUpper(name)
 
-	switch name {
-	case "web":
-		if sentryDSN, ok := os.LookupEnv("CSHEET_WEB_SENTRY_DSN"); ok {
-			ret.SentryDsn = &sentryDSN
-		}
+	if v := getenv.StringCoalesce(
+		[]string{
+			"CSHEET_CLIENT_SENTRY_DSN_" + upperName,
+			"CSHEET_CLIENT_SENTRY_DSN",
+		},
+		"",
+	); v != "" {
+		ret.SentryDsn = &v
 	}
 	return ret, nil
 }

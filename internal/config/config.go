@@ -1,9 +1,11 @@
 package config
 
 import (
+	"os"
 	"strings"
 	"time"
 
+	"github.com/NateScarlet/zap-sentry/pkg/logging"
 	"github.com/WuLiFang/csheet/v6/pkg/getenv"
 	"github.com/WuLiFang/csheet/v6/pkg/job/transcode"
 )
@@ -45,3 +47,18 @@ var (
 	ArchiveCollectionLimit      = getenv.Int("CSHEET_ARCHIVE_COLLECTION_LIMIT", 1000)
 	UseXForwardedFor            = getenv.Bool("USE_X_FORWARDED_FOR", false)
 )
+
+func init() {
+	logger := logging.Logger("config")
+	if v := os.Getenv("CSHEET_WEB_SENTRY_DSN"); v != "" {
+		if os.Getenv("CSHEET_CLIENT_SENTRY_DSN") == "" {
+			logger.Warn("CSHEET_WEB_SENTRY_DSN is depreacted, use CSHEET_CLIENT_SENTRY_DSN instead")
+			os.Setenv("CSHEET_CLIENT_SENTRY_DSN", v)
+		} else {
+			logger.Warn("ignore CSHEET_WEB_SENTRY_DSN when CSHEET_CLIENT_SENTRY_DSN set")
+		}
+	}
+	if v := os.Getenv("CSHEET_STORAGE"); v != "" {
+		logger.Warn("CSHEET_STORAGE is depreacted, use CSHEET_DATA_PATH instead")
+	}
+}
