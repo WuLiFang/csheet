@@ -201,11 +201,9 @@ export function setupKeyboardShortcut({
   return cleanup;
 }
 
+
 function animateOnce(el: HTMLElement, animateClass: string) {
   el.classList.remove(animateClass);
-  for (const i of el.getAnimations()) {
-    i.finish();
-  }
   el.classList.add(animateClass);
   const handleAnimationEnd = () => {
     el.classList.remove(animateClass);
