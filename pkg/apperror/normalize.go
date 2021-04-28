@@ -34,5 +34,5 @@ func As(err error, target **AppError) bool {
 		return true
 	}
 
-	return false
+	return errors.As(err, target)
 }
