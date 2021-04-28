@@ -13,15 +13,16 @@
       <template v-if="multiple">
         <ol class="inline-block mr-1">
           <template v-for="tag in values">
-            <li :key="tag" class="inline-block bg-gray-700 px-2 rounded m-px">
-              <span class="">{{ tag }}</span>
+            <li :key="tag" class="inline-block bg-gray-700 rounded px-1 m-px">
+              <span class="mx-1 align-middle">{{ tag }}</span>
               <button
                 type="button"
-                class="ml-1"
                 tabindex="-1"
                 @click.prevent="_handleDeleteButtonClick(tag)"
               >
-                <fa-icon name="times" />
+                <svg class="h-4 fill-current inline-block" viewBox="0 0 24 24">
+                  <path :d="mdiClose" />
+                </svg>
               </button>
             </li>
           </template>
@@ -51,7 +52,9 @@
         class="float-right"
         @click="values = []"
       >
-        <fa-icon name="times" />
+        <svg class="fill-current h-6 inline-block" viewBox="0 0 24 24">
+          <path :d="mdiClose" />
+        </svg>
       </button>
     </output>
     <template #dropdown>
@@ -85,6 +88,7 @@ import useSelect from '@/composables/useSelect';
 import useStorage from '@/composables/useStorage';
 import queries from '@/graphql/queries';
 import containsDeepChildNode from '@/utils/containsDeepChildNode';
+import { mdiClose } from '@mdi/js';
 import {
   computed,
   defineComponent,
@@ -127,6 +131,9 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+  },
+  data() {
+    return { mdiClose };
   },
   setup: (props, ctx) => {
     const { multiple } = toRefs(props);
