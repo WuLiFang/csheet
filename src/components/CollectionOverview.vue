@@ -37,7 +37,7 @@
     template(v-if="pageInfo.hasNextPage")
       button(
         class="sm:col-span-2 md:col-span-3 lg:col-span-4 xl:col-span-5 2xl:col-span-6"
-        class="bg-gray-900 text-gray-600 h-32 min-h-full"
+        class="bg-gray-900 text-gray-600 h-32 min-h-full overflow-hidden"
         title="加载更多"
         @click="fetchMore()"
         :disabled="loadingCount > 0"
