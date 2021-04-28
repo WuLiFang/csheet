@@ -1,5 +1,6 @@
 import * as client from '@/client';
 import * as sentry from '@sentry/browser';
+import * as tracing from '@sentry/tracing';
 import { Vue as SentryVue } from '@sentry/integrations';
 import Vue from 'vue';
 
@@ -9,7 +10,10 @@ import Vue from 'vue';
     return;
   }
   // https://github.com/getsentry/sentry-javascript/issues/3388
-  const isAffectedByIssue3388 = navigator.userAgent.includes('Chrome/74.0.3729');
+  const isAffectedByIssue3388 = navigator.userAgent.includes(
+    'Chrome/74.0.3729'
+  );
+  const tracesSampleRate = config.sentryTracesSampleRate ?? 0;
   sentry.init({
     environment: process.env.NODE_ENV,
     dsn: config.sentryDSN,
@@ -27,6 +31,10 @@ import Vue from 'vue';
       new sentry.Integrations.LinkedErrors(),
       new sentry.Integrations.UserAgent(),
       new SentryVue({ Vue, attachProps: true }),
+      ...(tracesSampleRate > 0
+        ? [new tracing.Integrations.BrowserTracing()]
+        : []),
     ],
+    tracesSampleRate,
   });
 })();

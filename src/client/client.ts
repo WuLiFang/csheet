@@ -22,6 +22,7 @@ import { createUploadLink } from 'apollo-upload-client';
 import { getMainDefinition } from 'apollo-utilities';
 import { GraphQLError } from 'graphql';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
+import { SpanStatus } from '@sentry/tracing';
 
 if (process.env.NODE_ENV === 'development') {
   if (location.pathname === '/index.static.html') {
@@ -98,15 +99,39 @@ class SentryLink extends ApolloLink {
     operation: Operation,
     forward?: NextLink
   ): Observable<FetchResult> | null {
+    const data = {
+      variables: operation.variables,
+      extensions: operation.extensions,
+    };
     sentry.addBreadcrumb({
       category: 'graphql',
       message: operation.operationName,
-      data: {
-        variables: operation.variables,
-        extensions: operation.extensions,
-      },
+      data,
     });
-    return forward?.(operation) ?? null;
+    const ret = forward?.(operation) ?? null;
+    if (ret != null) {
+      const txn = sentry.startTransaction({
+        name: 'graphql.' + (operation.operationName ?? 'operation'),
+      });
+      sentry.configureScope((scope) => scope.setSpan(txn));
+      return new Observable((sub) => {
+        ret.subscribe(
+          (v) => sub.next(v),
+          (err) => {
+            sub.error(err);
+            txn.setData('error', err);
+            txn.setStatus(SpanStatus.UnknownError);
+            txn.finish();
+          },
+          () => {
+            sub.complete();
+            txn.setStatus(SpanStatus.Ok);
+            txn.finish();
+          }
+        );
+      });
+    }
+    return ret;
   }
 }
 

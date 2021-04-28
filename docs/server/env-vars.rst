@@ -58,7 +58,13 @@ CSHEET_FOLDER_EXCLUDE
 
 CSHEET_CLIENT_SENTRY_DSN
 
-  客户端 Sentry 配置。
+  客户端 Sentry 地址配置。
+
+  后缀添加 _{客户端类型大写} 可对特定客户端指定覆盖值。
+
+CSHEET_CLIENT_SENTRY_TRACES_SAMPLE_RATE
+
+  客户端 Sentry 性能跟踪取样率配置，范围 0 - 1.0 。
 
   后缀添加 _{客户端类型大写} 可对特定客户端指定覆盖值。
 

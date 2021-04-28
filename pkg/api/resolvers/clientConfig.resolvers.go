@@ -5,6 +5,7 @@ package resolvers
 
 import (
 	"context"
+	"strconv"
 	"strings"
 
 	"github.com/WuLiFang/csheet/v6/pkg/api/generated"
@@ -42,6 +43,18 @@ func (r *queryResolver) ClientConfig(ctx context.Context, name string) (*models.
 		"",
 	); v != "" {
 		ret.SentryDsn = &v
+	}
+	if v := getenv.StringCoalesce(
+		[]string{
+			"CSHEET_CLIENT_SENTRY_TRACES_SAMPLE_RATE_" + upperName,
+			"CSHEET_CLIENT_SENTRY_TRACES_SAMPLE_RATE",
+		},
+		"",
+	); v != "" {
+		n, err := strconv.ParseFloat(v, 64)
+		if err == nil {
+			ret.SentryTracesSampleRate = &n
+		}
 	}
 	return ret, nil
 }

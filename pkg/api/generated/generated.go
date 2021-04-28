@@ -120,10 +120,11 @@ type ComplexityRoot struct {
 	}
 
 	ClientConfig struct {
-		EnableCGTeamwork func(childComplexity int) int
-		FolderInclude    func(childComplexity int, format *string) int
-		IssueTrackerURL  func(childComplexity int) int
-		SentryDsn        func(childComplexity int) int
+		EnableCGTeamwork       func(childComplexity int) int
+		FolderInclude          func(childComplexity int, format *string) int
+		IssueTrackerURL        func(childComplexity int) int
+		SentryDsn              func(childComplexity int) int
+		SentryTracesSampleRate func(childComplexity int) int
 	}
 
 	CollectFromCGTeamworkPayload struct {
@@ -606,6 +607,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ClientConfig.SentryDsn(childComplexity), true
+
+	case "ClientConfig.sentryTracesSampleRate":
+		if e.complexity.ClientConfig.SentryTracesSampleRate == nil {
+			break
+		}
+
+		return e.complexity.ClientConfig.SentryTracesSampleRate(childComplexity), true
 
 	case "CollectFromCGTeamworkPayload.clientMutationId":
 		if e.complexity.CollectFromCGTeamworkPayload.ClientMutationID == nil {
@@ -1710,6 +1718,7 @@ extend type Mutation {
 `, BuiltIn: false},
 	{Name: "pkg/api/queries/clientConfig.gql", Input: `type ClientConfig {
   sentryDSN: String
+  sentryTracesSampleRate: Float
   issueTrackerURL: String
   enableCGTeamwork: Boolean!
   folderInclude(format: String): [String!] @goField(forceResolver: true)
@@ -3605,6 +3614,35 @@ func (ec *executionContext) _ClientConfig_sentryDSN(ctx context.Context, field g
 	res := resTmp.(*string)
 	fc.Result = res
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClientConfig_sentryTracesSampleRate(ctx context.Context, field graphql.CollectedField, obj *models.ClientConfig) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClientConfig",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp := ec._fieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SentryTracesSampleRate, nil
+	})
+
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*float64)
+	fc.Result = res
+	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ClientConfig_issueTrackerURL(ctx context.Context, field graphql.CollectedField, obj *models.ClientConfig) (ret graphql.Marshaler) {
@@ -8734,6 +8772,8 @@ func (ec *executionContext) _ClientConfig(ctx context.Context, sel ast.Selection
 			out.Values[i] = graphql.MarshalString("ClientConfig")
 		case "sentryDSN":
 			out.Values[i] = ec._ClientConfig_sentryDSN(ctx, field, obj)
+		case "sentryTracesSampleRate":
+			out.Values[i] = ec._ClientConfig_sentryTracesSampleRate(ctx, field, obj)
 		case "issueTrackerURL":
 			out.Values[i] = ec._ClientConfig_issueTrackerURL(ctx, field, obj)
 		case "enableCGTeamwork":
@@ -11517,6 +11557,21 @@ func (ec *executionContext) marshalODiskFile2ᚖgithubᚗcomᚋWuLiFangᚋcsheet
 		return graphql.Null
 	}
 	return ec._DiskFile(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOFloat2ᚖfloat64(ctx context.Context, v interface{}) (*float64, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalFloat(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOFloat2ᚖfloat64(ctx context.Context, sel ast.SelectionSet, v *float64) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return graphql.MarshalFloat(*v)
 }
 
 func (ec *executionContext) unmarshalOID2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {

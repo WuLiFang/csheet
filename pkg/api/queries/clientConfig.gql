@@ -1,5 +1,6 @@
 type ClientConfig {
   sentryDSN: String
+  sentryTracesSampleRate: Float
   issueTrackerURL: String
   enableCGTeamwork: Boolean!
   folderInclude(format: String): [String!] @goField(forceResolver: true)
