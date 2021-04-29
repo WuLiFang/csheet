@@ -8,6 +8,15 @@ steps:
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
+    environment:
+      SENTRY_URL:
+        from_secret: SENTRY_URL
+      SENTRY_ORG:
+        from_secret: SENTRY_ORG
+      SENTRY_PROJECT:
+        from_secret: SENTRY_PROJECT
+      SENTRY_AUTH_TOKEN:
+        from_secret: SENTRY_AUTH_TOKEN
     commands:
       - git fetch origin 'refs/tags/*:refs/tags/*'
       - RELEASE=$(git describe --always --match 'v*.*.*')
@@ -19,6 +28,10 @@ steps:
         --build-arg GOPROXY
         --build-arg ALPINE_MIRROR
         --build-arg RELEASE="$${RELEASE}"
+        --build-arg SENTRY_URL
+        --build-arg SENTRY_ORG
+        --build-arg SENTRY_PROJECT
+        --build-arg SENTRY_AUTH_TOKEN
         --label "repo=${DRONE_REPO}"
         --label "commit-sha=${DRONE_COMMIT_SHA}"
         --tag registry.wlf.com/csheet:${DRONE_COMMIT_SHA}

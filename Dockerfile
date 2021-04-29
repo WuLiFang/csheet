@@ -7,19 +7,28 @@ ARG NODEJS_ORG_MIRROR
 # For npx run, example: http://registry.npm.taobao.org
 ARG npm_config_registry
 RUN if [ -n "${NPM_MIRROR}" ]; then \
-    npx npm-mirror-set -g ${NPM_MIRROR} \
+    npx npm-mirror-set@1.3.1 -g ${NPM_MIRROR} \
     && npm -g config list \
     ; fi
+RUN npm i -g pnpm
+RUN npm i -g --unsafe-perm=true @sentry/cli
 
 WORKDIR /app/
 ARG RELEASE
+ARG SENTRY_URL
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
+ARG SENTRY_AUTH_TOKEN
 ENV CSHEET_RELEASE=${RELEASE}
 COPY package*.json tsconfig.json *.config.js .graphqlconfig .npmrc .pnpmfile.cjs ./
 COPY src/ src/
 COPY public/ public/
 RUN set -ex &&\
-    npx pnpm --store-dir .pnpm_store/ i &&\
-    npm run build &&\
+    pnpm i --store-dir .pnpm_store/ &&\
+    pnpm run build &&\
+    if [ -n "${RELEASE}" ] && [ -n "${SENTRY_AUTH_TOKEN}" ]; then \
+        sentry-cli --log-level=info releases files "${RELEASE}" upload-sourcemaps dist \
+    ; fi &&\
     rm -rf .pnpm_store/ node_modules/
 
 FROM golang:1-alpine AS server
