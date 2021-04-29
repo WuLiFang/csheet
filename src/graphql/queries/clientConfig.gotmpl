@@ -3,14 +3,15 @@ import { computed } from "@vue/composition-api"
 {{- end }}
 
 {{- define "before" }}
-    export type Config = NonNullable<{{.Name}}["{{.Name}}"]>
-    const defaultConfig: Config = {
-        __typename: 'ClientConfig',
-        sentryDSN: null,
-        issueTrackerURL: null,
-        enableCGTeamwork: false,
-        folderInclude: [],
-    }
+export type Config = NonNullable<{{.Name}}["{{.Name}}"]>
+const defaultConfig: Config = {
+    __typename: 'ClientConfig',
+    sentryDSN: null,
+    sentryTracesSampleRate: null,
+    issueTrackerURL: null,
+    enableCGTeamwork: false,
+    folderInclude: [],
+}
 {{- end }}
 
 {{- define "extendUseQueryType" }}

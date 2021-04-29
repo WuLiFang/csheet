@@ -22,6 +22,7 @@ export type Config = NonNullable<clientConfig['clientConfig']>;
 const defaultConfig: Config = {
   __typename: 'ClientConfig',
   sentryDSN: null,
+  sentryTracesSampleRate: null,
   issueTrackerURL: null,
   enableCGTeamwork: false,
   folderInclude: [],
