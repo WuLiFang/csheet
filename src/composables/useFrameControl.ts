@@ -1,6 +1,7 @@
 import useCleanup from '@/composables/useCleanup';
 import { Ref, ref, watch } from '@vue/composition-api';
 import { clamp } from 'lodash';
+import cast from 'cast-unknown';
 
 export default function useFrameControl({
   el,
@@ -50,7 +51,14 @@ export default function useFrameControl({
 
   const play = () => {
     if (el.value instanceof HTMLVideoElement) {
-      el.value.play();
+      cast
+        .promise(el.value.play())()
+        .catch((err) => {
+          if (String(err).startsWith('AbortError:')) {
+            return;
+          }
+          throw err;
+        });
     }
   };
   const pause = () => {
