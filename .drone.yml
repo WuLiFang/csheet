@@ -20,6 +20,7 @@ steps:
     commands:
       - git fetch origin 'refs/tags/*:refs/tags/*'
       - RELEASE=$(git describe --always --match 'v*.*.*')
+      - if [ "${DRONE_BRANCH}" != "master" ]; then unset SENTRY_AUTH_TOKEN ; fi
       - >-
         docker build
         --build-arg NPM_MIRROR
