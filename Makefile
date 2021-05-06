@@ -1,8 +1,8 @@
-.PHONY: default deploy-docs test build install src/graphql
+.PHONY: default deploy-docs test build build/windows install src/graphql
 
 export CGO_ENABLED?=0
 
-default: build src/graphql docs/_build/html dist
+default: build src/graphql docs/_build/html dist build/windows
 
 docs/_build/html: docs/_build/html/.git docs/* docs/*/*.rst docs/*/*/*.rst
 	$(MAKE) -C docs
@@ -25,15 +25,31 @@ pkg/api: pkg/api/*/*.gql gqlgen.yml
 src/graphql:
 	$(MAKE) -C src/graphql
 
-dist: node_modules src/* src/*/*
-	npm run build
+dist: export CSHEET_RELEASE?=$(shell git describe)
+dist: node_modules/.sentinel src/* src/*/*
+	pnpm run build
 
-node_modules: package.json package-lock.json
-	npm install
-	touch node_modules
+node_modules/.sentinel: package.json pnpm-lock.yaml
+	pnpm install
+	touch $@
 
 test:
 	go test ./pkg/...
 
 install: 
 	go get ./cmd/...
+
+
+build/windows: export GOOS=windows
+build/windows: export GOARCH=amd64
+build/windows: export VERSION?=$(shell git describe)
+build/windows: dist
+	rm -rf build/windows
+	mkdir -p build/windows
+	cp $(shell where.exe ffmpeg.exe) build/windows
+	cp $(shell where.exe ffprobe.exe) build/windows
+	cp -r dist-extra/windows/* build/windows
+	cp -r dist/ build/windows/
+	echo $(VERSION) > build/windows/VERSION
+	go build -o build/windows/ ./cmd/...
+	cd build/windows; zip ../csheet-$(VERSION)-win.zip *
