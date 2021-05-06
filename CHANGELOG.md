@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.5.0](https://github.com/WuLiFang/csheet/compare/v6.4.0...v6.5.0) (2021-05-06)
+
+
+### Features
+
+* add browser warning for chrome74.0.3729 ([b73aabf](https://github.com/WuLiFang/csheet/commit/b73aabfda6a91b34bb82de24d240d06ebe22ec83))
+* rename config `CSHEET_WEB_SENTRY_DSN` to `CSHEET_CLIENT_SENTRY_DSN` ([908cdf2](https://github.com/WuLiFang/csheet/commit/908cdf21d5d803f184cbb4dd161e86444b471e7e))
+* show collect buttom when overview is empty ([5d307d3](https://github.com/WuLiFang/csheet/commit/5d307d352d40195505693ec2f5df57ce0f52d2ee))
+* support sentry tracing ([df882d5](https://github.com/WuLiFang/csheet/commit/df882d58c64c639edba17e23cc235afd775ec97b))
+* **style:** update icons ([c744eb9](https://github.com/WuLiFang/csheet/commit/c744eb9c37cf0100a70dfa509f9d49e8d9b026ba))
+* show current frame rate in viewer ([72a7450](https://github.com/WuLiFang/csheet/commit/72a74507648db6c3884cd9945810a178827f1d06))
+* use webm format for high fps video ([9885df1](https://github.com/WuLiFang/csheet/commit/9885df1a32946b47eaec57557e845fef6256d5ed))
+
+
+### Bug Fixes
+
+* **deps:** update package dompurify to 2.2.8 ([589e296](https://github.com/WuLiFang/csheet/commit/589e296be2520d6b8bc477c9b81e390735237896))
+* handle video play abort error ([d24b721](https://github.com/WuLiFang/csheet/commit/d24b7214f60b3eed4a12996c484826fb3165031a))
+* **api:** correct log message data ([7f7eced](https://github.com/WuLiFang/csheet/commit/7f7ecedfdda2c5b975af5ce64c753774a5eefcb6))
+* **api:** error when use null in variables ([f7083f3](https://github.com/WuLiFang/csheet/commit/f7083f3af9203a436aa79e712c1bafa7df3ba50f))
+* **api:** list input coercion not work ([886e65e](https://github.com/WuLiFang/csheet/commit/886e65e4c466591cd21c8712f508ec6940e0d3b9))
+* **deps:** update dependency moment to v2.29.1 ([864a2ab](https://github.com/WuLiFang/csheet/commit/864a2ab1491e4c3cd9616a68f4c28c61abab7504))
+* **gql:** missing field in default client config ([603141a](https://github.com/WuLiFang/csheet/commit/603141a43335efd34cf457cf4b4fee129043bbb1))
+* should not use experimental `Element.getAnimations` ([bb922cb](https://github.com/WuLiFang/csheet/commit/bb922cbede5d15a1e890b9fd208e3a7d408f74fc))
+* **api:** missing error extension data ([ec64915](https://github.com/WuLiFang/csheet/commit/ec64915760d4c40929cc5b10b23010b17c9b9c38))
+* **style:** loading icon overflow ([51f2dbc](https://github.com/WuLiFang/csheet/commit/51f2dbca0b022c2c83a81527debacfc8ec0b9cd4))
+* **style:** missing icon in tag input ([2c669f3](https://github.com/WuLiFang/csheet/commit/2c669f36cc53199f52cc9b851277e29985592124))
+* **style:** wrong vertical align in navbar ([cbfc50b](https://github.com/WuLiFang/csheet/commit/cbfc50b3bfd6721b55f419776a425be5319666fe))
+* binding property name conflict ([8e2ad28](https://github.com/WuLiFang/csheet/commit/8e2ad28a04557d9a00af7b35186b5e19140f9aaa))
+* disable sentry event target wrap for chrome74.0.3729 ([9cd5bb4](https://github.com/WuLiFang/csheet/commit/9cd5bb44380615364e8a967dc346e9afb476c5df))
+* disable sentry requestAnimationFrame wrap for chrome74.0.3729 ([c6588c1](https://github.com/WuLiFang/csheet/commit/c6588c132324549dcb68ec647ac3a15941045c1b))
+* invariant violation error when fetchMore ([90f3412](https://github.com/WuLiFang/csheet/commit/90f341261fbd315743c072f1054fd3944ee3b703))
+* presentation annotation always empty ([08b1e23](https://github.com/WuLiFang/csheet/commit/08b1e23106311705028aa458143ad69e240e90bf))
+* property stop update after object change to null ([bb34e58](https://github.com/WuLiFang/csheet/commit/bb34e5825a868d5e3f36808fc894dc4ad49a4823))
+* should not throw non-error ([327bc16](https://github.com/WuLiFang/csheet/commit/327bc16dbece90228a0177ab9fa0d6cd68aa2e52))
+* should show loading when image loading ([d1da230](https://github.com/WuLiFang/csheet/commit/d1da23085f96049108ace1193bd74182aa3fc357))
+* t.presentation.pause is not a function ([7f3733d](https://github.com/WuLiFang/csheet/commit/7f3733dfbe9d01cb354bf69c2e7a3a5012034cd3))
+* video current time display lag when playing ([e01345d](https://github.com/WuLiFang/csheet/commit/e01345d2a091337781eb1d96da4a41a9700c7ccd))
+
 ## [6.4.0](https://github.com/WuLiFang/csheet/compare/v6.3.0...v6.4.0) (2021-04-06)
 
 
