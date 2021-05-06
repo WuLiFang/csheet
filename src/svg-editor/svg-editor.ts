@@ -1,3 +1,4 @@
+import { SVG_NAMESPACE } from '@/const';
 import { Painter } from '@/svg-editor/painter';
 import NullPainter from '@/svg-editor/painters/null';
 import createSVGElement from '@/svg-editor/utils/createSVGElement';
@@ -58,6 +59,9 @@ function renderValue(el: Element, safeValue: string) {
     if (!o || !n) {
       continue;
     }
+    if (n.getAttribute('xmlns') === SVG_NAMESPACE) {
+      n.removeAttribute('xmlns');
+    }
     if (o.isEqualNode(n)) {
       continue;
     }
@@ -80,7 +84,11 @@ export class SVGEditor {
     el: SVGSVGElement,
     {
       hooks = {},
-      sanitize = (v) => DOMPurify.sanitize(v, { USE_PROFILES: { svg: true } }),
+      sanitize = (v) =>
+        DOMPurify.sanitize(v, {
+          USE_PROFILES: { svg: true },
+          NAMESPACE: SVG_NAMESPACE,
+        }),
       style = `\
 polyline {
   stroke-linecap: round;
